@@ -2,93 +2,109 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C4CC433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA55C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76BDD20758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 08:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4728820658
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 08:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgHQIXg (ORCPT
+        id S1726366AbgHQI2W (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 04:23:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:49848 "EHLO foss.arm.com"
+        Mon, 17 Aug 2020 04:28:22 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:60242 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgHQIXf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 04:23:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23B3830E;
-        Mon, 17 Aug 2020 01:23:34 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBBE03F6CF;
-        Mon, 17 Aug 2020 01:23:31 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 09:23:25 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        id S1727879AbgHQI2U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 04:28:20 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 7AF44FB04;
+        Mon, 17 Aug 2020 10:28:18 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8TlX4fRmALQd; Mon, 17 Aug 2020 10:28:17 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id A9DEE4576F; Mon, 17 Aug 2020 10:28:16 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 10:28:16 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
-        punit1.agrawal@toshiba.co.jp, linux-gpio@vger.kernel.org,
-        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 6/8] arm64: dts: visconti: Add device tree for TMPV7708
- RM main board
-Message-ID: <20200817082325.GA7057@bogus>
-References: <20200817014632.595898-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20200817014632.595898-7-nobuhiro1.iwamatsu@toshiba.co.jp>
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200817082816.GA33443@bogon.m.sigxcpu.org>
+References: <cover.1597526107.git.agx@sigxcpu.org>
+ <d4e3f881e3d53166eea0be31a885e08679813558.1597526107.git.agx@sigxcpu.org>
+ <20200815212727.GA1244923@ravnborg.org>
+ <20200816175521.GC2838@bogon.m.sigxcpu.org>
+ <20200816190417.GA1421437@ravnborg.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200817014632.595898-7-nobuhiro1.iwamatsu@toshiba.co.jp>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200816190417.GA1421437@ravnborg.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 10:46:30AM +0900, Nobuhiro Iwamatsu wrote:
-> Add basic support for the Visconti TMPV7708 SoC peripherals -
->   - CPU
->     - CA53 x 4 and 2 cluster.
->     - not support PSCI, currently only spin-table is supported.
+Hi Sam,
+On Sun, Aug 16, 2020 at 09:04:17PM +0200, Sam Ravnborg wrote:
+> On Sun, Aug 16, 2020 at 07:55:21PM +0200, Guido Günther wrote:
+> > Hi Sam,
+> > thanks for having a look!
+> > 
+> > On Sat, Aug 15, 2020 at 11:27:27PM +0200, Sam Ravnborg wrote:
+> > > Hi Guido.
+> > > 
+> > > On Sat, Aug 15, 2020 at 11:16:22PM +0200, Guido Günther wrote:
+> > > > The panel uses a Focaltech FT8006p, the touch part is handled by the
+> > > > already existing edt-ft5x06.
+> > > > 
+> > > > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > > 
+> > > Two small nits - otherwise looks good.
+> > > Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> > > 
+> > > I can fix while applying or you can send a new revision,
+> > > but I cannot apply until drm-misc-next have seen a backmerge
+> > > due to dev_err_probe() usage.
+> > 
+> > I'll send out a v3 with this fixed.
+> > 
+> > > Did you have commit rights yet?
+> > > If yes, then please apply yourself.
+> > 
+> > No commit rights here. So it would be great if you could apply the
+> > patches. Should I look for commit rights? I assume that means following
+> > 
+> >     https://drm.pages.freedesktop.org/maintainer-tools/commit-access.html#drm-misc    
+> I recall we discussed this before for some other driver.
+> For a single panel it is not needed, but if you continue to be active
+> on other parts it makes sense.
 
-Do you have plans to support PSCI in future ?
-It is now almost more than 5 year old specification. So they should be
-strong reason for not supporting that.
+I think st7703, mantix and nwl all go in via drm-misc so it might make
+sense. Thanks for the suggestion!
 
+> I will apply v3 when drm-misc-next is backmeged unless you tell me
+> otherwise. And ping me if I forgets.
 
-[..]
-
-> diff --git a/arch/arm64/boot/dts/toshiba/Makefile b/arch/arm64/boot/dts/toshiba/Makefile
-> new file mode 100644
-> index 000000000000..8cd460d5b68e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/toshiba/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_ARCH_VISCONTI) += tmpv7708-rm-mbrc.dtb
-> diff --git a/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts b/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
-> new file mode 100644
-> index 000000000000..a883d3ab1858
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
-> @@ -0,0 +1,44 @@
-
-[..]
-
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		always-on;
-
-Will this be true when CPU is in low power modes ?
-
--- 
-Regards,
-Sudeep
+Thanks!
+ -- Guido
