@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A53C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D102C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D103A2078E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AA22078A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VNlBfP3a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pN1BhJbk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHQKVn (ORCPT
+        id S1727954AbgHQKVr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
+        Mon, 17 Aug 2020 06:21:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgHQKVm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 06:21:42 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14984C061389
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 03:21:42 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g7so6139980plq.1
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 03:21:42 -0700 (PDT)
+        with ESMTP id S1726165AbgHQKVp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 06:21:45 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD51EC061389
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 03:21:45 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x25so8012451pff.4
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 03:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=T27zylxvpG1uKqrUR70eeURZpzCdR3pXDMNQ1pHagbA=;
-        b=VNlBfP3aqV9004jXgp3H4ztvNReV0zK1OpUFaeDXTUwiRv0XGfieBxtZW3sItBlv31
-         P9vWc2+6AeY880kFFgV+wuiG328ys0LfN1Ef23S4dbRvb2NWFK2vkPaucKuNBbMNDMJL
-         0mrXUoAu1i1H1NFX9qtwx8ZxRwJTFIT87CvZUDfsOFsaJaQOiJlsICSyrzddkmoo1UL1
-         qvGgK8Q8eZIvmE9UxVq0ncCCdykZVH+nwodWAI/mFfnevNfqzPiLarroHQFaxqk3gePX
-         3GEX+OYoiqKYhdnET2s/4+OAzx413hnAahRF6ldwgEMxoThiAwhY3mwUkNFyoxPe8W2R
-         +k4w==
+        bh=Lty6facXqNiOm5uMHf69/sWVwYZMbpQy+5RWM2GRtIg=;
+        b=pN1BhJbko63bRfN8Sp914IbopiUiqNfP1BodnjxKtgh42cd6Jc/A5kf+Ufy0DoSrSS
+         QOur7EcqvNqO2Wxv/J6GcMUy5L3ZyWFkmrWeeEnAK0LT3+9ALAI01Uuzvz9NMTZehZ2s
+         zBTwUWg+XxKctwLb6qIlXcFRqQJJ+YXbnP6fqXH2ONOTqS9dXRLmMqarNgJXjKc0SvRl
+         awxc1ZCw5AvuYPpNNhy0Tp6OXNarmSN77P9Z3Bz6e7P7YHSw46vTDRsq5UnPaoYb6cC1
+         a3Ta1okPIBj1WlczEqBJMomIM6Kpiwk+qxKDy3sOF9PsQV61RPzQtzCTLDZ5PnP2klPM
+         wnVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=T27zylxvpG1uKqrUR70eeURZpzCdR3pXDMNQ1pHagbA=;
-        b=lHzW9zA6tdRipu5hKeatrzDNUCR2mpkbleZ2bzrkQqTdBbtgpV+0XRt+/gWwdh2Djq
-         KsarCqR6YohvMRxD3c6kQ5qir7pJbooRiB3L9iC9UC3dRo2ERT8HBkiI8jdKYGBEKDn6
-         1jFPTOlec5L15YMmKho8YCdwDfCwDmC5W0ejwPyjDMuFoFLwOzxtKqZtHeqn3r+F5/4s
-         mTCl9QEBdbdevNAYjNAqdiLuvw/Ls/w0LS6pxZF4msUIG92IsPy+Iuho4A26TyIJ72GK
-         xCCVfVAqLQPQQwP98aWgywzn5626vJXsBk0KvQMjIZPmeEhb6iNojGVC1x70PJPaaJAo
-         e+8w==
-X-Gm-Message-State: AOAM533EEarwzft8wV/DOnil0DSjoU6sF3bOPdOiecDNLI4P5giV6Vxw
-        lEO768xHRINzMf74tFLeiZv0+RFeJRQ=
-X-Google-Smtp-Source: ABdhPJzjP4kr8mjLNZZY23q6m/Nvpl8Mwl7NLBzr1RoFgFmBmkYWnUSsW/ucuWK+7RapTzSZyLhzOg==
-X-Received: by 2002:a17:902:82c1:: with SMTP id u1mr10710196plz.224.1597659701482;
-        Mon, 17 Aug 2020 03:21:41 -0700 (PDT)
+        bh=Lty6facXqNiOm5uMHf69/sWVwYZMbpQy+5RWM2GRtIg=;
+        b=HlcF9di5m7t+jSm+ZTtnq0RhQmfq7FtZgg9+NfaeoV1DNoi7rI7iWjAyaUZHg2EVbj
+         f7iFW0E3Nts9OOJZ8ImgILxQ9UDizeNZ4npSLjsbIbzoV3SuMpHq5VsP6reAaBP9WZqd
+         SRMfXNBSIRyfXJ4Uy0B1Tjdk+zvJ7wq4x65+/L00qKLVx1EF02c27gPGEwxb79MgAz8N
+         cytOXnY7ar26EKGy85nLmgTCtQunU/B/Y8QWkJ5r37bsDA1oApSguoWCysXYVTHiRhPX
+         mWCq3JCfHocqc6jgjXjIMtMCRVjxLX68L//eWdxChjMUBbOjtJTBSi08bfZd0Zep5IP9
+         QIcQ==
+X-Gm-Message-State: AOAM530N/rXBp+up4gJMugLUHmFURr0Rd1ALw+F/F+Hf+L4+XQm7bT8n
+        3S2dgst0XjPcxs+G+NdtgQ4CQXQCrdA=
+X-Google-Smtp-Source: ABdhPJylJwiE+zRYuMkQNccV7+uAK/8roRhHGyenffyM530Ozi5JeiojHOGJNXKpQacb+PD6qixZxg==
+X-Received: by 2002:a65:40c1:: with SMTP id u1mr9110103pgp.379.1597659705173;
+        Mon, 17 Aug 2020 03:21:45 -0700 (PDT)
 Received: from localhost.localdomain ([45.114.62.137])
-        by smtp.gmail.com with ESMTPSA id l67sm16773206pga.41.2020.08.17.03.21.38
+        by smtp.gmail.com with ESMTPSA id l67sm16773206pga.41.2020.08.17.03.21.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 03:21:41 -0700 (PDT)
+        Mon, 17 Aug 2020 03:21:44 -0700 (PDT)
 From:   Anand Moon <linux.amoon@gmail.com>
 To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org
@@ -69,9 +69,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Kevin Hilman <khilman@baylibre.com>,
         Christian Hewitt <christianshewitt@gmail.com>,
         Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v2 2/3] arm64: dts: meson-g12b-odroid-n2: Disable virtual RTC driver
-Date:   Mon, 17 Aug 2020 10:21:21 +0000
-Message-Id: <20200817102122.434-3-linux.amoon@gmail.com>
+Subject: [PATCH v2 3/3] arm64: defconfig: Enable RTC devices for Amlogic boards
+Date:   Mon, 17 Aug 2020 10:21:22 +0000
+Message-Id: <20200817102122.434-4-linux.amoon@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200817102122.434-1-linux.amoon@gmail.com>
 References: <20200817102122.434-1-linux.amoon@gmail.com>
@@ -82,34 +82,31 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Disable virtual RTC node on Odroid N2,
-since RTC PCF8563 support rtc wakeup.
+Enables the RTC PCF8563 driver used on Amlogic Libretech-pc
+and Odroid-N2 boards supported in mainline kernel.
 
-[    7.171149] meson-vrtc ff8000a8.rtc: registered as rtc0
-[    7.182875] meson-vrtc ff8000a8.rtc: setting system clock to 1970-01-01T00:00:07 UTC (7)
-
-Cc: Neil Armstrong <narmstrong@baylibre.com>
 Cc: Kevin Hilman <khilman@baylibre.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
 Changes v2
---Fix the subject and commit message.
+Added Neil's ACK.
 ---
- arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-index f08ae1b337ad..7fb952a2a35e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-@@ -642,3 +642,7 @@ &usb2_phy1 {
- 	/* Enable the hub which is connected to this port */
- 	phy-supply = <&hub_5v>;
- };
-+
-+&vrtc {
-+	status = "disabled";
-+};
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e0f33826819f..3d9756833e0e 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -773,6 +773,7 @@ CONFIG_RTC_DRV_DS1307=m
+ CONFIG_RTC_DRV_MAX77686=y
+ CONFIG_RTC_DRV_RK808=m
+ CONFIG_RTC_DRV_PCF85363=m
++CONFIG_RTC_DRV_PCF8563=m
+ CONFIG_RTC_DRV_RX8581=m
+ CONFIG_RTC_DRV_RV8803=m
+ CONFIG_RTC_DRV_S5M=y
 -- 
 2.28.0
 
