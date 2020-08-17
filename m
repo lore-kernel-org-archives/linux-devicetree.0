@@ -2,84 +2,109 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837C0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 02:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E6BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56598207FF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 02:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074062087D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:04:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GW+/3iDI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSek12SA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgHQCuU (ORCPT
+        id S1726648AbgHQDEV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 22:50:20 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:28935 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726918AbgHQCuT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 22:50:19 -0400
-X-UUID: c1bdd9e3147f477a8ec76817789a2969-20200817
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=JJlKMP7ee02ays8KbIJqTQ/xkRTBFEVByYajjiFisPk=;
-        b=GW+/3iDIILtb1nDctYPMebyBQ258ydRh9L1J/d9xSV60Jy/qoODNxOaLmQxdIRHed8QnNOt3YYMhWk7sbGrRy+SITfN1aiY/N1K9ZWucTQLM8tKT9T8exOQKyXG4QDMhhpVZ2nKhZbt/i61G+a3fjlANamvFiBx8g7h/Y9TEjq0=;
-X-UUID: c1bdd9e3147f477a8ec76817789a2969-20200817
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <crystal.guo@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 281549421; Mon, 17 Aug 2020 10:50:14 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 17 Aug 2020 10:50:11 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 17 Aug 2020 10:50:10 +0800
-From:   Crystal Guo <crystal.guo@mediatek.com>
-To:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>
-CC:     <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <s-anna@ti.com>, <afd@ti.com>, <seiya.wang@mediatek.com>,
-        <stanley.chu@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <fan.chen@mediatek.com>, <yong.liang@mediatek.com>,
-        Crystal Guo <crystal.guo@mediatek.com>
-Subject: [v3,2/4] dt-binding: reset-controller: ti: add 'mediatek,infra-reset' to compatible
-Date:   Mon, 17 Aug 2020 10:48:40 +0800
-Message-ID: <20200817024842.5289-3-crystal.guo@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200817024842.5289-1-crystal.guo@mediatek.com>
-References: <20200817024842.5289-1-crystal.guo@mediatek.com>
+        Sun, 16 Aug 2020 23:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgHQDES (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 23:04:18 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005FFC061385;
+        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id s14so824292plp.4;
+        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u2t9cZojup/XRAfOOohcGCISaz5vKpnzd7po0W7Brn4=;
+        b=mSek12SAv1BJ6ldCV8GbAcqWxHtmYqybitk2vnr8tEQJDg9njV0L2OK9MMFHwSVXB6
+         YnxwwLHYPWeXDaBxfiLBMJNil43M/nUv16OYieMI149G/rP1GXkdtR4wuNL8KZQK1V2h
+         72RLjJvdNFsND45+Dqdz59o/YGYH6O8TF7G1tsVJQrFcuVYfFm81Eughm0igkP+dKzc+
+         cwA9gKOIg45WjWBt8+BUkjutzNI6OoMVRcQgJd8iDr2OjsA6xlyj5Bn/JvToxwFtAjke
+         E6+ncpe2QToaQBOZ/pD5FoGq/pkTAwoXDkhjCfoQfizb44tH/JRrefhlaplYFbfTIMS2
+         pvCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=u2t9cZojup/XRAfOOohcGCISaz5vKpnzd7po0W7Brn4=;
+        b=gmZ88t34LBisXCXakfD980N43vwkXMoxJ/XEnhMKXCXSCUuCFkD7X78pQNXlHYWmEO
+         VoMoowSiacjQxzjWGPW4UOtaXk6836vZtB8Pg/DxWDRPhH70KIgymSRzxodMk0YyAnrO
+         IhGTsIL3nabIJuys/o0LjVCDHzY/S0TlCNTdK30TOz0c5m9LW/ZRbusgY47ZfyDvR/dX
+         aa+zFM97tIW6FLkVdAZjUV22RbEIbvgPM2fsXvtxuSWbKDnjBbv37zuo/7fBwAFOItOP
+         JHItk2xHlmgj0gS7F5hV9x6k6unQQXLp0NWk28hQZ1mdoiZo4pIqCAhwDYUl4/kQ5eo2
+         kvag==
+X-Gm-Message-State: AOAM533SbKS+sPWP3nwzNYeKTpquim//SP31deq43QOCbwfhnajD7KQ/
+        L2jQ4BuuzfL5ngCq9sqRE2M=
+X-Google-Smtp-Source: ABdhPJwcOR2+1quyxWqjQQMMyinCGbyTuuXsCkvKpAd0p7fdGw5BaRkRa1UqMLxTq/Loy1rvyTeCgw==
+X-Received: by 2002:a17:90a:2081:: with SMTP id f1mr11353865pjg.174.1597633457296;
+        Sun, 16 Aug 2020 20:04:17 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
+        by smtp.gmail.com with ESMTPSA id n22sm14869939pjq.25.2020.08.16.20.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2020 20:04:16 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+X-Google-Original-From: Chris Healy <cphealy@gmail.com
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        linux@rempel-privat.de, davem@davemloft.net,
+        philippe.schenker@toradex.com, andrew@lunn.ch,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH] ARM: dts: imx7d-zii-rmu2: fix rgmii phy-mode for ksz9031 phy
+Date:   Sun, 16 Aug 2020 20:04:01 -0700
+Message-Id: <20200817030401.3124855-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhlIFRJIHN5c2NvbiByZXNldCBjb250cm9sbGVyIHByb3ZpZGVzIGEgY29tbW9uIHJlc2V0IG1h
-bmFnZW1lbnQsDQphbmQgaXMgc3VpdGFibGUgZm9yIE1USyBTb0NzLiBBZGQgY29tcGF0aWJsZSAn
-bWVkaWF0ZWssaW5mcmEtcmVzZXQnLA0Kd2hpY2ggZGVub3RlcyB0byB1c2UgdGkgcmVzZXQtY29u
-dHJvbGxlciBkcml2ZXIgZGlyZWN0bHkuDQoNClNpZ25lZC1vZmYtYnk6IENyeXN0YWwgR3VvIDxj
-cnlzdGFsLmd1b0BtZWRpYXRlay5jb20+DQotLS0NCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcmVzZXQvdGktc3lzY29uLXJlc2V0LnR4dCB8IDEgKw0KIDEgZmlsZSBjaGFuZ2Vk
-LCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3Jlc2V0L3RpLXN5c2Nvbi1yZXNldC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcmVzZXQvdGktc3lzY29uLXJlc2V0LnR4dA0KaW5kZXggYWIwNDEwMzIz
-MzliLi41YTBlOTM2NWI1MWIgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcmVzZXQvdGktc3lzY29uLXJlc2V0LnR4dA0KKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L3RpLXN5c2Nvbi1yZXNldC50eHQNCkBAIC0yNSw2ICsy
-NSw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQogCQkJICAgICJ0aSxrMmwtcHNjcnN0Ig0KIAkJ
-CSAgICAidGksazJoay1wc2Nyc3QiDQogCQkJICAgICJ0aSxzeXNjb24tcmVzZXQiDQorCQkJICAg
-ICJtZWRpYXRlayxpbmZyYS1yZXNldCIsICJ0aSxzeXNjb24tcmVzZXQiDQogIC0gI3Jlc2V0LWNl
-bGxzCQk6IFNob3VsZCBiZSAxLiBQbGVhc2Ugc2VlIHRoZSByZXNldCBjb25zdW1lciBub2RlIGJl
-bG93DQogCQkJICBmb3IgdXNhZ2UgZGV0YWlscw0KICAtIHRpLHJlc2V0LWJpdHMJOiBDb250YWlu
-cyB0aGUgcmVzZXQgY29udHJvbCByZWdpc3RlciBpbmZvcm1hdGlvbg0KLS0gDQoyLjE4LjANCg==
+From: Chris Healy <cphealy@gmail.com>
+
+Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+KSZ9031 PHY") the networking is broken on the imx7d-zii-rmu2 board.
+
+Fix it by switching to phy-mode = "rgmii-id".
+
+Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+ arch/arm/boot/dts/imx7d-zii-rmu2.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+index e5e20b07f184..7cb6153fc650 100644
+--- a/arch/arm/boot/dts/imx7d-zii-rmu2.dts
++++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
+@@ -58,7 +58,7 @@ &fec1 {
+ 			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
+ 	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
+ 	assigned-clock-rates = <0>, <100000000>;
+-	phy-mode = "rgmii";
++	phy-mode = "rgmii-id";
+ 	phy-handle = <&fec1_phy>;
+ 	status = "okay";
+ 
+-- 
+2.26.2
 
