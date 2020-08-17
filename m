@@ -2,111 +2,308 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D102C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA206C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58AA22078A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pN1BhJbk"
+	by mail.kernel.org (Postfix) with ESMTP id 8F2ED2078A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 10:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgHQKVr (ORCPT
+        id S1727957AbgHQKVs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 06:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbgHQKVp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 06:21:45 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD51EC061389
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 03:21:45 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x25so8012451pff.4
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 03:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Lty6facXqNiOm5uMHf69/sWVwYZMbpQy+5RWM2GRtIg=;
-        b=pN1BhJbko63bRfN8Sp914IbopiUiqNfP1BodnjxKtgh42cd6Jc/A5kf+Ufy0DoSrSS
-         QOur7EcqvNqO2Wxv/J6GcMUy5L3ZyWFkmrWeeEnAK0LT3+9ALAI01Uuzvz9NMTZehZ2s
-         zBTwUWg+XxKctwLb6qIlXcFRqQJJ+YXbnP6fqXH2ONOTqS9dXRLmMqarNgJXjKc0SvRl
-         awxc1ZCw5AvuYPpNNhy0Tp6OXNarmSN77P9Z3Bz6e7P7YHSw46vTDRsq5UnPaoYb6cC1
-         a3Ta1okPIBj1WlczEqBJMomIM6Kpiwk+qxKDy3sOF9PsQV61RPzQtzCTLDZ5PnP2klPM
-         wnVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Lty6facXqNiOm5uMHf69/sWVwYZMbpQy+5RWM2GRtIg=;
-        b=HlcF9di5m7t+jSm+ZTtnq0RhQmfq7FtZgg9+NfaeoV1DNoi7rI7iWjAyaUZHg2EVbj
-         f7iFW0E3Nts9OOJZ8ImgILxQ9UDizeNZ4npSLjsbIbzoV3SuMpHq5VsP6reAaBP9WZqd
-         SRMfXNBSIRyfXJ4Uy0B1Tjdk+zvJ7wq4x65+/L00qKLVx1EF02c27gPGEwxb79MgAz8N
-         cytOXnY7ar26EKGy85nLmgTCtQunU/B/Y8QWkJ5r37bsDA1oApSguoWCysXYVTHiRhPX
-         mWCq3JCfHocqc6jgjXjIMtMCRVjxLX68L//eWdxChjMUBbOjtJTBSi08bfZd0Zep5IP9
-         QIcQ==
-X-Gm-Message-State: AOAM530N/rXBp+up4gJMugLUHmFURr0Rd1ALw+F/F+Hf+L4+XQm7bT8n
-        3S2dgst0XjPcxs+G+NdtgQ4CQXQCrdA=
-X-Google-Smtp-Source: ABdhPJylJwiE+zRYuMkQNccV7+uAK/8roRhHGyenffyM530Ozi5JeiojHOGJNXKpQacb+PD6qixZxg==
-X-Received: by 2002:a65:40c1:: with SMTP id u1mr9110103pgp.379.1597659705173;
-        Mon, 17 Aug 2020 03:21:45 -0700 (PDT)
-Received: from localhost.localdomain ([45.114.62.137])
-        by smtp.gmail.com with ESMTPSA id l67sm16773206pga.41.2020.08.17.03.21.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 03:21:44 -0700 (PDT)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v2 3/3] arm64: defconfig: Enable RTC devices for Amlogic boards
-Date:   Mon, 17 Aug 2020 10:21:22 +0000
-Message-Id: <20200817102122.434-4-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817102122.434-1-linux.amoon@gmail.com>
-References: <20200817102122.434-1-linux.amoon@gmail.com>
+        Mon, 17 Aug 2020 06:21:48 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:60481 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727952AbgHQKVr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 06:21:47 -0400
+Received: from localhost (sto93-h02-176-184-36-142.dsl.sta.abo.bbox.fr [176.184.36.142])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E5CC3200002;
+        Mon, 17 Aug 2020 10:21:41 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 12:21:36 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Reto Schneider <code@reto-schneider.ch>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Reto Schneider <reto.schneider@husqvarnagroup.com>,
+        Stefan Roese <sr@denx.de>,
+        Michael Zimmermann <michael.zimmermann@grandcentrix.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: at91: Add GARDENA smart Gateway AT91SAM board
+Message-ID: <20200817102136.GC4500@piout.net>
+References: <20200810171921.8679-1-code@reto-schneider.ch>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200810171921.8679-1-code@reto-schneider.ch>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enables the RTC PCF8563 driver used on Amlogic Libretech-pc
-and Odroid-N2 boards supported in mainline kernel.
+Hello,
 
-Cc: Kevin Hilman <khilman@baylibre.com>
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Changes v2
-Added Neil's ACK.
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thank you for this submission.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e0f33826819f..3d9756833e0e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -773,6 +773,7 @@ CONFIG_RTC_DRV_DS1307=m
- CONFIG_RTC_DRV_MAX77686=y
- CONFIG_RTC_DRV_RK808=m
- CONFIG_RTC_DRV_PCF85363=m
-+CONFIG_RTC_DRV_PCF8563=m
- CONFIG_RTC_DRV_RX8581=m
- CONFIG_RTC_DRV_RV8803=m
- CONFIG_RTC_DRV_S5M=y
+On 10/08/2020 19:19:19+0200, Reto Schneider wrote:
+> From: Reto Schneider <reto.schneider@husqvarnagroup.com>
+> 
+> This patch adds support for the GARDENA smart Gateway, which is based on
+> the Atmel AT91SAM9G25. It is equipped with 128 MiB of DDR2 RAM and
+> 256 MiB NAND storage.
+> 
+> Please note that this gateway is not actually based on a AT91SAM9x5 EK
+> board, but is close enough to allow its DT to be used.
+> 
+> Co-developed-by: Stefan Roese <sr@denx.de>
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Co-developed-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
+> Signed-off-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
+> Signed-off-by: Reto Schneider <reto.schneider@husqvarnagroup.com>
+> ---
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  .../dts/at91sam9g25-gardena-smart-gateway.dts | 186 ++++++++++++++++++
+>  2 files changed, 187 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 4572db3fa5ae..d38d256f59fa 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -44,6 +44,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+>  	at91-wb45n.dtb \
+>  	at91sam9g15ek.dtb \
+>  	at91sam9g25ek.dtb \
+> +	at91sam9g25-gardena-smart-gateway.dtb \
+>  	at91sam9g35ek.dtb \
+>  	at91sam9x25ek.dtb \
+>  	at91sam9x35ek.dtb
+> diff --git a/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts b/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
+> new file mode 100644
+> index 000000000000..19b0f67a7af6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
+> @@ -0,0 +1,186 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Device Tree file for the GARDENA smart Gateway (AT91SAM)
+> + *
+> + *  Copyright (C) 2020 GARDENA GmbH
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "at91sam9g25.dtsi"
+> +#include "at91sam9x5ek.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +
+> +/ {
+> +	model = "GARDENA smart Gateway (AT91SAM)";
+> +	compatible = "gardena,smart-gateway-at91sam", "atmel,at91sam9g25", "atmel,at91sam9x5", "atmel,at91sam9";
+
+You should document the vendor string. And ideally,
+gardena,smart-gateway-at91sam should be documented in
+Documentation/devicetree/bindings/arm/atmel-at91.yaml
+
+> +
+> +	aliases {
+> +		serial1 = &usart3;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+
+This is already in at91sam9x5ek.dtsi
+
+> +	};
+> +
+> +	memory {
+> +		reg = <0x20000000 0x8000000>;
+
+This is already in at91sam9x5cm.dtsi, included fromat91sam9x5ek.dtsi
+
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		user_btn1 {
+> +			label = "USER_BTN1";
+> +			gpios = <&pioA 24 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_PROG1>;
+> +		};
+> +	};
+> +
+> +	1wire_cm {
+> +		status = "disabled";
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		power_blue {
+> +			label = "smartgw:power:blue";
+> +			gpios = <&pioC 21 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		power_green {
+> +			label = "smartgw:power:green";
+> +			gpios = <&pioC 20 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +
+> +		power_red {
+> +			label = "smartgw:power:red";
+> +			gpios = <&pioC 19 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		radio_blue {
+> +			label = "smartgw:radio:blue";
+> +			gpios = <&pioC 18 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		radio_green {
+> +			label = "smartgw:radio:green";
+> +			gpios = <&pioC 17 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		radio_red {
+> +			label = "smartgw:radio:red";
+> +			gpios = <&pioC 16 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		internet_blue {
+> +			label = "smartgw:internet:blue";
+> +			gpios = <&pioC 15 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		internet_green {
+> +			label = "smartgw:internet:green";
+> +			gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		internet_red {
+> +			label = "smartgw:internet:red";
+> +			gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		heartbeat {
+> +			label = "smartgw:heartbeat";
+> +			gpios = <&pioB 8 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +
+> +		pb18 {
+> +			status = "disabled";
+> +		};
+> +
+> +		pd21 {
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> +
+> +&dbgu {
+> +	status = "okay";
+> +};
+
+This is already in at91sam9x5ek.dtsi and is duplicated below
+
+> +
+> +&macb0 {
+> +	phy-mode = "rmii";
+> +	status = "okay";
+> +};
+> +
+> +&nand_controller {
+> +	status = "okay";
+
+This is already in at91sam9x5cm.dtsi
+
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +	num-ports = <3>;
+
+This is already in at91sam9x5ek.dtsi
+
+> +};
+> +
+> +&usb1 {
+> +	status = "okay";
+This is already in at91sam9x5ek.dtsi
+> +};
+> +
+> +&usart0 {
+> +	status = "disabled";
+> +};
+> +
+> +&usart2 {
+> +	status = "disabled";
+> +};
+> +
+> +&dbgu {
+> +	status = "okay";
+> +};
+> +
+> +&usart3 {
+> +	status = "okay";
+> +
+> +	pinctrl-0 = <&pinctrl_usart3
+> +		     &pinctrl_usart3_rts
+> +		     &pinctrl_usart3_cts
+> +		    >;
+> +};
+> +
+> +&watchdog {
+> +	status = "okay";
+> +};
+> +
+> +&mmc0 {
+> +	status = "disabled";
+> +};
+> +
+> +&mmc1 {
+> +	status = "disabled";
+> +};
+> +
+> +&spi0 {
+> +	status = "disabled";
+> +};
+> +
+> +&i2c0 {
+> +	status = "disabled";
+> +};
+> +
+> +&adc0 {
+> +	status = "disabled";
+> +};
+> +
+> +&ssc0 {
+> +	status = "disabled";
+> +};
+
+Overall, I'm not convinced it is a good idea to start from
+at91sam9x5ek.dtsi as it makes you dtb bigger than necessary but if you
+want it that way, I'm fine with that.
+
 -- 
-2.28.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
