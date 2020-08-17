@@ -2,210 +2,114 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56486C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 15:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADEEAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 16:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25B39221E2
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 15:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84BC6205CB
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 16:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597682435;
+	bh=ifO03cMzINSVsY3nIRWYJJWNorVOV7MEsCao05SISEI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sG5CNe514zhSw8fPd3X+WW/U81AGSKP2i4Q0k6/+zTIMJtfFyWGbFEXJIwKDCO2Sd
+	 kiVHMNmbAoueP2MQJg3XL47m8XLQNNeU4OVRdcVH7VFLhnd9xtFf//3Nwkm32Ju4Zc
+	 V/Ud3laWBI6UAJhOkicLszXfHnfffi1TUzhLsFlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387590AbgHQP4S (ORCPT
+        id S2388113AbgHQQkC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 11:56:18 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:52387 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388029AbgHQPzl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 11:55:41 -0400
-Received: from uno.lan (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 772B524000E;
-        Mon, 17 Aug 2020 15:55:35 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        laurent.pinchart@ideasonboard.com,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: media: ov772x: Convert to json-schema
-Date:   Mon, 17 Aug 2020 17:59:08 +0200
-Message-Id: <20200817155910.255883-2-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200817155910.255883-1-jacopo+renesas@jmondi.org>
-References: <20200817155910.255883-1-jacopo+renesas@jmondi.org>
+        Mon, 17 Aug 2020 12:40:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388898AbgHQQj4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 12:39:56 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F75420674;
+        Mon, 17 Aug 2020 16:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597682395;
+        bh=ifO03cMzINSVsY3nIRWYJJWNorVOV7MEsCao05SISEI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aiQBA39aUMY1Y44AGHoNsvI5heZEdPz3RASAMATyoNPfg904JKx/nEECcThKwh53D
+         iAGQuuobZ6SKApaX7I8nmQJgAhAR++iNLnMiy3//k4p9B/jPqrcdE/93PT0plYeBN+
+         TOHujonKP0VlLhiv7SR0cjSakloX2a506r41NXKg=
+Received: by mail-oi1-f174.google.com with SMTP id a24so15333804oia.6;
+        Mon, 17 Aug 2020 09:39:55 -0700 (PDT)
+X-Gm-Message-State: AOAM5314nPBTEPUp2TvMpqX21ze2p15uSx+El0+UVZeY/wsSoFA8Wchm
+        xtVdBVW5blUknlWj6GkPNT+jx/aF2ifj9XWBdw==
+X-Google-Smtp-Source: ABdhPJxhRWY6PWbqPYwgGjUIxWQR66vhMnMb3Lx3z86cqv3Gg8rVBxYxbVIvfsh9MLzYqkLWtvNEjbqKehRsRJxzIa4=
+X-Received: by 2002:aca:190c:: with SMTP id l12mr10376472oii.147.1597682394749;
+ Mon, 17 Aug 2020 09:39:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com> <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 17 Aug 2020 10:39:43 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
+Message-ID: <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
+Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
+ get phy
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the ov772x binding document to json-schema and update
-the MAINTAINERS file accordingly.
+On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+>
+> Even if phy driver doesn't probe, the error message can't be distinguished
+> from other errors. This displays error message caused by the phy driver
+> explicitly.
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 93ef608..7c8721e 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>                 return PTR_ERR(priv->rst);
+>
+>         priv->phy = devm_phy_optional_get(dev, "pcie-phy");
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- .../devicetree/bindings/media/i2c/ov772x.txt  | 40 ---------
- .../devicetree/bindings/media/i2c/ov772x.yaml | 84 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 85 insertions(+), 41 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+The point of the optional variant vs. devm_phy_get() is whether or not
+you get an error message. So shouldn't you switch to devm_phy_get
+instead?
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-deleted file mode 100644
-index 0b3ede5b8e6a..000000000000
---- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-+++ /dev/null
-@@ -1,40 +0,0 @@
--* Omnivision OV7720/OV7725 CMOS sensor
--
--The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
--such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
--support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
--
--Required Properties:
--- compatible: shall be one of
--	"ovti,ov7720"
--	"ovti,ov7725"
--- clocks: reference to the xclk input clock.
--
--Optional Properties:
--- reset-gpios: reference to the GPIO connected to the RSTB pin which is
--  active low, if any.
--- powerdown-gpios: reference to the GPIO connected to the PWDN pin which is
--  active high, if any.
--
--The device node shall contain one 'port' child node with one child 'endpoint'
--subnode for its digital output video port, in accordance with the video
--interface bindings defined in Documentation/devicetree/bindings/media/
--video-interfaces.txt.
--
--Example:
--
--&i2c0 {
--	ov772x: camera@21 {
--		compatible = "ovti,ov7725";
--		reg = <0x21>;
--		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
--		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
--		clocks = <&xclk>;
--
--		port {
--			ov772x_0: endpoint {
--				remote-endpoint = <&vcap1_in0>;
--			};
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-new file mode 100644
-index 000000000000..2b84fefeb4aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-@@ -0,0 +1,84 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/ov772x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title:  Omnivision OV7720/OV7725 CMOS sensor
-+
-+maintainers:
-+  - Jacopo Mondi <jacopo@jmondi.org>
-+
-+description: -|
-+  The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
-+  such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
-+  support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ovti,ov7720
-+      - ovti,ov7725
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    description: -|
-+      Reference to the GPIO connected to the RSTB pin which is active low.
-+    maxItems: 1
-+
-+  powerdown-gpios:
-+    description: -|
-+      Reference to the GPIO connected to the PWDN pin which is active high.
-+    maxItems: 1
-+
-+  port:
-+    type: object
-+    description: |
-+      The device node must contain one 'port' child node for its digital output
-+      video port, in accordance with the video interface bindings defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+    properties:
-+      endpoint:
-+        type: object
-+        properties:
-+          remote-endpoint:
-+            description: A phandle to the bus receiver's endpoint node.
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - reset-gpios
-+  - powerdown-gpios
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        ov772x: camera@21 {
-+            compatible = "ovti,ov7725";
-+            reg = <0x21>;
-+            reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
-+            powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
-+            clocks = <&xclk>;
-+
-+            port {
-+                ov772x_0: endpoint {
-+                    remote-endpoint = <&vcap1_in0>;
-+                };
-+            };
-+        };
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d1a6173d3b64..d0a20214eaaf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12666,7 +12666,7 @@ M:	Jacopo Mondi <jacopo@jmondi.org>
- L:	linux-media@vger.kernel.org
- S:	Odd fixes
- T:	git git://linuxtv.org/media_tree.git
--F:	Documentation/devicetree/bindings/media/i2c/ov772x.txt
-+F:	Documentation/devicetree/bindings/media/i2c/ov772x.yaml
- F:	drivers/media/i2c/ov772x.c
- F:	include/media/i2c/ov772x.h
- 
--- 
-2.27.0
-
+> -       if (IS_ERR(priv->phy))
+> -               return PTR_ERR(priv->phy);
+> +       if (IS_ERR(priv->phy)) {
+> +               ret = PTR_ERR(priv->phy);
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
+> +               return ret;
+> +       }
+>
+>         platform_set_drvdata(pdev, priv);
+>
+> --
+> 2.7.4
+>
