@@ -2,81 +2,65 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1650C433E8
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 11:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20D1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 11:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5ACD2067C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 11:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2F420674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 11:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgHQLcN (ORCPT
+        id S1727050AbgHQLsd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 07:32:13 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:55738 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgHQLcM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 07:32:12 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k7dN2-0002Ii-P6; Mon, 17 Aug 2020 11:32:08 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V3] of/address: check for invalid range.cpu_addr
-Date:   Mon, 17 Aug 2020 12:32:08 +0100
-Message-Id: <20200817113208.523805-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 17 Aug 2020 07:48:33 -0400
+Received: from muru.com ([72.249.23.125]:40596 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726161AbgHQLsW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 07:48:22 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6068880A3;
+        Mon, 17 Aug 2020 11:48:20 +0000 (UTC)
+Date:   Mon, 17 Aug 2020 14:48:47 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford <adam.ford@logicpd.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+Message-ID: <20200817114847.GL2994@atomide.com>
+References: <20191007220540.30690-1-aford173@gmail.com>
+ <20191007220540.30690-2-aford173@gmail.com>
+ <CAHCN7x+fnyXb+UO3xPd0nKeZNAPhRsXd5kTCAHxvg6hSt8Bx-A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHCN7x+fnyXb+UO3xPd0nKeZNAPhRsXd5kTCAHxvg6hSt8Bx-A@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+* Adam Ford <aford173@gmail.com> [200805 13:17]:
+> I know this is an old thread.  I am trying to revisit some of the
+> other issues that came about with this, but is there any way we can
+> get patch 2/2 applied?  It might not do anything unless the bandgap
+> sensor is enabled, but it at least gets us one step closer for those
+> who choose to enable it.  With 1GHz support now available, it would be
+> nice to have the precautions to protect the processor from running too
+> fast when its too hot.
 
-Currently invalid CPU addresses are not being sanity checked resulting in
-SATA setup failure on a SynQuacer SC2A11 development machine. The original
-check was removed by and earlier commit, so add a sanity check back in
-to avoid this regression.
+Sure seems OK to me. Care to resend as I no longer have it in my inbox?
 
-Fixes: 7a8b64d17e35 ("of/address: use range parser for of_dma_get_range")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
+Regards,
 
-V2: print message using pr_err and don't print range.cpu_addr as it's always
-    going to be OF_BAD_ADDR so the information is pointless.
-V3: print the bus address to help diagnose issues
-
----
- drivers/of/address.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 590493e04b01..945b3d785f44 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -985,6 +985,11 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
- 			/* Don't error out as we'd break some existing DTs */
- 			continue;
- 		}
-+		if (range.cpu_addr == OF_BAD_ADDR) {
-+			pr_err("translation of DMA address(%llx) to CPU address failed node(%pOF)\n",
-+			       range.bus_addr, node);
-+			continue;
-+		}
- 		dma_offset = range.cpu_addr - range.bus_addr;
- 
- 		/* Take lower and upper limits */
--- 
-2.27.0
-
+Tony
