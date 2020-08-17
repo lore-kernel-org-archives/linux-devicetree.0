@@ -2,64 +2,62 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11F0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7A3C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE8E20772
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD33B20772
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597650626;
-	bh=pEmZ0bJwP+2jy7JV6MazNJRUpimkMGqSRi6r/UUBXcE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Hen/knt8cM6nA8CGr2yaMGbKLuQ9GP/pUhB9kIYLOkEQUS1uBOUzavPGeaFBw7O1A
-	 Lm+WoyvvXD5yD6/rTiyJIID29BYN8I6l3kurLGiaEC9CyA4j47hoQVxmrolfAx9HZy
-	 Wx5hl4B4pjsDUwAMiDJ6BJHB4ozwkduQBeaxNLQ0=
+	s=default; t=1597650641;
+	bh=FiVFRusfj9DjxEECqrLRwnPwn3v/1jVkijJ8N2ump8g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TY1iQvjr9V+g9qVbRKx8hc2/nrk3s/ELotT9Q97CRUUxLDIft08xIOnaXAI1mglbT
+	 SVC/8hIIc5ZDiHjFECuwnqgfzwEozm83UHuOE0OgpBuieRv0HiktzsiiSbVK6f4zM1
+	 wpJj1asruBpi+pDuq+ztR9i8jakAb6lGSNIPBbFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgHQHuV (ORCPT
+        id S1726608AbgHQHuk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:50:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45244 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 03:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbgHQHuU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:50:20 -0400
+        id S1726874AbgHQHu0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:50:26 -0400
 Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB9D207DF;
-        Mon, 17 Aug 2020 07:50:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C71A22CAD;
+        Mon, 17 Aug 2020 07:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1597650620;
-        bh=pEmZ0bJwP+2jy7JV6MazNJRUpimkMGqSRi6r/UUBXcE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iO7lGho8i1sBtrmzrfWbT3D8qOHg90bwGxSGDCjffji/8hjWZ805E7LsJ41smtHML
-         YmMkrWO10hX92w47Sn53e6i9zgs85tWOyl5ZPn8xPMERnXY1CVRZ5O7ormvcXWfKzg
-         txOZJrIUz1gnaQIhcenhYVN+YbW+sDs8Ty9Q1ezI=
+        bh=FiVFRusfj9DjxEECqrLRwnPwn3v/1jVkijJ8N2ump8g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WhMMGunmpgK8vFWnOdTQ2I8t9MbghOejJRSb+BTP9jycrNykrJQP3kz4Br4sXCn0s
+         4wwBV/Lx6SIIapFKypuni/Kbn41IlmBg7YFmeu7+n7UCekd4w/Oh6G6JMLRekvyPwg
+         LRgUpuTisRQGkhsAJDrp8QBMM9mEU6AgEfstMrh4=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1k7ZuL-00Bfbr-OZ; Mon, 17 Aug 2020 09:50:17 +0200
+        id 1k7ZuM-00BfcU-FM; Mon, 17 Aug 2020 09:50:18 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         John Stultz <john.stultz@linaro.org>,
         Manivannan Sadhasivam <mani@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Wei Xu <xuwei5@hisilicon.com>, devicetree@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        iommu@lists.linux-foundation.org,
-        Chenfeng <puck.chen@hisilicon.com>, devel@driverdev.osuosl.org,
-        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 00/16] IOMMU driver for Kirin 960/970
-Date:   Mon, 17 Aug 2020 09:49:59 +0200
-Message-Id: <cover.1597650455.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 14/16] dt: add an spec for the Kirin36x0 SMMU
+Date:   Mon, 17 Aug 2020 09:50:13 +0200
+Message-Id: <0fa3a11f63e68fdef3a8aa8d45f1df4d0832dcac.1597650455.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1597650455.git.mchehab+huawei@kernel.org>
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -67,49 +65,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver for the Kirin 960/970 iommu.
+Describe the properties expected by the IOMMU driver used on
+Hikey960 and Hikey970 boards.
 
-As on the past series, this starts from the original 4.9 driver from
-the 96boards tree:
-
-	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-
-The remaining patches add SPDX headers and make it build and run with
-the upstream Kernel.
-
-Chenfeng (1):
-  iommu: add support for HiSilicon Kirin 960/970 iommu
-
-Mauro Carvalho Chehab (15):
-  iommu: hisilicon: remove default iommu_map_sg handler
-  iommu: hisilicon: map and unmap ops gained new arguments
-  iommu: hisi_smmu_lpae: rebase it to work with upstream
-  iommu: hisi_smmu: remove linux/hisi/hisi-iommu.h
-  iommu: hisilicon: cleanup its code style
-  iommu: hisi_smmu_lpae: get rid of IOMMU_SEC and IOMMU_DEVICE
-  iommu: get rid of map/unmap tile functions
-  iommu: hisi_smmu_lpae: use the right code to get domain-priv data
-  iommu: hisi_smmu_lpae: convert it to probe_device
-  iommu: add Hisilicon Kirin970 iommu at the building system
-  iommu: hisi_smmu_lpae: cleanup printk macros
-  iommu: hisi_smmu_lpae: make OF compatible more standard
-  dt: add an spec for the Kirin36x0 SMMU
-  dt: hi3670-hikey970.dts: load the SMMU driver on Hikey970
-  staging: hikey9xx: add an item about the iommu driver
-
- .../iommu/hisilicon,kirin36x0-smmu.yaml       |  55 ++
- .../boot/dts/hisilicon/hi3670-hikey970.dts    |   3 +
- drivers/staging/hikey9xx/Kconfig              |   9 +
- drivers/staging/hikey9xx/Makefile             |   1 +
- drivers/staging/hikey9xx/TODO                 |   1 +
- drivers/staging/hikey9xx/hisi_smmu.h          | 196 ++++++
- drivers/staging/hikey9xx/hisi_smmu_lpae.c     | 648 ++++++++++++++++++
- 7 files changed, 913 insertions(+)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../iommu/hisilicon,kirin36x0-smmu.yaml       | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iommu/hisilicon,kirin36x0-smmu.yaml
- create mode 100644 drivers/staging/hikey9xx/hisi_smmu.h
- create mode 100644 drivers/staging/hikey9xx/hisi_smmu_lpae.c
 
+diff --git a/Documentation/devicetree/bindings/iommu/hisilicon,kirin36x0-smmu.yaml b/Documentation/devicetree/bindings/iommu/hisilicon,kirin36x0-smmu.yaml
+new file mode 100644
+index 000000000000..ec4c98faf3a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/hisilicon,kirin36x0-smmu.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iommu/hisilicon,kirin36x0-smmu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Hisilicon support for HI3660/HI3670 SMMU
++
++maintainers:
++  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
++
++description: |+
++  Huawei's Hisilicon Kirin 3660/3670 contains a System MMU that enables
++  scattered physical memory chunks visible as a contiguous region to
++  DMA-capable peripheral devices like GPU and ISP.
++
++  The IOMMU domains are described via iommu_info settings.
++
++properties:
++  compatible:
++    const: hisilicon,hisi-smmu-lpae
++
++  iommu_info:
++    type: object
++
++    properties:
++      start-addr:
++        maxItems: 1
++        description: Memory start address (32 bits)
++
++      size:
++        maxItems: 1
++        description: size of the I/O MMU block (32 bits)
++
++      iova-align:
++        minItems: 2
++        maxItems: 2
++        description: DMA address alignment of the mapped memory (64 bits)
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    smmu_lpae {
++      compatible = "hisilicon,smmu-lpae";
++
++      iommu_info {
++        start-addr = <0x40000>;
++        size = <0xbffc0000>;
++        iova-align = <0x0 0x8000>;
++      };
++    };
 -- 
 2.26.2
-
 
