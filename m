@@ -2,117 +2,84 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE16C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3754BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F9B206DA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tbfi4l6E"
+	by mail.kernel.org (Postfix) with ESMTP id 0ED87207DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 06:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597644530;
+	bh=jkDy2M4HrHeMvMWNxZN8BboPzsYViMAXDP5YYtRj88U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pHuUbs8eITH0XOsd+vjKsvHVXVTxgUZMAs10WbFooen2MjMZo94gru4mR4Hmlmu6g
+	 55+vUZvBZ9CE102a3wukyrp+86iXfVlPvlEPij/Mk7GBQFmISWWOuLNdItbJ0VGjQB
+	 XVshGxJvT8mqcdK1Cc55calPxhOJaZB+HSbpjAss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgHQF7f (ORCPT
+        id S1726417AbgHQGIt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHQF7e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 01:59:34 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22F6C061388;
-        Sun, 16 Aug 2020 22:59:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=HZyl5q+jnCvX1fyjf0e5q25W96mTDQeUnBuw8XcBjho=; b=Tbfi4l6EOYQY5R4kZrucj5ihlG
-        Pa24jwPDsNSiAcgBzp880XtY4ytb+tBXkFJnRNQvQfJxkOr0Nii6011LKqUcs35/fhyQYn+b4XwNL
-        CltUqh8GD4Ww7OiU3tQ5DHo8fMtqzAY7U4++7NisYLeFiwnKcSoMObWYX1x25O1Xigkc=;
-Received: from p200300ccff0cdf001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:df00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k7YAy-0004Iy-4D; Mon, 17 Aug 2020 07:59:20 +0200
-Date:   Mon, 17 Aug 2020 07:59:18 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, marcel.ziswiler@toradex.com,
-        sebastien.szymanski@armadeus.com, rjones@gateworks.com,
-        leoyang.li@nxp.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine
- 2 HD
-Message-ID: <20200817075918.4e53e6b8@aktux>
-In-Reply-To: <20200816155751.GB103070@latitude>
-References: <20200815193336.21598-1-andreas@kemnade.info>
-        <20200815193336.21598-3-andreas@kemnade.info>
-        <20200816125247.GA103070@latitude>
-        <20200816165058.3a17d97a@aktux>
-        <20200816155751.GB103070@latitude>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 17 Aug 2020 02:08:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40017 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbgHQGIs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 02:08:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l2so13699777wrc.7;
+        Sun, 16 Aug 2020 23:08:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6lNHNVgf2Zq0mPKET3cpuT7A8ZQmxysEPxjfsk3SXqU=;
+        b=L4QDFTN866nOtYmzkvQSfwW/9n0sBWllYyo0c0Dg5denrACQ45CwVrfE+RPHxkBNZY
+         CnaIME1hATcOPQtH/I20wrx0xSPbB/zaK5uiBAAEA4S2nKY9izAUSU+dp+VPBWWDiSjp
+         tYnHpfq83d5F2J5i/RrJE6PPhE6BvYe0FIRX25cR3ctBVlaaENVZzjp73gUcEby5wXBJ
+         qJKDuuBH4Vo9kcA14gNQoQ2JnjkqwQTZG366wkdJHirOYOeaCOreEpNAEIC9m+QjyI86
+         WHnjTPizKvwA7GmmyCfVq398JjXts+eszc0PtELl5uUe056qTith3/JlNv1roSmTGACU
+         3IzQ==
+X-Gm-Message-State: AOAM532A1LnZ8WhyuvFqGJ/7uv6v00lsTXZucgid41uaCtKykC3ngFzS
+        IsTUpNKkr7VzALEbhKQb5Wm6nwJIyHh6pdS1ryo=
+X-Google-Smtp-Source: ABdhPJzJXTUT1UYlIYgRbMpn7HcBUPZpvH/Ec368Rq7Dadpw9jTRShu4vXorR3Lv03qOpofD68plZ5MEse+lOLFHX9E=
+X-Received: by 2002:adf:e94c:: with SMTP id m12mr13657505wrn.109.1597644525957;
+ Sun, 16 Aug 2020 23:08:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200817031249.36795-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20200817031249.36795-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Felipe Balbi <balbi@kernel.org>
+Date:   Mon, 17 Aug 2020 09:08:35 +0300
+Message-ID: <CAH8TKc8giWkY8oNMKG97PYov0iN8f6TrA+PAsceSV0uwkO+qjQ@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] phy: Add USB3 PHY support for Intel LGM SoC
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     Kernel development list <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>, vkoul@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi
 
-On Sun, 16 Aug 2020 17:57:51 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
+On Mon, Aug 17, 2020 at 6:13 AM Ramuthevar,Vadivel MuruganX
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index c27408e4daae..90030ff299eb 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -1,4 +1,4 @@
+> -# SPDX-License-Identifier: GPL-2.0
+> +PDX-License-Identifier: GPL-2.0
 
-> On Sun, Aug 16, 2020 at 04:50:58PM +0200, Andreas Kemnade wrote:
-> > Hi,
-> >=20
-> > Seems that we have different hardware, so the first question is
-> > first the most interesting thing: how much does the hw actually differ,
-> > especially do they require different device trees?
-> >=20
-> > Can you provide me a photo of your hardware?
-> > Or is it a Shine 3? =20
->=20
-> It is a Shine 2HD
->=20
-> >=20
-> > Mine is at https://misc.andi.de1.cc/tolino2.jpg =20
->=20
-> Mine:
->=20
-> https://raw.githubusercontent.com/wiki/neuschaefer/linux/Tolino-Shine2HD.=
-jpg
->=20
->=20
-> It appears to be the next PCB revision (+4A3 instead of +4A2), but I
-> think the PCB layout looks the same. The Realtek-based Wifi module is
-> exactly where the CyberTan WC121 was.
->=20
+you didn't try to compile your patch
 
-=46rom other sources I also think these revisions are same besides wifi.
-
-So the only thing warranting separate dtbs might be the OOB IRQ thing.
-In the Tolino sources there is the function dhd_customer_oob_irq_map in
-the bcmdhd driver, and it gets its number from this:
-drivers/net/wireless/bcmdhd/Makefile:	-DCUSTOMER_HW2 -DCUSTOM_OOB_GPIO_NUM=
-=3D127 -DOOB_INTR_ONLY -DHW_OOB
-
-The brcmfmac driver is upstream and has devicetree support, but the
-rtl8189fs is not. For the Clara I am using this one:
-https://github.com/jwrdegoede/rtl8189ES_linux.git (branch 8189fs)
-It has no devicetree support, so things cannot be defined anyway.
-
-On one hand the hardware should be described in the devicetree as good
-as possible but on the other hand the OOB IRQ is not mandatory.
-
-Regards,
-Andreas
+-- 
+balbi
