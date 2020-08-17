@@ -2,91 +2,81 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7FDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C308BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DFC22076E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:34:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597696447;
-	bh=XH7I1hXSl/V42ispNDh72jA2vZtZMiSmxXBc8qiVVjY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jJGJKIILCZmc7XLCJaPC13bQb0x9OMg1fKsQUFk62xU6g7aMXQL2+hnD8POQ0kdrz
-	 R2++3k7Y9YVO8yrORa1yXPpn4gkzbeiY5fqvYQnN2NIO1oJpNlgwwTjTAUdRCpnqSp
-	 pTg4PLawuBR0ZBkhC4yVIuoS2RpE8RLpUjOCACko=
+	by mail.kernel.org (Postfix) with ESMTP id 9F1BB2076E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgHQUeG (ORCPT
+        id S1726473AbgHQUfW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:34:06 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45314 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgHQUeC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 16:34:02 -0400
-Received: by mail-il1-f194.google.com with SMTP id k4so15699624ilr.12;
-        Mon, 17 Aug 2020 13:34:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KxhMGNIUdZ1yfwF2CLcsEi0+t0a62c8/WaiKA5cVM88=;
-        b=g8OAt7gxC8qmoGRyPMQtwge+7heVahWxOvLAs/VdbFfOjNvl5QZiTi96miNi92m9iz
-         4vnzTUarhhJ1wVg1HTeqpkNU6y35YnB8yv8PYLgAX6oB3LRggLs/S4yuZP91qsD4jjuF
-         3jfRssIrZbTpTu2lwNFRQxGPQt4vW0K1tjkademORNbH+3HZ2oFm0du8Iw/kpuViEt87
-         3JWonRxOWwcRgpj1+uZb2pKyZcftkOSx+EtfsM6i0odFKgZWsWnXawlweQYtgkRrbuvz
-         joEIJh4ECVNrl6gZmJvW8EoC2imU94kPjK5q0gVF6W2qLF1SDEO5NiPNXDnoTRc7kOYU
-         b39g==
-X-Gm-Message-State: AOAM531jY8GaFXOx8AXWeoq4Uktl5nE0hsWyhfcSlrTLqzwIcy9YaLmt
-        fSFgygVoEGgz7eJazHk3Jw==
-X-Google-Smtp-Source: ABdhPJz0u0qcCb40TpJWzBjWVe/xCrvnFZFXsHJDFf2hrGTmCsSKIV3GWzi3eskdElcpf6E2jkjESA==
-X-Received: by 2002:a92:9adc:: with SMTP id c89mr14463950ill.272.1597696441144;
-        Mon, 17 Aug 2020 13:34:01 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id t88sm10627894ilk.26.2020.08.17.13.33.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 13:34:00 -0700 (PDT)
-Received: (nullmailer pid 1509185 invoked by uid 1000);
-        Mon, 17 Aug 2020 20:33:58 -0000
-Date:   Mon, 17 Aug 2020 14:33:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     TY Chang <tychang@realtek.com>
-Cc:     linux-realtek-soc@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, afaerber@suse.de,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org
-Subject: Re: [PATCH v3 5/9] dt-bindings: pinctrl: realtek: Add Realtek DHC
- SoC rtd1295
-Message-ID: <20200817203358.GA1508879@bogus>
-References: <20200813074908.889-1-tychang@realtek.com>
- <20200813074908.889-6-tychang@realtek.com>
+        Mon, 17 Aug 2020 16:35:22 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:40280 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbgHQUfV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 16:35:21 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id CB3611C0BB7; Mon, 17 Aug 2020 22:35:19 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 22:35:19 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, robh@kernel.org, marek.behun@nic.cz,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v33 0/6] LP50xx addition and remainder Multicolor patches
+Message-ID: <20200817203519.GA14622@amd>
+References: <20200812195020.13568-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
 Content-Disposition: inline
-In-Reply-To: <20200813074908.889-6-tychang@realtek.com>
+In-Reply-To: <20200812195020.13568-1-dmurphy@ti.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 13 Aug 2020 15:49:04 +0800, TY Chang wrote:
-> Add device tree binding Documentation for rtd1295
-> pinctrl driver.
-> 
-> Signed-off-by: TY Chang <tychang@realtek.com>
-> ---
->  .../pinctrl/realtek,rtd1295-pinctrl.yaml      | 192 ++++++++++++++++++
->  1 file changed, 192 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/realtek,rtd1295-pinctrl.yaml
-> 
 
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Hi!
 
-If a tag was not added on purpose, please state why and what changed.
+> These are the final patches from the original multicolor framework patchs=
+et.
+>=20
+> Changes made were to the LP50xx to rework regmap_defaults to eliminate us=
+ed
+> only once #defines.  Also fixed putting the child node in the dt parsing =
+and
+> changed regmap regcache type to flat.
 
+Thanks. I applied 1 and 2 of the series to the for-next branch.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--y0ulUmNC+osPPQO6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl866gcACgkQMOfwapXb+vK3/gCgm1Jg7V7qaZpX1QGT/ZtA4YAD
+8XIAnj3SrFGh3d1vaa5D5YEMboS1eNrv
+=+nSX
+-----END PGP SIGNATURE-----
+
+--y0ulUmNC+osPPQO6--
