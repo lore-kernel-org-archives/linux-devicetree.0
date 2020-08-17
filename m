@@ -2,89 +2,123 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5855C433EA
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDE3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E54320885
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:05:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dvTkpM3q"
+	by mail.kernel.org (Postfix) with ESMTP id 856652063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgHQDFV (ORCPT
+        id S1726402AbgHQDM5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:05:21 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:64599 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726424AbgHQDFU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 23:05:20 -0400
-X-UUID: 13ca9d3ca144428fab8404007b45e70e-20200817
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=MgYUQXlp69yp7mKaPcEZgq7fYcJApihBC9PfPYl1V5Y=;
-        b=dvTkpM3q6SBSndnfPmjK7zPgOp1UilpyIWwXLW1LF2s3ab+uMCO84DiAZELYBAAnrEE9KNXha9SWUNPJvW3z4b+K6Ux07NEKMN5/NEgVKUj8b+FTd6+p51ZYMJL3Dd2dUiacgqtRPtLY2Q3SWjwHiJmaVLSU3DK00R7MaRb70sE=;
-X-UUID: 13ca9d3ca144428fab8404007b45e70e-20200817
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <crystal.guo@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 154625755; Mon, 17 Aug 2020 11:05:17 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 17 Aug 2020 11:05:15 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 17 Aug 2020 11:05:14 +0800
-From:   Crystal Guo <crystal.guo@mediatek.com>
-To:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>
-CC:     <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <s-anna@ti.com>, <afd@ti.com>, <seiya.wang@mediatek.com>,
-        <stanley.chu@mediatek.com>, <yingjoe.chen@mediatek.com>,
-        <fan.chen@mediatek.com>, <yong.liang@mediatek.com>,
-        Crystal Guo <crystal.guo@mediatek.com>
-Subject: [v4,4/4] arm64: dts: mt8192: add infracfg_rst node
-Date:   Mon, 17 Aug 2020 11:03:24 +0800
-Message-ID: <20200817030324.5690-5-crystal.guo@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200817030324.5690-1-crystal.guo@mediatek.com>
-References: <20200817030324.5690-1-crystal.guo@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Sun, 16 Aug 2020 23:12:57 -0400
+Received: from mga18.intel.com ([134.134.136.126]:38840 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726235AbgHQDM4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 16 Aug 2020 23:12:56 -0400
+IronPort-SDR: o0Ih/1kZZShtLjfCXOjPWwM/n0fD+xOWHutOAdv9/bk4apAyour80EJ5XwCrBi+u3TQJ7KRE1H
+ M3jcG2FEHATQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="142250870"
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="142250870"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 20:12:55 -0700
+IronPort-SDR: M5r5OuFuobbfG2iocEG0ZGktlinSjJyIwvYVBtc1Gx/Qv5BDdy3v0kSQTtkjVA9p0X2U6P5yyV
+ jbq6rQCZuIUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
+   d="scan'208";a="496337042"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Aug 2020 20:12:52 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, p.zabel@pengutronix.de,
+        andriy.shevchenko@intel.com, balbi@kernel.org,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v8 0/2] phy: Add USB PHY support on Intel LGM SoC
+Date:   Mon, 17 Aug 2020 11:12:47 +0800
+Message-Id: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-YWRkIGluZnJhY2ZnX3JzdCBub2RlIHdoaWNoIGlzIGZvciBNVDgxOTIgcGxhdGZvcm0NCg0KU2ln
-bmVkLW9mZi1ieTogQ3J5c3RhbCBHdW8gPGNyeXN0YWwuZ3VvQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
-IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTkyLmR0c2kgfCAxMSArKysrKysrKysr
-LQ0KIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRp
-ZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5kdHNpIGIvYXJj
-aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRzaQ0KaW5kZXggOTMxZTFjYTE3MjIw
-Li5hMGNiOTkwNDcwNmIgMTAwNjQ0DQotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
-L210ODE5Mi5kdHNpDQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5k
-dHNpDQpAQCAtMTAsNiArMTAsNyBAQA0KICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQt
-Y29udHJvbGxlci9pcnEuaD4NCiAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcGluY3RybC9tdDgxOTIt
-cGluZnVuYy5oPg0KICNpbmNsdWRlIDxkdC1iaW5kaW5ncy9wb3dlci9tdDgxOTItcG93ZXIuaD4N
-CisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcmVzZXQvdGktc3lzY29uLmg+DQogDQogLyB7DQogCWNv
-bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTkyIjsNCkBAIC0yMTksOSArMjIwLDE3IEBADQogCQl9
-Ow0KIA0KIAkJaW5mcmFjZmc6IGluZnJhY2ZnQDEwMDAxMDAwIHsNCi0JCQljb21wYXRpYmxlID0g
-Im1lZGlhdGVrLG10ODE5Mi1pbmZyYWNmZyIsICJzeXNjb24iOw0KKwkJCWNvbXBhdGlibGUgPSAi
-bWVkaWF0ZWssbXQ4MTkyLWluZnJhY2ZnIiwgInN5c2NvbiIsICJzaW1wbGUtbWZkIjsNCiAJCQly
-ZWcgPSA8MCAweDEwMDAxMDAwIDAgMHgxMDAwPjsNCiAJCQkjY2xvY2stY2VsbHMgPSA8MT47DQor
-DQorCQkJaW5mcmFjZmdfcnN0OiByZXNldC1jb250cm9sbGVyIHsNCisJCQkJY29tcGF0aWJsZSA9
-ICJtZWRpYXRlayxpbmZyYS1yZXNldCIsICJ0aSxzeXNjb24tcmVzZXQiOw0KKwkJCQkjcmVzZXQt
-Y2VsbHMgPSA8MT47DQorCQkJCXRpLHJlc2V0LWJpdHMgPSA8DQorCQkJCQkweDE0MCAxNSAweDE0
-NCAxNSAwIDAgKEFTU0VSVF9TRVQgfCBERUFTU0VSVF9TRVQgfCBTVEFUVVNfTk9ORSkgLyogMDog
-cGNpZSAqLw0KKwkJCQk+Ow0KKwkJCX07DQogCQl9Ow0KIA0KIAkJcGVyaWNmZzogcGVyaWNmZ0Ax
-MDAwMzAwMCB7DQotLSANCjIuMTguMA0K
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
+---
+v8:
+  - Rebase to V5.9-rc1
+v7:
+  - No Change
+v6:
+  - No Change
+v5:
+  - As per Felipe and Greg's suggestion usb phy driver reviewed patches
+    changed the folder from drivers/usb/phy to drivers/phy
+  - Reviewed-By tag added in commit message
+v4:
+  - Andy's review comments addressed
+  - drop the excess error debug prints
+  - error check optimized
+  - merge the split line to one line
+v3:
+  - Andy's review comments update
+  - hardcode return value changed to actual return value from the callee
+  - add error check is fixed according to the above
+  - correct the assignment in redundant
+  - combine the split line into one line
+v2:
+  - Address Phillip's review comments
+  - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+  - re-design the assert and deassert fucntion calls as per review comments
+  - address kbuild bot warnings
+  - add the comments
+v1:
+  - initial version
+
+---
+dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+v8:
+  - No Change
+v7:
+  - Fixed the bot issue: usb-phy@e7e00000: '#phy-cells' is a required property
+v6:
+  - Fixed the bot issue.
+  - replace node-name by usb-phy@ in example
+v5:
+  - Reviewed-By tag added
+v4:
+  - No Change
+v3:
+  - No Change
+v2:
+  - No Change
+v1:
+  - initial version
+
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: Add USB PHY support for Intel LGM SoC
+  phy: Add USB3 PHY support for Intel LGM SoC
+
+ .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  58 +++++
+ drivers/phy/Kconfig                                |  11 +
+ drivers/phy/Makefile                               |   3 +-
+ drivers/phy/phy-lgm-usb.c                          | 278 +++++++++++++++++++++
+ 4 files changed, 349 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/phy/phy-lgm-usb.c
+
+-- 
+2.11.0
 
