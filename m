@@ -2,83 +2,93 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A70C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA69C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 21:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50F9C20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:52:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597697558;
-	bh=qq/Aq6gH91HmodHUuGstQfY62H36imeGZ9HxFm3ZU38=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C9x60fjtn+HPyVeRPk61cMPdjvkBYPBDJ835FkIZg+0D/VY/LQGODteZJh6jFDSbo
-	 Ztg4ojHPW/bPwx4pzCWtY04ZRw1KhWYFSw9I8+IKzzevehLNV76XCZmsjY9CBbILCu
-	 vnS+WMD3Et0iZl4AdzgtcBm61OBF7hhAadyfsi6Q=
+	by mail.kernel.org (Postfix) with ESMTP id F1F302065D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 21:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zRkKo65X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHQUwh (ORCPT
+        id S1727024AbgHQVAE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:52:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbgHQUwg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 16:52:36 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B15F22065D;
-        Mon, 17 Aug 2020 20:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597697555;
-        bh=qq/Aq6gH91HmodHUuGstQfY62H36imeGZ9HxFm3ZU38=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hS2LVsyU8NJ8bR4fK4TKRsh1j9DVIs2drJXjOHGbvQtu+jFjV4NV3NdQosReQua6P
-         9n8I9NIi+xITfG7i7wnRkxOwy13Ki2qzGPcHipkdQ2Olz6dGmdQWupXmAiia2TjEKA
-         6+d0V9wMAWqvt1xFEumTyNJVU6kYZstFp0EI0MSU=
-Received: by mail-ot1-f45.google.com with SMTP id h22so14518413otq.11;
-        Mon, 17 Aug 2020 13:52:35 -0700 (PDT)
-X-Gm-Message-State: AOAM530JTTqA1twM3ko5WKkKKmVLX6/TD/V0YstDQh0GJExO2jrB98ur
-        zUU6oqLB3SDpoM1lv6fhIVKYjl6m5sM4vsvUKg==
-X-Google-Smtp-Source: ABdhPJxaF0nYdin2AdmlzdGbIHiRf2CI5TWBbErlxvKR1Popk5mGNuff8kbE7smq29spDmT37s+s0UIO+v4pPWaQ6I4=
-X-Received: by 2002:a05:6830:1d8e:: with SMTP id y14mr12789084oti.129.1597697555093;
- Mon, 17 Aug 2020 13:52:35 -0700 (PDT)
+        Mon, 17 Aug 2020 17:00:04 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:47772 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726203AbgHQVAE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 17:00:04 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07HKxlrv041340;
+        Mon, 17 Aug 2020 15:59:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597697987;
+        bh=iPwtdiZ9M530IgYsmj2NfHt1KBrq4LqlIipS6kK6gvI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=zRkKo65XaDnGTtWtXBWKgoAbWO5sbdGTs98nwTO6egAb+DlqKLJVhYiiKX6VN49YF
+         L7vJ0qKnwevSx8VAit0JYJ3IiNfFQAKxoE8MQ+S6yiLHyGXC8oEE6BISDqXdV1tbbm
+         kcNrSl0ZwZ4UVQkYXRe2krDcbjbw9ODJKgiXZ+yU=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07HKxldj055398
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Aug 2020 15:59:47 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 17
+ Aug 2020 15:59:46 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 17 Aug 2020 15:59:46 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07HKxkKs128910;
+        Mon, 17 Aug 2020 15:59:46 -0500
+Subject: Re: [PATCH v33 0/6] LP50xx addition and remainder Multicolor patches
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <jacek.anaszewski@gmail.com>, <robh@kernel.org>,
+        <marek.behun@nic.cz>, <devicetree@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200812195020.13568-1-dmurphy@ti.com>
+ <20200817203519.GA14622@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <e8f53aea-2f33-e186-d74c-da1b94974511@ti.com>
+Date:   Mon, 17 Aug 2020 15:59:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200817160037.255972-1-jacopo+renesas@jmondi.org> <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
-In-Reply-To: <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 17 Aug 2020 14:52:23 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJFaewwrqM_vfGWGS5RGcJ2h144wV8dgWgCtO3hQQwF0w@mail.gmail.com>
-Message-ID: <CAL_JsqJFaewwrqM_vfGWGS5RGcJ2h144wV8dgWgCtO3hQQwF0w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: media: imx274: Convert to json-schema
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        devicetree@vger.kernel.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Leon Luo <leonl@leopardimaging.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200817203519.GA14622@amd>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 1:15 PM Jacopo Mondi <jacopo@jmondi.org> wrote:
->
-> Slightly better with a subject  =)
->
-> I made a formatting error, empty line between receivers list and Subject:
->
-> Sorry about this :)
+Pavel
 
-Just resend so all the tooling works. My scripts barfed on it as it
-seems to not be in lore.
+On 8/17/20 3:35 PM, Pavel Machek wrote:
+> Hi!
+>
+>> These are the final patches from the original multicolor framework patchset.
+>>
+>> Changes made were to the LP50xx to rework regmap_defaults to eliminate used
+>> only once #defines.  Also fixed putting the child node in the dt parsing and
+>> changed regmap regcache type to flat.
+> Thanks. I applied 1 and 2 of the series to the for-next branch.
 
-Rob
+Thanks.  The DT files are not really a major issue.  But the defconfig 
+is not sure who to ping to have them pull it.
+
+Maybe Linus W?
+
+Dan
+
+> Best regards,
+> 								Pavel
