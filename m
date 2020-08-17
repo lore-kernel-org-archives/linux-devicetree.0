@@ -2,190 +2,489 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB7EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04262C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97592065C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:47:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOs1HrhM"
+	by mail.kernel.org (Postfix) with ESMTP id C20082075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 13:52:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597672330;
+	bh=n+dykXqNvpeAPuYbAw75hZU7HRusRfJzlLIZHtMnwAY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZUebuziYDpYWK9VHT+Ty9twq0S33IOZVH7gaEs/WcLHU9/ZuCOfTzkDPyS2JtB5oC
+	 9ShRi0JELFz985D6yUiNlJS0aztmm8G1x358CH8fzUFOyTOavIEO4ivGyUG0qNXhPg
+	 nqr7uT7znoHJtGoZhBFBK37JSvz6IA2lJUZen2s8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728443AbgHQNrX (ORCPT
+        id S1728521AbgHQNwJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 09:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46174 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbgHQNrV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 09:47:21 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF70CC061389;
-        Mon, 17 Aug 2020 06:47:20 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b11so8390305lfe.10;
-        Mon, 17 Aug 2020 06:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kp2OAD0ICogQKk52QDNikt0ThpNhJxZYmPf9EL7yEaM=;
-        b=TOs1HrhMt19tbzY2EpvLz0ZtqqfJBYuaiUcH1BoiflXvgVQXzRskCMS5CRRklvjC6t
-         eGBk6qUdm0k2f+5hb2i9wIgxxxFkqiFEgGIAagH4vDpuaDc77YGkVmb311PB9CZD8CWJ
-         Ft5IktDWFGEnAg2wd6cNmMftbBUTKLoCA8/OTi92XxV/N9aeksT2NYMvYAtcK9BM4puK
-         5C1fpmjshcdns4dH5k77cNgcuTzOKGiYvHcItBYHR8Lxz1yMNoBAJNcrdav9DGC99obX
-         MROU8H7nS1Rvc4qO72R7wy7J+hZ6lAO2ayQ7a1UYRixcSCgdv/j+lydISSxyUtMZOQLd
-         eFMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kp2OAD0ICogQKk52QDNikt0ThpNhJxZYmPf9EL7yEaM=;
-        b=SfqJhxq9ILGsQLduW4O4lZolebG7eByky7mY6T+TNhfLJ+O1jg55Hc15YSwUlh2/53
-         TvbGSFdnqUB4KbYY0u/miE3U1f2SAHRiUr0xWix3Ttfljva8IlrXRl+tSpIqButiBe+i
-         Gpybxbjs7telE611H8VFtZ2lbZXjutp39IO/eUEyppWpnzEdYhaUvBeiokSGfmA6aqkg
-         KTPEqW319qfb/IsZfI9umXOzaukmns5KR1U8BaBCbyzs8ELlCZqIz4QXHWdVpjAhQUf4
-         0UssbwYJ/P583EmDu4O6GTt4q5xw4O7UfapYvyIcX6lcc8o8V2+3zyZBVkaExdNO5AIP
-         rVMA==
-X-Gm-Message-State: AOAM533RnuxcskePDvSiEEL0k7mN0B+/had3/YXrrSb8++JQA2jo3QBG
-        gGjUXFB7aZMsmtrjrsCGKxKg+Dapi7h7dGhBBYA=
-X-Google-Smtp-Source: ABdhPJyfeEonIvGC2m3t5jnrWcaI+aOxpZTWZT8u8NDEyeRVe4igLqnzXcGjizWkbSVMZm2wPBtA/32o9PnS1z7Skxw=
-X-Received: by 2002:a19:8957:: with SMTP id l84mr7184858lfd.66.1597672039259;
- Mon, 17 Aug 2020 06:47:19 -0700 (PDT)
+        Mon, 17 Aug 2020 09:52:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728537AbgHQNwJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 09:52:09 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2115C2065D;
+        Mon, 17 Aug 2020 13:52:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597672328;
+        bh=n+dykXqNvpeAPuYbAw75hZU7HRusRfJzlLIZHtMnwAY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=M4Ip7SsLk3ZZ3ynY2Bq0MqYR6SEk9mGSVxGxwSFJ7sSx5+aUjqHgD70otd12f0Vij
+         kfapUoBEYjC/pS7pAtw7mCvA9kZmBzIKl1mwSEWEdpDYuXwVdAM3P6vqBL7AnQJQC8
+         tLvBWVj8RrlxbSkXJuZeCPY0ibv+h/0phMSqRGy8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k7fYU-003a97-JR; Mon, 17 Aug 2020 14:52:06 +0100
 MIME-Version: 1.0
-References: <1596714629-16425-1-git-send-email-shengjiu.wang@nxp.com>
-In-Reply-To: <1596714629-16425-1-git-send-email-shengjiu.wang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 17 Aug 2020 10:47:08 -0300
-Message-ID: <CAOMZO5C34LyMEx0S+_W-OuHz=SjbzRGb8gf5+tj6MvsMGD0x_Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6sll-evk: Add audio sound card node
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 17 Aug 2020 14:52:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?An?= =?UTF-8?Q?dreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org,
+        Parthiban Nallathambi <pn@denx.de>,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: Re: [PATCH v4 2/3] irqchip: Add Actions Semi Owl SIRQ controller
+In-Reply-To: <addb413d192d88c076c6ed7f453aa693095bdd15.1597571397.git.cristian.ciocaltea@gmail.com>
+References: <cover.1597571397.git.cristian.ciocaltea@gmail.com>
+ <addb413d192d88c076c6ed7f453aa693095bdd15.1597571397.git.cristian.ciocaltea@gmail.com>
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <8e43fe6c6246bfd5347dc21b6f5c3f50@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: cristian.ciocaltea@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, afaerber@suse.de, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, pn@denx.de, sravanhome@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Shengjiu,
+On 2020-08-16 12:33, Cristian Ciocaltea wrote:
+> This controller appears on Actions Semi Owl family SoC's S500, S700 and
+> S900 and provides support for 3 external interrupt controllers through
 
-On Thu, Aug 6, 2020 at 8:55 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
->
-> Add audio sound card node, which depends on codec node,
-> SSI node, audmux node.
->
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Is that really 3 interrupt controllers? Or merely 3 interrupt lines?
+
+> dedicated SIRQ pins.
+> 
+> Each line can be independently configured as interrupt and triggers
+> on either of the edges (raising or falling) or either of the levels
+> (high or low). Each line can also be masked independently.
+> 
+> This is based on the patch series submitted by Parthiban Nallathambi:
+> https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
+> 
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> [cristi: optimized DT, various fixes/cleanups/improvements]
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 > ---
->  arch/arm/boot/dts/imx6sll-evk.dts | 74 +++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-> index 5ace9e6acf85..45bf5e61e960 100644
-> --- a/arch/arm/boot/dts/imx6sll-evk.dts
-> +++ b/arch/arm/boot/dts/imx6sll-evk.dts
-> @@ -132,6 +132,29 @@ panel_in: endpoint {
->                         };
->                 };
->         };
+>  drivers/irqchip/Makefile       |   1 +
+>  drivers/irqchip/irq-owl-sirq.c | 318 +++++++++++++++++++++++++++++++++
+>  2 files changed, 319 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-owl-sirq.c
+> 
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index 133f9c45744a..b8eb5b8b766d 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
+>  obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
+>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
+> +obj-$(CONFIG_ARCH_ACTIONS)		+= irq-owl-sirq.o
+>  obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
+>  obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
+>  obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+= exynos-combiner.o
+> diff --git a/drivers/irqchip/irq-owl-sirq.c 
+> b/drivers/irqchip/irq-owl-sirq.c
+> new file mode 100644
+> index 000000000000..29b7ffc40ac7
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-owl-sirq.c
+> @@ -0,0 +1,318 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Actions Semi Owl SoCs SIRQ interrupt controller driver
+> + *
+> + * Copyright (C) 2014 Actions Semi Inc.
+> + * David Liu <liuwei@actions-semi.com>
+> + *
+> + * Author: Parthiban Nallathambi <pn@denx.de>
+> + * Author: Saravanan Sekar <sravanhome@gmail.com>
+> + * Author: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> + */
 > +
-> +       sound {
-> +               compatible = "fsl,imx6sl-evk-wm8962", "fsl,imx-audio-wm8962";
-> +               model = "wm8962-audio";
-> +               audio-cpu = <&ssi2>;
-> +               audio-codec = <&codec>;
-> +               audio-routing =
-> +                       "Headphone Jack", "HPOUTL",
-> +                       "Headphone Jack", "HPOUTR",
-> +                       "Ext Spk", "SPKOUTL",
-> +                       "Ext Spk", "SPKOUTR",
-> +                       "AMIC", "MICBIAS",
-> +                       "IN3R", "AMIC";
-> +               mux-int-port = <2>;
-> +               mux-ext-port = <3>;
-> +               hp-det-gpio = <&gpio4 24 GPIO_ACTIVE_LOW>;
-> +       };
+> +#include <linux/interrupt.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +
+> +#define NUM_SIRQ			3
+> +
+> +#define INTC_EXTCTL_PENDING		BIT(0)
+> +#define INTC_EXTCTL_CLK_SEL		BIT(4)
+> +#define INTC_EXTCTL_EN			BIT(5)
+> +#define INTC_EXTCTL_TYPE_MASK		GENMASK(7, 6)
+> +#define INTC_EXTCTL_TYPE_HIGH		0
+> +#define INTC_EXTCTL_TYPE_LOW		BIT(6)
+> +#define INTC_EXTCTL_TYPE_RISING		BIT(7)
+> +#define INTC_EXTCTL_TYPE_FALLING	(BIT(6) | BIT(7))
+> +
+> +/* S900 SIRQ1 & SIRQ2 control register offsets, relative to SIRQ0 */
+> +#define INTC_EXTCTL1			0x0328
+> +#define INTC_EXTCTL2			0x032c
+> +
+> +struct owl_sirq_params {
+> +	/* INTC_EXTCTL reg shared for all three SIRQ lines */
+> +	bool reg_shared;
+> +	/* INTC_EXTCTL reg offsets relative to controller base address */
+> +	u16 reg_offset[NUM_SIRQ];
 > +};
 > +
-> +&audmux {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_audmux3>;
-> +       status = "okay";
->  };
->
->  &cpu0 {
-> @@ -247,6 +270,27 @@ vgen6_reg: vgen6 {
->         };
->  };
->
-> +&i2c3 {
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c3>;
-> +       status = "okay";
-> +
-> +       codec: wm8962@1a {
+> +struct owl_sirq_chip_data {
+> +	const struct owl_sirq_params *params;
+> +	void __iomem *base;
+> +	raw_spinlock_t lock;
+> +	u32 ext_irqs[NUM_SIRQ];
+> +	u8 trigger;
 
-Node names should be generic:
+Nit: Please align data structure members vertically:
 
-wm8962: audio-codec@1a
+struct owl_sirq_chip_data {
+	const struct owl_sirq_params *params;
+	void __iomem                 *base;
+	raw_spinlock_t               lock;
+	u32                          ext_irqs[NUM_SIRQ];
+	u8                           trigger;
+};
 
-> +               compatible = "wlf,wm8962";
-> +               reg = <0x1a>;
-> +               clocks = <&clks IMX6SLL_CLK_EXTERN_AUDIO>;
-> +               DCVDD-supply = <&vgen3_reg>;
-> +               DBVDD-supply = <&reg_aud3v>;
-> +               AVDD-supply = <&vgen3_reg>;
-> +               CPVDD-supply = <&vgen3_reg>;
-> +               MICVDD-supply = <&reg_aud3v>;
-> +               PLLVDD-supply = <&vgen3_reg>;
-> +               SPKVDD1-supply = <&reg_aud4v>;
-> +               SPKVDD2-supply = <&reg_aud4v>;
-> +       };
 > +};
 > +
->  &lcdif {
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_lcd>;
-> @@ -273,6 +317,10 @@ &snvs_pwrkey {
->         status = "okay";
->  };
->
-> +&ssi2 {
-> +       status = "okay";
+> +/* S500 and S700 SoCs */
+> +static const struct owl_sirq_params owl_sirq_s500_params = {
+> +	.reg_shared = true,
+> +	.reg_offset = { 0, 0, 0 },
 > +};
 > +
->  &uart1 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_uart1>;
-> @@ -329,6 +377,25 @@ &wdog1 {
->  };
->
->  &iomuxc {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_hog>;
-> +
-> +       pinctrl_audmux3: audmux3grp {
-> +               fsl,pins = <
-> +                       MX6SLL_PAD_AUD_TXC__AUD3_TXC            0x4130b0
-> +                       MX6SLL_PAD_AUD_TXFS__AUD3_TXFS          0x4130b0
-> +                       MX6SLL_PAD_AUD_TXD__AUD3_TXD            0x4110b0
-> +                       MX6SLL_PAD_AUD_RXD__AUD3_RXD            0x4130b0
-> +                       MX6SLL_PAD_AUD_MCLK__AUDIO_CLK_OUT      0x4130b0
-> +               >;
-> +       };
-> +
-> +       pinctrl_hog: hoggrp {
-> +               fsl,pins = <
-> +                       MX6SLL_PAD_GPIO4_IO24__GPIO4_IO24 0x17059 /* HP DETECT */
+> +/* S900 SoC */
+> +static const struct owl_sirq_params owl_sirq_s900_params = {
+> +	.reg_shared = false,
+> +	.reg_offset = { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
 
-Please place it under audmux3 group for consistency.
+0 *is* an offset, right? Why doesn't it have a name too?
+
+> +};
+> +
+> +static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32 
+> index)
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(data->base + data->params->reg_offset[index]);
+> +	if (data->params->reg_shared)
+> +		val = (val >> (2 - index) * 8) & 0xff;
+
+         base = (2 - index) * 8;
+         val = FIELD_GET(GENMASK(base + 7, base), val);
+
+> +
+> +	return val;
+> +}
+> +
+> +static void owl_sirq_write_extctl(struct owl_sirq_chip_data *data,
+> +				  u32 extctl, u32 index)
+> +{
+> +	u32 val;
+> +
+> +	if (data->params->reg_shared) {
+> +		val = readl_relaxed(data->base + data->params->reg_offset[index]);
+> +		val &= ~(0xff << (2 - index) * 8);
+> +		extctl &= 0xff;
+> +		extctl = (extctl << (2 - index) * 8) | val;
+
+Please make use of FIELD_PREP, FIELD_GET and GENMASK.
+
+> +	}
+> +
+> +	writel_relaxed(extctl, data->base + data->params->reg_offset[index]);
+> +}
+> +
+> +static void owl_sirq_clear_set_extctl(struct owl_sirq_chip_data *d,
+> +				      u32 clear, u32 set, u32 index)
+> +{
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	raw_spin_lock_irqsave(&d->lock, flags);
+> +	val = owl_sirq_read_extctl(d, index);
+> +	val &= ~clear;
+> +	val |= set;
+> +	owl_sirq_write_extctl(d, val, index);
+> +	raw_spin_unlock_irqrestore(&d->lock, flags);
+> +}
+> +
+> +static void owl_sirq_eoi(struct irq_data *data)
+> +{
+> +	struct owl_sirq_chip_data *chip_data = 
+> irq_data_get_irq_chip_data(data);
+> +
+> +	/*
+> +	 * Software must clear external interrupt pending, when interrupt 
+> type
+> +	 * is edge triggered, so we need per SIRQ based clearing.
+> +	 */
+> +	if (chip_data->trigger & (1 << data->hwirq))
+
+BIT(d->hwirq)
+
+But it also begs the question: we already have all the trigger 
+information
+in the irqdesc. Why do you need some additional bookkeeping?
+
+> +		owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_PENDING,
+> +					  data->hwirq);
+> +
+> +	irq_chip_eoi_parent(data);
+> +}
+> +
+> +static void owl_sirq_mask(struct irq_data *data)
+> +{
+> +	struct owl_sirq_chip_data *chip_data = 
+> irq_data_get_irq_chip_data(data);
+> +
+> +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_EN, 0, data->hwirq);
+> +	irq_chip_mask_parent(data);
+> +}
+> +
+> +static void owl_sirq_unmask(struct irq_data *data)
+> +{
+> +	struct owl_sirq_chip_data *chip_data = 
+> irq_data_get_irq_chip_data(data);
+> +
+> +	owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_EN, data->hwirq);
+> +	irq_chip_unmask_parent(data);
+> +}
+> +
+> +/*
+> + * GIC does not handle falling edge or active low, hence SIRQ shall be
+> + * programmed to convert falling edge to rising edge signal and active
+> + * low to active high signal.
+> + */
+> +static int owl_sirq_set_type(struct irq_data *data, unsigned int type)
+> +{
+> +	struct owl_sirq_chip_data *chip_data = 
+> irq_data_get_irq_chip_data(data);
+> +	u32 sirq_type;
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		sirq_type = INTC_EXTCTL_TYPE_LOW;
+> +		chip_data->trigger &= ~(1 << data->hwirq);
+> +		type = IRQ_TYPE_LEVEL_HIGH;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		sirq_type = INTC_EXTCTL_TYPE_HIGH;
+> +		chip_data->trigger &= ~(1 << data->hwirq);
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		sirq_type = INTC_EXTCTL_TYPE_FALLING;
+> +		chip_data->trigger |= 1 << data->hwirq;
+> +		type = IRQ_TYPE_EDGE_RISING;
+> +		break;
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		sirq_type = INTC_EXTCTL_TYPE_RISING;
+> +		chip_data->trigger |= 1 << data->hwirq;
+> +		break;
+> +	default:
+> +		WARN_ON(1);
+
+No need for this WARN_ON(), the core kernel is loud enough.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_TYPE_MASK, 
+> sirq_type,
+> +				  data->hwirq);
+> +
+> +	return irq_chip_set_type_parent(data, type);
+> +}
+> +
+> +static struct irq_chip owl_sirq_chip = {
+> +	.name		= "owl-sirq",
+> +	.irq_mask	= owl_sirq_mask,
+> +	.irq_unmask	= owl_sirq_unmask,
+> +	.irq_eoi	= owl_sirq_eoi,
+> +	.irq_set_type	= owl_sirq_set_type,
+> +	.irq_retrigger	= irq_chip_retrigger_hierarchy,
+
+How about irq_set_affinity? Or does it only exist on UP systems?
+
+> +};
+> +
+> +static int owl_sirq_domain_translate(struct irq_domain *d,
+> +				     struct irq_fwspec *fwspec,
+> +				     unsigned long *hwirq,
+> +				     unsigned int *type)
+> +{
+> +	if (!is_of_node(fwspec->fwnode))
+> +		return -EINVAL;
+> +
+> +	if (fwspec->param_count != 2 || fwspec->param[0] >= NUM_SIRQ)
+> +		return -EINVAL;
+> +
+> +	*hwirq = fwspec->param[0];
+> +	*type = fwspec->param[1];
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_sirq_domain_alloc(struct irq_domain *domain, unsigned 
+> int virq,
+> +				 unsigned int nr_irqs, void *data)
+> +{
+> +	struct owl_sirq_chip_data *chip_data = domain->host_data;
+> +	struct irq_fwspec *fwspec = data;
+> +	struct irq_fwspec parent_fwspec;
+> +	irq_hw_number_t hwirq;
+> +	unsigned int type;
+> +	int ret;
+> +
+> +	if (WARN_ON(nr_irqs != 1))
+> +		return -EINVAL;
+> +
+> +	ret = owl_sirq_domain_translate(domain, fwspec, &hwirq, &type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		type = IRQ_TYPE_EDGE_RISING;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		type = IRQ_TYPE_LEVEL_HIGH;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &owl_sirq_chip,
+> +				      chip_data);
+> +
+> +	parent_fwspec.fwnode = domain->parent->fwnode;
+> +	parent_fwspec.param_count = 3;
+> +	parent_fwspec.param[0] = 0;	/* SPI */
+> +	parent_fwspec.param[1] = chip_data->ext_irqs[hwirq];
+> +	parent_fwspec.param[2] = type;
+> +
+> +	return irq_domain_alloc_irqs_parent(domain, virq, 1, &parent_fwspec);
+> +}
+> +
+> +static const struct irq_domain_ops owl_sirq_domain_ops = {
+> +	.translate	= owl_sirq_domain_translate,
+> +	.alloc		= owl_sirq_domain_alloc,
+> +	.free		= irq_domain_free_irqs_common,
+> +};
+> +
+> +static const struct of_device_id owl_sirq_of_match[] = {
+> +	{ .compatible = "actions,s500-sirq", .data = &owl_sirq_s500_params },
+> +	{ .compatible = "actions,s700-sirq", .data = &owl_sirq_s500_params },
+> +	{ .compatible = "actions,s900-sirq", .data = &owl_sirq_s900_params },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static int __init owl_sirq_of_init(struct device_node *node,
+> +				   struct device_node *parent)
+> +{
+> +	const struct of_device_id *match;
+> +	struct irq_domain *domain, *parent_domain;
+> +	struct owl_sirq_chip_data *chip_data;
+> +	int ret, i;
+> +
+> +	parent_domain = irq_find_host(parent);
+> +	if (!parent_domain) {
+> +		pr_err("%pOF: failed to find sirq parent domain\n", node);
+> +		return -ENXIO;
+> +	}
+> +
+> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> +	if (!chip_data)
+> +		return -ENOMEM;
+> +
+> +	match = of_match_node(owl_sirq_of_match, node);
+> +	if (!match) {
+> +		pr_warn("owl-sirq: assuming S500/S700 compatible controller\n");
+> +		chip_data->params = &owl_sirq_s500_params;
+> +	} else {
+> +		chip_data->params = match->data;
+> +	}
+> +
+> +	raw_spin_lock_init(&chip_data->lock);
+> +
+> +	chip_data->base = of_iomap(node, 0);
+> +	if (!chip_data->base) {
+> +		pr_err("%pOF: failed to map sirq registers\n", node);
+> +		ret = -ENXIO;
+> +		goto out_free;
+> +	}
+> +
+> +	ret = of_property_read_variable_u32_array(node, 
+> "actions,ext-interrupts",
+> +						  chip_data->ext_irqs,
+> +						  NUM_SIRQ, NUM_SIRQ);
+> +	if (ret < NUM_SIRQ) {
+> +		pr_err("%pOF: failed to read sirq interrupts\n", node);
+> +		goto out_unmap;
+> +	}
+> +
+> +	/* Set 24MHz external interrupt clock freq */
+> +	for (i = 0; i < NUM_SIRQ; i++)
+> +		owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_CLK_SEL, i);
+> +
+> +	domain = irq_domain_add_hierarchy(parent_domain, 0, NUM_SIRQ, node,
+> +					  &owl_sirq_domain_ops, chip_data);
+> +	if (!domain) {
+> +		pr_err("%pOF: failed to add domain\n", node);
+> +		ret = -ENOMEM;
+> +		goto out_unmap;
+> +	}
+> +
+> +	return 0;
+> +
+> +out_unmap:
+> +	iounmap(chip_data->base);
+> +out_free:
+> +	kfree(chip_data);
+> +
+> +	return ret;
+> +}
+> +
+> +IRQCHIP_DECLARE(owl_sirq, "actions,owl-sirq", owl_sirq_of_init);
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
