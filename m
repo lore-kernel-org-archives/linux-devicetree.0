@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C696DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 17:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABBDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAC9E20716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 17:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A3CC20758
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GXqhKU6Y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lH4mJXL6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbgHQRmf (ORCPT
+        id S2389749AbgHQSCS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 13:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54474 "EHLO
+        Mon, 17 Aug 2020 14:02:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731546AbgHQRm1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 13:42:27 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A953BC061344
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 10:42:26 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id m8so8583255pfh.3
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 10:42:26 -0700 (PDT)
+        with ESMTP id S2389680AbgHQSCB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 14:02:01 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19947C061343
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 11:02:01 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ep8so8031747pjb.3
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 11:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=dOiaQirXBI3rQ6qT+kTTGtB6bOoUlvCJmrcPgoAcFag=;
-        b=GXqhKU6YA+o0z+HzDuOj1wrYpCBvfRBexpZQHyS0GUUx+GzyM0VfexnpuHmqXovRgw
-         ibR94ySpDu1Mvk8/yRLNFsBhOkav76Jd3gAqNGlw86D9WuzxNtPswfqjrNle6Cw5BONA
-         //OPKcywsNON0CBA0/EzKmHeffwzlRuvDMuBE=
+        bh=WDw5eMluEqJ71UREIfdhLPB079gyndxPuX/d/PHa2Q8=;
+        b=lH4mJXL67WGnjmOPFlC/XMt7+biiQPvdCIitAOA7CnDS96ZV60CLgfv8bglKeuCSu6
+         4SfaZpWGc+jg2/VTpMrRebhg63dsBW0e+GKH7i2JdiltjEMkX8M2aFxFahU6JdFifONV
+         t8EVV3qa9mFYayJE4ty3p9v42scjEUUEmPDpc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=dOiaQirXBI3rQ6qT+kTTGtB6bOoUlvCJmrcPgoAcFag=;
-        b=ZnlVyq28Frc3f81jj6cYCmjuTBc0AffTvGUd2vmQPwe9fKIztYsKEENxDfajcXTMP/
-         I08c4beKGPETF0lJmKavk9po56BxlLFIGNOVrgNE9pIrM3qoMhIzhhCt4p1dda19/nDe
-         fUpfJQSdZ3xLqc28fRny7YoSTMOZbNIvbRpanW5RanfgkTXyxh503s3DthIoOZ2tM2sg
-         6O7k81sZ54MyZSEmmo0RA4wg56VzKN7XWCAVr7qgMqzXF+UKv9cypUYlMfBiyO+1ljlw
-         xZNfFIbILFP9glUIC1lXIUhPYbIZEhkcpq3nk8TjMhxiWeo+VDYbNnVEYarB73n5hLpI
-         38Hw==
-X-Gm-Message-State: AOAM531dFGPjV2YJ/kb1d0URaIGdDBnV6hn70FFC/BYcQpEdpDHFdRel
-        Tl4LiO+njdo8Y2nJ2t44NCzHQw==
-X-Google-Smtp-Source: ABdhPJyHQmuEwO2cQ7Y9JRh9ksUJUsr15yCYIESJvvghfsOXzwabIpJ9rsWYsfbyI5WvYGNtVBWcBQ==
-X-Received: by 2002:a63:7a06:: with SMTP id v6mr10410151pgc.441.1597686145978;
-        Mon, 17 Aug 2020 10:42:25 -0700 (PDT)
+        bh=WDw5eMluEqJ71UREIfdhLPB079gyndxPuX/d/PHa2Q8=;
+        b=snhjnv659g23LXKp7OkGuda/MzUQcPFhrBwgqw80Wo7aL7oXJX/pcvBsargnQdpuhq
+         3xgn5hZvU+q+99S8TliYF/wWrm2DTqj31hgyc/becpCWC5U7jt5UyIQf360qIxv2p5Vp
+         4dq2PtLoC6hpmzBTdfZtU70QxMHMnj59qv5cUFDUleE8bIeGtKwQy6QiGJ7FgeWkNd9/
+         ZM9FELcmevHPIeUBLCK+yZVVE/9n70PyosU/gxRnhhCJEX0T2ahuRDtuh8DocrQRg7so
+         QNovkS1yMZjZP/v67pb0Ljssq7ccFNGwEwnIwLxwS1khdVR1Ydpjot1QKAvXpQQTq7dQ
+         SuYA==
+X-Gm-Message-State: AOAM533BiU/RxWklOAgBZLcoYUUmqqCJSptMU9W7xnicu0iuC7euCl6g
+        MGBNkVhr+6Aq22CStZP7oYMQmWRALgIWcQ==
+X-Google-Smtp-Source: ABdhPJzTSklBYKNKgwQHtVwq6E0KgdOo2lDcZNazJWEFqsY1hZgpv5RGw21eM5NAFArPgo5KBNW+lg==
+X-Received: by 2002:a17:90b:3891:: with SMTP id mu17mr13119099pjb.160.1597687320442;
+        Mon, 17 Aug 2020 11:02:00 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id h1sm21195366pfr.39.2020.08.17.10.42.24
+        by smtp.gmail.com with ESMTPSA id x136sm20161179pfc.28.2020.08.17.11.01.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 10:42:24 -0700 (PDT)
-Date:   Mon, 17 Aug 2020 10:42:22 -0700
+        Mon, 17 Aug 2020 11:01:59 -0700 (PDT)
+Date:   Mon, 17 Aug 2020 11:01:58 -0700
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     satya priya <skakit@codeaurora.org>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -64,51 +64,66 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, akashast@codeaurora.org,
         rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V2 3/3] tty: serial: qcom_geni_serial: Fix the UART
- wakeup issue
-Message-ID: <20200817174222.GC2995789@google.com>
+Subject: Re: [PATCH V2 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
+ BT uart
+Message-ID: <20200817180158.GD2995789@google.com>
 References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
- <1595563082-2353-4-git-send-email-skakit@codeaurora.org>
+ <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1595563082-2353-4-git-send-email-skakit@codeaurora.org>
+In-Reply-To: <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 09:28:02AM +0530, satya priya wrote:
-> As a part of system suspend we call uart_port_suspend from the
-> Serial driver, which calls set_mctrl passing mctrl as NULL. This
-> makes RFR high(NOT_READY) during suspend.
-> 
-> Due to this BT SoC is not able to send wakeup bytes to UART during
-> suspend. Included if check for non-suspend case to keep RFR low
-> during suspend.
+On Fri, Jul 24, 2020 at 09:28:01AM +0530, satya priya wrote:
+> Add sleep pin ctrl for BT uart, and also change the bias
+> configuration to match Bluetooth module.
 > 
 > Signed-off-by: satya priya <skakit@codeaurora.org>
 > ---
 > Changes in V2:
->  - This patch fixes the UART flow control issue during suspend.
->    Newly added in V2.
+>  - This patch adds sleep state for BT UART. Newly added in V2.
 > 
->  drivers/tty/serial/qcom_geni_serial.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42 ++++++++++++++++++++++++++++-----
+>  1 file changed, 36 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-> index 07b7b6b..7108dfc 100644
-> --- a/drivers/tty/serial/qcom_geni_serial.c
-> +++ b/drivers/tty/serial/qcom_geni_serial.c
-> @@ -242,7 +242,7 @@ static void qcom_geni_serial_set_mctrl(struct uart_port *uport,
->  	if (mctrl & TIOCM_LOOP)
->  		port->loopback = RX_TX_CTS_RTS_SORTED;
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index 26cc491..bc919f2 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> @@ -469,20 +469,50 @@
 >  
-> -	if (!(mctrl & TIOCM_RTS))
-> +	if ((!(mctrl & TIOCM_RTS)) && (!(uport->suspended)))
+>  &qup_uart3_default {
+>  	pinconf-cts {
+> -		/*
+> -		 * Configure a pull-down on 38 (CTS) to match the pull of
+> -		 * the Bluetooth module.
+> -		 */
+> +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
 
-Why all these parentheses, instead of:
+Has the pull from the Bluetooth module been removed or did the previous config
+incorrectly claim that the Bluetooth module has a pull-down?
 
-    	if (!(mctrl & TIOCM_RTS) && !uport->suspended)
+>  		pins = "gpio38";
+> +		bias-disable;
+> +	};
+> +
+> +	pinconf-rts {
+> +		/* We'll drive 39 (RTS), so configure pull-down */
+> +		pins = "gpio39";
+> +		drive-strength = <2>;
+>  		bias-pull-down;
+> +	};
+> +
+> +	pinconf-tx {
+> +		/* We'll drive 40 (TX), so no pull */
 
-?
+The rationales for RTS and TX contradict each other. According to the comment
+the reason to configure a pull-down on RTS is that it is driven by the host.
+Then for TX the reason to configure no pull is that it is driven by the host.
+
+Please make sure the comments *really* describe the rationale, otherwise they
+are just confusing.
