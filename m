@@ -2,113 +2,88 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39E1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D77C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0DA420674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:15:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tu3HPHWa"
+	by mail.kernel.org (Postfix) with ESMTP id 5C5CC20674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbgHQUPi (ORCPT
+        id S1727062AbgHQUZM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 16:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726228AbgHQUPi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 16:15:38 -0400
-X-Greylist: delayed 934 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 17 Aug 2020 13:15:37 PDT
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F23C061389;
-        Mon, 17 Aug 2020 13:15:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=MQxwrtyOSC0pqe1VevhdSFunt/8xuDEPA6IOemddH4o=; b=Tu3HPHWaEXY96Wq4yxc3gzDq4d
-        m39dWE3VGFrwZ+xgRjkiplje1pfUG92mS0Nf9FEQq9/mCI6ldmIMUC+djq/pu/7CAIgVwOGLihIbc
-        Bs/8i/xz7FtV6zZTn9ZWhOZZJurqYSPdirLVVF14700DDi6oKYlNpZuiqrM9GuMrmQSM=;
-Received: from p5dcc3306.dip0.t-ipconnect.de ([93.204.51.6] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1k7lXa-000549-1W; Mon, 17 Aug 2020 22:15:34 +0200
-Date:   Mon, 17 Aug 2020 22:15:32 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Adam Ford <aford173@gmail.com>
-Cc:     Linux-OMAP <linux-omap@vger.kernel.org>,
-        Adam Ford-BE <aford@beaconembedded.com>,
-        =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
- omap34/36 families
-Message-ID: <20200817221532.5d150648@aktux>
-In-Reply-To: <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
-References: <20200817133931.11785-1-aford173@gmail.com>
-        <20200817215953.59607c11@aktux>
-        <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 17 Aug 2020 16:25:12 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39384 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726228AbgHQUZM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 16:25:12 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id B40CA1C0BB6; Mon, 17 Aug 2020 22:25:08 +0200 (CEST)
+Date:   Mon, 17 Aug 2020 22:25:08 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>, vishwa@linux.ibm.com,
+        andy.shevchenko@gmail.com, robh+dt@kernel.org,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmurphy@ti.com,
+        jacek.anaszewski@gmail.com
+Subject: Re: [PATCH v2 1/2] dt-bindings: leds: pca955x: Add IBM
+ implementation compatible string
+Message-ID: <20200817202508.GA13123@amd>
+References: <20200803145055.5203-1-eajames@linux.ibm.com>
+ <20200803145055.5203-2-eajames@linux.ibm.com>
+ <20200812195747.GA2605701@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Content-Disposition: inline
+In-Reply-To: <20200812195747.GA2605701@bogus>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 17 Aug 2020 15:02:27 -0500
-Adam Ford <aford173@gmail.com> wrote:
 
-> On Mon, Aug 17, 2020 at 2:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
-> >
-> > On Mon, 17 Aug 2020 08:39:31 -0500
-> > Adam Ford <aford173@gmail.com> wrote:
-> >  
-> > > The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
-> > > depending on commercial or industrial temperature ratings.
-> > >
-> > > This patch expands the thermal information to include the limits of 90
-> > > and 105C for alert and critical.  It sets the coolings-cells for the
-> > > 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
-> > >
-> > > For boards who never use industrial temperatures, these can be
-> > > changed on their respective device trees with something like:
-> > >
-> > > &cpu_alert0 {
-> > >       temperature = <85000>; /* millicelsius */
-> > > };
-> > >
-> > > &cpu_crit {
-> > >       temperature = <90000>; /* millicelsius */
-> > > };
-> > >
-> > > OMAP3_THERMAL will need to be enabled.  It is off by default.
-> > >  
-> > hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
-> > got stuck somewhere. It still seems not to work. Shouldn't that patch
-> > be applied first?  
-> 
-> I rebased the idle stuff, and now I get errors, so I haven't pushed it
-> yet.  I put a note that OMAP3_THERMAL is off by default, but this
-> patch would at least get the framing in there.  I know at least two of
-> us that use 1GHZ processors which are not supposed to run at that
-> speed above 90MHz, so the idea was to tolerate the higher current for
-> now, and when the idle stuff works, we'll enable the OMAP3_THERMAL by
-> default.
-> 
-yes, makes sense, so with this patch we have the choice to either
-optimize for low speeds and currents (by disabling OMAP3_THERMAL and
-1GHz) or high speeds (by enabling OMAP3_THERMAL and 1 Ghz).
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Andreas
+On Wed 2020-08-12 13:57:47, Rob Herring wrote:
+> On Mon, 03 Aug 2020 09:50:54 -0500, Eddie James wrote:
+> > IBM created an implementation of the PCA9552 on a PIC16F
+> > microcontroller. Document the new compatible string for this device.
+> >=20
+> > Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > ---
+> >  Documentation/devicetree/bindings/leds/leds-pca955x.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Thanks, I applied the series.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8656QACgkQMOfwapXb+vJ/vgCggeE9wN9rcZ//IBVRvJwgJupz
+L5cAoKKJ85ZMJGg6Sf/GbCNP2talpcIQ
+=wI1t
+-----END PGP SIGNATURE-----
+
+--2oS5YaxWCcQjTEyO--
