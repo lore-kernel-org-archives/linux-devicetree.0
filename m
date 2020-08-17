@@ -2,272 +2,86 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83E8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839D4C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8FB204EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69EBD204EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CXQWgNkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbgHQTP1 (ORCPT
+        id S1730270AbgHQTS1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:15:27 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:34097 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392164AbgHQTPS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:15:18 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 1929A240009;
-        Mon, 17 Aug 2020 19:15:12 +0000 (UTC)
-Date:   Mon, 17 Aug 2020 21:18:55 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Leon Luo <leonl@leopardimaging.com>,
-        mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH] dt-bindings: media: imx274: Convert to json-schema
-Message-ID: <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
-References: <20200817160037.255972-1-jacopo+renesas@jmondi.org>
+        Mon, 17 Aug 2020 15:18:27 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52256 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392131AbgHQTS0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:18:26 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07HJIEDF041828;
+        Mon, 17 Aug 2020 14:18:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597691894;
+        bh=80uJ5kKs7K6ojF+rJ/lSvYTiOi3jFw4mNWv2W/UGfYA=;
+        h=From:To:CC:Subject:Date;
+        b=CXQWgNkTw+S21ozwtWoHygnVTOEVH1sVSDh3VZ+pUp+ftF1BeIUiBIvfJTcNGm1L+
+         K0N98YWUbw+7guB7liQbPtpa0ZATzm3ue2otVTjdHarb62aeSYMX6FFMYwrKBfMxJT
+         9FPT0BoWeuB/pak1zL0kTx5jnxKPfHsACTcMgvaA=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07HJIEM0102013
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Aug 2020 14:18:14 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 17
+ Aug 2020 14:18:13 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 17 Aug 2020 14:18:13 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07HJIDeW094892;
+        Mon, 17 Aug 2020 14:18:13 -0500
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+To:     <sre@kernel.org>, <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <dmurphy@ti.com>, Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Subject: [PATCH v1 0/2] Introduce the BQ256XX family of chargers
+Date:   Mon, 17 Aug 2020 14:17:21 -0500
+Message-ID: <20200817191723.22416-1-r-rivera-matos@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200817160037.255972-1-jacopo+renesas@jmondi.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Slightly better with a subject  =)
+Hello,
 
-I made a formatting error, empty line between receivers list and Subject:
+This patchset introduces the bq256xx family of charging ICs. The bq256xx ICs
+are highly integrated, buck, switching chargers intended for use in 
+smartphones, tablets, and portable electronics.
 
-Sorry about this :)
+Ricardo Rivera-Matos (2):
+  dt-bindings: power: Add the bq256xx dt bindings
+  power: supply: bq256xx: Introduce the BQ256XX charger driver
 
-On Mon, Aug 17, 2020 at 06:00:37PM +0200, Jacopo Mondi wrote:
-> Subject: [PATCH] dt-bindings: media: imx274: Convert to json-schema
->
-> Convert the imx274 bindings document to json-schema and update
-> the MAINTAINERS file accordingly.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../bindings/media/i2c/sony,imx214.txt        |  53 --------
->  .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 125 insertions(+), 54 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
->
-> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> deleted file mode 100644
-> index f11f28a5fda4..000000000000
-> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> +++ /dev/null
-> @@ -1,53 +0,0 @@
-> -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> -
-> -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-> -an active array size of 4224H x 3200V. It is programmable through an I2C
-> -interface.
-> -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-> -throughput of 1.2Gbps/lane.
-> -
-> -
-> -Required Properties:
-> -- compatible: Shall be "sony,imx214".
-> -- reg: I2C bus address of the device. Depending on how the sensor is wired,
-> -       it shall be <0x10> or <0x1a>;
-> -- enable-gpios: GPIO descriptor for the enable pin.
-> -- vdddo-supply: Chip digital IO regulator (1.8V).
-> -- vdda-supply: Chip analog regulator (2.7V).
-> -- vddd-supply: Chip digital core regulator (1.12V).
-> -- clocks: Reference to the xclk clock.
-> -- clock-frequency: Frequency of the xclk clock.
-> -
-> -Optional Properties:
-> -- flash-leds: See ../video-interfaces.txt
-> -- lens-focus: See ../video-interfaces.txt
-> -
-> -The imx214 device node shall contain one 'port' child node with
-> -an 'endpoint' subnode. For further reading on port node refer to
-> -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> -
-> -Required Properties on endpoint:
-> -- data-lanes: check ../video-interfaces.txt
-> -- link-frequencies: check ../video-interfaces.txt
-> -- remote-endpoint: check ../video-interfaces.txt
-> -
-> -Example:
-> -
-> -	camera-sensor@1a {
-> -		compatible = "sony,imx214";
-> -		reg = <0x1a>;
-> -		vdddo-supply = <&pm8994_lvs1>;
-> -		vddd-supply = <&camera_vddd_1v12>;
-> -		vdda-supply = <&pm8994_l17>;
-> -		lens-focus = <&ad5820>;
-> -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
-> -		clock-frequency = <24000000>;
-> -		port {
-> -			imx214_ep: endpoint {
-> -				data-lanes = <1 2 3 4>;
-> -				link-frequencies = /bits/ 64 <480000000>;
-> -				remote-endpoint = <&csiphy0_ep>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> new file mode 100644
-> index 000000000000..ddd4627214b1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> @@ -0,0 +1,124 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> +
-> +maintainers:
-> +  - Ricardo Ribalda <ribalda@kernel.org>
-> +
-> +description: -|
-> +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-> +  an active array size of 4224H x 3200V. It is programmable through an I2C
-> +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
-> +  maximum throughput of 1.2Gbps/lane.
-> +
-> +properties:
-> +  compatible:
-> +    const: sony,imx214
-> +
-> +  reg:
-> +    description: -|
-> +      I2C device address. Depends on how the sensor is wired, it shall be
-> +    enum:
-> +      - 0x10
-> +      - 0x1a
-> +
-> +  clocks:
-> +    description: Reference to the xclk clock.
-> +    maxItems: 1
-> +
-> +  clock-frequency:
-> +    description: Frequency of the xclk clock in Hz.
-> +
-> +  enable-gpios:
-> +    description: GPIO descriptor for the enable pin.
-> +    maxItems: 1
-> +
-> +  vdddo-supply:
-> +    description: Chip digital IO regulator (1.8V).
-> +    maxItems: 1
-> +
-> +  vdda-supply:
-> +    description: Chip analog regulator (2.7V).
-> +    maxItems: 1
-> +
-> +  vddd-supply:
-> +    description: Chip digital core regulator (1.12V).
-> +    maxItems: 1
-> +
-> +  flash-leds:
-> +    description: See ../video-interfaces.txt
-> +
-> +  lens-focus:
-> +    description: See ../video-interfaces.txt
-> +
-> +  port:
-> +    type: object
-> +    description: |
-> +      The device node must contain one 'port' child node for its digital output
-> +      video port, in accordance with the video interface bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        properties:
-> +          remote-endpoint:
-> +            description: See ../video-interfaces.txt
-> +
-> +          data-lanes:
-> +            description: See ../video-interfaces.txt
-> +
-> +          link-frequencies:
-> +            description: See ../video-interfaces.txt
-> +
-> +        required:
-> +          - data-lanes
-> +          - link-frequencies
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-frequency
-> +  - enable-gpios
-> +  - vdddo-supply
-> +  - vdda-supply
-> +  - vddd-supply
-> +  - port
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        camera-sensor@1a {
-> +            compatible = "sony,imx214";
-> +            reg = <0x1a>;
-> +            vdddo-supply = <&pm8994_lvs1>;
-> +            vddd-supply = <&camera_vddd_1v12>;
-> +            vdda-supply = <&pm8994_l17>;
-> +            lens-focus = <&ad5820>;
-> +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> +            clocks = <&camera_clk>;
-> +            clock-frequency = <24000000>;
-> +
-> +            port {
-> +                imx214_ep: endpoint {
-> +                    data-lanes = <1 2 3 4>;
-> +                    link-frequencies = /bits/ 64 <480000000>;
-> +                    remote-endpoint = <&csiphy0_ep>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6c8e98238a7b..d1a6173d3b64 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15918,7 +15918,7 @@ M:	Ricardo Ribalda <ribalda@kernel.org>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
->  T:	git git://linuxtv.org/media_tree.git
-> -F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
->  F:	drivers/media/i2c/imx214.c
->
->  SONY IMX219 SENSOR DRIVER
-> --
-> 2.27.0
->
+ .../bindings/power/supply/bq256xx.yaml        |   99 +
+ drivers/power/supply/Kconfig                  |   11 +
+ drivers/power/supply/Makefile                 |    1 +
+ drivers/power/supply/bq256xx_charger.c        | 1769 +++++++++++++++++
+ 4 files changed, 1880 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+ create mode 100644 drivers/power/supply/bq256xx_charger.c
+
+-- 
+2.28.0
+
