@@ -2,141 +2,109 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2539FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 00:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945E5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 00:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01FFC20708
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 00:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A7520708
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 00:09:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CL5AvQ5M"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZevMh0c0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbgHQAEf (ORCPT
+        id S1726585AbgHQAJ1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 20:04:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60420 "EHLO
+        Sun, 16 Aug 2020 20:09:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbgHQAEd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 20:04:33 -0400
+        with ESMTP id S1726108AbgHQAJZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 16 Aug 2020 20:09:25 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C12A7C061786
-        for <devicetree@vger.kernel.org>; Sun, 16 Aug 2020 17:04:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC56C061786
+        for <devicetree@vger.kernel.org>; Sun, 16 Aug 2020 17:09:25 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7990AF9;
-        Mon, 17 Aug 2020 02:04:22 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A3BA6F9;
+        Mon, 17 Aug 2020 02:09:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597622662;
-        bh=Osusw+izUNrAmOEtzq1RB1qpF6rnUbzPz1Lw1TxdgP4=;
+        s=mail; t=1597622963;
+        bh=0DixlhBTmdxj8HBI+2zbq1LpGmNVk/QcrtOPxI8AWFQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CL5AvQ5MvcT0iFtM5YiYFaU6cp5mQ0E1EJTV8BK7qo5iOV0lMYhqLJxBsxe/a52uD
-         4feOIqe2/bEhkkootjhvJsS52eL9tCa9J/jeL1SMUG+px7lW7WWzSy70r/GDLhHj02
-         NwmNWw1l+Kem06si58mXYjoeyb3SZJlaVMdoLLao=
-Date:   Mon, 17 Aug 2020 03:04:06 +0300
+        b=ZevMh0c0dITM3LShxTFexCYRkfoZtdr0lEwEUM5vy0ipgtGdAQa191F83HX/KTtFP
+         MHdKiIiwMdbo8wAGMN/syGo46kKPZ0xvp+gc2M6xYelLOTl/UcPJNznZjA3x+NPsRp
+         SqC6QGgMacHEvI/X8Ql7RbC88ZceKTB8FIcpIEz0=
+Date:   Mon, 17 Aug 2020 03:09:08 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel@lists.freedesktop.org, Marek Vasut <marex@denx.de>,
-        devicetree@vger.kernel.org,
-        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+To:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/8] dt-bindings: display: mxsfb: Add and fix compatible
- strings
-Message-ID: <20200817000406.GC7729@pendragon.ideasonboard.com>
+Subject: Re: [PATCH 3/8] dt-bindings: display: mxsfb: Add a bus-width
+ endpoint property
+Message-ID: <20200817000908.GD7729@pendragon.ideasonboard.com>
 References: <20200813012910.13576-1-laurent.pinchart@ideasonboard.com>
- <20200813012910.13576-3-laurent.pinchart@ideasonboard.com>
- <20200816063933.GC1201814@ravnborg.org>
+ <20200813012910.13576-4-laurent.pinchart@ideasonboard.com>
+ <20200815212838.GC134339@bogon.m.sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200816063933.GC1201814@ravnborg.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200815212838.GC134339@bogon.m.sigxcpu.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
+Hi Guido,
 
-On Sun, Aug 16, 2020 at 08:39:33AM +0200, Sam Ravnborg wrote:
-> On Thu, Aug 13, 2020 at 04:29:04AM +0300, Laurent Pinchart wrote:
-> > Additional compatible strings have been added in DT source for the
-> > i.MX6SL, i.MX6SLL, i.MX6UL and i.MX7D without updating the bindings.
-> > Most of the upstream DT sources use the fsl,imx28-lcdif compatible
-> > string, which mostly predates the realization that the LCDIF in the
-> > i.MX6 and newer SoCs have extra features compared to the i.MX28.
+On Sat, Aug 15, 2020 at 11:28:38PM +0200, Guido Günther wrote:
+> On Thu, Aug 13, 2020 at 04:29:05AM +0300, Laurent Pinchart wrote:
+> > When the PCB routes the display data signals in an unconventional way,
+> > the output bus width may differ from the bus width of the connected
+> > panel or encoder. For instance, when a 18-bit RGB panel has its R[5:0],
+> > G[5:0] and B[5:0] signals connected to LCD_DATA[7:2], LCD_DATA[15:10]
+> > and LCD_DATA[23:18], the output bus width is 24 instead of 18 when the
+> > signals are routed to LCD_DATA[5:0], LCD_DATA[11:6] and LCD_DATA[17:12].
 > > 
-> > Update the bindings to add the missing compatible strings, with the
-> > correct fallback values. This fails to validate some of the upstream DT
-> > sources. Instead of adding the incorrect compatible fallback to the
-> > binding, the sources should be updated separately.
+> > Add a bus-width property to describe this data routing.
 > > 
 > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 > > ---
-> >  .../devicetree/bindings/display/mxsfb.yaml     | 18 +++++++++++++-----
-> >  1 file changed, 13 insertions(+), 5 deletions(-)
+> >  Documentation/devicetree/bindings/display/mxsfb.yaml | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
 > > 
 > > diff --git a/Documentation/devicetree/bindings/display/mxsfb.yaml b/Documentation/devicetree/bindings/display/mxsfb.yaml
-> > index 202381ec5bb7..ec6533b1d4a3 100644
+> > index ec6533b1d4a3..d15bb8edc29f 100644
 > > --- a/Documentation/devicetree/bindings/display/mxsfb.yaml
 > > +++ b/Documentation/devicetree/bindings/display/mxsfb.yaml
-> > @@ -15,11 +15,19 @@ description: |
+> > @@ -58,6 +58,18 @@ properties:
+> >          type: object
 > >  
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -      - fsl,imx23-lcdif
-> > -      - fsl,imx28-lcdif
-> > -      - fsl,imx6sx-lcdif
-> > -      - fsl,imx8mq-lcdif
-> > +    oneOf:
-> > +      - enum:
-> > +          - fsl,imx23-lcdif
-> > +          - fsl,imx28-lcdif
-> > +          - fsl,imx6sx-lcdif
+> >          properties:
+> > +          data-shift:
 >
-> Indent correct.
-> 
-> > +      - items:
-> > +        - enum:
-> > +          - fsl,imx6sl-lcdif
-> > +          - fsl,imx6sll-lcdif
-> > +          - fsl,imx6ul-lcdif
-> > +          - fsl,imx7d-lcdif
-> > +          - fsl,imx8mq-lcdif
->
-> Indent shall be two more spaces like above.
-> (This is at least my best uderstanding)
+> Shouldn't that be bus-width ?
 
-I think you're right. I wonder why dt_binding_check doesn't complain.
-I'll fix it anyway.
+Absolutely. I'll fix that.
 
-> > +        - const: fsl,imx6sx-lcdif
-> 
-> With the above the following compatibles are supported:
-> 
-> 	"fsl,imx23-lcdif"
-> 	"fsl,imx28-lcdif"
-> 	"fsl,imx6sx-lcdif"
-> 	"fsl,imx8mq-lcdif"
-> 
-> 	"fsl,imx6sl-lcdif", "fsl,imx6sx-lcdif"
-> 	"fsl,imx6sll-lcdif", "fsl,imx6sx-lcdif"
-> 	"fsl,imx6ul-lcdif", "fsl,imx6sx-lcdif"
-> 	"fsl,imx7d-lcdif", "fsl,imx6sx-lcdif"
-> 	"fsl,imx8mq-lcdif", "fsl,imx6sx-lcdif"
-> 
-> So the fallback value is the later "fsl,imx6sx-lcdif" which looks ok.
-> 
-> With indent fixed (or explained why I am wrong):
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> 
+> > +            enum: [16, 18, 24]
+> > +            description: |
+> > +              The output bus width. This value overrides the configuration
+> > +              derived from the connected device (encoder or panel). It should
+> > +              only be specified when PCB routing of the data signals require a
+> > +              different bus width on the LCDIF and the connected device. For
+> > +              instance, when a 18-bit RGB panel has its R[5:0], G[5:0] and
+> > +              B[5:0] signals connected to LCD_DATA[7:2], LCD_DATA[15:10] and
+> > +              LCD_DATA[23:18] instead of LCD_DATA[5:0], LCD_DATA[11:6] and
+> > +              LCD_DATA[17:12], bus-width should be set to 24.
+> > +
+> >            remote-endpoint:
+> >              $ref: /schemas/types.yaml#/definitions/phandle
 > >  
-> >    reg:
-> >      maxItems: 1
 
 -- 
 Regards,
