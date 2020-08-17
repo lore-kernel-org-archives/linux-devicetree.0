@@ -2,191 +2,90 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDA4C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D81DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B5420578
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:18:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KHItjRgF"
+	by mail.kernel.org (Postfix) with ESMTP id 3FF34204EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597692479;
+	bh=a8lgxrLDh7umN2n93WqCKz3gbEhIYdnZ7uW6BDMdotg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VAw4VI4UyPadsA7T9Rw5axstJ8Un42OqhPwFWZrGbPa8mWR2gnXVV9G2yfs6hDmpl
+	 2r9y5l5G/tCsSGEPPR1Zz1v4UjGIK4cHjDO37RUcjM2dP7l4By0LVHPhhgYB78SsNT
+	 yo8FH7arufQOk4KMy4zAKhqKFYiERJzsvUSYQx94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404169AbgHQTSm (ORCPT
+        id S1731977AbgHQT16 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:18:42 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53118 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387473AbgHQTS1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:18:27 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07HJIE8w003381;
-        Mon, 17 Aug 2020 14:18:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597691894;
-        bh=4JAd00xMiWrjvk4rZNCeC62B1mGwyRj0ceLiUfWiEyw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=KHItjRgFleFmDsE9dlxLeOe4Livzma9D8/Aq823EOdA3mF6c0HN6IJElEn30q/gzP
-         iEp2yyL0dmrmTL4vYjodBH3hkxbQ7z7bRpcjQ9HxlA0IQ8jG16kkoxKxV4GmEZVm3Y
-         rSGFZi9+r5O3h+uAPCDRg/ns8yfM/I/Z9/gmuszw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07HJIEGI087266;
-        Mon, 17 Aug 2020 14:18:14 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 17
- Aug 2020 14:18:14 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 17 Aug 2020 14:18:13 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07HJID9I119292;
-        Mon, 17 Aug 2020 14:18:13 -0500
-From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-To:     <sre@kernel.org>, <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmurphy@ti.com>, Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
-Date:   Mon, 17 Aug 2020 14:17:22 -0500
-Message-ID: <20200817191723.22416-2-r-rivera-matos@ti.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200817191723.22416-1-r-rivera-matos@ti.com>
-References: <20200817191723.22416-1-r-rivera-matos@ti.com>
+        Mon, 17 Aug 2020 15:27:58 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35005 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731973AbgHQT1y (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:27:54 -0400
+Received: by mail-io1-f65.google.com with SMTP id s189so18832765iod.2
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 12:27:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=H7GXHyDeVIh5lEncSQMJjs8Q/7+ajAT7eoqNf5xLW4Y=;
+        b=SrBB73JZTxu4vttcxUp4p4QQ4iIMlr+ZNGpU/MoolwjqAXlUzIZgleoAzIb0sofzpg
+         KtarPeQ0bTMAoToRkTB4dQbTdIez6Fvr7n9+0gWsBstwDrSbJ0oUUopl5NmCtwIwEQTM
+         nL+Kzy+Nqgcv7fg1yM/bHG+f381+ppM1QfQHyFwwej5igwIIN3Wo+6PtduauztLk9UiH
+         qFgFpN+2oNGxDKR2AB5NjXhQ1baYqULu4UjHaUF6sVmkWEogbLgMdKYQmkh/l3yRY1TA
+         NDivc+2/DO9pgo+c5jY98DetMLKZ4f0f99lxBFlc26OXOOWTU3Df3WK1IinAPzBAQbDo
+         j0cg==
+X-Gm-Message-State: AOAM533IBYLKNmEHuCN9B64zjpsuYlJ48XWOmigNnI1qqcELCC6hHAQl
+        Yvh7Ju8LxdYbn0aOuDTWZQ==
+X-Google-Smtp-Source: ABdhPJzrfNS/B9pPPi2ZWeHn90wB7Wyt+7r/wY07Qz6B8BIm2GueyDVMe0o8H0uBgt630m6k+Q4WMQ==
+X-Received: by 2002:a02:cf26:: with SMTP id s6mr16003073jar.44.1597692473359;
+        Mon, 17 Aug 2020 12:27:53 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id c88sm6039755ilg.5.2020.08.17.12.27.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 12:27:52 -0700 (PDT)
+Received: (nullmailer pid 1399062 invoked by uid 1000);
+        Mon, 17 Aug 2020 19:27:51 -0000
+Date:   Mon, 17 Aug 2020 13:27:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: imx25-pinfunc: Fix GPT function names
+Message-ID: <20200817192751.GA1398927@bogus>
+References: <20200813202410.5670-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200813202410.5670-1-u.kleine-koenig@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the bindings for the bq256xx series of battery charging ICs.
+On Thu, 13 Aug 2020 22:24:10 +0200, Uwe Kleine-König wrote:
+> According to the reference manual of the i.MX25 the function name for
+> the GPT capture input is called CAPIN1. So fix the names to follow the
+> same naming scheme as used for the other pads and functions. Also add
+> one missing pad function.
+> 
+> There are no mainline users that needs adaption.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx25-pinfunc.h | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
 
-Datasheets:
-- https://www.ti.com/lit/ds/symlink/bq25600.pdf
-- https://www.ti.com/lit/ds/symlink/bq25601.pdf
-- https://www.ti.com/lit/ds/symlink/bq25600d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25601d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25611d.pdf
-- https://www.ti.com/lit/ds/symlink/bq25618.pdf
-- https://www.ti.com/lit/ds/symlink/bq25619.pdf
-
-Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
----
- .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-
-diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-new file mode 100644
-index 000000000000..67db4ba9fdb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
-@@ -0,0 +1,99 @@
-+# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: TI bq256xx Switch Mode Buck Charger
-+
-+maintainers:
-+  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-+
-+description: |
-+  The bq256xx devices are a family of highly-integrated battery charge
-+  management and system power management ICs for single cell Li-ion and Li-
-+  polymer batteries.
-+
-+  Datasheets:
-+    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
-+    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,bq25600
-+      - ti,bq25601
-+      - ti,bq25600d
-+      - ti,bq25601d
-+      - ti,bq25611d
-+      - ti,bq25618
-+      - ti,bq25619
-+
-+  reg:
-+    maxItems: 1
-+
-+  ti,watchdog-timer:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Watchdog timer in milli seconds. 0 (default) disables the watchdog
-+    minimum: 0
-+    maximum: 160000
-+    enum: [ 0, 40000, 80000, 160000]
-+
-+  input-voltage-limit-microvolt:
-+    description: |
-+       Minimum input voltage limit in micro volts with a 100000 micro volt step
-+    minimum: 3900000
-+    maximum: 5400000
-+
-+  input-current-limit-microamp:
-+    description: |
-+       Maximum input current limit in micro amps with a 100000 micro amp step
-+    minimum: 100000
-+    maximum: 3200000
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    bat: battery {
-+      compatible = "simple-battery";
-+      constant-charge-current-max-microamp = <2040000>;
-+      constant-charge-voltage-max-microvolt = <4352000>;
-+      precharge-current-microamp = <180000>;
-+      termination-current-microamp = <180000>;
-+    };
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c0 {
-+      pinctrl-names = "default";
-+      pinctrl-0 = <&i2c2_pins>;
-+
-+      status = "okay";
-+      clock-frequency = <400000>;
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      bq25601@6b {
-+        compatible = "ti,bq25601";
-+        reg = <0x6b>;
-+        monitored-battery = <&bat>;
-+
-+        interrupt-parent = <&gpio1>;
-+        interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
-+        watchdog-timer = <40000>;
-+
-+        input-voltage-limit-microvolt = <4500000>;
-+        input-current-limit-microamp = <2400000>;
-+       };
-+    };
-+...
--- 
-2.28.0
-
+Acked-by: Rob Herring <robh@kernel.org>
