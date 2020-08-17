@@ -2,133 +2,117 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA683C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE16C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8846B2054F
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F9B206DA
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 05:59:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skidata.com header.i=@skidata.com header.b="TiQa2LaC"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Tbfi4l6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgHQFpd (ORCPT
+        id S1726366AbgHQF7f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 01:45:33 -0400
-Received: from mail2.skidata.com ([91.230.2.91]:36143 "EHLO mail2.skidata.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726308AbgHQFpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 01:45:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=skidata.com; i=@skidata.com; q=dns/txt; s=selector1;
-  t=1597643132; x=1629179132;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=iq6E0tROTvyWLYPqPO1Jep0gNCBrkGzldGCPeMg+7YQ=;
-  b=TiQa2LaC6eg/8+EgVhdWz+/BS136xFBuZa7mM9clCoGr+VaF0NJ81RC6
-   l1YY4PERPYIct8aW7qt60fHqYW77KzNLZCkr1RONk1befRqCcXmOQhqst
-   rynS6YSA7V4SIMCbyTPi5Hc+Xg+aYA5QZ5Kmv+BvmckHPo2p0j17CMwNo
-   ESf+24whxtcLrLALVFu7c3P//l2A0VY5gLtcwZqiGBulWLJIOIu3cZq1k
-   LqRRe2KXSgIWwzRZ22Itv976yeYXlp9DnpHVhCY199+vBibkeyI6SYacT
-   A4tOFYCCu5SMRN35loVB7RnW23pqNHCFtc/ee+JDyr9dTO3yB7EjntMqI
-   g==;
-IronPort-SDR: rZkcM47agA66V7rz7feaMdOluzUqk0bpZwPNFBS4nRIuINpiwtoyuu5PvhKvd7GxTCNDYB6kXY
- q+8aPl4488YU/sH1xOfKWdB3CMlyy7Wmb9WhpewAqI8mDDklAMKIou3zPjCur2Svcz1ng1Oj8Z
- Zy7WxGnwP3YJWucu6wpo6YHFvYGa5JHGgsVwTkK/rDs/Q9q8+zXUyPiuiSF72FTDQ+I8JVsk45
- na+58Ifn3fOwiZaehwKqTEjAYKrWjacs9o1T8V1VGA9ce2sOYhvzzUx0Gd/5S3O54kP7NGQAU7
- SbE=
-X-IronPort-AV: E=Sophos;i="5.76,322,1592863200"; 
-   d="scan'208";a="2642498"
-Date:   Mon, 17 Aug 2020 07:38:20 +0200
-From:   Richard Leitner <richard.leitner@skidata.com>
-To:     Robin Gong <yibin.gong@nxp.com>
-CC:     <mark.rutland@arm.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <catalin.marinas@arm.com>, <vkoul@kernel.org>,
-        <will.deacon@arm.com>, <shawnguo@kernel.org>, <festevam@gmail.com>,
-        <s.hauer@pengutronix.de>, <martin.fuzzey@flowbird.group>,
-        <u.kleine-koenig@pengutronix.de>, <dan.j.williams@intel.com>,
-        <matthias.schiffer@ew.tq-group.com>, <frieder.schrempf@kontron.de>,
-        <r.schwebel@pengutronix.de>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kernel@pengutronix.de>,
-        <dmaengine@vger.kernel.org>, <linux-imx@nxp.com>
-Subject: Re: [PATCH v12 04/12] dmaengine: imx-sdma: remove duplicated
- sdma_load_context
-Message-ID: <20200817053820.GB551027@pcleri>
-References: <1597161231-32303-1-git-send-email-yibin.gong@nxp.com>
- <1597161231-32303-5-git-send-email-yibin.gong@nxp.com>
+        Mon, 17 Aug 2020 01:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHQF7e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 01:59:34 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B22F6C061388;
+        Sun, 16 Aug 2020 22:59:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=HZyl5q+jnCvX1fyjf0e5q25W96mTDQeUnBuw8XcBjho=; b=Tbfi4l6EOYQY5R4kZrucj5ihlG
+        Pa24jwPDsNSiAcgBzp880XtY4ytb+tBXkFJnRNQvQfJxkOr0Nii6011LKqUcs35/fhyQYn+b4XwNL
+        CltUqh8GD4Ww7OiU3tQ5DHo8fMtqzAY7U4++7NisYLeFiwnKcSoMObWYX1x25O1Xigkc=;
+Received: from p200300ccff0cdf001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0c:df00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k7YAy-0004Iy-4D; Mon, 17 Aug 2020 07:59:20 +0200
+Date:   Mon, 17 Aug 2020 07:59:18 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, marcel.ziswiler@toradex.com,
+        sebastien.szymanski@armadeus.com, rjones@gateworks.com,
+        leoyang.li@nxp.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine
+ 2 HD
+Message-ID: <20200817075918.4e53e6b8@aktux>
+In-Reply-To: <20200816155751.GB103070@latitude>
+References: <20200815193336.21598-1-andreas@kemnade.info>
+        <20200815193336.21598-3-andreas@kemnade.info>
+        <20200816125247.GA103070@latitude>
+        <20200816165058.3a17d97a@aktux>
+        <20200816155751.GB103070@latitude>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1597161231-32303-5-git-send-email-yibin.gong@nxp.com>
-X-Originating-IP: [192.168.111.252]
-X-ClientProxiedBy: sdex6srv.skidata.net (192.168.111.84) To
- sdex5srv.skidata.net (192.168.111.83)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 11:53:43PM +0800, Robin Gong wrote:
-> Since sdma_transfer_init() will do sdma_load_context before any
-> sdma transfer, no need once more in sdma_config_channel().
-> 
-> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
+Hi,
 
-Hi Robin,
-thanks for the pointer to this patch.
+On Sun, 16 Aug 2020 17:57:51 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
-As you suggested I've tested the two patches on my custom i.MX6DL
-board. Therefore please feel free to add:
+> On Sun, Aug 16, 2020 at 04:50:58PM +0200, Andreas Kemnade wrote:
+> > Hi,
+> >=20
+> > Seems that we have different hardware, so the first question is
+> > first the most interesting thing: how much does the hw actually differ,
+> > especially do they require different device trees?
+> >=20
+> > Can you provide me a photo of your hardware?
+> > Or is it a Shine 3? =20
+>=20
+> It is a Shine 2HD
+>=20
+> >=20
+> > Mine is at https://misc.andi.de1.cc/tolino2.jpg =20
+>=20
+> Mine:
+>=20
+> https://raw.githubusercontent.com/wiki/neuschaefer/linux/Tolino-Shine2HD.=
+jpg
+>=20
+>=20
+> It appears to be the next PCB revision (+4A3 instead of +4A2), but I
+> think the PCB layout looks the same. The Realtek-based Wifi module is
+> exactly where the CyberTan WC121 was.
+>=20
 
-Tested-by: Richard Leitner <richard.leitner@skidata.com>
+=46rom other sources I also think these revisions are same besides wifi.
 
-regards;rl
+So the only thing warranting separate dtbs might be the OOB IRQ thing.
+In the Tolino sources there is the function dhd_customer_oob_irq_map in
+the bcmdhd driver, and it gets its number from this:
+drivers/net/wireless/bcmdhd/Makefile:	-DCUSTOMER_HW2 -DCUSTOM_OOB_GPIO_NUM=
+=3D127 -DOOB_INTR_ONLY -DHW_OOB
 
-> ---
->  drivers/dma/imx-sdma.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index d305b80..5411e01e 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1137,7 +1137,6 @@ static void sdma_set_watermarklevel_for_p2p(struct sdma_channel *sdmac)
->  static int sdma_config_channel(struct dma_chan *chan)
->  {
->  	struct sdma_channel *sdmac = to_sdma_chan(chan);
-> -	int ret;
->  
->  	sdma_disable_channel(chan);
->  
-> @@ -1177,9 +1176,7 @@ static int sdma_config_channel(struct dma_chan *chan)
->  		sdmac->watermark_level = 0; /* FIXME: M3_BASE_ADDRESS */
->  	}
->  
-> -	ret = sdma_load_context(sdmac);
-> -
-> -	return ret;
-> +	return 0;
->  }
->  
->  static int sdma_set_channel_priority(struct sdma_channel *sdmac,
-> -- 
-> 2.7.4
-> 
-> 
+The brcmfmac driver is upstream and has devicetree support, but the
+rtl8189fs is not. For the Clara I am using this one:
+https://github.com/jwrdegoede/rtl8189ES_linux.git (branch 8189fs)
+It has no devicetree support, so things cannot be defined anyway.
 
--- 
-Richard Leitner
-Hardware R&D / Senior Embedded Linux Engineer
+On one hand the hardware should be described in the devicetree as good
+as possible but on the other hand the OOB IRQ is not mandatory.
 
-SKIDATA | Driving Your Digital Future
-
-SKIDATA GmbH
-Untersbergstraße 40 | 5083 Grödig/Salzburg | Austria
-[t] +43-6246-888-4245 | [m] +43-664-88616370
-[w] www.skidata.com
+Regards,
+Andreas
