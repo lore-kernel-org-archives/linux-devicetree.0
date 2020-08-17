@@ -2,43 +2,43 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7732C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55911C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0AB4204EC
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3110D20760
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597689709;
-	bh=XGnEgmFBVdyc/oUXakYFZiKhW4THFttuZ2JyUOkUtJw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SBXt8PQX3BSTTlyQiu80o+iN6MAEIFzsq9slhLXgeuHL6FUuPhQvpn7DKMXhG52nJ
-	 bNUiqx7amOfk6Lj9q76WehnOFpoe5+RtRtk3IKOkp20XcgCbb0QV95Uyah9QFy7TQe
-	 v1HfCVEH4kG6iezRKQnaYT9EUpBnq0sBHrs+UE8A=
+	s=default; t=1597689750;
+	bh=qiszeG2DETfNLk1h6LSV90irfUrBtYajyeWRmTxA694=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Hnk6h9uzQmm8InttZd3nkBVVLBoLqf/fOHJEemNeVbmhjHnvq3iYEV5dVKcTAZnVM
+	 ZonyO4YKHNy3v1H3S2Bz0ZZkTO2USYPhCZ1FDmzrm7zxh8/G9ZLvYcvX0pQD6Tgb/k
+	 lljpKd6g3J6wlLNFoLyD6sNqBOXNw/a7UpR3tKPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391108AbgHQSlq (ORCPT
+        id S2390756AbgHQSmF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:41:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50150 "EHLO mail.kernel.org"
+        Mon, 17 Aug 2020 14:42:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389597AbgHQSlk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:41:40 -0400
+        id S1730096AbgHQSlp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:41:45 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73123204EC;
-        Mon, 17 Aug 2020 18:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6055220578;
+        Mon, 17 Aug 2020 18:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597689700;
-        bh=XGnEgmFBVdyc/oUXakYFZiKhW4THFttuZ2JyUOkUtJw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jHawPRZQrrd5xxfRQtHweKENED5UFeclNEs/TU/nUtthQQZGnCL0R1AJ+Sk46mDyQ
-         icRCngDuUc/ZyulO0k04YaBQYT5wRmJvOyTh0Yqj/ernE9YH+1S6cpkWclCHRgMYQA
-         3d20KnUo5XBAY2DvCeRAvg2R4oADhEYrn4Kfvg4k=
+        s=default; t=1597689704;
+        bh=qiszeG2DETfNLk1h6LSV90irfUrBtYajyeWRmTxA694=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lv2IgNnZkzv+mgS45C9KIxlOTvkSf7h5MH8+Iv2FkzTFNjx3mof2bkTNavcAtcIfL
+         e+cXrZwa+NHWgNQ1SFZ4cqU9Gk5AL4YjEN0uavWL8VEnpEfU1e8ISYgOdZmBq6HTfp
+         SUaGcskUd1ARRz1e73RekcSM0nCSqpLWRklimvOk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Paul Cercueil <paul@crapouillou.net>,
         Rob Herring <robh+dt@kernel.org>,
@@ -50,46 +50,51 @@ To:     Paul Cercueil <paul@crapouillou.net>,
         linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 1/2] MAINTAINERS: Remove JZ4780 DMA driver entry
-Date:   Mon, 17 Aug 2020 20:41:30 +0200
-Message-Id: <20200817184131.907-1-krzk@kernel.org>
+Subject: [PATCH v2 2/2] MAINTAINERS: Add linux-mips mailing list to JZ47xx entries
+Date:   Mon, 17 Aug 2020 20:41:31 +0200
+Message-Id: <20200817184131.907-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200817184131.907-1-krzk@kernel.org>
+References: <20200817184131.907-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The entry for MIPS Ingenic JZ4780 DMA driver is not up to date anymore.
-Zubair Lutfullah Kakakhel's email bounces and no maintenance is
-provided.
+The entries for JZ47xx SoCs and its drivers lacked MIPS mailing list.
+Only MTD NAND driver pointed linux-mtd.  Add linux-mips so the relevant
+patches will get attention of MIPS developers.
 
-Suggested-by: Paul Cercueil <paul@crapouillou.net>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Paul Cercueil <paul@crapouillou.net>
 
 ---
 
 Changes since v1:
-1. New patch
+1. Do not update DMA driver entry
+2. Add ack
 ---
- MAINTAINERS | 5 -----
- 1 file changed, 5 deletions(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index b0a742ce8f2c..9ab3a7fd6451 100644
+index 9ab3a7fd6451..33d0ea35d8b4 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -8580,11 +8580,6 @@ F:	include/uapi/rdma/
- F:	samples/bpf/ibumad_kern.c
- F:	samples/bpf/ibumad_user.c
- 
--INGENIC JZ4780 DMA Driver
--M:	Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
--S:	Maintained
--F:	drivers/dma/dma-jz4780.c
--
+@@ -8583,11 +8583,13 @@ F:	samples/bpf/ibumad_user.c
  INGENIC JZ4780 NAND DRIVER
  M:	Harvey Hunt <harveyhuntnexus@gmail.com>
  L:	linux-mtd@lists.infradead.org
++L:	linux-mips@vger.kernel.org
+ S:	Maintained
+ F:	drivers/mtd/nand/raw/ingenic/
+ 
+ INGENIC JZ47xx SoCs
+ M:	Paul Cercueil <paul@crapouillou.net>
++L:	linux-mips@vger.kernel.org
+ S:	Maintained
+ F:	arch/mips/boot/dts/ingenic/
+ F:	arch/mips/include/asm/mach-jz4740/
 -- 
 2.17.1
 
