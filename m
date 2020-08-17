@@ -2,102 +2,112 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38402C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B4DC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE7C20716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597692946;
-	bh=/KvwqAUSHWzgBWBZkg0o5e4o2nzy6/qz61tCsI3y8dY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wZ3cXKaDgM/vgr1xEeT169ECOP3hmrbJdqig0caK9Itfl/YMHL9efhFdRWFrLmZsi
-	 NG6EP9E2UJeqRMjtaRBgSOhFKA6dTlu5ndiEkmzERKc8Nxlv5D7vEuBkY+nMQ066pm
-	 Ijdn9oZ3uMgdt3iouNQk1bNyFQ1/KpmiHUEnClAc=
+	by mail.kernel.org (Postfix) with ESMTP id B683520716
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HGpqSDw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730056AbgHQTfm (ORCPT
+        id S2392412AbgHQTgH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:35:42 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37259 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730068AbgHQTfj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:35:39 -0400
-Received: by mail-il1-f194.google.com with SMTP id p13so15570268ilh.4;
-        Mon, 17 Aug 2020 12:35:38 -0700 (PDT)
+        Mon, 17 Aug 2020 15:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2392396AbgHQTgC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:36:02 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5551C061389
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 12:36:01 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p24so19168627ejf.13
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 12:36:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VwFw5hgUmgRtXhrUbQX2TB/ljF4qHz9d6xiixFTiMJw=;
+        b=HGpqSDw3fP6ZBWEE+ohC8/MRyRcWLSXgCc70YwJNS0CpNnz2GpL3DFcmbnaYoEvOyj
+         W42olQhdk1YTsaeuOP74p9ElmBvSOEhCL/fYqkqiAtEkJOEk9cIJThg7cKitD0nMDXeA
+         fYI92dRFyrOoLciA5IBfIeYblE9VwJg8/+s2eaOFRa7Qi+oumXELb/33P/Pidw7jmD8+
+         /Ba9iTlQyEQasdL09wMhZsNNrOQkgG2zKR21DlTb+s7NDoaAIyRhiBllGjtTymZhvsLi
+         IZPyvHuM8N5OpEUnZsmg5M+ZSCVzdFwBYI2d+nKpUf5Er16KfVCgMev6gPb4CaLcsga4
+         znpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iAgp3OtOJ2V/PDJ3pq372B1DRl70fIx00JIpk/BWygU=;
-        b=WD83jij1Rbas2aoH26bst4Wd2IAZsamOy69COePEP242UJVeliasG91aV7xS3fMGP7
-         zo0EoAACW4gJMuGLQzG8bVBwVR75yBOePYP0SdltQxjm0HZkGHZR8aOSkPGvxKNa47Ov
-         67WYEd3wShUexT/2jx7D0To8LCDs2sv6/L36akxJOoPvrKhGD258NT9JrZt539EEvH8c
-         F4V/SNEdalpsxdxOU9aJFXJN6IuS9lE4g91WF7jYaKUWy4eXK0xZqs5EALbR8Li1TPMj
-         VuEkuMB3qYv/moOZrGCJKKnlGpZQ/4/zcBSl97xhiHoBFpoDEX349nnSYl9XZYGaegQk
-         z12g==
-X-Gm-Message-State: AOAM530uBiw0LBvTLOCtcWudQw+5XmKkSmjJA6DAU44h66T4K+AAA6Hl
-        n9rK+N2iCKHFwhrM9tbbfw==
-X-Google-Smtp-Source: ABdhPJwXOJDDDq8HeKQf/PZk3gaBEkSGQVXO8CPg+FvLgAC1GUzXTU3b3o6z9o/yPeoBt4dX6qCiJw==
-X-Received: by 2002:a92:d4cc:: with SMTP id o12mr14429800ilm.90.1597692938320;
-        Mon, 17 Aug 2020 12:35:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id f132sm9555787ioa.45.2020.08.17.12.35.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:35:37 -0700 (PDT)
-Received: (nullmailer pid 1415017 invoked by uid 1000);
-        Mon, 17 Aug 2020 19:35:35 -0000
-Date:   Mon, 17 Aug 2020 13:35:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Christian Eggers <ceggers@arri.de>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v3] dt-bindings: at25: convert the binding document to
- yaml
-Message-ID: <20200817193535.GA1414886@bogus>
-References: <20200812200602.GA2612803@bogus>
- <20200813085959.15946-1-ceggers@arri.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VwFw5hgUmgRtXhrUbQX2TB/ljF4qHz9d6xiixFTiMJw=;
+        b=a9O39MABF4+Zldn8bRbxU/vAh3m5dJbJdK3r/vD0vB2DhpM5SmIe/VB/8pP+tdaIfk
+         +hyiNP7mAXsWi8e8g2uhoQevlO3LVSLh+mOKXJ1G6cnF31LcVjszUCLmrq15sai3eWZg
+         SnjRT01NoX2UyrsWffM+hxaboH+iErutPdlPZnZ+RWq1nbRZ2ATe4af27V4GbxH+bQD/
+         NAkCwq5hr9P5GWT5D3dZOtyIBZYXWwlkoJSQypSHUorbPFkZZ3eHLTwCSxNMeExnVpVO
+         U7tTa0NAtULMkkSMluo13qjzWIFN4/YocOkKEVOTn68jf8F4wgbHJYqsI4lEVSpzwu6J
+         HMzA==
+X-Gm-Message-State: AOAM532F3n2AoK9v8ENnQCDRcj8gLlOCOsqC6XeX6vxWZyjILT7r6D+v
+        Z4ojhr4mbVQl4Fe2GBCrLJEQMEWx+BZmaWqSyho=
+X-Google-Smtp-Source: ABdhPJzBLq7BTUZu0gPhyPZr1iMVSNYxpytQ0oWV4Nv6K4s8WcQqs0XwbGPW54bVfRpJFoiUF59hC2YERdceZBH+2xs=
+X-Received: by 2002:a17:906:cc47:: with SMTP id mm7mr15799313ejb.362.1597692960285;
+ Mon, 17 Aug 2020 12:36:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813085959.15946-1-ceggers@arri.de>
+References: <20200817102122.434-1-linux.amoon@gmail.com> <20200817102122.434-2-linux.amoon@gmail.com>
+In-Reply-To: <20200817102122.434-2-linux.amoon@gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 17 Aug 2020 21:35:49 +0200
+Message-ID: <CAFBinCCYgm83Vs+dq6G4+1wv7T=S0mzt=gtLaHDfgBrCeRkk5A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] arm64: dts: meson-g12b-odroid-n2: Enable RTC
+ controller node
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 13 Aug 2020 10:59:59 +0200, Christian Eggers wrote:
-> Convert the binding document for at25 EEPROMs from txt to yaml.
-> 
-> Signed-off-by: Christian Eggers <ceggers@arri.de>
-> ---
-> On Wednesday, 12 August 2020, 22:06:02 CEST, Rob Herring wrote:
-> > > +This file has been moved to at25.yaml.
-> >
-> > We only do this to save updating a bunch of references and there aren't
-> > any, so just remove the file.
-> file removed.
-> 
-> > I'd just fix it up, but this wouldn't apply for me on Linus' current
-> > master. Please rebase and resend (You can want til rc1 if you want
-> > because that's what I'll ultimately apply it too).
-> This was my fault. I forgot to revert my previous patch ("dt-bindings: at25: fix
-> syntax error in example code"). So v2 was created from a wrong base.
-> 
-> I'll be unavailable until August, 23.
-> 
-> regards
-> Christian
-> 
->  .../devicetree/bindings/eeprom/at25.txt       |  45 ------
->  .../devicetree/bindings/eeprom/at25.yaml      | 129 ++++++++++++++++++
->  2 files changed, 129 insertions(+), 45 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/eeprom/at25.txt
->  create mode 100644 Documentation/devicetree/bindings/eeprom/at25.yaml
-> 
+Hi Anand,
 
-Applied, thanks!
+thank you for updating this patch!
+
+On Mon, Aug 17, 2020 at 12:21 PM Anand Moon <linux.amoon@gmail.com> wrote:
+[...]
+> changes v2
+> --Fix the missing INT (GPIOA.BIT7) pinctrl.
+should I also expect an interrupt property somewhere below?
+
+> --Fix the missing rtcwakeup.
+> --Drop the clock not required clock property by the PCF8563 driver.
+> ---
+>  .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> index 34fffa6d859d..f08ae1b337ad 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> @@ -477,6 +477,19 @@ hdmi_tx_tmds_out: endpoint {
+>         };
+>  };
+>
+> +&i2c3 {
+> +       pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
+> +       pinctrl-1 = <&tdm_c_din3_a_pins>;
+> +       pinctrl-names = "default";
+why is there pinctrl-1 without any corresponding "pinctrl-names" entry?
+also I'm surprised to see a TDM (audio) related pin function as part
+of an I2C controller. if this is correct then I'd appreciate a bit
+information (for example as part of the patch description) why that is
+
+
+Martin
