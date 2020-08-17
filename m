@@ -2,173 +2,81 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551D9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806BEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322D420758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597648489;
-	bh=kXMV8wukE99rUYUOv+jkANRPnJMhnnypd20U67KLfaM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BxdTWmxSwtlQMCMRNVDyvhFj7DxHDF8f+K2YVLHoU7iluUVIxR/CInEFVSagcYjDz
-	 udPxyYAlAUwPhUx2O4LPEkAA8i7vKZYM3Mv92zmj/YkE5JAKhIYBa2s/eQt4xUuHmU
-	 WK3KXb2K1LFa3Nti959CesLg9eKsSzCmHcygURVE=
+	by mail.kernel.org (Postfix) with ESMTP id 5241C20716
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:19:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="m+BtZ93P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgHQHOe (ORCPT
+        id S1726709AbgHQHTU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:14:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726402AbgHQHLR (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:11:17 -0400
-Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 17 Aug 2020 03:19:20 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:12120 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbgHQHTU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:19:20 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597648760; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=hwlJ5WSyqLCQ3kLhAjhnixhlrCzC9z8oa3p4W6kt32o=; b=m+BtZ93P2JWpvR2Zr3iRycqR59YKEKLmkmq6qr4atHH6Peovf1oO+UhUpwioo7TBZwOPNUQI
+ TrxY6fPJyWWAVIvZSovwDrpSB4ZjNnvfa8dpJIr8b6kitFZ5cwdZY3VkzBaDlJ8C8Dfy77fW
+ ppzDn8oT2Mgyeu2HKPfCyY/NBTM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f3a2f60f2b697637a623b46 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 07:18:56
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4F96DC43387; Mon, 17 Aug 2020 07:18:55 +0000 (UTC)
+Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AED44207FB;
-        Mon, 17 Aug 2020 07:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597648276;
-        bh=kXMV8wukE99rUYUOv+jkANRPnJMhnnypd20U67KLfaM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jOAsnPYqqJ4qtBSn87nrOrPbEigb7xFFYFG8QCQ4rp/xTsR2UPFbZGd19UWPCV/vV
-         HcskDkPpEiYRvvhpHxz6Q5a1MCnRJNmboj2KF+K7HaLxiqH9IiwAsDEMLnMBPaHjUY
-         uYUGXE4Uls0X5F2zdmeiuWsXFDR57VpXqfnWmLIQ=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1k7ZIY-00BdjC-MB; Mon, 17 Aug 2020 09:11:14 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: [PATCH v3 00/44] SPMI patches needed by Hikey 970
-Date:   Mon, 17 Aug 2020 09:10:19 +0200
-Message-Id: <cover.1597647359.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: kathirav)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 82022C433C6;
+        Mon, 17 Aug 2020 07:18:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 82022C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
+From:   Kathiravan T <kathirav@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, sivaprak@codeaurora.org,
+        devicetree@vger.kernel.org
+Cc:     kathirav@codeaurora.org
+Subject: [PATCH V2 0/2] Enable DVFS support for IPQ6018
+Date:   Mon, 17 Aug 2020 12:48:38 +0530
+Message-Id: <1597648720-13649-1-git-send-email-kathirav@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Greg,
+Add A53 PLL, APCS clock, RPM Glink, RPM message RAM, cpu-opp-table,
+SMPA2 regulator to enable the cpu frequency on IPQ6018.
 
-This patch series is part of a work I'm doing in order to be able to support
-a HiKey 970 board that I recently got on my hands.
+[v2]
+	- Rebased on v5.9-rc1
+	- Picked up the Rob's Acked-by tag for mailbox YAML
+	- Regulator binding in V1 was picked by Mark and available in v5.9-rc1
 
-Regards,
-Mauro.
+Kathiravan T (2):
+  dt-bindings: mailbox: add compatible for the IPQ6018 SoC
+  arm64: dts: ipq6018: enable DVFS support
 
-v1:
-   submitted to drivers/{mfd,spmi,regulator}
-
-v2:
-  - submitted via staging, mainly to preserve original
-    authorship and his SoB;
-  - as requested on previous review, patches were split per
-    target subsystem.
-
-v3:
-  - Some coding style changes, due to reviews from Joe Perches
-
-Patches were tested on a Hikey 970 board.
-
-Mauro Carvalho Chehab (41):
-  staging: spmi: hisi-spmi-controller: coding style fixup
-  staging: spmi: hisi-spmi-controller: fix it to probe successfully
-  staging: spmi: hisi-spmi-controller: fix a typo
-  staging: spmi: hisi-spmi-controller: adjust whitespaces at defines
-  staging: spmi: hisi-spmi-controller: use le32 macros where needed
-  staging: spmi: hisi-spmi-controller: add debug when values are
-    read/write
-  staging: spmi: hisi-spmi-controller: fix the dev_foo() logic
-  staging: spmi: hisi-spmi-controller: add it to the building system
-  staging: spmi: hisi-spmi-controller: do some code cleanups
-  staging: mfd: hi6421-spmi-pmic: get rid of unused code
-  staging: mfd: hi6421-spmi-pmic: deal with non-static functions
-  staging: mfd: hi6421-spmi-pmic: get rid of the static vars
-  staging: mfd: hi6421-spmi-pmic: cleanup hi6421-spmi-pmic.h header
-  staging: mfd: hi6421-spmi-pmic: change the binding logic
-  staging: mfd: hi6421-spmi-pmic: get rid of unused OF properties
-  staging: mfd: hi6421-spmi-pmic: cleanup OF properties
-  staging: mfd: hi6421-spmi-pmic: change namespace on its functions
-  staging: mfd: hi6421-spmi-pmic: fix some coding style issues
-  staging: mfd: hi6421-spmi-pmic: add it to the building system
-  staging: mfd: hi6421-spmi-pmic: cleanup the code
-  staging: regulator: hi6421v600-regulator: get rid of unused code
-  staging: regulator: hi6421v600-regulator: port it to upstream
-  staging: regulator: hi6421v600-regulator: coding style fixups
-  staging: regulator: hi6421v600-regulator: change the binding logic
-  staging: regulator: hi6421v600-regulator: cleanup struct
-    hisi_regulator
-  staging: regulator: hi6421v600-regulator: cleanup debug messages
-  staging: regulator: hi6421v600-regulator: use shorter names for OF
-    properties
-  staging: regulator: hi6421v600-regulator: better handle modes
-  staging: regulator: hi6421v600-regulator: change namespace
-  staging: regulator: hi6421v600-regulator: convert to use get/set
-    voltage_sel
-  staging: regulator: hi6421v600-regulator: don't use usleep_range for
-    off_on_delay
-  staging: regulator: hi6421v600-regulator: add a driver-specific debug
-    macro
-  staging: regulator: hi6421v600-regulator: initialize ramp_delay
-  staging: regulator: hi6421v600-regulator: cleanup DT settings
-  staging: regulator: hi6421v600-regulator: fix some coding style issues
-  staging: regulator: hi6421v600-regulator: add it to the building
-    system
-  staging: regulator: hi6421v600-regulator: code cleanup
-  staging: hikey9xx: add a TODO list
-  MAINTAINERS: add an entry for HiSilicon 6421v600 drivers
-  dt: document HiSilicon SPMI controller and mfd/regulator properties
-  dt: hisilicon: add support for the PMIC found on Hikey 970
-
-Mayulong (3):
-  staging: spmi: add Hikey 970 SPMI controller driver
-  staging: mfd: add a PMIC driver for HiSilicon 6421 SPMI version
-  staging: regulator: add a regulator driver for HiSilicon 6421v600 SPMI
-    PMIC
-
- .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 +++++++
- .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++
- MAINTAINERS                                   |   6 +
- .../boot/dts/hisilicon/hi3670-hikey970.dts    |  22 +-
- .../boot/dts/hisilicon/hikey970-pmic.dtsi     | 200 ++++++++
- drivers/staging/Kconfig                       |   2 +
- drivers/staging/Makefile                      |   1 +
- drivers/staging/hikey9xx/Kconfig              |  35 ++
- drivers/staging/hikey9xx/Makefile             |   5 +
- drivers/staging/hikey9xx/TODO                 |   5 +
- drivers/staging/hikey9xx/hi6421-spmi-pmic.c   | 382 ++++++++++++++
- .../staging/hikey9xx/hi6421v600-regulator.c   | 479 ++++++++++++++++++
- .../staging/hikey9xx/hisi-spmi-controller.c   | 356 +++++++++++++
- include/linux/mfd/hi6421-spmi-pmic.h          |  68 +++
- 14 files changed, 1778 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
- create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
- create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
- create mode 100644 drivers/staging/hikey9xx/Kconfig
- create mode 100644 drivers/staging/hikey9xx/Makefile
- create mode 100644 drivers/staging/hikey9xx/TODO
- create mode 100644 drivers/staging/hikey9xx/hi6421-spmi-pmic.c
- create mode 100644 drivers/staging/hikey9xx/hi6421v600-regulator.c
- create mode 100644 drivers/staging/hikey9xx/hisi-spmi-controller.c
- create mode 100644 include/linux/mfd/hi6421-spmi-pmic.h
+ .../bindings/mailbox/qcom,apcs-kpss-global.yaml    |  1 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              | 96 +++++++++++++++++++++-
+ 2 files changed, 94 insertions(+), 3 deletions(-)
 
 -- 
-2.26.2
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
