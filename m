@@ -2,120 +2,107 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 056F5C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 637EB20674
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693116;
-	bh=uL3CiGQO5lTVSg6FRgGW4wao8mfJKlmO0zjEjw/6SII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KHJnBtXWVs5mM705KkWZfM66cRcxBnGjnDZnsOAGl5+7ffwGAicxS6N9leT9cSmlL
-	 eGKYgSVVyNiZNb29hTmU3XR+cu7TppKm7A5s1wUaBZJ8oGG6q0fXRMWxyv2I3e8pSY
-	 bYpCUIZs/+fj15/rGAJWhWiI0IX9vt0RtmLh1DMk=
+	by mail.kernel.org (Postfix) with ESMTP id CEDE92072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GQM5vTa3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgHQTid (ORCPT
+        id S2388360AbgHQTkh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:38:33 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44800 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732456AbgHQTi2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:38:28 -0400
-Received: by mail-il1-f193.google.com with SMTP id j9so15538877ilc.11;
-        Mon, 17 Aug 2020 12:38:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Flz5BKGDdaW7ZnqIwZRWx/uMxnDaWlXWl56bHuuN1CU=;
-        b=F77oA9uRN2ZBXSOMCXwOZfPt2qyAcUn63ashmvDVoj9j79iFdbowL+5F0c4G4JDshn
-         3qDIxlTx3n5yPYgVFhWzR2FQ/OEEJpCtrKp1GWQ1ezY1+tkBbMWwdhZplD+AnF4FA5aq
-         /lYWbh8NzAfOMeHnyS/lCupXpcfMnzwKXp1fntrgiV2+7sqI604lq0J4zIV8zQp1WeJ9
-         vXd40jeQDErZ06JkC9L8qDpdntKH+rgCsgI8Z5S7/qYtP6YfOouLYOUtGkUJZnA55QDr
-         j2g/OzOr8VspgplD+wEMPkv2dUnAV2GwtcstLYDq3ht74bYZTc0XbYDEpksdDCGg3X+6
-         3LyQ==
-X-Gm-Message-State: AOAM533wu8kPQ9doz8KjmsyU8kyqJ2Zr/4FQQaIH7rR6lp4OmPIshyUS
-        YQmN7qkaPWBgCa+dgS36GA==
-X-Google-Smtp-Source: ABdhPJzCXtRI+ilbmlVB/zkPF+w3d3j6oztJQTv8tmf6mi11GZPzY/jlYGFb8HwqGgx8EQdWfkx2bA==
-X-Received: by 2002:a92:c8c1:: with SMTP id c1mr15171197ilq.42.1597693107034;
-        Mon, 17 Aug 2020 12:38:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id w22sm9520191ioc.24.2020.08.17.12.38.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:38:26 -0700 (PDT)
-Received: (nullmailer pid 1419503 invoked by uid 1000);
-        Mon, 17 Aug 2020 19:38:25 -0000
-Date:   Mon, 17 Aug 2020 13:38:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, kernel@axis.com, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, oliver@schinagl.nl
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: Add pwm-gpio
-Message-ID: <20200817193825.GA1416132@bogus>
-References: <20200814155513.31936-1-vincent.whitchurch@axis.com>
+        Mon, 17 Aug 2020 15:40:37 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40396 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729742AbgHQPZg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 11:25:36 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HFBOO6039814;
+        Mon, 17 Aug 2020 15:25:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=cjzdpdXq2OFDNjLcmDZq/8KMYSFbgoAYkIaLS/N63v8=;
+ b=GQM5vTa3KX4tNW/94eDAc8RWkTJHAjkLps3epQpWFplyMpUccegmu+Y6TwGgGz7aUlEX
+ b8S349zkTNIvIsueSXYeK4TbV6IDqZt4gYL3bQytMpRLGt7WM7AVvuIzhD3rSXzD9jOE
+ 2fGAUYfealh2XYUl+m+DIVr3ojg3BUZD5GUuXfgDcNFJfRsKOULaZA4357ufHsYk4pTY
+ muKIY0LMCLSAj0FGbFbKyNEoN6vgdIhK+FA1N1d9MOTrQkG5CChucs/wOlw2U9tV6iZG
+ N5QHttGne1azWqbxNmQTDCXH96uVXRWjx1NyuZ7qt+GHDl+pbUJXkFiOlv9ws9ozRa6U UQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 32x7nm7ghs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Aug 2020 15:25:24 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07HFEQJZ133060;
+        Mon, 17 Aug 2020 15:25:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 32xsfqp2e0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Aug 2020 15:25:23 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07HFPLAl022596;
+        Mon, 17 Aug 2020 15:25:21 GMT
+Received: from [10.74.111.253] (/10.74.111.253)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Aug 2020 08:25:21 -0700
+Subject: Re: [PATCHv4 0/6] Add initial genpd support for omap PRM driver
+To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     "Andrew F . Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+References: <20200702154513.31859-1-tony@atomide.com>
+ <20200817065300.GD2994@atomide.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <f52bc6c2-1256-a3ca-fede-1d3ab441ef9f@oracle.com>
+Date:   Mon, 17 Aug 2020 08:25:18 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814155513.31936-1-vincent.whitchurch@axis.com>
+In-Reply-To: <20200817065300.GD2994@atomide.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ spamscore=0 suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008170117
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9716 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
+ impostorscore=0 priorityscore=1501 adultscore=0 mlxscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008170117
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 05:55:12PM +0200, Vincent Whitchurch wrote:
-> Add bindings for the pwm-gpio driver.
+On 8/16/20 11:53 PM, Tony Lindgren wrote:
+> Hi Santosh,
 > 
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-gpio.yaml     | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+> * Tony Lindgren <tony@atomide.com> [200702 18:46]:
+>> Hi all,
+>>
+>> Here's v4 set of patches to add genpd support to the PRM (Power and Reset
+>> Module) driver.
+>>
+>> Initially we just add one hardware accelerator power domain for sgx,
+>> and one interconnect instance for l4_abe. The rest of the SoC specific
+>> domain data is probably best added one SoC at a time based on generated
+>> data.
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-> new file mode 100644
-> index 000000000000..51941cd03955
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
-> @@ -0,0 +1,29 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/pwm-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GPIO-based PWM
-> +
-> +maintainers:
-> +  - Vincent Whitchurch <vincent.whitchurch@axis.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - pwm-gpio
-> +
-> +  "#pwm-cells":
-> +    const: 2
-> +
-> +  gpio:
-
-'gpios' is the preferred form even if singular.
-
-> +    maxItems: 1
-> +    description: GPIO to toggle.
-> +
-> +required:
-> +  - compatible
-> +  - "#pwm-cells"
-> +  - gpio
-> +
-> +additionalProperties: false
-> -- 
-> 2.25.1
+> Care to ack some of these patches? I'd like to get this into Linux next
+> for v5.10 :)
 > 
+Sure,
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
