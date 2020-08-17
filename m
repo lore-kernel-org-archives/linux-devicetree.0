@@ -2,183 +2,90 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC77C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 326BAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C70F20658
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:49:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597693750;
-	bh=Wj4iogAk4e2K5Ewj8Q7AnkU33eYg8fKPyP/m6U7x1z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XFEQo58cYoX8WqbAEoXz7S3ar5xnK1sstbXkD4NSpUgwY8oUaupW4YxYFV1VhRNnI
-	 fznrUVc/39aFwFoJz6GGyrvkiWlaTT9npCTW614YhiKQtrmyypTR8maMF9yQ+K8d5l
-	 aPQaUrjJGoobbX/beEHGMeX6sYfJ7DNi0MJYmofQ=
+	by mail.kernel.org (Postfix) with ESMTP id EEBCE204EC
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 20:00:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="cwPg6sKS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732773AbgHQTtC (ORCPT
+        id S1729917AbgHQUAE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:49:02 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46751 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732759AbgHQTsg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:48:36 -0400
-Received: by mail-io1-f68.google.com with SMTP id a5so18755497ioa.13;
-        Mon, 17 Aug 2020 12:48:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bdm5/ZmcCtO4pQ4ZrSWguZmoYjiaeTCpZkVV8TL8LsU=;
-        b=r9kMy8Jfaqh2V4YRr4qoR5M5tj+uCxZyDooppGYZcyNDmu3xiOSUAYfI4ewLj2+3C0
-         Pem0qGE0aNULEWzzgpLsM2mxhK4vMvTLwVbAawL8WFScMB87pPf1ZgI0SxBilfWm7Ju4
-         OP8UbNRCwOU2BwAtT6iZBxsoJpW2fFOw83EM9oRQlWQ5Sd2vkDUgtBvp5LiJwKkiF+ey
-         1+KUB1WjD58jtFq4IKqXmzumHmr4RTAymfFIcTr0aUPL04xJaoWvjUubq8KNzvWE8UiZ
-         fzYnwqQg8uYNIGOj0Sx9JiEDDc9MjvsTz23X1XKy03VOqENCyScJW/bsVEcCBEGu1doj
-         w6/g==
-X-Gm-Message-State: AOAM533nNdgI3XGdImyeU3ixllPFR7JpA1jH04Dwg1fXISqjOled0mnM
-        mFE1xAz/KNjNKhEVblcerQ==
-X-Google-Smtp-Source: ABdhPJyfyXruHPGjAki+7394r3/dxKBEyv7eITP/FN8HsZFdQA7aixl1V94o+l9vMJ12nEnSRnNQ8g==
-X-Received: by 2002:a5e:d514:: with SMTP id e20mr13501658iom.183.1597693714832;
-        Mon, 17 Aug 2020 12:48:34 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id d12sm5500906ilq.34.2020.08.17.12.48.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 12:48:34 -0700 (PDT)
-Received: (nullmailer pid 1435985 invoked by uid 1000);
-        Mon, 17 Aug 2020 19:48:33 -0000
-Date:   Mon, 17 Aug 2020 13:48:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, punit1.agrawal@toshiba.co.jp,
-        yuji2.ishikawa@toshiba.co.jp, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/8] dt-bindings: pinctrl: Add bindings for Toshiba
- Visconti TMPV7700 SoC
-Message-ID: <20200817194833.GB1432385@bogus>
-References: <20200817014632.595898-1-nobuhiro1.iwamatsu@toshiba.co.jp>
- <20200817014632.595898-2-nobuhiro1.iwamatsu@toshiba.co.jp>
+        Mon, 17 Aug 2020 16:00:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729118AbgHQUAD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 16:00:03 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE55C061389;
+        Mon, 17 Aug 2020 13:00:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JvFsJsVah9hNUUBcuUOzHtwAbnw84m6c+Ym/sqopwyg=; b=cwPg6sKS99k7Z/W8H7CydeRAtI
+        mrv1duiZdj1i7d7qoQdL6kyezw0sauPEQkcqm6lMBqJT/uYsmWXLN9VGTRYqT+722nBMx4OAT33B0
+        cSS0N1xGekrFlj+hOUdSgJInOPrIql34bC+BGt99DFuuAx42MFiNAW2dsD+hk/xm+tdM=;
+Received: from p5dcc3306.dip0.t-ipconnect.de ([93.204.51.6] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k7lIQ-0004uS-5Y; Mon, 17 Aug 2020 21:59:54 +0200
+Date:   Mon, 17 Aug 2020 21:59:53 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, aford@beaconembedded.com,
+        =?UTF-8?B?QmVu?= =?UTF-8?B?b8OudA==?= Cousson 
+        <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hns@goldelico.com
+Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+Message-ID: <20200817215953.59607c11@aktux>
+In-Reply-To: <20200817133931.11785-1-aford173@gmail.com>
+References: <20200817133931.11785-1-aford173@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817014632.595898-2-nobuhiro1.iwamatsu@toshiba.co.jp>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 10:46:25AM +0900, Nobuhiro Iwamatsu wrote:
-> Add pinctrl bindings for Toshiba Visconti TMPV7700 SoC series.
+On Mon, 17 Aug 2020 08:39:31 -0500
+Adam Ford <aford173@gmail.com> wrote:
+
+> The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+> depending on commercial or industrial temperature ratings.
 > 
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> ---
->  .../pinctrl/toshiba,visconti-pinctrl.yaml     | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
+> This patch expands the thermal information to include the limits of 90
+> and 105C for alert and critical.  It sets the coolings-cells for the
+> 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..4009902cd396
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/toshiba,visconti-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Toshiba Visconti TMPV770x pin mux/config controller
-> +
-> +maintainers:
-> +  - Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-> +
-> +description:
-> +  Toshiba's Visconti ARM SoC a pin mux/config controller.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - toshiba,tmpv7708-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +patternProperties:
-> +  '^.*$':
-
-For new bindings, please define something like '-pins$' for the pin 
-nodes.
-
-> +    if:
-> +      type: object
-> +    then:
-
-Then we don't have to do this if/then.
-
-This also needs a $ref to the common pinctrl schemas.
-
-> +      properties:
-> +        function:
-> +          description:
-> +            Function to mux.
-> +          $ref: "/schemas/types.yaml#/definitions/string"
-> +          enum: [i2c0, i2c1, i2c2, i2c3, i2c4, i2c5, i2c6, i2c7, i2c8,
-> +            spi0, spi1, spi2, spi3, spi4, spi5, spi6,
-> +            uart0, uart1, uart2, uart3, pwm, pcmif_out, pcmif_in]
-> +
-> +        groups:
-> +          description:
-> +            Name of the pin group to use for the functions.
-> +          $ref: "/schemas/types.yaml#/definitions/string"
-> +          enum: [i2c0_grp, i2c1_grp, i2c2_grp, i2c3_grp, i2c4_grp,
-> +            i2c5_grp, i2c6_grp, i2c7_grp, i2c8_grp,
-> +            spi0_grp, spi0_cs0_grp, spi0_cs1_grp, spi0_cs2_grp,
-> +            spi1_grp, spi2_grp, spi3_grp, spi4_grp, spi5_grp, spi6_grp,
-> +            uart0_grp, uart1_grp, uart2_grp, uart3_grp,
-> +            pwm0_gpio4_grp, pwm0_gpio8_grp, pwm0_gpio12_grp,
-> +            pwm0_gpio16_grp, pwm1_gpio5_grp, pwm1_gpio9_grp,
-> +            pwm1_gpio13_grp, pwm1_gpio17_grp, pwm2_gpio6_grp,
-> +            pwm2_gpio10_grp, pwm2_gpio14_grp, pwm2_gpio18_grp,
-> +            pwm3_gpio7_grp, pwm3_gpio11_grp, pwm3_gpio15_grp,
-> +            pwm3_gpio19_grp, pcmif_out_grp, pcmif_in_grp]
-> +
-> +        drive-strength:
-> +          enum: [2, 4, 6, 8, 16, 24, 32]
-> +          default: 2
-> +          description:
-> +            Selects the drive strength for the specified pins, in mA.
-> +
-> +        bias-pull-up: true
-> +
-> +        bias-pull-down: true
-> +
-> +        bias-disable: true
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    pmux: pmux@24190000 {
-> +        compatible = "toshiba,tmpv7708-pinctrl";
-> +        reg = <0 0x24190000 0 0x10000>;
-> +
-> +        spi_0: spi_0 {
-> +                function = "spi0";
-> +                groups = "spi0_grp";
-> +        };
-> +    };
-> -- 
-> 2.27.0
+> For boards who never use industrial temperatures, these can be
+> changed on their respective device trees with something like:
 > 
+> &cpu_alert0 {
+> 	temperature = <85000>; /* millicelsius */
+> };
+> 
+> &cpu_crit {
+> 	temperature = <90000>; /* millicelsius */
+> };
+> 
+> OMAP3_THERMAL will need to be enabled.  It is off by default.
+> 
+hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
+got stuck somewhere. It still seems not to work. Shouldn't that patch
+be applied first?
+
+Regards,
+Andreas
