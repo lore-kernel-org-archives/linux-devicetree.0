@@ -2,236 +2,100 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650C6C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6077FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 480752076E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LE6eAOoE"
+	by mail.kernel.org (Postfix) with ESMTP id 36FE920738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 18:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597688586;
+	bh=ywvUa0thchGA9URPQznfjWIyxppEo/JGKZ107vVQVQQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qac3K5OkZpMkNPTVTEzHWMpUoV7vwlZTboaK3F+ryXGvN1v6vkkykZ0ykgeG50KeY
+	 BSxm51VS6y5WaYCyermg2Acivr9lrgaBoNxP8tlsTKT0NXwylZX02bK1bembMXaVT6
+	 cxLW8tgxFauNpaImoyDz2WZ13DU7c/Zfcl63UtZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390317AbgHQSHC (ORCPT
+        id S2390333AbgHQSWW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 14:07:02 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:37104 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390314AbgHQSG4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 14:06:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597687615; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=9CVlP0NKFUrth4YuewySvBnW5hSLKNVeVTO5XQZN6uw=;
- b=LE6eAOoE0gN7vWtfqy3ZpVFqsqfIfQp4Ml9N6DZJUBAusKuyZHi8X7FARYGd2PmTLxHKOlet
- uz2U3Ux90i5clppJSuXiGz/AZdzNOEyv5ESTQe1C5nO6bPAZmj47iDT9BngfR0Qpkxv+W0OX
- mTZkXiv9A/BPI2ZDfqo+rYnFlQk=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f3ac73d440a07969a8172ec (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 17 Aug 2020 18:06:53
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8087FC433A0; Mon, 17 Aug 2020 18:06:52 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Mon, 17 Aug 2020 14:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390912AbgHQSVz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 14:21:55 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: tanmay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E444C433CA;
-        Mon, 17 Aug 2020 18:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1D9320738;
+        Mon, 17 Aug 2020 18:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597688515;
+        bh=ywvUa0thchGA9URPQznfjWIyxppEo/JGKZ107vVQVQQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y/RXsrrpXvzRbb9Bjm/MkVRUSxhLxuGu8CSdYYwdyLHTiUloID/MsoZ+qpcnBzG9F
+         KAZVk+Kkuhw34IvZftks6NNv8s45M65L5zLJWiAaTCMkLiMXoZRaXy6vhf1N/5DAvd
+         yv/DYZ8GCSBvu2G6sDH/V7x5/+yPqDVxOT/nOGns=
+Received: by mail-oi1-f179.google.com with SMTP id b22so15611410oic.8;
+        Mon, 17 Aug 2020 11:21:54 -0700 (PDT)
+X-Gm-Message-State: AOAM533VrkiwNbLXRjAEHf/cEqtwBRnADOzy8YSjvDkz6IY+Mgy+Dk/H
+        EcOhc3QEAe83yUB1SHjOprTBLgaEsFo1kKID3Q==
+X-Google-Smtp-Source: ABdhPJxFsvl9kH86GxixpRdB5tPpGwqT2xFsCvdog8At58/krej8IRcOw7DKZn8zvJK2vP5cE27RU3JaNpXROwleBQs=
+X-Received: by 2002:aca:90a:: with SMTP id 10mr10338190oij.106.1597688514113;
+ Mon, 17 Aug 2020 11:21:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 17 Aug 2020 11:06:51 -0700
-From:   Tanmay Shah <tanmay@codeaurora.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     devicetree@vger.kernel.org, airlied@linux.ie,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, swboyd@chromium.org,
-        khsieh@codeaurora.org, seanpaul@chromium.org,
-        abhinavk@codeaurora.org, Vara Reddy <varar@codeaurora.org>,
-        aravindh@codeaurora.org, freedreno@lists.freedesktop.org,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        dri-devel <dri-devel-bounces@lists.freedesktop.org>
-Subject: Re: [PATCH v10 3/5] drm/msm/dp: add support for DP PLL driver
-In-Reply-To: <28b1f678-ab8f-cf6a-af9f-fcd79131bdc1@linaro.org>
-References: <20200812044223.19279-1-tanmay@codeaurora.org>
- <20200812044223.19279-4-tanmay@codeaurora.org>
- <821b5cf9-5ca0-7026-fd99-9a32285ed030@linaro.org>
- <f6b330778c07abd3003da9acab4d3398@codeaurora.org>
- <28b1f678-ab8f-cf6a-af9f-fcd79131bdc1@linaro.org>
-Message-ID: <c5662d54073bc6d3f7ea872cb2bbbcdb@codeaurora.org>
-X-Sender: tanmay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200814225637.702584-1-arch0.zheng@gmail.com>
+In-Reply-To: <20200814225637.702584-1-arch0.zheng@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 17 Aug 2020 12:21:42 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ7eK3HB_E8OeSbs=xVLYrvOcXD9GxpKr2N4dXZWnBP+g@mail.gmail.com>
+Message-ID: <CAL_JsqJ7eK3HB_E8OeSbs=xVLYrvOcXD9GxpKr2N4dXZWnBP+g@mail.gmail.com>
+Subject: Re: [PATCH] of/fdt: Remove duplicate check in early_init_dt_scan_memory()
+To:     Qi Zheng <arch0.zheng@gmail.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-15 04:45, Dmitry Baryshkov wrote:
-> On 15/08/2020 02:22, Tanmay Shah wrote:
->> On 2020-08-14 10:05, Dmitry Baryshkov wrote:
->>> On 12/08/2020 07:42, Tanmay Shah wrote:
->>>> From: Chandan Uddaraju <chandanu@codeaurora.org>
->>>> 
->>>> Add the needed DP PLL specific files to support
->>>> display port interface on msm targets.
->>> 
->>> [skipped]
->>> 
->>>> diff --git a/drivers/gpu/drm/msm/dp/dp_pll_private.h 
->>>> b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>>> new file mode 100644
->>>> index 000000000000..475ba6ed59ab
->>>> --- /dev/null
->>>> +++ b/drivers/gpu/drm/msm/dp/dp_pll_private.h
->>>> @@ -0,0 +1,98 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0-only */
->>>> +/*
->>>> + * Copyright (c) 2016-2020, The Linux Foundation. All rights 
->>>> reserved.
->>>> + */
->>>> +
->>>> +#ifndef __DP_PLL_10NM_H
->>>> +#define __DP_PLL_10NM_H
->>>> +
->>>> +#include "dp_pll.h"
->>>> +#include "dp_reg.h"
->>>> +
->>>> +#define DP_VCO_HSCLK_RATE_1620MHZDIV1000    1620000UL
->>>> +#define DP_VCO_HSCLK_RATE_2700MHZDIV1000    2700000UL
->>>> +#define DP_VCO_HSCLK_RATE_5400MHZDIV1000    5400000UL
->>>> +#define DP_VCO_HSCLK_RATE_8100MHZDIV1000    8100000UL
->>>> +
->>>> +#define NUM_DP_CLOCKS_MAX            6
->>>> +
->>>> +#define DP_PHY_PLL_POLL_SLEEP_US        500
->>>> +#define DP_PHY_PLL_POLL_TIMEOUT_US        10000
->>>> +
->>>> +#define DP_VCO_RATE_8100MHZDIV1000        8100000UL
->>>> +#define DP_VCO_RATE_9720MHZDIV1000        9720000UL
->>>> +#define DP_VCO_RATE_10800MHZDIV1000        10800000UL
->>>> +
->>>> +struct dp_pll_vco_clk {
->>>> +    struct clk_hw hw;
->>>> +    unsigned long    rate;        /* current vco rate */
->>>> +    u64        min_rate;    /* min vco rate */
->>>> +    u64        max_rate;    /* max vco rate */
->>>> +    void        *priv;
->>>> +};
->>>> +
->>>> +struct dp_pll_db {
->>> 
->>> This struct should probably go into dp_pll_10nm.c. dp_pll_7nm.c, for
->>> example, will use slightly different structure.
->>> 
->> 
->> Sure, it sounds good. I will give it try. Thanks!
->> 
->>>> +    struct msm_dp_pll *base;
->>>> +
->>>> +    int id;
->>>> +    struct platform_device *pdev;
->>>> +
->>>> +    /* private clocks: */
->>>> +    bool fixed_factor_clk[NUM_DP_CLOCKS_MAX];
->>>> +    struct clk_hw *hws[NUM_DP_CLOCKS_MAX];
->>> 
->>> Then these two fields can use exact number of clocks rather than
->>> NUM_DP_CLOCKS_MAX.
->>> 
->> 
->> I didn't get this. I think NUM_DP_CLOCKS_MAX is doing same?
-> 
-> Not exactly. We'd need fixed_factor_clk[4] for 10nm rather than 6.
-> It's not that important, just a small nitpick.
-> 
-> 
->>>> +    u32 num_hws;
->>>> +
->>>> +    /* lane and orientation settings */
->>>> +    u8 lane_cnt;
->>>> +    u8 orientation;
->>>> +
->>>> +    /* COM PHY settings */
->>>> +    u32 hsclk_sel;
->>>> +    u32 dec_start_mode0;
->>>> +    u32 div_frac_start1_mode0;
->>>> +    u32 div_frac_start2_mode0;
->>>> +    u32 div_frac_start3_mode0;
->>>> +    u32 integloop_gain0_mode0;
->>>> +    u32 integloop_gain1_mode0;
->>>> +    u32 vco_tune_map;
->>>> +    u32 lock_cmp1_mode0;
->>>> +    u32 lock_cmp2_mode0;
->>>> +    u32 lock_cmp3_mode0;
->>>> +    u32 lock_cmp_en;
->>>> +
->>>> +    /* PHY vco divider */
->>>> +    u32 phy_vco_div;
->>>> +    /*
->>>> +     * Certain pll's needs to update the same vco rate after resume 
->>>> in
->>>> +     * suspend/resume scenario. Cached the vco rate for such plls.
->>>> +     */
->>>> +    unsigned long    vco_cached_rate;
->>>> +    u32        cached_cfg0;
->>>> +    u32        cached_cfg1;
->>>> +    u32        cached_outdiv;
->>>> +
->>>> +    uint32_t index;
->>>> +};
->>>> +
->>>> +static inline struct dp_pll_vco_clk *to_dp_vco_hw(struct clk_hw 
->>>> *hw)
->>>> +{
->>>> +    return container_of(hw, struct dp_pll_vco_clk, hw);
->>>> +}
->>>> +
->>>> +#define to_msm_dp_pll(vco) ((struct msm_dp_pll *)vco->priv)
->>>> +
->>>> +#define to_dp_pll_db(x)    ((struct dp_pll_db *)x->priv)
->>>> +
->>>> +int dp_vco_set_rate_10nm(struct clk_hw *hw, unsigned long rate,
->>>> +                unsigned long parent_rate);
->>>> +unsigned long dp_vco_recalc_rate_10nm(struct clk_hw *hw,
->>>> +                unsigned long parent_rate);
->>>> +long dp_vco_round_rate_10nm(struct clk_hw *hw, unsigned long rate,
->>>> +                unsigned long *parent_rate);
->>>> +int dp_vco_prepare_10nm(struct clk_hw *hw);
->>>> +void dp_vco_unprepare_10nm(struct clk_hw *hw);
->>>> +
->>>> +int msm_dp_pll_10nm_init(struct msm_dp_pll *dp_pll, int id);
->>>> +void msm_dp_pll_10nm_deinit(struct msm_dp_pll *dp_pll);
->>> 
->>> These functions don't seem to be used outside of dp_pll_10nm. What
->>> about making them static?
->> 
->> I can't declare static to "init" and "deinit" as they are exported to 
->> dp_pll.c.
->> Rest of them I can move to dp_pll_10nm and then define static.
-> 
-> Please exuse me for not being exact enough. Of course I meant
-> dp_vco_FOO_10nm() functions, not init/exit.
-> 
-Ok got it. Sorry I didn't mean to nitpick here.
+On Fri, Aug 14, 2020 at 4:57 PM Qi Zheng <arch0.zheng@gmail.com> wrote:
+>
+> When the value of the first reg is not NULL, there will be
+> two repeated checks. So modify it.
 
-> BTW: as I'm looking onto 7nm dp pll, which naming would you prefer?
-> 
-I didn't get this. Did you mean naming convention of functions and 
-structure between
-7nm and 10 nm? Could you point me where 7nm dp pll code is posted?
+I prefer the way it was. I'm sure the compiler is smart enough to
+throw out the 2nd check. Plus, 'linux,usable-memory' being present is
+the exception, so usually 'reg' will be NULL.
 
-> We can have separate DP_PLL_10nm/DP_PLL_7nm namespaces (as DSI PLLs
-> do) or I can override only a set of constants (like downstream driver
-> does).
-
-Having separate namespace sounds good.
-
+> Signed-off-by: Qi Zheng <arch0.zheng@gmail.com>
+> ---
+>  drivers/of/fdt.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 4602e467ca8b..f54412c00642 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1002,10 +1002,11 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+>                 return 0;
+>
+>         reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
+> -       if (reg == NULL)
+> +       if (reg == NULL) {
+>                 reg = of_get_flat_dt_prop(node, "reg", &l);
+> -       if (reg == NULL)
+> -               return 0;
+> +               if (reg == NULL)
+> +                       return 0;
+> +       }
+>
+>         endp = reg + (l / sizeof(__be32));
+>         hotpluggable = of_get_flat_dt_prop(node, "hotpluggable", NULL);
+> --
+> 2.25.1
+>
