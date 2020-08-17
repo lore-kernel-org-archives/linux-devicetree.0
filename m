@@ -2,397 +2,133 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF5CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FE6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 04:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC792063A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 03:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B74220674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 04:02:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FKrS86B9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHQDNG (ORCPT
+        id S1726151AbgHQECt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 16 Aug 2020 23:13:06 -0400
-Received: from mga02.intel.com ([134.134.136.20]:13567 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726235AbgHQDNF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 16 Aug 2020 23:13:05 -0400
-IronPort-SDR: uxCdkeZvprbtp8hsiaqZxTnjPuEJhhaVd/8ab/rYe/F2CoYWcZBGzQlosvnDSe/PLMP6ESvOLC
- 2/IMJMOQPt4Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="142457332"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="142457332"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2020 20:13:03 -0700
-IronPort-SDR: CVyman69i/zqeUxCRQhObKspAcdVTGcGGKnKx9LuAdeP4tmrou6SRGZ4/DqE4bd2BHyAp2FsRy
- E672iZkBwItA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="326281413"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga008.jf.intel.com with ESMTP; 16 Aug 2020 20:13:00 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, p.zabel@pengutronix.de,
-        andriy.shevchenko@intel.com, balbi@kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [PATCH v8 2/2] phy: Add USB3 PHY support for Intel LGM SoC
-Date:   Mon, 17 Aug 2020 11:12:49 +0800
-Message-Id: <20200817031249.36795-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Mon, 17 Aug 2020 00:02:49 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22945 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725765AbgHQECs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 00:02:48 -0400
+X-UUID: 388c34d1e23c4b7e8cf9e40e9b2d1a37-20200817
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=pACLi6wbKi9AORYpzxtaOBRDENoBN/knrxeP2OFFLTY=;
+        b=FKrS86B9fgmvYv0bjbxQBjEROkx4buduqT262mBjdAthGuhVBZ2kIRRPihjQ7hvv83gXmVtfjtWiPKO5dRYxVqW5s8M7RdpYIEhY/AzGvAzlVUQQKlrryrpI7gaqS2Y70nkSdnfuFdrnVJT7c6FWG49amjDE/YkC32AC8t5fo3s=;
+X-UUID: 388c34d1e23c4b7e8cf9e40e9b2d1a37-20200817
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 917943585; Mon, 17 Aug 2020 12:02:40 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 17 Aug 2020 12:02:32 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 17 Aug 2020 12:02:33 +0800
+Message-ID: <1597636953.3394.7.camel@mtkswgap22>
+Subject: Re: [PATCH v6 2/2] soc: mediatek: add mt6779 devapc driver
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 17 Aug 2020 12:02:33 +0800
+In-Reply-To: <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
+References: <1597289564-17030-1-git-send-email-neal.liu@mediatek.com>
+         <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
+         <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-
-Add support for USB PHY on Intel LGM SoC.
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/phy/Kconfig       |  11 ++
- drivers/phy/Makefile      |   3 +-
- drivers/phy/phy-lgm-usb.c | 278 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 291 insertions(+), 1 deletion(-)
- create mode 100644 drivers/phy/phy-lgm-usb.c
-
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index de9362c25c07..01b53f86004c 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -49,6 +49,17 @@ config PHY_XGENE
- 	help
- 	  This option enables support for APM X-Gene SoC multi-purpose PHY.
- 
-+config USB_LGM_PHY
-+	tristate "INTEL Lightning Mountain USB PHY Driver"
-+	depends on USB_SUPPORT
-+	select USB_PHY
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
-+	help
-+	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
-+	  interface to interact with USB GEN-II and USB 3.x PHY that is part
-+	  of the Intel network SOC.
-+
- source "drivers/phy/allwinner/Kconfig"
- source "drivers/phy/amlogic/Kconfig"
- source "drivers/phy/broadcom/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index c27408e4daae..90030ff299eb 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -1,4 +1,4 @@
--# SPDX-License-Identifier: GPL-2.0
-+PDX-License-Identifier: GPL-2.0
- #
- # Makefile for the phy drivers.
- #
-@@ -8,6 +8,7 @@ obj-$(CONFIG_GENERIC_PHY_MIPI_DPHY)	+= phy-core-mipi-dphy.o
- obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-+obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
- obj-y					+= allwinner/	\
- 					   amlogic/	\
- 					   broadcom/	\
-diff --git a/drivers/phy/phy-lgm-usb.c b/drivers/phy/phy-lgm-usb.c
-new file mode 100644
-index 000000000000..1ec9ab266e08
---- /dev/null
-+++ b/drivers/phy/phy-lgm-usb.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel LGM USB PHY driver
-+ *
-+ * Copyright (C) 2020 Intel Corporation.
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/usb/phy.h>
-+#include <linux/workqueue.h>
-+
-+#define CTRL1_OFFSET		0x14
-+#define SRAM_EXT_LD_DONE	BIT(25)
-+#define SRAM_INIT_DONE		BIT(26)
-+
-+#define TCPC_OFFSET		0x1014
-+#define TCPC_MUX_CTL		GENMASK(1, 0)
-+#define MUX_NC			0
-+#define MUX_USB			1
-+#define MUX_DP			2
-+#define MUX_USBDP		3
-+#define TCPC_FLIPPED		BIT(2)
-+#define TCPC_LOW_POWER_EN	BIT(3)
-+#define TCPC_VALID		BIT(4)
-+#define TCPC_CONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB))
-+#define TCPC_DISCONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
-+
-+static const char *const PHY_RESETS[] = { "phy31", "phy", };
-+static const char *const CTL_RESETS[] = { "apb", "ctrl", };
-+
-+struct tca_apb {
-+	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
-+	struct regulator *vbus;
-+	struct work_struct wk;
-+	struct usb_phy phy;
-+
-+	bool phy_initialized;
-+	bool connected;
-+};
-+
-+static int get_flipped(struct tca_apb *ta, bool *flipped)
-+{
-+	union extcon_property_value property;
-+	int ret;
-+
-+	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-+				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-+		return ret;
-+	}
-+
-+	*flipped = property.intval;
-+
-+	return ret;
-+}
-+
-+static int phy_init(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-+	int val, ret, i;
-+
-+	if (ta->phy_initialized)
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_deassert(ta->resets[i]);
-+
-+	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE, 10, 10 * 1000);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-+		return ret;
-+	}
-+
-+	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
-+
-+	ta->phy_initialized = true;
-+	if (!ta->phy.edev) {
-+		writel(TCPC_CONN, ta->phy.io_priv + TCPC_OFFSET);
-+		return phy->set_vbus(phy, true);
-+	}
-+
-+	schedule_work(&ta->wk);
-+
-+	return ret;
-+}
-+
-+static void phy_shutdown(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int i;
-+
-+	if (!ta->phy_initialized)
-+		return;
-+
-+	ta->phy_initialized = false;
-+	flush_work(&ta->wk);
-+	ta->phy.set_vbus(&ta->phy, false);
-+
-+	ta->connected = false;
-+	writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+}
-+
-+static int phy_set_vbus(struct usb_phy *phy, int on)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int ret;
-+
-+	if (on) {
-+		ret = regulator_enable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not enabled\n");
-+	} else {
-+		ret = regulator_disable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not disabled\n");
-+	}
-+
-+	return ret;
-+}
-+
-+static void tca_work(struct work_struct *work)
-+{
-+	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-+	bool connected;
-+	bool flipped = false;
-+	u32 val;
-+	int ret;
-+
-+	ret = get_flipped(ta, &flipped);
-+	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST) && !ret;
-+	if (connected == ta->connected)
-+		return;
-+
-+	ta->connected = connected;
-+	if (connected) {
-+		val = TCPC_CONN;
-+		if (flipped)
-+			val |= TCPC_FLIPPED;
-+		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-+	} else {
-+		val = TCPC_DISCONN;
-+		dev_info(ta->phy.dev, "disconnected\n");
-+	}
-+
-+	writel(val, ta->phy.io_priv + TCPC_OFFSET);
-+
-+	ret = ta->phy.set_vbus(&ta->phy, connected);
-+	if (ret)
-+		dev_err(ta->phy.dev, "failed to set VBUS\n");
-+}
-+
-+static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-+{
-+	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
-+
-+	if (ta->phy_initialized)
-+		schedule_work(&ta->wk);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int vbus_notifier(struct notifier_block *nb, unsigned long evnt, void *ptr)
-+{
-+	return NOTIFY_DONE;
-+}
-+
-+static int phy_probe(struct platform_device *pdev)
-+{
-+	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-+	struct device *dev = &pdev->dev;
-+	struct usb_phy *phy;
-+	struct tca_apb *ta;
-+	int i;
-+
-+	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-+	if (!ta)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ta);
-+	INIT_WORK(&ta->wk, tca_work);
-+
-+	phy = &ta->phy;
-+	phy->dev = dev;
-+	phy->label = dev_name(dev);
-+	phy->type = USB_PHY_TYPE_USB3;
-+	phy->init = phy_init;
-+	phy->shutdown = phy_shutdown;
-+	phy->set_vbus = phy_set_vbus;
-+	phy->id_nb.notifier_call = id_notifier;
-+	phy->vbus_nb.notifier_call = vbus_notifier;
-+
-+	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(phy->io_priv))
-+		return PTR_ERR(phy->io_priv);
-+
-+	ta->vbus = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(ta->vbus))
-+		return PTR_ERR(ta->vbus);
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-+		resets[i] = devm_reset_control_get_exclusive(dev, CTL_RESETS[i]);
-+		if (IS_ERR(resets[i])) {
-+			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-+			return PTR_ERR(resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-+		ta->resets[i] = devm_reset_control_get_exclusive(dev, PHY_RESETS[i]);
-+		if (IS_ERR(ta->resets[i])) {
-+			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-+			return PTR_ERR(ta->resets[i]);
-+		}
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_assert(resets[i]);
-+
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+	/*
-+	 * Out-of-band reset of the controller after PHY reset will cause
-+	 * controller malfunctioning, so we should use in-band controller
-+	 * reset only and leave the controller de-asserted here.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_deassert(resets[i]);
-+
-+	/* Need to wait at least 20us after de-assert the controller */
-+	usleep_range(20, 100);
-+
-+	return usb_add_phy_dev(phy);
-+}
-+
-+static int phy_remove(struct platform_device *pdev)
-+{
-+	struct tca_apb *ta = platform_get_drvdata(pdev);
-+
-+	usb_remove_phy(&ta->phy);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id intel_usb_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-usb-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
-+
-+static struct platform_driver lgm_phy_driver = {
-+	.driver = {
-+		.name = "lgm-usb-phy",
-+		.of_match_table = intel_usb_phy_dt_ids,
-+	},
-+	.probe = phy_probe,
-+	.remove = phy_remove,
-+};
-+
-+module_platform_driver(lgm_phy_driver);
-+
-+MODULE_DESCRIPTION("Intel LGM USB PHY driver");
-+MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
-+MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@linux.intel.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+SGkgQ2h1bi1LdWFuZywNCg0KT24gU2F0LCAyMDIwLTA4LTE1IGF0IDExOjAzICswODAwLCBDaHVu
+LUt1YW5nIEh1IHdyb3RlOg0KPiBIaSwgTmVhbDoNCj4gDQo+IE5lYWwgTGl1IDxuZWFsLmxpdUBt
+ZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0OOaciDEz5pelIOmAseWbmyDkuIrljYgxMTozM+Wvq+mB
+k++8mg0KPiA+DQo+ID4gTWVkaWFUZWsgYnVzIGZhYnJpYyBwcm92aWRlcyBUcnVzdFpvbmUgc2Vj
+dXJpdHkgc3VwcG9ydCBhbmQgZGF0YQ0KPiA+IHByb3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMg
+ZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVjdGVkDQo+ID4gbWFzdGVycy4NCj4gPiBUaGUg
+c2VjdXJpdHkgdmlvbGF0aW9uIGlzIGxvZ2dlZCBhbmQgc2VudCB0byB0aGUgcHJvY2Vzc29yIGZv
+cg0KPiA+IGZ1cnRoZXIgYW5hbHlzaXMgb3IgY291bnRlcm1lYXN1cmVzLg0KPiA+DQo+ID4gQW55
+IG9jY3VycmVuY2Ugb2Ygc2VjdXJpdHkgdmlvbGF0aW9uIHdvdWxkIHJhaXNlIGFuIGludGVycnVw
+dCwgYW5kDQo+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1kZXZhcGMgZHJpdmVyLiBUaGUg
+dmlvbGF0aW9uDQo+ID4gaW5mb3JtYXRpb24gaXMgcHJpbnRlZCBpbiBvcmRlciB0byBmaW5kIHRo
+ZSBtdXJkZXJlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE5lYWwgTGl1IDxuZWFsLmxpdUBt
+ZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKy8qDQo+ID4gKyAq
+IGRldmFwY192aW9sYXRpb25faXJxIC0gdGhlIGRldmFwYyBJbnRlcnJ1cHQgU2VydmljZSBSb3V0
+aW5lIChJU1IpIHdpbGwgZHVtcA0KPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgIHZpb2xh
+dGlvbiBpbmZvcm1hdGlvbiBpbmNsdWRpbmcgd2hpY2ggbWFzdGVyIHZpb2xhdGVzDQo+ID4gKyAq
+ICAgICAgICAgICAgICAgICAgICAgICAgYWNjZXNzIHNsYXZlLg0KPiA+ICsgKi8NCj4gPiArc3Rh
+dGljIGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJxKGludCBpcnFfbnVtYmVyLA0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX2RldmFw
+Y19jb250ZXh0ICpjdHgpDQo+ID4gK3sNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAgKiBN
+YXNrIHNsYXZlJ3MgaXJxIGJlZm9yZSBjbGVhcmluZyB2aW8gc3RhdHVzLg0KPiA+ICsgICAgICAg
+ICogTXVzdCBkbyBpdCB0byBhdm9pZCBuZXN0ZWQgaW50ZXJydXB0IGFuZCBwcmV2ZW50DQo+ID4g
+KyAgICAgICAgKiB1bmV4cGVjdGVkIGJlaGF2aW9yLg0KPiA+ICsgICAgICAgICovDQo+ID4gKyAg
+ICAgICBtYXNrX21vZHVsZV9pcnEoY3R4LCB0cnVlKTsNCj4gDQo+IEkgc3RpbGwgZG9uJ3QgdW5k
+ZXJzdGFuZCB3aHkgbmVzdGVkIGludGVycnVwdCBoYXBwZW4uIElmIHR3byBDUFUNCj4gcHJvY2Vz
+cyBkaWZmZXJlbnQgZGV2YXBjIGludGVycnVwdCBhdCB0aGUgc2FtZSB0aW1lLCBtYXNrIGludGVy
+cnVwdA0KPiBjb3VsZCBub3QgcHJldmVudCB0aGVzZSB0d28gQ1BVIHRvIHN5bmMgdmlvIGRiZyBh
+dCB0aGUgc2FtZSB0aW1lLiBBcyBJDQo+IGtub3csIGluIEFSTSBDUFUsIG9ubHkgQ1BVMCBwcm9j
+ZXNzIGlycSBoYW5kbGVyLCBhbmQgYWxsIGRldmFwYw0KPiBpbnRlcnJ1cHQgaGFzIHRoZSBzYW1l
+IHByaW9yaXR5LCBzbyB3aHkgbmVzdGVkIGludGVycnVwdCBoYXBwZW4/IENvdWxkDQo+IHlvdSBl
+eHBsYWluIG1vcmUgZGV0YWlsIGFib3V0IGhvdyBuZXN0ZWQgaW50ZXJydXB0IGhhcHBlbj8NCg0K
+SWYgdGhlcmUgaXMgYW5vdGhlciB2aW9sYXRpb24gaGFwcGVuZWQgYmVmb3JlIHByZXZpb3VzIHZp
+b2xhdGlvbiBpcw0KZnVsbHkgaGFuZGxlZCwgbmVzdGVkIGludGVycnVwdCB3b3VsZCBoYXBwZW4u
+DQoNCkxldCdzIG1lIHRha2UgYW4gZXhhbXBsZToNCnZpbyBBIGhhcHBlbg0KZW50ZXIgQSBJU1IN
+Ci4uLgkJdmlvIEIgaGFwcGVuDQpmaW5pc2ggQSBJU1IJZW50ZXIgQiBJU1INCgkJLi4uDQoJCWZp
+bmlzaCBCIElTUg0KDQpXZSBtYXNrIGFsbCBtb2R1bGUncyBpcnEgdG8gYXZvaWQgbmVzdGVkIGlu
+dGVycnVwdC4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICB3aGlsZSAoZGV2YXBjX3N5bmNfdmlv
+X2RiZyhjdHgpKQ0KPiA+ICsgICAgICAgICAgICAgICBkZXZhcGNfZXh0cmFjdF92aW9fZGJnKGN0
+eCk7DQo+ID4gKw0KPiA+ICsgICAgICAgLyoNCj4gPiArICAgICAgICAqIEVuc3VyZSB0aGF0IHZp
+b2xhdGlvbiBpbmZvIGFyZSB3cml0dGVuDQo+ID4gKyAgICAgICAgKiBiZWZvcmUgZnVydGhlciBv
+cGVyYXRpb25zDQo+ID4gKyAgICAgICAgKi8NCj4gPiArICAgICAgIHNtcF9tYigpOw0KPiA+ICsN
+Cj4gPiArICAgICAgIGNsZWFyX3Zpb19zdGF0dXMoY3R4KTsNCj4gPiArICAgICAgIG1hc2tfbW9k
+dWxlX2lycShjdHgsIGZhbHNlKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gSVJRX0hBTkRM
+RUQ7DQo+ID4gK30NCj4gPiArDQo+IA0KPiBbc25pcF0NCj4gDQo+ID4gKw0KPiA+ICtzdGF0aWMg
+aW50IG10a19kZXZhcGNfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4g
+K3sNCj4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCA9IHBsYXRmb3Jt
+X2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsNCj4gPiArICAgICAgIHN0b3BfZGV2YXBjKGN0eCk7
+DQo+ID4gKw0KPiA+ICsgICAgICAgaWYgKGN0eC0+aW5mcmFfY2xrKQ0KPiANCj4gVGhpcyBhbHdh
+eXMgdHJ1ZS4NCg0KRG9lcyBpdCBtZWFuIHRoYXQgcmVtb3ZlIGZ1bmN0aW9uIHdvdWxkIGJlIGNh
+bGxlZCBvbmx5IGlmIHByb2JlIGZ1bmN0aW9uDQppcyByZXR1cm5lZCBzdWNjZXNzZnVsbHk/DQpJ
+cyB0aGVyZSBhbnkgY2hhbmNlIHRoaXMgZnVuY3Rpb24gd291bGQgYmUgY2FsbGVkIGRpcmVjdGx5
+Pw0KDQo+IA0KPiBSZWdhcmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCj4gPiArICAgICAgICAgICAg
+ICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGN0eC0+aW5mcmFfY2xrKTsNCj4gPiArDQo+ID4gKyAg
+ICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCBwbGF0Zm9y
+bV9kcml2ZXIgbXRrX2RldmFwY19kcml2ZXIgPSB7DQo+ID4gKyAgICAgICAucHJvYmUgPSBtdGtf
+ZGV2YXBjX3Byb2JlLA0KPiA+ICsgICAgICAgLnJlbW92ZSA9IG10a19kZXZhcGNfcmVtb3ZlLA0K
+PiA+ICsgICAgICAgLmRyaXZlciA9IHsNCj4gPiArICAgICAgICAgICAgICAgLm5hbWUgPSBLQlVJ
+TERfTU9ETkFNRSwNCj4gPiArICAgICAgICAgICAgICAgLm9mX21hdGNoX3RhYmxlID0gbXRrX2Rl
+dmFwY19kdF9tYXRjaCwNCj4gPiArICAgICAgIH0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICttb2R1
+bGVfcGxhdGZvcm1fZHJpdmVyKG10a19kZXZhcGNfZHJpdmVyKTsNCj4gPiArDQo+ID4gK01PRFVM
+RV9ERVNDUklQVElPTigiTWVkaWF0ZWsgRGV2aWNlIEFQQyBEcml2ZXIiKTsNCj4gPiArTU9EVUxF
+X0FVVEhPUigiTmVhbCBMaXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4iKTsNCj4gPiArTU9EVUxF
+X0xJQ0VOU0UoIkdQTCIpOw0KPiA+IC0tDQo+ID4gMS43LjkuNQ0KPiA+IF9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4gTGludXgtbWVkaWF0ZWsgbWFp
+bGluZyBsaXN0DQo+ID4gTGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+IGh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsN
+Cg0K
 
