@@ -2,392 +2,327 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CCEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A49C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 229CA20758
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F002072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 07:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597648413;
+	bh=ljY4hNkAYHQQVlNsazJvW+CoA58hsPice7owmwah8F4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qO+GoFQiZgAeM7agN/kRk+RhfkeESRi3Qv+be70K/3yNuqcprReGvVr2k5q3W9ajN
+	 3DDZ34rtVV5n4zUq6HDLsLDJAEdbUVJOnzCbvCHdQnvpV9Xn6Gmun6ygsNs/fnd02m
+	 bLpvL+gh6KfWjbqZJ5v5W3+Uf1Vmxx/+lek5zbmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725765AbgHQHFf (ORCPT
+        id S1726583AbgHQHNc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 03:05:35 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63040 "EHLO mga05.intel.com"
+        Mon, 17 Aug 2020 03:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbgHQHFa (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 03:05:30 -0400
-IronPort-SDR: petFCSW7UzQBC6duDvh83bqFOltG8P8FovUJ/d0dCS4fxRiZwbwPpR1SIEK6wxRqgHkH5uUNai
- bR2tnU3jqkDw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9715"; a="239469626"
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="239469626"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2020 00:05:30 -0700
-IronPort-SDR: H6433/XWDS/r54DT1wV2NcHOvpGHSiJj7Aiw8wsOgqaCJ71TZkDnPaqABPgwrXNWbnfV7Zpvxt
- zmOUjvhOrHBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,322,1592895600"; 
-   d="scan'208";a="496389393"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Aug 2020 00:05:25 -0700
-From:   "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org,
-        devicetree@vger.kernel.org
-Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        p.zabel@pengutronix.de, balbi@kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Subject: [RESEND PATCH v8 2/2] phy: Add USB3 PHY support for Intel LGM SoC
-Date:   Mon, 17 Aug 2020 15:05:13 +0800
-Message-Id: <20200817070513.34376-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200817070513.34376-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-References: <20200817070513.34376-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        id S1726896AbgHQHLs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Aug 2020 03:11:48 -0400
+Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 958B822EBE;
+        Mon, 17 Aug 2020 07:11:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597648278;
+        bh=ljY4hNkAYHQQVlNsazJvW+CoA58hsPice7owmwah8F4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=weJFB2dykeTzL4E2BzfsT+GmE7RVQ9oe4XudMt001kyS1aYQghz91NlAn9Q/BrI9Y
+         Ca/Gk6yuSNQHL/MI1tSJXnouSYWzRFOtMlMF4oqp160qXSAGScfim0FWQWzCgE+Oh2
+         leh5mO7b8NIl442glG0xaLE1AxW3f173F00QjGHA=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1k7ZIa-00BdlG-Mi; Mon, 17 Aug 2020 09:11:16 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: [PATCH v3 43/44] dt: document HiSilicon SPMI controller and mfd/regulator properties
+Date:   Mon, 17 Aug 2020 09:11:02 +0200
+Message-Id: <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1597647359.git.mchehab+huawei@kernel.org>
+References: <cover.1597647359.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+Add documentation for the properties needed by the HiSilicon
+6421v600 driver, and by the SPMI controller used to access
+the chipset.
 
-Add support for USB PHY on Intel LGM SoC.
-
-Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/phy/Kconfig       |  11 ++
- drivers/phy/Makefile      |   1 +
- drivers/phy/phy-lgm-usb.c | 278 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 290 insertions(+)
- create mode 100644 drivers/phy/phy-lgm-usb.c
+ .../mfd/hisilicon,hi6421-spmi-pmic.yaml       | 182 ++++++++++++++++++
+ .../spmi/hisilicon,hisi-spmi-controller.yaml  |  54 ++++++
+ 2 files changed, 236 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index de9362c25c07..01b53f86004c 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -49,6 +49,17 @@ config PHY_XGENE
- 	help
- 	  This option enables support for APM X-Gene SoC multi-purpose PHY.
- 
-+config USB_LGM_PHY
-+	tristate "INTEL Lightning Mountain USB PHY Driver"
-+	depends on USB_SUPPORT
-+	select USB_PHY
-+	select REGULATOR
-+	select REGULATOR_FIXED_VOLTAGE
-+	help
-+	  Enable this to support Intel DWC3 PHY USB phy. This driver provides
-+	  interface to interact with USB GEN-II and USB 3.x PHY that is part
-+	  of the Intel network SOC.
-+
- source "drivers/phy/allwinner/Kconfig"
- source "drivers/phy/amlogic/Kconfig"
- source "drivers/phy/broadcom/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index c27408e4daae..6eb2916773c5 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_GENERIC_PHY_MIPI_DPHY)	+= phy-core-mipi-dphy.o
- obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-+obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
- obj-y					+= allwinner/	\
- 					   amlogic/	\
- 					   broadcom/	\
-diff --git a/drivers/phy/phy-lgm-usb.c b/drivers/phy/phy-lgm-usb.c
+diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
 new file mode 100644
-index 000000000000..1ec9ab266e08
+index 000000000000..95494114554d
 --- /dev/null
-+++ b/drivers/phy/phy-lgm-usb.c
-@@ -0,0 +1,278 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel LGM USB PHY driver
-+ *
-+ * Copyright (C) 2020 Intel Corporation.
-+ */
++++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
+@@ -0,0 +1,182 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/usb/phy.h>
-+#include <linux/workqueue.h>
++title: HiSilicon 6421v600 SPMI PMIC
 +
-+#define CTRL1_OFFSET		0x14
-+#define SRAM_EXT_LD_DONE	BIT(25)
-+#define SRAM_INIT_DONE		BIT(26)
++maintainers:
++  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 +
-+#define TCPC_OFFSET		0x1014
-+#define TCPC_MUX_CTL		GENMASK(1, 0)
-+#define MUX_NC			0
-+#define MUX_USB			1
-+#define MUX_DP			2
-+#define MUX_USBDP		3
-+#define TCPC_FLIPPED		BIT(2)
-+#define TCPC_LOW_POWER_EN	BIT(3)
-+#define TCPC_VALID		BIT(4)
-+#define TCPC_CONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_USB))
-+#define TCPC_DISCONN		\
-+	(TCPC_VALID | FIELD_PREP(TCPC_MUX_CTL, MUX_NC) | TCPC_LOW_POWER_EN)
++description: |
++  HiSilicon 6421v600 uses a MIPI System Power Management (SPMI) bus in order
++  to provide interrupts and power supply.
 +
-+static const char *const PHY_RESETS[] = { "phy31", "phy", };
-+static const char *const CTL_RESETS[] = { "apb", "ctrl", };
++  The GPIO and interrupt settings are represented as part of the top-level PMIC
++  node.
 +
-+struct tca_apb {
-+	struct reset_control *resets[ARRAY_SIZE(PHY_RESETS)];
-+	struct regulator *vbus;
-+	struct work_struct wk;
-+	struct usb_phy phy;
++  The SPMI controller part is provided by
++  Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml.
 +
-+	bool phy_initialized;
-+	bool connected;
-+};
++properties:
++  $nodename:
++    pattern: "pmic@[0-9a-f]"
 +
-+static int get_flipped(struct tca_apb *ta, bool *flipped)
-+{
-+	union extcon_property_value property;
-+	int ret;
++  compatible:
++    const: hisilicon,hi6421-spmi-pmic
 +
-+	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-+				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-+		return ret;
-+	}
++  reg:
++    maxItems: 1
 +
-+	*flipped = property.intval;
++  spmi-channel:
++    description: number of the SPMI channel where the PMIC is connected
 +
-+	return ret;
-+}
++  '#interrupt-cells':
++    const: 2
 +
-+static int phy_init(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-+	int val, ret, i;
++  interrupt-controller:
++    description:
++      Identify that the PMIC is capable of behaving as an interrupt controller.
 +
-+	if (ta->phy_initialized)
-+		return 0;
++  gpios:
++    maxItems: 1
 +
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_deassert(ta->resets[i]);
++  irq-num:
++    description: Interrupt request number
 +
-+	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE, 10, 10 * 1000);
-+	if (ret) {
-+		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-+		return ret;
-+	}
++  'irq-array':
++    description: Interrupt request array
 +
-+	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
++  'irq-mask-addr':
++    description: Address for the interrupt request mask
 +
-+	ta->phy_initialized = true;
-+	if (!ta->phy.edev) {
-+		writel(TCPC_CONN, ta->phy.io_priv + TCPC_OFFSET);
-+		return phy->set_vbus(phy, true);
-+	}
++  'irq-addr':
++    description: Address for the interrupt request
 +
-+	schedule_work(&ta->wk);
++  regulators:
++    type: object
 +
-+	return ret;
-+}
++    properties:
++      '#address-cells':
++        const: 1
 +
-+static void phy_shutdown(struct usb_phy *phy)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int i;
++      '#size-cells':
++        const: 0
 +
-+	if (!ta->phy_initialized)
-+		return;
++    patternProperties:
++      '^ldo@[0-9]+$':
++        type: object
 +
-+	ta->phy_initialized = false;
-+	flush_work(&ta->wk);
-+	ta->phy.set_vbus(&ta->phy, false);
++        $ref: "/schemas/regulator/regulator.yaml#"
 +
-+	ta->connected = false;
-+	writel(TCPC_DISCONN, ta->phy.io_priv + TCPC_OFFSET);
++        properties:
++          reg:
++            description: Enable register.
 +
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+}
++          '#address-cells':
++            const: 1
 +
-+static int phy_set_vbus(struct usb_phy *phy, int on)
-+{
-+	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-+	int ret;
++          '#size-cells':
++            const: 0
 +
-+	if (on) {
-+		ret = regulator_enable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not enabled\n");
-+	} else {
-+		ret = regulator_disable(ta->vbus);
-+		if (ret)
-+			dev_err(ta->phy.dev, "regulator not disabled\n");
-+	}
++          vsel-reg:
++            description: Voltage selector register.
 +
-+	return ret;
-+}
++          enable-mask:
++            description: Bitmask used to enable the regulator.
 +
-+static void tca_work(struct work_struct *work)
-+{
-+	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-+	bool connected;
-+	bool flipped = false;
-+	u32 val;
-+	int ret;
++          voltage-table:
++            description: Table with the selector items for the voltage regulator.
++            minItems: 2
++            maxItems: 16
 +
-+	ret = get_flipped(ta, &flipped);
-+	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST) && !ret;
-+	if (connected == ta->connected)
-+		return;
++          off-on-delay-us:
++            description: Time required for changing state to enabled in microseconds.
 +
-+	ta->connected = connected;
-+	if (connected) {
-+		val = TCPC_CONN;
-+		if (flipped)
-+			val |= TCPC_FLIPPED;
-+		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-+	} else {
-+		val = TCPC_DISCONN;
-+		dev_info(ta->phy.dev, "disconnected\n");
-+	}
++          startup-delay-us:
++            description: Startup time in microseconds.
 +
-+	writel(val, ta->phy.io_priv + TCPC_OFFSET);
++          idle-mode-mask:
++            description: Bitmask used to put the regulator on idle mode.
 +
-+	ret = ta->phy.set_vbus(&ta->phy, connected);
-+	if (ret)
-+		dev_err(ta->phy.dev, "failed to set VBUS\n");
-+}
++          eco-microamp:
++            description: Maximum current while on idle mode.
 +
-+static int id_notifier(struct notifier_block *nb, unsigned long event, void *ptr)
-+{
-+	struct tca_apb *ta = container_of(nb, struct tca_apb, phy.id_nb);
++        required:
++          - reg
++          - vsel-reg
++          - enable-mask
++          - voltage-table
++          - off-on-delay-us
++          - startup-delay-us
 +
-+	if (ta->phy_initialized)
-+		schedule_work(&ta->wk);
++required:
++  - compatible
++  - reg
++  - regulators
 +
-+	return NOTIFY_DONE;
-+}
++examples:
++  - |
++    /* pmic properties */
 +
-+static int vbus_notifier(struct notifier_block *nb, unsigned long evnt, void *ptr)
-+{
-+	return NOTIFY_DONE;
-+}
++    pmic: pmic@0 {
++      compatible = "hisilicon,hi6421-spmi-pmic";
++      slave_id = <0>;
++      reg = <0 0>;
 +
-+static int phy_probe(struct platform_device *pdev)
-+{
-+	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-+	struct device *dev = &pdev->dev;
-+	struct usb_phy *phy;
-+	struct tca_apb *ta;
-+	int i;
++      #interrupt-cells = <2>;
++      interrupt-controller;
++      gpios = <&gpio28 0 0>;
++      irq-num = <16>;
++      irq-array = <2>;
++      irq-mask-addr = <0x202 2>;
++      irq-addr = <0x212 2>;
 +
-+	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-+	if (!ta)
-+		return -ENOMEM;
++      #address-cells = <1>;
++      #size-cells = <0>;
 +
-+	platform_set_drvdata(pdev, ta);
-+	INIT_WORK(&ta->wk, tca_work);
++      regulators {
++          #address-cells = <1>;
++          #size-cells = <0>;
 +
-+	phy = &ta->phy;
-+	phy->dev = dev;
-+	phy->label = dev_name(dev);
-+	phy->type = USB_PHY_TYPE_USB3;
-+	phy->init = phy_init;
-+	phy->shutdown = phy_shutdown;
-+	phy->set_vbus = phy_set_vbus;
-+	phy->id_nb.notifier_call = id_notifier;
-+	phy->vbus_nb.notifier_call = vbus_notifier;
++        ldo3: ldo3@16 {
++          reg = <0x16>;
++          vsel-reg = <0x51>;
 +
-+	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(phy->io_priv))
-+		return PTR_ERR(phy->io_priv);
++          regulator-name = "ldo3";
++          regulator-min-microvolt = <1500000>;
++          regulator-max-microvolt = <2000000>;
++          regulator-boot-on;
 +
-+	ta->vbus = devm_regulator_get(dev, "vbus");
-+	if (IS_ERR(ta->vbus))
-+		return PTR_ERR(ta->vbus);
++          enable-mask = <0x01>;
 +
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-+		resets[i] = devm_reset_control_get_exclusive(dev, CTL_RESETS[i]);
-+		if (IS_ERR(resets[i])) {
-+			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-+			return PTR_ERR(resets[i]);
-+		}
-+	}
++          voltage-table = <1500000>, <1550000>, <1600000>, <1650000>,
++                          <1700000>, <1725000>, <1750000>, <1775000>,
++                          <1800000>, <1825000>, <1850000>, <1875000>,
++                          <1900000>, <1925000>, <1950000>, <2000000>;
++          off-on-delay-us = <20000>;
++          startup-delay-us = <120>;
++        };
 +
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-+		ta->resets[i] = devm_reset_control_get_exclusive(dev, PHY_RESETS[i]);
-+		if (IS_ERR(ta->resets[i])) {
-+			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-+			return PTR_ERR(ta->resets[i]);
-+		}
-+	}
++        ldo4: ldo4@17 { /* 40 PIN */
++          reg = <0x17>;
++          vsel-reg = <0x52>;
 +
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_assert(resets[i]);
++          regulator-name = "ldo4";
++          regulator-min-microvolt = <1725000>;
++          regulator-max-microvolt = <1900000>;
++          regulator-boot-on;
 +
-+	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-+		reset_control_assert(ta->resets[i]);
-+	/*
-+	 * Out-of-band reset of the controller after PHY reset will cause
-+	 * controller malfunctioning, so we should use in-band controller
-+	 * reset only and leave the controller de-asserted here.
-+	 */
-+	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-+		reset_control_deassert(resets[i]);
++          enable-mask = <0x01>;
++          idle-mode-mask = <0x10>;
++          eco-microamp = <10000>;
 +
-+	/* Need to wait at least 20us after de-assert the controller */
-+	usleep_range(20, 100);
++          hi6421-vsel = <0x52 0x07>;
++          voltage-table = <1725000>, <1750000>, <1775000>, <1800000>,
++                          <1825000>, <1850000>, <1875000>, <1900000>;
++          off-on-delay-us = <20000>;
++          startup-delay-us = <120>;
++        };
++      };
++    };
+diff --git a/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+new file mode 100644
+index 000000000000..5aeb2ae12024
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spmi/hisilicon,hisi-spmi-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	return usb_add_phy_dev(phy);
-+}
++title: HiSilicon SPMI controller
 +
-+static int phy_remove(struct platform_device *pdev)
-+{
-+	struct tca_apb *ta = platform_get_drvdata(pdev);
++maintainers:
++  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 +
-+	usb_remove_phy(&ta->phy);
++description: |
++  The HiSilicon SPMI controller is found on some Kirin-based designs.
++  It is a MIPI System Power Management (SPMI) controller.
 +
-+	return 0;
-+}
++  The PMIC part is provided by
++  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
 +
-+static const struct of_device_id intel_usb_phy_dt_ids[] = {
-+	{ .compatible = "intel,lgm-usb-phy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_usb_phy_dt_ids);
++properties:
++  $nodename:
++    pattern: "spmi@[0-9a-f]"
 +
-+static struct platform_driver lgm_phy_driver = {
-+	.driver = {
-+		.name = "lgm-usb-phy",
-+		.of_match_table = intel_usb_phy_dt_ids,
-+	},
-+	.probe = phy_probe,
-+	.remove = phy_remove,
-+};
++  compatible:
++    const: hisilicon,spmi-controller
 +
-+module_platform_driver(lgm_phy_driver);
++  reg:
++    maxItems: 1
 +
-+MODULE_DESCRIPTION("Intel LGM USB PHY driver");
-+MODULE_AUTHOR("Li Yin <yin1.li@intel.com>");
-+MODULE_AUTHOR("Vadivel Murugan R <vadivel.muruganx.ramuthevar@linux.intel.com>");
-+MODULE_LICENSE("GPL v2");
++  "#address-cells":
++    const: 2
++
++  "#size-cells":
++    const: 0
++
++  spmi-channel:
++    description: number of the SPMI channel where the PMIC is connected
++
++patternProperties:
++  "^pmic@[0-9a-f]$":
++    $ref: "/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#"
++
++examples:
++  - |
++    spmi: spmi@fff24000 {
++      compatible = "hisilicon,spmi-controller";
++      #address-cells = <2>;
++      #size-cells = <0>;
++      status = "ok";
++      reg = <0x0 0xfff24000 0x0 0x1000>;
++      spmi-channel = <2>;
++
++      /* pmic properties */
++
++    };
 -- 
-2.11.0
+2.26.2
 
