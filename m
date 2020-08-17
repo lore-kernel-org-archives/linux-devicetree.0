@@ -2,112 +2,120 @@ Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B4DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FF3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B683520716
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:36:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HGpqSDw3"
+	by mail.kernel.org (Postfix) with ESMTP id 637EB20674
+	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 19:38:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597693116;
+	bh=uL3CiGQO5lTVSg6FRgGW4wao8mfJKlmO0zjEjw/6SII=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KHJnBtXWVs5mM705KkWZfM66cRcxBnGjnDZnsOAGl5+7ffwGAicxS6N9leT9cSmlL
+	 eGKYgSVVyNiZNb29hTmU3XR+cu7TppKm7A5s1wUaBZJ8oGG6q0fXRMWxyv2I3e8pSY
+	 bYpCUIZs/+fj15/rGAJWhWiI0IX9vt0RtmLh1DMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392412AbgHQTgH (ORCPT
+        id S1729458AbgHQTid (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 15:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392396AbgHQTgC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:36:02 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5551C061389
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 12:36:01 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id p24so19168627ejf.13
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 12:36:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VwFw5hgUmgRtXhrUbQX2TB/ljF4qHz9d6xiixFTiMJw=;
-        b=HGpqSDw3fP6ZBWEE+ohC8/MRyRcWLSXgCc70YwJNS0CpNnz2GpL3DFcmbnaYoEvOyj
-         W42olQhdk1YTsaeuOP74p9ElmBvSOEhCL/fYqkqiAtEkJOEk9cIJThg7cKitD0nMDXeA
-         fYI92dRFyrOoLciA5IBfIeYblE9VwJg8/+s2eaOFRa7Qi+oumXELb/33P/Pidw7jmD8+
-         /Ba9iTlQyEQasdL09wMhZsNNrOQkgG2zKR21DlTb+s7NDoaAIyRhiBllGjtTymZhvsLi
-         IZPyvHuM8N5OpEUnZsmg5M+ZSCVzdFwBYI2d+nKpUf5Er16KfVCgMev6gPb4CaLcsga4
-         znpw==
+        Mon, 17 Aug 2020 15:38:33 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44800 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732456AbgHQTi2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 15:38:28 -0400
+Received: by mail-il1-f193.google.com with SMTP id j9so15538877ilc.11;
+        Mon, 17 Aug 2020 12:38:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VwFw5hgUmgRtXhrUbQX2TB/ljF4qHz9d6xiixFTiMJw=;
-        b=a9O39MABF4+Zldn8bRbxU/vAh3m5dJbJdK3r/vD0vB2DhpM5SmIe/VB/8pP+tdaIfk
-         +hyiNP7mAXsWi8e8g2uhoQevlO3LVSLh+mOKXJ1G6cnF31LcVjszUCLmrq15sai3eWZg
-         SnjRT01NoX2UyrsWffM+hxaboH+iErutPdlPZnZ+RWq1nbRZ2ATe4af27V4GbxH+bQD/
-         NAkCwq5hr9P5GWT5D3dZOtyIBZYXWwlkoJSQypSHUorbPFkZZ3eHLTwCSxNMeExnVpVO
-         U7tTa0NAtULMkkSMluo13qjzWIFN4/YocOkKEVOTn68jf8F4wgbHJYqsI4lEVSpzwu6J
-         HMzA==
-X-Gm-Message-State: AOAM532F3n2AoK9v8ENnQCDRcj8gLlOCOsqC6XeX6vxWZyjILT7r6D+v
-        Z4ojhr4mbVQl4Fe2GBCrLJEQMEWx+BZmaWqSyho=
-X-Google-Smtp-Source: ABdhPJzBLq7BTUZu0gPhyPZr1iMVSNYxpytQ0oWV4Nv6K4s8WcQqs0XwbGPW54bVfRpJFoiUF59hC2YERdceZBH+2xs=
-X-Received: by 2002:a17:906:cc47:: with SMTP id mm7mr15799313ejb.362.1597692960285;
- Mon, 17 Aug 2020 12:36:00 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Flz5BKGDdaW7ZnqIwZRWx/uMxnDaWlXWl56bHuuN1CU=;
+        b=F77oA9uRN2ZBXSOMCXwOZfPt2qyAcUn63ashmvDVoj9j79iFdbowL+5F0c4G4JDshn
+         3qDIxlTx3n5yPYgVFhWzR2FQ/OEEJpCtrKp1GWQ1ezY1+tkBbMWwdhZplD+AnF4FA5aq
+         /lYWbh8NzAfOMeHnyS/lCupXpcfMnzwKXp1fntrgiV2+7sqI604lq0J4zIV8zQp1WeJ9
+         vXd40jeQDErZ06JkC9L8qDpdntKH+rgCsgI8Z5S7/qYtP6YfOouLYOUtGkUJZnA55QDr
+         j2g/OzOr8VspgplD+wEMPkv2dUnAV2GwtcstLYDq3ht74bYZTc0XbYDEpksdDCGg3X+6
+         3LyQ==
+X-Gm-Message-State: AOAM533wu8kPQ9doz8KjmsyU8kyqJ2Zr/4FQQaIH7rR6lp4OmPIshyUS
+        YQmN7qkaPWBgCa+dgS36GA==
+X-Google-Smtp-Source: ABdhPJzCXtRI+ilbmlVB/zkPF+w3d3j6oztJQTv8tmf6mi11GZPzY/jlYGFb8HwqGgx8EQdWfkx2bA==
+X-Received: by 2002:a92:c8c1:: with SMTP id c1mr15171197ilq.42.1597693107034;
+        Mon, 17 Aug 2020 12:38:27 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id w22sm9520191ioc.24.2020.08.17.12.38.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2020 12:38:26 -0700 (PDT)
+Received: (nullmailer pid 1419503 invoked by uid 1000);
+        Mon, 17 Aug 2020 19:38:25 -0000
+Date:   Mon, 17 Aug 2020 13:38:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, kernel@axis.com, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, oliver@schinagl.nl
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: Add pwm-gpio
+Message-ID: <20200817193825.GA1416132@bogus>
+References: <20200814155513.31936-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
-References: <20200817102122.434-1-linux.amoon@gmail.com> <20200817102122.434-2-linux.amoon@gmail.com>
-In-Reply-To: <20200817102122.434-2-linux.amoon@gmail.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 17 Aug 2020 21:35:49 +0200
-Message-ID: <CAFBinCCYgm83Vs+dq6G4+1wv7T=S0mzt=gtLaHDfgBrCeRkk5A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] arm64: dts: meson-g12b-odroid-n2: Enable RTC
- controller node
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814155513.31936-1-vincent.whitchurch@axis.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Anand,
-
-thank you for updating this patch!
-
-On Mon, Aug 17, 2020 at 12:21 PM Anand Moon <linux.amoon@gmail.com> wrote:
-[...]
-> changes v2
-> --Fix the missing INT (GPIOA.BIT7) pinctrl.
-should I also expect an interrupt property somewhere below?
-
-> --Fix the missing rtcwakeup.
-> --Drop the clock not required clock property by the PCF8563 driver.
+On Fri, Aug 14, 2020 at 05:55:12PM +0200, Vincent Whitchurch wrote:
+> Add bindings for the pwm-gpio driver.
+> 
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 > ---
->  .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index 34fffa6d859d..f08ae1b337ad 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -477,6 +477,19 @@ hdmi_tx_tmds_out: endpoint {
->         };
->  };
->
-> +&i2c3 {
-> +       pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
-> +       pinctrl-1 = <&tdm_c_din3_a_pins>;
-> +       pinctrl-names = "default";
-why is there pinctrl-1 without any corresponding "pinctrl-names" entry?
-also I'm surprised to see a TDM (audio) related pin function as part
-of an I2C controller. if this is correct then I'd appreciate a bit
-information (for example as part of the patch description) why that is
+>  .../devicetree/bindings/pwm/pwm-gpio.yaml     | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+> new file mode 100644
+> index 000000000000..51941cd03955
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+> @@ -0,0 +1,29 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/pwm-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: GPIO-based PWM
+> +
+> +maintainers:
+> +  - Vincent Whitchurch <vincent.whitchurch@axis.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - pwm-gpio
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +  gpio:
 
+'gpios' is the preferred form even if singular.
 
-Martin
+> +    maxItems: 1
+> +    description: GPIO to toggle.
+> +
+> +required:
+> +  - compatible
+> +  - "#pwm-cells"
+> +  - gpio
+> +
+> +additionalProperties: false
+> -- 
+> 2.25.1
+> 
