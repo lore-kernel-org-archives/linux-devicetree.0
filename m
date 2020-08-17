@@ -2,320 +2,255 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A34C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCF9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153BF20738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAA420639
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:48:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kSt4tcoc"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="BGyulHAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgHRGnv (ORCPT
+        id S1726745AbgHRGsc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726398AbgHRGnu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 02:43:50 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4884DC061342
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 23:43:50 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v4so20239708ljd.0
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 23:43:50 -0700 (PDT)
+        Tue, 18 Aug 2020 02:48:32 -0400
+Received: from mail-db8eur05on2067.outbound.protection.outlook.com ([40.107.20.67]:64003
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726730AbgHRGsa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 02:48:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mIoLk7qfsG2tJHty1wXuraJUlDbQZlNgj2PoG3ijRbleKQtNuvf2MiYm5wTCZP4fv+ev1MZc5mE5EgFRKFjC16teAGQs3fQnPzgaPmDA8bL3bIkUtvjNWo91+yeE+Ova7UXo7mg5KGduD7hqOpEbSCfva59OG2AqCW80QOj9pKTp4pDSVRSdgdD8zgXKYguHkMEz6g6adbGQIkEhbcYZTnt/MbR1eA4Yf9JGQCOfPAnPpZnOA6e1AqtZSrd3h5pQzX/XGmmBrV27K3nPFQt+bFYzrnAnHIPjn+avMxbLuJYeTsxRuHIEzU9BoWaOjwZLDrdhdQYbF0BsSAJPZyhMwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tdE1x8BM7XNoSSlsO+7fVaolO1TVM6KIX4nD4XzXAao=;
+ b=hVJzODZLYTErQrfMgeNvvb7Y77iqj9L13AvZhZpE2/YAJqme7N3U+KcN7jXzE28mzPwB5HlgZ8BYR983Z5mgOeOUjspE/nrzzclJF8qDrVc0kZebJGNBlayPKBeUCUht0W2SZtwR2IG0ZiGA2nNtBEcDVCxMiQopZTJgO3cwRuoJSc3RDFLWho3K8eOe4ZHkEA7QldK/J/j9bQ2vUO9TMXlmeM/22+F3+ZGr4U9xtOnRQyKIyabtxJ9OA2ltYPNO8K+IO41wAhS/elbCFxPpa8wZLjS5KgbZQ2GwdjSwI3rF1Wr4IyTT1/cbwlAjmWlYQ4ESecNb2chyB930cDS8Gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=neutral (sender ip is
+ 193.240.239.45) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=diasemi.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=diasemi.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ClXX7uJ60td5LnvfRgmPKtfx8z8dTsIv+iRBmNZyVoA=;
-        b=kSt4tcocrgt42fP9k7nigyYuEtJmqu/nqhLVX93E6GYGGP2Jpe8ePzae1W9m3auUDs
-         cG6SWMeqQE+bBKWbVXy7mGFD7eDplEwGDiMpr6Xi6mgcPq/Pb73h2KfhGM/kdgx4XENj
-         wEVDtGPO8aFZeRWWuOgCxOmdI51GTNwm1pjBCbQoH9ep6DVGpQkZMXL6BocCj+eL0kev
-         Jdfo4u2aleuHijhdSw6y8i7EAVmzJf2LvjgH3qZHCcf22Dkn/a0QqMn/qRacSKd91z0X
-         C56fJPtVYf6DcehfSqwGF/MsiPXowGvXjNOg68AYeCPTKRwRcWizDKPPjZ/UZurNfgQ4
-         0ibw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ClXX7uJ60td5LnvfRgmPKtfx8z8dTsIv+iRBmNZyVoA=;
-        b=nFVCArIdsd6tdLDi0cdQFkI59Uib72H8IXLYvBvG7sb25eqXDNX3pfVRCxQ5rw+5JD
-         rjnB24Ysh5wnN0XD1iKXAzzH+50f5Edz2T4CkFZFb2Ij9nw0xRqHoeC6LcrQEmlhih8o
-         Lx7mPVk+G4/FyJZPJtbjSTCFFn4K8gbPrOwhxZtFus+6Cn/ZgmsUzYoe/Ko1gmHlICJk
-         ZpAUBjkiVFtVjFrUWDLeQ9i1nQSj7Ntla94b+jYpIXyDMzBr7u2162ALWeYZGco1jxvJ
-         TRmT92C6Ebq1t0pB0EGzBTuxjJB1aZYey6w8atcy0asGhuJp1Q2AC+GL4dH5xLMHivMR
-         f9ZQ==
-X-Gm-Message-State: AOAM531ALagDHMjGd3GUmIVCh1TiVj6VL1cXPluoKPPDitBqyZgkBAxS
-        7I42LYrm7HzqosFJZ7r4/Nsy4Q==
-X-Google-Smtp-Source: ABdhPJzq4ZGEEmdILhrjYOQbVBu/H10UwBlGsgZjGCCOkKbx52gLSJfnFuD9oslfdMsAdHDuZDOOiQ==
-X-Received: by 2002:a2e:912:: with SMTP id 18mr9494717ljj.429.1597733028570;
-        Mon, 17 Aug 2020 23:43:48 -0700 (PDT)
-Received: from [192.168.118.216] (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
-        by smtp.gmail.com with ESMTPSA id z22sm6149757lfb.93.2020.08.17.23.43.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 23:43:47 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: media: imx274: Convert to json-schema
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Leon Luo <leonl@leopardimaging.com>,
-        mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
-        linux-renesas-soc@vger.kernel.org
-References: <20200817160037.255972-1-jacopo+renesas@jmondi.org>
- <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
-From:   Andrey Konovalov <andrey.konovalov@linaro.org>
-Message-ID: <3592105f-584f-eeeb-4ece-89f3f6bb5352@linaro.org>
-Date:   Tue, 18 Aug 2020 09:43:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tdE1x8BM7XNoSSlsO+7fVaolO1TVM6KIX4nD4XzXAao=;
+ b=BGyulHAlyQzcTzX1HKMB84wCwqCi+pGK3vZiy+xwZ4aeRCALriPiIC5nFHqN4c/CH+f7J+9REIBPr38Mmcws1QtkgMwoQR4E9cmCjn9/1rn/rstVJMJaJQDLcUciUW9gNOIf9uSwHfKxxVIvhOPqJ6JofTMddAt7Fp+HB/sUB5E=
+Received: from MR2P264CA0173.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501::12) by
+ PR3PR10MB4015.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:a3::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3283.18; Tue, 18 Aug 2020 06:48:26 +0000
+Received: from VE1EUR02FT031.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:501:0:cafe::b5) by MR2P264CA0173.outlook.office365.com
+ (2603:10a6:501::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15 via Frontend
+ Transport; Tue, 18 Aug 2020 06:48:26 +0000
+X-MS-Exchange-Authentication-Results: spf=neutral (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; vger.kernel.org; dkim=none
+ (message not signed) header.d=none;vger.kernel.org; dmarc=fail action=none
+ header.from=diasemi.com;
+Received-SPF: Neutral (protection.outlook.com: 193.240.239.45 is neither
+ permitted nor denied by domain of diasemi.com)
+Received: from mailrelay1.diasemi.com (193.240.239.45) by
+ VE1EUR02FT031.mail.protection.outlook.com (10.152.12.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3283.16 via Frontend Transport; Tue, 18 Aug 2020 06:48:25 +0000
+Received: from krsrvapps-03.diasemi.com (10.93.17.2) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Tue, 18 Aug 2020 08:48:16 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 5BCA613F673; Tue, 18 Aug 2020 15:48:15 +0900 (KST)
+Message-ID: <0c125776c1d606cad03112b19cfe26a6371164a5.1597706056.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1597706056.git.Roy.Im@diasemi.com>
+References: <cover.1597706056.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Tue, 18 Aug 2020 08:14:16 +0900
+Subject: [RESEND PATCH v19 2/3] dt-bindings: input: Add document bindings for
+ DA7280
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        <devicetree@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b40d2f31-8a75-40e0-9aa1-08d84342b528
+X-MS-TrafficTypeDiagnostic: PR3PR10MB4015:
+X-Microsoft-Antispam-PRVS: <PR3PR10MB40151E611542C013AAE5EF32A25C0@PR3PR10MB4015.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: w2F/MN1tVDtWivZjZnsJ4FZeS+V6zPDjlnqCusT3rkdnMAsrD6qPI4M7nVjyJVEbw6gkpzO4t025iJFvogeByUfqk6g6hDE0sX5WpWGJItahyXVTSV1aZaLPlbFc6984ZCd1fL5K8R4emD3BqwrQgjZSBIGBJ8ynjD307bqhK7bfVCfW2IqsEBu5rPj5rxB0fRpZ64GWe7Ygr82655S2+oc2cT49SJg5fhUWp6SxCLDAGiRMAbtAuyD5eKpv6lLCD/uvqbhinkodqr8aHbL+Owdf9agDpi5e9tar4C3J2E98UutDuN5v1+y1epgKvkAIqMlpOAiBAk6pTL/vTidbyr2aXpD37ny0u2EKDGdIm1lDgcf0iS/7KheCZb8B0mZs4zeb5fgfcZabVjtYyGCGxUxt7eHzz21C/mmpbNHo4suZvaysPwH8USmvoE2GkgH2
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(39860400002)(376002)(346002)(396003)(46966005)(83380400001)(36906005)(36756003)(478600001)(2616005)(356005)(33310700002)(42186006)(82740400003)(4326008)(336012)(82310400002)(81166007)(54906003)(110136005)(70586007)(2906002)(26005)(6266002)(8676002)(316002)(5660300002)(8936002)(70206006)(186003)(426003)(86362001)(47076004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2020 06:48:25.6566
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b40d2f31-8a75-40e0-9aa1-08d84342b528
+X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
+X-MS-Exchange-CrossTenant-AuthSource: VE1EUR02FT031.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR10MB4015
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Add device tree binding information for DA7280 haptic driver.
+Example bindings for DA7280 are added.
 
-Misprint in the subject (imx274 vs imx214)?
+Reviewed-by: Rob Herring <robh@kernel.org>.
 
-Thanks,
-Andrey
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
 
-On 17.08.2020 22:18, Jacopo Mondi wrote:
-> Slightly better with a subject  =)
-> 
-> I made a formatting error, empty line between receivers list and Subject:
-> 
-> Sorry about this :)
-> 
-> On Mon, Aug 17, 2020 at 06:00:37PM +0200, Jacopo Mondi wrote:
->> Subject: [PATCH] dt-bindings: media: imx274: Convert to json-schema
->>
->> Convert the imx274 bindings document to json-schema and update
->> the MAINTAINERS file accordingly.
->>
->> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->> ---
->>   .../bindings/media/i2c/sony,imx214.txt        |  53 --------
->>   .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
->>   MAINTAINERS                                   |   2 +-
->>   3 files changed, 125 insertions(+), 54 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->>   create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->> deleted file mode 100644
->> index f11f28a5fda4..000000000000
->> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->> +++ /dev/null
->> @@ -1,53 +0,0 @@
->> -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
->> -
->> -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
->> -an active array size of 4224H x 3200V. It is programmable through an I2C
->> -interface.
->> -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
->> -throughput of 1.2Gbps/lane.
->> -
->> -
->> -Required Properties:
->> -- compatible: Shall be "sony,imx214".
->> -- reg: I2C bus address of the device. Depending on how the sensor is wired,
->> -       it shall be <0x10> or <0x1a>;
->> -- enable-gpios: GPIO descriptor for the enable pin.
->> -- vdddo-supply: Chip digital IO regulator (1.8V).
->> -- vdda-supply: Chip analog regulator (2.7V).
->> -- vddd-supply: Chip digital core regulator (1.12V).
->> -- clocks: Reference to the xclk clock.
->> -- clock-frequency: Frequency of the xclk clock.
->> -
->> -Optional Properties:
->> -- flash-leds: See ../video-interfaces.txt
->> -- lens-focus: See ../video-interfaces.txt
->> -
->> -The imx214 device node shall contain one 'port' child node with
->> -an 'endpoint' subnode. For further reading on port node refer to
->> -Documentation/devicetree/bindings/media/video-interfaces.txt.
->> -
->> -Required Properties on endpoint:
->> -- data-lanes: check ../video-interfaces.txt
->> -- link-frequencies: check ../video-interfaces.txt
->> -- remote-endpoint: check ../video-interfaces.txt
->> -
->> -Example:
->> -
->> -	camera-sensor@1a {
->> -		compatible = "sony,imx214";
->> -		reg = <0x1a>;
->> -		vdddo-supply = <&pm8994_lvs1>;
->> -		vddd-supply = <&camera_vddd_1v12>;
->> -		vdda-supply = <&pm8994_l17>;
->> -		lens-focus = <&ad5820>;
->> -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
->> -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
->> -		clock-frequency = <24000000>;
->> -		port {
->> -			imx214_ep: endpoint {
->> -				data-lanes = <1 2 3 4>;
->> -				link-frequencies = /bits/ 64 <480000000>;
->> -				remote-endpoint = <&csiphy0_ep>;
->> -			};
->> -		};
->> -	};
->> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
->> new file mode 100644
->> index 000000000000..ddd4627214b1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
->> @@ -0,0 +1,124 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
->> +
->> +maintainers:
->> +  - Ricardo Ribalda <ribalda@kernel.org>
->> +
->> +description: -|
->> +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
->> +  an active array size of 4224H x 3200V. It is programmable through an I2C
->> +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
->> +  maximum throughput of 1.2Gbps/lane.
->> +
->> +properties:
->> +  compatible:
->> +    const: sony,imx214
->> +
->> +  reg:
->> +    description: -|
->> +      I2C device address. Depends on how the sensor is wired, it shall be
->> +    enum:
->> +      - 0x10
->> +      - 0x1a
->> +
->> +  clocks:
->> +    description: Reference to the xclk clock.
->> +    maxItems: 1
->> +
->> +  clock-frequency:
->> +    description: Frequency of the xclk clock in Hz.
->> +
->> +  enable-gpios:
->> +    description: GPIO descriptor for the enable pin.
->> +    maxItems: 1
->> +
->> +  vdddo-supply:
->> +    description: Chip digital IO regulator (1.8V).
->> +    maxItems: 1
->> +
->> +  vdda-supply:
->> +    description: Chip analog regulator (2.7V).
->> +    maxItems: 1
->> +
->> +  vddd-supply:
->> +    description: Chip digital core regulator (1.12V).
->> +    maxItems: 1
->> +
->> +  flash-leds:
->> +    description: See ../video-interfaces.txt
->> +
->> +  lens-focus:
->> +    description: See ../video-interfaces.txt
->> +
->> +  port:
->> +    type: object
->> +    description: |
->> +      The device node must contain one 'port' child node for its digital output
->> +      video port, in accordance with the video interface bindings defined in
->> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +    properties:
->> +      endpoint:
->> +        type: object
->> +        properties:
->> +          remote-endpoint:
->> +            description: See ../video-interfaces.txt
->> +
->> +          data-lanes:
->> +            description: See ../video-interfaces.txt
->> +
->> +          link-frequencies:
->> +            description: See ../video-interfaces.txt
->> +
->> +        required:
->> +          - data-lanes
->> +          - link-frequencies
->> +
->> +    additionalProperties: false
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-frequency
->> +  - enable-gpios
->> +  - vdddo-supply
->> +  - vdda-supply
->> +  - vddd-supply
->> +  - port
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/gpio/gpio.h>
->> +
->> +    i2c0 {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        camera-sensor@1a {
->> +            compatible = "sony,imx214";
->> +            reg = <0x1a>;
->> +            vdddo-supply = <&pm8994_lvs1>;
->> +            vddd-supply = <&camera_vddd_1v12>;
->> +            vdda-supply = <&pm8994_l17>;
->> +            lens-focus = <&ad5820>;
->> +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
->> +            clocks = <&camera_clk>;
->> +            clock-frequency = <24000000>;
->> +
->> +            port {
->> +                imx214_ep: endpoint {
->> +                    data-lanes = <1 2 3 4>;
->> +                    link-frequencies = /bits/ 64 <480000000>;
->> +                    remote-endpoint = <&csiphy0_ep>;
->> +                };
->> +            };
->> +        };
->> +    };
->> +
->> +...
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 6c8e98238a7b..d1a6173d3b64 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -15918,7 +15918,7 @@ M:	Ricardo Ribalda <ribalda@kernel.org>
->>   L:	linux-media@vger.kernel.org
->>   S:	Maintained
->>   T:	git git://linuxtv.org/media_tree.git
->> -F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
->>   F:	drivers/media/i2c/imx214.c
->>
->>   SONY IMX219 SENSOR DRIVER
->> --
->> 2.27.0
->>
+---
+v19: No changes.
+v18: No changes.
+v17: No changes.
+v16: No changes.
+v15: No changes.
+v14: No changes.
+v13: No changes.
+v12: No changes.
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: Updated descriptions for new properties.
+v7: No changes.
+v6: No changes.
+v5: Updated descriptions and fixed errors.
+v4: Fixed commit message, properties.
+v3: Fixed subject format.
+v2: No changes
+
+
+ .../devicetree/bindings/input/dlg,da7280.txt       | 109 +++++++++++++++++++++
+ 1 file changed, 109 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+
+diff --git a/Documentation/devicetree/bindings/input/dlg,da7280.txt b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+new file mode 100644
+index 0000000..e6b719d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/dlg,da7280.txt
+@@ -0,0 +1,109 @@
++Dialog Semiconductor DA7280 Haptics bindings
++
++Required properties:
++- compatible: Should be "dlg,da7280".
++- reg: Specifies the I2C slave address.
++
++- interrupt-parent : Specifies the phandle of the interrupt controller to
++  which the IRQs from DA7280 are delivered to.
++
++- dlg,actuator-type: Set Actuator type. it should be one of:
++  "LRA" - Linear Resonance Actuator type.
++  "ERM-bar" - Bar type Eccentric Rotating Mass.
++  "ERM-coin" - Coin type Eccentric Rotating Mass.
++
++- dlg,const-op-mode: Haptic operation mode for FF_CONSTANT.
++  Possible values:
++	1 - Direct register override(DRO) mode triggered by i2c(default),
++	2 - PWM data source mode controlled by PWM duty,
++- dlg,periodic-op-mode: Haptic operation mode for FF_PERIODIC.
++  Possible values:
++	1 - Register triggered waveform memory(RTWM) mode, the pattern
++	    assigned to the PS_SEQ_ID played as much times as PS_SEQ_LOOP,
++	2 - Edge triggered waveform memory(ETWM) mode, external GPI(N)
++	    control are required to enable/disable and it needs to keep
++	    device enabled by sending magnitude (X > 0),
++	    the pattern is assigned to the GPI(N)_SEQUENCE_ID below.
++	The default value is 1 for both of the operation modes.
++	For more details, please see the datasheet.
++
++- dlg,nom-microvolt: Nominal actuator voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,abs-max-microvolt: Absolute actuator maximum voltage rating.
++  Valid values: 0 - 6000000.
++- dlg,imax-microamp: Actuator max current rating.
++  Valid values: 0 - 252000.
++  Default: 130000.
++- dlg,impd-micro-ohms: the impedance of the actuator in micro ohms.
++  Valid values: 0 - 1500000000.
++
++Optional properties:
++- pwms : phandle to the physical PWM(Pulse Width Modulation) device.
++  PWM properties should be named "pwms". And number of cell is different
++  for each pwm device.
++  (See Documentation/devicetree/bindings/pwm/pwm.txt
++   for further information relating to pwm properties)
++
++- dlg,ps-seq-id: the PS_SEQ_ID(pattern ID in waveform memory inside chip)
++  to play back when RTWM-MODE is enabled.
++  Valid range: 0 - 15.
++- dlg,ps-seq-loop: the PS_SEQ_LOOP, Number of times the pre-stored sequence
++  pointed to by PS_SEQ_ID or GPI(N)_SEQUENCE_ID is repeated.
++  Valid range: 0 - 15.
++- dlg,gpiN-seq-id: the GPI(N)_SEQUENCE_ID, pattern to play
++  when gpi0 is triggered, 'N' must be 0 - 2.
++  Valid range: 0 - 15.
++- dlg,gpiN-mode: the pattern mode which can select either
++  "Single-pattern" or "Multi-pattern", 'N' must be 0 - 2.
++- dlg,gpiN-polarity: gpiN polarity which can be chosen among
++  "Rising-edge", "Falling-edge" and "Both-edge",
++  'N' must be 0 - 2
++  Haptic will work by this edge option in case of ETWM mode.
++
++- dlg,resonant-freq-hz: use in case of LRA.
++  the frequency range: 50 - 300.
++  Default: 205.
++
++- dlg,bemf-sens-enable: Enable for internal loop computations.
++- dlg,freq-track-enable: Enable for resonant frequency tracking.
++- dlg,acc-enable: Enable for active acceleration.
++- dlg,rapid-stop-enable: Enable for rapid stop.
++- dlg,amp-pid-enable: Enable for the amplitude PID.
++- dlg,mem-array: Customized waveform memory(patterns) data downloaded to
++  the device during initialization. This is an array of 100 values(u8).
++
++For further information, see device datasheet.
++
++======
++
++Example:
++
++	haptics: da7280-haptics@4a {
++		compatible = "dlg,da7280";
++		reg = <0x4a>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
++		dlg,actuator-type = "LRA";
++		dlg,dlg,const-op-mode = <1>;
++		dlg,dlg,periodic-op-mode = <1>;
++		dlg,nom-microvolt = <2000000>;
++		dlg,abs-max-microvolt = <2000000>;
++		dlg,imax-microamp = <170000>;
++		dlg,resonant-freq-hz = <180>;
++		dlg,impd-micro-ohms = <10500000>;
++		dlg,freq-track-enable;
++		dlg,rapid-stop-enable;
++		dlg,mem-array = <
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++ 		  0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00
++		>;
++
++	};
+-- 
+end-of-patch for RESEND PATCH v19
+
