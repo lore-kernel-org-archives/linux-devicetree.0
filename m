@@ -4,66 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C27C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FCBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 797C920786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56963207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769849;
-	bh=J7XeXrnf7EWLng0Ibi1VtPXm9pHCbnRQAorF/Vb5psk=;
+	s=default; t=1597769984;
+	bh=q7GHGm9c21lI15iiqdFoBfoi140sZ9N2QyzIbIqI6C4=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=Dz9tro9VGmxUscbZ0aT8wTA3WK0ujV0A2aw465Hzj8h3T0paYcTZ0nEhiE9knyra0
-	 6YoLqcpHKhqDFmeD9uxzuPRMqK42D5r+y8JOjuoYYESKnj1tmKtpmyQztUC/c2eatr
-	 dSobHIj2QRqHZZ+1uPuKBqlo8kZqsnnEyjnj97DA=
+	b=BpTf/FvAg451mtH0y3k31IschpxcfpksTp2h+H+zISC/zf6NNUfukzrftdD9gevC0
+	 9m3V6gv0i7yv3rmBa9K9Zm5VNjMuzejkQ+aHo2kVQMOb6/wcG1c0wOjTxYqIibcIq8
+	 mH5qdAGWL0TQn6SZ9KgsU7ujuMrpIM5vHbgWB7lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgHRQ52 (ORCPT
+        id S1728398AbgHRQ7f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:57:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40674 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbgHRQ5Z (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:57:25 -0400
+        id S1728180AbgHRQ6N (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:58:13 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6639C20825;
-        Tue, 18 Aug 2020 16:57:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09545207DE;
+        Tue, 18 Aug 2020 16:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769844;
-        bh=J7XeXrnf7EWLng0Ibi1VtPXm9pHCbnRQAorF/Vb5psk=;
+        s=default; t=1597769876;
+        bh=q7GHGm9c21lI15iiqdFoBfoi140sZ9N2QyzIbIqI6C4=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=uJtKoXYlAvw689386/D8cK4pqxSdmDWwlDLr4Toioy9PpWtmicYXPVzXBydgRfngY
-         DpxvPNvZvk6Z2K0ex+YwjET96/sIdlqOwaUBxeP8BUVdjgg9Yb1SWUBIncDh98m7AT
-         yItVFJjglJ7o9FM2UEv7onNJ5riYJ7mnKXqw4Xtk=
-Date:   Tue, 18 Aug 2020 17:56:54 +0100
+        b=cKOOh4OLI2c9ZvpeJ9CywkkuTDEpsXeU2Ykynmr+G183gfpd/YkNCxfUVbZl32u6d
+         Xgh6PvmZjBGTvndlmX1PoJS8ax/ybbEe8EsA85BnccZfzzSRqe3wAUHMQytLqw3PEv
+         WZBVXO28ur/eQRiwZ42iCcW/KpT4n3OgExwXhnwI=
+Date:   Tue, 18 Aug 2020 17:57:25 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20200803144436.5d2b7e54@xhacker.debian>
-References: <20200803144436.5d2b7e54@xhacker.debian>
-Subject: Re: [PATCH v3] dt-bindings: regulator: Convert sy8824x to json-schema
-Message-Id: <159776976828.56451.12856424120296708687.b4-ty@kernel.org>
+To:     Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>
+In-Reply-To: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 0/2] r8a7742 add QSPI support
+Message-Id: <159776983047.56565.6592409588140078778.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 3 Aug 2020 14:44:36 +0800, Jisheng Zhang wrote:
-> Convert the sy8824x binding to DT schema format using json-schema.
+On Wed, 12 Aug 2020 16:00:46 +0100, Lad Prabhakar wrote:
+> This patchset adds qspi node to r8a7742 (RZ/G1H) SoC along
+> with updating the DT binding.
+> 
+> Cheers,
+> Prabhakar
+> 
+> Lad Prabhakar (2):
+>   dt-bindings: spi: renesas,rspi: Add r8a7742 to the compatible list
+>   ARM: dts: r8a7742: Add QSPI support
+> 
+> [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] regulator: Convert sy8824x to json-schema
-      commit: aedf7451e7535bc93bb9cec0ebc91744934da95c
+[1/1] spi: renesas,rspi: Add r8a7742 to the compatible list
+      commit: 08f9793efd3decae75e60bfec2e6068f2d4180df
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
