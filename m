@@ -2,194 +2,235 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8687C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0382EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D0F207DE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597764556;
-	bh=y1EcZY8mviDh3Iz3/qatQ0cLnCFk9OV4Adl//n5aXSA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xjhWPYJuuj7OmPaD7nMo0fzB6F9FtUJoUIwPnQPDRUqRFyG1Z6iPJfZpS1iGXVHf0
-	 V+a0Rj4zFR+NMIipVM8lIJBeFPfdeBVKKmZxNlG7B4waXix2yTY+Oz8sE0qm7WRzdV
-	 pyfZFLgF31Wdwf3lX+JVxP+W9gMWsPENcPXtW/XQ=
+	by mail.kernel.org (Postfix) with ESMTP id D1DB720897
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:48:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgHRP3Q (ORCPT
+        id S1728254AbgHRPsw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51882 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 11:48:52 -0400
+Received: from mga14.intel.com ([192.55.52.115]:41763 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726972AbgHRP3P (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:29:15 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEE39206DA;
-        Tue, 18 Aug 2020 15:29:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597764555;
-        bh=y1EcZY8mviDh3Iz3/qatQ0cLnCFk9OV4Adl//n5aXSA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=l1khQJNCqaJkNf17Z3CSbq9tMDMPPbMtKTMXXMzroWcNsHKDsO4NxIPVcEnlSTKcX
-         vdU1vzH4P+A5CN3B5DKjylxHKOgwQwyZMlSkUyFzeBK5M6HGi0wE204PORhNROuOkG
-         zBndFkZTkyO2KybOc9/lrOpk6h4q17/K+lRnUnJE=
-Date:   Tue, 18 Aug 2020 17:29:09 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
-        Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>, mauro.chehab@huawei.com,
-        Suzhuangluan <suzhuangluan@hisilicon.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
-Message-ID: <20200818172909.71f5243a@coco.lan>
-In-Reply-To: <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
-References: <cover.1597650455.git.mchehab+huawei@kernel.org>
-        <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1728240AbgHRPsU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:48:20 -0400
+IronPort-SDR: sR6D3MpIZelbM6yclzF6ZdW8hDarCnm8z5qnEzitlnlXAOKasBa6RK14RNZXzK0gGlXI7zcnRx
+ cEJjPPbfxfsw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="154194593"
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="154194593"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 08:48:08 -0700
+IronPort-SDR: kZZ2AcB8IdQK7Yv26NjXFc0QfUWmTFCRMPNXvfbXsEHUVSTb2unZHo+IsuXOe0r6OCY4/JVrzx
+ 4XRaPBgvjfdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,327,1592895600"; 
+   d="scan'208";a="400530454"
+Received: from pg-nxl3.altera.com ([10.142.129.93])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Aug 2020 08:48:05 -0700
+From:   "Ooi, Joyce" <joyce.ooi@intel.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dalon Westergreen <dalon.westergreen@linux.intel.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tan Ley Foon <ley.foon.tan@intel.com>,
+        See Chin Liang <chin.liang.see@intel.com>,
+        Dinh Nguyen <dinh.nguyen@intel.com>,
+        Dalon Westergreen <dalon.westergreen@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH v6 10/10] net: eth: altera: update devicetree bindings documentation
+Date:   Tue, 18 Aug 2020 23:46:13 +0800
+Message-Id: <20200818154613.148921-11-joyce.ooi@intel.com>
+X-Mailer: git-send-email 2.13.0
+In-Reply-To: <20200818154613.148921-1-joyce.ooi@intel.com>
+References: <20200818154613.148921-1-joyce.ooi@intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Robin,
+From: Dalon Westergreen <dalon.westergreen@intel.com>
 
-Em Tue, 18 Aug 2020 15:47:55 +0100
-Robin Murphy <robin.murphy@arm.com> escreveu:
+Update devicetree bindings documentation to include msgdma
+prefetcher and ptp bindings.
 
-> On 2020-08-17 08:49, Mauro Carvalho Chehab wrote:
-> > Add a driver for the Kirin 960/970 iommu.
-> > 
-> > As on the past series, this starts from the original 4.9 driver from
-> > the 96boards tree:
-> > 
-> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > 
-> > The remaining patches add SPDX headers and make it build and run with
-> > the upstream Kernel.
-> > 
-> > Chenfeng (1):
-> >    iommu: add support for HiSilicon Kirin 960/970 iommu
-> > 
-> > Mauro Carvalho Chehab (15):
-> >    iommu: hisilicon: remove default iommu_map_sg handler
-> >    iommu: hisilicon: map and unmap ops gained new arguments
-> >    iommu: hisi_smmu_lpae: rebase it to work with upstream
-> >    iommu: hisi_smmu: remove linux/hisi/hisi-iommu.h
-> >    iommu: hisilicon: cleanup its code style
-> >    iommu: hisi_smmu_lpae: get rid of IOMMU_SEC and IOMMU_DEVICE
-> >    iommu: get rid of map/unmap tile functions
-> >    iommu: hisi_smmu_lpae: use the right code to get domain-priv data
-> >    iommu: hisi_smmu_lpae: convert it to probe_device
-> >    iommu: add Hisilicon Kirin970 iommu at the building system
-> >    iommu: hisi_smmu_lpae: cleanup printk macros
-> >    iommu: hisi_smmu_lpae: make OF compatible more standard  
-> 
-> Echoing the other comments about none of the driver patches being CC'd 
-> to the IOMMU list...
-> 
-> Still, I dug the series up on lore and frankly I'm not sure what to make 
-> of it - AFAICS the "driver" is just yet another implementation of Arm 
-> LPAE pagetable code, with no obvious indication of how those pagetables 
-> ever get handed off to IOMMU hardware (and indeed no indication of IOMMU 
-> hardware at all). Can you explain how it's supposed to work?
-> 
-> And as a pre-emptive strike, we really don't need any more LPAE 
-> implementations - that's what the io-pgtable library is all about (which 
-> incidentally has been around since 4.0...). I think that should make the 
-> issue of preserving authorship largely moot since there's no need to 
-> preserve most of the code anyway ;)
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+Signed-off-by: Joyce Ooi <joyce.ooi@intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v2: no change
+v3: no change
+v4: no change
+v5: no change
+v6: no change
+---
+ .../devicetree/bindings/net/altera_tse.txt         | 103 +++++++++++++++++----
+ 1 file changed, 84 insertions(+), 19 deletions(-)
 
-I didn't know about that, since I got a Hikey 970 board for the first time
-about one month ago, and that's the first time I looked into iommu code.
+diff --git a/Documentation/devicetree/bindings/net/altera_tse.txt b/Documentation/devicetree/bindings/net/altera_tse.txt
+index 0b7d4d3758ea..2f2d12603907 100644
+--- a/Documentation/devicetree/bindings/net/altera_tse.txt
++++ b/Documentation/devicetree/bindings/net/altera_tse.txt
+@@ -2,53 +2,86 @@
+ 
+ Required properties:
+ - compatible: Should be "altr,tse-1.0" for legacy SGDMA based TSE, and should
+-		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE.
++		be "altr,tse-msgdma-1.0" for the preferred MSGDMA based TSE,
++		and "altr,tse-msgdma-2.0" for MSGDMA with prefetcher based
++		implementations.
+ 		ALTR is supported for legacy device trees, but is deprecated.
+ 		altr should be used for all new designs.
+ - reg: Address and length of the register set for the device. It contains
+   the information of registers in the same order as described by reg-names
+ - reg-names: Should contain the reg names
+-  "control_port": MAC configuration space region
+-  "tx_csr":       xDMA Tx dispatcher control and status space region
+-  "tx_desc":      MSGDMA Tx dispatcher descriptor space region
+-  "rx_csr" :      xDMA Rx dispatcher control and status space region
+-  "rx_desc":      MSGDMA Rx dispatcher descriptor space region
+-  "rx_resp":      MSGDMA Rx dispatcher response space region
+-  "s1":		  SGDMA descriptor memory
+ - interrupts: Should contain the TSE interrupts and it's mode.
+ - interrupt-names: Should contain the interrupt names
+-  "rx_irq":       xDMA Rx dispatcher interrupt
+-  "tx_irq":       xDMA Tx dispatcher interrupt
++  "rx_irq":       DMA Rx dispatcher interrupt
++  "tx_irq":       DMA Tx dispatcher interrupt
+ - rx-fifo-depth: MAC receive FIFO buffer depth in bytes
+ - tx-fifo-depth: MAC transmit FIFO buffer depth in bytes
+ - phy-mode: See ethernet.txt in the same directory.
+ - phy-handle: See ethernet.txt in the same directory.
+ - phy-addr: See ethernet.txt in the same directory. A configuration should
+ 		include phy-handle or phy-addr.
+-- altr,has-supplementary-unicast:
+-		If present, TSE supports additional unicast addresses.
+-		Otherwise additional unicast addresses are not supported.
+-- altr,has-hash-multicast-filter:
+-		If present, TSE supports a hash based multicast filter.
+-		Otherwise, hash-based multicast filtering is not supported.
+-
+ - mdio device tree subnode: When the TSE has a phy connected to its local
+ 		mdio, there must be device tree subnode with the following
+ 		required properties:
+-
+ 	- compatible: Must be "altr,tse-mdio".
+ 	- #address-cells: Must be <1>.
+ 	- #size-cells: Must be <0>.
+ 
+ 	For each phy on the mdio bus, there must be a node with the following
+ 	fields:
+-
+ 	- reg: phy id used to communicate to phy.
+ 	- device_type: Must be "ethernet-phy".
+ 
+ The MAC address will be determined using the optional properties defined in
+ ethernet.txt.
+ 
++- altr,has-supplementary-unicast:
++		If present, TSE supports additional unicast addresses.
++		Otherwise additional unicast addresses are not supported.
++- altr,has-hash-multicast-filter:
++		If present, TSE supports a hash based multicast filter.
++		Otherwise, hash-based multicast filtering is not supported.
++- altr,has-ptp:
++		If present, TSE supports 1588 timestamping.  Currently only
++		supported with the msgdma prefetcher.
++- altr,tx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
++- altr,rx-poll-cnt:
++		Optional cycle count for Tx prefetcher to poll descriptor
++		list.  If not present, defaults to 128, which at 125MHz is
++		roughly 1usec. Only for "altr,tse-msgdma-2.0".
++
++Required registers by compatibility string:
++ - "altr,tse-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"s1":		DMA descriptor memory
++
++ - "altr,tse-msgdma-1.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_desc":      DMA Tx dispatcher descriptor space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_desc":      DMA Rx dispatcher descriptor space region
++	"rx_resp":      DMA Rx dispatcher response space region
++
++ - "altr,tse-msgdma-2.0"
++	"control_port": MAC configuration space region
++	"tx_csr":       DMA Tx dispatcher control and status space region
++	"tx_pref":      DMA Tx prefetcher configuration space region
++	"rx_csr" :      DMA Rx dispatcher control and status space region
++	"rx_pref":      DMA Rx prefetcher configuration space region
++	"tod_ctrl":     Time of Day Control register only required when
++			timestamping support is enabled.  Timestamping is
++			only supported with the msgdma-2.0 implementation.
++
++Optional properties:
++- local-mac-address: See ethernet.txt in the same directory.
++- max-frame-size: See ethernet.txt in the same directory.
++
+ Example:
+ 
+ 	tse_sub_0_eth_tse_0: ethernet@1,00000000 {
+@@ -86,6 +119,11 @@ Example:
+ 				device_type = "ethernet-phy";
+ 			};
+ 
++			phy2: ethernet-phy@2 {
++				reg = <0x2>;
++				device_type = "ethernet-phy";
++			};
++
+ 		};
+ 	};
+ 
+@@ -111,3 +149,30 @@ Example:
+ 		altr,has-hash-multicast-filter;
+ 		phy-handle = <&phy1>;
+ 	};
++
++
++	tse_sub_2_eth_tse_0: ethernet@1,00002000 {
++		compatible = "altr,tse-msgdma-2.0";
++		reg = 	<0x00000001 0x00002000 0x00000400>,
++			<0x00000001 0x00002400 0x00000020>,
++			<0x00000001 0x00002420 0x00000020>,
++			<0x00000001 0x00002440 0x00000020>,
++			<0x00000001 0x00002460 0x00000020>,
++			<0x00000001 0x00002480 0x00000040>;
++		reg-names = "control_port", "rx_csr", "rx_pref","tx_csr", "tx_pref", "tod_ctrl";
++		interrupt-parent = <&hps_0_arm_gic_0>;
++		interrupts = <0 45 4>, <0 44 4>;
++		interrupt-names = "rx_irq", "tx_irq";
++		rx-fifo-depth = <2048>;
++		tx-fifo-depth = <2048>;
++		address-bits = <48>;
++		max-frame-size = <1500>;
++		local-mac-address = [ 00 00 00 00 00 00 ];
++		phy-mode = "sgmii";
++		altr,has-supplementary-unicast;
++		altr,has-hash-multicast-filter;
++		altr,has-ptp;
++		altr,tx-poll-cnt = <128>;
++		altr,rx-poll-cnt = <32>;
++		phy-handle = <&phy2>;
++	};
+-- 
+2.13.0
 
-My end goal with this is to make the DRM/KMS driver to work with upstream
-Kernels.
-
-The full patch series are at:
-
-	https://github.com/mchehab/linux/commits/hikey970/to_upstream-2.0-v1.1
-
-(I need to put a new version there, after some changes due to recent
-upstream discussions at the regulator's part of the code)
-
-Basically, the DT binding has this, for IOMMU:
-
-
-	smmu_lpae {
-		compatible = "hisilicon,smmu-lpae";
-	};
-
-...
-	dpe: dpe@e8600000 {
-		compatible = "hisilicon,kirin970-dpe";
-		memory-region = <&drm_dma_reserved>;
-...
-		iommu_info {
-			start-addr = <0x8000>;
-			size = <0xbfff8000>;
-		};
-	}
-
-This is used by kirin9xx_drm_dss.c in order to enable and use
-the iommu:
-
-
-	static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
-	{
-		struct device *dev = NULL;
-
-		dev = &pdev->dev;
-
-		/* create iommu domain */
-		ctx->mmu_domain = iommu_domain_alloc(dev->bus);
-		if (!ctx->mmu_domain) {
-			pr_err("iommu_domain_alloc failed!\n");
-			return -EINVAL;
-		}
-
-		iommu_attach_device(ctx->mmu_domain, dev);
-
-		return 0;
-	}
-
-The only place where the IOMMU domain is used is on this part of the
-code(error part simplified here) [1]:
-
-	void hisi_dss_smmu_on(struct dss_hw_ctx *ctx) 
-	{
-		uint64_t fama_phy_pgd_base;
-		uint32_t phy_pgd_base;
-...
-		fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
-		phy_pgd_base = (uint32_t)fama_phy_pgd_base;
-		if (WARN_ON(!phy_pgd_base))
-			return;
-
-		set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
-	}
-
-[1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
-
-In other words, the driver needs to get the physical address of the frame
-buffer (mapped via iommu) in order to set some DRM-specific register.
-
-Yeah, the above code is somewhat hackish. I would love to replace 
-this part by a more standard approach.
-
-Thanks,
-Mauro
