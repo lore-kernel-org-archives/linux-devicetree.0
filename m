@@ -2,186 +2,123 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F211DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301FEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D351420786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZykcEFHR"
+	by mail.kernel.org (Postfix) with ESMTP id 1A7A720786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:06:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgHRRAe (ORCPT
+        id S1728405AbgHRRGx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:00:34 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:32996 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728481AbgHRQ4T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 12:56:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuFU8108023;
-        Tue, 18 Aug 2020 11:56:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597769775;
-        bh=GsIk/233sXDbKwSAqxENWcQiMVlD1bZlmMIXu/P3m3s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZykcEFHRfrpX++PtZ3aG6D2q0R1u7Xw4LTbvwwQVJFoeh5VnQ80kXP+TxqXH7IN/c
-         2lWDQ4fvx8ldYI+z9PYHnX2kBF8TFBtQ8l9lpI/Ndj+89/BLuZMOVrPdi88rbOh0fi
-         wQwX/IIgvHgrHAKENX1fShgZkK/tP69oWxhMKqX0=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuF40024785;
-        Tue, 18 Aug 2020 11:56:15 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 18
- Aug 2020 11:56:10 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 18 Aug 2020 11:56:10 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuA2I028209;
-        Tue, 18 Aug 2020 11:56:10 -0500
-Subject: Re: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
-To:     Rob Herring <robh@kernel.org>,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-CC:     <sre@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200817191723.22416-1-r-rivera-matos@ti.com>
- <20200817191723.22416-2-r-rivera-matos@ti.com>
- <20200818164305.GB3586878@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <3928a95f-1f60-5f0f-2cfa-ab9b40038003@ti.com>
-Date:   Tue, 18 Aug 2020 11:56:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 18 Aug 2020 13:06:53 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:34000 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728468AbgHRRGH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 13:06:07 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 8F58C2001F;
+        Tue, 18 Aug 2020 19:05:57 +0200 (CEST)
+Date:   Tue, 18 Aug 2020 19:05:56 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] drm/panel: Add panel driver for the Mantix
+ MLAF057WE51-X DSI panel
+Message-ID: <20200818170556.GA2291850@ravnborg.org>
+References: <cover.1597652012.git.agx@sigxcpu.org>
 MIME-Version: 1.0
-In-Reply-To: <20200818164305.GB3586878@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1597652012.git.agx@sigxcpu.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=8nJEP1OIZ-IA:10 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8
+        a=eCTDOZTGqrxRdbbr8LwA:9 a=wPNLvfGTeEIA:10 a=AjGcO6oz07-iQ99wixmX:22
+        a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Rob
+Hi Guido.
 
-On 8/18/20 11:43 AM, Rob Herring wrote:
-> On Mon, Aug 17, 2020 at 02:17:22PM -0500, Ricardo Rivera-Matos wrote:
->> Add the bindings for the bq256xx series of battery charging ICs.
->>
->> Datasheets:
->> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
->> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
->>
->> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
->> ---
->>   .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
->>   1 file changed, 99 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
->> new file mode 100644
->> index 000000000000..67db4ba9fdb6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
->> @@ -0,0 +1,99 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
->> +# Copyright (C) 2020 Texas Instruments Incorporated
->> +%YAML 1.2
->> +---
->> +$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
->> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
->> +
->> +title: TI bq256xx Switch Mode Buck Charger
->> +
->> +maintainers:
->> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
->> +
->> +description: |
->> +  The bq256xx devices are a family of highly-integrated battery charge
->> +  management and system power management ICs for single cell Li-ion and Li-
->> +  polymer batteries.
->> +
->> +  Datasheets:
->> +    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
->> +    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,bq25600
->> +      - ti,bq25601
->> +      - ti,bq25600d
->> +      - ti,bq25601d
->> +      - ti,bq25611d
->> +      - ti,bq25618
->> +      - ti,bq25619
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  ti,watchdog-timer:
-> Poorly named since we have 'ti,watchdog-timers' already and is
-> completely different.
+On Mon, Aug 17, 2020 at 10:14:33AM +0200, Guido Günther wrote:
+> 
+> The panel uses a Focaltech FT8006p, the touch part is handled by the already
+> existing edt-ft5x06. It can be found in e.g. the Librem 5.
+> 
+> Changes from v2:
+> - Due to review comments by Sam Ravnborg, thanks!
+>   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
+>   - Drop unused header
+>   - Use newline before comment
+> - Add Reviewed/Acked-by by Sam Ravnborg, thanks!
+>   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
+>   https://lore.kernel.org/lkml/20200815212750.GB1244923@ravnborg.org/
+>   https://lore.kernel.org/lkml/20200815212840.GC1244923@ravnborg.org/
+> 
+> Changes from v1:
+> - Due to review comments by Sam Ravnborg, thanks!
+>   https://lore.kernel.org/dri-devel/20200815083917.GA993113@ravnborg.org/
+>   - Don't preserve newlines with '|' in description
+>   - Use reset-gpios and backlight from panel-common.yaml
+>   - Reindent example
+>   https://lore.kernel.org/dri-devel/20200815093226.GB993113@ravnborg.org/
+>   - Drop unused includes
+>   - Use dev_* instead of DRM_* for printing
+>   - Turn off regulators in reverse order from enable
+>   - Silence errors in mantix_{shutdown,remove}
+>   - Drop duplicate mipi_dsi_dcs_enter_sleep_mode()
+>   https://lore.kernel.org/dri-devel/20200815100230.GA1002374@ravnborg.org/
+>   - Use dev_err_probe()
+> - Add delays when turning off panel as suggested by the data sheet
+> 
+> This series is against next-20200814.
+> 
+> Guido Günther (3):
+>   dt-bindings: vendor-prefixes: Add mantix vendor prefix
+>   dt-bindings: Add Mantix MLAF057WE51-X panel bindings
+>   drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
 
-I think you made a comment on my DT to make this ti,watchdog-timeout-ms 
-and then we can remove the type.
+Maxime Ripard backmerged -rc1 to drm-misc-next so I went ahead and applied
+this series to drm-misc-next, forgetting you got commit rights. As they are
+already pushed out too late for you to do push them - sorry!
 
+	Sam
 
->
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Watchdog timer in milli seconds. 0 (default) disables the watchdog
-> If you have units, then you should use standard unit suffix.
->
->> +    minimum: 0
->> +    maximum: 160000
->> +    enum: [ 0, 40000, 80000, 160000]
->> +
->> +  input-voltage-limit-microvolt:
->> +    description: |
->> +       Minimum input voltage limit in micro volts with a 100000 micro volt step
->> +    minimum: 3900000
->> +    maximum: 5400000
->> +
->> +  input-current-limit-microamp:
->> +    description: |
->> +       Maximum input current limit in micro amps with a 100000 micro amp step
->> +    minimum: 100000
->> +    maximum: 3200000
-> Aren't these properties of the battery, not the charger?
->
->> +
->> +required:
->> +  - compatible
->> +  - reg
-> monitored-battery not required?
->
-> Add:
->
-> additionalProperties: false
-
-What about using
-
-unevaluatedProperties: false
-
-Dan
-
+> 
+>  .../display/panel/mantix,mlaf057we51-x.yaml   |  70 ++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+>  MAINTAINERS                                   |   7 +
+>  drivers/gpu/drm/panel/Kconfig                 |  11 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  .../gpu/drm/panel/panel-mantix-mlaf057we51.c  | 328 ++++++++++++++++++
+>  6 files changed, 419 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/mantix,mlaf057we51-x.yaml
+>  create mode 100644 drivers/gpu/drm/panel/panel-mantix-mlaf057we51.c
+> 
+> -- 
+> 2.26.2
