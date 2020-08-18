@@ -2,85 +2,186 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C7CBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F211DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1DF20786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769999;
-	bh=BWBBTN7rTGTLtp33vxw316/R9Nel85083V49L7dQbD0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=yreBgqpuHffJu1W4Tc2Gm7SJigJRhV2xcEx9cdYk2skAoxpYOB9UYUWReLYYUqjID
-	 e7q8KME50j3Ks5T70mty8QD0YheeYwHe0oRlfZ5k6+UHxrkZPo+jNtXL87mpkROsfD
-	 cLRXLqmhw7M88xb9Q4FyE65gKIrLIiDO2kdAQx1o=
+	by mail.kernel.org (Postfix) with ESMTP id D351420786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:00:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZykcEFHR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgHRQ7w (ORCPT
+        id S1727106AbgHRRAe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:59:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728540AbgHRQ47 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:56:59 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9B06207D3;
-        Tue, 18 Aug 2020 16:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769819;
-        bh=BWBBTN7rTGTLtp33vxw316/R9Nel85083V49L7dQbD0=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=1szPJUCLS4sVpwHO0f1/OU8Roip4O4e0yrLCdCnPKChDBZcAEz9y2dvAnwdcNPOP3
-         6g2p0w6Q+du42uYgO4vtcZn0S78P4WAakFGEx0QfHJIjdKEAfjLyBRpuYtpS1Xx0Xm
-         pkvDfWsm3j3OV9trXNLiy14AzfhyRKnGZGBFhAI8=
-Date:   Tue, 18 Aug 2020 17:56:28 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, lgirdwood@gmail.com,
-        devicetree@vger.kernel.org, yibin.gong@nxp.com
-Cc:     Linux-imx@nxp.com
-In-Reply-To: <1596421439-19591-1-git-send-email-Anson.Huang@nxp.com>
-References: <1596421439-19591-1-git-send-email-Anson.Huang@nxp.com>
-Subject: Re: [PATCH] dt-bindings: regulator: Convert pfuze100 to json-schema
-Message-Id: <159776976827.56451.8318882621000296228.b4-ty@kernel.org>
+        Tue, 18 Aug 2020 13:00:34 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:32996 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728481AbgHRQ4T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 12:56:19 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuFU8108023;
+        Tue, 18 Aug 2020 11:56:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597769775;
+        bh=GsIk/233sXDbKwSAqxENWcQiMVlD1bZlmMIXu/P3m3s=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ZykcEFHRfrpX++PtZ3aG6D2q0R1u7Xw4LTbvwwQVJFoeh5VnQ80kXP+TxqXH7IN/c
+         2lWDQ4fvx8ldYI+z9PYHnX2kBF8TFBtQ8l9lpI/Ndj+89/BLuZMOVrPdi88rbOh0fi
+         wQwX/IIgvHgrHAKENX1fShgZkK/tP69oWxhMKqX0=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuF40024785;
+        Tue, 18 Aug 2020 11:56:15 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 18
+ Aug 2020 11:56:10 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 18 Aug 2020 11:56:10 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IGuA2I028209;
+        Tue, 18 Aug 2020 11:56:10 -0500
+Subject: Re: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
+To:     Rob Herring <robh@kernel.org>,
+        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+CC:     <sre@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200817191723.22416-1-r-rivera-matos@ti.com>
+ <20200817191723.22416-2-r-rivera-matos@ti.com>
+ <20200818164305.GB3586878@bogus>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <3928a95f-1f60-5f0f-2cfa-ab9b40038003@ti.com>
+Date:   Tue, 18 Aug 2020 11:56:05 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200818164305.GB3586878@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 3 Aug 2020 10:23:59 +0800, Anson Huang wrote:
-> Convert the pfuze100 regulator binding to DT schema format using
-> json-schema.
+Rob
 
-Applied to
+On 8/18/20 11:43 AM, Rob Herring wrote:
+> On Mon, Aug 17, 2020 at 02:17:22PM -0500, Ricardo Rivera-Matos wrote:
+>> Add the bindings for the bq256xx series of battery charging ICs.
+>>
+>> Datasheets:
+>> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
+>>
+>> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+>> ---
+>>   .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
+>>   1 file changed, 99 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+>> new file mode 100644
+>> index 000000000000..67db4ba9fdb6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+>> @@ -0,0 +1,99 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>> +# Copyright (C) 2020 Texas Instruments Incorporated
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: TI bq256xx Switch Mode Buck Charger
+>> +
+>> +maintainers:
+>> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+>> +
+>> +description: |
+>> +  The bq256xx devices are a family of highly-integrated battery charge
+>> +  management and system power management ICs for single cell Li-ion and Li-
+>> +  polymer batteries.
+>> +
+>> +  Datasheets:
+>> +    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ti,bq25600
+>> +      - ti,bq25601
+>> +      - ti,bq25600d
+>> +      - ti,bq25601d
+>> +      - ti,bq25611d
+>> +      - ti,bq25618
+>> +      - ti,bq25619
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  ti,watchdog-timer:
+> Poorly named since we have 'ti,watchdog-timers' already and is
+> completely different.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+I think you made a comment on my DT to make this ti,watchdog-timeout-ms 
+and then we can remove the type.
 
-Thanks!
 
-[1/1] regulator: Convert pfuze100 to json-schema
-      commit: b2ad0be5087470f4a5ba29129e611df00cd183a7
+>
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Watchdog timer in milli seconds. 0 (default) disables the watchdog
+> If you have units, then you should use standard unit suffix.
+>
+>> +    minimum: 0
+>> +    maximum: 160000
+>> +    enum: [ 0, 40000, 80000, 160000]
+>> +
+>> +  input-voltage-limit-microvolt:
+>> +    description: |
+>> +       Minimum input voltage limit in micro volts with a 100000 micro volt step
+>> +    minimum: 3900000
+>> +    maximum: 5400000
+>> +
+>> +  input-current-limit-microamp:
+>> +    description: |
+>> +       Maximum input current limit in micro amps with a 100000 micro amp step
+>> +    minimum: 100000
+>> +    maximum: 3200000
+> Aren't these properties of the battery, not the charger?
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+> monitored-battery not required?
+>
+> Add:
+>
+> additionalProperties: false
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+What about using
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+unevaluatedProperties: false
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Dan
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
