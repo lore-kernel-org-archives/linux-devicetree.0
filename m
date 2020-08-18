@@ -2,67 +2,56 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C6CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77795C433EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01CE42054F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B58E207DA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBPbIGYQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U+1oQ3B9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgHRPML (ORCPT
+        id S1728131AbgHRPTf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:12:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbgHRPMJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 11:12:09 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CACC061389;
-        Tue, 18 Aug 2020 08:12:08 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id z18so18602674wrm.12;
-        Tue, 18 Aug 2020 08:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K7rzgcMuhB59uSbGxt2+obmcC2a75JDzO+8IEBPn/20=;
-        b=LBPbIGYQrU0mHziA4nNdl4eE3cXtppYEvfLXZxMFHqUJCC3aPFJcpOX4uJ04qMnssG
-         Ag5clvTZ7KaHp05xI+LCkT46W+mumhbi4uMzTEJ0Zgw7EHw2biiG22cGZvWWi8pxSKUn
-         b+v8CHE4M/CZIj/ImziP2Zwe6Qr+5YWvKJ7VWieX7JGRgV9arfMDfkxkIL/t2jBZldOQ
-         42hgWUG6W+6+Bo9XvCgOGgt9ZRn/D8ze4gVCG8oUASyzK10IQlJx8mGSCfQnykVQkC+J
-         UnF7P+cyJAVXZcDJ/N6ANDnOzFaD1Jc+NLZEKQQKLDOnvlSZiA5g2pYB+cNNfwTlgOBN
-         eWHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K7rzgcMuhB59uSbGxt2+obmcC2a75JDzO+8IEBPn/20=;
-        b=er6gUCaHCrHfN1PbVsIjxmS/u6juuPVw8YcHXZ1rhQei1qvymrvY0LoBlXPFz/wYo5
-         qLHeJHbaQBeEVDDKvvqWLvVJVhlvf/tZLTBKWY3grYOqLwI3ZLr8Tbz295tHgmLB31E9
-         FY01AqHCHepiFb+Yj3y/G8GhmYt6fu15DNr+g8dHCwvrwS1MRt+5H5fJ2Ds5YKQKFK2z
-         qNX48zIo2MkiElVW/2YWiQ/ANYnjBPIIUQ5NU2l0GS1dD5SNN7zIy3ehEc8xCv80wdmJ
-         jQeGB+fZkIECnPs8OkQrqqtTCz5vqX4qCvkLVdXqti0lZ3IMMLLVGFfbDR/6z0fgKYRv
-         HSKg==
-X-Gm-Message-State: AOAM533V3dug9xAmRBQwqE9AVnkunX+rnXM82IBoDpEVW4kDfYGIaT1l
-        NBqr53N2HhJxfMwWYtkQXRdFCQabFEiX0gkoWoA=
-X-Google-Smtp-Source: ABdhPJwKdzwEohL5E9SDLCVg0q8nhvUN8RMpxHE73jN/E0C6arJhxxGXiKWPU1nLKhzAjKAWQrer6Yss9Q2RQ13N+mU=
-X-Received: by 2002:adf:f485:: with SMTP id l5mr19243697wro.147.1597763527343;
- Tue, 18 Aug 2020 08:12:07 -0700 (PDT)
+        Tue, 18 Aug 2020 11:19:35 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:61721 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728101AbgHRPSt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:18:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597763929; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=llOXz6hHf939lRgjzq6PQgYsFaUkZxMefMQodFWY1Y4=;
+ b=U+1oQ3B9kkt1X2w9xLOf2YDF6zd0Th1GYJ3xCOhABPeJ0sw0ghTYsmDSm+kcpJWnyaU3HL0g
+ tdkmhC8Y7HHD7X1w/68Rj8LzCq8Dk8sKJw0whsDy3p+mRVlV3ay79tRT77oTzuB7hRBi4kMs
+ 9gyQx5DJ0WNeGGpazmkw2q//dOk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 5f3bf14f668ab3fef6c61a61 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 15:18:39
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 241F2C433A1; Tue, 18 Aug 2020 15:18:38 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49A95C433CA;
+        Tue, 18 Aug 2020 15:18:37 +0000 (UTC)
 MIME-Version: 1.0
-References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org> <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
-In-Reply-To: <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 18 Aug 2020 08:12:53 -0700
-Message-ID: <CAF6AEGvDN2B-xxecOt+0aaweWohGSKekb3tCerX42T1eOte-ig@mail.gmail.com>
-Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 20:48:37 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
 Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
         Emil Velikov <emil.velikov@collabora.com>,
         Sean Paul <seanpaul@chromium.org>,
@@ -76,78 +65,86 @@ Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Matthias Kaehlcke <mka@chromium.org>,
         linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
+In-Reply-To: <CAF6AEGvDN2B-xxecOt+0aaweWohGSKekb3tCerX42T1eOte-ig@mail.gmail.com>
+References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
+ <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
+ <CAF6AEGvDN2B-xxecOt+0aaweWohGSKekb3tCerX42T1eOte-ig@mail.gmail.com>
+Message-ID: <0c3a5b78537c659f49037e3f9d0d8888@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 3:03 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Hi,
->
-> On 2020-06-01 16:33, Krishna Manikandan wrote:
-> > Define shutdown callback for display drm driver,
-> > so as to disable all the CRTCS when shutdown
-> > notification is received by the driver.
-> >
-> > This change will turn off the timing engine so
-> > that no display transactions are requested
-> > while mmu translations are getting disabled
-> > during reboot sequence.
-> >
-> > Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-> >
-> > Changes in v2:
-> >       - Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
-> >       - Change commit text to reflect when this issue
-> >         was uncovered (Sai Prakash Ranjan)
-> > ---
-> >  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/msm/msm_drv.c
-> > b/drivers/gpu/drm/msm/msm_drv.c
-> > index e4b750b..94e3963 100644
-> > --- a/drivers/gpu/drm/msm/msm_drv.c
-> > +++ b/drivers/gpu/drm/msm/msm_drv.c
-> > @@ -1322,6 +1322,13 @@ static int msm_pdev_remove(struct
-> > platform_device *pdev)
-> >       return 0;
-> >  }
-> >
-> > +static void msm_pdev_shutdown(struct platform_device *pdev)
-> > +{
-> > +     struct drm_device *drm = platform_get_drvdata(pdev);
-> > +
-> > +     drm_atomic_helper_shutdown(drm);
-> > +}
-> > +
-> >  static const struct of_device_id dt_match[] = {
-> >       { .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
-> >       { .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
-> > @@ -1334,6 +1341,7 @@ static int msm_pdev_remove(struct platform_device
-> > *pdev)
-> >  static struct platform_driver msm_platform_driver = {
-> >       .probe      = msm_pdev_probe,
-> >       .remove     = msm_pdev_remove,
-> > +     .shutdown   = msm_pdev_shutdown,
-> >       .driver     = {
-> >               .name   = "msm",
-> >               .of_match_table = dt_match,
->
-> Any more comments on this patch?
+On 2020-08-18 20:42, Rob Clark wrote:
+> On Tue, Aug 18, 2020 at 3:03 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Hi,
+>> 
+>> On 2020-06-01 16:33, Krishna Manikandan wrote:
+>> > Define shutdown callback for display drm driver,
+>> > so as to disable all the CRTCS when shutdown
+>> > notification is received by the driver.
+>> >
+>> > This change will turn off the timing engine so
+>> > that no display transactions are requested
+>> > while mmu translations are getting disabled
+>> > during reboot sequence.
+>> >
+>> > Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+>> >
+>> > Changes in v2:
+>> >       - Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
+>> >       - Change commit text to reflect when this issue
+>> >         was uncovered (Sai Prakash Ranjan)
+>> > ---
+>> >  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+>> >  1 file changed, 8 insertions(+)
+>> >
+>> > diff --git a/drivers/gpu/drm/msm/msm_drv.c
+>> > b/drivers/gpu/drm/msm/msm_drv.c
+>> > index e4b750b..94e3963 100644
+>> > --- a/drivers/gpu/drm/msm/msm_drv.c
+>> > +++ b/drivers/gpu/drm/msm/msm_drv.c
+>> > @@ -1322,6 +1322,13 @@ static int msm_pdev_remove(struct
+>> > platform_device *pdev)
+>> >       return 0;
+>> >  }
+>> >
+>> > +static void msm_pdev_shutdown(struct platform_device *pdev)
+>> > +{
+>> > +     struct drm_device *drm = platform_get_drvdata(pdev);
+>> > +
+>> > +     drm_atomic_helper_shutdown(drm);
+>> > +}
+>> > +
+>> >  static const struct of_device_id dt_match[] = {
+>> >       { .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
+>> >       { .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
+>> > @@ -1334,6 +1341,7 @@ static int msm_pdev_remove(struct platform_device
+>> > *pdev)
+>> >  static struct platform_driver msm_platform_driver = {
+>> >       .probe      = msm_pdev_probe,
+>> >       .remove     = msm_pdev_remove,
+>> > +     .shutdown   = msm_pdev_shutdown,
+>> >       .driver     = {
+>> >               .name   = "msm",
+>> >               .of_match_table = dt_match,
+>> 
+>> Any more comments on this patch?
+> 
+> sorry, I managed to overlook this earlier.. I've pulled it in to 
+> msm-next
+> 
 
-sorry, I managed to overlook this earlier.. I've pulled it in to msm-next
+No problem, thanks Rob.
 
-BR,
--R
+-Sai
 
-> Thanks,
-> Sai
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member
-> of Code Aurora Forum, hosted by The Linux Foundation
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
