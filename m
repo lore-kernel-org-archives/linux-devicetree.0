@@ -2,486 +2,152 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E473C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 20:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4B0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 20:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10D3C2075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 20:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597783729;
-	bh=F0Rt/Sa6XOeH6QhMbwY6pm7rAx3cgygvM77yHUKtrks=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=F6Hrsr+iPo90BVaQAUwo9Fp0g8+YEzlI0r1zykGWaZjMFTFVjsnQIxsXLTk8D0ueS
-	 PN00bEDPGUDecOuoc6G8NVHmYby2EuvmxilwV1nlRGoEhiXgnmGK/JR2R2Xy+Ctp5w
-	 ebXWoqY/mtG9FzRcMUSf8Eh2ZH2w/HgIPkfS94pU=
+	by mail.kernel.org (Postfix) with ESMTP id 3597C2063A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 20:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F7t4t8R2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHRUss (ORCPT
+        id S1726852AbgHRU4M (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 16:48:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726176AbgHRUsr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 16:48:47 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B622075E;
-        Tue, 18 Aug 2020 20:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597783724;
-        bh=F0Rt/Sa6XOeH6QhMbwY6pm7rAx3cgygvM77yHUKtrks=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yRTSIIGdTow+nFhoXqJCsUEExWajDUNMhWGh2rmQ4q7LdZANgOyfmLkFO/kdOmstr
-         CCrmpiJC6efPMUDQplhMF45LUIYao13m9C0JFtuNi7wMgwagZ3EyU1ePFP/qXFJ7bu
-         zzRwqSkIsRO5kVEX7J5oIYtm2Sbkvhtt8aUP1TNk=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k88XC-0041Rw-Vt; Tue, 18 Aug 2020 21:48:43 +0100
-Date:   Tue, 18 Aug 2020 21:48:41 +0100
-Message-ID: <87lfibn0ie.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Tue, 18 Aug 2020 16:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726366AbgHRU4L (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 16:56:11 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6CBAC061389
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 13:56:10 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id j7so19151564oij.9
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 13:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WVlaqaJEkLaogLxHkb59x+3913QcwhMo1tlZOm9AT0s=;
+        b=F7t4t8R2e65gCr9vdIxnNuliGDt2ahdeDAfavI7tANLzu2aQ0/Dm9nm68MjGmfDIEn
+         +INKamv7mBD5XwNAn5unHK7F4wcGpKBzLWiimwLuJuMjurd9FzQdSLd4A3XwNq4oZgON
+         0mJ1mp3STPu72DoEU6s2oGDaAPZc1d9iqm6UukG6YQUqg1rxoULI89OmVCHGV1I5M6PW
+         LehxdYwb6AkyftI67q/r18iiMmsk+U2qcn2C0MXIx9alBu+BWFFFFCArG9HhsRjc+0Ow
+         eHMsfDTsciu66LcErJpINTzl2QMt9ciDVh42trJ4L0rc+/x0fLt7IxkYDBuYtyO6wsbj
+         4YsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WVlaqaJEkLaogLxHkb59x+3913QcwhMo1tlZOm9AT0s=;
+        b=p5yRLb0o2ez1HnCmM+57v39rCB3fk9Pr1T1OHH+WKM/EnhpGS07zIpB6ZhYiPmcN4t
+         PcOvNzicEmXPglVmLYvTC0bWJJ7lS/cjNVXeR02443rlaFasy41PoyCHeeC5iw7ZhKV/
+         zha6pl3pRqR22sy5igUJdJt0OXSqloL9UafYq8xsSxkG2CyfszLy3GFzj3MbvoUuocRg
+         zD7WIa2FTvdIZbRH3M/A2XUKPdsyL/5W7R/36lixec7Cw/Jhz09O7AzJICguN1WDrjMg
+         92dRZP1x/JDkFgkaH4LlxvpGedRnTkWg6Eu7HCLpauBlkZXVZsZfszOUR50s21DWn8wZ
+         LKvg==
+X-Gm-Message-State: AOAM532MLjlo73DwRuTCd3SUfCcJSiBWREAMJ/hD7Wg4/Wqph0P9CQil
+        DjbjDfTbHhJgBqP0mHIAhcISFpVOjzn/fdYvLcuYVw==
+X-Google-Smtp-Source: ABdhPJwbu8MfbO3BaVc7WQtY8gCaYLyN64siinjCbEFyrvhEdhXeVpE86gO8wO6noTbeRWOhZomU5kKcgOZGItaZTUA=
+X-Received: by 2002:aca:1117:: with SMTP id 23mr1367198oir.97.1597784170084;
+ Tue, 18 Aug 2020 13:56:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <CGME20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6@epcas2p2.samsung.com>
+ <20200818080415.7531-1-hyesoo.yu@samsung.com>
+In-Reply-To: <20200818080415.7531-1-hyesoo.yu@samsung.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 18 Aug 2020 13:55:59 -0700
+Message-ID: <CALAqxLWRLOqNrhhpjfqfztsWTib8SQQgeX3jJM+_ij_CvC6hiw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Chunk Heap Support on DMA-HEAP
+To:     Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        iamjoonsoo.kim@lge.com, joaodias@google.com,
+        linux-mm <linux-mm@kvack.org>,
+        KyongHo Cho <pullip.cho@samsung.com>,
+        Suren Baghdasaryan <surenb@google.com>, vbabka@suse.cz,
+        "Andrew F. Davis" <afd@ti.com>,
+        "(Exiting) Benjamin Gaignard" <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org,
-        Saravanan Sekar <sravanhome@gmail.com>
-Subject: Re: [PATCH v4 2/3] irqchip: Add Actions Semi Owl SIRQ controller
-In-Reply-To: <20200818174241.GA2020288@BV030612LT>
-References: <cover.1597571397.git.cristian.ciocaltea@gmail.com>
-        <addb413d192d88c076c6ed7f453aa693095bdd15.1597571397.git.cristian.ciocaltea@gmail.com>
-        <8e43fe6c6246bfd5347dc21b6f5c3f50@kernel.org>
-        <20200818174241.GA2020288@BV030612LT>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: cristian.ciocaltea@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, afaerber@suse.de, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, sravanhome@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Aug 2020 18:42:41 +0100,
-Cristian Ciocaltea <cristian.ciocaltea@gmail.com> wrote:
->=20
-> Hi Marc,
->=20
-> Thanks for your quick and detailed review!
->=20
-> On Mon, Aug 17, 2020 at 02:52:06PM +0100, Marc Zyngier wrote:
-> > On 2020-08-16 12:33, Cristian Ciocaltea wrote:
-> > > This controller appears on Actions Semi Owl family SoC's S500, S700 a=
-nd
-> > > S900 and provides support for 3 external interrupt controllers through
-> >=20
-> > Is that really 3 interrupt controllers? Or merely 3 interrupt lines?
->=20
-> This is mostly a leftover statement from the previous patch revision.
-> I will change it to something like:
->=20
-> "This interrupt controller is found in the Actions Semi Owl SoCs (S500,
-> S700 and S900) and provides support for handling up to 3 external
-> interrupt lines."
+On Tue, Aug 18, 2020 at 12:45 AM Hyesoo Yu <hyesoo.yu@samsung.com> wrote:
+>
+> These patch series to introduce a new dma heap, chunk heap.
+> That heap is needed for special HW that requires bulk allocation of
+> fixed high order pages. For example, 64MB dma-buf pages are made up
+> to fixed order-4 pages * 1024.
+>
+> The chunk heap uses alloc_pages_bulk to allocate high order page.
+> https://lore.kernel.org/linux-mm/20200814173131.2803002-1-minchan@kernel.org
+>
+> The chunk heap is registered by device tree with alignment and memory node
+> of contiguous memory allocator(CMA). Alignment defines chunk page size.
+> For example, alignment 0x1_0000 means chunk page size is 64KB.
+> The phandle to memory node indicates contiguous memory allocator(CMA).
+> If device node doesn't have cma, the registration of chunk heap fails.
+>
+> The patchset includes the following:
+>  - export dma-heap API to register kernel module dma heap.
+>  - add chunk heap implementation.
+>  - document of device tree to register chunk heap
+>
+> Hyesoo Yu (3):
+>   dma-buf: add missing EXPORT_SYMBOL_GPL() for dma heaps
+>   dma-buf: heaps: add chunk heap to dmabuf heaps
+>   dma-heap: Devicetree binding for chunk heap
 
-Looks good.
+Hey! Thanks so much for sending this out! I'm really excited to see
+these heaps be submitted and reviewed on the list!
 
->=20
-> > > dedicated SIRQ pins.
-> > >=20
-> > > Each line can be independently configured as interrupt and triggers
-> > > on either of the edges (raising or falling) or either of the levels
-> > > (high or low). Each line can also be masked independently.
-> > >=20
-> > > This is based on the patch series submitted by Parthiban Nallathambi:
-> > > https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
-> > >=20
-> > > Signed-off-by: Parthiban Nallathambi <pn@denx.de>
-> > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
-> > > [cristi: optimized DT, various fixes/cleanups/improvements]
-> > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > ---
-> > >  drivers/irqchip/Makefile       |   1 +
-> > >  drivers/irqchip/irq-owl-sirq.c | 318 +++++++++++++++++++++++++++++++=
-++
-> > >  2 files changed, 319 insertions(+)
-> > >  create mode 100644 drivers/irqchip/irq-owl-sirq.c
-> > >=20
-> > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > > index 133f9c45744a..b8eb5b8b766d 100644
-> > > --- a/drivers/irqchip/Makefile
-> > > +++ b/drivers/irqchip/Makefile
-> > > @@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+=3D irq-ath79-cpu.o
-> > >  obj-$(CONFIG_ATH79)			+=3D irq-ath79-misc.o
-> > >  obj-$(CONFIG_ARCH_BCM2835)		+=3D irq-bcm2835.o
-> > >  obj-$(CONFIG_ARCH_BCM2835)		+=3D irq-bcm2836.o
-> > > +obj-$(CONFIG_ARCH_ACTIONS)		+=3D irq-owl-sirq.o
-> > >  obj-$(CONFIG_DAVINCI_AINTC)		+=3D irq-davinci-aintc.o
-> > >  obj-$(CONFIG_DAVINCI_CP_INTC)		+=3D irq-davinci-cp-intc.o
-> > >  obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+=3D exynos-combiner.o
-> > > diff --git a/drivers/irqchip/irq-owl-sirq.c
-> > > b/drivers/irqchip/irq-owl-sirq.c
-> > > new file mode 100644
-> > > index 000000000000..29b7ffc40ac7
-> > > --- /dev/null
-> > > +++ b/drivers/irqchip/irq-owl-sirq.c
-> > > @@ -0,0 +1,318 @@
-> > > +// SPDX-License-Identifier: GPL-2.0+
-> > > +/*
-> > > + * Actions Semi Owl SoCs SIRQ interrupt controller driver
-> > > + *
-> > > + * Copyright (C) 2014 Actions Semi Inc.
-> > > + * David Liu <liuwei@actions-semi.com>
-> > > + *
-> > > + * Author: Parthiban Nallathambi <pn@denx.de>
-> > > + * Author: Saravanan Sekar <sravanhome@gmail.com>
-> > > + * Author: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > > + */
-> > > +
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/irqchip.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/of_irq.h>
-> > > +
-> > > +#define NUM_SIRQ			3
-> > > +
-> > > +#define INTC_EXTCTL_PENDING		BIT(0)
-> > > +#define INTC_EXTCTL_CLK_SEL		BIT(4)
-> > > +#define INTC_EXTCTL_EN			BIT(5)
-> > > +#define INTC_EXTCTL_TYPE_MASK		GENMASK(7, 6)
-> > > +#define INTC_EXTCTL_TYPE_HIGH		0
-> > > +#define INTC_EXTCTL_TYPE_LOW		BIT(6)
-> > > +#define INTC_EXTCTL_TYPE_RISING		BIT(7)
-> > > +#define INTC_EXTCTL_TYPE_FALLING	(BIT(6) | BIT(7))
-> > > +
-> > > +/* S900 SIRQ1 & SIRQ2 control register offsets, relative to SIRQ0 */
-> > > +#define INTC_EXTCTL1			0x0328
-> > > +#define INTC_EXTCTL2			0x032c
-> > > +
-> > > +struct owl_sirq_params {
-> > > +	/* INTC_EXTCTL reg shared for all three SIRQ lines */
-> > > +	bool reg_shared;
-> > > +	/* INTC_EXTCTL reg offsets relative to controller base address */
-> > > +	u16 reg_offset[NUM_SIRQ];
-> > > +};
-> > > +
-> > > +struct owl_sirq_chip_data {
-> > > +	const struct owl_sirq_params *params;
-> > > +	void __iomem *base;
-> > > +	raw_spinlock_t lock;
-> > > +	u32 ext_irqs[NUM_SIRQ];
-> > > +	u8 trigger;
-> >=20
-> > Nit: Please align data structure members vertically:
-> >=20
-> > struct owl_sirq_chip_data {
-> > 	const struct owl_sirq_params *params;
-> > 	void __iomem                 *base;
-> > 	raw_spinlock_t               lock;
-> > 	u32                          ext_irqs[NUM_SIRQ];
-> > 	u8                           trigger;
-> > };
->=20
-> Done.
->=20
-> > > +};
-> > > +
-> > > +/* S500 and S700 SoCs */
-> > > +static const struct owl_sirq_params owl_sirq_s500_params =3D {
-> > > +	.reg_shared =3D true,
-> > > +	.reg_offset =3D { 0, 0, 0 },
-> > > +};
-> > > +
-> > > +/* S900 SoC */
-> > > +static const struct owl_sirq_params owl_sirq_s900_params =3D {
-> > > +	.reg_shared =3D false,
-> > > +	.reg_offset =3D { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
-> >=20
-> > 0 *is* an offset, right? Why doesn't it have a name too?
->=20
-> Right, I updated the defines section:
->=20
-> /* S900 SIRQ control register offsets, relative to controller base addres=
-s */
-> #define INTC_EXTCTL0			0x0000
-> #define INTC_EXTCTL1			0x0328
-> [...]
->=20
-> The controller base address points to SIRQ0 control register, so this
-> offset is always 0, but I totally agree we should have a name for it.
->=20
-> > > +};
-> > > +
-> > > +static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32
-> > > index)
-> > > +{
-> > > +	u32 val;
-> > > +
-> > > +	val =3D readl_relaxed(data->base + data->params->reg_offset[index]);
-> > > +	if (data->params->reg_shared)
-> > > +		val =3D (val >> (2 - index) * 8) & 0xff;
-> >=20
-> >         base =3D (2 - index) * 8;
-> >         val =3D FIELD_GET(GENMASK(base + 7, base), val);
->=20
-> Unfortunately the context doesn't allow using FIELD_GET:
->=20
-> ./include/linux/compiler.h:392:38: error: call to =E2=80=98__compiletime_=
-assert_159=E2=80=99=20
->  declared with attribute error: FIELD_GET: mask is not constant
+The first general concern I have with your series is that it adds a dt
+binding for the chunk heap, which we've gotten a fair amount of
+pushback on.
 
-Bah. Turning the whole thing into compile-time values would actually
-be more readable, so how about this:
+A possible alternative might be something like what Kunihiko Hayashi
+proposed for non-default CMA heaps:
+  https://lore.kernel.org/lkml/1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com/
 
-diff --git a/drivers/irqchip/irq-owl-sirq.c b/drivers/irqchip/irq-owl-sirq.c
-index 29b7ffc40ac7..b771acbda7d5 100644
---- a/drivers/irqchip/irq-owl-sirq.c
-+++ b/drivers/irqchip/irq-owl-sirq.c
-@@ -57,13 +57,39 @@ static const struct owl_sirq_params owl_sirq_s900_param=
-s =3D {
- 	.reg_offset =3D { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
- };
-=20
-+static u32 owl_field_get(u32 val, int index)
-+{
-+	switch(index) {
-+	case 0:
-+		return FIELD_GET(GENMASK(23, 16), val);
-+	case 1:
-+		return FIELD_GET(GENMASK(15, 8), val);
-+	case 2:
-+	default:
-+		return FIELD_GET(GENMASK(7, 0), val);
-+	}
-+}
-+
-+static u32 owl_field_prep(u32 val, int index)
-+{
-+	switch(index) {
-+	case 0:
-+		return FIELD_PREP(GENMASK(23, 16), val);
-+	case 1:
-+		return FIELD_PREP(GENMASK(15, 8), val);
-+	case 2:
-+	default:
-+		return FIELD_PREP(GENMASK(7, 0), val);
-+	}
-+}
-+
- static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32 index)
- {
- 	u32 val;
-=20
- 	val =3D readl_relaxed(data->base + data->params->reg_offset[index]);
- 	if (data->params->reg_shared)
--		val =3D (val >> (2 - index) * 8) & 0xff;
-+		val =3D owl_field_get(val, index);
-=20
- 	return val;
- }
-@@ -75,9 +101,8 @@ static void owl_sirq_write_extctl(struct owl_sirq_chip_d=
-ata *data,
-=20
- 	if (data->params->reg_shared) {
- 		val =3D readl_relaxed(data->base + data->params->reg_offset[index]);
--		val &=3D ~(0xff << (2 - index) * 8);
--		extctl &=3D 0xff;
--		extctl =3D (extctl << (2 - index) * 8) | val;
-+		val &=3D ~owl_field_prep(0xff, index);
-+		extctl =3D owl_field_prep(extctl, index) | val;
- 	}
-=20
- 	writel_relaxed(extctl, data->base + data->params->reg_offset[index]);
+This approach would insteal allow a driver to register a CMA area with
+the chunk heap implementation.
 
-Yes, this is a bit more code, but it *is* readable. Bonus points if
-you add proper defines for the masks.
+However, (and this was the catch Kunihiko Hayashi's patch) this
+requires that the driver also be upstream, as we need an in-tree user
+of such code.
 
->=20
-> > > +
-> > > +	return val;
-> > > +}
-> > > +
-> > > +static void owl_sirq_write_extctl(struct owl_sirq_chip_data *data,
-> > > +				  u32 extctl, u32 index)
-> > > +{
-> > > +	u32 val;
-> > > +
-> > > +	if (data->params->reg_shared) {
-> > > +		val =3D readl_relaxed(data->base + data->params->reg_offset[index]=
-);
-> > > +		val &=3D ~(0xff << (2 - index) * 8);
-> > > +		extctl &=3D 0xff;
-> > > +		extctl =3D (extctl << (2 - index) * 8) | val;
-> >=20
-> > Please make use of FIELD_PREP, FIELD_GET and GENMASK.
->=20
-> I'm not sure how to deal with the mask constness restriction, except
-> using static defines and if/else statements, which is not quite
-> elegant.
+Also, it might be good to provide some further rationale on why this
+heap is beneficial over the existing CMA heap?  In general focusing
+the commit messages more on the why we might want the patch, rather
+than what the patch does, is helpful.
 
-See above.
+"Special hardware" that doesn't have upstream drivers isn't very
+compelling for most maintainers.
 
->=20
-> > > +	}
-> > > +
-> > > +	writel_relaxed(extctl, data->base + data->params->reg_offset[index]=
-);
-> > > +}
-> > > +
-> > > +static void owl_sirq_clear_set_extctl(struct owl_sirq_chip_data *d,
-> > > +				      u32 clear, u32 set, u32 index)
-> > > +{
-> > > +	unsigned long flags;
-> > > +	u32 val;
-> > > +
-> > > +	raw_spin_lock_irqsave(&d->lock, flags);
-> > > +	val =3D owl_sirq_read_extctl(d, index);
-> > > +	val &=3D ~clear;
-> > > +	val |=3D set;
-> > > +	owl_sirq_write_extctl(d, val, index);
-> > > +	raw_spin_unlock_irqrestore(&d->lock, flags);
-> > > +}
-> > > +
-> > > +static void owl_sirq_eoi(struct irq_data *data)
-> > > +{
-> > > +	struct owl_sirq_chip_data *chip_data =3D
-> > > irq_data_get_irq_chip_data(data);
-> > > +
-> > > +	/*
-> > > +	 * Software must clear external interrupt pending, when interrupt t=
-ype
-> > > +	 * is edge triggered, so we need per SIRQ based clearing.
-> > > +	 */
-> > > +	if (chip_data->trigger & (1 << data->hwirq))
-> >=20
-> > BIT(d->hwirq)
-> >=20
-> > But it also begs the question: we already have all the trigger informat=
-ion
-> > in the irqdesc. Why do you need some additional bookkeeping?
->=20
-> That's another leftover from the original work. Thanks for pointing
-> this out, I missed it. I dropped the redundant handling of the IRQ
-> trigger information and just replaced this with:
->=20
->   if (!irqd_is_level_type(data))
+That said, I'm very excited to see these sorts of submissions, as I
+know lots of vendors have historically had very custom out of tree ION
+heaps, and I think it would be a great benefit to the community to
+better understand the experience vendors have in optimizing
+performance on their devices, so we can create good common solutions
+upstream. So I look forward to your insights on future revisions of
+this patch series!
 
-Yup.
-
->=20
-> > > +		owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_PENDING,
-> > > +					  data->hwirq);
-> > > +
-> > > +	irq_chip_eoi_parent(data);
-> > > +}
-> > > +
-> > > +static void owl_sirq_mask(struct irq_data *data)
-> > > +{
-> > > +	struct owl_sirq_chip_data *chip_data =3D
-> > > irq_data_get_irq_chip_data(data);
-> > > +
-> > > +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_EN, 0, data->hwirq=
-);
-> > > +	irq_chip_mask_parent(data);
-> > > +}
-> > > +
-> > > +static void owl_sirq_unmask(struct irq_data *data)
-> > > +{
-> > > +	struct owl_sirq_chip_data *chip_data =3D
-> > > irq_data_get_irq_chip_data(data);
-> > > +
-> > > +	owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_EN, data->hwirq=
-);
-> > > +	irq_chip_unmask_parent(data);
-> > > +}
-> > > +
-> > > +/*
-> > > + * GIC does not handle falling edge or active low, hence SIRQ shall =
-be
-> > > + * programmed to convert falling edge to rising edge signal and acti=
-ve
-> > > + * low to active high signal.
-> > > + */
-> > > +static int owl_sirq_set_type(struct irq_data *data, unsigned int typ=
-e)
-> > > +{
-> > > +	struct owl_sirq_chip_data *chip_data =3D
-> > > irq_data_get_irq_chip_data(data);
-> > > +	u32 sirq_type;
-> > > +
-> > > +	switch (type) {
-> > > +	case IRQ_TYPE_LEVEL_LOW:
-> > > +		sirq_type =3D INTC_EXTCTL_TYPE_LOW;
-> > > +		chip_data->trigger &=3D ~(1 << data->hwirq);
-> > > +		type =3D IRQ_TYPE_LEVEL_HIGH;
-> > > +		break;
-> > > +	case IRQ_TYPE_LEVEL_HIGH:
-> > > +		sirq_type =3D INTC_EXTCTL_TYPE_HIGH;
-> > > +		chip_data->trigger &=3D ~(1 << data->hwirq);
-> > > +		break;
-> > > +	case IRQ_TYPE_EDGE_FALLING:
-> > > +		sirq_type =3D INTC_EXTCTL_TYPE_FALLING;
-> > > +		chip_data->trigger |=3D 1 << data->hwirq;
-> > > +		type =3D IRQ_TYPE_EDGE_RISING;
-> > > +		break;
-> > > +	case IRQ_TYPE_EDGE_RISING:
-> > > +		sirq_type =3D INTC_EXTCTL_TYPE_RISING;
-> > > +		chip_data->trigger |=3D 1 << data->hwirq;
-> > > +		break;
-> > > +	default:
-> > > +		WARN_ON(1);
-> >=20
-> > No need for this WARN_ON(), the core kernel is loud enough.
->=20
-> Done.
->=20
-> > > +		return -EINVAL;
-> > > +	}
-> > > +
-> > > +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_TYPE_MASK, sirq_ty=
-pe,
-> > > +				  data->hwirq);
-> > > +
-> > > +	return irq_chip_set_type_parent(data, type);
-> > > +}
-> > > +
-> > > +static struct irq_chip owl_sirq_chip =3D {
-> > > +	.name		=3D "owl-sirq",
-> > > +	.irq_mask	=3D owl_sirq_mask,
-> > > +	.irq_unmask	=3D owl_sirq_unmask,
-> > > +	.irq_eoi	=3D owl_sirq_eoi,
-> > > +	.irq_set_type	=3D owl_sirq_set_type,
-> > > +	.irq_retrigger	=3D irq_chip_retrigger_hierarchy,
-> >=20
-> > How about irq_set_affinity? Or does it only exist on UP systems?
->=20
-> I have just added:
->=20
-> #ifdef CONFIG_SMP
-> 	.irq_set_affinity =3D irq_chip_set_affinity_parent,
-> #endif
-
-Looks OK.
-
-Cheers,
-
-	M.
-
---=20
-Without deviation from the norm, progress is not possible.
+thanks
+-john
