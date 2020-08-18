@@ -2,141 +2,293 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF5FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 11:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37481C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 12:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3A72206B5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 11:49:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZtRztLvX"
+	by mail.kernel.org (Postfix) with ESMTP id 22C56207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 12:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgHRLtY (ORCPT
+        id S1726473AbgHRMCR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgHRLtX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 07:49:23 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 517D2C061389;
-        Tue, 18 Aug 2020 04:49:23 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id qc22so21700026ejb.4;
-        Tue, 18 Aug 2020 04:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mMxvSNvYN0G9gHfNld2QBfDcMy7NeODVjheMMYfO7t0=;
-        b=ZtRztLvX7y/z12SWaalBEyeOEYxXabLjCHi5xVWw90onClwSFm5N82IkLOBLg85oVy
-         rI/wo7v8wlnrP9amQdbWl54hsO+LiO1KvL4hZAXrs993duzAg9d7CAC11n4cgZy7CQ3C
-         Gwfw62LPLu+BB2BZPBaFtKv7uhcUBYsuhuUTiawxHxTHbFlTywVV+zvU3cOBJHAOnRrN
-         o6e9AisnzU3fcRqeftlfZhzb1ODkMT73Tzcw0LYkSLR9kWddRI4xtv3beWBw95OdSrgP
-         sBGUKq9P+diHlxTYGsn5/LP9yTNnYLB4hiXTPwf+EHlolkFNcHxgpSCDR0fKx6WTLFx/
-         xJCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mMxvSNvYN0G9gHfNld2QBfDcMy7NeODVjheMMYfO7t0=;
-        b=ABdL6YbImcaDlmTvyfFnMJl6puWkqpcxixfV6YamD7FZSUDAL1bx5USq4SiIxm67DR
-         if7Ho6bpVju8RD6wQjZr2sun53RymYf3ouVFx51OuN/SxD/prIj+hi9KT4t29DN+cElg
-         UpuyK1WkPKf1LP5nVPvdGJdhku5QrE0pDdJLRo3bk27DkZLPLbpTy/mxg+aoEyDih03m
-         wMZluBiPD92ZL+7m+1OAvlCO4KyXg+nrAgRadqk/KWcTVl4MGLM+vV2+hYer1VehWAE+
-         TAlPFKizTMgW0HeS8DibR8kpwAUg3POQPXsedN4CflSUlVrADaWzc7QZYb4AuBIzOWtV
-         sb7Q==
-X-Gm-Message-State: AOAM5316KDxmMoSJSKOi9ZBQhqtwrq2QoNBV5PNcEdCHlKrif4Sx9N6e
-        BCS7EkE1ikmNLtDQG2k/jyel7QQeLhWjjBtUW2s=
-X-Google-Smtp-Source: ABdhPJwsPOc04kvdKuEfb7mxh740Lfw+l/VTLX1glmpk7RdsbB0R0Zt9vCZhZGNuyNwSG8ObvYtv5oSZ9wzSF1JryNk=
-X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr20883087ejw.170.1597751361674;
- Tue, 18 Aug 2020 04:49:21 -0700 (PDT)
+        Tue, 18 Aug 2020 08:02:17 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:18285 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbgHRMCR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 08:02:17 -0400
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 2D6F0240004;
+        Tue, 18 Aug 2020 12:02:10 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 14:05:53 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Andrey Konovalov <andrey.konovalov@linaro.org>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        Leon Luo <leonl@leopardimaging.com>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+        laurent.pinchart@ideasonboard.com,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: media: imx274: Convert to json-schema
+Message-ID: <20200818120553.4gfuy7abuin7g24r@uno.localdomain>
+References: <20200817160037.255972-1-jacopo+renesas@jmondi.org>
+ <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
+ <3592105f-584f-eeeb-4ece-89f3f6bb5352@linaro.org>
 MIME-Version: 1.0
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com> <1597406966-13740-17-git-send-email-abel.vesa@nxp.com>
-In-Reply-To: <1597406966-13740-17-git-send-email-abel.vesa@nxp.com>
-From:   Dong Aisheng <dongas86@gmail.com>
-Date:   Tue, 18 Aug 2020 19:34:14 +0800
-Message-ID: <CAA+hA=S_wdoZvCPamW2F1Vs73t4fgnQa8LouUwzq2Vfpz3SDCg@mail.gmail.com>
-Subject: Re: [PATCH v2 16/17] arm64: dts: imx8mp: Add media_blk_ctrl node
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3592105f-584f-eeeb-4ece-89f3f6bb5352@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 8:12 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+Hi Andrey
+
+On Tue, Aug 18, 2020 at 09:43:46AM +0300, Andrey Konovalov wrote:
+> Hi Jacopo,
 >
-> Some of the features of the media_ctrl will be used by some
-> different drivers in a way those drivers will know best, so adding the
-> syscon compatible we allow those to do just that. Only the resets
-> and the clocks are registered bit the clk-blk-ctrl driver.
+> Misprint in the subject (imx274 vs imx214)?
 >
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+> Thanks,
+> Andrey
+
+Seems like I screwed up big times with this patch.
+I'll fix and resend with the right subject!
+
+Thanks
+  j
+
 >
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> index dede0ae..2d6d213 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> @@ -736,6 +736,22 @@
->                         };
->                 };
->
-> +               aips4: bus@32c00000 {
-> +                       compatible = "simple-bus";
-> +                       reg = <0x32c00000 0x400000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges;
-> +
-> +                       media_blk_ctrl: clock-controller@32ec0000 {
-
-For this combo device, maybe we can directly name it as blk-ctrl@32ec0000.
-Rob, do you think if we can do that?
-
-> +                               compatible = "fsl,imx8mp-media-blk-ctrl", "syscon";
-> +                               reg = <0x32ec0000 0x10000>;
-> +
-
-Remove unnecessary blank line
-
-Otherwise:
-Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-Regards
-Aisheng
-
-> +                               #clock-cells = <1>;
-> +                               #reset-cells = <1>;
-> +                       };
-> +               };
-> +
->                 aips5: bus@30c00000 {
->                         compatible = "fsl,aips-bus", "simple-bus";
->                         reg = <0x30c00000 0x400000>;
-> --
-> 2.7.4
->
+> On 17.08.2020 22:18, Jacopo Mondi wrote:
+> > Slightly better with a subject  =)
+> >
+> > I made a formatting error, empty line between receivers list and Subject:
+> >
+> > Sorry about this :)
+> >
+> > On Mon, Aug 17, 2020 at 06:00:37PM +0200, Jacopo Mondi wrote:
+> > > Subject: [PATCH] dt-bindings: media: imx274: Convert to json-schema
+> > >
+> > > Convert the imx274 bindings document to json-schema and update
+> > > the MAINTAINERS file accordingly.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >   .../bindings/media/i2c/sony,imx214.txt        |  53 --------
+> > >   .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
+> > >   MAINTAINERS                                   |   2 +-
+> > >   3 files changed, 125 insertions(+), 54 deletions(-)
+> > >   delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> > >   create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> > > deleted file mode 100644
+> > > index f11f28a5fda4..000000000000
+> > > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> > > +++ /dev/null
+> > > @@ -1,53 +0,0 @@
+> > > -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+> > > -
+> > > -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+> > > -an active array size of 4224H x 3200V. It is programmable through an I2C
+> > > -interface.
+> > > -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
+> > > -throughput of 1.2Gbps/lane.
+> > > -
+> > > -
+> > > -Required Properties:
+> > > -- compatible: Shall be "sony,imx214".
+> > > -- reg: I2C bus address of the device. Depending on how the sensor is wired,
+> > > -       it shall be <0x10> or <0x1a>;
+> > > -- enable-gpios: GPIO descriptor for the enable pin.
+> > > -- vdddo-supply: Chip digital IO regulator (1.8V).
+> > > -- vdda-supply: Chip analog regulator (2.7V).
+> > > -- vddd-supply: Chip digital core regulator (1.12V).
+> > > -- clocks: Reference to the xclk clock.
+> > > -- clock-frequency: Frequency of the xclk clock.
+> > > -
+> > > -Optional Properties:
+> > > -- flash-leds: See ../video-interfaces.txt
+> > > -- lens-focus: See ../video-interfaces.txt
+> > > -
+> > > -The imx214 device node shall contain one 'port' child node with
+> > > -an 'endpoint' subnode. For further reading on port node refer to
+> > > -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > -
+> > > -Required Properties on endpoint:
+> > > -- data-lanes: check ../video-interfaces.txt
+> > > -- link-frequencies: check ../video-interfaces.txt
+> > > -- remote-endpoint: check ../video-interfaces.txt
+> > > -
+> > > -Example:
+> > > -
+> > > -	camera-sensor@1a {
+> > > -		compatible = "sony,imx214";
+> > > -		reg = <0x1a>;
+> > > -		vdddo-supply = <&pm8994_lvs1>;
+> > > -		vddd-supply = <&camera_vddd_1v12>;
+> > > -		vdda-supply = <&pm8994_l17>;
+> > > -		lens-focus = <&ad5820>;
+> > > -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> > > -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
+> > > -		clock-frequency = <24000000>;
+> > > -		port {
+> > > -			imx214_ep: endpoint {
+> > > -				data-lanes = <1 2 3 4>;
+> > > -				link-frequencies = /bits/ 64 <480000000>;
+> > > -				remote-endpoint = <&csiphy0_ep>;
+> > > -			};
+> > > -		};
+> > > -	};
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> > > new file mode 100644
+> > > index 000000000000..ddd4627214b1
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> > > @@ -0,0 +1,124 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+> > > +
+> > > +maintainers:
+> > > +  - Ricardo Ribalda <ribalda@kernel.org>
+> > > +
+> > > +description: -|
+> > > +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+> > > +  an active array size of 4224H x 3200V. It is programmable through an I2C
+> > > +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
+> > > +  maximum throughput of 1.2Gbps/lane.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: sony,imx214
+> > > +
+> > > +  reg:
+> > > +    description: -|
+> > > +      I2C device address. Depends on how the sensor is wired, it shall be
+> > > +    enum:
+> > > +      - 0x10
+> > > +      - 0x1a
+> > > +
+> > > +  clocks:
+> > > +    description: Reference to the xclk clock.
+> > > +    maxItems: 1
+> > > +
+> > > +  clock-frequency:
+> > > +    description: Frequency of the xclk clock in Hz.
+> > > +
+> > > +  enable-gpios:
+> > > +    description: GPIO descriptor for the enable pin.
+> > > +    maxItems: 1
+> > > +
+> > > +  vdddo-supply:
+> > > +    description: Chip digital IO regulator (1.8V).
+> > > +    maxItems: 1
+> > > +
+> > > +  vdda-supply:
+> > > +    description: Chip analog regulator (2.7V).
+> > > +    maxItems: 1
+> > > +
+> > > +  vddd-supply:
+> > > +    description: Chip digital core regulator (1.12V).
+> > > +    maxItems: 1
+> > > +
+> > > +  flash-leds:
+> > > +    description: See ../video-interfaces.txt
+> > > +
+> > > +  lens-focus:
+> > > +    description: See ../video-interfaces.txt
+> > > +
+> > > +  port:
+> > > +    type: object
+> > > +    description: |
+> > > +      The device node must contain one 'port' child node for its digital output
+> > > +      video port, in accordance with the video interface bindings defined in
+> > > +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > +
+> > > +    properties:
+> > > +      endpoint:
+> > > +        type: object
+> > > +        properties:
+> > > +          remote-endpoint:
+> > > +            description: See ../video-interfaces.txt
+> > > +
+> > > +          data-lanes:
+> > > +            description: See ../video-interfaces.txt
+> > > +
+> > > +          link-frequencies:
+> > > +            description: See ../video-interfaces.txt
+> > > +
+> > > +        required:
+> > > +          - data-lanes
+> > > +          - link-frequencies
+> > > +
+> > > +    additionalProperties: false
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - reg
+> > > +  - clocks
+> > > +  - clock-frequency
+> > > +  - enable-gpios
+> > > +  - vdddo-supply
+> > > +  - vdda-supply
+> > > +  - vddd-supply
+> > > +  - port
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    #include <dt-bindings/gpio/gpio.h>
+> > > +
+> > > +    i2c0 {
+> > > +        #address-cells = <1>;
+> > > +        #size-cells = <0>;
+> > > +
+> > > +        camera-sensor@1a {
+> > > +            compatible = "sony,imx214";
+> > > +            reg = <0x1a>;
+> > > +            vdddo-supply = <&pm8994_lvs1>;
+> > > +            vddd-supply = <&camera_vddd_1v12>;
+> > > +            vdda-supply = <&pm8994_l17>;
+> > > +            lens-focus = <&ad5820>;
+> > > +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> > > +            clocks = <&camera_clk>;
+> > > +            clock-frequency = <24000000>;
+> > > +
+> > > +            port {
+> > > +                imx214_ep: endpoint {
+> > > +                    data-lanes = <1 2 3 4>;
+> > > +                    link-frequencies = /bits/ 64 <480000000>;
+> > > +                    remote-endpoint = <&csiphy0_ep>;
+> > > +                };
+> > > +            };
+> > > +        };
+> > > +    };
+> > > +
+> > > +...
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 6c8e98238a7b..d1a6173d3b64 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -15918,7 +15918,7 @@ M:	Ricardo Ribalda <ribalda@kernel.org>
+> > >   L:	linux-media@vger.kernel.org
+> > >   S:	Maintained
+> > >   T:	git git://linuxtv.org/media_tree.git
+> > > -F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> > > +F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> > >   F:	drivers/media/i2c/imx214.c
+> > >
+> > >   SONY IMX219 SENSOR DRIVER
+> > > --
+> > > 2.27.0
+> > >
