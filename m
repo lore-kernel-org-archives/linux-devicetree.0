@@ -2,94 +2,164 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B14C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D895BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9E3A20738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC238207DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="i6WRLedk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jOzfJefJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbgHRHpe (ORCPT
+        id S1726641AbgHRHp4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:45:34 -0400
-Received: from mout.gmx.net ([212.227.17.20]:53699 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgHRHpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:45:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597736703;
-        bh=ap693LLFeqKCPEJc56ThJpeeYc97CmzfomkRjHhl5Lc=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=i6WRLedkh61h9EWnwL8+agH/ZhPLFobT8LQwX97RutWb02W8g51ojjqea5SoSJgRp
-         pSQiyHg4h+JQz5eDzRZs1LxBH/TqxomEq3UsfPl502I8Lh6YYHHTrIMneUNuc4cb8e
-         5CDlAxNeLU+UJvNobxpV58kb6BG/AZiC1d5daxlg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.53.43.192] ([185.53.43.192]) by web-mail.gmx.net
- (3c-app-gmx-bap75.server.lan [172.19.172.175]) (via HTTP); Tue, 18 Aug 2020
- 09:45:03 +0200
+        Tue, 18 Aug 2020 03:45:56 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:17702 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbgHRHpz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 03:45:55 -0400
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200818074552epoutp03a9c9c4780df2d703a79f41c0684d1d6b~sTRxdEohS0381803818epoutp03D
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 07:45:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200818074552epoutp03a9c9c4780df2d703a79f41c0684d1d6b~sTRxdEohS0381803818epoutp03D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597736752;
+        bh=dw5oXT9wypsLxfzjFB/LVZWr7Mx69JAVk4Tqy1Lmc7s=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=jOzfJefJboLRPUZkvthpwCZYPdn6vhl1ylQEz6YGDCqKxU6+dx5370+02X4yBUNxD
+         20ktGChjWLb1nwSGGYrtaajqgwXNXWWvFDWWgMdfO81jOmAreovY9qIzqDXyK9nFsP
+         HBkLXhwVANta5GksROanM4wqJNjbVDaeYEY6idN4=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20200818074551epcas2p3eafdb6409e1a2636717a4c2f73d76015~sTRwgIcRf2091420914epcas2p3b;
+        Tue, 18 Aug 2020 07:45:51 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.181]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4BW2yj0RGSzMqYmC; Tue, 18 Aug
+        2020 07:45:49 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        63.BD.19322.C278B3F5; Tue, 18 Aug 2020 16:45:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6~sTRtSO3vb2672326723epcas2p2X;
+        Tue, 18 Aug 2020 07:45:47 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200818074547epsmtrp163a93b57be1a23b472e1de5be6cc5044~sTRtRGzpp2704127041epsmtrp1l;
+        Tue, 18 Aug 2020 07:45:47 +0000 (GMT)
+X-AuditID: b6c32a45-7adff70000004b7a-d2-5f3b872c46b0
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        84.78.08303.B278B3F5; Tue, 18 Aug 2020 16:45:47 +0900 (KST)
+Received: from Dabang.dsn.sec.samsung.com (unknown [12.36.155.59]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200818074547epsmtip239546245637fb5172bd79a2d66a02ce9~sTRtBSvcm2582525825epsmtip2n;
+        Tue, 18 Aug 2020 07:45:47 +0000 (GMT)
+From:   Hyesoo Yu <hyesoo.yu@samsung.com>
+To:     sumit.semwal@linaro.org
+Cc:     minchan@kernel.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, joaodias@google.com, linux-mm@kvack.org,
+        pullip.cho@samsung.com, surenb@google.com, vbabka@suse.cz,
+        afd@ti.com, benjamin.gaignard@linaro.org, lmark@codeaurora.org,
+        labbott@redhat.com, Brian.Starkey@arm.com, john.stultz@linaro.org,
+        christian.koenig@amd.com, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, Hyesoo Yu <hyesoo.yu@samsung.com>
+Subject: [PATCH 0/3] Chunk Heap Support on DMA-HEAP
+Date:   Tue, 18 Aug 2020 17:04:12 +0900
+Message-Id: <20200818080415.7531-1-hyesoo.yu@samsung.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Message-ID: <trinity-8b2a2966-9e61-4617-9cdc-fa496cfdd1af-1597736703797@3c-app-gmx-bap75>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     David Woodhouse <dwmw2@infradead.org>
-Cc:     linux-mediatek@lists.infradead.org,
-        chunkuang Hu <chunkuang.hu@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: Aw: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related
- nodes to mt7623n.dtsi
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 18 Aug 2020 09:45:03 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <5EB39D93-57C0-47AD-B0F3-09AEE643CFBF@infradead.org>
-References: <20200807082754.6790-1-linux@fw-web.de>
- <20200807082754.6790-2-linux@fw-web.de>
- <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
- <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
- <cefc273c226c93c605f4dc76afa9eb5aacceaf26.camel@infradead.org>
- <trinity-bbc9a618-a916-40bb-b144-bffe715646a4-1597734987449@3c-app-gmx-bap75>
- <5EB39D93-57C0-47AD-B0F3-09AEE643CFBF@infradead.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:85BOu6BZdj2Wig1BiNK0aOOhPHhkbzUQavsJfIXv/VN9miFbvhQHTt6im8lCBMQ+0oeEh
- ulmrdb/qo9PZvIVceuhKSdzs1AwzuG3BlQu1U7nIKN8i83ItITsAAddk7nlIBOH3yzpz5+513U/i
- SNIY2EIoMsHRr0Ie7x0Y4AwbaqlOwtk26v8oAm463L+J4RSdi57ZXMdd8qlGrUeRx1p3yBeUaTJf
- BwmKDZbBDGdxpUrHoCgn8BohE0r2ZKbEJ8/M3M5a25LQVVOEK2lTGVNnJXBmK+7Jjlb1ts7L5hjx
- jA=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:s0ZG40dufYo=:hcHuqQMJtbMsOT9VqYBWd1
- 5p/sXKqEySlXE7TBgaELLBeCDvBjzNy77c0v6XFV8OKM2TKRv+vxm8n8FxDkg02DJLze2XBt3
- cVJk3BKRNUWpFhvPOsv6nYjHqh+vzFEnDyhoDEvnuefRBNMoUsbwj0FB66OTnrPAxHlzv5n63
- 12Vgg3CEqm2EAwXuO+K9A2gLbsMWV07KDVal8mgs+OMKvZ8GrgBfX/7WTlvkjj3v6JbIQmlQV
- huKSm0Gv+khQbdmAQThhd/klkRxRDDd8FEb6R5wl/9m9O3uGA1x5FkrIlPdr783oS4t4/Y/mp
- qwQkDUbuvyRsnR69V1HyIDZKMi8FuwofVnmZRgo1WqcviPLJW3PQKvVU1qh5/aIwnfrg1kin+
- vaNpUy9F5TspjPhlTf35KlZaQL56V9ATB1tKKKCHZoxvzOPIBpu7kST+iFyynL8aGT9sQTLrE
- jo98IAxuOET+LR16X7KNHuTGKGVPTTQnlerA0ogW2r2IoEce9z9WvthgXLEgKJYi5XBdQV7H+
- Nav2yK4ObULITv0KiYDRS9Pj69sPz2vO5ILFZLgv2AijdZpOZocWqOxK56CDdCu7TTeM0l3/Y
- dWbjLri1EvnJoSw51SJtecsfoegvllfufY3SCqaKRftqz77GtRaxdEaAfj7mwZ/gI+plZngd5
- Aw8siV1RZxJMrvJkn4npHJgzkq85+7yHb3Xy3Ksxi8iV55NKpBZFeDG9MotsEI8OwVOM=
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xTZxjG8522p4Wk21lx46MkwEo2A5NLweKHEzVOt2MgjsCyIMtWKhwp
+        obRdD3hpXKYgFxGqgMPRKhRQVhgIloqAiIJkXEQDglgHCkPUyEAQVAgEXGkx47/nfd73l+e7
+        5OUweGlsPidOnkip5BKZALdn1t3yCPDakP6l2LdhiIemunLY6Fx1JY6SW7twNNrVA9Dk8DUW
+        Kmq7y0L9b6ZwtHSih4XKT6bgaE4/ykDdi16ovGkeQ6/7/8FQX+M5HGXVXGGhx5XvWEjbOYCh
+        sjdTbLSc3QJQ6vU2Nup6NMtGeff0ONId04DtjmTqvSWcrCysBGSfJhsj9cYk0lhxAieNM7ls
+        MnOyHyOHBppwsuP3RSY5fLIdIweXnzDIqeb7OKkxVQCyW9/GJtvNVzFy1ugSSkTKtkgpSQyl
+        cqPk0YqYOHlskCA4XPyVWBTgK/QSBqJNAje5JIEKEuwMCfX6Ok5meQuB2wGJLMlihUpoWuCz
+        dYtKkZRIuUkVdGKQgFLGyJRCodKbliTQSfJY72hFwmahr6+fyDIZJZNqiqTKLO6hlgYddhSc
+        t88EdhxIbITNczdZmcCewyPqAWzNr2HYihkAl8/kYrZiFsBLExPgPfJ4eQi3NRoBnDdcWOXn
+        AHw7PchYmcKJ9bDDVGYl1hHO8KzBYB1iEOVMOJBntjYcCH94YXDeCjCJz2Dm4hmr5hKBsFir
+        WY1zhTm6R8DmfwQ7C8aYK5ph8VOu6KyHhUSeHXx+PpNtA3bClo4qpk07wPF206rPhy9Opa3q
+        g/DO8VGWDT4OYG/+fdzW8IfaZ+mWNI4lwQNWN/qsSEi4w7a/V3M/gBm3ltg2mwsz0ng20B3e
+        KCtcTXWCo1XpLJsm4cU6jVXziB9hTW0K6zRw1a65jXbNbbT/5+oBowJ8QinphFiK9lMK1/6q
+        EVgXwnNXPcibnPZuBRgHtALIYQjWcfd1bBLzuDGSw2pKpRCrkmQU3QpElvfNYfA/jlZYNkqe
+        KBaK/AICfANFSBTghwSO3IRPe37iEbGSRCqeopSU6j2Hcez4R7GCufmwUsm2cJT67qBh0fkZ
+        P/XwUrj62sumyIcjyV1b+w3mhtEs6eZOV8c/f8mO92uujnCumD2S6fG5U99vKT43hbsf7AhR
+        /+UcmfGH5zZ1xPOSq/ELt/dyMvLFpgOnPqy6W7D3i6Gj++hLtbXq+tjSKKco1+2F9SPmEsPT
+        B+3BdTy5S8TppT3xDuYdv/aE5S4szH1fnHyIcr9hfklfbk4+Mp41ZjLxA3ffYZX6364t6z1L
+        Q5WLpHd/3sYNP4QY08Nan+h1/eOXj3VPBbz61in13/aGkTaddqZhoji36O13L5hVF18J1K+f
+        RsbkjvlUs4dLgqf2fzM0/vMe74eFWufr61Ox6V0CJi2VCD0ZKlryH4b59EiZBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA03RfUzMcRzA8b6/3+9+9+u2y69T+uZMdliWdUKbr9XIU75DmGbDcI5+qvV0
+        7sqz6PKwLi55CL9DV7PknIeuECpcR9cTLTk3JKp5GKmVm0jhNJv/Xvu8t8/njw9DSkqp0Ux8
+        ciqnTlYmymgRdbNaFhA8+VCYIqTquz/qrssVorPXzDTSWuto1F7XBFBX210Byrc9FqAWVzeN
+        BrOaBOhSdiaNvhnbSdQwEIwuVfQT6GvLWwI9vXOWRoev3xCg1+ZfAsTXOghU5OoWoqEjDwA6
+        UGkTorrWPiE63mykkSFDDyL88IHmQRqbz5sBfqo/QmCjJQ1bTFk0tvQeE2JdVwuBXzkqaGw/
+        PUDhtuwaAr8c6iBxd9UzGuvLTAA3GG1CXOO8ReA+y9jl7BpReAyXGL+VU0+ZtUEUp8+PUx0W
+        b39w20DsA+dEOuDJQDYUvh56ReuAiJGw5QB25emFw8Ef8n21xLBHwrb9NoHbEtYFYJ5jj9s0
+        GwjtZUXAbR9WCk8VFwvci0i2moLVV520O4xkp8MLL/tJtyl2ItQNnPhrMTsTFvB6MHwgAOYa
+        WsHw3BvWnumk3Cb/zDNvGMijwIv/L/H/JSMgTMCfU2mSYpM0U1XTkrltco0ySZOWHCvflJJk
+        AX//GhRUDipMPXIrIBhgBZAhZT7ijfYZCok4RrljJ6dOUajTEjmNFUgZSuYndvEF6yVsrDKV
+        S+A4Faf+VwnGc/Q+wlqvXdc4bgzd6FFp73FeWRbcsdmZnjk3RjuPSi9V34kMbJU6zCF+tjC2
+        BHyz3rus++DkewLT5ov6iyO2JZhyol0e4VHaSE47GDUrdAuc77jlVPikfPIu7GVUOeX3CwVz
+        Hofmh+5UfJZYD+ZGT2rwtO5IwEUrOuOjrzbtD3jHzxtFVr7x25XBGiKffLf/GL/Ie+GYD887
+        myetfCT1fRH+UyL1LUZVYWtLd//qW/D20O7bqVl5Hj22givhXgG5MHt9O1orz/CK1xjSHxWW
+        rzrpM7NkLy/fLFFOOF0vrmV9yYcj7PX5X3pnr4ZjP0aocpbkeHRkOBYHLi2d20Jd7HgfIqM0
+        ccqpQaRao/wNZwBpYkYDAAA=
+X-CMS-MailID: 20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6
+References: <CGME20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6@epcas2p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> Gesendet: Dienstag, 18. August 2020 um 09:36 Uhr
-> Von: "David Woodhouse" <dwmw2@infradead.org>
-> >David: is it ok to squash your mali-commit with mine moving the other
-> >display-related nodes and use me as author?
->
-> Absolutely. Can the U7623 patch go along for the ride too? Was there any=
-thing else you weren't including?
+These patch series to introduce a new dma heap, chunk heap.
+That heap is needed for special HW that requires bulk allocation of
+fixed high order pages. For example, 64MB dma-buf pages are made up
+to fixed order-4 pages * 1024.
 
-i did not included the mt7623a-patches because they are not related to my =
-hdmi-series ;)
-but it should be easy to add them on top/separately
+The chunk heap uses alloc_pages_bulk to allocate high order page.
+https://lore.kernel.org/linux-mm/20200814173131.2803002-1-minchan@kernel.org
 
-regards Frank
+The chunk heap is registered by device tree with alignment and memory node
+of contiguous memory allocator(CMA). Alignment defines chunk page size.
+For example, alignment 0x1_0000 means chunk page size is 64KB.
+The phandle to memory node indicates contiguous memory allocator(CMA).
+If device node doesn't have cma, the registration of chunk heap fails.
+
+The patchset includes the following:
+ - export dma-heap API to register kernel module dma heap.
+ - add chunk heap implementation.
+ - document of device tree to register chunk heap
+
+Hyesoo Yu (3):
+  dma-buf: add missing EXPORT_SYMBOL_GPL() for dma heaps
+  dma-buf: heaps: add chunk heap to dmabuf heaps
+  dma-heap: Devicetree binding for chunk heap
+
+ .../devicetree/bindings/dma-buf/chunk_heap.yaml    |  46 +++++
+ drivers/dma-buf/dma-heap.c                         |   2 +
+ drivers/dma-buf/heaps/Kconfig                      |   9 +
+ drivers/dma-buf/heaps/Makefile                     |   1 +
+ drivers/dma-buf/heaps/chunk_heap.c                 | 222 +++++++++++++++++++++
+ drivers/dma-buf/heaps/heap-helpers.c               |   2 +
+ 6 files changed, 282 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma-buf/chunk_heap.yaml
+ create mode 100644 drivers/dma-buf/heaps/chunk_heap.c
+
+-- 
+2.7.4
+
