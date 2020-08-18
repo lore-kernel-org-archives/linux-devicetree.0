@@ -2,252 +2,134 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEADBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 01:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10267C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 01:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA96D206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 01:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEACB2075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 01:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FUQHZGPm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHRBLa (ORCPT
+        id S1726398AbgHRBqn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 21:11:30 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:34800 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726324AbgHRBL3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 21:11:29 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B09DD1A0F74;
-        Tue, 18 Aug 2020 03:11:27 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 22E201A0F2A;
-        Tue, 18 Aug 2020 03:11:24 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9C4DD402BE;
-        Tue, 18 Aug 2020 03:11:19 +0200 (CEST)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
-        shengjiu.wang@nxp.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2] dt-bindings: sound: Convert NXP spdif to json-schema
-Date:   Tue, 18 Aug 2020 09:06:11 +0800
-Message-Id: <1597712771-32433-1-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 17 Aug 2020 21:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45208 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHRBqk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 21:46:40 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD3DC061342
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 18:46:39 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id df16so13963696edb.9
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 18:46:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y+lrgfwMqPomcWygbUK3e6COtGQC4/UPSB2RLkkHV+A=;
+        b=FUQHZGPmxY0dGVSuUc83kBkn4ATwkOdEQO+KwXiht76mke5IWG8/nQcLNFJ9/gCV7v
+         +idWk+VlJAxuwN3pu4g58HoUUP471EEiLamE5u3ddKgZjWYR8WcQs2JYN0E2nGf/Z6cV
+         jXCeK3EgxInYP1lw+sn5SoFOOu33YwmF15gpU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y+lrgfwMqPomcWygbUK3e6COtGQC4/UPSB2RLkkHV+A=;
+        b=So3CVzUCAM5SHqGqpVcT7o6C0T2xRLLLCQawFs4ttoce/NApykUWDEP6OMpVNNIFd7
+         HAOqS41xlyjKi2CgqNDFjp7MZDtSJHP7D9a7C8D533VRoD0Q/IQAAfS1GSs96DP0JjR9
+         trXLPtpalRlem2T5rN15EO9teuo69hGW9ObKCXuZu7xnvCGoZ1Tq6WKtLeB/sM+WCmVP
+         siOqVy6spN/oHBOMp3zyGWsF+13bpcRTrtMGkSq7MpxSdk8PgNy2dGpf5XDFsW/24gYY
+         xJfQZzcOtltcGOqTehYaFS2p5vUBMqPout16scTqakU908y5LBhIFwnXSxhBFzglubDq
+         ZC9w==
+X-Gm-Message-State: AOAM532WJcnyll2pz+rzoqHZQyryFi5P42UZ4+1WaGp9OjQs7UFeuRU7
+        32aHDXY7tGCXApuFXPo0XewtU5e3Cz2wrw==
+X-Google-Smtp-Source: ABdhPJwZqBGggqXctvMoDK1WykZrgF3Z1EItYEFDNAxy/hvT32embNnA0s4Wwqf1xM5cEhv0HfoCgQ==
+X-Received: by 2002:a05:6402:1c88:: with SMTP id cy8mr18222115edb.24.1597715198028;
+        Mon, 17 Aug 2020 18:46:38 -0700 (PDT)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
+        by smtp.gmail.com with ESMTPSA id b7sm15582857ejp.65.2020.08.17.18.46.35
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 18:46:36 -0700 (PDT)
+Received: by mail-wr1-f46.google.com with SMTP id f1so16731681wro.2
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 18:46:35 -0700 (PDT)
+X-Received: by 2002:adf:ed85:: with SMTP id c5mr17886807wro.307.1597715195448;
+ Mon, 17 Aug 2020 18:46:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200803235815.778997-1-campello@chromium.org> <20200803175559.v5.9.If88afce92bbc1e97a532874cca35e642a9566172@changeid>
+In-Reply-To: <20200803175559.v5.9.If88afce92bbc1e97a532874cca35e642a9566172@changeid>
+From:   Daniel Campello <campello@chromium.org>
+Date:   Mon, 17 Aug 2020 19:45:59 -0600
+X-Gmail-Original-Message-ID: <CAHcu+Vb3ezGgRAPWgmHMGAisOQzEm-kKs7bj0ssgyASx-fqoXA@mail.gmail.com>
+Message-ID: <CAHcu+Vb3ezGgRAPWgmHMGAisOQzEm-kKs7bj0ssgyASx-fqoXA@mail.gmail.com>
+Subject: Re: [PATCH v5 09/15] iio: sx9310: Update copyright
+To:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the NXP SPDIF binding to DT schema format using json-schema.
+On Mon, Aug 3, 2020 at 5:58 PM Daniel Campello <campello@chromium.org> wrote:
+>
+> Fixes wrong copyright year.
+>
+> Signed-off-by: Daniel Campello <campello@chromium.org>
+> ---
+>
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+>
+>  drivers/iio/proximity/sx9310.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> index cd7de40a55c2f6..87b2de0d7b55a3 100644
+> --- a/drivers/iio/proximity/sx9310.c
+> +++ b/drivers/iio/proximity/sx9310.c
+> @@ -1,13 +1,13 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * Copyright 2018 Google LLC.
+> + * Copyright 2020 Google LLC.
+>   *
+>   * Driver for Semtech's SX9310/SX9311 capacitive proximity/button solution.
+>   * Based on SX9500 driver and Semtech driver using the input framework
+>   * <https://my.syncplicity.com/share/teouwsim8niiaud/
+>   *          linux-driver-SX9310_NoSmartHSensing>.
+> - * Reworked April 2019 by Evan Green <evgreen@chromium.org>
+> - * and January 2020 by Daniel Campello <campello@chromium.org>
+> + * Reworked in April 2019 by Evan Green <evgreen@chromium.org>
+> + * and in January 2020 by Daniel Campello <campello@chromium.org>.
+>   */
+>
+>  #include <linux/acpi.h>
+> --
+> 2.28.0.163.g6104cc2f0b6-goog
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-changes since V1:
-	- add "additionalProperties: false".
----
- .../devicetree/bindings/sound/fsl,spdif.txt        |  68 -------------
- .../devicetree/bindings/sound/fsl,spdif.yaml       | 110 +++++++++++++++++++++
- 2 files changed, 110 insertions(+), 68 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/fsl,spdif.yaml
+Hi Jonathan,
 
-diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.txt b/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-deleted file mode 100644
-index e1365b0..0000000
---- a/Documentation/devicetree/bindings/sound/fsl,spdif.txt
-+++ /dev/null
-@@ -1,68 +0,0 @@
--Freescale Sony/Philips Digital Interface Format (S/PDIF) Controller
--
--The Freescale S/PDIF audio block is a stereo transceiver that allows the
--processor to receive and transmit digital audio via an coaxial cable or
--a fibre cable.
--
--Required properties:
--
--  - compatible		: Compatible list, should contain one of the following
--			  compatibles:
--			  "fsl,imx35-spdif",
--			  "fsl,vf610-spdif",
--			  "fsl,imx6sx-spdif",
--
--  - reg			: Offset and length of the register set for the device.
--
--  - interrupts		: Contains the spdif interrupt.
--
--  - dmas		: Generic dma devicetree binding as described in
--			  Documentation/devicetree/bindings/dma/dma.txt.
--
--  - dma-names		: Two dmas have to be defined, "tx" and "rx".
--
--  - clocks		: Contains an entry for each entry in clock-names.
--
--  - clock-names		: Includes the following entries:
--	"core"		  The core clock of spdif controller.
--	"rxtx<0-7>"	  Clock source list for tx and rx clock.
--			  This clock list should be identical to the source
--			  list connecting to the spdif clock mux in "SPDIF
--			  Transceiver Clock Diagram" of SoC reference manual.
--			  It can also be referred to TxClk_Source bit of
--			  register SPDIF_STC.
--	"spba"		  The spba clock is required when SPDIF is placed as a
--			  bus slave of the Shared Peripheral Bus and when two
--			  or more bus masters (CPU, DMA or DSP) try to access
--			  it. This property is optional depending on the SoC
--			  design.
--
--Optional properties:
--
--   - big-endian		: If this property is absent, the native endian mode
--			  will be in use as default, or the big endian mode
--			  will be in use for all the device registers.
--
--Example:
--
--spdif: spdif@2004000 {
--	compatible = "fsl,imx35-spdif";
--	reg = <0x02004000 0x4000>;
--	interrupts = <0 52 0x04>;
--	dmas = <&sdma 14 18 0>,
--	       <&sdma 15 18 0>;
--	dma-names = "rx", "tx";
--
--	clocks = <&clks 197>, <&clks 3>,
--	       <&clks 197>, <&clks 107>,
--	       <&clks 0>, <&clks 118>,
--	       <&clks 62>, <&clks 139>,
--	       <&clks 0>;
--	clock-names = "core", "rxtx0",
--		"rxtx1", "rxtx2",
--		"rxtx3", "rxtx4",
--		"rxtx5", "rxtx6",
--		"rxtx7";
--
--	big-endian;
--};
-diff --git a/Documentation/devicetree/bindings/sound/fsl,spdif.yaml b/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
-new file mode 100644
-index 0000000..2ac671f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/fsl,spdif.yaml
-@@ -0,0 +1,110 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/sound/fsl,spdif.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale Sony/Philips Digital Interface Format (S/PDIF) Controller
-+
-+maintainers:
-+  - Shengjiu Wang <shengjiu.wang@nxp.com>
-+
-+description: |
-+  The Freescale S/PDIF audio block is a stereo transceiver that allows the
-+  processor to receive and transmit digital audio via an coaxial cable or
-+  a fibre cable.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - fsl,imx35-spdif
-+      - fsl,vf610-spdif
-+      - fsl,imx6sx-spdif
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: DMA controller phandle and request line for RX
-+      - description: DMA controller phandle and request line for TX
-+
-+  dma-names:
-+    items:
-+      - const: rx
-+      - const: tx
-+
-+  clocks:
-+    items:
-+      - description: The core clock of spdif controller.
-+      - description: Clock for tx0 and rx0.
-+      - description: Clock for tx1 and rx1.
-+      - description: Clock for tx2 and rx2.
-+      - description: Clock for tx3 and rx3.
-+      - description: Clock for tx4 and rx4.
-+      - description: Clock for tx5 and rx5.
-+      - description: Clock for tx6 and rx6.
-+      - description: Clock for tx7 and rx7.
-+      - description: The spba clock is required when SPDIF is placed as a bus
-+          slave of the Shared Peripheral Bus and when two or more bus masters
-+          (CPU, DMA or DSP) try to access it. This property is optional depending
-+          on the SoC design.
-+    minItems: 9
-+
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: rxtx0
-+      - const: rxtx1
-+      - const: rxtx2
-+      - const: rxtx3
-+      - const: rxtx4
-+      - const: rxtx5
-+      - const: rxtx6
-+      - const: rxtx7
-+      - const: spba
-+    minItems: 9
-+
-+  big-endian:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description: |
-+      If this property is absent, the native endian mode will be in use
-+      as default, or the big endian mode will be in use for all the device
-+      registers. Set this flag for HCDs with big endian descriptors and big
-+      endian registers.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - dmas
-+  - dma-names
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spdif@2004000 {
-+        compatible = "fsl,imx35-spdif";
-+        reg = <0x02004000 0x4000>;
-+        interrupts = <0 52 0x04>;
-+        dmas = <&sdma 14 18 0>,
-+               <&sdma 15 18 0>;
-+        dma-names = "rx", "tx";
-+        clocks = <&clks 197>, <&clks 3>,
-+                 <&clks 197>, <&clks 107>,
-+                 <&clks 0>, <&clks 118>,
-+                 <&clks 62>, <&clks 139>,
-+                 <&clks 0>;
-+        clock-names = "core", "rxtx0",
-+                      "rxtx1", "rxtx2",
-+                      "rxtx3", "rxtx4",
-+                      "rxtx5", "rxtx6",
-+                      "rxtx7";
-+        big-endian;
-+    };
--- 
-2.7.4
+After discussing with Gwendal on crrev.com/c/2360467 it seems that the
+right year for the copyright is 2018 as it was before this change.
+Sorry about the inconvenience.
 
+Regards,
+Daniel Campello
