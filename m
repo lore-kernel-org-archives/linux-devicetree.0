@@ -2,398 +2,253 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16BFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 03:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626E1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 05:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1259206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 03:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF582076E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 05:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fFplalD0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lF+kmdUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgHRDvV (ORCPT
+        id S1726302AbgHRFKT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 23:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36066 "EHLO
+        Tue, 18 Aug 2020 01:10:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbgHRDvS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 23:51:18 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470DEC061389
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 20:51:18 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id s15so9117304pgc.8
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 20:51:18 -0700 (PDT)
+        with ESMTP id S1726228AbgHRFKR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 01:10:17 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D05C061389
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 22:10:16 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id b16so20006833ioj.4
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 22:10:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cXcyzgpA0O3bb7a8a920U2T7CsYtwR4Ii0WCR468L8w=;
-        b=fFplalD0iHrxteK60yQp8uhq82RIySlnPh3iyLrKubsfeJc7iRY98wsUhx8lr77AFK
-         xAs8N1cTcPZlSa90BhJizjw/zwjcjc29KTXqhEm6zYD8KwtpUH6wWip+oqlpQBVqFIRb
-         PcL9M3A2FW6ky0doCGS7GJDm7oNKrv3cbs61s=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dDeuI2at4DUnP5ePYzs4nh4EYYaqUTPmHOeGx+LVl8c=;
+        b=lF+kmdUdd834Mkv9Nobn/W7Ww3ZsZFCdqIW0uWFWan/uei+LuYY2Azljs52L6GN46g
+         +CM59rYvJBcvgnyi+IZre5Jqf9x69UeMaUO8LLJvwWPaCj1TbTrXL0cPywWr61VEOMQm
+         DogPx+HLT8TuUsalQNCX44Q4WSpwtZWPzYeqnyJrS31TbB3dQ6akMrDTvO5+pkXSB0jo
+         7PqPBJ+hC2qH2l2boMIT+fl+slhHq0bfeil9NiCrV9reOwMJezbUkArVq8DadcHipLHE
+         FsJRgqqotGrV71uwJ0em1+zCGJh/ZLhgG3OmEMRPI4OMcPFPFX7HF5QKQzAEIYT5fkq3
+         p9qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cXcyzgpA0O3bb7a8a920U2T7CsYtwR4Ii0WCR468L8w=;
-        b=OQ13hKjKOOSGVFWmEJCv+TUI2y5yIVn/QTXqEezTO7b+WUL0KC3cPhKpwYsP/lfR17
-         uT95NwQYuaUrL2kWMqghXYwRQeI3zVFEbpvoMB9QilDQT01kF3xSFkgU0grzzgwYOO1N
-         3IYLLlKzgWcxMlfpoC6rjfgmiJUdvlu6ZA0TtNVQaq9fTh1LKAtcJdvyzJexpUFiYyKv
-         vIIRro0VY4bxix1hRLTlEJsZcDLvOmBQ+EN+GELW/peB/Nh4gfpDtRn3ypYgGTSJpef1
-         q7Uss02fdNq9lkynAKolP1LxYHWi8w8XwwMPExmMaao7zrK8kqhTZApgM/xi1QfIQiRf
-         PPCA==
-X-Gm-Message-State: AOAM530A1xbpki6Zv9NNpvkNgwyfcUG/zlTrOFIxjS/emuxiv5Vf4Zg4
-        W/nMItgEhi2fxQNsttofYTJnKA==
-X-Google-Smtp-Source: ABdhPJykyc+8el7jwwAy4NzOPDj1/2JfxP76jnqiF6sOfqoP20iyaEQUeebqVt363z1fyaSc37dSTg==
-X-Received: by 2002:aa7:9a88:: with SMTP id w8mr13097421pfi.88.1597722677762;
-        Mon, 17 Aug 2020 20:51:17 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
-        by smtp.gmail.com with ESMTPSA id b185sm21922658pfg.71.2020.08.17.20.51.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2020 20:51:17 -0700 (PDT)
-From:   Cheng-Yi Chiang <cychiang@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>, Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, Ajit Pandey <ajitp@codeaurora.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Tzung-Bi Shih <tzungbi@google.com>
-Subject: [PATCH v5 2/2] ASoC: qcom: sc7180: Add machine driver for sound card registration
-Date:   Tue, 18 Aug 2020 11:50:28 +0800
-Message-Id: <20200818035028.2265197-3-cychiang@chromium.org>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
-In-Reply-To: <20200818035028.2265197-1-cychiang@chromium.org>
-References: <20200818035028.2265197-1-cychiang@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dDeuI2at4DUnP5ePYzs4nh4EYYaqUTPmHOeGx+LVl8c=;
+        b=b2/qhdTNBYvM0z/nhVAwxfRnQE7/fcJ5ZKrj7bZfw095ojY+0br6SW02OeAfAsDf2e
+         PUtcLWzofIMpo9vsCNxn5NV7fXDgL4bTCP1MOp6tUn9Oi/o71S5qmQ3aNMRQXjjCDc95
+         oq26RFk2y5FwmWvz4w4Yur7Q3AB3KeJA5YjpDbu5wUM470wBO5yjF38X5eJ697+0VD/y
+         qOZlZ12Du3dDr1yuLGaom7In0lh9mdkOlI/OHjYG7SdPO1yK5+wNzPf1tweGNUF0cmth
+         g9dFOkJ5THRG4P2G9nzHioCc8IO1b/e/K3mT0BqaKChbl5WPrO4XZIDOwriQPJ1eeNYt
+         bHrQ==
+X-Gm-Message-State: AOAM530lX4lsoY6wo2ZiE7ZWlx2y/fgjkx9GpuTGiyh6JCrh+VpyQW46
+        zSWAMiVyK9ZJ102ZEaUH7WovW14NmiDi2S+bxmw=
+X-Google-Smtp-Source: ABdhPJzlUMXFreLoLp9ldnImjq6T5h9bRsmZOZhfAkQQJ1NbB9rXaoytPT1YBx+ICz0ihvTUdkDmvHu+ioxe/BknC9M=
+X-Received: by 2002:a6b:f801:: with SMTP id o1mr14969666ioh.43.1597727416068;
+ Mon, 17 Aug 2020 22:10:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200817102122.434-1-linux.amoon@gmail.com> <20200817102122.434-2-linux.amoon@gmail.com>
+ <CAFBinCCYgm83Vs+dq6G4+1wv7T=S0mzt=gtLaHDfgBrCeRkk5A@mail.gmail.com> <CANAwSgTqAEyKFFan=opdF3MLtvkwj5MZ=oEizjeZNEfhL8ZzKA@mail.gmail.com>
+In-Reply-To: <CANAwSgTqAEyKFFan=opdF3MLtvkwj5MZ=oEizjeZNEfhL8ZzKA@mail.gmail.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Tue, 18 Aug 2020 10:40:06 +0530
+Message-ID: <CANAwSgTq+4KQJJLJPxV+afAYiqfpJ_JvwdJHn4sf5NVJgedbUQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] arm64: dts: meson-g12b-odroid-n2: Enable RTC
+ controller node
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ajit Pandey <ajitp@codeaurora.org>
+Hi Martin,
 
-Add new driver to register sound card on sc7180 trogdor board and
-do the required configuration for lpass cpu dai and external codecs
-connected over MI2S interfaces.
+On Tue, 18 Aug 2020 at 08:33, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> Hi Martin,
+>
+> Thanks for your review comments .
+>
+> On Tue, 18 Aug 2020 at 01:06, Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+> >
+> > Hi Anand,
+> >
+> > thank you for updating this patch!
+> >
+> > On Mon, Aug 17, 2020 at 12:21 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> > [...]
+> > > changes v2
+> > > --Fix the missing INT (GPIOA.BIT7) pinctrl.
+> > should I also expect an interrupt property somewhere below?
+> >
+> > > --Fix the missing rtcwakeup.
+> > > --Drop the clock not required clock property by the PCF8563 driver.
+> > > ---
+> > >  .../arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> > > index 34fffa6d859d..f08ae1b337ad 100644
+> > > --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> > > +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+> > > @@ -477,6 +477,19 @@ hdmi_tx_tmds_out: endpoint {
+> > >         };
+> > >  };
+> > >
+> > > +&i2c3 {
+> > > +       pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
+> > > +       pinctrl-1 = <&tdm_c_din3_a_pins>;
 
-Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
----
- sound/soc/qcom/Kconfig  |  12 ++
- sound/soc/qcom/Makefile |   2 +
- sound/soc/qcom/sc7180.c | 244 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 258 insertions(+)
- create mode 100644 sound/soc/qcom/sc7180.c
+Note: without setting this *pinctrl-1* configuration RTC wake up
+feature works as expected.
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index 5d6b2466a2f2..54aa2ede229c 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -110,3 +110,15 @@ config SND_SOC_SDM845
- 	  To add support for audio on Qualcomm Technologies Inc.
- 	  SDM845 SoC-based systems.
- 	  Say Y if you want to use audio device on this SoCs.
-+
-+config SND_SOC_SC7180
-+	tristate "SoC Machine driver for SC7180 boards"
-+	depends on SND_SOC_QCOM
-+	select SND_SOC_QCOM_COMMON
-+	select SND_SOC_LPASS_SC7180
-+	select SND_SOC_MAX98357A
-+	select SND_SOC_RT5682
-+	help
-+	 To add support for audio on Qualcomm Technologies Inc.
-+	 SC7180 SoC-based systems.
-+	 Say Y if you want to use audio device on this SoCs.
-diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
-index 41b2c7a23a4d..3f6275d90526 100644
---- a/sound/soc/qcom/Makefile
-+++ b/sound/soc/qcom/Makefile
-@@ -15,12 +15,14 @@ snd-soc-storm-objs := storm.o
- snd-soc-apq8016-sbc-objs := apq8016_sbc.o
- snd-soc-apq8096-objs := apq8096.o
- snd-soc-sdm845-objs := sdm845.o
-+snd-soc-sc7180-objs := sc7180.o
- snd-soc-qcom-common-objs := common.o
- 
- obj-$(CONFIG_SND_SOC_STORM) += snd-soc-storm.o
- obj-$(CONFIG_SND_SOC_APQ8016_SBC) += snd-soc-apq8016-sbc.o
- obj-$(CONFIG_SND_SOC_MSM8996) += snd-soc-apq8096.o
- obj-$(CONFIG_SND_SOC_SDM845) += snd-soc-sdm845.o
-+obj-$(CONFIG_SND_SOC_SC7180) += snd-soc-sc7180.o
- obj-$(CONFIG_SND_SOC_QCOM_COMMON) += snd-soc-qcom-common.o
- 
- #DSP lib
-diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
-new file mode 100644
-index 000000000000..7849376f63ba
---- /dev/null
-+++ b/sound/soc/qcom/sc7180.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+//
-+// Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+//
-+// sc7180.c -- ALSA SoC Machine driver for SC7180
-+
-+#include <dt-bindings/sound/sc7180-lpass.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <sound/core.h>
-+#include <sound/jack.h>
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <uapi/linux/input-event-codes.h>
-+
-+#include "../codecs/rt5682.h"
-+#include "common.h"
-+#include "lpass.h"
-+
-+#define DEFAULT_SAMPLE_RATE_48K		48000
-+#define DEFAULT_MCLK_RATE		19200000
-+#define RT5682_PLL1_FREQ (48000 * 512)
-+
-+struct sc7180_snd_data {
-+	struct snd_soc_jack jack;
-+	u32 pri_mi2s_clk_count;
-+};
-+
-+static void sc7180_jack_free(struct snd_jack *jack)
-+{
-+	struct snd_soc_component *component = jack->private_data;
-+
-+	snd_soc_component_set_jack(component, NULL, NULL);
-+}
-+
-+static int sc7180_headset_init(struct snd_soc_component *component)
-+{
-+	struct snd_soc_card *card = component->card;
-+	struct sc7180_snd_data *pdata = snd_soc_card_get_drvdata(card);
-+	struct snd_jack *jack;
-+	int rval;
-+
-+	rval = snd_soc_card_jack_new(
-+			card, "Headset Jack",
-+			SND_JACK_HEADSET |
-+			SND_JACK_HEADPHONE |
-+			SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-+			SND_JACK_BTN_2 | SND_JACK_BTN_3,
-+			&pdata->jack, NULL, 0);
-+
-+	if (rval < 0) {
-+		dev_err(card->dev, "Unable to add Headset Jack\n");
-+		return rval;
-+	}
-+
-+	jack = pdata->jack.jack;
-+
-+	snd_jack_set_key(jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
-+	snd_jack_set_key(jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
-+	snd_jack_set_key(jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
-+	snd_jack_set_key(jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
-+
-+	jack->private_data = component;
-+	jack->private_free = sc7180_jack_free;
-+
-+	rval = snd_soc_component_set_jack(component,
-+					  &pdata->jack, NULL);
-+	if (rval != 0 && rval != -EOPNOTSUPP) {
-+		dev_warn(card->dev, "Failed to set jack: %d\n", rval);
-+		return rval;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_aux_dev sc7180_headset_dev = {
-+	.dlc = COMP_EMPTY(),
-+	.init = sc7180_headset_init,
-+};
-+
-+static int sc7180_snd_startup(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_card *card = rtd->card;
-+	struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-+	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-+	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
-+	int ret;
-+
-+	switch (cpu_dai->id) {
-+	case MI2S_PRIMARY:
-+		if (++data->pri_mi2s_clk_count == 1) {
-+			snd_soc_dai_set_sysclk(cpu_dai,
-+					       LPASS_MCLK0,
-+					       DEFAULT_MCLK_RATE,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+
-+		snd_soc_dai_set_fmt(codec_dai,
-+				    SND_SOC_DAIFMT_CBS_CFS |
-+				    SND_SOC_DAIFMT_NB_NF |
-+				    SND_SOC_DAIFMT_I2S);
-+
-+		/* Configure PLL1 for codec */
-+		ret = snd_soc_dai_set_pll(codec_dai, 0, RT5682_PLL1_S_MCLK,
-+					  DEFAULT_MCLK_RATE, RT5682_PLL1_FREQ);
-+		if (ret) {
-+			dev_err(rtd->dev, "can't set codec pll: %d\n", ret);
-+			return ret;
-+		}
-+
-+		/* Configure sysclk for codec */
-+		ret = snd_soc_dai_set_sysclk(codec_dai, RT5682_SCLK_S_PLL1,
-+					     RT5682_PLL1_FREQ,
-+					     SND_SOC_CLOCK_IN);
-+		if (ret)
-+			dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n",
-+				ret);
-+
-+		break;
-+	case MI2S_SECONDARY:
-+		break;
-+	default:
-+		dev_err(rtd->dev, "%s: invalid dai id 0x%x\n", __func__,
-+			cpu_dai->id);
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static void sc7180_snd_shutdown(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_card *card = rtd->card;
-+	struct sc7180_snd_data *data = snd_soc_card_get_drvdata(card);
-+	struct snd_soc_dai *cpu_dai = asoc_rtd_to_cpu(rtd, 0);
-+
-+	switch (cpu_dai->id) {
-+	case MI2S_PRIMARY:
-+		if (--data->pri_mi2s_clk_count == 0) {
-+			snd_soc_dai_set_sysclk(cpu_dai,
-+					       LPASS_MCLK0,
-+					       0,
-+					       SNDRV_PCM_STREAM_PLAYBACK);
-+		}
-+		break;
-+	case MI2S_SECONDARY:
-+		break;
-+	default:
-+		dev_err(rtd->dev, "%s: invalid dai id 0x%x\n", __func__,
-+			cpu_dai->id);
-+		break;
-+	}
-+}
-+
-+static const struct snd_soc_ops sc7180_ops = {
-+	.startup = sc7180_snd_startup,
-+	.shutdown = sc7180_snd_shutdown,
-+};
-+
-+static const struct snd_soc_dapm_widget sc7180_snd_widgets[] = {
-+	SND_SOC_DAPM_HP("Headphone Jack", NULL),
-+	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-+};
-+
-+static struct snd_soc_card sc7180_card = {
-+	.owner = THIS_MODULE,
-+	.aux_dev = &sc7180_headset_dev,
-+	.num_aux_devs = 1,
-+	.dapm_widgets = sc7180_snd_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets),
-+};
-+
-+static int sc7180_parse_aux_of(struct device *dev)
-+{
-+	sc7180_headset_dev.dlc.of_node = of_parse_phandle(
-+			dev->of_node, "aux-dev", 0);
-+
-+	if (!sc7180_headset_dev.dlc.of_node)
-+		return -EINVAL;
-+	return 0;
-+}
-+
-+static void sc7180_add_ops(struct snd_soc_card *card)
-+{
-+	struct snd_soc_dai_link *link;
-+	int i;
-+
-+	for_each_card_prelinks(card, i, link)
-+		link->ops = &sc7180_ops;
-+}
-+
-+static int sc7180_snd_platform_probe(struct platform_device *pdev)
-+{
-+	struct snd_soc_card *card = &sc7180_card;
-+	struct sc7180_snd_data *data;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	/* Allocate the private data */
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	card->dev = dev;
-+
-+	ret = qcom_snd_parse_of(card);
-+	if (ret) {
-+		dev_err(dev, "Error parsing OF data\n");
-+		return ret;
-+	}
-+
-+	snd_soc_card_set_drvdata(card, data);
-+
-+	sc7180_add_ops(card);
-+
-+	ret = sc7180_parse_aux_of(dev);
-+	if (ret) {
-+		dev_err(dev, "Failed to parse OF for jack device\n");
-+		return ret;
-+	}
-+
-+	return devm_snd_soc_register_card(dev, card);
-+}
-+
-+static const struct of_device_id sc7180_snd_device_id[]  = {
-+	{ .compatible = "qcom,sc7180-sndcard" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sc7180_snd_device_id);
-+
-+static struct platform_driver sc7180_snd_driver = {
-+	.probe = sc7180_snd_platform_probe,
-+	.driver = {
-+		.name = "msm-snd-sc7180",
-+		.of_match_table = sc7180_snd_device_id,
-+	},
-+};
-+module_platform_driver(sc7180_snd_driver);
-+
-+MODULE_DESCRIPTION("sc7180 ASoC Machine Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.28.0.220.ged08abb693-goog
+> > > +       pinctrl-names = "default";
+> > why is there pinctrl-1 without any corresponding "pinctrl-names" entry?
+> > also I'm surprised to see a TDM (audio) related pin function as part
+> > of an I2C controller. if this is correct then I'd appreciate a bit
+> > information (for example as part of the patch description) why that is
+> >
+> >
+> > Martin
+>
+> Opps, I could not figure the difference between GPIOA_7 and GPIOAO_7 pins
+> I will try to figure out the correct configuration pin for this node.
+>
+> Best Regards
+> -Anand
 
+I see from the schematics [0] odroid-n2_rev0.4_20190307.pdf section S905D2  IO.
+Following pin configuration is used for RTC
+RTC    GPIOAO_7(JTAG_A_TMS//TSIN_A_DIN0//TDMB_FS//TDMB_SLV_FS)
+
+As per the data sheets [1] S922X_Public_Datasheet_V0.2.pdf  following
+are the pin funtion description.
+
+JTAG_A_TMS                       DI                 JTAG Test mode
+select input channel A
+TSIN_A_DIN0                       DI                 Serial TS input port A data
+TDMB_FS                            DO               Frame sync output
+of TDM port B (Word clock of I2S)
+TDMB_SLV_FS                    DI                 Frame sync input of
+TDM port B (Word clock of I2S)
+
+But I dont observe this configration is linked to the RTC INT (GPIOAO.BIT7) pin.
+Without setting the *pinctrl-1*  rtc is getting registeed correcly and
+suspend / resume feature is also working correcly see below.
+
+[root@archl-on2e ~]# dmesg | grep rtc
+[    5.269079] rtc-pcf8563 0-0051: registered as rtc0
+[    5.270948] rtc-pcf8563 0-0051: setting system clock to
+2020-08-18T04:52:26 UTC (1597726346)
+[root@archl-on2e ~]#
+[root@archl-on2e ~]#
+[root@archl-on2e ~]# rtcwake -s 30 -m mem
+rtcwake: assuming RTC uses UTC ...
+rtcwake: wakeup from "mem" using /dev/rtc0 at Tue Aug 18 05:06:05 2020
+[  793.341957] PM: suspend entry (deep)
+[  793.342292] Filesystems sync: 0.000 seconds
+[  793.649621] Freezing user space processes ... (elapsed 0.001 seconds) done.
+[  793.652309] OOM killer disabled.
+[  793.655514] Freezing remaining freezable tasks ... (elapsed 0.001
+seconds) done.
+[  793.666584] meson8b-dwmac ff3f0000.ethernet eth0: Link is Down
+[  793.686014] sd 0:0:0:0: [sda] Synchronizing SCSI cache
+[  793.778908] Disabling non-boot CPUs ...
+[  793.783712] CPU1: shutdown
+[  793.783845] psci: CPU1 killed (polled 0 ms)
+[  793.795813] CPU2: shutdown
+[  793.795941] psci: CPU2 killed (polled 0 ms)
+[  793.807337] CPU3: shutdown
+[  793.807465] psci: CPU3 killed (polled 0 ms)
+[  793.819110] CPU4: shutdown
+[  793.819235] psci: CPU4 killed (polled 0 ms)
+[  793.833682] CPU5: shutdown
+[  793.834614] psci: CPU5 killed (polled 0 ms)
+bl30 get wakeup sources!
+process command 00000006
+bl30 enter suspend!
+Little core clk suspend rate 100000000
+Big core clk suspend rate 24000000
+store restore gp0 pll
+suspend_counter: 1
+Enter ddr suspend
+ddr suspend time: 16us
+alarm=0S
+process command 00000001
+GPIOA_11/13 off
+cec ver:2018/04/19
+CEC cfg:0x0000
+WAKEUP GPIO cfg:0x00000000
+use vddee new table!
+kern log_addr:0x00
+cec T: 00
+err: tx not finish flag
+cec reset
+Set cec pinmux:0x11
+Set cec log_addr:0x10,ADDR0:10
+use vddee new table!
+exit_reason:0x03
+Enter ddr resume
+ddr resume time: 124us
+store restore gp0 pll
+cfg15 3b00000
+cfg15 33b00000
+Little [  793.845285] Enabling non-boot CPUs ...
+core clk re[  793.846900] Detected VIPT I-cache on CPU1
+[  793.847250] CPU1: Booted secondary processor 0x0000000001 [0x410fd034]
+[  793.850966] CPU1 is up
+[  793.858728] Detected VIPT I-cache on CPU2
+[  793.858825] arch_timer: CPU2: Trapping CNTVCT access
+[  793.858851] CPU2: Booted secondary processor 0x0000000100 [0x410fd092]
+[  793.860784] cpufreq: cpufreq_online: CPU2: Running at unlisted
+freq: 999999 KHz
+[  793.880028] cpufreq: cpufreq_online: CPU2: Unlisted initial
+frequency changed to: 1000000 KHz
+[  793.889018] CPU2 is up
+[  793.891578] Detected VIPT I-cache on CPU3
+[  793.891609] arch_timer: CPU3: Trapping CNTVCT access
+[  793.891617] CPU3: Booted secondary processor 0x0000000101 [0x410fd092]
+[  793.892276] CPU3 is up
+[  793.909048] Detected VIPT I-cache on CPU4
+[  793.909077] arch_timer: CPU4: Trapping CNTVCT access
+[  793.909084] CPU4: Booted secondary processor 0x0000000102 [0x410fd092]
+[  793.909896] CPU4 is up
+[  793.926797] Detected VIPT I-cache on CPU5
+[  793.926827] arch_timer: CPU5: Trapping CNTVCT access
+[  793.926834] CPU5: Booted secondary processor 0x0000000103 [0x410fd092]
+[  793.927609] CPU5 is up
+sume rate 100000000
+Big core clk resume rate 50000000
+[  793.971976] meson8b-dwmac ff3f0000.ethernet eth0: No Safety
+Features support found
+[  793.974405] meson8b-dwmac ff3f0000.ethernet eth0: configuring for
+phy/rgmii link mode
+
+[root@archl-on2e ~]# dmesg | grep rtc
+[    5.269079] rtc-pcf8563 0-0051: registered as rtc0
+[    5.270948] rtc-pcf8563 0-0051: setting system clock to
+2020-08-18T04:52:26 UTC (1597726346)
+
+Schematics [0] https://dn.odroid.com/S922X/ODROID-N2/Schematic/odroid-n2_rev0.4_20190307.pdf
+Datasheets [1] https://dn.odroid.com/S922X/ODROID-N2/Datasheet/S922X_Public_Datasheet_V0.2.pdf
+
+Best Regards
+-Anand
