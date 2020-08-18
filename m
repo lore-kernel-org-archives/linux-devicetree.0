@@ -2,126 +2,98 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46D4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 18:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA6CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 19:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C667F221E2
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 18:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6FF20772
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 19:07:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e5E4DWnN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VBQLhkMm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHRSzE (ORCPT
+        id S1726529AbgHRTHC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 14:55:04 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:42974 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbgHRSyp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 14:54:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597776885; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=pURV5QFpmLy38X5gYC0uGHz0Zw0P/0cot7hAuBA4Ty0=; b=e5E4DWnNdF7gDtMH6dMsYIt4tCYUE6b5CRIfSqXqMHL+vceDwVbY0btQt4c0qudES7DBASmJ
- 4cIIja3I75Onyc9qZ3DK5ZAnjg59f2TzSh/0ktTwoGMrnLiIVb1j3PL5rfXDu2ZsnZhy2Lyc
- C0wUxUUF1yqT8YUfRnPStAv/Pn8=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n09.prod.us-east-1.postgun.com with SMTP id
- 5f3c23e2cbcd42bdeed5335c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 18:54:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D16FC4339C; Tue, 18 Aug 2020 18:54:25 +0000 (UTC)
-Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51BA7C433C6;
-        Tue, 18 Aug 2020 18:54:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51BA7C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-From:   Elliot Berman <eberman@codeaurora.org>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Elliot Berman <eberman@codeaurora.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>
-Subject: [RESEND PATCH v1 2/4] dt-bindings: power: reset: Add alternate reboot mode format
-Date:   Tue, 18 Aug 2020 11:54:14 -0700
-Message-Id: <1597776856-12014-3-git-send-email-eberman@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
-References: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
+        Tue, 18 Aug 2020 15:07:02 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:49516 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgHRTHC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 15:07:02 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07IJ6teI012213;
+        Tue, 18 Aug 2020 14:06:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597777615;
+        bh=ATT9YzBtFfOv6tpYe6xqvgONf4ZLmPGq3Z7H+UA4wq8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VBQLhkMmzhTnD3FER2HDMQbJDIv+qAZi+y0679ddInmb8qZF2jnzHs1cCw4G6bc7t
+         00aFty27gkNRGCbW+lXZCCaF8XiSRVv7kU3jRcSLiVYkLEcxCWCJFBp0eEaHYNjJXi
+         8HypjwHbTUTO+20io0KUxNaB5N2rF4pfa5twIz4E=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IJ6tCl079230;
+        Tue, 18 Aug 2020 14:06:55 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 18
+ Aug 2020 14:06:55 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 18 Aug 2020 14:06:54 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IJ6sbK107852;
+        Tue, 18 Aug 2020 14:06:54 -0500
+Subject: Re: [PATCH] dt: bindings: lp55xx: Updte yaml examples with new color
+ ID
+To:     <pavel@ucw.cz>, <robh@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200812193248.11325-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <df82c0f7-8ea6-04f6-6da1-018dac7e4c6b@ti.com>
+Date:   Tue, 18 Aug 2020 14:06:54 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200812193248.11325-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Current reboot-mode device tree schema does not support reboot commands
-with spaces in them [1]. Add an optional new node "reboot-mode-names"
-and "reboot-mode-magic" which add an array of strings and u32s,
-respectively which would permit any string in this framework.
+Pavel
 
-[1]:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-verity-target.c?h=v5.5#n255
+On 8/12/20 2:32 PM, Dan Murphy wrote:
+> Update the binding examples for the color ID to LED_COLOR_ID_RGB
+>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   Documentation/devicetree/bindings/leds/leds-lp55xx.yaml | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+> index b1bb3feb0f4d..89f69d62493e 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+> +++ b/Documentation/devicetree/bindings/leds/leds-lp55xx.yaml
+> @@ -189,7 +189,7 @@ examples:
+>                  #address-cells = <1>;
+>                  #size-cells = <0>;
+>                  reg = <0x2>;
+> -               color = <LED_COLOR_ID_MULTI>;
+> +               color = <LED_COLOR_ID_RGB>;
+>                  function = LED_FUNCTION_STANDBY;
+>                  linux,default-trigger = "heartbeat";
+>   
 
-Signed-off-by: Elliot Berman <eberman@codeaurora.org>
----
- .../devicetree/bindings/power/reset/reboot-mode.yaml    | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Don't forget this simple update to the LP55xx yaml file.
 
-diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-index a6c9102..4ea6b33 100644
---- a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-+++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-@@ -19,6 +19,9 @@ description: |
-   the bootloader what to do when the system reboots, and should be named
-   as mode-xxx = <magic> (xxx is mode name, magic should be a non-zero value).
- 
-+  reboot-mode-magic and reboot-mode-names may be used in addition/instead of
-+  mode-xxx style.
-+
-   For example, modes common Android platform are:
-     - normal: Normal reboot mode, system reboot with command "reboot".
-     - recovery: Android Recovery mode, it is a mode to format the device or update a new image.
-@@ -32,6 +35,14 @@ properties:
-       description: |
-         Default value to set on a reboot if no command was provided.
- 
-+  reboot-mode-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description: List of reboot commands, paired with reboot-mode-magic by index
-+
-+  reboot-mode-magic:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description: List of reboot magic, paired with reboot-mode-names by index
-+
- patternProperties:
-   "^mode-.*$":
-     $ref: /schemas/types.yaml#/definitions/uint32
-@@ -44,4 +55,10 @@ examples:
-       mode-bootloader = <2>;
-       mode-loader = <3>;
-     };
-+
-+  - |
-+    reboot-mode {
-+      reboot-mode-names = "normal", "bootloader", "dm-verity device corrupted";
-+      reboot-mode-magic = <0x0>, <0x1>, <0xf>;
-+    };
- ...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Dan
 
