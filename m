@@ -2,117 +2,94 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739B8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B14C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6CC207FB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E3A20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lP1zPxrP"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="i6WRLedk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726203AbgHRHpF (ORCPT
+        id S1726628AbgHRHpe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRHpE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 03:45:04 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2C3C061389
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 00:45:04 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id d6so20906903ejr.5
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 00:45:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=F9fOoRA9pJZPPsu0jJzLDURp0h2hTxmM73TFlf3VuwA=;
-        b=lP1zPxrPZ/NsOHtDvabu13+OQG04WjHKR2fWQb6Wrx55QKqdtsBUcW8EGi594pDhEa
-         NQMztuw8LhxWSmEY/o24kwy7pfjwSHCSz3L/uO5kTsHl3dqP+ijGsdlo3QQNLpzQ2pPo
-         lT/hjfwq2L0vT7r0/3rbP8NNjGaKHsBc8+P73vrjtZx3XBb6SuH4dW39u+213hoaGcq8
-         HBWE/S5OCavaqFIgazToH1qQIuZdHHfZs3ITOoxXZ+nrUUBe0vMPvB1qH3G6PH0oqqCy
-         Kv/7/8fsCJSmw60kHaEGKFTg1L4oOKBIQNuHcHQLIkGxGR2O3DOeHlCgVqv0J/Z45QEn
-         izYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=F9fOoRA9pJZPPsu0jJzLDURp0h2hTxmM73TFlf3VuwA=;
-        b=ZKCb9Pd6vYhmhbOHt4DHtDwHalMTeuBJNcsp/8yXZ52tgIZbGZQUhkM2DDdMvasglw
-         kKVEoQTvb1UNDISdB7B0tOXtUqTYZEtyy+yr1hgmozOmLZw16de90Cy3MsuTSNo9u5Th
-         9ErlNyxOhYP1SVS5/Hj9dgnALakCV6I6chTh/+G8+g/Gth6JGRiRR705X3QpgttfoMdp
-         CoRgvp0Ko0yPfTSPaprAnYIeszaR9WoZrlpXUuUq9g8/7OTO5ksqWwJRUoav5L8VtjSG
-         P2kK2etWf5RP0mWb9gHyC9XUzYHX6UIjc22Tn2wdw7qbT8+cGdW8JHHdTU3qWRK2Chi7
-         EaLA==
-X-Gm-Message-State: AOAM533UAafQXrWvMxjumNbj/XWbLgDgdprRTFzSUOE95DBhobdZGVG1
-        QNR1pgnUG+sa/OyiCROClDTZHg==
-X-Google-Smtp-Source: ABdhPJzs/NEYfJqQIrV9qA0eRmM4MAKKamlMOkvCW+p1dOvvMwgBytrHgCCPAwYNJGw67ShMuKzI/Q==
-X-Received: by 2002:a17:906:1604:: with SMTP id m4mr18317054ejd.6.1597736703062;
-        Tue, 18 Aug 2020 00:45:03 -0700 (PDT)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id sb9sm16351802ejb.90.2020.08.18.00.45.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 00:45:02 -0700 (PDT)
-References: <20200817102122.434-1-linux.amoon@gmail.com> <20200817102122.434-3-linux.amoon@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: meson-g12b-odroid-n2: Disable virtual RTC driver
-In-reply-to: <20200817102122.434-3-linux.amoon@gmail.com>
-Date:   Tue, 18 Aug 2020 09:45:01 +0200
-Message-ID: <1jzh6se6te.fsf@starbuckisacylon.baylibre.com>
+        Tue, 18 Aug 2020 03:45:34 -0400
+Received: from mout.gmx.net ([212.227.17.20]:53699 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgHRHpd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:45:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1597736703;
+        bh=ap693LLFeqKCPEJc56ThJpeeYc97CmzfomkRjHhl5Lc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=i6WRLedkh61h9EWnwL8+agH/ZhPLFobT8LQwX97RutWb02W8g51ojjqea5SoSJgRp
+         pSQiyHg4h+JQz5eDzRZs1LxBH/TqxomEq3UsfPl502I8Lh6YYHHTrIMneUNuc4cb8e
+         5CDlAxNeLU+UJvNobxpV58kb6BG/AZiC1d5daxlg=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.53.43.192] ([185.53.43.192]) by web-mail.gmx.net
+ (3c-app-gmx-bap75.server.lan [172.19.172.175]) (via HTTP); Tue, 18 Aug 2020
+ 09:45:03 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <trinity-8b2a2966-9e61-4617-9cdc-fa496cfdd1af-1597736703797@3c-app-gmx-bap75>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     David Woodhouse <dwmw2@infradead.org>
+Cc:     linux-mediatek@lists.infradead.org,
+        chunkuang Hu <chunkuang.hu@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: Aw: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related
+ nodes to mt7623n.dtsi
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 18 Aug 2020 09:45:03 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <5EB39D93-57C0-47AD-B0F3-09AEE643CFBF@infradead.org>
+References: <20200807082754.6790-1-linux@fw-web.de>
+ <20200807082754.6790-2-linux@fw-web.de>
+ <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69>
+ <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com>
+ <cefc273c226c93c605f4dc76afa9eb5aacceaf26.camel@infradead.org>
+ <trinity-bbc9a618-a916-40bb-b144-bffe715646a4-1597734987449@3c-app-gmx-bap75>
+ <5EB39D93-57C0-47AD-B0F3-09AEE643CFBF@infradead.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:85BOu6BZdj2Wig1BiNK0aOOhPHhkbzUQavsJfIXv/VN9miFbvhQHTt6im8lCBMQ+0oeEh
+ ulmrdb/qo9PZvIVceuhKSdzs1AwzuG3BlQu1U7nIKN8i83ItITsAAddk7nlIBOH3yzpz5+513U/i
+ SNIY2EIoMsHRr0Ie7x0Y4AwbaqlOwtk26v8oAm463L+J4RSdi57ZXMdd8qlGrUeRx1p3yBeUaTJf
+ BwmKDZbBDGdxpUrHoCgn8BohE0r2ZKbEJ8/M3M5a25LQVVOEK2lTGVNnJXBmK+7Jjlb1ts7L5hjx
+ jA=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:s0ZG40dufYo=:hcHuqQMJtbMsOT9VqYBWd1
+ 5p/sXKqEySlXE7TBgaELLBeCDvBjzNy77c0v6XFV8OKM2TKRv+vxm8n8FxDkg02DJLze2XBt3
+ cVJk3BKRNUWpFhvPOsv6nYjHqh+vzFEnDyhoDEvnuefRBNMoUsbwj0FB66OTnrPAxHlzv5n63
+ 12Vgg3CEqm2EAwXuO+K9A2gLbsMWV07KDVal8mgs+OMKvZ8GrgBfX/7WTlvkjj3v6JbIQmlQV
+ huKSm0Gv+khQbdmAQThhd/klkRxRDDd8FEb6R5wl/9m9O3uGA1x5FkrIlPdr783oS4t4/Y/mp
+ qwQkDUbuvyRsnR69V1HyIDZKMi8FuwofVnmZRgo1WqcviPLJW3PQKvVU1qh5/aIwnfrg1kin+
+ vaNpUy9F5TspjPhlTf35KlZaQL56V9ATB1tKKKCHZoxvzOPIBpu7kST+iFyynL8aGT9sQTLrE
+ jo98IAxuOET+LR16X7KNHuTGKGVPTTQnlerA0ogW2r2IoEce9z9WvthgXLEgKJYi5XBdQV7H+
+ Nav2yK4ObULITv0KiYDRS9Pj69sPz2vO5ILFZLgv2AijdZpOZocWqOxK56CDdCu7TTeM0l3/Y
+ dWbjLri1EvnJoSw51SJtecsfoegvllfufY3SCqaKRftqz77GtRaxdEaAfj7mwZ/gI+plZngd5
+ Aw8siV1RZxJMrvJkn4npHJgzkq85+7yHb3Xy3Ksxi8iV55NKpBZFeDG9MotsEI8OwVOM=
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On Mon 17 Aug 2020 at 12:21, Anand Moon <linux.amoon@gmail.com> wrote:
-
-> Disable virtual RTC node on Odroid N2,
-> since RTC PCF8563 support rtc wakeup.
+> Gesendet: Dienstag, 18. August 2020 um 09:36 Uhr
+> Von: "David Woodhouse" <dwmw2@infradead.org>
+> >David: is it ok to squash your mali-commit with mine moving the other
+> >display-related nodes and use me as author?
 >
-> [    7.171149] meson-vrtc ff8000a8.rtc: registered as rtc0
-> [    7.182875] meson-vrtc ff8000a8.rtc: setting system clock to 1970-01-01T00:00:07 UTC (7)
->
+> Absolutely. Can the U7623 patch go along for the ride too? Was there any=
+thing else you weren't including?
 
-Maybe I'm missing something but why should disable this ?
-Can't the 2 RTCs co-exist ?
+i did not included the mt7623a-patches because they are not related to my =
+hdmi-series ;)
+but it should be easy to add them on top/separately
 
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Changes v2
-> --Fix the subject and commit message.
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index f08ae1b337ad..7fb952a2a35e 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -642,3 +642,7 @@ &usb2_phy1 {
->  	/* Enable the hub which is connected to this port */
->  	phy-supply = <&hub_5v>;
->  };
-> +
-> +&vrtc {
-> +	status = "disabled";
-> +};
-
+regards Frank
