@@ -2,121 +2,123 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+X-Spam-Status: No, score=-3.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92E1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB10C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A677C204EA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8113B204EA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eK9D0Nd5";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gDXbpy3J"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="TNhDrsR+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Z4gCmEWJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgHYNj2 (ORCPT
+        id S1726672AbgHYNls (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:39:28 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:50467 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726374AbgHYNgK (ORCPT
+        Tue, 25 Aug 2020 09:41:48 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:46361 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726570AbgHYNlk (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:36:10 -0400
+        Tue, 25 Aug 2020 09:41:40 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 6E67ACC1;
-        Tue, 25 Aug 2020 09:36:09 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:10 -0400
+        by mailout.west.internal (Postfix) with ESMTP id D71A7C10;
+        Tue, 25 Aug 2020 09:35:29 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=5Pncf8+79KIbCdN+npAcSw2WlNr
-        zFF6U/pUENKFgIl8=; b=eK9D0Nd5H9laRnDihIy6NQHYhAc58O6B7pLdZ+Wkjto
-        I3BR9voC15hwWdY7fWUCnDglZ8dmu1B+YxRjI2pgDGYcADUdsqwBiNuuqn1J63Dq
-        fd+EyIsZWPJJnOEw2yAd5ddj9iHtfrPlNkNgX8JgeTJypdYJox6BrTTiTwcGvT7A
-        6de614Fzv+chIChMBJzJS7EYkhspp/6roKUhsVC4aFfXMxnpvSPJCz7dQtDaAsVl
-        TdKPUOH8gP5d/e2Kwy1MM2ZSL33o/7xloXX/QzCxu+IBrtT7ts/qCGAiYXCpBF3C
-        iRLWWVQDJatZw64+EaeLmC1ULXvWgmu3sR0YVTNcnjQ==
+        :content-type:in-reply-to; s=fm3; bh=/JRUPYnRLa2QMCNAdK0p5F/lGHS
+        w/13qa1e91vLfa2U=; b=TNhDrsR+oMzM71Tv212Uq2yPrdhDxXPmPEa9DF1Resm
+        IaJ8fT7PCS4hMLCMdJEHd/bxuhcSL4CERMLcv3U7NFiHov/LTrPtcuIGsF+fB0vF
+        v5JVu4L06X4RgnQ7pGPqcRtOvo6+qsHOgDx4Pagx/AGEUixWDq/c1BjK2OfgEXwS
+        5oUkvZLk6s7kODqqIInOi92S59KvlKG3tK5VMMZLzj2Q/FLU4Lb+Z4CYLBT4zjyY
+        pR4PfCfs83uTZAsg1lVONF4x39OY5MQyBKRIf+b9noQlgAG00HQm2BPK0TG7gq5F
+        pL/T5ebTRgi6k34tcIkxKg0z5D/SHilYRtWF8c7/XtA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=5Pncf8
-        +79KIbCdN+npAcSw2WlNrzFF6U/pUENKFgIl8=; b=gDXbpy3JA8Zsj+BxVWKKXa
-        MdBjRkCqtbkiuSXk9T5HiroG4ziuvkxHWM/I5ZKZcT8DCyieDZhkFu5lNrywtkvv
-        PasQHBJM+qgirAl+yUqugqJ/oKunHTdxuR67YN4d2G6KG7Cg3+SAaxJ0aHQBSVd9
-        FhxC448mQ86nefP/BzId6NJjudAxyFxAXDmRh9St9fHlf2gwVL6oI/DuB5Vy4bae
-        CYYBJqSO6kpZEr1SQItq5VqsHgh0wjBF+7OSwcMF4eOFKcAIb3ROm2UX04hAHbUP
-        ddLLuk6WvMIXZC5d6wOgBRfu3wdXXPwv0+/EXLct1YRpCbUkSYXkKUQkThcDpASQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=/JRUPY
+        nRLa2QMCNAdK0p5F/lGHSw/13qa1e91vLfa2U=; b=Z4gCmEWJjkycjCAUl4N+2X
+        1tvAQ6vj/dYF8E1lfYX9B5jPl86vWnSncSgfjt5MIREOk+1yceNXK48ZKnvAW/oe
+        8yvXt1+qtFjWx6BaF81PPGOhOtqx+vLuCRj5+j9AgwwqYyCaaemBGI0/x9eCJufJ
+        0Rl6ypYst6WcAPkYl+52BWkGiPE8l4j+haLy1DIQlsvHUbaDb4237Es8Vj/xFkBJ
+        TH5kRFsIHCoOofjdUfl8x8dJLDHL1rb4eDL0xczg+MPDtWE5uKIMgqYfuOK9DzTC
+        XW4X/68mbtj3i7fOkyx22gSsX7YIoF4njGer7f2U071L8KIL2hCmK6KGN9nau4ig
         ==
-X-ME-Sender: <xms:yBNFX2wrWHMw_jJGyx0EGlYa7PVwZxy_0grW8xHtcBp5T4ik2IDz2g>
+X-ME-Sender: <xms:oRNFX3S5XzeWSETb2tPW9tuRHuV2BovB4BCfDOitIt8o1B4vQe6DZQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudegne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:yBNFXyShE0sgyb5W6xhqStBA1xLf7-tKVEkh-nQVugeKE58BNsbhGA>
-    <xmx:yBNFX4VMsla9DLvKXYiB0c06G105ttH48i_A80E5uViZJ-FkJuXvnw>
-    <xmx:yBNFX8h-KUCLE7rFk0SwkTxcPBmJj-IAzVm5PHwBbFNXUJle9fqj2w>
-    <xmx:yRNFX4vhOy0E9uvw6TtLoBviLOE28wFVGLZ7vAMq0Rbu8DRvNfMcsYTBZJY>
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:oRNFX4xKRmsDg59xI5K-OsajaUxdiKEtcRJYoImEf2b007dULH2z_w>
+    <xmx:oRNFX83dV-xpqfoxlWj0vehFofnQaWEy7D5VFCs3LRGplKCy4WC90w>
+    <xmx:oRNFX3AKjxbRmuAcAB_PQda4EEqN1YsVb8gof912D5I4qggXXIZY_A>
+    <xmx:oRNFX8bzcu31Ak_zIJokZuct-UUfFnH8WZ6IlaeE8GY3CeKz4cD2mg>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 527E03280066;
-        Tue, 25 Aug 2020 09:36:08 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:49:19 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 113883060067;
+        Tue, 25 Aug 2020 09:35:28 -0400 (EDT)
+Date:   Tue, 18 Aug 2020 11:10:38 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        robh+dt@kernel.org, wens@csie.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 11/16] dt-bindings: irq: sun7i-nmi: fix dt-binding for
- a80 nmi
-Message-ID: <20200825084919.y5kp5telhrg7v43j@gilmour.lan>
-References: <cover.1595572867.git.frank@allwinnertech.com>
- <fb081585c4fedcb9b8b95e5f16879dff482c9717.1595572867.git.frank@allwinnertech.com>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: allwinner: Mark timer as stopped in suspend
+Message-ID: <20200818091038.uie3gxn7i74loho6@gilmour.lan>
+References: <20200809021822.5285-1-samuel@sholland.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="byyatgm2s2dabaqh"
+        protocol="application/pgp-signature"; boundary="6lj3l6uq3mnmvdcg"
 Content-Disposition: inline
-In-Reply-To: <fb081585c4fedcb9b8b95e5f16879dff482c9717.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <20200809021822.5285-1-samuel@sholland.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---byyatgm2s2dabaqh
+--6lj3l6uq3mnmvdcg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2020 at 03:14:48PM +0800, Frank Lee wrote:
-> From: Yangtao Li <frank@allwinnertech.com>
+Hi!
+
+On Sat, Aug 08, 2020 at 09:18:22PM -0500, Samuel Holland wrote:
+> When possible, system firmware on 64-bit Allwinner platforms disables
+> OSC24M during system suspend. Since this oscillator is the clock source
+> for the ARM architectural timer, this causes the timer to stop counting.
+> Therefore, the ARM architectural timer must not be marked as NONSTOP on
+> these platforms, or the time will be wrong after system resume.
 >=20
-> There is no one use "allwinner,sun9i-a80-sc-nmi". The A80 uses
-> "allwinner,sun9i-a80-nmi".
+> Adding the arm,no-tick-in-suspend property forces the kernel to ignore
+> the ARM architectural timer when calculating sleeptime; it falls back to
+> reading the RTC. Note that this only affects deep suspend, not s2idle.
 >=20
-> Let's fix it.
->=20
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
 Applied, thanks!
+
+I assume it affects all the SoCs with a Cortex-A7 as well?
+
 Maxime
 
---byyatgm2s2dabaqh
+--6lj3l6uq3mnmvdcg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TQjwAKCRDj7w1vZxhR
-xXiVAQDOAeUj4JX86Yrk4ExZjAfyFTXiIerWr7jVkVGTqIM/6gEAviD6il2NwCaR
-ly3k6tae3dCGUvQGwV3GgmhsplJ0pgM=
-=CwzG
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXzubDgAKCRDj7w1vZxhR
+xfaWAQDnZwRS7XpoHeidnQOOdUYkTt6m+Is8lK6qswz3CJ3H3AD/bkPTIL8YJmR/
+TYXu8yTTBp42sy7Dl2zcqs1H+JDybAQ=
+=GC+Q
 -----END PGP SIGNATURE-----
 
---byyatgm2s2dabaqh--
+--6lj3l6uq3mnmvdcg--
