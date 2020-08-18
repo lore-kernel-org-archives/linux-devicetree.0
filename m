@@ -2,126 +2,111 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D6C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E71C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD6520674
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BlejnWNN"
+	by mail.kernel.org (Postfix) with ESMTP id C1F972075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597747055;
+	bh=xcEDk+m+glN3qf3EHS7yRPVEgKV2+j6JUm4tvbC33dI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2MRUv9ADdN4aNl1cVK/I0CoBMCQmSKKbrerSBw1Ltsg7qQETMuyZdJfu0i0+thXya
+	 4twyqPyGCjwTsIjtvB6JucVZKSd9W7R0fwVkEl2PdtHmIjeyxw+J2UYSS46PPoORao
+	 7AW8CLyYt5Ig9x1kDOohaW2DYMX9ml3Y+wgHOm3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgHRK1r (ORCPT
+        id S1726684AbgHRKhe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:27:47 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40654 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHRK1q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 06:27:46 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07IAReZO003390;
-        Tue, 18 Aug 2020 05:27:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597746460;
-        bh=8xkBadz85cSC+Zl1n9wGXqzdc8DH2yqT3Qiku2kAblw=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=BlejnWNNhXfa2jmfFm5+Gu9xiQFI5A98q/H1lZVldl6GAy/Oi1m5IsPFRdbjW5Vpi
-         MHGr7oy7vKwnat4RaZwpxih/DBIdRyrzMBsXwTCChBtDu+hvHFW2QoFXoHnw0ptwwu
-         83Ya/fJ/l2wop6gc1uYBWeUygoD0tlbd2Qj/Ea18=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IAReWK096463;
-        Tue, 18 Aug 2020 05:27:40 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 18
- Aug 2020 05:27:40 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 18 Aug 2020 05:27:40 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IARbcJ057381;
-        Tue, 18 Aug 2020 05:27:38 -0500
-Subject: Re: [PATCH v5 2/2] Add Intel LGM soc DMA support.
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>,
-        <dmaengine@vger.kernel.org>, <vkoul@kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <andriy.shevchenko@intel.com>,
-        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>,
-        <chuanhua.lei@linux.intel.com>, <malliamireddy009@gmail.com>
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <cdd26d104000c060d85a0c5f8abe8492e4103de5.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <fbc98cdb-3b50-cbcc-0e90-c9d6116566d1@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <70848117-ec29-d293-6603-cbf47dec35d4@ti.com>
-Date:   Tue, 18 Aug 2020 13:29:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 06:37:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726862AbgHRKhb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 06:37:31 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 796D9204EA;
+        Tue, 18 Aug 2020 10:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597747050;
+        bh=xcEDk+m+glN3qf3EHS7yRPVEgKV2+j6JUm4tvbC33dI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rrqjEXVyogXgFmEPm0UJiwXSLh0Ydlb3WnZ756K7M/o4ayb1HRItIPvnJF9Bhc9OL
+         M80o73E0cGR95LFp6oLgJ1OovCWUk74dTPYEc33FjHWUgq3dBb6eODn7qhtM8+ycmN
+         SFPcmIgKgUmfvsKzhij8xn6jPPxWCoiVgDoFe3Yg=
+Date:   Tue, 18 Aug 2020 12:37:25 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Lee Jones <lee.jones@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 43/44] dt: document HiSilicon SPMI controller and
+ mfd/regulator properties
+Message-ID: <20200818123725.5b70af9b@coco.lan>
+In-Reply-To: <20200818111351.7e3fc780@coco.lan>
+References: <cover.1597647359.git.mchehab+huawei@kernel.org>
+        <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+        <20200817201211.GA1437827@bogus>
+        <20200818111351.7e3fc780@coco.lan>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <fbc98cdb-3b50-cbcc-0e90-c9d6116566d1@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Em Tue, 18 Aug 2020 11:13:51 +0200
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+
+> Em Mon, 17 Aug 2020 14:12:11 -0600
+> Rob Herring <robh@kernel.org> escreveu:
+> 
+
+> > > +  'irq-mask-addr':
+> > > +    description: Address for the interrupt request mask
+> > > +
+> > > +  'irq-addr':
+> > > +    description: Address for the interrupt request  
+> 
+> Those two seems more standard to me: irq-mask-addr is the address to
+> enable/disable IRQs, while irq-addr is where the pending IRQs are
+> stored.
+> 
+> What would be the standard way to specify them both?
+
+After another look at the driver, both seems to be fixed
+address. There are even some comments that implies that:
+
+	/* SOC_PMIC_IRQ_MASK_0_ADDR */
+	ret = of_property_read_u32(np, "irq-mask-addr", &pmic->irq_mask_addr);
+
+	/* SOC_PMIC_IRQ0_ADDR */
+	ret = of_property_read_u32(np, "irq-addr", &pmic->irq_addr);
+
+So, I'll just drop the entire set of irq-* properties. The PMIC part
+should be just this:
+
+	#include <dt-bindings/spmi/spmi.h>
+...
+		pmic: pmic@0 {
+			compatible = "hisilicon,hi6421v600-spmi";
+			reg = <0 SPMI_USID>;
+
+			#interrupt-cells = <2>;
+			interrupt-controller;
+			gpios = <&gpio28 0 0>;
+...
+		};
 
 
-On 18/08/2020 13.16, Peter Ujfalusi wrote:
 
-=2E..
-
->> +static void dma_issue_pending(struct dma_chan *chan)
->> +{
->> +	struct ldma_chan *c =3D to_ldma_chan(chan);
->> +	struct ldma_dev *d =3D to_ldma_dev(c->vchan.chan.device);
->> +	unsigned long flags;
->> +
->> +	if (d->ver =3D=3D DMA_VER22) {
->> +		spin_lock_irqsave(&c->vchan.lock, flags);
->> +		if (vchan_issue_pending(&c->vchan)) {
->> +			struct virt_dma_desc *vdesc;
->> +
->> +			/* Get the next descriptor */
->> +			vdesc =3D vchan_next_desc(&c->vchan);
->> +			if (!vdesc) {
->> +				c->ds =3D NULL;
->> +				return;
->> +			}
->> +			list_del(&vdesc->node);
->> +			c->ds =3D to_lgm_dma_desc(vdesc);
->=20
-> you have set c->ds in dma_prep_slave_sg and the only way I can see that=
-
-> you will not leak memory is that the client must terminate_sync() after=
-
-> each transfer so that the synchronize callback is invoked between each
-> prep_sg/issue_pending/competion.
->=20
->> +			spin_unlock_irqrestore(&c->vchan.lock, flags);
->> +			ldma_chan_desc_hw_cfg(c, c->ds->desc_phys, c->ds->desc_cnt);
->> +			ldma_chan_irq_en(c);
->> +		}
->=20
-> If there is nothing pending, you will leave the spinlock wide open...
-
-you leave it locked...
-
->=20
->> +	}
->> +	ldma_chan_on(c);
->> +}
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Thanks,
+Mauro
