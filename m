@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 791D2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03021207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5126E20825
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769804;
-	bh=d9cPWtyENfNl2HRXMgEXWQnjJbqhSVmywdREqBxnrCY=;
+	s=default; t=1597769841;
+	bh=XZEu+054owukh/CD+zNMN7eD5GYsUepDZpyJCKR6s9o=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=xbCbnoUHmxr+/4pDwL6Gk07b8ZuqP1BBYk/u0n6m31MPuXltNIFpFhhTGzlNnGgV9
-	 chmr97yFLq0ezWW/DAm84DJoVi6SZYnFxSbnKZ/4laAsL4LliB6Sompx1NUkDtpn34
-	 jJCUmBbqftGde5w8iXX+7TqBMPFigQaUtkARpYLk=
+	b=KfIGxKUJxjzfSCNqdLJxr2F1WSBynpxz0q1dx6xwQNyzwzcb3PdpTKUKN47ykjKmV
+	 JPg0UY+Oor1QQYluwcpamvAfCj7VT34jIZFuxzmwN8Ka5DhZDN9H7K1lc43i/0ju6/
+	 nHygFiuIC7fUW6/8C2f9qL7VwM+x2CCTAOkPBAc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgHRQ4m (ORCPT
+        id S1728401AbgHRQ5T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:56:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39236 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:57:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728464AbgHRQ4j (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:56:39 -0400
+        id S1728542AbgHRQ5E (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:57:04 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A0F1207DE;
-        Tue, 18 Aug 2020 16:56:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1255420786;
+        Tue, 18 Aug 2020 16:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769799;
-        bh=d9cPWtyENfNl2HRXMgEXWQnjJbqhSVmywdREqBxnrCY=;
+        s=default; t=1597769824;
+        bh=XZEu+054owukh/CD+zNMN7eD5GYsUepDZpyJCKR6s9o=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=yACKnyoFBp/jxXuRDWlpSzvp2g1iat9EXWJrvfq2dZ+yQg8CnSl9gDFhRAUIeA6i0
-         EWulvufwZkN8Ge0orn4jZUcjPoLezXn4aclHI6Rg1JqA7kwW6G6CBFzIAHDj3XN6cm
-         I9riw1LPjz9poKJXILlWkhL0s6sIq4k0OOqZ8wyE=
-Date:   Tue, 18 Aug 2020 17:56:08 +0100
+        b=kjl1W+h48zNGn1DkV/nuYz5gHXURZ/VOcNokiiHZY1MngzhZQkSWwLF3rmjIh5Zn6
+         a2IOMKFvbeFrmzIj3wm+I8XvySQB+zlqrnA3G0br10VOUamMW5gM/+iPkDs5AVPBPc
+         7w//2jRnS0JTH1rCfKZEvNoFsmS0397+iBbYFitg=
+Date:   Tue, 18 Aug 2020 17:56:33 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     lgirdwood@gmail.com, robh+dt@kernel.org,
         cy_huang <u0084500@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         cy_huang@richtek.com, gene_chen@richtek.com
-In-Reply-To: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
-References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
-Subject: Re: [PATCH 1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
-Message-Id: <159776976828.56451.5593321071237177212.b4-ty@kernel.org>
+In-Reply-To: <1597418824-15906-1-git-send-email-u0084500@gmail.com>
+References: <1597418824-15906-1-git-send-email-u0084500@gmail.com>
+Subject: Re: [PATCH 1/2] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
+Message-Id: <159776976828.56451.5989906126815444846.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, 15 Aug 2020 11:14:20 +0800, cy_huang wrote:
+On Fri, 14 Aug 2020 23:27:03 +0800, cy_huang wrote:
 > Adds support for the RT4801 DSV. It has two regulators (DSVP/DSVN) with
 > an I2C interface. DSVP/DSVN can provide the display panel module for the
 > positive/negative voltage range from (+/-)4V to (+/-)6V.
@@ -64,12 +64,10 @@ Applied to
 
 Thanks!
 
-[1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
+[1/2] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
       commit: 5bbbfc7f7f0a44b7a85ab3872dd2ccce7019f7b1
-[2/3] regulator: rt4801: Add DT binding documentation
+[2/2] regulator: rt4801: Add DT binding documentation
       commit: fd6b928db8a05fcd8629320c52eae214a8615aae
-[3/3] regulator: rt4801: Fix the dt-binding document for dtc check.
-      commit: 6f4ac2844b61d43c0c48b7c67a974d9f6e4ddd9c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
