@@ -2,152 +2,126 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6708EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D6C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28BEC20786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD6520674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 10:27:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ds0.me header.i=@ds0.me header.b="fOkTv/cw"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BlejnWNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgHRK0z (ORCPT
+        id S1726422AbgHRK1r (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 06:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726203AbgHRK0z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 06:26:55 -0400
-X-Greylist: delayed 1840 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 18 Aug 2020 03:26:53 PDT
-Received: from ds0.me (ds0.me [IPv6:2602:ffc5::f9bc:b4ce])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0312C061389
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 03:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=ds0.me; s=mail;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:Date:To:From:Subject:Message-ID; bh=u6QD4NyqzwBKiplcT5XogB7V62U2eA+KUrMAyYbwPXw=;
-        b=fOkTv/cw+97aIYqNme09JojGHg++KVybbBZZbW+sk08yDT+pU8JfbSgNXeG/S0vUb6ja7tVoyb9fmC91gbksWeST8W/VzaqsgP4tDtmWygnP4hzlG8kYLbtrqaK9mTebcIzf5xCUftwHBKKzxjfSXF2Bky89NwtSTPVR2CB6VTo=;
-Received: from 97e0b068.skybroadband.com ([151.224.176.104] helo=archlinux)
-        by ds0.me with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.84_2)
-        (envelope-from <dave@ds0.me>)
-        id 1k7yLk-0004Aj-UC
-        for devicetree@vger.kernel.org; Tue, 18 Aug 2020 05:56:13 -0400
-Message-ID: <cddea862708aabd57c7cb40742a517b3d0aa3ee1.camel@ds0.me>
-Subject: Fwd: [PATCH] omap5: Fix DSI base address and clocks
-From:   David Shah <dave@ds0.me>
-To:     devicetree@vger.kernel.org
-Date:   Tue, 18 Aug 2020 10:56:06 +0100
-References: <20200818095100.25412-1-dave@ds0.me>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 
+        Tue, 18 Aug 2020 06:27:47 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40654 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHRK1q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 06:27:46 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07IAReZO003390;
+        Tue, 18 Aug 2020 05:27:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597746460;
+        bh=8xkBadz85cSC+Zl1n9wGXqzdc8DH2yqT3Qiku2kAblw=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=BlejnWNNhXfa2jmfFm5+Gu9xiQFI5A98q/H1lZVldl6GAy/Oi1m5IsPFRdbjW5Vpi
+         MHGr7oy7vKwnat4RaZwpxih/DBIdRyrzMBsXwTCChBtDu+hvHFW2QoFXoHnw0ptwwu
+         83Ya/fJ/l2wop6gc1uYBWeUygoD0tlbd2Qj/Ea18=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IAReWK096463;
+        Tue, 18 Aug 2020 05:27:40 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 18
+ Aug 2020 05:27:40 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 18 Aug 2020 05:27:40 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07IARbcJ057381;
+        Tue, 18 Aug 2020 05:27:38 -0500
+Subject: Re: [PATCH v5 2/2] Add Intel LGM soc DMA support.
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>,
+        <dmaengine@vger.kernel.org>, <vkoul@kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>,
+        <chuanhua.lei@linux.intel.com>, <malliamireddy009@gmail.com>
+References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <cdd26d104000c060d85a0c5f8abe8492e4103de5.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <fbc98cdb-3b50-cbcc-0e90-c9d6116566d1@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <70848117-ec29-d293-6603-cbf47dec35d4@ti.com>
+Date:   Tue, 18 Aug 2020 13:29:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <fbc98cdb-3b50-cbcc-0e90-c9d6116566d1@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sorry, meant to send this to the device tree list as well as the OMAP
-one for review too.
 
-David
 
--------- Forwarded Message --------
-From: David Shah <dave@ds0.me>
-To: letux-kernel@openphoenux.org, kernel@pyra-handheld.com, 
-linux-omap@vger.kernel.org, tony@atomide.com
-Subject: [PATCH] omap5: Fix DSI base address and clocks
-Date: Tue, 18 Aug 2020 10:51:00 +0100
+On 18/08/2020 13.16, Peter Ujfalusi wrote:
 
-DSI was not probing due to base address off by 0x1000, and sys_clk
-missing.
+=2E..
 
-With this patch, the Pyra display works if HDMI is disabled in the
-device tree.
+>> +static void dma_issue_pending(struct dma_chan *chan)
+>> +{
+>> +	struct ldma_chan *c =3D to_ldma_chan(chan);
+>> +	struct ldma_dev *d =3D to_ldma_dev(c->vchan.chan.device);
+>> +	unsigned long flags;
+>> +
+>> +	if (d->ver =3D=3D DMA_VER22) {
+>> +		spin_lock_irqsave(&c->vchan.lock, flags);
+>> +		if (vchan_issue_pending(&c->vchan)) {
+>> +			struct virt_dma_desc *vdesc;
+>> +
+>> +			/* Get the next descriptor */
+>> +			vdesc =3D vchan_next_desc(&c->vchan);
+>> +			if (!vdesc) {
+>> +				c->ds =3D NULL;
+>> +				return;
+>> +			}
+>> +			list_del(&vdesc->node);
+>> +			c->ds =3D to_lgm_dma_desc(vdesc);
+>=20
+> you have set c->ds in dma_prep_slave_sg and the only way I can see that=
 
-Signed-off-by: David Shah <dave@ds0.me>
----
- arch/arm/boot/dts/omap5.dtsi | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+> you will not leak memory is that the client must terminate_sync() after=
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi
-b/arch/arm/boot/dts/omap5.dtsi
-index c96e19a15c52..849a2dd9fef7 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -388,11 +388,11 @@ rfbi: encoder@0  {
- 					};
- 				};
- 
--				target-module@5000 {
-+				target-module@4000 {
- 					compatible = "ti,sysc-omap2",
-"ti,sysc";
--					reg = <0x5000 0x4>,
--					      <0x5010 0x4>,
--					      <0x5014 0x4>;
-+					reg = <0x4000 0x4>,
-+					      <0x4010 0x4>,
-+					      <0x4014 0x4>;
- 					reg-names = "rev", "sysc",
-"syss";
- 					ti,sysc-sidle =
-<SYSC_IDLE_FORCE>,
- 							<SYSC_IDLE_NO>,
-@@ -404,7 +404,7 @@ SYSC_OMAP2_SOFTRESET |
- 					ti,syss-mask = <1>;
- 					#address-cells = <1>;
- 					#size-cells = <1>;
--					ranges = <0 0x5000 0x1000>;
-+					ranges = <0 0x4000 0x1000>;
- 
- 					dsi1: encoder@0 {
- 						compatible = "ti,omap5-
-dsi";
-@@ -414,8 +414,9 @@ dsi1: encoder@0 {
- 						reg-names = "proto",
-"phy", "pll";
- 						interrupts = <GIC_SPI
-53 IRQ_TYPE_LEVEL_HIGH>;
- 						status = "disabled";
--						clocks = <&dss_clkctrl
-OMAP5_DSS_CORE_CLKCTRL 8>;
--						clock-names = "fck";
-+						clocks = <&dss_clkctrl
-OMAP5_DSS_CORE_CLKCTRL 8>,
-+							 <&dss_clkctrl
-OMAP5_DSS_CORE_CLKCTRL 10>;
-+						clock-names = "fck",
-"sys_clk";
- 					};
- 				};
- 
-@@ -445,8 +446,9 @@ dsi2: encoder@0 {
- 						reg-names = "proto",
-"phy", "pll";
- 						interrupts = <GIC_SPI
-55 IRQ_TYPE_LEVEL_HIGH>;
- 						status = "disabled";
--						clocks = <&dss_clkctrl
-OMAP5_DSS_CORE_CLKCTRL 8>;
--						clock-names = "fck";
-+						clocks = <&dss_clkctrl
-OMAP5_DSS_CORE_CLKCTRL 8>,
-+							 <&dss_clkctrl
-OMAP5_DSS_CORE_CLKCTRL 10>;
-+						clock-names = "fck",
-"sys_clk";
- 					};
- 				};
- 
--- 
-2.28.0
+> each transfer so that the synchronize callback is invoked between each
+> prep_sg/issue_pending/competion.
+>=20
+>> +			spin_unlock_irqrestore(&c->vchan.lock, flags);
+>> +			ldma_chan_desc_hw_cfg(c, c->ds->desc_phys, c->ds->desc_cnt);
+>> +			ldma_chan_irq_en(c);
+>> +		}
+>=20
+> If there is nothing pending, you will leave the spinlock wide open...
 
-_______________________________________________
-Kernel mailing list
-Kernel@pyra-handheld.com
-http://pyra-handheld.com/cgi-bin/mailman/listinfo/kernel
+you leave it locked...
+
+>=20
+>> +	}
+>> +	ldma_chan_on(c);
+>> +}
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
