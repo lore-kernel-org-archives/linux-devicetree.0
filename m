@@ -2,163 +2,403 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63785C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A393C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4582075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A622067C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:07:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b0VdabeT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HPYR+grp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHRWDJ (ORCPT
+        id S1726867AbgHRWHS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38600 "EHLO
+        Tue, 18 Aug 2020 18:07:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHRWDH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 18:03:07 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67500C061389
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:03:06 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id a24so19293771oia.6
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:03:06 -0700 (PDT)
+        with ESMTP id S1726783AbgHRWHR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 18:07:17 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9A7C061389
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:07:16 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id 6so16406274qtt.0
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:07:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=diQpwa3braoDFIWAByVDgaoQfS004fXuMypoBUCVdtk=;
-        b=b0VdabeT3wDVIbsWC3+UUFu/XIeQMDjK+Xkxa9ATJN7g6hRVTbi7XDjpV5TPaXfGmT
-         wCslWgKlUXSyClpdNtyCqXZhL8SHL1wLFyVVbHWqLxWhH354vCXo69U7GQLCdiGKgJTk
-         qsn7lgRuF4gN2odTDj14Cj6eeH9USU6CdxJdFtpXQsbmo9fA7Bzxyr8zqr4Tho5Mlacg
-         NNBUaVOoobOAL4BO/aK64cIbDncboXoxOXNIwdZS7zVuFJy7fVFc5rfAYnrB5O8feCmD
-         xIq+FyJqN/khbmBqaIvmo3ds1WTecSqZPFQhBYfsn8tMHwNAklxW5j52iXCStxFayCQ8
-         JtwA==
+        bh=px8ObE2xOi/36R5JWvUBtMfgDCI+Fg4lbQqfJ0YrggQ=;
+        b=HPYR+grppmQc/6qWyiY8FL2m31cXd/LpPr+K9Rk92MwGCiO+09qTJQZJnbWEvNLGy4
+         HFWN3eMFqp8OTxNH4FZF407D2c/tv50tQvOvS5rWKs3nno+UKbYsZzt++FIvTgcv3QcB
+         Vo9gmTRuDH3ygT/pm6qRwfLBQjjnQrcJCxpArjqcsnci5IMXbXWh4y2w/DhE0UHxmwyd
+         oD03vMhzkAnZ0S067sgdGPTGneuyU0iD/YuqUlV9pAomfPnmWGHldmQYLfkNMbuEDafg
+         6nTddIcCQ2hcE3Ywjmoug4WrJ7Fau5OgM3uyQFXW4lMor/xZUiuBVQ7frs0SVNcQz7AX
+         Cvyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=diQpwa3braoDFIWAByVDgaoQfS004fXuMypoBUCVdtk=;
-        b=c5qH/yx640yUZGnX5i/4GLCcP/mpnc/HVkG3VpMso86D/2sUxqUcErt95/q/TFM9c2
-         BCqmP7A9ulSjBMtC5ry++b1VLkntkVKZpGKD4equ2iYBCvWGtx3QZ6JCsbpIWwp0wsJv
-         cvVpMKnIDYC4PaJziVb5GKDIWYjzW2dbrzQ3ro2VkuOImhTWjMYYMmw+lY++tXDJujq2
-         Dk4O50tG6eRPFQReVM8BsqATcIevl9AKpP0zl9GrY/j0O+sgSixbwQ4O+Iswr3Rj3KAm
-         fqfUhIX3Udwf995FdDhR3BE5jcsmNS6ElKDoKDKc+0fBJ5yQdgLEuhLxhIbMPuUiAXa7
-         IwFw==
-X-Gm-Message-State: AOAM531JsJ/8HZEAo67DWKTfTeaxAzJcHg6hPv69/+6KFjOgZL99oiF6
-        Oma+TET7iE2/mxy+5VyGQ1/SDMAWjCkBLwc+CDrniA==
-X-Google-Smtp-Source: ABdhPJyGzE0nx7m/2KMeb3GHpmBH6vjSg1G7xFIBMVTmsTi1vQDYWMmdQoiFgnNFFNSMKmEyMesrHuoEyoSXZV5UF2Y=
-X-Received: by 2002:aca:dc85:: with SMTP id t127mr1404925oig.169.1597788185528;
- Tue, 18 Aug 2020 15:03:05 -0700 (PDT)
+        bh=px8ObE2xOi/36R5JWvUBtMfgDCI+Fg4lbQqfJ0YrggQ=;
+        b=NDkjAq8Wq1JYQEewNIScN2yYRUdzfsAsw6cGWBwNIY4wZKEe+mcOqiL/AQklO4Iiz4
+         lT7RksquXx3bqRwW3lCK1+q/JPa7p3TDI4ax2WYKf/gnzcRuWeMvpedF77HeTxn6boXL
+         wh6zpBCKUrFjSjGiXtK9q6uNw89S0zjOrp1ZoS/dUj3DcNTSRKKZ7KKs6lKDtCwkql5d
+         06dG0UA9jmOvzMCQaNA0Yhme5AH6E/xyjlaKyWYmqQkoMbyNqtEtiw2cyq2q9oVudXw5
+         0YgHW+aprW/u45Fmvrd2TKtHkpgYP4W7OwXqVBRYDzMeZHorBcd61CtYtTWtc29t2aDT
+         AFkw==
+X-Gm-Message-State: AOAM530aL06GjQp0f6wtLGVPYTBmlE/msJ9EZTzbbOaLTM/uS+yz54/g
+        DSsvLwhZikipWOGHQlt2HMT0QVsVoNy++heLGd7HlQ==
+X-Google-Smtp-Source: ABdhPJyHCn8r4aLq23a97uyhpLFlSZ3mnxBVLrCwHgQJVtznOvhgjh2wgQPw3On28wpzamxePVdq2m1CSITqWxILkUE=
+X-Received: by 2002:aed:22cb:: with SMTP id q11mr19402496qtc.200.1597788435923;
+ Tue, 18 Aug 2020 15:07:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1597650455.git.mchehab+huawei@kernel.org>
- <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com> <20200818172909.71f5243a@coco.lan>
- <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
-In-Reply-To: <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 18 Aug 2020 15:02:54 -0700
-Message-ID: <CALAqxLXBYvwZ9kiKSGBeO5f-eKi2DD14QtoZgFGyGd-B7EOPQA@mail.gmail.com>
-Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
-        Wei Xu <xuwei5@hisilicon.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Suzhuangluan <suzhuangluan@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1596020528-19510-2-git-send-email-grzegorz.jaszczyk@linaro.org> <20200817211456.GA1542592@bogus>
+In-Reply-To: <20200817211456.GA1542592@bogus>
+From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Date:   Wed, 19 Aug 2020 00:07:05 +0200
+Message-ID: <CAMxfBF5YQCE9i-Xot209S+vWtaH6NFUrcViFcsEG6GKyeQ5j3A@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: ti: Add TI PRUSS bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     ssantosh@kernel.org, "Anna, Suman" <s-anna@ti.com>,
+        santosh.shilimkar@oracle.com, Lee Jones <lee.jones@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "Bajjuri, Praneeth" <praneeth@ti.com>,
+        Roger Quadros <rogerq@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 9:26 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2020-08-18 16:29, Mauro Carvalho Chehab wrote:
-> > Em Tue, 18 Aug 2020 15:47:55 +0100
-> > Basically, the DT binding has this, for IOMMU:
-> >
-> >
-> >       smmu_lpae {
-> >               compatible = "hisilicon,smmu-lpae";
-> >       };
-> >
-> > ...
-> >       dpe: dpe@e8600000 {
-> >               compatible = "hisilicon,kirin970-dpe";
-> >               memory-region = <&drm_dma_reserved>;
-> > ...
-> >               iommu_info {
-> >                       start-addr = <0x8000>;
-> >                       size = <0xbfff8000>;
-> >               };
-> >       }
-> >
-> > This is used by kirin9xx_drm_dss.c in order to enable and use
-> > the iommu:
-> >
-> >
-> >       static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
-> >       {
-> >               struct device *dev = NULL;
-> >
-> >               dev = &pdev->dev;
-> >
-> >               /* create iommu domain */
-> >               ctx->mmu_domain = iommu_domain_alloc(dev->bus);
-> >               if (!ctx->mmu_domain) {
-> >                       pr_err("iommu_domain_alloc failed!\n");
-> >                       return -EINVAL;
-> >               }
-> >
-> >               iommu_attach_device(ctx->mmu_domain, dev);
-> >
-> >               return 0;
-> >       }
-> >
-> > The only place where the IOMMU domain is used is on this part of the
-> > code(error part simplified here) [1]:
-> >
-> >       void hisi_dss_smmu_on(struct dss_hw_ctx *ctx)
-> >       {
-> >               uint64_t fama_phy_pgd_base;
-> >               uint32_t phy_pgd_base;
-> > ...
-> >               fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
-> >               phy_pgd_base = (uint32_t)fama_phy_pgd_base;
-> >               if (WARN_ON(!phy_pgd_base))
-> >                       return;
-> >
-> >               set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
-> >       }
-> >
-> > [1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
-> >
-> > In other words, the driver needs to get the physical address of the frame
-> > buffer (mapped via iommu) in order to set some DRM-specific register.
-> >
-> > Yeah, the above code is somewhat hackish. I would love to replace
-> > this part by a more standard approach.
+Hi Rob,
+
+On Mon, 17 Aug 2020 at 23:14, Rob Herring <robh@kernel.org> wrote:
 >
-> OK, so from a quick look at that, my impression is that your display
-> controller has its own MMU and you don't need to pretend to use the
-> IOMMU API at all. Just have the DRM driver use io-pgtable directly to
-> run its own set of ARM_32_LPAE_S1 pagetables - see Panfrost for an
-> example (but try to ignore the wacky "Mali LPAE" format).
+> On Wed, Jul 29, 2020 at 01:02:03PM +0200, Grzegorz Jaszczyk wrote:
+> > This patch adds the bindings for the Programmable Real-Time Unit
+> > and Industrial Communication Subsystem (PRU-ICSS) present on various
+> > TI SoCs. The IP is present on multiple TI SoC architecture families
+> > including the OMAP architecture SoCs such as AM33xx, AM437x and
+> > AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
+> > also present on the Davinci based OMAPL138 SoCs and K3 architecture
+> > based AM65x and J721E SoCs as well.
+> >
+> > The IP has a number of sub-modules some of which are represented as
+> > their own devices. This binding covers only the top-level sub-system
+> > devices, and some sub-modules like MDIO, MII_RT (Ethernet MII_RT module
+> > with MII ports) and IEP (Industrial Ethernet Peripheral). The remaining
+> > sub-modules bindings shall be defined in the respective driver
+> > subsystem bindings folders. Couple of full examples have also been
+> > added demonstrating the devices on AM335x and AM437x SoCs.
+> >
+> > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
+> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+> > Reviewed-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  .../devicetree/bindings/soc/ti/ti,pruss.yaml       | 383 +++++++++++++++++++++
+> >  1 file changed, 383 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> > new file mode 100644
+> > index 0000000..4b7a098
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> > @@ -0,0 +1,383 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/soc/ti/ti,pruss.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: |+
+> > +  TI Programmable Real-Time Unit and Industrial Communication Subsystem
+> > +
+> > +maintainers:
+> > +  - Suman Anna <s-anna@ti.com>
+> > +
+> > +description: |+
+> > +
+> > +  The Programmable Real-Time Unit and Industrial Communication Subsystem
+> > +  (PRU-ICSS a.k.a. PRUSS) is present on various TI SoCs such as AM335x, AM437x,
+> > +  Keystone 66AK2G, OMAP-L138/DA850 etc. A PRUSS consists of dual 32-bit RISC
+> > +  cores (Programmable Real-Time Units, or PRUs), shared RAM, data and
+> > +  instruction RAMs, some internal peripheral modules to facilitate industrial
+> > +  communication, and an interrupt controller.
+> > +
+> > +  The programmable nature of the PRUs provide flexibility to implement custom
+> > +  peripheral interfaces, fast real-time responses, or specialized data handling.
+> > +  The common peripheral modules include the following,
+> > +    - an Ethernet MII_RT module with two MII ports
+> > +    - an MDIO port to control external Ethernet PHYs
+> > +    - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+> > +      Ethernet functions
+> > +    - an Enhanced Capture Module (eCAP)
+> > +    - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
+> > +    - a 16550-compatible UART to support PROFIBUS
+> > +    - Enhanced GPIO with async capture and serial support
+> > +
+> > +  A PRU-ICSS subsystem can have up to three shared data memories. A PRU core
+> > +  acts on a primary Data RAM (there are usually 2 Data RAMs) at its address
+> > +  0x0, but also has access to a secondary Data RAM (primary to the other PRU
+> > +  core) at its address 0x2000. A shared Data RAM, if present, can be accessed
+> > +  by both the PRU cores. The Interrupt Controller (INTC) and a CFG module are
+> > +  common to both the PRU cores. Each PRU core also has a private instruction
+> > +  RAM, and specific register spaces for Control and Debug functionalities.
+> > +
+> > +  Various sub-modules within a PRU-ICSS subsystem are represented as individual
+> > +  nodes and are defined using a parent-child hierarchy depending on their
+> > +  integration within the IP and the SoC. These nodes are described in the
+> > +  following sections.
+> > +
+> > +
+> > +  PRU-ICSS Node
+> > +  ==============
+> > +  Each PRU-ICSS instance is represented as its own node with the individual PRU
+> > +  processor cores, the memories node, an INTC node and an MDIO node represented
+> > +  as child nodes within this PRUSS node. This node shall be a child of the
+> > +  corresponding interconnect bus nodes or target-module nodes.
+> > +
+> > +  See ../../mfd/syscon.yaml for generic SysCon binding details.
+> > +
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - ti,am3356-pruss  # for AM335x SoC family
+> > +      - ti,am4376-pruss0 # for AM437x SoC family and PRUSS unit 0
+> > +      - ti,am4376-pruss1 # for AM437x SoC family and PRUSS unit 1
+> > +      - ti,am5728-pruss  # for AM57xx SoC family
+> > +      - ti,k2g-pruss     # for 66AK2G SoC family
+> > +      - ti,am654-icssg   # for K3 AM65x SoC family
+> > +      - ti,j721e-icssg   # for K3 J721E SoC family
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  ranges:
+> > +    maxItems: 1
+> > +    description: |
+> > +      Standard ranges definition using addresses from 0 for child nodes.
+>
+> Don't need a description on standard properties.
 
-Yea. For the HiKey960, there was originally a similar patch series but
-it was refactored out and the (still out of tree) DRM driver I'm
-carrying doesn't seem to need it (though looking we still have the
-iommu_info subnode in the dts that maybe needs to be cleaned up).
+Ok.
 
-thanks
--john
+>
+>
+> > +
+> > +  power-domains:
+> > +    description: |
+> > +      This property is as per sci-pm-domain.txt.
+> > +
+> > +  memories:
+>
+> Missing unit-address pattern.
+
+Ok, I will also update other subnodes regarding the unit-address pattern.
+
+>
+>
+> > +    description: |
+> > +      The various Data RAMs within a single PRU-ICSS unit are represented as a
+> > +      single node with the name 'memories'.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      reg:
+> > +        minItems: 2 # On AM437x one of two PRUSS units don't contain Shared RAM.
+> > +        maxItems: 3
+> > +        items:
+> > +          - description: Address and size of the Data RAM0.
+> > +          - description: Address and size of the Data RAM1.
+> > +          - description: |
+> > +              Address and size of the Shared Data RAM. Note that on AM437x one
+> > +              of two PRUSS units don't contain Shared RAM, while the second one
+> > +              has it.
+> > +
+> > +      reg-names:
+> > +        minItems: 2
+> > +        maxItems: 3
+> > +        items:
+> > +          - const: dram0
+> > +          - const: dram1
+> > +          - const: shrdram2
+> > +
+> > +    required:
+> > +      - reg
+> > +      - reg-names
+>
+>        additionalProperties: false
+>
+
+Ok.
+
+>
+>
+> (And throughout for other child nodes).
+
+Ok.
+
+>
+>
+> > +
+> > +  cfg:
+> > +    description: |
+> > +      PRU-ICSS configuration space. CFG sub-module represented as a SysCon.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - const: ti,pruss-cfg
+> > +          - const: syscon
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +  iep:
+> > +    description: |
+> > +      Industrial Ethernet Peripheral to manage/generate Industrial Ethernet
+> > +      functions such as time stamping. Each PRUSS has either 1 IEP (on AM335x,
+> > +      AM437x, AM57xx & 66AK2G SoCs) or 2 IEPs (on K3 AM65x & J721E SoCs ). IEP
+> > +      is used for creating PTP clocks and generating PPS signals. The bindings
+> > +      for this shall be defined in ../../net/ti,icss-iep.yaml.
+> > +
+> > +    type: object
+> > +
+> > +  mii-rt:
+> > +    description: |
+> > +      Real-Time Ethernet to support multiple industrial communication protocols.
+> > +      MII-RT sub-module represented as a SysCon.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - const: ti,pruss-mii
+> > +          - const: syscon
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +  mii-g-rt:
+> > +    description: |
+> > +      The Real-time Media Independent Interface to support multiple industrial
+> > +      communication protocols (G stands for Gigabit). MII-G-RT sub-module
+> > +      represented as a SysCon.
+> > +
+> > +    type: object
+> > +
+> > +    properties:
+> > +      compatible:
+> > +        items:
+> > +          - const: ti,pruss-mii-g
+> > +          - const: syscon
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +  interrupt-controller:
+> > +    description: |
+> > +      PRUSS INTC Node. Each PRUSS has a single interrupt controller instance
+> > +      that is common to all the PRU cores. This should be represented as an
+> > +      interrupt-controller node. The bindings for this shall be defined in
+> > +      ../../interrupt-controller/ti,pruss-intc.yaml.
+>
+> Use $ref to reference the schema.
+
+The problem is that the mentioned binding is not merged yet. Is it ok
+for you to leave it as is and update once
+../../interrupt-controller/ti,pruss-intc.yam get merged?
+
+>
+>
+> > +
+> > +    type: object
+> > +
+> > +  mdio:
+> > +    description: |
+> > +      MDIO Node. Each PRUSS has an MDIO module that can be used to control
+> > +      external PHYs. The MDIO module used within the PRU-ICSS is an instance of
+> > +      the MDIO Controller used in TI Davinci SoCs.
+> > +
+> > +    allOf:
+> > +      - $ref: /schemas/net/ti,davinci-mdio.yaml#
+> > +
+> > +    type: object
+> > +
+> > +patternProperties:
+> > +  "^(pru|rtu|txpru)@[0-9a-f]+$":
+> > +    description: |
+> > +      PRU Node. Each PRUSS has dual PRU cores, each represented as a RemoteProc
+> > +      device through a PRU child node each. Each node can optionally be rendered
+> > +      inactive by using the standard DT string property, "status". The ICSSG IP
+> > +      present on K3 SoCs have additional auxiliary PRU cores with slightly
+> > +      different IP integration. The bindings for this shall be defined in
+> > +      ../../remoteproc/ti,pru-rproc.yaml
+> > +
+> > +    type: object
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - ranges
+> > +
+> > +# Due to inability of correctly verifying sub-nodes with an @address through
+> > +# the "required" list, the required sub-nodes below are commented out for now.
+> > +
+> > +#required:
+> > +# - memories
+> > +# - interrupt-controller
+> > +# - pru
+>
+> Add:
+>
+> additionalProperties: false
+
+Ok.
+
+>
+>
+> > +
+> > +if:
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        enum:
+> > +          - ti,k2g-pruss
+> > +          - ti,am654-icssg
+> > +          - ti,j721e-icssg
+> > +then:
+> > +  required:
+> > +    - power-domains
+> > +
+> > +examples:
+> > +  - |
+> > +
+> > +    /* Example 1 AM33xx PRU-ICSS */
+> > +    pruss: pruss@0 {
+> > +        compatible = "ti,am3356-pruss";
+> > +        reg = <0x0 0x80000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        ranges;
+>
+> I would have expected a warning on this since you defined it to have 1
+> entry.
+
+I've double checked with dt_binding_check - there is no warning. For
+ranges maxItems: 1 is defined.
+
+Thank you for your review,
+Grzegorz
