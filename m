@@ -2,81 +2,149 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48951C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D02C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20DCD2076E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E442076E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lJ9q1usP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eRd8YUFX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbgHRHhL (ORCPT
+        id S1726357AbgHRHi3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgHRHhK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 03:37:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C624C061389
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 00:37:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Message-ID:From:CC:To:Subject:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
-        Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Tuui4JKywOGQP//vjZ5uTcHQ/MsFtjm89enFy1ffrY8=; b=lJ9q1usPa0OPMfcT+WTeY3aNOC
-        FwNmgE+/6QiX3F85eiFyl8rzB1t9wKlbdvR8NpJbxTpr9F4q8Szv1jB/+UmsJ0zvN4dET/AzXfaZZ
-        +Rn/TPzAB3Qz/RcQPxRhBZftG8u1q3SQI6LRT+BSCZYfrIo1/1e9Ng2gioZxmADmknanZKuxTuMNA
-        +3zRLTgZPk4jKbT2mj9cnkt2hWPsZly3IvNFjKy3hP0cpnRW8u1gKZqVYOOxhkVs93KdcYYcW8KHE
-        NoL6UfkKbdLIqiXo8/Oj37NJl7QcvGrCalv78ps0ZUnjdgEhdPgOVBNrNlNL9bj4C8Pg8jAKTJyfM
-        i7b3TZJQ==;
-Received: from [51.219.137.136] (helo=[10.0.1.19])
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k7wAy-0007EV-HN; Tue, 18 Aug 2020 07:36:57 +0000
-Date:   Tue, 18 Aug 2020 08:36:55 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <trinity-bbc9a618-a916-40bb-b144-bffe715646a4-1597734987449@3c-app-gmx-bap75>
-References: <20200807082754.6790-1-linux@fw-web.de> <20200807082754.6790-2-linux@fw-web.de> <trinity-f5a5deb1-c123-44d7-b7ca-1f7a8dbe1c1c-1596889651064@3c-app-gmx-bap69> <CAAOTY_9o_hBWxWBdDoeeJ6zuV4rb4R_yEoN5+L0uHBGMw4Kduw@mail.gmail.com> <cefc273c226c93c605f4dc76afa9eb5aacceaf26.camel@infradead.org> <trinity-bbc9a618-a916-40bb-b144-bffe715646a4-1597734987449@3c-app-gmx-bap75>
+        Tue, 18 Aug 2020 03:38:29 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:59353 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726302AbgHRHi2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:38:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597736308; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=oBlBFLNCfpm1tApUYPpLjT+H0f58c4Dojdn1tDV42qA=;
+ b=eRd8YUFXBXF/4ff48m3/MzzAUz0nNrluMUFfG88XRipNISo29qsTFw4GzyfZDZ7lL1GJHdN+
+ nzJjvMHxbGM2+yk0TlPM2eENIOVQ7dGxI+BOk3g6WUIQCUBXLh8H3RP0mugf2xHk4n5y+gte
+ Wzz0loGQqODb4QlOU1snjLr4qP0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
+ 5f3b8573ba4c2cd36742c78d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 07:38:27
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D7369C433CB; Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E2EBC433CB;
+        Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/2] arm: dts: mt7623: move more display-related nodes to mt7623n.dtsi
-To:     linux-mediatek@lists.infradead.org,
-        Frank Wunderlich <frank-w@public-files.de>,
-        chunkuang Hu <chunkuang.hu@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     devicetree@vger.kernel.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-From:   David Woodhouse <dwmw2@infradead.org>
-Message-ID: <5EB39D93-57C0-47AD-B0F3-09AEE643CFBF@infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Aug 2020 13:08:26 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix the LLCC base register size
+In-Reply-To: <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
+References: <20200817040417.11111-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
+Message-ID: <5c8b1664adceab8c600c80058e40cc97@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
+On 2020-08-18 02:42, Doug Anderson wrote:
+> Hi,
+> 
+> On Sun, Aug 16, 2020 at 9:04 PM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> There is only one LLCC logical bank on SC7180 SoC of size
+>> 0x50000(320KB) not 2MB, so correct the size and fix copy
+>> paste mistake from SDM845 which had 4 logical banks.
+> 
+> I guess SDM845 not only has 4 banks but each bank is bigger?  At first
+> I thought "yeah, 4 banks and 4 * 0x5 = 0x20" except that's not true in
+> hex.  ;-)
+> 
 
-On 18 August 2020 08:16:27 BST, Frank Wunderlich <frank-w@public-files=2Ed=
-e> wrote:
->Hi,
->
->i rebased changes to 5=2E9-rc1 [1] and include parts from Davids Series
->in my one=2E
->
->David: is it ok to squash your mali-commit with mine moving the other
->display-related nodes and use me as author?
-=20
-Absolutely=2E Can the U7623 patch go along for the ride too? Was there any=
-thing else you weren't including?
+Hehe, no I didn't mean 0x5 * 4 = 0x20 because I mentioned 320KB and 2MB 
+specifically
+for the same reason in case people think that ;) I just meant that we 
+are correcting
+the copied size from SDM845, but I agree I need to make it clear in the 
+commit msg
+which warrants a V2.
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+> 
+>> Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
+>> Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache 
+>> controller node")
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Without having any documentation ,this seems sane to me.  I guess it
+> doesn't do a whole lot because the driver just reads one register from
+> this whole space (at 0x0003000c bytes off).  So it's just a cleanup,
+> or is it needed to actually fix something?
+> 
+
+No, it is not required to fix any functional problems but is correcting 
+the
+wrong size which I think qualifies for a fixes tag? I don't have a 
+strong opinion
+though, so I can remove the tag if you feel strongly about it.
+
+> ...the fact that there's a status register in the middle of this seems
+> strange, though.  Your commit message makes it sound as if this range
+> is describing the size of the cache itself and then I would think that
+> this was the address range where you could read from the cache memory
+> directly, but that doesn't seem to mesh in my mind with there being a
+> status register.  Hrm.  Am I just confused as usual?
+> 
+
+It's not describing the cache size, it is the LLCC(LLC Controller) 
+register space.
+But I believe that the confusion is because of my commit msg, so I will 
+post a v2
+clearing this with something like below (I have removed the confusing 4 
+banks info
+of SDM845).
+
+"
+There is one LLCC logical bank(LLCC0) on SC7180 SoC and the size of the 
+LLCC0 base
+is 0x50000(320KB) not 2MB, so correct the size and fix copy paste 
+mistake
+carried over from SDM845.
+"
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
