@@ -6,55 +6,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC67DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50C1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB2A020674
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1D28207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597772399;
-	bh=jw0rqgoKOxJjeFzL3PLrNSOLSmVzOndyFsCJBt1RmBE=;
+	s=default; t=1597772405;
+	bh=vhi5iImj5rpc1HCF6tflR5/gmVfFRnZe0Q1H8J1CIQU=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=1y7ius7LpU5wZKmtcAHd5ZnmiAcJ1FhL+LyCl6sJq0o9qK/TDjzcXnVchknB04L3R
-	 yNad+1I63hdRCMk3M7unRU4EwH4E2eW3GEck/8i6D3GiS/YLu5TYDE5YZsMZEVBNPA
-	 8ipnkWQgpzDOzKVJG9nfvRMX4xPOy7XRHamkbdYA=
+	b=gQKzHeQYDtD0Ps38vmKqr8NiWBJFfu4TlaCc5pdShFu7za5HiDdmKMCUFtSayauYI
+	 Xd1DJ/eSjYeF4ZnIvy5pVWYOvCDPG5gwH12E2k8Dy5knRWLDvcHReM5KfbSOIwFw2N
+	 E/IpJKwK9ZakOyMboYUba/u8SAwjZ1upuwajSrK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgHRRj7 (ORCPT
+        id S1727016AbgHRRkF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 13:40:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgHRRj6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:39:58 -0400
+        id S1726716AbgHRRkD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:40:03 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ED2D20738;
-        Tue, 18 Aug 2020 17:39:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B01B20674;
+        Tue, 18 Aug 2020 17:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597772397;
-        bh=jw0rqgoKOxJjeFzL3PLrNSOLSmVzOndyFsCJBt1RmBE=;
+        s=default; t=1597772402;
+        bh=vhi5iImj5rpc1HCF6tflR5/gmVfFRnZe0Q1H8J1CIQU=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=JITDFbdXUSdL3CAO6S6oBsDueJ6T92UpvF2cvgIOiROsih1Att03rFWG8fDHlw8Kr
-         5gt3MWB6+E0LwEoKV+J6QXsnwHozg+mfEoWWSvEb1Q5SEj1klVTkoZKaAbgD8OMGnD
-         3qc8wxSPdiMVAh95d49Qx9j8IJ2vMKLzaQUYDKLo=
-Date:   Tue, 18 Aug 2020 18:39:27 +0100
+        b=W0/tCenkdLxWuq9DuP4pl5WQcneKduqX5eyQEDgaOCxoz2k6PoOjjku4t9ap0FZ1Z
+         wnmqFwEuJ2KJKV3b1BLNA+ZrNPMZEawNR3TQo392nmQ0iDEhCot7Ltbfon5AAV5B8t
+         oIL4zXmPmcaoqD1XW3bn9zNoc3qxPNGBMnLPTBHg=
+Date:   Tue, 18 Aug 2020 18:39:32 +0100
 From:   Mark Brown <broonie@kernel.org>
 To:     heiko@sntech.de, Johan Jonker <jbx6244@gmail.com>
 Cc:     linux-kernel@vger.kernel.org, robh+dt@kernel.org,
         lgirdwood@gmail.com, devicetree@vger.kernel.org,
         sugar.zhang@rock-chips.com, linux-arm-kernel@lists.infradead.org,
         alsa-devel@alsa-project.org, linux-rockchip@lists.infradead.org
-In-Reply-To: <20200818143727.5882-1-jbx6244@gmail.com>
-References: <20200818143727.5882-1-jbx6244@gmail.com>
-Subject: Re: [PATCH v2 1/2] ASoC: rockchip-spdif: add description for rk3308
-Message-Id: <159777235702.24785.2371871958311959848.b4-ty@kernel.org>
+In-Reply-To: <20200815112437.6662-1-jbx6244@gmail.com>
+References: <20200815112437.6662-1-jbx6244@gmail.com>
+Subject: Re: [RFC PATCH v1 1/2] ASoC: rockchip-spdif: add description for rk3308
+Message-Id: <159777235702.24785.6071406092979338870.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Aug 2020 16:37:26 +0200, Johan Jonker wrote:
+On Sat, 15 Aug 2020 13:24:36 +0200, Johan Jonker wrote:
 > A test with the command below shows that the compatible string
 > 
 > "rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
