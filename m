@@ -2,207 +2,106 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156E4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAA8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F263820658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9926A20658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:14:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hCWNi3bG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgHRHKZ (ORCPT
+        id S1726620AbgHRHO0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:10:25 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44036 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726588AbgHRHKV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 03:10:21 -0400
-Received: by mail-oi1-f196.google.com with SMTP id h3so17067002oie.11;
-        Tue, 18 Aug 2020 00:10:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9pWu2reKsehPk8O8QMwZqkq9HDhUpVFSdtfnM5vROwk=;
-        b=AOAqb6NH5LV67MEzG9T8C37bvwcfBSiwRSMZ1V+UPfTmx9O+qduxNIz61FvOnZ44ZB
-         Aq7q7eds/PWj61uqrkEPlZrs4FPmL9+zV8fe6phiuzuAHRkVAHKGhnhrvM0Y7WWQQMYI
-         mX75pHl1NzSuvVXQOR07bU/mFU+pE33sJaLM6SNT7VhaPGeRu3l/VkBOEwiSHUr1Topu
-         D99Pvpr2JVaAq5LszmhnjNF31OyvGvMyM0iRedLQFbJd58q87xq8rH1gJb/xjbsqoHb9
-         sptDa5FzkOQ3L7+asp5O0AHREOKn39sWnG+wg29IyCEbmVk1KMeHjUSGQQQ1iEncTSOM
-         RiYA==
-X-Gm-Message-State: AOAM5319lfDXOk0b/JHaYMQCoLz/miafD+qaeCzdLAB20Pc6277qF2ie
-        BQXGtSt69RO5uxJI0y7VrrTbht89Kh9caACAHus=
-X-Google-Smtp-Source: ABdhPJxlHpP9CutWWQ1WzZHFEX/kpODzKDecPSPVsGDlyQEZuovKBMm9EgyXUP0kzZUH0FPOVGAX2J+x5TrpOAvPnrs=
-X-Received: by 2002:aca:adc4:: with SMTP id w187mr11504104oie.153.1597734619692;
- Tue, 18 Aug 2020 00:10:19 -0700 (PDT)
+        Tue, 18 Aug 2020 03:14:26 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:9786 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726341AbgHRHOZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 03:14:25 -0400
+X-UUID: 639abd32fad742f08779ff6fb81c4d16-20200818
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=V6XxCpPTSlmV62qL2azad6TOR58m4DQS08EIOISEdq4=;
+        b=hCWNi3bGS1TTNBHFXqsWpfZlZiz3rXEyJli0ekQMsb3zuFKECf2eOIO3smMPoF3Bw+tydUa829hikwZPrZi0C8xk1a+RKRgOozJjyMM47I9e0Z1+sDIz7VOdIi2aBw2U62h4xDfbaHDm/lMOtb2YLUi1kwzr3pNJsiFtbbyJ46c=;
+X-UUID: 639abd32fad742f08779ff6fb81c4d16-20200818
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 18934888; Tue, 18 Aug 2020 15:14:17 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 18 Aug 2020 15:14:15 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 18 Aug 2020 15:14:16 +0800
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <vivien.didelot@savoirfairelinux.com>, <matthias.bgg@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <davem@davemloft.net>,
+        <sean.wang@mediatek.com>, <opensource@vdorst.com>,
+        <frank-w@public-files.de>, <dqfext@gmail.com>,
+        Landen Chao <landen.chao@mediatek.com>
+Subject: [PATCH net-next v2 0/7] net-next: dsa: mt7530: add support for MT7531
+Date:   Tue, 18 Aug 2020 15:14:05 +0800
+Message-ID: <cover.1597729692.git.landen.chao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20200807141345.6714-1-geert+renesas@glider.be> <20200817233253.GA1819982@bogus>
-In-Reply-To: <20200817233253.GA1819982@bogus>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 18 Aug 2020 09:10:08 +0200
-Message-ID: <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
-Subject: Re: [PATCH/RFC v2] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+VGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBNVDc1MzEuDQoNCk1UNzUzMSBpcyB0
+aGUgbmV4dCBnZW5lcmF0aW9uIG9mIE1UNzUzMCB3aGljaCBjb3VsZCBiZSBmb3VuZCBvbiBNZWRp
+YXRlaw0Kcm91dGVyIHBsYXRmb3JtcyBzdWNoIGFzIE1UNzYyMiBvciBNVDc2MjkuDQoNCkl0IGlz
+IGFsc28gYSA3LXBvcnRzIHN3aXRjaCB3aXRoIDUgZ2lnYSBlbWJlZGRlZCBwaHlzLCAyIGNwdSBw
+b3J0cywgYW5kDQp0aGUgc2FtZSBNQUMgbG9naWMgb2YgTVQ3NTMwLiBDcHUgcG9ydCA2IG9ubHkg
+c3VwcG9ydHMgU0dNSUkgaW50ZXJmYWNlLg0KQ3B1IHBvcnQgNSBzdXBwb3J0cyBlaXRoZXIgUkdN
+SUkgb3IgU0dNSUkgaW4gZGlmZmVyZW50IEhXIFNLVS4gRHVlIHRvDQpzdXBwb3J0IGZvciBTR01J
+SSBpbnRlcmZhY2UsIHBsbCwgYW5kIHBhZCBzZXR0aW5nIGFyZSBkaWZmZXJlbnQgZnJvbQ0KTVQ3
+NTMwLg0KDQpNVDc1MzEgU0dNSUkgaW50ZXJmYWNlIGNhbiBiZSBjb25maWd1cmVkIGluIGZvbGxv
+d2luZyBtb2RlOg0KLSAnU0dNSUkgQU4gbW9kZScgd2l0aCBpbi1iYW5kIG5lZ290aWF0aW9uIGNh
+cGFiaWxpdHkNCiAgICB3aGljaCBpcyBjb21wYXRpYmxlIHdpdGggUEhZX0lOVEVSRkFDRV9NT0RF
+X1NHTUlJLg0KLSAnU0dNSUkgZm9yY2UgbW9kZScgd2l0aG91dCBpbi1ibmFkIG5lZ290aWF0aW9u
+DQogICAgd2hpY2ggaXMgY29tcGF0aWJsZSB3aXRoIDEwQi84QiBlbmNvZGluZyBvZg0KICAgIFBI
+WV9JTlRFUkZBQ0VfTU9ERV8xMDAwQkFTRVggd2l0aCBmaXhlZCBmdWxsLWR1cGxleCBhbmQgZml4
+ZWQgcGF1c2UuDQotIDIuNSB0aW1lcyBmYXN0ZXIgY2xvY2tlZCAnU0dNSUkgZm9yY2UgbW9kZScg
+d2l0aG91dCBpbi1ibmFkIG5lZ290aWF0aW9uDQogICAgd2hpY2ggaXMgY29tcGF0aWJsZSB3aXRo
+IDEwQi84QiBlbmNvZGluZyBvZg0KICAgIFBIWV9JTlRFUkZBQ0VfTU9ERV8yNTAwQkFTRVggd2l0
+aCBmaXhlZCBmdWxsLWR1cGxleCBhbmQgZml4ZWQgcGF1c2UuDQoNCmNoYW5nZXMgYmV0d2VlbiB2
+MSAmIHYyDQotIGNoYW5nZSBwaHlsaW5rX3ZhbGlkYXRlIGNhbGxiYWNrIGZ1bmN0aW9uIHRvIHN1
+cHBvcnQgZnVsbC1kdXBsZXgNCiAgZ2lnYWJpdCBvbmx5IHRvIG1hdGNoIGhhcmR3YXJlIGNhcGFi
+aWxpdHkuDQotIGFkZCBkZXNjcmlwdGlvbiBvZiBTR01JSSBpbnRlcmZhY2UuDQotIGNvbmZpZ3Vy
+ZSBtdDc1MzEgY3B1IHBvcnQgaW4gZmFzdGVzdCBzcGVlZCBieSBkZWZhdWx0Lg0KLSBwYXJzZSBT
+R01JSSBjb250cm9sIHdvcmQgZm9yIGluLWJhbmQgbmVnb3RpYXRpb24gbW9kZS4NCi0gY29uZmln
+dXJlIFJHTUlJIGRlbGF5IGJhc2VkIG9uIHBoeS5yc3QuDQotIFJlbmFtZSB0aGUgZGVmaW5pdGlv
+biBpbiB0aGUgaGVhZGVyIGZpbGUgdG8gYXZvaWQgcG90ZW50aWFsIGNvbmZsaWN0cy4NCi0gQWRk
+IHdyYXBwZXIgZnVuY3Rpb24gZm9yIG1kaW8gcmVhZC93cml0ZSB0byBzdXBwb3J0IGJvdGggQzIy
+IGFuZCBDNDUuDQotIGNvcnJlY3QgZml4ZWQtbGluayBzcGVlZCBvZiAyNTAwYmFzZS14IGluIGR0
+cy4NCi0gYWRkIE1UNzUzMSBwb3J0IG1pcnJvciBzZXR0aW5nLg0KDQpMYW5kZW4gQ2hhbyAoNyk6
+DQogIG5ldDogZHNhOiBtdDc1MzA6IFJlZmluZSBtZXNzYWdlIGluIEtjb25maWcNCiAgbmV0OiBk
+c2E6IG10NzUzMDogc3VwcG9ydCBmdWxsLWR1cGxleCBnaWdhYml0IG9ubHkNCiAgbmV0OiBkc2E6
+IG10NzUzMDogRXh0ZW5kIGRldmljZSBkYXRhIHJlYWR5IGZvciBhZGRpbmcgYSBuZXcgaGFyZHdh
+cmUNCiAgZHQtYmluZGluZ3M6IG5ldDogZHNhOiBhZGQgbmV3IE1UNzUzMSBiaW5kaW5nIHRvIHN1
+cHBvcnQgTVQ3NTMxDQogIG5ldDogZHNhOiBtdDc1MzA6IEFkZCB0aGUgc3VwcG9ydCBvZiBNVDc1
+MzEgc3dpdGNoDQogIGFybTY0OiBkdHM6IG10NzYyMjogYWRkIG10NzUzMSBkc2EgdG8gbXQ3NjIy
+LXJmYjEgYm9hcmQNCiAgYXJtNjQ6IGR0czogbXQ3NjIyOiBhZGQgbXQ3NTMxIGRzYSB0byBiYW5h
+bmFwaS1icGktcjY0IGJvYXJkDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvZHNhL210
+NzUzMC50eHQgICAgfCAgIDcxICstDQogLi4uL2R0cy9tZWRpYXRlay9tdDc2MjItYmFuYW5hcGkt
+YnBpLXI2NC5kdHMgIHwgICA0NCArDQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2
+MjItcmZiMS5kdHMgIHwgICA1NyArLQ0KIGRyaXZlcnMvbmV0L2RzYS9LY29uZmlnICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgIDYgKy0NCiBkcml2ZXJzL25ldC9kc2EvbXQ3NTMwLmMgICAgICAg
+ICAgICAgICAgICAgICAgfCAxMTg0ICsrKysrKysrKysrKysrKy0tDQogZHJpdmVycy9uZXQvZHNh
+L210NzUzMC5oICAgICAgICAgICAgICAgICAgICAgIHwgIDI1OSArKystDQogNiBmaWxlcyBjaGFu
+Z2VkLCAxNTE0IGluc2VydGlvbnMoKyksIDEwNyBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjE3LjEN
+Cg==
 
-On Tue, Aug 18, 2020 at 1:32 AM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Aug 07, 2020 at 04:13:45PM +0200, Geert Uytterhoeven wrote:
-> > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
-> > documentation to json-schema.
-> >
-> > Document missing properties.
-> > Drop deprecated and obsolete #gpio-range-cells property.
-> > Update the example to match reality.
-> > Drop consumer examples, as they do not belong here.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Still RFC, due to the FIXMEs near the enum descriptions.
-> > If I enable the enums checks, I get e.g.:
-> >
-> >     [[1800]] is not one of [1800, 3300]
-> >
-> > Note the double square brackets around 1800.
-> > The usual error message doesn't have them, e.g.:
-> >
-> >     2000 is not one of [1800, 3300]
-> >
-> > So this looks like a bug in the tooling?
->
-> Yes, we only recently started supporting schemas under
-> 'additionalProperties', but failed to apply fixups.
->
-> I have a fix I'm testing out. I'm bumping the version requirement in
-> 5.10, so I'll make sure it is there.
-
-Thanks, looking forward to it.
-
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
-
-> > +  interrupts-extended:
->
-> Just use 'interrupts' here. 'interrupt-extended' is always magically
-> supported.
-
-Apparently not everywhere...
-
-    Documentation/devicetree/bindings/pinctrl/renesas,pfc.example.dt.yaml:
-pin-controller@e6050000: 'interrupts' is a required property
-
-Hence I kept it in both places, for consistency.
-
-Cfr. https://lore.kernel.org/linux-gpio/CAMuHMdWSPDQBABXZVaPecETbSRsP2yyZXLHiL_+_R2n_-09jRg@mail.gmail.com/
-
-> > +additionalProperties:
-> > +  anyOf:
-> > +    - type: object
-> > +      allOf:
-> > +        - $ref: pincfg-node.yaml#
-> > +        - $ref: pinmux-node.yaml#
-> > +
-> > +      description:
-> > +        Pin controller client devices use pin configuration subnodes (children
-> > +        and grandchildren) for desired pin configuration.
-> > +        Client device subnodes use below standard properties.
-> > +
-> > +      properties:
-> > +        phandle: true
->
-> Once fixed, this won't be necessary.
-
-OK.
-
-> > +        function: true
-> > +        groups: true
-> > +        pins: true
-> > +        bias-disable: true
-> > +        bias-pull-down: true
-> > +        bias-pull-up: true
-> > +        drive-strength:
-> > +          true # FIXME enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of supported values
-> > +          # avb:pins_mdio:drive-strength: [[24]] is not one of [3, 6, 9, 12, 15, 18, 21, 24]
-> > +        power-source:
-> > +          true # FIXME enum: [ 1800, 3300 ]
-> > +          # sd0_uhs:power-source: [[1800]] is not one of [1800, 3300]
-> > +        gpio-hog: true
-> > +        gpios: true
-> > +        input: true
-> > +        output-high: true
-> > +        output-low: true
-> > +
-> > +      additionalProperties: false
-> > +
-> > +    - type: object
-> > +      properties:
-> > +        phandle: true
->
-> For this one, you can just link it back to the first entry:
->
-> - type: object
->   additionalProperties:
->     $ref: "#/additionalProperties/anyOf/0"
-
-Thanks, cool!
-
-> > +examples:
-> > +  - |
-> > +    pfc: pin-controller@e6050000 {
->
-> Because we're been really consistent ( :( ):
->
-> pinctrl@...
-
-Oh, I had never noticed that was added in devicetree-specification-v0.2.pdf.
-Yes, consistency... everything else is *-controller ;-)
-
-Will fix.
-
->
-> > +            compatible = "renesas,pfc-sh73a0";
-> > +            reg = <0xe6050000 0x8000>, <0xe605801c 0x1c>;
-> > +            gpio-controller;
-> > +            #gpio-cells = <2>;
-> > +            gpio-ranges =
-> > +                <&pfc 0 0 119>, <&pfc 128 128 37>, <&pfc 192 192 91>,
-> > +                <&pfc 288 288 22>;
-> > +            interrupts-extended =
-> > +                <&irqpin0 0 0>, <&irqpin0 1 0>, <&irqpin0 2 0>, <&irqpin0 3 0>,
-> > +                <&irqpin0 4 0>, <&irqpin0 5 0>, <&irqpin0 6 0>, <&irqpin0 7 0>,
-> > +                <&irqpin1 0 0>, <&irqpin1 1 0>, <&irqpin1 2 0>, <&irqpin1 3 0>,
-> > +                <&irqpin1 4 0>, <&irqpin1 5 0>, <&irqpin1 6 0>, <&irqpin1 7 0>,
-> > +                <&irqpin2 0 0>, <&irqpin2 1 0>, <&irqpin2 2 0>, <&irqpin2 3 0>,
-> > +                <&irqpin2 4 0>, <&irqpin2 5 0>, <&irqpin2 6 0>, <&irqpin2 7 0>,
-> > +                <&irqpin3 0 0>, <&irqpin3 1 0>, <&irqpin3 2 0>, <&irqpin3 3 0>,
-> > +                <&irqpin3 4 0>, <&irqpin3 5 0>, <&irqpin3 6 0>, <&irqpin3 7 0>;
-> > +            power-domains = <&pd_c5>;
->
-> child and grandchild nodes exercising the above schema and issues would
-> be good here.
-
-Good idea, will add.  I'll probably have to replace the example completely,
-as SH73A0 doesn't support drive-strength and power-source.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
