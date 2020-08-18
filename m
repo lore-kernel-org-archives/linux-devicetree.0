@@ -2,110 +2,152 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D79C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C6CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E54D5207DE
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CE42054F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hbGVRH3B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LBPbIGYQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgHRO5z (ORCPT
+        id S1727086AbgHRPML (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56612 "EHLO
+        Tue, 18 Aug 2020 11:12:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727786AbgHRO5x (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 10:57:53 -0400
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7274BC061342
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 07:57:53 -0700 (PDT)
-Received: by mail-vk1-xa2d.google.com with SMTP id i20so4381584vkk.2
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 07:57:53 -0700 (PDT)
+        with ESMTP id S1726873AbgHRPMJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 11:12:09 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8CACC061389;
+        Tue, 18 Aug 2020 08:12:08 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z18so18602674wrm.12;
+        Tue, 18 Aug 2020 08:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TV7ie8YQzzCwxQWHVrIBTQKXy/oaWTjxbImglzQ6zZQ=;
-        b=hbGVRH3BGMrwNufK6iwkScF4wgv806ZBXZDcJCRIPddAOmGq1Fm5FWiW+VdokAM2/+
-         +w/sFtvsijDh0eHR69yXym0B1iwEHzEHK8Az8EdNtFj0/mTzzi9Iw0FtnpbQ2F7eIIX8
-         voFTbtK4Bux+4SL0ScZh+F4IRH5ehPrmv6wyE=
+        bh=K7rzgcMuhB59uSbGxt2+obmcC2a75JDzO+8IEBPn/20=;
+        b=LBPbIGYQrU0mHziA4nNdl4eE3cXtppYEvfLXZxMFHqUJCC3aPFJcpOX4uJ04qMnssG
+         Ag5clvTZ7KaHp05xI+LCkT46W+mumhbi4uMzTEJ0Zgw7EHw2biiG22cGZvWWi8pxSKUn
+         b+v8CHE4M/CZIj/ImziP2Zwe6Qr+5YWvKJ7VWieX7JGRgV9arfMDfkxkIL/t2jBZldOQ
+         42hgWUG6W+6+Bo9XvCgOGgt9ZRn/D8ze4gVCG8oUASyzK10IQlJx8mGSCfQnykVQkC+J
+         UnF7P+cyJAVXZcDJ/N6ANDnOzFaD1Jc+NLZEKQQKLDOnvlSZiA5g2pYB+cNNfwTlgOBN
+         eWHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TV7ie8YQzzCwxQWHVrIBTQKXy/oaWTjxbImglzQ6zZQ=;
-        b=YLv2ZVzBEa+9ykRXrVZrXZX94kcglBADF0YacEixwLLpyyQGDCHqop4RW+X/j2Fet2
-         12ZUAriY663Hz+L6x2gWN8qZm2xmmVA6x2GmTWKIxA8W+430zE79r7cfjuJxazBA+rkY
-         JJSjv6FBEnWAl9+RAmoo8XBfcR4HoiOiZg7OOc0q0sUpGjZzsslFCNZU6jQEdii0QSWP
-         nx7qJtveyWoIejHOqm9UwfAbjNY/QB3Q0jpXqcGF2nm6ESCe69j5Sln7MvH20i3zWCf3
-         u0W2XXKTxUyO9UWwVvekW2fx+X2MFarE0Nw39L4whlxsqQj0vh6YKmBlz0GdgRvVHHX6
-         GeBQ==
-X-Gm-Message-State: AOAM533pU6T/qtpjAtvTpM/mg+5NDpo02zyMwTdsQmSqGG4+TTPjzM9G
-        Bd9KKn4aSNsnb3A5+uCU0wpIeiakAxCGTw==
-X-Google-Smtp-Source: ABdhPJwnrtoU500xKn9sNkNxoDAWsY7gejcEqvYgenlOIAdJCa87XaA1NtdJLGtHFlkFU9lSrfLLdw==
-X-Received: by 2002:a1f:206:: with SMTP id 6mr12095518vkc.79.1597762670991;
-        Tue, 18 Aug 2020 07:57:50 -0700 (PDT)
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
-        by smtp.gmail.com with ESMTPSA id y17sm4120722vky.49.2020.08.18.07.57.50
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 07:57:50 -0700 (PDT)
-Received: by mail-vk1-f174.google.com with SMTP id 186so4386772vkx.4
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 07:57:50 -0700 (PDT)
-X-Received: by 2002:a1f:a302:: with SMTP id m2mr12131702vke.28.1597762669752;
- Tue, 18 Aug 2020 07:57:49 -0700 (PDT)
+        bh=K7rzgcMuhB59uSbGxt2+obmcC2a75JDzO+8IEBPn/20=;
+        b=er6gUCaHCrHfN1PbVsIjxmS/u6juuPVw8YcHXZ1rhQei1qvymrvY0LoBlXPFz/wYo5
+         qLHeJHbaQBeEVDDKvvqWLvVJVhlvf/tZLTBKWY3grYOqLwI3ZLr8Tbz295tHgmLB31E9
+         FY01AqHCHepiFb+Yj3y/G8GhmYt6fu15DNr+g8dHCwvrwS1MRt+5H5fJ2Ds5YKQKFK2z
+         qNX48zIo2MkiElVW/2YWiQ/ANYnjBPIIUQ5NU2l0GS1dD5SNN7zIy3ehEc8xCv80wdmJ
+         jQeGB+fZkIECnPs8OkQrqqtTCz5vqX4qCvkLVdXqti0lZ3IMMLLVGFfbDR/6z0fgKYRv
+         HSKg==
+X-Gm-Message-State: AOAM533V3dug9xAmRBQwqE9AVnkunX+rnXM82IBoDpEVW4kDfYGIaT1l
+        NBqr53N2HhJxfMwWYtkQXRdFCQabFEiX0gkoWoA=
+X-Google-Smtp-Source: ABdhPJwKdzwEohL5E9SDLCVg0q8nhvUN8RMpxHE73jN/E0C6arJhxxGXiKWPU1nLKhzAjKAWQrer6Yss9Q2RQ13N+mU=
+X-Received: by 2002:adf:f485:: with SMTP id l5mr19243697wro.147.1597763527343;
+ Tue, 18 Aug 2020 08:12:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200818145514.16262-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <20200818145514.16262-1-saiprakash.ranjan@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 18 Aug 2020 07:57:38 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vzk=qkemLRU3gaZ1K4P-9=tMqB+HUoGCQL4Zxv6q8XFQ@mail.gmail.com>
-Message-ID: <CAD=FV=Vzk=qkemLRU3gaZ1K4P-9=tMqB+HUoGCQL4Zxv6q8XFQ@mail.gmail.com>
-Subject: Re: [PATCHv2] arm64: dts: qcom: sc7180: Fix the LLCC base register size
+References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org> <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
+In-Reply-To: <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 18 Aug 2020 08:12:53 -0700
+Message-ID: <CAF6AEGvDN2B-xxecOt+0aaweWohGSKekb3tCerX42T1eOte-ig@mail.gmail.com>
+Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
 To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm-owner@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-
-On Tue, Aug 18, 2020 at 7:55 AM Sai Prakash Ranjan
+On Tue, Aug 18, 2020 at 3:03 AM Sai Prakash Ranjan
 <saiprakash.ranjan@codeaurora.org> wrote:
 >
-> There is one LLCC logical bank(LLCC0) on SC7180 SoC and the
-> size of the LLCC0 base is 0x50000(320KB) not 2MB, so correct
-> the size and fix copy paste mistake carried over from SDM845.
+> Hi,
 >
-> Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
-> Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache controller node")
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
+> On 2020-06-01 16:33, Krishna Manikandan wrote:
+> > Define shutdown callback for display drm driver,
+> > so as to disable all the CRTCS when shutdown
+> > notification is received by the driver.
+> >
+> > This change will turn off the timing engine so
+> > that no display transactions are requested
+> > while mmu translations are getting disabled
+> > during reboot sequence.
+> >
+> > Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+> >
+> > Changes in v2:
+> >       - Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
+> >       - Change commit text to reflect when this issue
+> >         was uncovered (Sai Prakash Ranjan)
+> > ---
+> >  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/msm_drv.c
+> > b/drivers/gpu/drm/msm/msm_drv.c
+> > index e4b750b..94e3963 100644
+> > --- a/drivers/gpu/drm/msm/msm_drv.c
+> > +++ b/drivers/gpu/drm/msm/msm_drv.c
+> > @@ -1322,6 +1322,13 @@ static int msm_pdev_remove(struct
+> > platform_device *pdev)
+> >       return 0;
+> >  }
+> >
+> > +static void msm_pdev_shutdown(struct platform_device *pdev)
+> > +{
+> > +     struct drm_device *drm = platform_get_drvdata(pdev);
+> > +
+> > +     drm_atomic_helper_shutdown(drm);
+> > +}
+> > +
+> >  static const struct of_device_id dt_match[] = {
+> >       { .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
+> >       { .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
+> > @@ -1334,6 +1341,7 @@ static int msm_pdev_remove(struct platform_device
+> > *pdev)
+> >  static struct platform_driver msm_platform_driver = {
+> >       .probe      = msm_pdev_probe,
+> >       .remove     = msm_pdev_remove,
+> > +     .shutdown   = msm_pdev_shutdown,
+> >       .driver     = {
+> >               .name   = "msm",
+> >               .of_match_table = dt_match,
 >
-> Changes in v2:
->  * Edit commit msg to remove confusing references (Doug).
->
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Any more comments on this patch?
 
-I can't validate against any datasheets, but it does what it says and
-seems sane.
+sorry, I managed to overlook this earlier.. I've pulled it in to msm-next
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+BR,
+-R
+
+> Thanks,
+> Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member
+> of Code Aurora Forum, hosted by The Linux Foundation
