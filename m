@@ -3,77 +3,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263AFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01777C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B6D2067C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3F12075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbgHRIi6 (ORCPT
+        id S1726569AbgHRI62 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:38:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:40951 "EHLO mga07.intel.com"
+        Tue, 18 Aug 2020 04:58:28 -0400
+Received: from muru.com ([72.249.23.125]:40720 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgHRIi6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 04:38:58 -0400
-IronPort-SDR: ThzcvRNih6gaZ+ZVlV8r/mVbMjXo1qVlBh0zH/UJs0eqC403X+Hr6MpDqttOvtfUlD3z5us0YW
- sEWCICRARk4w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="219178879"
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="219178879"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 01:38:57 -0700
-IronPort-SDR: hW1dBlOMun3XElEII6JR+7rP79PhsMX9IakJeaErX+ZQLz/ddxkdALzHL0MhlRrgKuUms+r7FX
- J3AkbfoOGHLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="326667846"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2020 01:38:54 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1k7x8u-009biL-Ep; Tue, 18 Aug 2020 11:38:52 +0300
-Date:   Tue, 18 Aug 2020 11:38:52 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-Subject: Re: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
-Message-ID: <20200818083852.GC1891694@smile.fi.intel.com>
-References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
+        id S1726424AbgHRI61 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:58:27 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 317F7810D;
+        Tue, 18 Aug 2020 08:58:25 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 11:58:53 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Adam Ford <aford173@gmail.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Adam Ford-BE <aford@beaconembedded.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+Message-ID: <20200818085853.GO2994@atomide.com>
+References: <20200817133931.11785-1-aford173@gmail.com>
+ <20200817215953.59607c11@aktux>
+ <CAHCN7x+2trMJPmg1xA_j2EUfxqtZX0da-pyzvpiZE4GanVNf4Q@mail.gmail.com>
+ <20200817221532.5d150648@aktux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200817221532.5d150648@aktux>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 01:48:59PM +0800, Rahul Tanwar wrote:
-> Patch 1 adds dt binding document in YAML format.
-> Patch 2 add PWM fan controller driver for LGM SoC.
+* Andreas Kemnade <andreas@kemnade.info> [200817 20:15]:
+> On Mon, 17 Aug 2020 15:02:27 -0500
+> Adam Ford <aford173@gmail.com> wrote:
 > 
-> v7:
-> - Address code quality related review concerns.
-> - Rename fan related property to pwm-*.
-> - Fix one make dt_binding_check reported error.
+> > On Mon, Aug 17, 2020 at 2:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
+> > >
+> > > On Mon, 17 Aug 2020 08:39:31 -0500
+> > > Adam Ford <aford173@gmail.com> wrote:
+> > >  
+> > > > The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+> > > > depending on commercial or industrial temperature ratings.
+> > > >
+> > > > This patch expands the thermal information to include the limits of 90
+> > > > and 105C for alert and critical.  It sets the coolings-cells for the
+> > > > 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
+> > > >
+> > > > For boards who never use industrial temperatures, these can be
+> > > > changed on their respective device trees with something like:
+> > > >
+> > > > &cpu_alert0 {
+> > > >       temperature = <85000>; /* millicelsius */
+> > > > };
+> > > >
+> > > > &cpu_crit {
+> > > >       temperature = <90000>; /* millicelsius */
+> > > > };
 
-I guess it misses the answer why pwm-fan can't be integrated into the soup?
+I think you should set the lower temperatures by default and have
+only the boards known to work with higher values configure them as
+needed.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > > > OMAP3_THERMAL will need to be enabled.  It is off by default.
+> > > >  
+> > > hmm, I think the patch for idling core when OMAP3_THERMAL is enabled
+> > > got stuck somewhere. It still seems not to work. Shouldn't that patch
+> > > be applied first?  
+> > 
+> > I rebased the idle stuff, and now I get errors, so I haven't pushed it
+> > yet.  I put a note that OMAP3_THERMAL is off by default, but this
+> > patch would at least get the framing in there.  I know at least two of
+> > us that use 1GHZ processors which are not supposed to run at that
+> > speed above 90MHz, so the idea was to tolerate the higher current for
+> > now, and when the idle stuff works, we'll enable the OMAP3_THERMAL by
+> > default.
+> > 
+> yes, makes sense, so with this patch we have the choice to either
+> optimize for low speeds and currents (by disabling OMAP3_THERMAL and
+> 1GHz) or high speeds (by enabling OMAP3_THERMAL and 1 Ghz).
 
+Maybe add something like that to the patch description too?
 
+Regards,
+
+Tony
