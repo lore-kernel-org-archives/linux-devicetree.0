@@ -2,146 +2,163 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26ED0C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 21:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63785C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0138E2075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 21:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4582075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="o245Zjj9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b0VdabeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHRV4l (ORCPT
+        id S1726819AbgHRWDJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 17:56:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        Tue, 18 Aug 2020 18:03:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726366AbgHRV4k (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 17:56:40 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A74C061389
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 14:56:40 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id k4so18976714ilr.12
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 14:56:40 -0700 (PDT)
+        with ESMTP id S1726482AbgHRWDH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 18:03:07 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67500C061389
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:03:06 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id a24so19293771oia.6
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:03:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wLY7DKEY5wW7mQXQ8oT/iCnE/ovDXCbzyVbqbcCsqrg=;
-        b=o245Zjj9rVaHE17kBt0+ISQkbkR8B9Y4RqLLw8KMd3Oj/rpXV3dsGPkIzfl/PGnOyh
-         JjeH8o28tlxyUfV0f9Dp3xOpzTMm6+G7+m+rmRHDyX51yVHKZsOjBYO0LYzblIEdkcsd
-         u64SX9CWMMf93vL46Mye0L+gNb3jPcqkIBFsaGySdt7n0OHHi6kpLrekftbY/+WOip1I
-         Z/cwafgW3xhQTmRRi5XeqYIbR73D5y26qV3ufJXoKi7aETBf9sHW+cpagXqBA+manizS
-         c/xEVmZgo6zABLwoLWWKS68gyC84vHl3aVTXA1w7SGZjBtYQH+fB5JC882c3ZU9IToYT
-         PRHQ==
+        bh=diQpwa3braoDFIWAByVDgaoQfS004fXuMypoBUCVdtk=;
+        b=b0VdabeT3wDVIbsWC3+UUFu/XIeQMDjK+Xkxa9ATJN7g6hRVTbi7XDjpV5TPaXfGmT
+         wCslWgKlUXSyClpdNtyCqXZhL8SHL1wLFyVVbHWqLxWhH354vCXo69U7GQLCdiGKgJTk
+         qsn7lgRuF4gN2odTDj14Cj6eeH9USU6CdxJdFtpXQsbmo9fA7Bzxyr8zqr4Tho5Mlacg
+         NNBUaVOoobOAL4BO/aK64cIbDncboXoxOXNIwdZS7zVuFJy7fVFc5rfAYnrB5O8feCmD
+         xIq+FyJqN/khbmBqaIvmo3ds1WTecSqZPFQhBYfsn8tMHwNAklxW5j52iXCStxFayCQ8
+         JtwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wLY7DKEY5wW7mQXQ8oT/iCnE/ovDXCbzyVbqbcCsqrg=;
-        b=WGrRacgob+T/v4hDWE5IXygU6zxFCGYnsA7s+f2PS0yF0aGRyFDWoYNrKnzVNQCP8K
-         N3gn955vSx/PNrxonyUj1odEhl3MLUoMve0dqDVpzIF8v5Xhn9fgLRs4PkyYdJYH6NI2
-         Sp9vYr25stVLmr9skJHW341VXo+DPr3wKQLtia6rREPTd2T9NJfHN+6wer6wy2XcEpfS
-         YhnaIJNSxZG1ZAPGKVmfB4AOW4BvUAHL8NZ+7Odsb7G282OL+teUKNWyikS4y1++ism5
-         3JOsw0Ct/rlNqyEgcQ/bhQqarx/jghCCYAcOoNbniLBYs2yPn2dnx5cx49kk7Wx47H8x
-         cDyA==
-X-Gm-Message-State: AOAM531GoV+YnITKptLbD8z8zwA+TYLqwhye2h17EABXTTE75osnFjL1
-        /rKFdSZdzxwfwxA8fGQDRfaChEWeLMlz8NvoDwxD
-X-Google-Smtp-Source: ABdhPJz+t0uijQIrgkWnhHij+U7BRA+/bic5/ZM1A/Hs7Vp04xXMnYU5YB2mLmG/uezMT4PcjxLTTnZZNZXpr8kj//4=
-X-Received: by 2002:a92:c50e:: with SMTP id r14mr7730786ilg.161.1597787798059;
- Tue, 18 Aug 2020 14:56:38 -0700 (PDT)
+        bh=diQpwa3braoDFIWAByVDgaoQfS004fXuMypoBUCVdtk=;
+        b=c5qH/yx640yUZGnX5i/4GLCcP/mpnc/HVkG3VpMso86D/2sUxqUcErt95/q/TFM9c2
+         BCqmP7A9ulSjBMtC5ry++b1VLkntkVKZpGKD4equ2iYBCvWGtx3QZ6JCsbpIWwp0wsJv
+         cvVpMKnIDYC4PaJziVb5GKDIWYjzW2dbrzQ3ro2VkuOImhTWjMYYMmw+lY++tXDJujq2
+         Dk4O50tG6eRPFQReVM8BsqATcIevl9AKpP0zl9GrY/j0O+sgSixbwQ4O+Iswr3Rj3KAm
+         fqfUhIX3Udwf995FdDhR3BE5jcsmNS6ElKDoKDKc+0fBJ5yQdgLEuhLxhIbMPuUiAXa7
+         IwFw==
+X-Gm-Message-State: AOAM531JsJ/8HZEAo67DWKTfTeaxAzJcHg6hPv69/+6KFjOgZL99oiF6
+        Oma+TET7iE2/mxy+5VyGQ1/SDMAWjCkBLwc+CDrniA==
+X-Google-Smtp-Source: ABdhPJyGzE0nx7m/2KMeb3GHpmBH6vjSg1G7xFIBMVTmsTi1vQDYWMmdQoiFgnNFFNSMKmEyMesrHuoEyoSXZV5UF2Y=
+X-Received: by 2002:aca:dc85:: with SMTP id t127mr1404925oig.169.1597788185528;
+ Tue, 18 Aug 2020 15:03:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200818124815.11029-1-vaishnav@beagleboard.org> <d53f0014-db7c-902c-70c7-eacac41cc6ed@gmail.com>
-In-Reply-To: <d53f0014-db7c-902c-70c7-eacac41cc6ed@gmail.com>
-From:   Vaishnav M A <vaishnav@beagleboard.org>
-Date:   Wed, 19 Aug 2020 03:26:27 +0530
-Message-ID: <CALudOK5GaApck7jVZnLeuF=srBPVkw6GUkgZ4cYRX0oWHQXF7w@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] mikroBUS driver for add-on boards
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>, arnd@arndb.de,
-        johan@kernel.org, elder@kernel.org,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        robh@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Drew Fustini <drew@beagleboard.org>,
-        Robert Nelson <robertcnelson@beagleboard.org>,
-        =?UTF-8?Q?Ivan_Rajkovi=C4=87?= <rajkovic@mikroe.com>,
-        chrisfriedt@gmail.com, zoran.stojsavljevic@gmail.com
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
+ <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com> <20200818172909.71f5243a@coco.lan>
+ <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
+In-Reply-To: <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 18 Aug 2020 15:02:54 -0700
+Message-ID: <CALAqxLXBYvwZ9kiKSGBeO5f-eKi2DD14QtoZgFGyGd-B7EOPQA@mail.gmail.com>
+Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
+        Wei Xu <xuwei5@hisilicon.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Suzhuangluan <suzhuangluan@hisilicon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 2:08 AM Frank Rowand <frowand.list@gmail.com> wrote:
+On Tue, Aug 18, 2020 at 9:26 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> On 2020-08-18 16:29, Mauro Carvalho Chehab wrote:
+> > Em Tue, 18 Aug 2020 15:47:55 +0100
+> > Basically, the DT binding has this, for IOMMU:
+> >
+> >
+> >       smmu_lpae {
+> >               compatible = "hisilicon,smmu-lpae";
+> >       };
+> >
+> > ...
+> >       dpe: dpe@e8600000 {
+> >               compatible = "hisilicon,kirin970-dpe";
+> >               memory-region = <&drm_dma_reserved>;
+> > ...
+> >               iommu_info {
+> >                       start-addr = <0x8000>;
+> >                       size = <0xbfff8000>;
+> >               };
+> >       }
+> >
+> > This is used by kirin9xx_drm_dss.c in order to enable and use
+> > the iommu:
+> >
+> >
+> >       static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
+> >       {
+> >               struct device *dev = NULL;
+> >
+> >               dev = &pdev->dev;
+> >
+> >               /* create iommu domain */
+> >               ctx->mmu_domain = iommu_domain_alloc(dev->bus);
+> >               if (!ctx->mmu_domain) {
+> >                       pr_err("iommu_domain_alloc failed!\n");
+> >                       return -EINVAL;
+> >               }
+> >
+> >               iommu_attach_device(ctx->mmu_domain, dev);
+> >
+> >               return 0;
+> >       }
+> >
+> > The only place where the IOMMU domain is used is on this part of the
+> > code(error part simplified here) [1]:
+> >
+> >       void hisi_dss_smmu_on(struct dss_hw_ctx *ctx)
+> >       {
+> >               uint64_t fama_phy_pgd_base;
+> >               uint32_t phy_pgd_base;
+> > ...
+> >               fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
+> >               phy_pgd_base = (uint32_t)fama_phy_pgd_base;
+> >               if (WARN_ON(!phy_pgd_base))
+> >                       return;
+> >
+> >               set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
+> >       }
+> >
+> > [1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
+> >
+> > In other words, the driver needs to get the physical address of the frame
+> > buffer (mapped via iommu) in order to set some DRM-specific register.
+> >
+> > Yeah, the above code is somewhat hackish. I would love to replace
+> > this part by a more standard approach.
 >
-> Hi Vaishnav,
->
-> +me +devicetree
->
-> Please add these two recipients to future versions.
->
-> I will comment more after reading the first version and v2.
->
-> -Frank
->
-Hi Frank,
+> OK, so from a quick look at that, my impression is that your display
+> controller has its own MMU and you don't need to pretend to use the
+> IOMMU API at all. Just have the DRM driver use io-pgtable directly to
+> run its own set of ARM_32_LPAE_S1 pagetables - see Panfrost for an
+> example (but try to ignore the wacky "Mali LPAE" format).
 
-Sorry, I missed to run get_maintainer.pl after making the changes
-will add both recipients in future versions.
+Yea. For the HiKey960, there was originally a similar patch series but
+it was refactored out and the (still out of tree) DRM driver I'm
+carrying doesn't seem to need it (though looking we still have the
+iommu_info subnode in the dts that maybe needs to be cleaned up).
 
-Thanks and Regards,
-Vaishnav M A
->
-> On 2020-08-18 07:48, Vaishnav M A wrote:
-> > Hi,
-> >
-> > This Patch series is an update to the mikroBUS driver
-> > RFC v1 Patch : https://lkml.org/lkml/2020/7/24/518 .
-> > The mikrobus driver is updated to add mikrobus ports from device-tree
-> > overlays, the debug interfaces for adding mikrobus ports through sysFS
-> > is removed, and the driver considers the extended usage of mikrobus
-> > port pins from their standard purposes.
-> >
-> > change log:
-> >         v2: support for adding mikroBUS ports from DT overlays,
-> >         remove debug sysFS interface for adding mikrobus ports,
-> >         consider extended pin usage/deviations from mikrobus standard
-> >         specifications,
-> >         use greybus CPort protocol enum instead of new protcol enums
-> >         Fix cases of wrong indendation, ignoring return values, freeing
-> >         allocated resources in case of errors and other style suggestions
-> >         in v1 review.
-> >
-> > Vaishnav M A (3):
-> >   add mikrobus descriptors to greybus_manifest
-> >   mikroBUS driver for add-on boards on mikrobus ports
-> >   Add Device Tree Bindings for mikroBUS port
-> >
-> >  .../bindings/misc/linux,mikrobus.txt          |  81 ++
-> >  MAINTAINERS                                   |   6 +
-> >  drivers/misc/Kconfig                          |   1 +
-> >  drivers/misc/Makefile                         |   1 +
-> >  drivers/misc/mikrobus/Kconfig                 |  16 +
-> >  drivers/misc/mikrobus/Makefile                |   7 +
-> >  drivers/misc/mikrobus/mikrobus_core.c         | 692 ++++++++++++++++++
-> >  drivers/misc/mikrobus/mikrobus_core.h         | 191 +++++
-> >  drivers/misc/mikrobus/mikrobus_manifest.c     | 444 +++++++++++
-> >  drivers/misc/mikrobus/mikrobus_manifest.h     |  21 +
-> >  drivers/misc/mikrobus/mikrobus_port.c         | 171 +++++
-> >  include/linux/greybus/greybus_manifest.h      |  47 ++
-> >  12 files changed, 1678 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/linux,mikrobus.txt
-> >  create mode 100644 drivers/misc/mikrobus/Kconfig
-> >  create mode 100644 drivers/misc/mikrobus/Makefile
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_core.c
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_core.h
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.c
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.h
-> >  create mode 100644 drivers/misc/mikrobus/mikrobus_port.c
-> >
->
+thanks
+-john
