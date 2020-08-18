@@ -2,149 +2,93 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D02C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC76C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55E442076E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4573A207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="eRd8YUFX"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="v5eu+Mpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgHRHi3 (ORCPT
+        id S1726403AbgHRHnG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:38:29 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:59353 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726302AbgHRHi2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:38:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597736308; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=oBlBFLNCfpm1tApUYPpLjT+H0f58c4Dojdn1tDV42qA=;
- b=eRd8YUFXBXF/4ff48m3/MzzAUz0nNrluMUFfG88XRipNISo29qsTFw4GzyfZDZ7lL1GJHdN+
- nzJjvMHxbGM2+yk0TlPM2eENIOVQ7dGxI+BOk3g6WUIQCUBXLh8H3RP0mugf2xHk4n5y+gte
- Wzz0loGQqODb4QlOU1snjLr4qP0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n10.prod.us-east-1.postgun.com with SMTP id
- 5f3b8573ba4c2cd36742c78d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 07:38:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D7369C433CB; Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5E2EBC433CB;
-        Tue, 18 Aug 2020 07:38:26 +0000 (UTC)
+        Tue, 18 Aug 2020 03:43:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbgHRHnE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 03:43:04 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A6AC061389
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 00:43:04 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id i6so14471627edy.5
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 00:43:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=5HsyZsoKjm060rvDSEtMkPqgnArr4sh0YC0G60nxwEw=;
+        b=v5eu+Mpm72068/lOHhmx+7+0snWUwsS2OSm5rafXvyvPclnxkdYaV6VTnwuHnqT5DV
+         GmirRi54+eP+YFIoHPvyP4IpPf7HMMrBjAsCe4bs1AjABFEvi3qh874d4csbTc+hxEJy
+         eTcpzkC+98sfmDYq7lSn2MX2yGNWMhMObIeVUzmIf2wXj9pfC8GlzHAtIJs8zHEFP+Ad
+         4YH4/Ua1psV7m15UBDEUHD7xNIzqnO7wJYmhMkWbxn5YEQ3XArtbs7dHMHrwLlUK1H79
+         Nc8AY3sxMYBYhln0fupsphsBdLbHEa6ym8FgJxH+A1RmUUp5xTgth+NqLHonMJHZw9NP
+         jkCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=5HsyZsoKjm060rvDSEtMkPqgnArr4sh0YC0G60nxwEw=;
+        b=aeMhYjcUfnKb3wLvehdXoIVO+iWuBgohjVNzcDOAcedvUY/DVPEEj0vXPh8YOtY/uD
+         ohEOu1mnUHCn9is54yZK4HLN2UN6b6AT55VVErJtcHmPEHPuEQwRPUxq6F647OFzBcd2
+         AloWTeogH1u+iY09fgonjEfMGVpG9ZAMNT8ys8z/BnJPg1zdSvVfT0UUSDsjOUUBkN1a
+         RbFKYVNdXfPSjt5cU/01L/znM8tuMyepmvGVxt3+mhkXiO18EDd86RGb0n6qNANnwxev
+         WPV9tnanz5PautzgGmP8U76AdEqP9rzdF4Ih82fzaRMMxmlf9tTFDJrPyk+xqpOwRv6s
+         /3Og==
+X-Gm-Message-State: AOAM530aEwdcPn3sZ4qe/O5FyrVGTLsa2sHyofui8FMqwp6FlwJZJ4IH
+        yJ5RsKzl5HOOvgC20fVH05g5Yg==
+X-Google-Smtp-Source: ABdhPJw/ZcBmsBkk7fscjG6qs6aeBLDcAopNw9zkaXwYznIwnEFTqjWTKbfCdy30cuwEP95Pq2wv/g==
+X-Received: by 2002:a05:6402:13d4:: with SMTP id a20mr19029089edx.161.1597736582979;
+        Tue, 18 Aug 2020 00:43:02 -0700 (PDT)
+Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.gmail.com with ESMTPSA id h16sm15569920ejf.120.2020.08.18.00.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 00:43:02 -0700 (PDT)
+References: <20200817102122.434-1-linux.amoon@gmail.com> <20200817102122.434-2-linux.amoon@gmail.com> <CAFBinCCYgm83Vs+dq6G4+1wv7T=S0mzt=gtLaHDfgBrCeRkk5A@mail.gmail.com> <CANAwSgTqAEyKFFan=opdF3MLtvkwj5MZ=oEizjeZNEfhL8ZzKA@mail.gmail.com> <CANAwSgTq+4KQJJLJPxV+afAYiqfpJ_JvwdJHn4sf5NVJgedbUQ@mail.gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.3
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH v2 1/3] arm64: dts: meson-g12b-odroid-n2: Enable RTC controller node
+In-reply-to: <CANAwSgTq+4KQJJLJPxV+afAYiqfpJ_JvwdJHn4sf5NVJgedbUQ@mail.gmail.com>
+Date:   Tue, 18 Aug 2020 09:43:01 +0200
+Message-ID: <1j1rk4flh6.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Aug 2020 13:08:26 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Fix the LLCC base register size
-In-Reply-To: <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
-References: <20200817040417.11111-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=VVeoqOsVzJiCxjYTpJc8JX4Qx3vB+0evzp8oMdYsRZvQ@mail.gmail.com>
-Message-ID: <5c8b1664adceab8c600c80058e40cc97@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
 
-On 2020-08-18 02:42, Doug Anderson wrote:
-> Hi,
-> 
-> On Sun, Aug 16, 2020 at 9:04 PM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> There is only one LLCC logical bank on SC7180 SoC of size
->> 0x50000(320KB) not 2MB, so correct the size and fix copy
->> paste mistake from SDM845 which had 4 logical banks.
-> 
-> I guess SDM845 not only has 4 banks but each bank is bigger?  At first
-> I thought "yeah, 4 banks and 4 * 0x5 = 0x20" except that's not true in
-> hex.  ;-)
-> 
+>> > >
+>> > > +&i2c3 {
+>> > > +       pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
+>> > > +       pinctrl-1 = <&tdm_c_din3_a_pins>;
+>
+> Note: without setting this *pinctrl-1* configuration RTC wake up
+> feature works as expected.
 
-Hehe, no I didn't mean 0x5 * 4 = 0x20 because I mentioned 320KB and 2MB 
-specifically
-for the same reason in case people think that ;) I just meant that we 
-are correcting
-the copied size from SDM845, but I agree I need to make it clear in the 
-commit msg
-which warrants a V2.
-
-> 
->> Fixes: 7cee5c742899 ("arm64: dts: qcom: sc7180: Fix node order")
->> Fixes: c831fa299996 ("arm64: dts: qcom: sc7180: Add Last level cache 
->> controller node")
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Without having any documentation ,this seems sane to me.  I guess it
-> doesn't do a whole lot because the driver just reads one register from
-> this whole space (at 0x0003000c bytes off).  So it's just a cleanup,
-> or is it needed to actually fix something?
-> 
-
-No, it is not required to fix any functional problems but is correcting 
-the
-wrong size which I think qualifies for a fixes tag? I don't have a 
-strong opinion
-though, so I can remove the tag if you feel strongly about it.
-
-> ...the fact that there's a status register in the middle of this seems
-> strange, though.  Your commit message makes it sound as if this range
-> is describing the size of the cache itself and then I would think that
-> this was the address range where you could read from the cache memory
-> directly, but that doesn't seem to mesh in my mind with there being a
-> status register.  Hrm.  Am I just confused as usual?
-> 
-
-It's not describing the cache size, it is the LLCC(LLC Controller) 
-register space.
-But I believe that the confusion is because of my commit msg, so I will 
-post a v2
-clearing this with something like below (I have removed the confusing 4 
-banks info
-of SDM845).
-
-"
-There is one LLCC logical bank(LLCC0) on SC7180 SoC and the size of the 
-LLCC0 base
-is 0x50000(320KB) not 2MB, so correct the size and fix copy paste 
-mistake
-carried over from SDM845.
-"
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+As pointed out by Martin, the pinctrl-1 here makes no sense for RTC on
+i2c. If the rtc is on an I2C of AO bank, the pinctrl-0 is likely to be
+wrong as well.
