@@ -2,127 +2,92 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8659C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 12:16:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 333F6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 12:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1CC3206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 12:16:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC12020639
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 12:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597753850;
+	bh=eHNv9FdwsK7uVxIPYmdOittfWJ5rJzEkrVPozM1SQu4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ND7Ao3+hUOcbUshqS3zOC6ShI/Y31tESAgm+hKmaKHRKIXB4PYJOVhRySTCdXq7QB
+	 ytrfvegfV9J7IOyYQOuHRMD91rQLJDj29ePzhoqka4nIBUrgknZCGCfvjYLwt12Jpu
+	 Hn6qq/BZIqITl0nxrxMf/DvA2hYrgmQCxvRkYfi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgHRMQr (ORCPT
+        id S1726696AbgHRMar (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 08:16:47 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55021 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgHRMQq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 08:16:46 -0400
-X-Originating-IP: 2.224.242.101
-Received: from uno.lan (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 45BF76000C;
-        Tue, 18 Aug 2020 12:16:42 +0000 (UTC)
-From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
-To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        laurent.pinchart@ideasonboard.com,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH 3/3] dt-bindings: media: ov772x: Document endpoint props
-Date:   Tue, 18 Aug 2020 14:20:12 +0200
-Message-Id: <20200818122012.37956-4-jacopo+renesas@jmondi.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
+        Tue, 18 Aug 2020 08:30:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726635AbgHRMar (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 08:30:47 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BDD72065D;
+        Tue, 18 Aug 2020 12:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597753846;
+        bh=eHNv9FdwsK7uVxIPYmdOittfWJ5rJzEkrVPozM1SQu4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SKcxKtnJrC7cXoPgNbvfatsTcUqQhXRNKGPXtOc0RgH4w9KY00FBZqzp1j8kQ2QZw
+         ZzBaqCkEH4QbKmE2zV4HIk0defjdZ64vYVLhewYYIeqY7p994IAwXa/3ppqOTMNNGd
+         nMguyU5y+4CN7DYElJUpDnrUftjA7P8DWV1/7Uv4=
+Date:   Tue, 18 Aug 2020 13:30:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, devicetree@vger.kernel.org,
+        alsa-devel@alsa-project.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        sugar.zhang@rock-chips.com, linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RFC PATCH v1 1/2] ASoC: rockchip-spdif: add description for
+ rk3308
+Message-ID: <20200818123015.GA5344@sirena.org.uk>
+References: <20200815112437.6662-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
+Content-Disposition: inline
+In-Reply-To: <20200815112437.6662-1-jbx6244@gmail.com>
+X-Cookie: Ma Bell is a mean mother!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document endpoint properties for the parallel bus type and
-add them to the example.
 
-Specify a few constraints:
-- If the bus type is BT.656 no hsync or vsycn polarities can be
-  specified.
-- If the bus width is 10 bits, not data-shift can be applied.
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- .../devicetree/bindings/media/i2c/ov772x.yaml | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
+On Sat, Aug 15, 2020 at 01:24:36PM +0200, Johan Jonker wrote:
+> A test with the command below shows that the compatible string
+>=20
+> "rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-index 75dad40f70cc..3fad5dffd19a 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-@@ -50,9 +50,47 @@ properties:
-           bus-type:
-             enum: [5, 6]
+This doesn't apply against current code, please check and resend.
 
-+          bus-width:
-+            enum: [8, 10]
-+            default: 10
-+
-+          data-shift:
-+            enum: [0, 2]
-+            default: 0
-+
-+          hsync-active:
-+            enum: [0, 1]
-+            default: 1
-+
-+          vsync-active:
-+            enum: [0, 1]
-+            default: 1
-+
-+          pclk-sample:
-+            enum: [0, 1]
-+            default: 1
-+
-           remote-endpoint:
-             description: A phandle to the bus receiver's endpoint node.
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-+        allOf:
-+          - if:
-+              properties:
-+                bus-type:
-+                  const: 6
-+            then:
-+                properties:
-+                  hsync-active: false
-+                  vsync-active: false
-+
-+          - if:
-+              properties:
-+                bus-width:
-+                  const: 10
-+            then:
-+                properties:
-+                  data-shift:
-+                    const: 0
-         required:
-           - bus-type
+-----BEGIN PGP SIGNATURE-----
 
-@@ -82,6 +120,11 @@ examples:
-             port {
-                 ov772x_0: endpoint {
-                     bus-type = <5>;
-+                    vsync-active = <0>;
-+                    hsync-active = <0>;
-+                    pclk-sample = <0>;
-+                    bus-width = <8>;
-+                    data-shift = <0>;
-                     remote-endpoint = <&vcap1_in0>;
-                 };
-             };
---
-2.27.0
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl87ydcACgkQJNaLcl1U
+h9ATqAf+Kw1JpgjNUlPGU5ePMTxIX88Ulj71aDatZmH8W/yzzfj7Lq5d1Rd2SDTC
+e7WeRvDuKmtoPbccucFH0aNFO3ev07yvSzgyQEzjlnvEIWiYO7RTxSQaqWfwGYJJ
+NgJ22Gfro6WhWVyOE4Wj6SQ9lGk5AkdmBEIiExWBgudwa+m7rwnzY5zM3oaLWCnO
+5zvlTV1yglKX5xuYjO38wOmmq2c1ZyWs8qriuXShJGQr9R96wZEvstrJlExGn/V/
+gR5Y0HvcEnAkCGWj8vqoeeq+Ot8vwbIkF4LZoAJpKVSDW5NELwr6IX7aww6k9p7+
+jsmCl584BsniWd/wfF6j7sQSETp0DA==
+=ZzoW
+-----END PGP SIGNATURE-----
 
+--45Z9DzgjV8m4Oswq--
