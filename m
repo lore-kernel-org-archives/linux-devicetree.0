@@ -2,161 +2,116 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F034C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E39FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25E81207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:46:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597761969;
-	bh=uLShTqPsScOSS/Y7xhwooyk4VokN/5lcf0l5sX6cwe0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zPn1kp7ifyjKUJeZTc+yg7DfWhMnvfNX81Zaxbe0F9NZdFU/LKqbJDOnyZb1Bb9th
-	 Cdc2D4E3V/akVm+snu4aUwl1007MwBuFa0o2QtgaAIWMH8divMlZ3Po6RJXyNqnhGV
-	 W/k2KX4+g+pIFotpv1tssBY/XDvQm0AL8nhr+lEs=
+	by mail.kernel.org (Postfix) with ESMTP id 89B16207DE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHROqI (ORCPT
+        id S1726698AbgHROsA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:46:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 10:48:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:42710 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgHROqI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:46:08 -0400
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F94A2087D;
-        Tue, 18 Aug 2020 14:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597761967;
-        bh=uLShTqPsScOSS/Y7xhwooyk4VokN/5lcf0l5sX6cwe0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LqPm/t4tT/0fik+ovMNaZmmhNITKQnbE/SEtpU/wQaHeFsc0oEqv0Ok7zgT8K8q0g
-         RzriiVo1EJOuEDWve2doQaiolPRjJE7i2Qfp7Q61s8o6qzy1RG89yQc6J/XgBhUjv8
-         N80VcYnaemw4XlLvCbVZs7Xhay5iOr2yqH8+lDpY=
-Received: by mail-ej1-f45.google.com with SMTP id g19so22370916ejc.9;
-        Tue, 18 Aug 2020 07:46:07 -0700 (PDT)
-X-Gm-Message-State: AOAM533lKBTbAXZOYuZVpyNfYO23zEGDZfc7Gx0A0S14yLS19Cl8Vw3Z
-        2kwe6chwRp8g629TF/C0G4mFpjORsFWVEEh9/w==
-X-Google-Smtp-Source: ABdhPJyAegsVyLKiVAWm3/ULM5Zo7ujEpLDRmMYGDKOTvVSOcFz66S1v3I39ISq/ljIBOR2BqS2UuSxiTjiBJSeDKEk=
-X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr21208887ejd.7.1597761965685;
- Tue, 18 Aug 2020 07:46:05 -0700 (PDT)
+        id S1726863AbgHROr6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:47:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E23541FB;
+        Tue, 18 Aug 2020 07:47:57 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E81D3F66B;
+        Tue, 18 Aug 2020 07:47:55 -0700 (PDT)
+Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
+        Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>, mauro.chehab@huawei.com,
+        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
+Date:   Tue, 18 Aug 2020 15:47:55 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200817130640.18021-1-jitao.shi@mediatek.com>
- <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com> <1597718492.6381.6.camel@mszsdaap41>
-In-Reply-To: <1597718492.6381.6.camel@mszsdaap41>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 18 Aug 2020 22:45:54 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_94Bd4PGnn88r_yJC0LYkmcByTY52gwNMALuv9+D0rTXg@mail.gmail.com>
-Message-ID: <CAAOTY_94Bd4PGnn88r_yJC0LYkmcByTY52gwNMALuv9+D0rTXg@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/mediatek: dsi: fix scrolling of panel with small
- hfp or hbp
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cover.1597650455.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Jitao:
+On 2020-08-17 08:49, Mauro Carvalho Chehab wrote:
+> Add a driver for the Kirin 960/970 iommu.
+> 
+> As on the past series, this starts from the original 4.9 driver from
+> the 96boards tree:
+> 
+> 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> 
+> The remaining patches add SPDX headers and make it build and run with
+> the upstream Kernel.
+> 
+> Chenfeng (1):
+>    iommu: add support for HiSilicon Kirin 960/970 iommu
+> 
+> Mauro Carvalho Chehab (15):
+>    iommu: hisilicon: remove default iommu_map_sg handler
+>    iommu: hisilicon: map and unmap ops gained new arguments
+>    iommu: hisi_smmu_lpae: rebase it to work with upstream
+>    iommu: hisi_smmu: remove linux/hisi/hisi-iommu.h
+>    iommu: hisilicon: cleanup its code style
+>    iommu: hisi_smmu_lpae: get rid of IOMMU_SEC and IOMMU_DEVICE
+>    iommu: get rid of map/unmap tile functions
+>    iommu: hisi_smmu_lpae: use the right code to get domain-priv data
+>    iommu: hisi_smmu_lpae: convert it to probe_device
+>    iommu: add Hisilicon Kirin970 iommu at the building system
+>    iommu: hisi_smmu_lpae: cleanup printk macros
+>    iommu: hisi_smmu_lpae: make OF compatible more standard
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8818=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8810:41=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> On Tue, 2020-08-18 at 07:42 +0800, Chun-Kuang Hu wrote:
-> > Hi, Jitao:
-> >
-> > Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8817=
-=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=889:07=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > >
-> > > horizontal_backporch_byte should be hbp * bpp - hbp extra bytes.
-> > > So remove the wrong subtraction 10.
-> > >
-> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 9 ++++-----
-> > >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/med=
-iatek/mtk_dsi.c
-> > > index 270bf22c98fe..5d031e634571 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> > > @@ -473,14 +473,13 @@ static void mtk_dsi_config_vdo_timing(struct mt=
-k_dsi *dsi)
-> > >         horizontal_sync_active_byte =3D (vm->hsync_len * dsi_tmp_buf_=
-bpp - 10);
-> >
-> > So this subtraction 10 is correct?
-> >
-> > Regards,
-> > Chun-Kuang.
-> >
->
-> Yes, It is right.
->
-> In the cea861 and dmt spec the mini hsync is 40 pixels.
-> So the vm->hsync_len * dsi_tmp_buf_bpp >=3D 120 > 10
->
+Echoing the other comments about none of the driver patches being CC'd 
+to the IOMMU list...
 
-OK, so
+Still, I dug the series up on lore and frankly I'm not sure what to make 
+of it - AFAICS the "driver" is just yet another implementation of Arm 
+LPAE pagetable code, with no obvious indication of how those pagetables 
+ever get handed off to IOMMU hardware (and indeed no indication of IOMMU 
+hardware at all). Can you explain how it's supposed to work?
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+And as a pre-emptive strike, we really don't need any more LPAE 
+implementations - that's what the io-pgtable library is all about (which 
+incidentally has been around since 4.0...). I think that should make the 
+issue of preserving authorship largely moot since there's no need to 
+preserve most of the code anyway ;)
 
-> Best Regards
-> jitao
-> > >
-> > >         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> > > -               horizontal_backporch_byte =3D
-> > > -                       (vm->hback_porch * dsi_tmp_buf_bpp - 10);
-> > > +               horizontal_backporch_byte =3D vm->hback_porch * dsi_t=
-mp_buf_bpp;
-> > >         else
-> > > -               horizontal_backporch_byte =3D ((vm->hback_porch + vm-=
->hsync_len) *
-> > > -                       dsi_tmp_buf_bpp - 10);
-> > > +               horizontal_backporch_byte =3D (vm->hback_porch + vm->=
-hsync_len) *
-> > > +                                           dsi_tmp_buf_bpp;
-> > >
-> > >         data_phy_cycles =3D timing->lpx + timing->da_hs_prepare +
-> > > -                         timing->da_hs_zero + timing->da_hs_exit + 3=
-;
-> > > +                         timing->da_hs_zero + timing->da_hs_exit;
-> > >
-> > >         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-> > >                 if ((vm->hfront_porch + vm->hback_porch) * dsi_tmp_bu=
-f_bpp >
-> > > --
-> > > 2.12.5
-> > > _______________________________________________
-> > > Linux-mediatek mailing list
-> > > Linux-mediatek@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
->
+Robin.
+
+>    dt: add an spec for the Kirin36x0 SMMU
+>    dt: hi3670-hikey970.dts: load the SMMU driver on Hikey970
+>    staging: hikey9xx: add an item about the iommu driver
+> 
+>   .../iommu/hisilicon,kirin36x0-smmu.yaml       |  55 ++
+>   .../boot/dts/hisilicon/hi3670-hikey970.dts    |   3 +
+>   drivers/staging/hikey9xx/Kconfig              |   9 +
+>   drivers/staging/hikey9xx/Makefile             |   1 +
+>   drivers/staging/hikey9xx/TODO                 |   1 +
+>   drivers/staging/hikey9xx/hisi_smmu.h          | 196 ++++++
+>   drivers/staging/hikey9xx/hisi_smmu_lpae.c     | 648 ++++++++++++++++++
+>   7 files changed, 913 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/iommu/hisilicon,kirin36x0-smmu.yaml
+>   create mode 100644 drivers/staging/hikey9xx/hisi_smmu.h
+>   create mode 100644 drivers/staging/hikey9xx/hisi_smmu_lpae.c
+> 
