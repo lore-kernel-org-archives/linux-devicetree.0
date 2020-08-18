@@ -1,137 +1,88 @@
-Return-Path: <SRS0=+eHa=B3=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCCBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 23:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8263EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 00:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E76D2065D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 17 Aug 2020 23:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597707778;
-	bh=x2x17PXByjmc5GL+cpiiMIiGtoeX2KrAjZvn4MxGmjM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=u/79fY610vzaq3/Ydlmc38bgfzcO0wclOfspqtlrGYmO+EkIDNevgRcOnI2qGn5k+
-	 apxIrKBZPJIz4ea7G0JhJthlZpKxMwp0VUsmQK9o6769Q5u82C3L5X9yjsBkMlZEQC
-	 rLqpb+J2pnK91tCsktSnWoQ8yYCX569wZfFJELtA=
+	by mail.kernel.org (Postfix) with ESMTP id 6BBB82078D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 00:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgHQXm5 (ORCPT
+        id S1726760AbgHRAT0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 19:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726365AbgHQXm4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 17 Aug 2020 19:42:56 -0400
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8693F2072E;
-        Mon, 17 Aug 2020 23:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597707775;
-        bh=x2x17PXByjmc5GL+cpiiMIiGtoeX2KrAjZvn4MxGmjM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jc/vz+UQzZaY3RWlTnKJ/1TkiZZistwAP8D5Rbr8gGMvQbCioL9ezZGWDCLTThzMQ
-         I5yeRps1Ms1E0aACHi+zxzWiY6evzagCBlM0RQAdSbsnhAHBIiYPfeCGeWc7+3eOqs
-         dR1K0IcG7QqNsmy+9iOB1VtJ8Sl6Xkug3njoTXFI=
-Received: by mail-ej1-f43.google.com with SMTP id jp10so19918105ejb.0;
-        Mon, 17 Aug 2020 16:42:55 -0700 (PDT)
-X-Gm-Message-State: AOAM533+bJjEgTqAcpo1nZ2COO7AFuTb8WGdmgRyuKBHHG1Fk6mjC0aa
-        TUjKmE21vn1y50E7QApIp2CobQiRmshgzSJ15Q==
-X-Google-Smtp-Source: ABdhPJz1blTGXowp+NNEIdFVKpxsWzYUxZj6C7dOmrD54k7lOK5kU33K3omXAVdbUpjCWHkbhkIeIAutfvc+KMgeqYw=
-X-Received: by 2002:a17:906:d92c:: with SMTP id rn12mr16958911ejb.187.1597707774145;
- Mon, 17 Aug 2020 16:42:54 -0700 (PDT)
+        Mon, 17 Aug 2020 20:19:26 -0400
+Received: from server-x.ipv4.hkg02.ds.network ([27.111.83.178]:47734 "EHLO
+        mail.gtsys.com.hk" rhost-flags-OK-FAIL-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbgHRATY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 20:19:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id C247720160C9;
+        Tue, 18 Aug 2020 08:19:21 +0800 (HKT)
+X-Virus-Scanned: Debian amavisd-new at gtsys.com.hk
+Received: from mail.gtsys.com.hk ([127.0.0.1])
+        by localhost (mail.gtsys.com.hk [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id HcIEno6LPT2x; Tue, 18 Aug 2020 08:19:21 +0800 (HKT)
+Received: from s01.gtsys.com.hk (unknown [10.128.4.2])
+        by mail.gtsys.com.hk (Postfix) with ESMTP id 9E4BD20160B5;
+        Tue, 18 Aug 2020 08:19:21 +0800 (HKT)
+Received: from [10.128.2.32] (unknown [203.145.95.142])
+        by s01.gtsys.com.hk (Postfix) with ESMTPSA id 203D7C01B7A;
+        Tue, 18 Aug 2020 08:19:21 +0800 (HKT)
+Subject: Re: [PATCH] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     devicetree@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200810033806.15503-1-chris.ruehl@gtsys.com.hk>
+ <20200816102733.7fa1d3ce@archlinux>
+From:   Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Message-ID: <e62dd384-3cce-dc84-cbf4-00fc6225d3cc@gtsys.com.hk>
+Date:   Tue, 18 Aug 2020 08:19:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200817130640.18021-1-jitao.shi@mediatek.com>
-In-Reply-To: <20200817130640.18021-1-jitao.shi@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 18 Aug 2020 07:42:38 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com>
-Message-ID: <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com>
-Subject: Re: [PATCH v2] drm/mediatek: dsi: fix scrolling of panel with small
- hfp or hbp
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        huijuan.xie@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>,
-        CK Hu <ck.hu@mediatek.com>, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200816102733.7fa1d3ce@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi, Jitao:
+Hi Jonathan
 
-Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8817=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=889:07=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> horizontal_backporch_byte should be hbp * bpp - hbp extra bytes.
-> So remove the wrong subtraction 10.
->
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_dsi.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediate=
-k/mtk_dsi.c
-> index 270bf22c98fe..5d031e634571 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-> @@ -473,14 +473,13 @@ static void mtk_dsi_config_vdo_timing(struct mtk_ds=
-i *dsi)
->         horizontal_sync_active_byte =3D (vm->hsync_len * dsi_tmp_buf_bpp =
-- 10);
 
-So this subtraction 10 is correct?
+On 16/8/2020 5:27 pm, Jonathan Cameron wrote:
+> On Mon, 10 Aug 2020 11:37:52 +0800
+> Chris Ruehl <chris.ruehl@gtsys.com.hk> wrote:
+> 
+> Hi Chris,
+> 
+> This will need a dt-binding maintainer review, but in the meantime...
+> 
+> Look at the title for dt-bindings patches and match that format.
+> 
+> One question for Rob inline.   A quick grep suggests we are
+> very inconsistent on whether we use the multiline block
+> thing for description fields or not.
+> 
+> Is it needed?
 
-Regards,
-Chun-Kuang.
+ok, next submit [PATCH] dt-bindings: iio/dac: ...
 
->
->         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> -               horizontal_backporch_byte =3D
-> -                       (vm->hback_porch * dsi_tmp_buf_bpp - 10);
-> +               horizontal_backporch_byte =3D vm->hback_porch * dsi_tmp_b=
-uf_bpp;
->         else
-> -               horizontal_backporch_byte =3D ((vm->hback_porch + vm->hsy=
-nc_len) *
-> -                       dsi_tmp_buf_bpp - 10);
-> +               horizontal_backporch_byte =3D (vm->hback_porch + vm->hsyn=
-c_len) *
-> +                                           dsi_tmp_buf_bpp;
->
->         data_phy_cycles =3D timing->lpx + timing->da_hs_prepare +
-> -                         timing->da_hs_zero + timing->da_hs_exit + 3;
-> +                         timing->da_hs_zero + timing->da_hs_exit;
->
->         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
->                 if ((vm->hfront_porch + vm->hback_porch) * dsi_tmp_buf_bp=
-p >
-> --
-> 2.12.5
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+just wait for Rob and his advice on your question regarding the | in the
+block.
+
+Regards
+Chris
+
