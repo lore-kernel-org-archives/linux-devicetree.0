@@ -2,102 +2,194 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E84CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8687C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 501E82076E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D0F207DE
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597764236;
-	bh=HpQrw3dSRuULmu7pAjgDli/38IUo+15Aerb5BtWgGbk=;
+	s=default; t=1597764556;
+	bh=y1EcZY8mviDh3Iz3/qatQ0cLnCFk9OV4Adl//n5aXSA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=h3NP0UpqLZe3uq8tOa9C49YOG4SKogZHRVR5XAV8jP5fGBc5N+ryZl2Rv2RiK95/3
-	 99t8giXNHbiGmhF2mqK5y1N9jNOE1PnyS+BZKcVg/m+7UduZa/leqoOLj0C2hiEvOO
-	 9TzGdftbCSmeXepmksJa9C4mlJapetxscQrLbBno=
+	b=xjhWPYJuuj7OmPaD7nMo0fzB6F9FtUJoUIwPnQPDRUqRFyG1Z6iPJfZpS1iGXVHf0
+	 V+a0Rj4zFR+NMIipVM8lIJBeFPfdeBVKKmZxNlG7B4waXix2yTY+Oz8sE0qm7WRzdV
+	 pyfZFLgF31Wdwf3lX+JVxP+W9gMWsPENcPXtW/XQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbgHRPXz (ORCPT
+        id S1727899AbgHRP3Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:23:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49288 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 11:29:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgHRPXu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:23:50 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        id S1726972AbgHRP3P (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:29:15 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2DF5206DA;
-        Tue, 18 Aug 2020 15:23:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEE39206DA;
+        Tue, 18 Aug 2020 15:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597764229;
-        bh=HpQrw3dSRuULmu7pAjgDli/38IUo+15Aerb5BtWgGbk=;
+        s=default; t=1597764555;
+        bh=y1EcZY8mviDh3Iz3/qatQ0cLnCFk9OV4Adl//n5aXSA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zXJGw6+41RMiXqsi8HA1lcWAoe+ELCgZ+17PvoyKTcUMnCSfLrCqiTnRF7HlVDJx8
-         Fkmv01FEVd4DxYxtfM35x8srBSm73NzP0cIc225181ZGgDcujUtT8OJpY61N0gx2Ft
-         UuhvzcaHhJLMEIC1K6oh5TaKhBgDMaqEuVCdSoGE=
-Date:   Tue, 18 Aug 2020 08:23:47 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Landen Chao <landen.chao@mediatek.com>
-Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>,
-        <vivien.didelot@savoirfairelinux.com>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <davem@davemloft.net>,
-        <sean.wang@mediatek.com>, <opensource@vdorst.com>,
-        <frank-w@public-files.de>, <dqfext@gmail.com>
-Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
- MT7531 switch
-Message-ID: <20200818082347.353fe926@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
-References: <cover.1597729692.git.landen.chao@mediatek.com>
-        <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
+        b=l1khQJNCqaJkNf17Z3CSbq9tMDMPPbMtKTMXXMzroWcNsHKDsO4NxIPVcEnlSTKcX
+         vdU1vzH4P+A5CN3B5DKjylxHKOgwQwyZMlSkUyFzeBK5M6HGi0wE204PORhNROuOkG
+         zBndFkZTkyO2KybOc9/lrOpk6h4q17/K+lRnUnJE=
+Date:   Tue, 18 Aug 2020 17:29:09 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
+        Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>, mauro.chehab@huawei.com,
+        Suzhuangluan <suzhuangluan@hisilicon.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
+Message-ID: <20200818172909.71f5243a@coco.lan>
+In-Reply-To: <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
+        <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Aug 2020 15:14:10 +0800 Landen Chao wrote:
-> Add new support for MT7531:
->=20
-> MT7531 is the next generation of MT7530. It is also a 7-ports switch with
-> 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
-> port 6 only supports SGMII interface. Cpu port 5 supports either RGMII
-> or SGMII in different HW sku. Due to SGMII interface support, pll, and
-> pad setting are different from MT7530. This patch adds different initial
-> setting, and SGMII phylink handlers of MT7531.
->=20
-> MT7531 SGMII interface can be configured in following mode:
-> - 'SGMII AN mode' with in-band negotiation capability
->     which is compatible with PHY_INTERFACE_MODE_SGMII.
-> - 'SGMII force mode' without in-bnad negotiation
->     which is compatible with 10B/8B encoding of
->     PHY_INTERFACE_MODE_1000BASEX with fixed full-duplex and fixed pause.
-> - 2.5 times faster clocked 'SGMII force mode' without in-bnad negotiation
->     which is compatible with 10B/8B encoding of
->     PHY_INTERFACE_MODE_2500BASEX with fixed full-duplex and fixed pause.
->=20
-> Signed-off-by: Landen Chao <landen.chao@mediatek.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Hi Robin,
 
-Please fix these W=3D1 warnings:
+Em Tue, 18 Aug 2020 15:47:55 +0100
+Robin Murphy <robin.murphy@arm.com> escreveu:
 
-../drivers/net/dsa/mt7530.c:1976:1: warning: no previous prototype for =E2=
-=80=98mt7531_sgmii_link_up_force=E2=80=99 [-Wmissing-prototypes]
- 1976 | mt7531_sgmii_link_up_force(struct dsa_switch *ds, int port,
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/net/dsa/mt7530.c:2081:6: warning: no previous prototype for =E2=
-=80=98mt7531_sgmii_restart_an=E2=80=99 [-Wmissing-prototypes]
- 2081 | void mt7531_sgmii_restart_an(struct dsa_switch *ds, int port)
-      |      ^~~~~~~~~~~~~~~~~~~~~~~
-../drivers/net/dsa/mt7530.c:1976:1: warning: symbol 'mt7531_sgmii_link_up_f=
-orce' was not declared. Should it be static?
-../drivers/net/dsa/mt7530.c:2081:6: warning: symbol 'mt7531_sgmii_restart_a=
-n' was not declared. Should it be static?
+> On 2020-08-17 08:49, Mauro Carvalho Chehab wrote:
+> > Add a driver for the Kirin 960/970 iommu.
+> > 
+> > As on the past series, this starts from the original 4.9 driver from
+> > the 96boards tree:
+> > 
+> > 	https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> > 
+> > The remaining patches add SPDX headers and make it build and run with
+> > the upstream Kernel.
+> > 
+> > Chenfeng (1):
+> >    iommu: add support for HiSilicon Kirin 960/970 iommu
+> > 
+> > Mauro Carvalho Chehab (15):
+> >    iommu: hisilicon: remove default iommu_map_sg handler
+> >    iommu: hisilicon: map and unmap ops gained new arguments
+> >    iommu: hisi_smmu_lpae: rebase it to work with upstream
+> >    iommu: hisi_smmu: remove linux/hisi/hisi-iommu.h
+> >    iommu: hisilicon: cleanup its code style
+> >    iommu: hisi_smmu_lpae: get rid of IOMMU_SEC and IOMMU_DEVICE
+> >    iommu: get rid of map/unmap tile functions
+> >    iommu: hisi_smmu_lpae: use the right code to get domain-priv data
+> >    iommu: hisi_smmu_lpae: convert it to probe_device
+> >    iommu: add Hisilicon Kirin970 iommu at the building system
+> >    iommu: hisi_smmu_lpae: cleanup printk macros
+> >    iommu: hisi_smmu_lpae: make OF compatible more standard  
+> 
+> Echoing the other comments about none of the driver patches being CC'd 
+> to the IOMMU list...
+> 
+> Still, I dug the series up on lore and frankly I'm not sure what to make 
+> of it - AFAICS the "driver" is just yet another implementation of Arm 
+> LPAE pagetable code, with no obvious indication of how those pagetables 
+> ever get handed off to IOMMU hardware (and indeed no indication of IOMMU 
+> hardware at all). Can you explain how it's supposed to work?
+> 
+> And as a pre-emptive strike, we really don't need any more LPAE 
+> implementations - that's what the io-pgtable library is all about (which 
+> incidentally has been around since 4.0...). I think that should make the 
+> issue of preserving authorship largely moot since there's no need to 
+> preserve most of the code anyway ;)
+
+I didn't know about that, since I got a Hikey 970 board for the first time
+about one month ago, and that's the first time I looked into iommu code.
+
+My end goal with this is to make the DRM/KMS driver to work with upstream
+Kernels.
+
+The full patch series are at:
+
+	https://github.com/mchehab/linux/commits/hikey970/to_upstream-2.0-v1.1
+
+(I need to put a new version there, after some changes due to recent
+upstream discussions at the regulator's part of the code)
+
+Basically, the DT binding has this, for IOMMU:
+
+
+	smmu_lpae {
+		compatible = "hisilicon,smmu-lpae";
+	};
+
+...
+	dpe: dpe@e8600000 {
+		compatible = "hisilicon,kirin970-dpe";
+		memory-region = <&drm_dma_reserved>;
+...
+		iommu_info {
+			start-addr = <0x8000>;
+			size = <0xbfff8000>;
+		};
+	}
+
+This is used by kirin9xx_drm_dss.c in order to enable and use
+the iommu:
+
+
+	static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
+	{
+		struct device *dev = NULL;
+
+		dev = &pdev->dev;
+
+		/* create iommu domain */
+		ctx->mmu_domain = iommu_domain_alloc(dev->bus);
+		if (!ctx->mmu_domain) {
+			pr_err("iommu_domain_alloc failed!\n");
+			return -EINVAL;
+		}
+
+		iommu_attach_device(ctx->mmu_domain, dev);
+
+		return 0;
+	}
+
+The only place where the IOMMU domain is used is on this part of the
+code(error part simplified here) [1]:
+
+	void hisi_dss_smmu_on(struct dss_hw_ctx *ctx) 
+	{
+		uint64_t fama_phy_pgd_base;
+		uint32_t phy_pgd_base;
+...
+		fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
+		phy_pgd_base = (uint32_t)fama_phy_pgd_base;
+		if (WARN_ON(!phy_pgd_base))
+			return;
+
+		set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
+	}
+
+[1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
+
+In other words, the driver needs to get the physical address of the frame
+buffer (mapped via iommu) in order to set some DRM-specific register.
+
+Yeah, the above code is somewhat hackish. I would love to replace 
+this part by a more standard approach.
+
+Thanks,
+Mauro
