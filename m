@@ -2,119 +2,94 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B4BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 00:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F70C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 00:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1CF22076D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 00:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917482078D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 00:38:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IA5/pMtM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkB6XyJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbgHRAYo (ORCPT
+        id S1726457AbgHRAiQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 20:24:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
+        Mon, 17 Aug 2020 20:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbgHRAYh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 20:24:37 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57A9EC061343
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 17:24:37 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id f5so8366158plr.9
-        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 17:24:37 -0700 (PDT)
+        with ESMTP id S1726444AbgHRAiO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 20:38:14 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B184C061389;
+        Mon, 17 Aug 2020 17:38:14 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id i10so19494777ljn.2;
+        Mon, 17 Aug 2020 17:38:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=fIzNe6kBLkkiD888cP6x/Hi2iQ+s1AZsPih0Qi4fjZc=;
-        b=IA5/pMtMp5vroeKoC6E1UoM88UwlNdVHVR28k5xmCUvR+oKpm7Qf27cSaXhCse3vky
-         Cjwd30Twk5TQNDX0tLBWQO1YIxZGch6pxTP0WGflQiEKqUk9VikrGPipVoOXhQNU9uGC
-         c6f0invxLMEpoZ/uvU+OO1lVPwA5CH4mgGASA=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fam7mYoJXPako+JuYRNzyOdMjKGVEPSxTqRdK5tFFp8=;
+        b=EkB6XyJmgU39PWJmCj8qriZyH8Xe7RfffXsrFZKZCn/3lSpS9EMLCKksnxJm+dfjsX
+         1r4iyQorYuvlqjhrJz6zvbCn63hAKrqEnNhKDms/OUVPY+gk3M0iB3R4D0h48XHpfVpd
+         zuTbVAD988wXIalA4+9gccW1YzbzpzhIGtwKNPPsUr6S+0RpAZeoYXrwk0e7TIjMRrGC
+         iCQ8e/1xnfYiF4Sz/n8Q1A9nXUqGwVCNPxLy/qehPu9SZTQEbOTX5HvBipZ4qaCmzMyt
+         hJbCRasW/qBLb4AkgvpL5qMSxxxQF8p41gYanAOxnIH6RM/jXnI/5a2IF9r1Y7RMUvUR
+         tdWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=fIzNe6kBLkkiD888cP6x/Hi2iQ+s1AZsPih0Qi4fjZc=;
-        b=uVu6+LLOJtPozJ7x2vHT2Ucstb4gx7gl3l2McVxCk1F438qcDyLdo1qo6KV0Mdph7W
-         +jRrZKCGQteJuyhYToTmvH1uyqpPmHb8wNGbEl26x2q2uOvCsqpiYFh1uo33+O8xCvPK
-         ZIMe3DXuA41NmRVa0B6dx0KJ1Kib8ObE/bzwE75yroZ98GwdS/BTNVUl8oQlDVBLo+gf
-         gTPqWVFG7cp8SnApxa/7VIXtj0ZUEfBUvBPe+Cw9kpDeBkNo2KGHJH0z3xOc2UFeFdyY
-         MG4qvqzaV1RXtI3HMt6cwVt5FM4NMJzwL30eCSUCsSEVgxGJt8TC2bP9DLexJ1LEMxHF
-         ZpGw==
-X-Gm-Message-State: AOAM531UMtUY6gslR2n89rDSgiGwV0rIC5WlkBvtDzCFxVzgkQ1TNsaI
-        KGz6M5ZHbKzzLlLt9sY4C9gkT7iuXOrzAA==
-X-Google-Smtp-Source: ABdhPJySOSK83lgv0VrVvSo5NN8HgXozKW5Xwsrc4v9hYedTPLRrqRuviKh2CudX25Tf3teS8OfmDw==
-X-Received: by 2002:a17:90b:150:: with SMTP id em16mr15073789pjb.86.1597710276290;
-        Mon, 17 Aug 2020 17:24:36 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id l22sm18949038pjy.31.2020.08.17.17.24.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 17:24:35 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fam7mYoJXPako+JuYRNzyOdMjKGVEPSxTqRdK5tFFp8=;
+        b=quLR/Z7KcR9aXxFEbnMEX2laJUftQL/Bh/g8Gpl+cTfXJyMdZJvOgvvStuGjJTTHlF
+         /Grh5w4MDkhI+49ZnvlrGXOTKpNkyYUR7qKso96JF/QFh9JNCT49Y03Rr3IP/Y+Q4sQv
+         +IDvR5x3ruYteBebMVSVGXf29BpabrdhsSklpTE8Fuu8mk3Cj6Lpc1xP3TL12hW6/RV1
+         m93QpHAB4Z3Yt5sATw56YS3PXHr2j9Z9+fyJ2vrTB1xiY6RbiTwg4fBJGxLhuUiuPfio
+         +a7f+Ix55clbiwKpTN81Or88sx3HFnCL4ETVs4OkJoPstXpXHdjnAzNCVVgnmDcBbliL
+         cKuQ==
+X-Gm-Message-State: AOAM5315KQHFytWenYnrJhUXlNo8Cq9OaaZBygx5R13i40JdfCJ4RNIG
+        F4rA/k/Lt6pUTy5rDERLXWqovpOpUanl02zm1ypiyJhI5Ko=
+X-Google-Smtp-Source: ABdhPJwpXxw3TIqu2RUzMKpopNwAEX9axJtRN7QLIK5dAaUX7yJRMcLnDUEo2Z9E/+dOEhoojkFd3pSyGoLVD6A+3UE=
+X-Received: by 2002:a2e:8ed4:: with SMTP id e20mr5687359ljl.403.1597711092498;
+ Mon, 17 Aug 2020 17:38:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200817225300.2209-1-tanmay@codeaurora.org>
-References: <20200817225300.2209-1-tanmay@codeaurora.org>
-Subject: Re: [PATCH v6] arm64: dts: qcom: sc7180: Add Display Port dt node
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, seanpaul@chromium.org,
-        robdclark@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
-        aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>
-Date:   Mon, 17 Aug 2020 17:24:34 -0700
-Message-ID: <159771027430.2423498.17739000479526174339@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+References: <VI1PR0402MB334219C2EDDB25D1493DEC7EE35F0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB334219C2EDDB25D1493DEC7EE35F0@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 17 Aug 2020 21:38:01 -0300
+Message-ID: <CAOMZO5A6w96XOes-FUfLuGbV=-o9FVh4UWN8vX1M=aWh=Gg3Qw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6sx-sdb: Add headphone detection for sound card
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tanmay Shah (2020-08-17 15:53:00)
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
-com/sc7180.dtsi
-> index 31b9217bb5bf..bf2f2bb1aa79 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -2440,6 +2447,71 @@ dsi_phy: dsi-phy@ae94400 {
-> =20
->                                 status =3D "disabled";
->                         };
-> +
-> +                       msm_dp: displayport-controller@ae90000 {
+On Mon, Aug 17, 2020 at 10:57 AM S.j. Wang <shengjiu.wang@nxp.com> wrote:
 
-This should come before dsi-phy and dsi node. It should be sorted by the
-address (0xae90000).
+> I didn't put headphone detect GPIO in audmux group in imx6sl-evk patch,
+> Still in hog group.
 
-> +                               status =3D "disabled";
-> +                               compatible =3D "qcom,sc7180-dp";
-> +
-> +                               reg =3D <0 0x0ae90000 0 0x1400>;
-> +
-> +                               interrupt-parent =3D <&mdss>;
-> +                               interrupts =3D <12>;
-> +
-[...]
->                 };
-> =20
->                 dispcc: clock-controller@af00000 {
-> @@ -2449,8 +2521,8 @@ dispcc: clock-controller@af00000 {
->                                  <&gcc GCC_DISP_GPLL0_CLK_SRC>,
->                                  <&dsi_phy 0>,
->                                  <&dsi_phy 1>,
-> -                                <0>,
-> -                                <0>;
-> +                                <&msm_dp 0>,
-> +                                <&msm_dp 1>;
+Ok, sorry. You grouped it with MX6SL_PAD_AUD_MCLK__AUDIO_CLK_OUT,
+which I also think should not be part of the hog group.
 
-Don't think we should apply this still because the binding will change
-when the phy is split out to qmp node. Maybe just leave this part off
-for now?
+> And I think headphone detect GPIO is not belong to audmux group, it should
+> Be in hog group.
+
+The hog group is better suited when there is no driver that can be
+associated with that particular pin.
+
+For the headphone GPIO detect, I think it makes sense to group it with
+the other audio-related pinctrl pins.
