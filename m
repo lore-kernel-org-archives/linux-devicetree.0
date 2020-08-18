@@ -2,162 +2,97 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70865C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B96C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 20:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA9220786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 19:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="me8JwS36"
+	by mail.kernel.org (Postfix) with ESMTP id 725C320709
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 20:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597782336;
+	bh=aqdvzDx7NVgXD+Mv6grL/bVyS5wqALlm7cAFdctuyTk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=sgdhfnsmIhqy1impt8Bo9fNfBRsTFTjMdPcVVVeLieLnLXLj8LdcNqn2svmGjPEd0
+	 rR8cEz96cWGwf3tX2hR8FXkDzuto020QRrtFtalgAezZv/kCICUu1d1D9FQwJt4ocp
+	 JLiz3j2qNlzVRbYCbpt7Q9JItPTOobGfhiiSw6dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHRT7C (ORCPT
+        id S1726698AbgHRUZf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 15:59:02 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:12337 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgHRT7A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 15:59:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597780739; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=zZL+Wq+UWx6ZdXVL+KawbcxWSyrD/Dh71Ipog7tgjDM=; b=me8JwS36gQyuJUuqrtUz93G2XmKVGydqGtXXoko1HPIwwta4D+T0Ttm51YE/5eWNXgE8Uruy
- FtLCT468Yx5O2VHUMN4W6jNX27faDTDM4fWNlTSNNTcrhttuo8An2cLwRShfNhpCg/w6c6eY
- TkOoNGYAu5B6x0JZU5kEJrTl7T0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f3c32e8440a07969a72c006 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 19:58:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9AF1FC43391; Tue, 18 Aug 2020 19:58:31 +0000 (UTC)
-Received: from [10.110.104.6] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 450AAC433C6;
-        Tue, 18 Aug 2020 19:58:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 450AAC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [RFC v4 1/3] usb: dwc3: Resize TX FIFOs to meet EP bursting
- requirements
-From:   Wesley Cheng <wcheng@codeaurora.org>
-To:     Felipe Balbi <balbi@kernel.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
-        robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        jackp@codeaurora.org
-References: <20200624022848.7765-1-wcheng@codeaurora.org>
- <20200624022848.7765-2-wcheng@codeaurora.org> <87d03yptxi.fsf@kernel.org>
- <b0c8a95b-45e3-0d79-2a7c-14c8936dd551@codeaurora.org>
- <877du5pseu.fsf@kernel.org>
- <a55445db-91b0-c2fd-0a90-0b10870b45cb@codeaurora.org>
-Message-ID: <35c02c96-01f1-a7f1-e5d7-c26df77ecccd@codeaurora.org>
-Date:   Tue, 18 Aug 2020 12:58:29 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 18 Aug 2020 16:25:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37578 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHRUZf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 16:25:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id b16so22544584ioj.4
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 13:25:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=unMCe/BLdS+VvMIYasq8w8t2TkGYp+baa2A5Un4qXT4=;
+        b=t00ZJMgUaTzsil9bhU8Es+bPufwY+3SrFaL1lMY39IT2J11m62k8jQ2QLdWKTneqbp
+         K+OXkz75Wlq2YTv3RaEYyM0PaGHf8UI+3Br80VMkVPz0mdbMPqL2q5UYbDKhbzeRU8AF
+         mIIGZ6zKBrZOO+iEaQmb47S5gTkrPGWmLWnz0XUZ899lvtGWD55qCIFKoD4DnNnAujbk
+         dmUC5rAcME9gM3R+zhKwWThBOn2Ajbksv7aBXcHEXt2v1PsBLg501ObDMKac6YnyCXR+
+         cFQgbcW4QLBAXSM86oeJsJKTSNps0ID5vBukLmQsCt7/6ZKttCIH9SCEHa+jVvS/GWQI
+         vhww==
+X-Gm-Message-State: AOAM533BA9OlbmhBqf5HBQlMfOWrh6Vqd+uLWXOV9iZZ2zK0C3e2UwaW
+        wMgn89ezHNmfa5dfdPHR6A==
+X-Google-Smtp-Source: ABdhPJxmSJSHYTVX8WnO/kBVypgafxz99/poW6PJcjJJEFmjc6bGa7uvGi3/xEEwWrlPFzo0xZnjVg==
+X-Received: by 2002:a6b:6204:: with SMTP id f4mr17252073iog.56.1597782334430;
+        Tue, 18 Aug 2020 13:25:34 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.249])
+        by smtp.googlemail.com with ESMTPSA id h18sm11488342iow.16.2020.08.18.13.25.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 13:25:33 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Subject: [PATCH] arm64: dts: imx: Add missing imx8mm-beacon-kit.dtb to build
+Date:   Tue, 18 Aug 2020 14:25:31 -0600
+Message-Id: <20200818202531.3918168-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <a55445db-91b0-c2fd-0a90-0b10870b45cb@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The imx8mm-beacon-kit.dtb was never added to dtbs-y and wasn't getting
+built. Fix it.
 
+Fixes: 593816fa2f35 ("arm64: dts: imx: Add Beacon i.MX8m-Mini development kit")
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ arch/arm64/boot/dts/freescale/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 8/12/2020 11:34 AM, Wesley Cheng wrote:
->>
->> awesome, thanks a lot for this :-) It's a considerable increase in your
->> setup. My only fear here is that we may end up creating a situation
->> where we can't allocate enough FIFO for all endpoints. This is, of
->> course, a consequence of the fact that we enable one endpoint at a
->> time.
->>
->> Perhaps we could envision a way where function driver requests endpoints
->> in bulk, i.e. combines all endpoint requirements into a single method
->> call for gadget framework and, consequently, for UDC.
->>
-> Hi Felipe,
-> 
-> I agree...Resizing the txfifo is not as straightforward as it sounds :).
->  Would be interesting to see how this affects tput on other platforms as
-> well.  We had a few discussions within our team, and came up with the
-> logic implemented in this patch to reserve at least 1 txfifo per
-> endpoint. Then we allocate any additional fifo space requests based on
-> the remaining space left.  That way we could avoid over allocating, but
-> the trade off is that we may have unused EPs taking up fifo space.
-> 
-> I didn't consider branching out to changing the gadget framework, so let
-> me take a look at your suggestion to see how it turns out.
-> 
-
-Hi Felipe,
-
-Instead of catching the out of FIFO memory issue during the ep enable
-stage, I was thinking if we could do it somewhere during the bind.  Then
-this would allow for at least failing the bind instead of having an
-enumerated device which doesn't work. (will happen if we bail out during
-ep enable phase)  The idea I had was the following:
-
-Introduce a new USB gadget function pointer, say
-usb_gadget_check_config(struct usb_gadget *gadget, unsigned long ep_map)
-
-The purpose for the ep_map is to carry information about the endpoints
-the configuration requires, since each function driver will define the
-endpoint descriptor(s) it will advertise to the host.  We have access to
-these ep desc after the bind() routine is executed for the function
-driver, so we can update this map after every bind.  The configfs driver
-will call the check config API every time a configuration is added.
-
-static int configfs_composite_bind(struct usb_gadget *gadget,
-		struct usb_gadget_driver *gdriver)
-{
-...
-  /* Go through all configs, attach all functions */
-  list_for_each_entry(c, &gi->cdev.configs, list) {
-  ...
-    list_for_each_entry_safe(f, tmp, &cfg->func_list, list) {
-    ...
-      	if (f->ss_descriptors) {
-	  struct usb_descriptor_header **descriptors;
-	  descriptors = f->ss_descriptors;
-	  for (; *descriptors; ++descriptors) {
-	    struct usb_endpoint_descriptor *ep;
-	    int addr;
-		
-	    if ((*descriptors)->bDescriptorType != USB_DT_ENDPOINT)
-		continue;
-		
-	    ep = (struct usb_endpoint_descriptor *)*descriptors;
-	    addr = ((ep->bEndpointAddress & 0x80) >> 3)
-	    |  (ep->bEndpointAddress & 0x0f);
-	    set_bit(addr, &ep_map);
-	  }
-	}
-    usb_gadget_check_config(cdev->gadget, ep_map);
-
-What it'll allow us to do is to decode the ep_map in the dwc3/udc driver
-to determine if we have enough fifo space. Also, if we wanted to utilize
-this ep map for the actual resizing stage, we could eliminate the issue
-of not knowing how many EPs will be enabled, and allocating potentially
-unused fifos due to unused eps.
-
-
-Thanks
-Wesley
-
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index a39f0a1723e0..903c0eb61290 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-honeycomb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+ 
++dtb-$(CONFIG_ARCH_MXC) += imx8mm-beacon-kit.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.25.1
+
