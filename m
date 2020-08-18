@@ -2,111 +2,97 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E477C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC67DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE8020674
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB2A020674
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 17:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597772399;
+	bh=jw0rqgoKOxJjeFzL3PLrNSOLSmVzOndyFsCJBt1RmBE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=1y7ius7LpU5wZKmtcAHd5ZnmiAcJ1FhL+LyCl6sJq0o9qK/TDjzcXnVchknB04L3R
+	 yNad+1I63hdRCMk3M7unRU4EwH4E2eW3GEck/8i6D3GiS/YLu5TYDE5YZsMZEVBNPA
+	 8ipnkWQgpzDOzKVJG9nfvRMX4xPOy7XRHamkbdYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbgHRRdu (ORCPT
+        id S1726863AbgHRRj7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 13:33:50 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:43470 "EHLO honk.sigxcpu.org"
+        Tue, 18 Aug 2020 13:39:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727773AbgHRRdu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 13:33:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id F0524FB03;
-        Tue, 18 Aug 2020 19:33:46 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SV7xgiVLbSXw; Tue, 18 Aug 2020 19:33:45 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 08CA94576F; Tue, 18 Aug 2020 19:33:44 +0200 (CEST)
-Date:   Tue, 18 Aug 2020 19:33:44 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Daniel Palmer <daniel@0x0f.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] drm/panel: Add panel driver for the Mantix
- MLAF057WE51-X DSI panel
-Message-ID: <20200818173344.GA382297@bogon.m.sigxcpu.org>
-References: <cover.1597652012.git.agx@sigxcpu.org>
- <20200818170556.GA2291850@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200818170556.GA2291850@ravnborg.org>
+        id S1726691AbgHRRj6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 13:39:58 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ED2D20738;
+        Tue, 18 Aug 2020 17:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597772397;
+        bh=jw0rqgoKOxJjeFzL3PLrNSOLSmVzOndyFsCJBt1RmBE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=JITDFbdXUSdL3CAO6S6oBsDueJ6T92UpvF2cvgIOiROsih1Att03rFWG8fDHlw8Kr
+         5gt3MWB6+E0LwEoKV+J6QXsnwHozg+mfEoWWSvEb1Q5SEj1klVTkoZKaAbgD8OMGnD
+         3qc8wxSPdiMVAh95d49Qx9j8IJ2vMKLzaQUYDKLo=
+Date:   Tue, 18 Aug 2020 18:39:27 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     heiko@sntech.de, Johan Jonker <jbx6244@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        lgirdwood@gmail.com, devicetree@vger.kernel.org,
+        sugar.zhang@rock-chips.com, linux-arm-kernel@lists.infradead.org,
+        alsa-devel@alsa-project.org, linux-rockchip@lists.infradead.org
+In-Reply-To: <20200818143727.5882-1-jbx6244@gmail.com>
+References: <20200818143727.5882-1-jbx6244@gmail.com>
+Subject: Re: [PATCH v2 1/2] ASoC: rockchip-spdif: add description for rk3308
+Message-Id: <159777235702.24785.2371871958311959848.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sam,
-On Tue, Aug 18, 2020 at 07:05:56PM +0200, Sam Ravnborg wrote:
-> Hi Guido.
+On Tue, 18 Aug 2020 16:37:26 +0200, Johan Jonker wrote:
+> A test with the command below shows that the compatible string
 > 
-> On Mon, Aug 17, 2020 at 10:14:33AM +0200, Guido Günther wrote:
-> > 
-> > The panel uses a Focaltech FT8006p, the touch part is handled by the already
-> > existing edt-ft5x06. It can be found in e.g. the Librem 5.
-> > 
-> > Changes from v2:
-> > - Due to review comments by Sam Ravnborg, thanks!
-> >   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
-> >   - Drop unused header
-> >   - Use newline before comment
-> > - Add Reviewed/Acked-by by Sam Ravnborg, thanks!
-> >   https://lore.kernel.org/lkml/20200815212727.GA1244923@ravnborg.org/
-> >   https://lore.kernel.org/lkml/20200815212750.GB1244923@ravnborg.org/
-> >   https://lore.kernel.org/lkml/20200815212840.GC1244923@ravnborg.org/
-> > 
-> > Changes from v1:
-> > - Due to review comments by Sam Ravnborg, thanks!
-> >   https://lore.kernel.org/dri-devel/20200815083917.GA993113@ravnborg.org/
-> >   - Don't preserve newlines with '|' in description
-> >   - Use reset-gpios and backlight from panel-common.yaml
-> >   - Reindent example
-> >   https://lore.kernel.org/dri-devel/20200815093226.GB993113@ravnborg.org/
-> >   - Drop unused includes
-> >   - Use dev_* instead of DRM_* for printing
-> >   - Turn off regulators in reverse order from enable
-> >   - Silence errors in mantix_{shutdown,remove}
-> >   - Drop duplicate mipi_dsi_dcs_enter_sleep_mode()
-> >   https://lore.kernel.org/dri-devel/20200815100230.GA1002374@ravnborg.org/
-> >   - Use dev_err_probe()
-> > - Add delays when turning off panel as suggested by the data sheet
-> > 
-> > This series is against next-20200814.
-> > 
-> > Guido Günther (3):
-> >   dt-bindings: vendor-prefixes: Add mantix vendor prefix
-> >   dt-bindings: Add Mantix MLAF057WE51-X panel bindings
-> >   drm/panel: Add panel driver for the Mantix MLAF057WE51-X DSI panel
+> "rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
 > 
-> Maxime Ripard backmerged -rc1 to drm-misc-next so I went ahead and applied
-> this series to drm-misc-next, forgetting you got commit rights. As they are
-> already pushed out too late for you to do push them - sorry!
+> is already in use, but is not added to a document.
+> The current fallback string "rockchip,rk3328-spdif" points to a data
+> set enum RK_SPDIF_RK3366 in rockchip_spdif.c that is not used both
+> in the mainline as in the manufacturer kernel.
+> (Of the enum only RK_SPDIF_RK3288 is used.)
+> So if the properties don't change we might as well use the first SoC
+> in line as fallback string and add the description for rk3308 as:
+> 
+> [...]
 
-On the contrary: Thanks a lot for handling this so promptly!
- -- Guido
+Applied to
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/1] ASoC: rockchip-spdif: add description for rk3308
+      commit: a8535ae7034e3547f4f7a8c7ca03a6ee72097fb0
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
