@@ -2,469 +2,201 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D64C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5230C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AEF20658
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0D620658
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 07:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="BoMPWGla";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="20VBGG5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbgHRHBb (ORCPT
+        id S1726435AbgHRHIf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 03:01:31 -0400
-Received: from mga04.intel.com ([192.55.52.120]:19689 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgHRHA6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 03:00:58 -0400
-IronPort-SDR: /aU+W0xx1WXMw4U92w+dUJyAkpWw5kruseCzAEPbo/GgWNk3gYoekeOzYOifOlqMhytQBxgyRg
- ljAD28aBI4hQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9716"; a="152262123"
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="152262123"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 00:00:48 -0700
-IronPort-SDR: TIjxzuAHOuBFfGEkckUHZBTYCqtzvPD+IPx1sEycMR3syMAjozxGDwO8wxqEFL+Bw446+5CWvG
- 6yBXbyYZBskg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,326,1592895600"; 
-   d="scan'208";a="292678316"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 18 Aug 2020 00:00:47 -0700
-Received: from [10.226.38.22] (unknown [10.226.38.22])
-        by linux.intel.com (Postfix) with ESMTP id 1BCE8580583;
-        Tue, 18 Aug 2020 00:00:44 -0700 (PDT)
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+        Tue, 18 Aug 2020 03:08:35 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:54844 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726043AbgHRHId (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 03:08:33 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07I7158a021659;
+        Tue, 18 Aug 2020 00:08:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=FNNkwDP1cKMAtBMVgH9/UO0+gIrZJ9d/Np/XwENeb68=;
+ b=BoMPWGlaKeXA3hMRCUUUxp13eYgVVL+o7z2q0+JqQ2zfescvVtnc6q9VZmwdPtV+4G6W
+ mj/HVlKM0WIK8Oxb/Xty9YEufdYu5NW7ZxGxfQdCD0mD6bC0ukkAk1aBR9bF+Iy4ZWbH
+ JIyz3Krw6Q/DCEo7K/kBBEBKQx/G4IuTttrgLYuaT4yJVYwjIzyVrOSQAcvWVHVfM2B8
+ /iSKXUgL/f2Tpm411otZ2kTEZGkvY25tnaAZiJB+OnUWIZqXZ+ZWsiepLBuvL8qJqj7y
+ 9JsmEz15T9vB41H+s0ep4AixJMefOUOtOA2b12tKA5FzD1l5FSiq8CiBut0bNrKSfDt4 XA== 
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 3306jngupw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Aug 2020 00:08:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jHVjpkj9KJ/ZGi/jG6PqVp/zAtiBK3JnxmMzZE/wZh4Owb4kQ4nWrZZbnvdX9CCriaQ3CIaPaXdx93QxuEE3NEx1PN6Fq/AteG6UeFCwzTBb9CruqkJLbEls7Tl9X7JUYJRW050SI+DYwTUwNt2sss/dW4lL6Ab425ju2Gv51vBgJYOLHRa7MzHtbe8HLrYjCInQyORm29meh0I3RT6brCBXxxW6I+exhYHPC5qv1VEwIzpCzelU+xf4fe+Vha8TLThZjgDR/tR/F48NJVpKdtscDRufo5SiPRl7XeziR5sB3Nx9Bebk7JfPQ74RE3y69HpKqoscE6JoYar0Fndwdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNNkwDP1cKMAtBMVgH9/UO0+gIrZJ9d/Np/XwENeb68=;
+ b=f8aUa6EX5gNEgqBqfwZzgjrME4wGgx8aw0Uqn6l0rPmV2NGQXzSEb4CDU0f3cR/GKWhTz0iICpjw5d/3BZlH707UFp00wXEPA5Et99RlLYE7PlamXasiaBkwgPp2KNa/LTVKRHOmSEiSMejlyRqfdkNB4oYiywVa3oW4Uu7D8TbT7rB+tFVYaZXL/mGb0fo1F8qcdlfLUwzatzn9Zp3tdGPswWQ9x9eYrT5xK2GTkOscxkppYldfEnF7ClF492WVHE8OBdAzHh/a7wn3Mr1lWVXgOldAa5DQWXYtmDHJeP8yUrxEFlEsl287EqdwD1MMntUOerlXQ+QNcI0uBuDBAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FNNkwDP1cKMAtBMVgH9/UO0+gIrZJ9d/Np/XwENeb68=;
+ b=20VBGG5CmtglcF6Yo4g2ZtENawMmDEECzSbmRQIiqsuiI/8KoCorqos0AnX/QO9kREufqJWxijt2ENpxnjoyglo3GMweeo9xgax2NXSjj5yNpDrd3N8ct6RGTPgF18bdLWD0KaDapfhzgrtoeWParzGrPTR+WjlRRwVN9xrzOSw=
+Received: from DM6PR07MB6154.namprd07.prod.outlook.com (2603:10b6:5:17e::20)
+ by DM5PR07MB3161.namprd07.prod.outlook.com (2603:10b6:3:e4::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Tue, 18 Aug
+ 2020 07:08:27 +0000
+Received: from DM6PR07MB6154.namprd07.prod.outlook.com
+ ([fe80::c0af:c085:c7a8:4bb6]) by DM6PR07MB6154.namprd07.prod.outlook.com
+ ([fe80::c0af:c085:c7a8:4bb6%5]) with mapi id 15.20.3283.028; Tue, 18 Aug 2020
+ 07:08:27 +0000
+From:   Swapnil Kashinath Jakhade <sjakhade@cadence.com>
 To:     Rob Herring <robh@kernel.org>
-Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
-Date:   Tue, 18 Aug 2020 15:00:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200814203222.GA2674896@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+CC:     "kishon@ti.com" <kishon@ti.com>, "jsarha@ti.com" <jsarha@ti.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
+        Yuti Suresh Amonkar <yamonkar@cadence.com>,
+        Milind Parab <mparab@cadence.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nsekhar@ti.com" <nsekhar@ti.com>
+Subject: RE: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
+ PHY bindings for generic use
+Thread-Topic: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update Torrent
+ PHY bindings for generic use
+Thread-Index: AQHWbKNgb4eLlJb0pE6AuVCE/4rv2ak0sXOAgAjQckA=
+Date:   Tue, 18 Aug 2020 07:08:27 +0000
+Message-ID: <DM6PR07MB61546EAD17F3221DEF393780C55C0@DM6PR07MB6154.namprd07.prod.outlook.com>
+References: <1596795165-13341-1-git-send-email-sjakhade@cadence.com>
+ <1596795165-13341-8-git-send-email-sjakhade@cadence.com>
+ <20200812162643.GA2320575@bogus>
+In-Reply-To: <20200812162643.GA2320575@bogus>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc2pha2hhZGVcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy05OTJiMWI3Mi1lMTIxLTExZWEtODUyNi1jOGY3NTA0NDIyZDhcYW1lLXRlc3RcOTkyYjFiNzQtZTEyMS0xMWVhLTg1MjYtYzhmNzUwNDQyMmQ4Ym9keS50eHQiIHN6PSIyNTUyIiB0PSIxMzI0MjIwODEwMTgyODAxOTkiIGg9ImxBN0R2QzIyMk00Y3dOWGxOdGFjSzlTYU5URT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: true
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=cadence.com;
+x-originating-ip: [59.145.174.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f73b6ee-0dad-4f54-a131-08d843458156
+x-ms-traffictypediagnostic: DM5PR07MB3161:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR07MB31611EC5F910662965FCDD36C55C0@DM5PR07MB3161.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 1YBWfo0egCF6lCqTDzu+S5GcM55g6J+zxcebKl9ZNTy1AswN6PwlDjzwG2lIZeBnq8cOl7FU/75MrsA4Bs/0WNaMsFX0KBU/hPBBpu2uRMrzzM6Q38HEmFg4spB7ivOSKhQqGXIruX4/xwLeylBFuTRzuclY4lmfdtF4etAEjmAEzDBvGTvCazuLd/4dVqiY/FasV8+Apki06HPQ8so9Xvua1GTYiiduSn8g8wFJz6WpLCP4jBF8ZY5SmS9+8Rj7JOVIy7g5e/n8CF52HGLrX1HasMMh7JbhtV4f4/XRSPK4LdvhkLXwQlGrfEoDem15Ee2O87K5tnIXWvNddZqJtRDEzXX68HjdfkIsfbV3Ezj7wD3eepk2bFifJEVC2fm+yjIJlGsGvKmQcgpVKKVVfhafL8bCNqm4k5HrwVzhb01cvuVFTQsgEP3GSzNHrMp/sanKUjzJP6iSOA4I0g71ctkE6ha+Nc8S/vncqgspfTI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB6154.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(376002)(346002)(39860400002)(396003)(36092001)(7696005)(52536014)(9686003)(6506007)(26005)(53546011)(55016002)(478600001)(86362001)(83380400001)(66556008)(66446008)(66946007)(2906002)(76116006)(64756008)(8936002)(71200400001)(5660300002)(316002)(33656002)(15650500001)(6916009)(8676002)(966005)(54906003)(66476007)(4326008)(186003)(41533002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: BuPA6Y26fG5q8a2MXY8GNpnbs0SzC56RMdP19DgOzyVjpJp6cLRZtWhN73Ro/MYhbmNW3GhqhtfBx+MeXhuWHg1p9okogMmTpvIW4NwIG0jmxBwJk1QMiXUOEdP9qvNP2QnGRpTAg9IfufdxzplhCBd2yLa0KyCDsLcDVVU+CYYEWoGMWhx6BOlFcjudyPxlnGgi7JV6CM8dvFX6RzVYQplgHqdslEXRW9KosXVgaBvyYbyjUtxoZgr3U8mnsEAsEQUIutf0neq2ynwpRM4KlGB4s/ymX8FxPbX7t0l5Ryh38QNmHs5YSMQUShv7DTMvlTKa4f8/K8bo7n1/0uhEYqJdNB36T6bpnPqO+xRk1GaWEp4aQpAsmJNQUOFeKQBwzxOITW37yhDp+K53gMaewtRDU2DUi49qpxVs24cWwanRSSyxUmTjwOfYMDhFb2m+vve2OklMcYBvTLVNms1zoHgVUKKWDLj6+VLObr8y0KHrktOaqPh+qn9awz1U3thA75VL864QSl4t0pWwB8Rw0KfFaWMDGeejEtdTagjR2cFdCnImjipDX9WwMSk4lD/gdLHyy9bgKQ/cb3BzZN14KPMrr2aIKlt+alCEhItMznMCaYyGuTgVtDXwzn/AunCm/psUG+Fel4eSg8/R1Fjv9A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB6154.namprd07.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f73b6ee-0dad-4f54-a131-08d843458156
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2020 07:08:27.4188
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y2tY94BSxcZfK3Zaz9Rl+lTgCdRW572OkB1qQgyt0gR2hDnGAcR8P5vo0jFrwVzFj/R/f6Dh0yarJCxuuv2UK34o7j7NutLZNlV5sE8iMQE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR07MB3161
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-18_04:2020-08-18,2020-08-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
+ mlxscore=0 priorityscore=1501 clxscore=1011 lowpriorityscore=0
+ adultscore=0 impostorscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ bulkscore=0 mlxlogscore=757 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008180049
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 Hi Rob,
-Thanks for your valuable comments. Please see my comments inline..
 
-On 8/15/2020 4:32 AM, Rob Herring wrote:
-> On Fri, Aug 14, 2020 at 01:26:09PM +0800, Amireddy Mallikarjuna reddy wrote:
->> Add DT bindings YAML schema for DMA controller driver
->> of Lightning Mountain(LGM) SoC.
->>
->> Signed-off-by: Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
->> ---
->> v1:
->> - Initial version.
->>
->> v2:
->> - Fix bot errors.
->>
->> v3:
->> - No change.
->>
->> v4:
->> - Address Thomas langer comments
->>    - use node name pattern as dma-controller as in common binding.
->>    - Remove "_" (underscore) in instance name.
->>    - Remove "port-" and "chan-" in attribute name for both 'dma-ports' & 'dma-channels' child nodes.
->>
->> v5:
->> - Moved some of the attributes in 'dma-ports' & 'dma-channels' child nodes to dma client/consumer side as cells in 'dmas' properties.
->> ---
->>   .../devicetree/bindings/dma/intel,ldma.yaml        | 319 +++++++++++++++++++++
->>   1 file changed, 319 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->> new file mode 100644
->> index 000000000000..9beaf191a6de
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->> @@ -0,0 +1,319 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/dma/intel,ldma.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Lightning Mountain centralized low speed DMA and high speed DMA controllers.
->> +
->> +maintainers:
->> +  - chuanhua.lei@intel.com
->> +  - mallikarjunax.reddy@intel.com
->> +
->> +allOf:
->> +  - $ref: "dma-controller.yaml#"
->> +
->> +properties:
->> + $nodename:
->> +   pattern: "^dma-controller(@.*)?$"
->> +
->> + "#dma-cells":
->> +   const: 1
-> Example says 3.
-OK, i will fix it.
->
->> +
->> + compatible:
->> +  anyOf:
->> +   - const: intel,lgm-cdma
->> +   - const: intel,lgm-dma2tx
->> +   - const: intel,lgm-dma1rx
->> +   - const: intel,lgm-dma1tx
->> +   - const: intel,lgm-dma0tx
->> +   - const: intel,lgm-dma3
->> +   - const: intel,lgm-toe-dma30
->> +   - const: intel,lgm-toe-dma31
-> 'anyOf' doesn't make sense here. This should be a single 'enum'.
-ok. I will update it.
->
->> +
->> + reg:
->> +  maxItems: 1
->> +
->> + clocks:
->> +  maxItems: 1
->> +
->> + resets:
->> +  maxItems: 1
->> +
->> + interrupts:
->> +  maxItems: 1
->> +
->> + intel,dma-poll-cnt:
->> +   $ref: /schemas/types.yaml#definitions/uint32
->> +   description:
->> +     DMA descriptor polling counter. It may need fine tune according
->> +     to the system application scenario.
->> +
->> + intel,dma-byte-en:
->> +   type: boolean
->> +   description:
->> +     DMA byte enable is only valid for DMA write(RX).
->> +     Byte enable(1) means DMA write will be based on the number of dwords
->> +     instead of the whole burst.
->> +
->> + intel,dma-drb:
->> +    type: boolean
->> +    description:
->> +      DMA descriptor read back to make sure data and desc synchronization.
->> +
->> + intel,dma-burst:
->> +    $ref: /schemas/types.yaml#definitions/uint32
->> +    description:
->> +       Specifiy the DMA burst size(in dwords), the valid value will be 8, 16, 32.
->> +       Default is 16 for data path dma, 32 is for memcopy DMA.
->> +
->> + intel,dma-polling-cnt:
->> +    $ref: /schemas/types.yaml#definitions/uint32
->> +    description:
->> +       DMA descriptor polling counter. It may need fine tune according to
->> +       the system application scenario.
->> +
->> + intel,dma-desc-in-sram:
->> +    type: boolean
->> +    description:
->> +       DMA descritpors in SRAM or not. Some old controllers descriptors
->> +       can be in DRAM or SRAM. The new ones are all in SRAM.
->> +
->> + intel,dma-orrc:
->> +    $ref: /schemas/types.yaml#definitions/uint32
->> +    description:
->> +       DMA outstanding read counter. The maximum value is 16, and it may
->> +       need fine tune according to the system application scenarios.
->> +
->> + intel,dma-dburst-wr:
->> +    type: boolean
->> +    description:
->> +       Enable RX dynamic burst write. It only applies to RX DMA and memcopy DMA.
->> +
->> +
->> + dma-ports:
->> +    type: object
->> +    description:
->> +       This sub-node must contain a sub-node for each DMA port.
->> +    properties:
->> +      '#address-cells':
->> +        const: 1
->> +      '#size-cells':
->> +        const: 0
->> +
->> +    patternProperties:
->> +      "^dma-ports@[0-9]+$":
->> +          type: object
->> +
->> +          properties:
->> +            reg:
->> +              items:
->> +                - enum: [0, 1, 2, 3, 4, 5]
->> +              description:
->> +                 Which port this node refers to.
->> +
->> +            intel,name:
->> +              $ref: /schemas/types.yaml#definitions/string-array
->> +              description:
->> +                 Port name of each DMA port.
-> No other DMA controller needs this, why do you?
-  Answered below. (*ABC)
->
->> +
->> +            intel,chans:
->> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->> +              description:
->> +                 The channels included on this port. Format is channel start
->> +                 number and how many channels on this port.
-> Why does this need to be in DT? This all seems like it can be in the dma
-> cells for each client.
-(*ABC)
-Yes. We need this.
-for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 
-22 channels. and the logical channel mapping for the peripherals also 
-differ b/w old and new SOCs.
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Wednesday, August 12, 2020 9:57 PM
+> To: Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+> Cc: kishon@ti.com; jsarha@ti.com; vkoul@kernel.org;
+> tomi.valkeinen@ti.com; Yuti Suresh Amonkar <yamonkar@cadence.com>;
+> Milind Parab <mparab@cadence.com>; robh+dt@kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; nsekhar@ti.com
+> Subject: Re: [PATCH v1 7/7] dt-bindings: phy: cadence-torrent: Update
+> Torrent PHY bindings for generic use
+>=20
+> EXTERNAL MAIL
+>=20
+>=20
+> On Fri, 07 Aug 2020 12:12:45 +0200, Swapnil Jakhade wrote:
+> > Torrent PHY can be used in different multi-link multi-protocol
+> > configurations including protocols other than DisplayPort also, such
+> > as PCIe, USB, SGMII, QSGMII etc. Update the bindings to have support
+> > for these configurations.
+> >
+> > Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
+> > ---
+> >  .../bindings/phy/phy-cadence-torrent.yaml     | 76 ++++++++++++++-----
+> >  1 file changed, 58 insertions(+), 18 deletions(-)
+> >
+>=20
+>=20
+> My bot found errors running 'make dt_binding_check' on your patch:
+>=20
+> Error: Documentation/devicetree/bindings/phy/phy-cadence-
+> torrent.example.dts:93.38-39 syntax error FATAL ERROR: Unable to parse
+> input tree
+> make[1]: *** [scripts/Makefile.lib:330:
+> Documentation/devicetree/bindings/phy/phy-cadence-
+> torrent.example.dt.yaml] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [Makefile:1334: dt_binding_check] Error 2
+>=20
+>=20
+> See
+> https://urldefense.com/v3/__https://patchwork.ozlabs.org/patch/1342193_
+> _;!!EHscmS1ygiU1lA!SVJ6n249DhrJY-
+> i_QSvywciTmAiJRcn9zUnmEeSR5UI4tt9jxEzzj9r5Rz1ZiOY$
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above error=
+(s),
+> then make sure dt-schema is up to date:
+>=20
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master -=
+-
+> upgrade
+>=20
+> Please check and re-submit.
 
-Because of this hardware limitation we are trying to configure the total 
-channels and port-channel mapping dynamically from device tree.
+This patch and the series requires the macro definition for PHY_TYPE_SGMII =
+in
+file include/dt-bindings/phy/phy.h
+This error is because of missing this macro definition. It has been newly a=
+dded
+and present in kernel v5.9-rc1
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/diff/inc=
+lude/dt-bindings/phy/phy.h?id=3Dv5.9-rc1&id2=3Dv5.8
+So latest version should not get this error.
 
-based on port name we are trying to configure the default values for 
-different peripherals(ports).
-Example: burst length is not same for all ports, so using port name to 
-do default configurations.
->
->> +
->> +          required:
->> +            - reg
->> +            - intel,name
->> +            - intel,chans
->> +
->> +
->> + ldma-channels:
->> +    type: object
->> +    description:
->> +       This sub-node must contain a sub-node for each DMA channel.
->> +    properties:
->> +      '#address-cells':
->> +        const: 1
->> +      '#size-cells':
->> +        const: 0
->> +
->> +    patternProperties:
->> +      "^ldma-channels@[0-15]+$":
->> +          type: object
->> +
->> +          properties:
->> +            reg:
->> +              items:
->> +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
->> +              description:
->> +                 Which channel this node refers to.
->> +
->> +            intel,desc_num:
->> +              $ref: /schemas/types.yaml#/definitions/uint32
->> +              description:
->> +                 Per channel maximum descriptor number. The max value is 255.
->> +
->> +            intel,hdr-mode:
->> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->> +              description:
->> +                 The first parameter is header mode size, the second
->> +                 parameter is checksum enable or disable. If enabled,
->> +                 header mode size is ignored. If disabled, header mode
->> +                 size must be provided.
->> +
->> +            intel,hw-desc:
->> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->> +              description:
->> +                 Per channel dma hardware descriptor configuration.
->> +                 The first parameter is descriptor physical address and the
->> +                 second parameter hardware descriptor number.
-> Again, this all seems like per client information for dma cells.
-  Ok, if we move all these attributes to 'dmas' then 'dma-channels' 
-child node is not needed in dtsi.
-#dma-cells number i am already using 7. If we move all these attributes 
-to 'dmas' then integer cells will increase.
-
-Is there any limitation in using a number of integer cells & as 
-determined by the #dma-cells property?
-
->
->> +
->> +          required:
->> +            - reg
->> +
->> +required:
->> + - compatible
->> + - reg
->> + - '#dma-cells'
-> Add:
->
-> additionalProperties: false
-Sure i will update it in the next patch..
-
->
->> +
->> +examples:
->> + - |
->> +   dma0: dma-controller@e0e00000 {
->> +     compatible = "intel,lgm-cdma";
->> +     reg = <0xe0e00000 0x1000>;
->> +     #dma-cells = <3>;
->> +     interrupt-parent = <&ioapic1>;
->> +     interrupts = <82 1>;
->> +     resets = <&rcu0 0x30 0>;
->> +     reset-names = "ctrl";
-> Not documented.
-ok. will Document in the next patch.
->
->> +     clocks = <&cgu0 80>;
->> +     intel,dma-poll-cnt = <4>;
->> +     intel,dma-byte-en;
->> +     intel,dma-drb;
->> +     dma-ports {
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +
->> +       dma-ports@0 {
->> +           reg = <0>;
->> +           intel,name = "SPI0";
->> +           intel,chans = <0 2>;
->> +       };
->> +       dma-ports@1 {
->> +           reg = <1>;
->> +           intel,name = "SPI1";
->> +           intel,chans = <2 2>;
->> +       };
->> +       dma-ports@2 {
->> +           reg = <2>;
->> +           intel,name = "SPI2";
->> +           intel,chans = <4 2>;
->> +       };
->> +       dma-ports@3 {
->> +           reg = <3>;
->> +           intel,name = "SPI3";
->> +           intel,chans = <6 2>;
->> +       };
->> +       dma-ports@4 {
->> +           reg = <4>;
->> +           intel,name = "HSNAND";
->> +           intel,chans = <8 2>;
->> +       };
->> +       dma-ports@5 {
->> +           reg = <5>;
->> +           intel,name = "PCM";
->> +           intel,chans = <10 6>;
->> +       };
->> +     };
->> +     ldma-channels {
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
->> +
->> +       ldma-channels@0 {
->> +           reg = <0>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@1 {
->> +           reg = <1>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@2 {
->> +           reg = <2>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@3 {
->> +           reg = <3>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@4 {
->> +           reg = <4>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@5 {
->> +           reg = <5>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@6 {
->> +           reg = <6>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@7 {
->> +           reg = <7>;
->> +           intel,desc_num = <1>;
->> +       };
->> +       ldma-channels@8 {
->> +           reg = <8>;
->> +       };
->> +       ldma-channels@9 {
->> +           reg = <9>;
->> +       };
->> +       ldma-channels@10 {
->> +           reg = <10>;
->> +       };
->> +       ldma-channels@11 {
->> +           reg = <11>;
->> +       };
->> +       ldma-channels@12 {
->> +           reg = <12>;
->> +       };
->> +       ldma-channels@13 {
->> +           reg = <13>;
->> +       };
->> +       ldma-channels@14 {
->> +           reg = <14>;
->> +       };
->> +       ldma-channels@15 {
->> +           reg = <15>;
->> +       };
->> +     };
->> +   };
->> + - |
->> +   dma3: dma-controller@ec800000 {
->> +     compatible = "intel,lgm-dma3";
->> +     reg = <0xec800000 0x1000>;
->> +     clocks = <&cgu0 71>;
->> +     resets = <&rcu0 0x10 9>;
->> +     #dma-cells = <7>;
->> +     intel,dma-burst = <32>;
->> +     intel,dma-polling-cnt = <16>;
->> +     intel,dma-desc-in-sram;
->> +     intel,dma-orrc = <16>;
->> +     intel,dma-byte-en;
->> +     intel,dma-dburst-wr;
->> +     ldma-channels {
->> +         #address-cells = <1>;
->> +         #size-cells = <0>;
->> +
->> +         ldma-channels@12 {
->> +             reg = <12>;
->> +             intel,hdr-mode = <128 0>;
->> +             intel,hw-desc = <0x20000000 8>;
->> +         };
->> +         ldma-channels@13 {
->> +             reg = <13>;
->> +             intel,hdr-mode = <128 0>;
->> +         };
->> +     };
->> +   };
->> -- 
->> 2.11.0
->>
+Thanks,
+Swapnil
