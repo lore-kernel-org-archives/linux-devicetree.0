@@ -2,140 +2,114 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DATE_IN_PAST_12_24,
+X-Spam-Status: No, score=-3.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C60C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F46CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6272F20738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C982207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:46:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MCRsTNJn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rKqjw58r"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qgNk/129";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="JN6U/R1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726457AbgHYNo5 (ORCPT
+        id S1726611AbgHYNqY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:44:57 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:48387 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgHYNll (ORCPT
+        Tue, 25 Aug 2020 09:46:24 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41899 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726551AbgHYNlk (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:41:41 -0400
+        Tue, 25 Aug 2020 09:41:40 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9AB6E58042E;
-        Tue, 25 Aug 2020 09:35:50 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:50 -0400
+        by mailout.west.internal (Postfix) with ESMTP id A45A3C3A;
+        Tue, 25 Aug 2020 09:35:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ojmseEKHzxoiGqB788p1XAtMfVn
-        G9Y87jZdv0bH8iWE=; b=MCRsTNJnWzXk9w8vclVSRjI++JPspgkJnMOA7vlbc3n
-        2BGrls9MO4acqbXQq3avMJLWlJbyeykiadgy+pA4CFkpN2plJmY5vupBbsXEwWbY
-        3V6CTg4yDI9Ha9R2qoYYjnmrMWvw/iogG7iufUAjz4I+CO3sPkI0Ew8R6tbwGAnr
-        5JcY7bs2dSJnivpEGc1ArzJ/qLhkiL/ROmcHCtg7vsT9EcEdRmi5YtXXKur7dui8
-        BES1GXueKXi02W3hGBouwDJ/ypXJTzAKr7yqyseInqGsbXgg0ZwbUQjMgniCNeOR
-        C+IdsOHpsAO+XX/mQERWIQMsnNX4ugUY9lNESKYNORg==
+        :content-type:in-reply-to; s=fm3; bh=xTWDnflbQvjGc9pJORy0trBH/Hi
+        jBQsjxwEsTIAsojw=; b=qgNk/129ZMAdQFwYnTgnBFShZX/0z/9wi0B53VaumK5
+        BPoe7vG0j6ENPJlYhJ89s/Wah7rk6GGsNWZon6LoDVMAIhwTkecXqjxQ0B/2cFp5
+        q8bSNjdeI6G1t7xiaJsxntVqwfF0BCCHVbIbXml/lDRe7ltWp7TDu0O+uuBnqmWS
+        Cs/HRbJW60mt63Gp8M00kJzbfepXVuImrl6uqIXlNGLxYdCXvxr9ZYriqbAeuXmk
+        K+NwoIxZbmbVSvykR4jRZyMMQZklnKfhVNpkIFYWvxpAyF/+OhnMeqYIB69i2TOy
+        OixgqW8IqhkqfBQmlhKIAfjGtBmmJdyIXYhqUqXDM1Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ojmseE
-        KHzxoiGqB788p1XAtMfVnG9Y87jZdv0bH8iWE=; b=rKqjw58rqy7uCIb+DDNORU
-        olRXuwt/cUxRQj+RlZvtrFH0gPWq51xcpRN4aJl7MyOtvbQqaMEBNsFcfhr6Ayjf
-        h1By9naU3BkTTuxJwOt8JzacwJftRvDPRfJLV/g6jg9BLxxAHKyi9XA52KjSJVzf
-        6X6I77fSxvdnfNhHgYoaf+roZMDx5m4cXMMRV3cPyn6d56zyp3Krq2cwjev0Ukcu
-        sNcvvubJpnbYgnKy23DvluNTOh1uh/zd2OFnmFo/wq+0uzbOMIoXUksWMrILBpbs
-        CRAow3ee/0/Gh+jpKue7nGTZ/riCtaEzDqgdKYck2lV5LoUiRlXoftickV8LJ8xw
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=xTWDnf
+        lbQvjGc9pJORy0trBH/HijBQsjxwEsTIAsojw=; b=JN6U/R1d/ynU1n70jTUR4d
+        c9ubnk6cR4WCLYaGmKfmXTh4G2A6R4f4H0ezzZKw16E9dDO9z8hLFsw2fn4U5BYj
+        BPX8O26NEY4wHTLy3fg4TvwQ3Gr+wM9+S+QOrQWdKczyHYlQxySgJvcXAJAPEG8K
+        6Rdv7LbrZcraUkNrw68CZrJGZWWfwVLVk1CTvxhZ1BZgBqZu5EJduNevNFRtXR5n
+        4I6umJCocFUZWXozdCfQTQG7kYSB+d7MpxR9BL7cbUmdXwHkV6q9ebieCPxLBWpS
+        g4XjT9qaBZpxRw96wgXaZFh2B6+6dxd3hxaAME5S4pdk9N7r9sub/jvLG+k7KLbQ
         ==
-X-ME-Sender: <xms:thNFX_6NlrgGqglkP6kcrUyexVbFsV7qHokZLVxCxe4zwngaDeAIBg>
+X-ME-Sender: <xms:nxNFX6yxuvSuu-Z8Di38cWYcCKkhWufA1c57mmQ4U9hDgRlN8PlXAw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
-    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:thNFX07Fyk2e9VROTjTBQzUNe7VeVyRlJI4nkosjP-XeHGD3kkWSeA>
-    <xmx:thNFX2du4subVK53IYoS_Arv2LfhpedppmYFebGKSNLyCPP0y38HZg>
-    <xmx:thNFXwL4cJympLRTlTvvA5a3vJBVzambWHD-RG7ezuxGkCKd1N-1Kw>
-    <xmx:thNFX0UdnNiY7WlVSzZjw-yksRmZALcOET-BwHw3cekgzqOSAJnfJA>
+X-ME-Proxy: <xmx:nxNFX2RKpCnmTKla08HUz3kF9C2W5doYQW8rA2h9Q0pBIY1Wz1nGzQ>
+    <xmx:nxNFX8XcWZkhIvpQt4NKJQX_-g95nfb29F_Nj3SUb2faSejoUidPkg>
+    <xmx:nxNFXwhqG6gZvjqhAM70OMNr1mvpOMw29cY2xznXN332cJHnVRNcPA>
+    <xmx:oBNFX_MIKJG3ugU8S1c_5NY6S6CFtYksfc9D6n6idfw_YTCjXWqvaw>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B826A3060067;
-        Tue, 25 Aug 2020 09:35:49 -0400 (EDT)
-Date:   Mon, 24 Aug 2020 18:52:44 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9BBDE3280059;
+        Tue, 25 Aug 2020 09:35:27 -0400 (EDT)
+Date:   Tue, 18 Aug 2020 11:04:09 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 0/7] Support of MIPI CSI-2 for A83T and OV8865 camera
-Message-ID: <20200824165244.x5rnon47kmtxojg2@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+To:     Alexander Kochetkov <al.kochet@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Kochetkov <akochetkov@lintech.ru>
+Subject: Re: [PATCH] arm64: dts: allwinner: replace numerical constant with
+ CCU_CLKX
+Message-ID: <20200818090409.te6oefjtuseclx4g@gilmour.lan>
+References: <20200803143022.25909-1-al.kochet@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6inilh36kvmcvg6m"
+        protocol="application/pgp-signature"; boundary="pga65g2vz6oo4kok"
 Content-Disposition: inline
-In-Reply-To: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+In-Reply-To: <20200803143022.25909-1-al.kochet@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---6inilh36kvmcvg6m
-Content-Type: text/plain; charset=iso-8859-1
+--pga65g2vz6oo4kok
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Fri, Aug 21, 2020 at 04:59:28PM +0200, K=E9vin L'h=F4pital wrote:
+On Mon, Aug 03, 2020 at 05:30:22PM +0300, Alexander Kochetkov wrote:
+> From: Alexander Kochetkov <akochetkov@lintech.ru>
 >=20
-> K=E9vin L'h=F4pital (7):
->   media: sun6i-csi: Fix the bpp for 10-bit bayer formats
->   dt-bindings: media: i2c: Add documentation for ov8865
->   media: i2c: Add support for the OV8865 image sensor
->   media: sunxi: sun6i-csi: Move the sun6i_csi_dev structure to the
->     common header
->   media: sunxi: sun6i-csi: Add support of MIPI CSI-2 for A83T
->   ARM: dts: sun8i: a83t: Add support for the MIPI CSI-2 in CSI node
->   [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3: Enable OV8865
->     camera
+> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
 
-You should have a cover letter here to provide some context.
-
-There's a bunch of things that would need to be explained and / or
-argued for here, in particular:
-  - Why did you need to plumb it into sun6i-csi?
-  - You're naming the CSI part as the A83t CSI, while MIPI-CSI has been
-    supported since the A31(?), is there a reason for that?
-  - This is not documented anywhere, what did you base this work on?
-
-Also, I think that documenting the general challenges you faced (which
-were likely because of the first bullet point above) and how you solved
-them here would be great to start a discussion if needed.
-
-Finally, iirc, Hans requires a v4l2-compliance run for any new driver,
-which isn't strictly the case for this driver, but isn't really *not*
-the case either.
+Applied, thanks
 
 Maxime
 
---6inilh36kvmcvg6m
+--pga65g2vz6oo4kok
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0PwXAAKCRDj7w1vZxhR
-xVcYAQDaPS4QQ1Gi24DL+makRUO9jaKTktQUPcL9pxgsiF10fwEAit94g5iWgJcy
-Au+vTT0bokw+qv26aQbdeHa5l3a/4Qc=
-=LI1/
+iHQEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXzuZiQAKCRDj7w1vZxhR
+xRD2APiHXOaxYjxcyyB920l1xxejOlrk/yVKF/YHdgQVWmQSAP9lU84Nbjf9wLwA
+nrvH0z9sV68fq/EbcHryPrKy++qdAw==
+=UJIV
 -----END PGP SIGNATURE-----
 
---6inilh36kvmcvg6m--
+--pga65g2vz6oo4kok--
