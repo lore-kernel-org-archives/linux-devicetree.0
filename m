@@ -2,94 +2,116 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6DDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7319BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F655207DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597717969;
-	bh=EAnw/Bvk72wkOjSvZ2+o+Zvrqz/DEiNtFwraMlYa0OI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BBBhwnuJpc2XiDm8JhwM7QT0TpaPE1SFBDolfDhSn0Wounfl1NLUEg1JH/B3+P6we
-	 7yDr6HfLrKcQQ0MIe0w9YQ/tCD94frpdWgj0wZW++1ySqpXnx6sHQxcp75OsBFNzGm
-	 yUoP7a0Tbl+15WG9bIaEmfJ9whFx6tqbnxZ1KhYY=
+	by mail.kernel.org (Postfix) with ESMTP id 3FA1B2075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:41:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HG8DOknO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgHRCct (ORCPT
+        id S1726365AbgHRClk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 22:32:49 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34545 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbgHRCcr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 22:32:47 -0400
-Received: by mail-il1-f194.google.com with SMTP id t4so16350173iln.1;
-        Mon, 17 Aug 2020 19:32:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QvpHeI0WHZgPpWWWnEcIF4iG2n5WGQmzx2y7VZKLvTU=;
-        b=qPx+07UB9Lcnn8cMwqHhrIK2gimOkeinfDoaunYkvqT4D6MGsCXmp99hDocKlAI2sG
-         UXjto9t163emBUACYs6zBBeLNV4Z4ePVQkqc+DkWxCNYsbF7QS21k74sfTDcyMvB9ZaF
-         Xog8V0GkksU0fGcC0fHjaaIpbAj61U3m0yAzjybj3SBrYXW1EtAsHSkKOCvp6eizxzrP
-         d1BDJKaXh5n5bM99xR5PFFcdEZNRuUEWU0yOVfPtBULu6kaKV8EKJEqBgsTeZgoUFfFx
-         g2v+b3ShLiYVO+bspk/Ei2JZivpa9+M+FSlHz276xKBBsfxmBXnyqoWEceZOpNYtrcfu
-         Xnhw==
-X-Gm-Message-State: AOAM531v0HwBU51lFRSPl0K/AIUv1clrillz/75otEbTNtDucc3A9r45
-        gPD/CWzvXydmZXUg+KaPOl77IaRrWQ==
-X-Google-Smtp-Source: ABdhPJw2iRX+NCj5otrYdEvehO5LBWinPR96UcoEICBXqiF3MoDoBbe96tFN8kkMdYiY+px8EED6aQ==
-X-Received: by 2002:a05:6e02:c71:: with SMTP id f17mr15431977ilj.98.1597717966095;
-        Mon, 17 Aug 2020 19:32:46 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id n5sm1086243ilj.43.2020.08.17.19.32.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 19:32:45 -0700 (PDT)
-Received: (nullmailer pid 2176277 invoked by uid 1000);
-        Tue, 18 Aug 2020 02:32:43 -0000
-Date:   Mon, 17 Aug 2020 20:32:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        devicetree@vger.kernel.org, Phil Reid <preid@electromag.com.au>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH 13/13] dt-bindings: iio: adc: ti,tlc4541 binding
- conversion
-Message-ID: <20200818023243.GA2176224@bogus>
-References: <20200809111753.156236-1-jic23@kernel.org>
- <20200809111753.156236-14-jic23@kernel.org>
+        Mon, 17 Aug 2020 22:41:40 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:19505 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726360AbgHRClj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 22:41:39 -0400
+X-UUID: 93079a44c1c7482691ce98d73eb1a0ea-20200818
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=j56Gt4pCxYB+XONCMAUzqjSxYqX2Nyr1p1m6xZJHWhg=;
+        b=HG8DOknOg/9IEBIZCA6qhoz7uyKI8NnxMV77LsWEeRI+X8OaxL9Xfx6Y2fwr8oCGxM+EdBxyjU3ekOLm3wPORDfjenWuc3q4WvRMqCQjMX6XWQ/VjoYmEPgYiXwhV1aL/lAbPUR1K9IY5rDa9Vcz2GLJl5390/Sm7Ldx1FmVAWw=;
+X-UUID: 93079a44c1c7482691ce98d73eb1a0ea-20200818
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 715428081; Tue, 18 Aug 2020 10:41:31 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 18 Aug
+ 2020 10:41:25 +0800
+Received: from [10.16.6.141] (10.16.6.141) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 18 Aug 2020 10:41:24 +0800
+Message-ID: <1597718492.6381.6.camel@mszsdaap41>
+Subject: Re: [PATCH v2] drm/mediatek: dsi: fix scrolling of panel with small
+ hfp or hbp
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        <huijuan.xie@mediatek.com>, <stonea168@163.com>,
+        <cawa.cheng@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 18 Aug 2020 10:41:32 +0800
+In-Reply-To: <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com>
+References: <20200817130640.18021-1-jitao.shi@mediatek.com>
+         <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200809111753.156236-14-jic23@kernel.org>
+X-TM-SNTS-SMTP: B2EDE1793418E9C320064DD32C4D7E50B37FF645537BA7075AAD17680B2B1B742000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 09 Aug 2020 12:17:53 +0100, Jonathan Cameron wrote:
-> From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> Simple binding so easy to convert.
-> Dropped the stated value of maximum spi bus frequency as it does
-> not seem to correspond to the datasheet.  The value of 200kHz
-> is the max sampling frequency of the ADC, not the clock frequency of
-> the SPI bus.
-> 
-> Added #io-channel-cells to allow use as a provider of channels to
-> other devices via the consumer binding.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Phil Reid <preid@electromag.com.au>
-> ---
->  .../bindings/iio/adc/ti,tlc4541.yaml          | 52 +++++++++++++++++++
->  .../bindings/iio/adc/ti-tlc4541.txt           | 17 ------
->  2 files changed, 52 insertions(+), 17 deletions(-)
-> 
+T24gVHVlLCAyMDIwLTA4LTE4IGF0IDA3OjQyICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
+PiBIaSwgSml0YW86DQo+IA0KPiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+IOaW
+vCAyMDIw5bm0OOaciDE35pelIOmAseS4gCDkuIvljYg5OjA35a+r6YGT77yaDQo+ID4NCj4gPiBo
+b3Jpem9udGFsX2JhY2twb3JjaF9ieXRlIHNob3VsZCBiZSBoYnAgKiBicHAgLSBoYnAgZXh0cmEg
+Ynl0ZXMuDQo+ID4gU28gcmVtb3ZlIHRoZSB3cm9uZyBzdWJ0cmFjdGlvbiAxMC4NCj4gPg0KPiA+
+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCj4gPiAt
+LS0NCj4gPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyB8IDkgKysrKy0tLS0t
+DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+
+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyBi
+L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMNCj4gPiBpbmRleCAyNzBiZjIyYzk4
+ZmUuLjVkMDMxZTYzNDU3MSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RzaS5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2ku
+Yw0KPiA+IEBAIC00NzMsMTQgKzQ3MywxMyBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX2NvbmZpZ192
+ZG9fdGltaW5nKHN0cnVjdCBtdGtfZHNpICpkc2kpDQo+ID4gICAgICAgICBob3Jpem9udGFsX3N5
+bmNfYWN0aXZlX2J5dGUgPSAodm0tPmhzeW5jX2xlbiAqIGRzaV90bXBfYnVmX2JwcCAtIDEwKTsN
+Cj4gDQo+IFNvIHRoaXMgc3VidHJhY3Rpb24gMTAgaXMgY29ycmVjdD8NCj4gDQo+IFJlZ2FyZHMs
+DQo+IENodW4tS3VhbmcuDQo+IA0KDQpZZXMsIEl0IGlzIHJpZ2h0Lg0KDQpJbiB0aGUgY2VhODYx
+IGFuZCBkbXQgc3BlYyB0aGUgbWluaSBoc3luYyBpcyA0MCBwaXhlbHMuDQpTbyB0aGUgdm0tPmhz
+eW5jX2xlbiAqIGRzaV90bXBfYnVmX2JwcCA+PSAxMjAgPiAxMA0KDQpCZXN0IFJlZ2FyZHMNCmpp
+dGFvDQo+ID4NCj4gPiAgICAgICAgIGlmIChkc2ktPm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RF
+X1ZJREVPX1NZTkNfUFVMU0UpDQo+ID4gLSAgICAgICAgICAgICAgIGhvcml6b250YWxfYmFja3Bv
+cmNoX2J5dGUgPQ0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICh2bS0+aGJhY2tfcG9yY2gg
+KiBkc2lfdG1wX2J1Zl9icHAgLSAxMCk7DQo+ID4gKyAgICAgICAgICAgICAgIGhvcml6b250YWxf
+YmFja3BvcmNoX2J5dGUgPSB2bS0+aGJhY2tfcG9yY2ggKiBkc2lfdG1wX2J1Zl9icHA7DQo+ID4g
+ICAgICAgICBlbHNlDQo+ID4gLSAgICAgICAgICAgICAgIGhvcml6b250YWxfYmFja3BvcmNoX2J5
+dGUgPSAoKHZtLT5oYmFja19wb3JjaCArIHZtLT5oc3luY19sZW4pICoNCj4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICBkc2lfdG1wX2J1Zl9icHAgLSAxMCk7DQo+ID4gKyAgICAgICAgICAgICAg
+IGhvcml6b250YWxfYmFja3BvcmNoX2J5dGUgPSAodm0tPmhiYWNrX3BvcmNoICsgdm0tPmhzeW5j
+X2xlbikgKg0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ZHNpX3RtcF9idWZfYnBwOw0KPiA+DQo+ID4gICAgICAgICBkYXRhX3BoeV9jeWNsZXMgPSB0aW1p
+bmctPmxweCArIHRpbWluZy0+ZGFfaHNfcHJlcGFyZSArDQo+ID4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgICB0aW1pbmctPmRhX2hzX3plcm8gKyB0aW1pbmctPmRhX2hzX2V4aXQgKyAzOw0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgdGltaW5nLT5kYV9oc196ZXJvICsgdGltaW5nLT5k
+YV9oc19leGl0Ow0KPiA+DQo+ID4gICAgICAgICBpZiAoZHNpLT5tb2RlX2ZsYWdzICYgTUlQSV9E
+U0lfTU9ERV9WSURFT19CVVJTVCkgew0KPiA+ICAgICAgICAgICAgICAgICBpZiAoKHZtLT5oZnJv
+bnRfcG9yY2ggKyB2bS0+aGJhY2tfcG9yY2gpICogZHNpX3RtcF9idWZfYnBwID4NCj4gPiAtLQ0K
+PiA+IDIuMTIuNQ0KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fDQo+ID4gTGludXgtbWVkaWF0ZWsgbWFpbGluZyBsaXN0DQo+ID4gTGludXgtbWVkaWF0
+ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtbWVkaWF0ZWsNCg0K
 
-Reviewed-by: Rob Herring <robh@kernel.org>
