@@ -2,119 +2,73 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECEEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A21C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 942FC206B5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBojPTd7"
+	by mail.kernel.org (Postfix) with ESMTP id 552E5206B5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 08:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgHRIQA (ORCPT
+        id S1726398AbgHRI0V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 04:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48754 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbgHRIP7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 04:15:59 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B223C061342
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 01:15:59 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id z6so20335903iow.6
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 01:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mVTJ27D4R3H6C6f0jdBIw50yJtblFxQuDJ6LjKOMP5s=;
-        b=qBojPTd7Q+0e6B8OJziPOJ9nn7uED4XQgwDpQNf996Pu0sWnuI7BWPbmuzmjvketsq
-         Nz46NgmdJ9KoR00KJGuDfmAfZGZtXB76eV1PVh1pVjJwFz09zLl4ZLiOxv5hK2d384du
-         1B3BD/3QQo24iogPuiSkD5HKTNsfefDaY+WlOZ34sSGaRkQh5lkE5QGzBdqSdhfTOqkF
-         6p1AUoRhtjl5E6apEJXb7AVYrnf3G7101Myby6rfj/hsYitV3mRo68qGXC5/HBEJO/Ry
-         /O4QVYQ2E9GaPz1po2qEkOkLnmncFpR7A0zxLVmj5Ic5SEUGnAYynHN7b0cB2UAsgjqB
-         BV7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mVTJ27D4R3H6C6f0jdBIw50yJtblFxQuDJ6LjKOMP5s=;
-        b=FqNysAoV2oIYjDcOEkrugSwK0UkY1e9gB657m4g0hUsqLR44JXoSEvJUInIk9CAmQ3
-         U9P7CFKuMlAraCXH1wHitS+VZH0FPrnDGY1cJ3BsPostoUozk505SwZ4a0nznZZAxhTo
-         dIoiIBRCzQV+SUHZcOufdFYjRzHi9zABn9NpyZkMtS/RcQENqLPG3WzN6wSmUHikQEJp
-         uTgw3neir4JEwuXT+OFBVk3tSDd1Uf+UGLn4PPRktqTnTzFT9v3YUB1hFUGv5IwCpzB9
-         cwU8+EsmBojUUXfCLWOcLt6Y2Rlhna5HD/YLCbCad6w0gmhE1mqdh1kRnNdm9ifjkSLn
-         Hw7w==
-X-Gm-Message-State: AOAM533ETCePaNzWE2ocuRw+un9fiXjpwTaRuygW7UCpqbLBBgH9nJW6
-        m9M1c/f375QroFoSOjSoFLyFODiQal4BMp9XKi4=
-X-Google-Smtp-Source: ABdhPJwoaSxUUmkYr7BSfO/yhNs7u20OUnmAeKOoAXMZAbbSOtGvZT9QCMhCfI4jY1MhXOJVcmRHUZ20H+AirlWZWg4=
-X-Received: by 2002:a6b:f801:: with SMTP id o1mr15423627ioh.43.1597738558213;
- Tue, 18 Aug 2020 01:15:58 -0700 (PDT)
+        Tue, 18 Aug 2020 04:26:21 -0400
+Received: from muru.com ([72.249.23.125]:40692 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726203AbgHRI0U (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 04:26:20 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 602A4810D;
+        Tue, 18 Aug 2020 08:26:18 +0000 (UTC)
+Date:   Tue, 18 Aug 2020 11:26:45 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     santosh.shilimkar@oracle.com
+Cc:     linux-omap@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        "Andrew F . Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCHv4 0/6] Add initial genpd support for omap PRM driver
+Message-ID: <20200818082645.GM2994@atomide.com>
+References: <20200702154513.31859-1-tony@atomide.com>
+ <20200817065300.GD2994@atomide.com>
+ <f52bc6c2-1256-a3ca-fede-1d3ab441ef9f@oracle.com>
 MIME-Version: 1.0
-References: <20200817102122.434-1-linux.amoon@gmail.com> <20200817102122.434-3-linux.amoon@gmail.com>
- <1jzh6se6te.fsf@starbuckisacylon.baylibre.com> <6B583170-3479-4DFB-B81A-431B5982C8D6@gmail.com>
-In-Reply-To: <6B583170-3479-4DFB-B81A-431B5982C8D6@gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Tue, 18 Aug 2020 13:45:48 +0530
-Message-ID: <CANAwSgS+MwbQHT=o3Bs7h_D7Gn3F2j4zDeT7dCnMwA2_YD4eDQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] arm64: dts: meson-g12b-odroid-n2: Disable virtual
- RTC driver
-To:     Christian Hewitt <christianshewitt@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f52bc6c2-1256-a3ca-fede-1d3ab441ef9f@oracle.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Christian and Jerome,
+* santosh.shilimkar@oracle.com <santosh.shilimkar@oracle.com> [200817 15:25]:
+> On 8/16/20 11:53 PM, Tony Lindgren wrote:
+> > Hi Santosh,
+> > 
+> > * Tony Lindgren <tony@atomide.com> [200702 18:46]:
+> > > Hi all,
+> > > 
+> > > Here's v4 set of patches to add genpd support to the PRM (Power and Reset
+> > > Module) driver.
+> > > 
+> > > Initially we just add one hardware accelerator power domain for sgx,
+> > > and one interconnect instance for l4_abe. The rest of the SoC specific
+> > > domain data is probably best added one SoC at a time based on generated
+> > > data.
+> > 
+> > Care to ack some of these patches? I'd like to get this into Linux next
+> > for v5.10 :)
+> > 
+> Sure,
+> Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
 
-Thanks for the review comments..
+Thanks, I've pushed out this series into omap-for-v5.10/prm-genpd and
+for-next branches.
 
-On Tue, 18 Aug 2020 at 13:21, Christian Hewitt
-<christianshewitt@gmail.com> wrote:
->
->
->
-> > On 18 Aug 2020, at 11:45 am, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> >
-> >
-> > On Mon 17 Aug 2020 at 12:21, Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> >> Disable virtual RTC node on Odroid N2,
-> >> since RTC PCF8563 support rtc wakeup.
-> >>
-> >> [    7.171149] meson-vrtc ff8000a8.rtc: registered as rtc0
-> >> [    7.182875] meson-vrtc ff8000a8.rtc: setting system clock to 1970-01-01T00:00:07 UTC (7)
-> >>
-> >
-> > Maybe I'm missing something but why should disable this ?
-> > Can't the 2 RTCs co-exist ?
->
-> aliases {
->         serial0 = &uart_AO;
->         ethernet0 = &ethmac;
->         rtc1 = &vrtc;
-> };
->
-> ^ adding this alias moves vrtc to /dev/rtc1 allowing the on-board rtc to
-> assume /dev/rtc0 which scripts/users and HOWTO guides assume to be a
-> real clock device. Tested and working fine with my own experiments with
-> enabling rtc on a bunch of G12B/SM1 boards.
->
-> Christian
+Regards,
 
-I will drop this patch and add the alias in the next version.
-
--Anand
+Tony
