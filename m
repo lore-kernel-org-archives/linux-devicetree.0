@@ -6,66 +6,70 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8242CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60EBF2080C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03021207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769748;
-	bh=8qiooKqbIY5buvznR0kFH1lZk03u/d1h4s6h+UzWh+w=;
+	s=default; t=1597769804;
+	bh=d9cPWtyENfNl2HRXMgEXWQnjJbqhSVmywdREqBxnrCY=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=eGZeM0niCekFhommUIg5ItJlRpomDWkR3K0XOwqxpDhlcrpBFXJ2aeFxSZS9AMw97
-	 z7IjvP34AYTyJMM5YNl32IHwGFdnfX8A2g9yYOiO4Nw8VCiqXRqFdgj+ErWfH3mQ4L
-	 XIJ1+qghThjAlGat7+wr4l71qINYPPrVRq4Iu0fQ=
+	b=xbCbnoUHmxr+/4pDwL6Gk07b8ZuqP1BBYk/u0n6m31MPuXltNIFpFhhTGzlNnGgV9
+	 chmr97yFLq0ezWW/DAm84DJoVi6SZYnFxSbnKZ/4laAsL4LliB6Sompx1NUkDtpn34
+	 jJCUmBbqftGde5w8iXX+7TqBMPFigQaUtkARpYLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgHRQzp (ORCPT
+        id S1728516AbgHRQ4m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:55:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35002 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:56:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727995AbgHRQyU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:54:20 -0400
+        id S1728464AbgHRQ4j (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:56:39 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF618207DA;
-        Tue, 18 Aug 2020 16:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A0F1207DE;
+        Tue, 18 Aug 2020 16:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769660;
-        bh=8qiooKqbIY5buvznR0kFH1lZk03u/d1h4s6h+UzWh+w=;
+        s=default; t=1597769799;
+        bh=d9cPWtyENfNl2HRXMgEXWQnjJbqhSVmywdREqBxnrCY=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=KzyrYJRY/SUg2zTX0I7Qe3AjmpADPvAFy1Ho9yYgcUAqTKntd0HBNEZiVYlRCoGho
-         vL4oHNfjuIkQLJ76ShY6jXtC1fgVx0Gw/55CcmOFxiKmczA+8OpEhbfaOLnonsnGyy
-         Xxd/GkdFHy1e3XFPP7dS+jt7CBKR99x5qoG23YYE=
-Date:   Tue, 18 Aug 2020 17:53:49 +0100
+        b=yACKnyoFBp/jxXuRDWlpSzvp2g1iat9EXWJrvfq2dZ+yQg8CnSl9gDFhRAUIeA6i0
+         EWulvufwZkN8Ge0orn4jZUcjPoLezXn4aclHI6Rg1JqA7kwW6G6CBFzIAHDj3XN6cm
+         I9riw1LPjz9poKJXILlWkhL0s6sIq4k0OOqZ8wyE=
+Date:   Tue, 18 Aug 2020 17:56:08 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     robh@kernel.org, tiwai@suse.com, lgirdwood@gmail.com,
-        Dan Murphy <dmurphy@ti.com>, perex@perex.cz
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200817172151.26564-1-dmurphy@ti.com>
-References: <20200817172151.26564-1-dmurphy@ti.com>
-Subject: Re: [PATCH 1/2] dt-bindings: tas2562: Remove tas2562 text file
-Message-Id: <159776961933.56094.16343409470039919349.b4-ty@kernel.org>
+To:     lgirdwood@gmail.com, robh+dt@kernel.org,
+        cy_huang <u0084500@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        cy_huang@richtek.com, gene_chen@richtek.com
+In-Reply-To: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+Subject: Re: [PATCH 1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
+Message-Id: <159776976828.56451.5593321071237177212.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 17 Aug 2020 12:21:50 -0500, Dan Murphy wrote:
-> Remove the tas2562 text file as the tas2562.yaml is now available.
+On Sat, 15 Aug 2020 11:14:20 +0800, cy_huang wrote:
+> Adds support for the RT4801 DSV. It has two regulators (DSVP/DSVN) with
+> an I2C interface. DSVP/DSVN can provide the display panel module for the
+> positive/negative voltage range from (+/-)4V to (+/-)6V.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/2] dt-bindings: tas2562: Remove tas2562 text file
-      commit: b1e78c9fcca83d3666bc149ba8ecc1e472759359
-[2/2] dt-bindings: tas2562: Add device specification links
-      commit: da9afe50ae2aac72d1b213d028d4e865c7ea9ba3
+[1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
+      commit: 5bbbfc7f7f0a44b7a85ab3872dd2ccce7019f7b1
+[2/3] regulator: rt4801: Add DT binding documentation
+      commit: fd6b928db8a05fcd8629320c52eae214a8615aae
+[3/3] regulator: rt4801: Fix the dt-binding document for dtc check.
+      commit: 6f4ac2844b61d43c0c48b7c67a974d9f6e4ddd9c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
