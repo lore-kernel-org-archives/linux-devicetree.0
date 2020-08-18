@@ -2,149 +2,102 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77795C433EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E84CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B58E207DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:19:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U+1oQ3B9"
+	by mail.kernel.org (Postfix) with ESMTP id 501E82076E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 15:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597764236;
+	bh=HpQrw3dSRuULmu7pAjgDli/38IUo+15Aerb5BtWgGbk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=h3NP0UpqLZe3uq8tOa9C49YOG4SKogZHRVR5XAV8jP5fGBc5N+ryZl2Rv2RiK95/3
+	 99t8giXNHbiGmhF2mqK5y1N9jNOE1PnyS+BZKcVg/m+7UduZa/leqoOLj0C2hiEvOO
+	 9TzGdftbCSmeXepmksJa9C4mlJapetxscQrLbBno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728131AbgHRPTf (ORCPT
+        id S1727945AbgHRPXz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 11:19:35 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:61721 "EHLO m43-7.mailgun.net"
+        Tue, 18 Aug 2020 11:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728101AbgHRPSt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 11:18:49 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597763929; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=llOXz6hHf939lRgjzq6PQgYsFaUkZxMefMQodFWY1Y4=;
- b=U+1oQ3B9kkt1X2w9xLOf2YDF6zd0Th1GYJ3xCOhABPeJ0sw0ghTYsmDSm+kcpJWnyaU3HL0g
- tdkmhC8Y7HHD7X1w/68Rj8LzCq8Dk8sKJw0whsDy3p+mRVlV3ay79tRT77oTzuB7hRBi4kMs
- 9gyQx5DJ0WNeGGpazmkw2q//dOk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f3bf14f668ab3fef6c61a61 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 18 Aug 2020 15:18:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 241F2C433A1; Tue, 18 Aug 2020 15:18:38 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1726630AbgHRPXu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 11:23:50 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49A95C433CA;
-        Tue, 18 Aug 2020 15:18:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2DF5206DA;
+        Tue, 18 Aug 2020 15:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597764229;
+        bh=HpQrw3dSRuULmu7pAjgDli/38IUo+15Aerb5BtWgGbk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zXJGw6+41RMiXqsi8HA1lcWAoe+ELCgZ+17PvoyKTcUMnCSfLrCqiTnRF7HlVDJx8
+         Fkmv01FEVd4DxYxtfM35x8srBSm73NzP0cIc225181ZGgDcujUtT8OJpY61N0gx2Ft
+         UuhvzcaHhJLMEIC1K6oh5TaKhBgDMaqEuVCdSoGE=
+Date:   Tue, 18 Aug 2020 08:23:47 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <vivien.didelot@savoirfairelinux.com>, <matthias.bgg@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <davem@davemloft.net>,
+        <sean.wang@mediatek.com>, <opensource@vdorst.com>,
+        <frank-w@public-files.de>, <dqfext@gmail.com>
+Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
+ MT7531 switch
+Message-ID: <20200818082347.353fe926@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
+References: <cover.1597729692.git.landen.chao@mediatek.com>
+        <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Aug 2020 20:48:37 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>, nganji@codeaurora.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [v2] drm/msm: add shutdown support for display platform_driver
-In-Reply-To: <CAF6AEGvDN2B-xxecOt+0aaweWohGSKekb3tCerX42T1eOte-ig@mail.gmail.com>
-References: <1591009402-681-1-git-send-email-mkrishn@codeaurora.org>
- <a3fcad3f97c258043cd4268ef2c99740@codeaurora.org>
- <CAF6AEGvDN2B-xxecOt+0aaweWohGSKekb3tCerX42T1eOte-ig@mail.gmail.com>
-Message-ID: <0c3a5b78537c659f49037e3f9d0d8888@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-18 20:42, Rob Clark wrote:
-> On Tue, Aug 18, 2020 at 3:03 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi,
->> 
->> On 2020-06-01 16:33, Krishna Manikandan wrote:
->> > Define shutdown callback for display drm driver,
->> > so as to disable all the CRTCS when shutdown
->> > notification is received by the driver.
->> >
->> > This change will turn off the timing engine so
->> > that no display transactions are requested
->> > while mmu translations are getting disabled
->> > during reboot sequence.
->> >
->> > Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
->> >
->> > Changes in v2:
->> >       - Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
->> >       - Change commit text to reflect when this issue
->> >         was uncovered (Sai Prakash Ranjan)
->> > ---
->> >  drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
->> >  1 file changed, 8 insertions(+)
->> >
->> > diff --git a/drivers/gpu/drm/msm/msm_drv.c
->> > b/drivers/gpu/drm/msm/msm_drv.c
->> > index e4b750b..94e3963 100644
->> > --- a/drivers/gpu/drm/msm/msm_drv.c
->> > +++ b/drivers/gpu/drm/msm/msm_drv.c
->> > @@ -1322,6 +1322,13 @@ static int msm_pdev_remove(struct
->> > platform_device *pdev)
->> >       return 0;
->> >  }
->> >
->> > +static void msm_pdev_shutdown(struct platform_device *pdev)
->> > +{
->> > +     struct drm_device *drm = platform_get_drvdata(pdev);
->> > +
->> > +     drm_atomic_helper_shutdown(drm);
->> > +}
->> > +
->> >  static const struct of_device_id dt_match[] = {
->> >       { .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
->> >       { .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
->> > @@ -1334,6 +1341,7 @@ static int msm_pdev_remove(struct platform_device
->> > *pdev)
->> >  static struct platform_driver msm_platform_driver = {
->> >       .probe      = msm_pdev_probe,
->> >       .remove     = msm_pdev_remove,
->> > +     .shutdown   = msm_pdev_shutdown,
->> >       .driver     = {
->> >               .name   = "msm",
->> >               .of_match_table = dt_match,
->> 
->> Any more comments on this patch?
-> 
-> sorry, I managed to overlook this earlier.. I've pulled it in to 
-> msm-next
-> 
+On Tue, 18 Aug 2020 15:14:10 +0800 Landen Chao wrote:
+> Add new support for MT7531:
+>=20
+> MT7531 is the next generation of MT7530. It is also a 7-ports switch with
+> 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
+> port 6 only supports SGMII interface. Cpu port 5 supports either RGMII
+> or SGMII in different HW sku. Due to SGMII interface support, pll, and
+> pad setting are different from MT7530. This patch adds different initial
+> setting, and SGMII phylink handlers of MT7531.
+>=20
+> MT7531 SGMII interface can be configured in following mode:
+> - 'SGMII AN mode' with in-band negotiation capability
+>     which is compatible with PHY_INTERFACE_MODE_SGMII.
+> - 'SGMII force mode' without in-bnad negotiation
+>     which is compatible with 10B/8B encoding of
+>     PHY_INTERFACE_MODE_1000BASEX with fixed full-duplex and fixed pause.
+> - 2.5 times faster clocked 'SGMII force mode' without in-bnad negotiation
+>     which is compatible with 10B/8B encoding of
+>     PHY_INTERFACE_MODE_2500BASEX with fixed full-duplex and fixed pause.
+>=20
+> Signed-off-by: Landen Chao <landen.chao@mediatek.com>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 
-No problem, thanks Rob.
+Please fix these W=3D1 warnings:
 
--Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+../drivers/net/dsa/mt7530.c:1976:1: warning: no previous prototype for =E2=
+=80=98mt7531_sgmii_link_up_force=E2=80=99 [-Wmissing-prototypes]
+ 1976 | mt7531_sgmii_link_up_force(struct dsa_switch *ds, int port,
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/dsa/mt7530.c:2081:6: warning: no previous prototype for =E2=
+=80=98mt7531_sgmii_restart_an=E2=80=99 [-Wmissing-prototypes]
+ 2081 | void mt7531_sgmii_restart_an(struct dsa_switch *ds, int port)
+      |      ^~~~~~~~~~~~~~~~~~~~~~~
+../drivers/net/dsa/mt7530.c:1976:1: warning: symbol 'mt7531_sgmii_link_up_f=
+orce' was not declared. Should it be static?
+../drivers/net/dsa/mt7530.c:2081:6: warning: symbol 'mt7531_sgmii_restart_a=
+n' was not declared. Should it be static?
