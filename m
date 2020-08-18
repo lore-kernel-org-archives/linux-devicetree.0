@@ -7,86 +7,86 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A32BDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F11C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 721CE2078D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBC12078B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 02:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597717743;
-	bh=/fc+b/wqc7lK1tFmkmQdp7cZSqCOq1mruj2f4nvuJPw=;
+	s=default; t=1597717768;
+	bh=g6bV9uj0kQaCZBQ6lrI9/vye68j1oHGZFFkWzyBuel8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ci4EVMsAKOQC17Fmc7RN6dJ+jH3hzSUf7z3vu5dnzESQCBtmaDmduCua6jKNzI6Bd
-	 BLRJNo1ijW3GC2ler0tm39kVsYp6B1n3j/1PJKCdVkXyW/wFCPAUYInsYB4GMuPEG1
-	 XrcSs3lidfNIcnHkgMb2Q6MZt4CSRHouadpkaipQ=
+	b=d13ssHXRVZjkpSb+ABb9N7QFP4J6ZjRX6UpNw+E50Fez9uufuHlHoz6Ez1yauFU4Z
+	 HuNF3qBTO/SXPwDSIem303BbFT0myF0ElgFwwKkn5mRXnbA3cZb7cS1usLWRFm8lnn
+	 9y9gCZmDaryy359UXcAWTsyWcLLFot2CBuVG9ndg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbgHRC3D (ORCPT
+        id S1726398AbgHRC32 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 17 Aug 2020 22:29:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44330 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbgHRC3B (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 22:29:01 -0400
-Received: by mail-io1-f66.google.com with SMTP id v6so19611686iow.11;
-        Mon, 17 Aug 2020 19:29:00 -0700 (PDT)
+        Mon, 17 Aug 2020 22:29:28 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43820 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgHRC31 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 17 Aug 2020 22:29:27 -0400
+Received: by mail-io1-f67.google.com with SMTP id s1so6601100iot.10;
+        Mon, 17 Aug 2020 19:29:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xOPGCZNMbLcnvdYWcfK6GCF8gWrkDTrkpCZJdkRcfKc=;
-        b=mhX5qrLgeM1gOFW0sJuKlbOUonpxmPj5wBzgd+pnHuvEn+q/H11qxhOWkDWSUxwTAL
-         YGzmC3BLLJAzYKUAZobWVE3OM+g9DyQ3zqNZ54RHg8oSBdiq6CtRwILS3ThdRVDHCTz6
-         EXiMAl6i3eYPCjhZICH6jmj/i3+0Y8/RSRPdijA1hIRsBAqS9nP7fiAsMBWMhgwrt3KP
-         kHm/g6ntRAKdgLxhp+EWyliiVRPVLTrRK8OnGSKfrKnsqMFckn6JaouxO2FgabfxUyOp
-         rW8FSsnAzwBuC7UeKudpc6jwQaI1nQjGH/1uxUfYqx7CTYh0O4oBE+JMGWvm/DrpaCCS
-         717g==
-X-Gm-Message-State: AOAM531Tk3LsuLl+7jJ/vvaHfOhELwkqxRMUQu77Lb51IR10U4/QMKnz
-        fZ9rhZ5TEluCiBwFG9UCLA==
-X-Google-Smtp-Source: ABdhPJwrNg5vAaqjlbFMABScdEtrRIR1qvk+8bQOHKwfa4SLCAMhJ3NQx56SJ/nNy4YbROZJjRtJhw==
-X-Received: by 2002:a5d:9a86:: with SMTP id c6mr14973585iom.27.1597717740341;
-        Mon, 17 Aug 2020 19:29:00 -0700 (PDT)
+        bh=BRB66w2MJgqQyApGcQsPcl+Nhb5geUiqMnsQiVzgExQ=;
+        b=ZJoeIWgtfzl4bSvD5hiO+66EIV0SrR1aixipWbqRZyFuD93hF6bM4PLNz6f5aRGQEc
+         RNI5Kfub8+FIvFZvQ3CTeRzHgC04LfrwZByrLbm7FxEHEz4wOPFG2OuHblGf6bnx+l7L
+         luBTeH0baWUKJWHNLKTcJjS8Wn0QVdqHpxFPmjzG4ViFgPBEeP0Ipibz3Ha5C48zZ5JT
+         ftXRwdDUGlXsjGEOmUiKvNS7n55ztT4XZcxs3wCH5FDj94ItlmWYmYcsE+P1kCWYsn31
+         68KPiQd4OYf58vXz5DWZuwrbiB/ZFG87BT+/vCja0fY8YPQVggJeAYJ0xMMKVJOZU7Xz
+         dWVQ==
+X-Gm-Message-State: AOAM530VYvin/WXWxbZEGjlYDGlECCVQFzEs4PgVAxAu1DDO6ubKCcP5
+        b9pz4DfGg2rogjhXZFo17Q==
+X-Google-Smtp-Source: ABdhPJw9nGRdtCF9VNDyW45yJWTb8Ec6U2I7dvTsj2TUVX1K6lL31CQbPZfAUyWSsKpb7o6x+wB97A==
+X-Received: by 2002:a05:6638:250f:: with SMTP id v15mr17520120jat.75.1597717766591;
+        Mon, 17 Aug 2020 19:29:26 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id q200sm10333700iod.5.2020.08.17.19.28.59
+        by smtp.gmail.com with ESMTPSA id z9sm10517670ilm.78.2020.08.17.19.29.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Aug 2020 19:28:59 -0700 (PDT)
-Received: (nullmailer pid 2169650 invoked by uid 1000);
-        Tue, 18 Aug 2020 02:28:57 -0000
-Date:   Mon, 17 Aug 2020 20:28:57 -0600
+        Mon, 17 Aug 2020 19:29:26 -0700 (PDT)
+Received: (nullmailer pid 2170452 invoked by uid 1000);
+        Tue, 18 Aug 2020 02:29:24 -0000
+Date:   Mon, 17 Aug 2020 20:29:24 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: Re: [PATCH 05/13] dt-bindings: iio: adc: ti,adc161s626 yaml
- conversion.
-Message-ID: <20200818022857.GA2169563@bogus>
+Cc:     linux-iio@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 06/13] dt-bindings: iio: adc: ti,adc0832 yaml conversion.
+Message-ID: <20200818022924.GA2170397@bogus>
 References: <20200809111753.156236-1-jic23@kernel.org>
- <20200809111753.156236-6-jic23@kernel.org>
+ <20200809111753.156236-7-jic23@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200809111753.156236-6-jic23@kernel.org>
+In-Reply-To: <20200809111753.156236-7-jic23@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 09 Aug 2020 12:17:45 +0100, Jonathan Cameron wrote:
+On Sun, 09 Aug 2020 12:17:46 +0100, Jonathan Cameron wrote:
 > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > 
-> Simple conversion for this ADC driver.  Note that I haven't put
-> limits on the spi-max-sampling-frequency because the adc161s626
-> doesn't state one clearly defined value.
+> Simple binding conversion of this SPI ADC binding, with reference
+> voltage.
 > 
-> Added the #io-channel-cells property to allow for consumers.
+> Added the optional property #io-channel-cells to allow for
+> consumers of channels if that makes sense for a given board.
 > 
 > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Matt Ranostay <matt.ranostay@konsulko.com>
+> Cc: Akinobu Mita <akinobu.mita@gmail.com>
 > ---
->  .../bindings/iio/adc/ti,adc161s626.yaml       | 51 +++++++++++++++++++
->  .../bindings/iio/adc/ti-adc161s626.txt        | 18 -------
->  2 files changed, 51 insertions(+), 18 deletions(-)
+>  .../bindings/iio/adc/ti,adc0832.yaml          | 56 +++++++++++++++++++
+>  .../bindings/iio/adc/ti-adc0832.txt           | 19 -------
+>  2 files changed, 56 insertions(+), 19 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
