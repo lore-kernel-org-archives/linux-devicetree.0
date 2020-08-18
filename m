@@ -2,85 +2,143 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBAE7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 21:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E3CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 21:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E2E7206DA
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 21:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15CF206DA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 21:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oekTgrwz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n2mYV4p9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726366AbgHRVm1 (ORCPT
+        id S1726882AbgHRVn7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 17:42:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35358 "EHLO
+        Tue, 18 Aug 2020 17:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHRVmZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 17:42:25 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A73C061342
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 14:42:25 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so9820713plb.12
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 14:42:25 -0700 (PDT)
+        with ESMTP id S1726372AbgHRVn4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 17:43:56 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3B4C061389
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 14:43:55 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y10so8266887plr.11
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 14:43:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=e5nsLglQi6iq0gXD4/ZLbxZPHmUiCWsoxGRyVuLjB/c=;
-        b=oekTgrwzSs/TnRji4n7Ia1KRw2sKFuCY6qwuXQcuT84qxYNIQBTvSVH5zSdQoh3F1L
-         uAmAKAJagFUtKA5NCI6262idBc6YE3mg3C8P5KXEG9A53xdLiIZsbpEfCEA3ovO+r+bw
-         D1Dbnfw3JW6d3gniWTVyrMYPGrYKyffZ21TC8=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ku6KRkFjfvYlI41FcPQR/35V9YSvyUi25iV14BtdfTo=;
+        b=n2mYV4p9IDfmqgRCbcPjkKKpofadfqoeYOUODnu9wLy3BfSqePwJUViC/LWoyxN9kr
+         mT05BiIcbp1/n4ERJw/glSMLMmofsfin9KK7EfX6eyNi5fkeuF/vF0uk3X4Ok76wOW2B
+         EGQr7JL5zLQVgtRilrwXZ66vdZPS5pJdyqqp81X70Q/UaWva5XgoIHll37nSLopD5gC7
+         sinZLqUerV84mEVE/Nk+10waDSu8uJSJUi1Brd4BrZskzzWRtee4mggIekT526wfJe27
+         XrgghLiG3AQm60+mb13Qcl2h36JU32NSO4XZB+vonSWKiO8R9fN7StajWhAduSKXDqKv
+         ke0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=e5nsLglQi6iq0gXD4/ZLbxZPHmUiCWsoxGRyVuLjB/c=;
-        b=e982BHC12VOWQDuYIGM59JBLHEndGnxhdE36SnUeY6+Bk1VYa1U6ijFgOF+3LMm3eR
-         RHvJdDZrcH36EsHQYjF9gBQzBNNR8hTUnDJWXYjjUnME6ZnCpjXRY0Y07Y4o2plcLME9
-         2KyPCD6OmRKM9479v3obxPnlSSa1exYxqp9WTGgq6Vp71gMiK5uY7zBwl+SbslQ9Qpeh
-         72lNrZMju+XBhhb3dlMYzDS50w7mx9mu0iLNE13qgmXiNNjrjJYTcLnD5+LPmV8ar0gE
-         IcaVR1ySicYB2jzhsW+Ec7uVTHHZftdiqfUcym74yK9YK8+2W1FEpuvxwdyD3PDPJS5E
-         agcA==
-X-Gm-Message-State: AOAM530eqIq0D9evE3zdgkJbql67xoMUqo0BnWnm9osOnXHhcT9x5n/E
-        TKkQqGgaca39YT13kmLBjhoxGQ==
-X-Google-Smtp-Source: ABdhPJxNWxWkdy4uYKtZpGauvgOCAqO43bYBYkbW03fwXdZ7RgGCLEOkwT4RULfvoamziaSpULpFwQ==
-X-Received: by 2002:a17:90a:d597:: with SMTP id v23mr1471836pju.24.1597786944417;
-        Tue, 18 Aug 2020 14:42:24 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id e7sm22363954pgn.64.2020.08.18.14.42.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ku6KRkFjfvYlI41FcPQR/35V9YSvyUi25iV14BtdfTo=;
+        b=QkbfEa+pnjT4GP5TdZGuQoDbPkA0ySKs4kqpRBbsIS7io6vqVIt9DMedi+f6xyaNtv
+         XGC7ZK7avT4NWlJQEUjMmcNWuLLzbaIoC+5Gd6pGU6VBkEfN8/HQuE0RC16a4PcIbQ/H
+         RcfY74O662YHIm+m4PTb48ZPAJDV8dGNoYdI+/LTMkT/930C+hRKFNAihb4fJM7CDC8r
+         nhJbqYnZ3lkrMV3DwNdgqL6uTbu4gKRpycEYBsBGcp/5x59gu0kEYckj4nHq3v46CuxP
+         h1zb2swD901WrEcw8O6d8qg5oYeo+uPQjTaUIQVcin8OwXRj4eKsCE+HM+HYnfzB/Puh
+         Kjng==
+X-Gm-Message-State: AOAM532kPJzIJlr6gDyZrKFvlYsy0uMdL7kU9IqYVv/8Wm3pyIM9Dyib
+        bZSVFONlNa47tuEC123nwaYnCQ==
+X-Google-Smtp-Source: ABdhPJwmdpgyw9mEmAXbMYiRDQ8V3OY0KY5mMDjghqQUNBoJNX0dpUf6Nixy/ZLbKq8JofeU879cpQ==
+X-Received: by 2002:a17:90a:b88c:: with SMTP id o12mr1458935pjr.187.1597787033141;
+        Tue, 18 Aug 2020 14:43:53 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id f3sm26170676pfj.206.2020.08.18.14.43.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 14:42:23 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 18 Aug 2020 14:43:52 -0700 (PDT)
+Date:   Tue, 18 Aug 2020 15:43:50 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     bjorn.andersson@linaro.org, o.rempel@pengutronix.de,
+        robh+dt@kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 04/10] remoteproc: imx_rproc: make syscon optional
+Message-ID: <20200818214350.GA3822080@xps15>
+References: <20200724080813.24884-1-peng.fan@nxp.com>
+ <20200724080813.24884-5-peng.fan@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200818033657.16074-1-tanmay@codeaurora.org>
-References: <20200818033657.16074-1-tanmay@codeaurora.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: sc7180: Add DisplayPort HPD pin dt node
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        seanpaul@chromium.org, robdclark@gmail.com, daniel@ffwll.ch,
-        airlied@linux.ie, aravindh@codeaurora.org, abhinavk@codeaurora.org,
-        khsieh@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
-To:     Tanmay Shah <tanmay@codeaurora.org>, devicetree@vger.kernel.org
-Date:   Tue, 18 Aug 2020 14:42:22 -0700
-Message-ID: <159778694245.334488.3352871644651964381@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200724080813.24884-5-peng.fan@nxp.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Tanmay Shah (2020-08-17 20:36:57)
-> This node defines alternate DP HPD functionality of GPIO.
->=20
-> Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
-> ---
+Hi Peng,
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On Fri, Jul 24, 2020 at 04:08:07PM +0800, Peng Fan wrote:
+> Make syscon optional, since i.MX8QM/QXP/7ULP not have SRC to control M4.
+> But currently i.MX8QM/QXP/7ULP not added, so still check regmap
+> when start/stop to avoid unhappy things.
+
+On the i.MX8QM/QXP/7ULP processors, the remote processors are not handled by the
+remoteproc cores, as implemented in this patch.  In such a scenario how does the
+remoteproc core know the remote processor has crashed and how does it recover
+from such a condition?
+
+Thanks,
+Mathieu
+
+> 
+> Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/remoteproc/imx_rproc.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> index 82594a800a1b..4fad5c0b1c05 100644
+> --- a/drivers/remoteproc/imx_rproc.c
+> +++ b/drivers/remoteproc/imx_rproc.c
+> @@ -162,6 +162,9 @@ static int imx_rproc_start(struct rproc *rproc)
+>  	struct device *dev = priv->dev;
+>  	int ret;
+>  
+> +	if (!priv->regmap)
+> +		return -EOPNOTSUPP;
+> +
+>  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
+>  				 dcfg->src_mask, dcfg->src_start);
+>  	if (ret)
+> @@ -177,6 +180,9 @@ static int imx_rproc_stop(struct rproc *rproc)
+>  	struct device *dev = priv->dev;
+>  	int ret;
+>  
+> +	if (!priv->regmap)
+> +		return -EOPNOTSUPP;
+> +
+>  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
+>  				 dcfg->src_mask, dcfg->src_stop);
+>  	if (ret)
+> @@ -325,9 +331,10 @@ static int imx_rproc_probe(struct platform_device *pdev)
+>  	regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
+>  	if (IS_ERR(regmap)) {
+>  		dev_err(dev, "failed to find syscon\n");
+> -		return PTR_ERR(regmap);
+> +		regmap = NULL;
+> +	} else {
+> +		regmap_attach_dev(dev, regmap, &config);
+>  	}
+> -	regmap_attach_dev(dev, regmap, &config);
+>  
+>  	/* set some other name then imx */
+>  	rproc = rproc_alloc(dev, "imx-rproc", &imx_rproc_ops,
+> -- 
+> 2.16.4
+> 
