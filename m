@@ -2,104 +2,118 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C71CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF77C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5A5206B5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA2320825
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769299;
-	bh=f430PkiU6GWHMyKW8M4ygAP28X9LBwFSg0DIomrBErY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0eQ4mKH3xRh83gH3/gjDfbrC2BH3ZuHBL2HiVcdJb2h+GEoptGehV7qOhG/9cI7SC
-	 Lt5sn04pvCXBxi2yzlyhLU/B/X2hA+cVsNSxa+k2rRn43q4+XS9ErMyHmQYPLm+z05
-	 DbYctrJ1dmCgUTp0WAbAe2DEi9vYlmkvxbqBt5tw=
+	s=default; t=1597769685;
+	bh=PxM9+n8vVIqpRf0jfe4HVoCR3Hxu6WufuYAJnUBROT4=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=CkucrjaUVewIBfX7PJYr3mZs3dZd8sWK1ULJW1fvw4n/rncl5yLYt/PIRgyiv9gqg
+	 lv7v2sNqAivLn+qHfkA7gvJtZZiYNuS7JGg7y4RyuDPooiv2fYtSFa2HC7qkG21An/
+	 EkwPsSVC5T2mRpofXEVR+eh2wFBgljMhTDsf5eNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgHRQsS (ORCPT
+        id S1728267AbgHRQyX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:48:18 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45914 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbgHRQsS (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 12:48:18 -0400
-Received: by mail-io1-f68.google.com with SMTP id u126so21731003iod.12;
-        Tue, 18 Aug 2020 09:48:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KImiBwzNWf5aXeRH8pMXlYk8GtbO84LBcSTU7lw7AYE=;
-        b=SAhSVk1VXKUG67ocZr33Azt5t2OixT77uVKgZpLm/T0vBlvZjESsYK+u81h2W/eFSM
-         u1gp424v8i2yabr58JbqxKSINDzc5RyzLojIfJN6I37DvLKY+keTxcECPiLtzYCU+Cr0
-         liddYK0u+soyzyloHLWO/3EuLFPTdSsTmjYBAlhwGFpqoZNbr8hyY9u7pb4gttu6YsjG
-         VWAnASQ34n2iXdpqjtPlRSLi5UsrGS2clOAKy8NouqeMwYtGBhCFGboehdS/xFZxTLth
-         Sl7EU4NQiCMECl9LsHnvBAkx/WvvvkCtjFYUXCCn2XH1AvizopMN0quX1txxUGr64X9l
-         M+iw==
-X-Gm-Message-State: AOAM53122B0W6Rtbu8rXprp6m8Spki8b4WZn8vMTf0dCnqT8zvFxGWKD
-        fXBlau4NZx94B4acRZwErQ==
-X-Google-Smtp-Source: ABdhPJwJYfpD4QBhfIN9mFdiDnmYYj+3q6cflyF3DxQm7aifzQDaQgcPKMWkNslzO9FXrSXFaDSQlA==
-X-Received: by 2002:a6b:e216:: with SMTP id z22mr15957990ioc.97.1597769296997;
-        Tue, 18 Aug 2020 09:48:16 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id 82sm11101331ioc.34.2020.08.18.09.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 09:48:16 -0700 (PDT)
-Received: (nullmailer pid 3602657 invoked by uid 1000);
-        Tue, 18 Aug 2020 16:48:12 -0000
-Date:   Tue, 18 Aug 2020 10:48:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hyesoo Yu <hyesoo.yu@samsung.com>
-Cc:     pullip.cho@samsung.com, lmark@codeaurora.org,
-        sumit.semwal@linaro.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, labbott@redhat.com,
-        linaro-mm-sig@lists.linaro.org, akpm@linux-foundation.org,
-        minchan@kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, joaodias@google.com, robh+dt@kernel.org,
-        Brian.Starkey@arm.com, afd@ti.com, iamjoonsoo.kim@lge.com,
-        christian.koenig@amd.com, john.stultz@linaro.org, vbabka@suse.cz,
-        devicetree@vger.kernel.org, surenb@google.com,
-        benjamin.gaignard@linaro.org
-Subject: Re: [PATCH 3/3] dma-heap: Devicetree binding for chunk heap
-Message-ID: <20200818164812.GA3602349@bogus>
-References: <20200818080415.7531-1-hyesoo.yu@samsung.com>
- <CGME20200818074554epcas2p2702e648ba975ea6fbe33c84396b152a9@epcas2p2.samsung.com>
- <20200818080415.7531-4-hyesoo.yu@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818080415.7531-4-hyesoo.yu@samsung.com>
+        Tue, 18 Aug 2020 12:54:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726840AbgHRQyP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:54:15 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C48A20786;
+        Tue, 18 Aug 2020 16:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597769650;
+        bh=PxM9+n8vVIqpRf0jfe4HVoCR3Hxu6WufuYAJnUBROT4=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=gUYGs4eMGo9kZaPbLsgoa9Ac73rnnbET5oal91nJ1x5zii7YwFryJq3BN3ZcuMXb4
+         +7MkNCsRLfFlMxKfJH0UR+bn9MXQ798+2obQ7OurbpMjqL7fO4qZuA+LxcrD+EYFGU
+         VqKfIY1uCkI02fGwhtF1gilroLiY3RAY5aRrR29U=
+Date:   Tue, 18 Aug 2020 17:53:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        srinivas.kandagatla@linaro.org, tiwai@suse.com,
+        plai@codeaurora.org, Rohit kumar <rohitkr@codeaurora.org>,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        bgoswami@codeaurora.org, bjorn.andersson@linaro.org,
+        agross@kernel.org, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, perex@perex.cz
+In-Reply-To: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
+References: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
+Subject: Re: [PATCH v6 00/12] ASoC: qcom: Add support for SC7180 lpass variant
+Message-Id: <159776961933.56094.17007093151985279828.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Aug 2020 17:04:15 +0900, Hyesoo Yu wrote:
-> Document devicetree binding for chunk heap on dma heap framework
+On Fri, 14 Aug 2020 16:22:56 +0530, Rohit kumar wrote:
+> This patch chain add audio support for SC7180 soc by doing the required
+> modification in existing common lpass-cpu/lpass-platform driver.
+> This also fixes some concurrency issue.
 > 
-> Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
-> ---
->  .../devicetree/bindings/dma-buf/chunk_heap.yaml    | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma-buf/chunk_heap.yaml
+> This patch series is already tested by Srinivas on Dragon Board 410c.
+> Changes since v5:
+>         - Fixed remove api in lpass-sc7180.c
+>         - Addressed comments by Rob in yaml Documentation.
 > 
+> [...]
 
+Applied to
 
-My bot found errors running 'make dt_binding_check' on your patch:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma-buf/chunk_heap.example.dt.yaml: chunk_default_heap: 'alignment', 'memory-region' do not match any of the regexes: 'pinctrl-[0-9]+'
+Thanks!
 
+[01/12] ASoC: qcom: Add common array to initialize soc based core clocks
+        commit: 1220f6a76e77af8ac14fe67a11fcd7806764ea46
+[02/12] ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
+        commit: a503567d70eca91796a4ab23053d4c70df8e1e3e
+[03/12] ASoC: qcom: lpass-platform: Replace card->dev with component->dev
+        commit: 784771863abae5f8878c62e9c624111c51bebe7c
+[04/12] ASoC: qcom: lpass-platform: fix memory leak
+        commit: 5fd188215d4eb52703600d8986b22311099a5940
+[05/12] ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
+        commit: b5022a36d28f6a99c1a57f54246e8b566cf094d5
+[06/12] ASoC: qcom: lpass-cpu: fix concurrency issue
+        commit: 753a6e17942f6f425ca622e1610625998312ad89
+[07/12] ASoC: Add sc7180 lpass cpu node
+        commit: 2a7a3797ed2de6a55e1467bd11002fa7b13e12f3
+[08/12] ASoC: Add sc7180-lpass bindings header
+        commit: 68d8904b25df28821425753eaebc8fe992dde236
+[09/12] ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
+        commit: 24caf8d9eb108c52e144bcc7af94bb1edcb70700
+[10/12] ASoC: qcom: lpass-cpu: Use platform_get_resource
+        commit: 93dbbd657167a796583506834cc03950ce25bce1
+[11/12] ASoC: qcom: lpass-platform: Use platform_get_irq
+        commit: b05372c84d61ad2a905274db7e3d63a65c835463
+[12/12] ASoC: lpass-cpu: Move to yaml format
+        commit: 4b381d7e86fd0b767456e07c49982fb4896e1166
 
-See https://patchwork.ozlabs.org/patch/1346687
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Please check and re-submit.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
