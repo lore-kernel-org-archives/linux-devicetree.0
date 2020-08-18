@@ -2,87 +2,105 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897B1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC06C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 656772076E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D58C207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597768312;
-	bh=osv5U7CM98JWeyZOMRSaihpPlQv6QDc6xC0hr5XbRrA=;
+	s=default; t=1597768619;
+	bh=7qVF9eqLdAJrYWydh3MzFJaDQjl7i7jwR5SZt7d6XHA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fmG2X4vwQrUKvgOIXhw05N9g8389ihYM1VXkkVAY7FQT8a9gjZaGblwOzYcksKSOz
-	 wroeK0qmkKhcE3eebG1yvs85d3XibBSuEH1x+JXNqM1hww38CbsAFXk8JR+QZnBtqX
-	 rX1v74xzQsOZQZOPp3JU4510l682Fe/8wsV0OOKo=
+	b=KGL6uEnd/LPPNVmKyAWL5Sa2NeNhzKL/x3kwITm53XqLt23j79fFj6Ks2/hGIf2GS
+	 5P6aqXaK7h+QNRvX6h1uNSZpg0Ds/IOSodZio45hl/HShtuYGOcDIK1MYWu3aHSHgL
+	 NbHBM/CvOh2cLE1Ev5+wjaU91RTZFW+n0wRYDDI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgHRQbv (ORCPT
+        id S1726759AbgHRQg6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:31:51 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46688 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHRQbt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 12:31:49 -0400
-Received: by mail-io1-f65.google.com with SMTP id a5so21691016ioa.13
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 09:31:49 -0700 (PDT)
+        Tue, 18 Aug 2020 12:36:58 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45928 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726715AbgHRQg4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 12:36:56 -0400
+Received: by mail-il1-f195.google.com with SMTP id k4so18155592ilr.12;
+        Tue, 18 Aug 2020 09:36:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=jAiOq68aDen9Q1Mx8UTb2YqOvhTFkcozUpaYYQsgA14=;
-        b=OxjW2hBMCaBXoUx1kulJev8QvsYIa5BqCF4apNjKA07MYdJqviVCHvR3+u7TX6IvdS
-         8/gVJF2RxO2sBi2NAHipjiz3uPNgJFTkWsm9i5LEbLsUdr9Sj75I/04+OoWLTaImoBBA
-         /kNd+DpH+F5mK7dJLqZfrW4+bro6NQoqJ57NqRVId+htIMBAn+FT7QFwplvVufHyNfDx
-         DzIHW2t648/vQuV3IIqGxRCdXg70fjw2e3GQu770d1Ne2CGwuUoL+sP+0OKyCftpLe5j
-         RJV9fMoTozMScRIDiKwgJjFm+urOPZBwsmTKU5d1B7ov2FSfYkc/P8CfY0H/3L/Bd9i8
-         rpMQ==
-X-Gm-Message-State: AOAM530sU2pi0gN12aNPX9m5z98ebKSKP33ounSA8AbHDFUvBJ9f3+/v
-        gzjN+eC1rdRpQmFW/vUTRQ==
-X-Google-Smtp-Source: ABdhPJxiNJbHvNpULFQtGNx42cULOJrAIezeAMCg8L+ngONKbgbVgcmPJxScZ5VL6tAwErFsf9DW4w==
-X-Received: by 2002:a05:6602:1405:: with SMTP id t5mr9591521iov.72.1597768308668;
-        Tue, 18 Aug 2020 09:31:48 -0700 (PDT)
+        bh=gl6XS4qfTxmDXNCXwNlbRvktsoiefhKSAFrgJZHSqYw=;
+        b=Q43fn4+uE/fNehYCY0UN5oK70Yal3P43gTjFCqgZBeRV2FfPWPArdbeXYQySGPS/dz
+         osMEGzobSEqSsZbudLOXkK5NPH3Zs+sdH1DYBKaK99BvfLX6BqcVZ4C+KqJBldfc2DvA
+         9CGK2rGIgYYxjjUy8JXtow46ce9mE/FQcG0zfNiGdoXOxTABiJ4V9pZY8etLgn3f7ZZz
+         5mXw3+zAXKHVT3O3nLj24yXnu6Y1z3QiTFa3syy18OwKrzSC+BoY81AtJk8cKJGkaTLN
+         g2H+XXtnVU8Fz/VUYI/2OFNtIG+sqKlEhkPJrkEJPj4IVRZNnjHKqQxVFIJyS/5ZUlZ5
+         XVCw==
+X-Gm-Message-State: AOAM533sB3nfHua0L61zbzqM1qtSXd2smy/pkNjimwszihv3pqHysdc/
+        JW9aKF2ruy7XnhEmySq08w==
+X-Google-Smtp-Source: ABdhPJzJ2p5fY3FMzkqhU6ooYSUD+BBzc6VBbwlA10dpndvE9pEmDfl71ZZPTxN6zqYd1aoufnDppA==
+X-Received: by 2002:a92:9996:: with SMTP id t22mr18129341ilk.216.1597768614776;
+        Tue, 18 Aug 2020 09:36:54 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id w9sm11108907iop.2.2020.08.18.09.31.47
+        by smtp.gmail.com with ESMTPSA id c76sm12155039ill.63.2020.08.18.09.36.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 09:31:48 -0700 (PDT)
-Received: (nullmailer pid 3580634 invoked by uid 1000);
-        Tue, 18 Aug 2020 16:31:47 -0000
-Date:   Tue, 18 Aug 2020 10:31:47 -0600
+        Tue, 18 Aug 2020 09:36:54 -0700 (PDT)
+Received: (nullmailer pid 3587582 invoked by uid 1000);
+        Tue, 18 Aug 2020 16:36:53 -0000
+Date:   Tue, 18 Aug 2020 10:36:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org, shawnguo@kernel.org
-Subject: Re: [PATCH] dt-bindings: Use Shawn Guo's preferred e-mail for i.MX
- bindings
-Message-ID: <20200818163147.GA3580529@bogus>
-References: <20200818111245.17047-1-festevam@gmail.com>
+To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Cc:     linux-pm@vger.kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, sre@kernel.org,
+        devicetree@vger.kernel.org, dmurphy@ti.com
+Subject: Re: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx dt bindings
+Message-ID: <20200818163653.GA3586878@bogus>
+References: <20200817191723.22416-1-r-rivera-matos@ti.com>
+ <20200817191723.22416-2-r-rivera-matos@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818111245.17047-1-festevam@gmail.com>
+In-Reply-To: <20200817191723.22416-2-r-rivera-matos@ti.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Aug 2020 08:12:45 -0300, Fabio Estevam wrote:
-> Use Shawn Guo's kernel.org address for the i.MX related bindings
-> as per the MAINTAINERS entries.
+On Mon, 17 Aug 2020 14:17:22 -0500, Ricardo Rivera-Matos wrote:
+> Add the bindings for the bq256xx series of battery charging ICs.
 > 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Datasheets:
+> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
+> 
+> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
 > ---
->  Documentation/devicetree/bindings/clock/imx23-clock.yaml   | 2 +-
->  Documentation/devicetree/bindings/clock/imx28-clock.yaml   | 2 +-
->  Documentation/devicetree/bindings/gpio/gpio-mxs.yaml       | 2 +-
->  Documentation/devicetree/bindings/i2c/i2c-mxs.yaml         | 2 +-
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml   | 2 +-
->  Documentation/devicetree/bindings/mmc/mxs-mmc.yaml         | 2 +-
->  Documentation/devicetree/bindings/pwm/mxs-pwm.yaml         | 2 +-
->  Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml    | 2 +-
->  Documentation/devicetree/bindings/thermal/imx-thermal.yaml | 2 +-
->  9 files changed, 9 insertions(+), 9 deletions(-)
+>  .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
 > 
 
-Applied, thanks!
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/supply/bq256xx.example.dt.yaml: battery: 'termination-current-microamp' does not match any of the regexes: '^ocv-capacity-table-[0-9]+$', 'pinctrl-[0-9]+'
+
+
+See https://patchwork.ozlabs.org/patch/1346479
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
