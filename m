@@ -2,96 +2,113 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4688C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D9DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2D7D20786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597760912;
-	bh=TyjAOtFLUcdkHJqVznsWOj1rsY2m5SGYugIkegCaavY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OPbbCN05EKd32CUAAAlYS6xtanEcsqs4CE9Xz96cO6Bea6gbw3auwXLBRFgI1a7zY
-	 Cn2fh0r2n87vxv4vxiILmw9XTex+pidNmelWag2n/TCqXL6NpnTr254IpLrK+i5jaj
-	 jiEW+vKrgXy8VaFLKb+oN4qapiV6yXyN+eISZhq8=
+	by mail.kernel.org (Postfix) with ESMTP id EDB3A2076E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aNH7Rb4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHRO22 (ORCPT
+        id S1726863AbgHROhl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:28:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44032 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726660AbgHRO21 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 10:28:27 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A1CD207D3;
-        Tue, 18 Aug 2020 14:28:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597760906;
-        bh=TyjAOtFLUcdkHJqVznsWOj1rsY2m5SGYugIkegCaavY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bxizRbar0YqT2TrzigWWLFiyjHd8OrzPxdbiHrSL99ATPBIiho1ScQAO7glgsBm1d
-         CbqL8TXLmE9kPn/MY2ElMs8rz7fnLBvYK+P6j8yH2z/fv3Q506iLRcxsBsCOKM8oYr
-         TVBv9HaIJ85o0Un2VIykpVXUobCuAXfcoKVL/ss4=
-Date:   Tue, 18 Aug 2020 16:28:20 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linuxarm@huawei.com, Wei Xu <xuwei5@hisilicon.com>,
-        linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, mauro.chehab@huawei.com,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 00/44] SPMI patches needed by Hikey 970
-Message-ID: <20200818162820.3c78c33c@coco.lan>
-In-Reply-To: <20200818141750.GA608639@kroah.com>
-References: <cover.1597647359.git.mchehab+huawei@kernel.org>
-        <20200818141750.GA608639@kroah.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Aug 2020 10:37:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727899AbgHROhh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 10:37:37 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A812BC061389;
+        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id o18so22356392eje.7;
+        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2UQZEODYOVCRlh1QRejLi/WzuJNA7W+JKPrcqeoHOhY=;
+        b=aNH7Rb4UjQ427P0G/2djpJOYW+4jNcYTY5ueMZJdI+aPHwfi9IVWQ5lmpfsxgPoOyD
+         2TembDjnXLlrJ/a8M5UAgVp4WnapO1DdLv6Z9TXH+CUQY9aWYahxInWFDBtnf2ZckZuK
+         AXKdp/x2y4mmrDILUtOyZd5aSuFkRAX+X5z2oiFaOrCkQ0ZugqWmLtDxySXxGmQA2Yvz
+         tep14aDEZDuEhoOfzeyidXqBxarz8eiwUJhOMdkx0QuWKYJN61zxdkXc/CgACP5Oco+T
+         xJgT5p2ERAXYe45DoMXsh1b+c31xNrWX9ZRHjX+1wIklQj71eMW19I/v0zCKuEdPPIax
+         Q5Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2UQZEODYOVCRlh1QRejLi/WzuJNA7W+JKPrcqeoHOhY=;
+        b=iOs1Z572zUB+R5AVCxiLLMu7MoonkL0VNt3t0giKWs6WUomSi09Tqel/K0BfaR9F8/
+         8cb9P6yiqvuc5QHy2ZTyNkUkQmtuwH/IWbYGdMFJrR+nijFbqzBOfXqDclxdaFTrB1Zs
+         LkRYo9nZOvnN+Bg2Onp7uLJJR7L9AEGeDneNWISwjMlYMVcyrnrBH0sz+0etJ0PjcPWy
+         sG095oCKi13tjDF3iOVKelBI2Pkvp0vxyKcjXKs3CSjEQGHt3w1z52G/4dwqYyzttt7e
+         ttu9ntmdkUglUU/IZ7AEkz3lOzut1QReytJJ+NxroxqExbD4SRSb9bVkhCrNy+yd1La3
+         G0HA==
+X-Gm-Message-State: AOAM532zLNKSQkXNTV//AvTvfsPnZ1kM0UsGDIdeA60JCR+y1/MgwfYb
+        mG7ABhAvwkmViyqBh5gmS8M=
+X-Google-Smtp-Source: ABdhPJzVRX6brDlwaMQejDzk4wxMr/TJ+2T1mXXnWNI34f1CAvmV4y0EPIUTLj8CH4kNb+vCaskauA==
+X-Received: by 2002:a17:907:20e6:: with SMTP id rh6mr20096569ejb.301.1597761455170;
+        Tue, 18 Aug 2020 07:37:35 -0700 (PDT)
+Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id r25sm16222575edy.93.2020.08.18.07.37.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Aug 2020 07:37:34 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        sugar.zhang@rock-chips.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] ASoC: rockchip-spdif: add description for rk3308
+Date:   Tue, 18 Aug 2020 16:37:26 +0200
+Message-Id: <20200818143727.5882-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Tue, 18 Aug 2020 16:17:50 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+A test with the command below shows that the compatible string
 
-> On Mon, Aug 17, 2020 at 09:10:19AM +0200, Mauro Carvalho Chehab wrote:
-> > Hi Greg,
-> > 
-> > This patch series is part of a work I'm doing in order to be able to support
-> > a HiKey 970 board that I recently got on my hands.  
-> 
-> With this applied, I get the following build error:
-> ERROR: modpost: "__spmi_driver_register" [drivers/staging/hikey9xx/hi6421-spmi-pmic.ko] undefined!
-> ERROR: modpost: "spmi_ext_register_writel" [drivers/staging/hikey9xx/hi6421-spmi-pmic.ko] undefined!
-> ERROR: modpost: "spmi_ext_register_readl" [drivers/staging/hikey9xx/hi6421-spmi-pmic.ko] undefined!
-> ERROR: modpost: "spmi_controller_add" [drivers/staging/hikey9xx/hisi-spmi-controller.ko] undefined!
-> ERROR: modpost: "spmi_controller_alloc" [drivers/staging/hikey9xx/hisi-spmi-controller.ko] undefined!
-> ERROR: modpost: "spmi_controller_remove" [drivers/staging/hikey9xx/hisi-spmi-controller.ko] undefined!
-> 
-> 
-> I'll take this in my testing tree for now, can you send a follow-on
-> patch to fix this?
+"rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
 
-Surely. That's because it got moved from drivers/spmi/Kconfig.
-The Kconfig var was inside a:
+is already in use, but is not added to a document.
+The current fallback string "rockchip,rk3328-spdif" points to a data
+set enum RK_SPDIF_RK3366 in rockchip_spdif.c that is not used both
+in the mainline as in the manufacturer kernel.
+(Of the enum only RK_SPDIF_RK3288 is used.)
+So if the properties don't change we might as well use the first SoC
+in line as fallback string and add the description for rk3308 as:
 
-if SPMI
-...
-endif
+"rockchip,rk3308-spdif", "rockchip,rk3066-spdif"
 
-This driver should "depends on SPMI". I'll send you a patch in a few.
+make ARCH=arm64 dtbs_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
 
-Thanks,
-Mauro
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+Changed V2:
+  rebase
+---
+ Documentation/devicetree/bindings/sound/rockchip-spdif.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+index 7bad6f16f..62a61b68d 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
+@@ -27,6 +27,7 @@ properties:
+           - enum:
+               - rockchip,rk3188-spdif
+               - rockchip,rk3288-spdif
++              - rockchip,rk3308-spdif
+           - const: rockchip,rk3066-spdif
+ 
+   reg:
+-- 
+2.11.0
+
