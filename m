@@ -2,114 +2,161 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683C5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F034C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 472532076E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:37:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCU2VExU"
+	by mail.kernel.org (Postfix) with ESMTP id 25E81207D3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 14:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597761969;
+	bh=uLShTqPsScOSS/Y7xhwooyk4VokN/5lcf0l5sX6cwe0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zPn1kp7ifyjKUJeZTc+yg7DfWhMnvfNX81Zaxbe0F9NZdFU/LKqbJDOnyZb1Bb9th
+	 Cdc2D4E3V/akVm+snu4aUwl1007MwBuFa0o2QtgaAIWMH8divMlZ3Po6RJXyNqnhGV
+	 W/k2KX4+g+pIFotpv1tssBY/XDvQm0AL8nhr+lEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgHROhl (ORCPT
+        id S1726698AbgHROqI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 10:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53154 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgHROhi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 10:37:38 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6582BC061342;
-        Tue, 18 Aug 2020 07:37:37 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id p24so22326012ejf.13;
-        Tue, 18 Aug 2020 07:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qW/vPODydHKoIxWkakc/8MljLCi8kAbWI/+HlLycii8=;
-        b=uCU2VExUgkOdf0CSnU7p7Lwj0HwQv0QnvrEuM3Q4DtTmfgcqJv7lIMg6wtWsqdRNtr
-         g5qApET1RisUjddrmMDVQXhqZkK6RUrIg+S1ft2ZwrIEdCpyOHTTzGA/R5EGMsKRwzj4
-         SsCX3rMM8bGiFd+wOqh1oFq4CbRFWaVCVBrrUQDeKee+Pz58Bzul52OIZy27Wlrou1/g
-         ECjwdYXY1HW5YzJlKL4uu7XevB8c/LCNUHqQtYNviTU3EXem5NfnQcAJiDbq94SJ3owE
-         fDqvczWzkV4IwcqGoE3pAqhNbOppeAUqbJV6zwa33ANkAs+92H9Szw3wOmS0e3n3/6YG
-         3HNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=qW/vPODydHKoIxWkakc/8MljLCi8kAbWI/+HlLycii8=;
-        b=e7rmFQTxaieWmrAADA3zqZ5Cop+wzjlaVuW1z9Jlw1HYUsRr2BhA2EqsewqoJMetEQ
-         RohJpUTEOcvvohm4X1nO4ZoiST1e+Vthf2tuC8kJPMgTbOIXMWxCCVwFvka+BzQIzH/x
-         /Fs6/mTHQ+3mXrJvvg0Hn1M9+4XIqAaMCraJ7zYE/emdY/7tTrzibaHNq+opu6dXJ47o
-         /aNdoMbnIECs5tPaK39UJXMU7dfAbQFeVylsgOhcFNgWPSxy5U4hH5D9n5kDji3ubuNc
-         ZzNm40ljQxLAqENpHvf2ISguu000X9U1ck3zHfyiL6DQKTQCur4nq7Pg/a8BUreqZkn+
-         6L2Q==
-X-Gm-Message-State: AOAM533fTgyjDU1tBVRY8U0s2cV8/aT7MnfCCz1O4HEOs5x/9AAVAswC
-        Rd9rJHkzgs1gHkTsdpzvKOYndTAjPy8=
-X-Google-Smtp-Source: ABdhPJwoKdEOnV0Xt2tgEw82my/fzFI9XtM+fHHICmtVeMhwZPUpUjoZ/RyxXNw3xpoCDJrZ+yHTpw==
-X-Received: by 2002:a17:906:a18e:: with SMTP id s14mr20008133ejy.168.1597761456090;
-        Tue, 18 Aug 2020 07:37:36 -0700 (PDT)
-Received: from debian.home (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r25sm16222575edy.93.2020.08.18.07.37.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Aug 2020 07:37:35 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        sugar.zhang@rock-chips.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] arm64: dts: rockchip: change fallback string rockchip,rk3308-spdif
-Date:   Tue, 18 Aug 2020 16:37:27 +0200
-Message-Id: <20200818143727.5882-2-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200818143727.5882-1-jbx6244@gmail.com>
-References: <20200818143727.5882-1-jbx6244@gmail.com>
+        Tue, 18 Aug 2020 10:46:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726145AbgHROqI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 10:46:08 -0400
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F94A2087D;
+        Tue, 18 Aug 2020 14:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597761967;
+        bh=uLShTqPsScOSS/Y7xhwooyk4VokN/5lcf0l5sX6cwe0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LqPm/t4tT/0fik+ovMNaZmmhNITKQnbE/SEtpU/wQaHeFsc0oEqv0Ok7zgT8K8q0g
+         RzriiVo1EJOuEDWve2doQaiolPRjJE7i2Qfp7Q61s8o6qzy1RG89yQc6J/XgBhUjv8
+         N80VcYnaemw4XlLvCbVZs7Xhay5iOr2yqH8+lDpY=
+Received: by mail-ej1-f45.google.com with SMTP id g19so22370916ejc.9;
+        Tue, 18 Aug 2020 07:46:07 -0700 (PDT)
+X-Gm-Message-State: AOAM533lKBTbAXZOYuZVpyNfYO23zEGDZfc7Gx0A0S14yLS19Cl8Vw3Z
+        2kwe6chwRp8g629TF/C0G4mFpjORsFWVEEh9/w==
+X-Google-Smtp-Source: ABdhPJyAegsVyLKiVAWm3/ULM5Zo7ujEpLDRmMYGDKOTvVSOcFz66S1v3I39ISq/ljIBOR2BqS2UuSxiTjiBJSeDKEk=
+X-Received: by 2002:a17:906:15cc:: with SMTP id l12mr21208887ejd.7.1597761965685;
+ Tue, 18 Aug 2020 07:46:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200817130640.18021-1-jitao.shi@mediatek.com>
+ <CAAOTY_9ggDUdDD9KoOaWBx3XaK+=Q=5qxahG7SJ5uYBQZ4aadw@mail.gmail.com> <1597718492.6381.6.camel@mszsdaap41>
+In-Reply-To: <1597718492.6381.6.camel@mszsdaap41>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 18 Aug 2020 22:45:54 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_94Bd4PGnn88r_yJC0LYkmcByTY52gwNMALuv9+D0rTXg@mail.gmail.com>
+Message-ID: <CAAOTY_94Bd4PGnn88r_yJC0LYkmcByTY52gwNMALuv9+D0rTXg@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/mediatek: dsi: fix scrolling of panel with small
+ hfp or hbp
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        huijuan.xie@mediatek.com, stonea168@163.com,
+        cawa.cheng@mediatek.com,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>, yingjoe.chen@mediatek.com,
+        eddie.huang@mediatek.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A test with the command below shows that the compatible string
+Hi, Jitao:
 
-"rockchip,rk3308-spdif", "rockchip,rk3328-spdif"
+Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8818=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8810:41=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On Tue, 2020-08-18 at 07:42 +0800, Chun-Kuang Hu wrote:
+> > Hi, Jitao:
+> >
+> > Jitao Shi <jitao.shi@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8817=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=889:07=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > >
+> > > horizontal_backporch_byte should be hbp * bpp - hbp extra bytes.
+> > > So remove the wrong subtraction 10.
+> > >
+> > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> > > ---
+> > >  drivers/gpu/drm/mediatek/mtk_dsi.c | 9 ++++-----
+> > >  1 file changed, 4 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/med=
+iatek/mtk_dsi.c
+> > > index 270bf22c98fe..5d031e634571 100644
+> > > --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+> > > @@ -473,14 +473,13 @@ static void mtk_dsi_config_vdo_timing(struct mt=
+k_dsi *dsi)
+> > >         horizontal_sync_active_byte =3D (vm->hsync_len * dsi_tmp_buf_=
+bpp - 10);
+> >
+> > So this subtraction 10 is correct?
+> >
+> > Regards,
+> > Chun-Kuang.
+> >
+>
+> Yes, It is right.
+>
+> In the cea861 and dmt spec the mini hsync is 40 pixels.
+> So the vm->hsync_len * dsi_tmp_buf_bpp >=3D 120 > 10
+>
 
-is already in use, but is not added to a document.
-The current fallback string "rockchip,rk3328-spdif" points to a data
-set enum RK_SPDIF_RK3366 in rockchip_spdif.c that is not used both
-in the mainline as in the manufacturer kernel.
-(Of the enum only RK_SPDIF_RK3288 is used.)
-So if the properties don't change we might as well use the first SoC
-in line as fallback string and add the description for rk3308 as:
+OK, so
 
-"rockchip,rk3308-spdif", "rockchip,rk3066-spdif"
+Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/sound/rockchip-spdif.yaml
-
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index e8b754d41..2560b9877 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -574,7 +574,7 @@
- 	};
- 
- 	spdif_tx: spdif-tx@ff3a0000 {
--		compatible = "rockchip,rk3308-spdif", "rockchip,rk3328-spdif";
-+		compatible = "rockchip,rk3308-spdif", "rockchip,rk3066-spdif";
- 		reg = <0x0 0xff3a0000 0x0 0x1000>;
- 		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru SCLK_SPDIF_TX>, <&cru HCLK_SPDIFTX>;
--- 
-2.11.0
-
+> Best Regards
+> jitao
+> > >
+> > >         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+> > > -               horizontal_backporch_byte =3D
+> > > -                       (vm->hback_porch * dsi_tmp_buf_bpp - 10);
+> > > +               horizontal_backporch_byte =3D vm->hback_porch * dsi_t=
+mp_buf_bpp;
+> > >         else
+> > > -               horizontal_backporch_byte =3D ((vm->hback_porch + vm-=
+>hsync_len) *
+> > > -                       dsi_tmp_buf_bpp - 10);
+> > > +               horizontal_backporch_byte =3D (vm->hback_porch + vm->=
+hsync_len) *
+> > > +                                           dsi_tmp_buf_bpp;
+> > >
+> > >         data_phy_cycles =3D timing->lpx + timing->da_hs_prepare +
+> > > -                         timing->da_hs_zero + timing->da_hs_exit + 3=
+;
+> > > +                         timing->da_hs_zero + timing->da_hs_exit;
+> > >
+> > >         if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+> > >                 if ((vm->hfront_porch + vm->hback_porch) * dsi_tmp_bu=
+f_bpp >
+> > > --
+> > > 2.12.5
+> > > _______________________________________________
+> > > Linux-mediatek mailing list
+> > > Linux-mediatek@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+>
