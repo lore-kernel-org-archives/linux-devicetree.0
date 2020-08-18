@@ -4,80 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FCBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D94C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56963207D3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D428420786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769984;
-	bh=q7GHGm9c21lI15iiqdFoBfoi140sZ9N2QyzIbIqI6C4=;
+	s=default; t=1597769990;
+	bh=XwMbwS6E/T6es+7pPWexpipw53A2pwAgEeRJQNhrN4Q=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=BpTf/FvAg451mtH0y3k31IschpxcfpksTp2h+H+zISC/zf6NNUfukzrftdD9gevC0
-	 9m3V6gv0i7yv3rmBa9K9Zm5VNjMuzejkQ+aHo2kVQMOb6/wcG1c0wOjTxYqIibcIq8
-	 mH5qdAGWL0TQn6SZ9KgsU7ujuMrpIM5vHbgWB7lQ=
+	b=vCnKc8z7bHwodVMHd0B/zkExsQ4XrCmIBW+abyaTo0KTssEMk4ej1K2tjkmKM8F/l
+	 8K6CtDCazHjtQHZUOBifCt2S58BTCHZO6S9po2nj8Sx80yHWYlZeqOvcNJG3TBoWEr
+	 rX7HOcUEqFI53pNTR3QT/ta0MCvqXOHwyyXXx+Us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgHRQ7f (ORCPT
+        id S1728514AbgHRQ7s (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:59:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41636 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:59:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgHRQ6N (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:58:13 -0400
+        id S1728560AbgHRQ5a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:57:30 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09545207DE;
-        Tue, 18 Aug 2020 16:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8965920829;
+        Tue, 18 Aug 2020 16:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769876;
-        bh=q7GHGm9c21lI15iiqdFoBfoi140sZ9N2QyzIbIqI6C4=;
+        s=default; t=1597769850;
+        bh=XwMbwS6E/T6es+7pPWexpipw53A2pwAgEeRJQNhrN4Q=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=cKOOh4OLI2c9ZvpeJ9CywkkuTDEpsXeU2Ykynmr+G183gfpd/YkNCxfUVbZl32u6d
-         Xgh6PvmZjBGTvndlmX1PoJS8ax/ybbEe8EsA85BnccZfzzSRqe3wAUHMQytLqw3PEv
-         WZBVXO28ur/eQRiwZ42iCcW/KpT4n3OgExwXhnwI=
-Date:   Tue, 18 Aug 2020 17:57:25 +0100
+        b=WJKV1xF6KmWs46VgxZNR341Gyjci4Egs4cEywN7AAIl9fW9UuntljGuzDYb/QYHKJ
+         WgTEmJQK0AnlLpMe2AWWZ3yji4HgMsaKLYfnOldwZxgn5qb+ZIz6QyTpJu94pq/Out
+         ZH1Bv+Q1nuF3dgaV+9Mhjn0S835iPQ0HRpZXymXs=
+Date:   Tue, 18 Aug 2020 17:56:59 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-In-Reply-To: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200812150048.27721-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 0/2] r8a7742 add QSPI support
-Message-Id: <159776983047.56565.6592409588140078778.b4-ty@kernel.org>
+To:     dri-devel@lists.freedesktop.org, Marek Vasut <marex@denx.de>
+Cc:     devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20200809105938.6388-1-marex@denx.de>
+References: <20200809105938.6388-1-marex@denx.de>
+Subject: Re: [PATCH 1/2] dt-bindings: Add DT bindings for RaspberryPi 7" display ATTINY88-based regulator/backlight controller
+Message-Id: <159776976827.56451.3322395405929688936.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 12 Aug 2020 16:00:46 +0100, Lad Prabhakar wrote:
-> This patchset adds qspi node to r8a7742 (RZ/G1H) SoC along
-> with updating the DT binding.
-> 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (2):
->   dt-bindings: spi: renesas,rspi: Add r8a7742 to the compatible list
->   ARM: dts: r8a7742: Add QSPI support
-> 
-> [...]
+On Sun, 9 Aug 2020 12:59:37 +0200, Marek Vasut wrote:
+> Add DT bindings for RaspberryPi 7" display ATTINY88-based
+> regulator/backlight controller, this one is used in the
+> Raspberry Pi 7" touchscreen display unit.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] spi: renesas,rspi: Add r8a7742 to the compatible list
-      commit: 08f9793efd3decae75e60bfec2e6068f2d4180df
+[1/2] regulator: Add DT bindings for RaspberryPi 7" display ATTINY88-based regulator/backlight controller
+      commit: 9c535960891470eaec5664eed2a56dbb2b6a205b
+[2/2] regulator: rpi-panel: Add regulator/backlight driver for RPi panel
+      commit: 38573472278da49e2ab588062d88bc2f0c11a325
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
