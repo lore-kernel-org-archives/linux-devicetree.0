@@ -4,69 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF77C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07369C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA2320825
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98D6207DA
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 16:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597769685;
-	bh=PxM9+n8vVIqpRf0jfe4HVoCR3Hxu6WufuYAJnUBROT4=;
+	s=default; t=1597769698;
+	bh=t1w93QEWEvokEoid6tjADACw7yv3h5hScfp7S15qTw0=;
 	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=CkucrjaUVewIBfX7PJYr3mZs3dZd8sWK1ULJW1fvw4n/rncl5yLYt/PIRgyiv9gqg
-	 lv7v2sNqAivLn+qHfkA7gvJtZZiYNuS7JGg7y4RyuDPooiv2fYtSFa2HC7qkG21An/
-	 EkwPsSVC5T2mRpofXEVR+eh2wFBgljMhTDsf5eNc=
+	b=vPDTHFKenZB4bf/Bg/Veufj1mCYTG/qAhyc7NKHXYzhv22szX4Xj66NQyyl48aVCk
+	 D+ZpGL9K9pSCCz/fLimDl5LKBhcmd7nECV/mzoXnsmJR9CGEkIrCSf/t7iYVxDP+5J
+	 ZhEZQi29jTLceiEBMFM8i8b/nltxu6i4lswudXnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgHRQyX (ORCPT
+        id S1728407AbgHRQyw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 12:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34662 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 12:54:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgHRQyP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 12:54:15 -0400
+        id S1728402AbgHRQyq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 12:54:46 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C48A20786;
-        Tue, 18 Aug 2020 16:54:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71D75207DE;
+        Tue, 18 Aug 2020 16:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597769650;
-        bh=PxM9+n8vVIqpRf0jfe4HVoCR3Hxu6WufuYAJnUBROT4=;
+        s=default; t=1597769686;
+        bh=t1w93QEWEvokEoid6tjADACw7yv3h5hScfp7S15qTw0=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=gUYGs4eMGo9kZaPbLsgoa9Ac73rnnbET5oal91nJ1x5zii7YwFryJq3BN3ZcuMXb4
-         +7MkNCsRLfFlMxKfJH0UR+bn9MXQ798+2obQ7OurbpMjqL7fO4qZuA+LxcrD+EYFGU
-         VqKfIY1uCkI02fGwhtF1gilroLiY3RAY5aRrR29U=
-Date:   Tue, 18 Aug 2020 17:53:39 +0100
+        b=fSLh9If/Ej7d50L2+kP020JW5koexmx3Wgwi7oFFgA/HvjWAbO+PMNqDzTKhdVvgD
+         OnoH2ly/oAupxb/psXSyQOy5itdHs5nGtq4NanH74VSQUBuyV8Xtx5nG5DzL2BMopT
+         53hV3JIV3hn0alEDgC7kF+BNSGCX6l4o3FzGgZbs=
+Date:   Tue, 18 Aug 2020 17:54:15 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        srinivas.kandagatla@linaro.org, tiwai@suse.com,
-        plai@codeaurora.org, Rohit kumar <rohitkr@codeaurora.org>,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        bgoswami@codeaurora.org, bjorn.andersson@linaro.org,
-        agross@kernel.org, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, perex@perex.cz
-In-Reply-To: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
-References: <1597402388-14112-1-git-send-email-rohitkr@codeaurora.org>
-Subject: Re: [PATCH v6 00/12] ASoC: qcom: Add support for SC7180 lpass variant
-Message-Id: <159776961933.56094.17007093151985279828.b4-ty@kernel.org>
+To:     devicetree@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org,
+        Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        perex@perex.cz
+In-Reply-To: <1597397561-2426-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1597397561-2426-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH 1/2] ASoC: dt-bindings: ak4458: Add power supply property
+Message-Id: <159776961933.56094.7304762190784166895.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 14 Aug 2020 16:22:56 +0530, Rohit kumar wrote:
-> This patch chain add audio support for SC7180 soc by doing the required
-> modification in existing common lpass-cpu/lpass-platform driver.
-> This also fixes some concurrency issue.
-> 
-> This patch series is already tested by Srinivas on Dragon Board 410c.
-> Changes since v5:
->         - Fixed remove api in lpass-sc7180.c
->         - Addressed comments by Rob in yaml Documentation.
-> 
-> [...]
+On Fri, 14 Aug 2020 17:32:40 +0800, Shengjiu Wang wrote:
+> AVDD-supply is for Analog power supply
+> DVDD-supply is for Digital power supply
 
 Applied to
 
@@ -74,30 +63,10 @@ Applied to
 
 Thanks!
 
-[01/12] ASoC: qcom: Add common array to initialize soc based core clocks
-        commit: 1220f6a76e77af8ac14fe67a11fcd7806764ea46
-[02/12] ASoC: qcom: lpass-cpu: Move ahbix clk to platform specific function
-        commit: a503567d70eca91796a4ab23053d4c70df8e1e3e
-[03/12] ASoC: qcom: lpass-platform: Replace card->dev with component->dev
-        commit: 784771863abae5f8878c62e9c624111c51bebe7c
-[04/12] ASoC: qcom: lpass-platform: fix memory leak
-        commit: 5fd188215d4eb52703600d8986b22311099a5940
-[05/12] ASoC: qcom: lpass: Use regmap_field for i2sctl and dmactl registers
-        commit: b5022a36d28f6a99c1a57f54246e8b566cf094d5
-[06/12] ASoC: qcom: lpass-cpu: fix concurrency issue
-        commit: 753a6e17942f6f425ca622e1610625998312ad89
-[07/12] ASoC: Add sc7180 lpass cpu node
-        commit: 2a7a3797ed2de6a55e1467bd11002fa7b13e12f3
-[08/12] ASoC: Add sc7180-lpass bindings header
-        commit: 68d8904b25df28821425753eaebc8fe992dde236
-[09/12] ASoC: qcom: lpass-sc7180: Add platform driver for lpass audio
-        commit: 24caf8d9eb108c52e144bcc7af94bb1edcb70700
-[10/12] ASoC: qcom: lpass-cpu: Use platform_get_resource
-        commit: 93dbbd657167a796583506834cc03950ce25bce1
-[11/12] ASoC: qcom: lpass-platform: Use platform_get_irq
-        commit: b05372c84d61ad2a905274db7e3d63a65c835463
-[12/12] ASoC: lpass-cpu: Move to yaml format
-        commit: 4b381d7e86fd0b767456e07c49982fb4896e1166
+[1/2] ASoC: dt-bindings: ak4458: Add power supply property
+      commit: 617a156f2ebae841bcd64ee5a21d0e12b5d733ab
+[2/2] ASoC: ak4458: Add regulator support
+      commit: 7e3096e8f823682c20e033113ec32dd590364774
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
