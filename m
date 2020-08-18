@@ -2,403 +2,162 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A393C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0131AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A622067C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HPYR+grp"
+	by mail.kernel.org (Postfix) with ESMTP id CEB662078D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 22:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597789108;
+	bh=QKSZI3J3mW0bAKJWZPuqJejya5eWTjv/sou73dl/S+4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GehhJB9i1ZYrCULTxTJiXMXbNn0dOEnMcdkEj/0l2FkK7z+jhs7qW0+ViB7xiGoSH
+	 yENCwalyHgDSaeLcsQbcsMjTXHg9RyK7XkTOizX8Zv9Bcy3iTgB1qphNYgQISdiToK
+	 OlrpSScWAigJwigPGv/Da/NVg/Tjto8rbl/RMleM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgHRWHS (ORCPT
+        id S1726840AbgHRWS2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 18:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbgHRWHR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 18:07:17 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE9A7C061389
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:07:16 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 6so16406274qtt.0
-        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 15:07:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=px8ObE2xOi/36R5JWvUBtMfgDCI+Fg4lbQqfJ0YrggQ=;
-        b=HPYR+grppmQc/6qWyiY8FL2m31cXd/LpPr+K9Rk92MwGCiO+09qTJQZJnbWEvNLGy4
-         HFWN3eMFqp8OTxNH4FZF407D2c/tv50tQvOvS5rWKs3nno+UKbYsZzt++FIvTgcv3QcB
-         Vo9gmTRuDH3ygT/pm6qRwfLBQjjnQrcJCxpArjqcsnci5IMXbXWh4y2w/DhE0UHxmwyd
-         oD03vMhzkAnZ0S067sgdGPTGneuyU0iD/YuqUlV9pAomfPnmWGHldmQYLfkNMbuEDafg
-         6nTddIcCQ2hcE3Ywjmoug4WrJ7Fau5OgM3uyQFXW4lMor/xZUiuBVQ7frs0SVNcQz7AX
-         Cvyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=px8ObE2xOi/36R5JWvUBtMfgDCI+Fg4lbQqfJ0YrggQ=;
-        b=NDkjAq8Wq1JYQEewNIScN2yYRUdzfsAsw6cGWBwNIY4wZKEe+mcOqiL/AQklO4Iiz4
-         lT7RksquXx3bqRwW3lCK1+q/JPa7p3TDI4ax2WYKf/gnzcRuWeMvpedF77HeTxn6boXL
-         wh6zpBCKUrFjSjGiXtK9q6uNw89S0zjOrp1ZoS/dUj3DcNTSRKKZ7KKs6lKDtCwkql5d
-         06dG0UA9jmOvzMCQaNA0Yhme5AH6E/xyjlaKyWYmqQkoMbyNqtEtiw2cyq2q9oVudXw5
-         0YgHW+aprW/u45Fmvrd2TKtHkpgYP4W7OwXqVBRYDzMeZHorBcd61CtYtTWtc29t2aDT
-         AFkw==
-X-Gm-Message-State: AOAM530aL06GjQp0f6wtLGVPYTBmlE/msJ9EZTzbbOaLTM/uS+yz54/g
-        DSsvLwhZikipWOGHQlt2HMT0QVsVoNy++heLGd7HlQ==
-X-Google-Smtp-Source: ABdhPJyHCn8r4aLq23a97uyhpLFlSZ3mnxBVLrCwHgQJVtznOvhgjh2wgQPw3On28wpzamxePVdq2m1CSITqWxILkUE=
-X-Received: by 2002:aed:22cb:: with SMTP id q11mr19402496qtc.200.1597788435923;
- Tue, 18 Aug 2020 15:07:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1596020528-19510-2-git-send-email-grzegorz.jaszczyk@linaro.org> <20200817211456.GA1542592@bogus>
-In-Reply-To: <20200817211456.GA1542592@bogus>
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Date:   Wed, 19 Aug 2020 00:07:05 +0200
-Message-ID: <CAMxfBF5YQCE9i-Xot209S+vWtaH6NFUrcViFcsEG6GKyeQ5j3A@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: soc: ti: Add TI PRUSS bindings
+        Tue, 18 Aug 2020 18:18:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726539AbgHRWS1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 18 Aug 2020 18:18:27 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AA320786;
+        Tue, 18 Aug 2020 22:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597789106;
+        bh=QKSZI3J3mW0bAKJWZPuqJejya5eWTjv/sou73dl/S+4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=v8SmAx6Dcfc89wEfDqt1kmeDO4WnuQLkRXFolTVKDYa8EI7+hfFnddkn/T9/J3ciC
+         mD5HXDEjvbbh2RWPfz3lviIg/jsPYV6/O0/IJxHCyCL5+4AxUbtCxdIY7hvpMTQpnG
+         YWQCfK9FufDmA68sG1fNEnq/PqND+xOHu5ujf7a8=
+Date:   Wed, 19 Aug 2020 00:18:21 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Rob Herring <robh@kernel.org>
-Cc:     ssantosh@kernel.org, "Anna, Suman" <s-anna@ti.com>,
-        santosh.shilimkar@oracle.com, Lee Jones <lee.jones@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "Bajjuri, Praneeth" <praneeth@ti.com>,
-        Roger Quadros <rogerq@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Lee Jones <lee.jones@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v3 43/44] dt: document HiSilicon SPMI controller and
+ mfd/regulator properties
+Message-ID: <20200819001821.651a7dcd@coco.lan>
+In-Reply-To: <20200818170755.GA3603438@bogus>
+References: <cover.1597647359.git.mchehab+huawei@kernel.org>
+        <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
+        <20200817201211.GA1437827@bogus>
+        <20200818111351.7e3fc780@coco.lan>
+        <20200818170755.GA3603438@bogus>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Em Tue, 18 Aug 2020 11:07:55 -0600
+Rob Herring <robh@kernel.org> escreveu:
 
-On Mon, 17 Aug 2020 at 23:14, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Jul 29, 2020 at 01:02:03PM +0200, Grzegorz Jaszczyk wrote:
-> > This patch adds the bindings for the Programmable Real-Time Unit
-> > and Industrial Communication Subsystem (PRU-ICSS) present on various
-> > TI SoCs. The IP is present on multiple TI SoC architecture families
-> > including the OMAP architecture SoCs such as AM33xx, AM437x and
-> > AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
-> > also present on the Davinci based OMAPL138 SoCs and K3 architecture
-> > based AM65x and J721E SoCs as well.
-> >
-> > The IP has a number of sub-modules some of which are represented as
-> > their own devices. This binding covers only the top-level sub-system
-> > devices, and some sub-modules like MDIO, MII_RT (Ethernet MII_RT module
-> > with MII ports) and IEP (Industrial Ethernet Peripheral). The remaining
-> > sub-modules bindings shall be defined in the respective driver
-> > subsystem bindings folders. Couple of full examples have also been
-> > added demonstrating the devices on AM335x and AM437x SoCs.
-> >
-> > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> > Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-> > Reviewed-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  .../devicetree/bindings/soc/ti/ti,pruss.yaml       | 383 +++++++++++++++++++++
-> >  1 file changed, 383 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> > new file mode 100644
-> > index 0000000..4b7a098
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
-> > @@ -0,0 +1,383 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/soc/ti/ti,pruss.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: |+
-> > +  TI Programmable Real-Time Unit and Industrial Communication Subsystem
-> > +
-> > +maintainers:
-> > +  - Suman Anna <s-anna@ti.com>
-> > +
-> > +description: |+
-> > +
-> > +  The Programmable Real-Time Unit and Industrial Communication Subsystem
-> > +  (PRU-ICSS a.k.a. PRUSS) is present on various TI SoCs such as AM335x, AM437x,
-> > +  Keystone 66AK2G, OMAP-L138/DA850 etc. A PRUSS consists of dual 32-bit RISC
-> > +  cores (Programmable Real-Time Units, or PRUs), shared RAM, data and
-> > +  instruction RAMs, some internal peripheral modules to facilitate industrial
-> > +  communication, and an interrupt controller.
-> > +
-> > +  The programmable nature of the PRUs provide flexibility to implement custom
-> > +  peripheral interfaces, fast real-time responses, or specialized data handling.
-> > +  The common peripheral modules include the following,
-> > +    - an Ethernet MII_RT module with two MII ports
-> > +    - an MDIO port to control external Ethernet PHYs
-> > +    - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
-> > +      Ethernet functions
-> > +    - an Enhanced Capture Module (eCAP)
-> > +    - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
-> > +    - a 16550-compatible UART to support PROFIBUS
-> > +    - Enhanced GPIO with async capture and serial support
-> > +
-> > +  A PRU-ICSS subsystem can have up to three shared data memories. A PRU core
-> > +  acts on a primary Data RAM (there are usually 2 Data RAMs) at its address
-> > +  0x0, but also has access to a secondary Data RAM (primary to the other PRU
-> > +  core) at its address 0x2000. A shared Data RAM, if present, can be accessed
-> > +  by both the PRU cores. The Interrupt Controller (INTC) and a CFG module are
-> > +  common to both the PRU cores. Each PRU core also has a private instruction
-> > +  RAM, and specific register spaces for Control and Debug functionalities.
-> > +
-> > +  Various sub-modules within a PRU-ICSS subsystem are represented as individual
-> > +  nodes and are defined using a parent-child hierarchy depending on their
-> > +  integration within the IP and the SoC. These nodes are described in the
-> > +  following sections.
-> > +
-> > +
-> > +  PRU-ICSS Node
-> > +  ==============
-> > +  Each PRU-ICSS instance is represented as its own node with the individual PRU
-> > +  processor cores, the memories node, an INTC node and an MDIO node represented
-> > +  as child nodes within this PRUSS node. This node shall be a child of the
-> > +  corresponding interconnect bus nodes or target-module nodes.
-> > +
-> > +  See ../../mfd/syscon.yaml for generic SysCon binding details.
-> > +
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - ti,am3356-pruss  # for AM335x SoC family
-> > +      - ti,am4376-pruss0 # for AM437x SoC family and PRUSS unit 0
-> > +      - ti,am4376-pruss1 # for AM437x SoC family and PRUSS unit 1
-> > +      - ti,am5728-pruss  # for AM57xx SoC family
-> > +      - ti,k2g-pruss     # for 66AK2G SoC family
-> > +      - ti,am654-icssg   # for K3 AM65x SoC family
-> > +      - ti,j721e-icssg   # for K3 J721E SoC family
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  ranges:
-> > +    maxItems: 1
-> > +    description: |
-> > +      Standard ranges definition using addresses from 0 for child nodes.
->
-> Don't need a description on standard properties.
+> > > > +  spmi-channel:
+> > > > +    description: number of the SPMI channel where the PMIC is connected    
+> > > 
+> > > This looks like a common (to SPMI), but it's not something defined in 
+> > > spmi.txt   
+> > 
+> > This one is not part of the SPMI core. It is stored inside a private 
+> > structure inside at the HiSilicon spmi controller driver. It is stored 
+> > there as ctrl_dev->channel, and it is used to calculate the register offset
+> > for readl():
+> > 
+> > 	offset  = SPMI_APB_SPMI_STATUS_BASE_ADDR;
+> > 	offset += SPMI_CHANNEL_OFFSET * ctrl_dev->channel + SPMI_SLAVE_OFFSET * sid;
+> > 	do {
+> > 		status = readl(base + offset);
+> > 	...
+> > 
+> > The SPMI bus is somewhat similar to I2C: it is a 2-wire serial bus
+> > with up to 16 devices connected to it.
+> > 
+> > Now, most modern I2C chipsets provide multiple independent I2C
+> > channels, on different pins. Also, on some chipsets, certain
+> > GPIO pins can be used either as GPIO or as I2C.
+> > 
+> > I strongly suspect that this is the case here: according with
+> > the Hikey 970 schematics:
+> > 
+> > 	https://www.96boards.org/documentation/consumer/hikey/hikey970/hardware-docs/files/hikey970-schematics.pdf
+> > 
+> > The pins used by SPMI clock/data can also be used as GPIO.
+> > 
+> > While I don't have access to the datasheets for Kirin 970 (or any other
+> > chipsets on this board), for me, it sounds that different GPIO pins
+> > are allowed to use SPMI. The "spmi-channel" property specifies
+> > what pins will be used for SPMI, among the ones that are
+> > compatible with MIPI SPMI specs.  
+> 
+> Based on this, I think it should be called 'hisilicon,spmi-channel' as 
+> it is vendor specific. 
 
-Ok.
+I'm fine with "hisilicon,spmi-channel".
 
->
->
-> > +
-> > +  power-domains:
-> > +    description: |
-> > +      This property is as per sci-pm-domain.txt.
-> > +
-> > +  memories:
->
-> Missing unit-address pattern.
+> > > > +
+> > > > +          vsel-reg:
+> > > > +            description: Voltage selector register.    
+> > > 
+> > > 'reg' can have multiple entries if you want.  
+> > 
+> > Yes, I know. I was in doubt if I should either place vsel-reg on
+> > a separate property or together with reg. I ended keeping it
+> > in separate on the submitted patch series.
+> > 
+> > What makes more sense?  
+> 
+> Really, not putting it in DT. Like other things, it's fixed for the 
+> chip.
 
-Ok, I will also update other subnodes regarding the unit-address pattern.
+I agree, but, as I said before, without the datasheet, we can only
+hardcode a small subset of the LDO settings.
 
->
->
-> > +    description: |
-> > +      The various Data RAMs within a single PRU-ICSS unit are represented as a
-> > +      single node with the name 'memories'.
-> > +
-> > +    type: object
-> > +
-> > +    properties:
-> > +      reg:
-> > +        minItems: 2 # On AM437x one of two PRUSS units don't contain Shared RAM.
-> > +        maxItems: 3
-> > +        items:
-> > +          - description: Address and size of the Data RAM0.
-> > +          - description: Address and size of the Data RAM1.
-> > +          - description: |
-> > +              Address and size of the Shared Data RAM. Note that on AM437x one
-> > +              of two PRUSS units don't contain Shared RAM, while the second one
-> > +              has it.
-> > +
-> > +      reg-names:
-> > +        minItems: 2
-> > +        maxItems: 3
-> > +        items:
-> > +          - const: dram0
-> > +          - const: dram1
-> > +          - const: shrdram2
-> > +
-> > +    required:
-> > +      - reg
-> > +      - reg-names
->
->        additionalProperties: false
->
+Due to that, I prefer keeping it at DT - either grouped together at "reg" or 
+as two separated properties (reg and vsel-reg).
 
-Ok.
+> > > > +description: |
+> > > > +  The HiSilicon SPMI controller is found on some Kirin-based designs.
+> > > > +  It is a MIPI System Power Management (SPMI) controller.
+> > > > +
+> > > > +  The PMIC part is provided by
+> > > > +  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
+> > > > +
+> > > > +properties:
+> > > > +  $nodename:
+> > > > +    pattern: "spmi@[0-9a-f]"
+> > > > +
+> > > > +  compatible:
+> > > > +    const: hisilicon,spmi-controller    
+> > > 
+> > > Needs an SoC specific compatible.  
+> > 
+> > What about:
+> > 	hisilicon,kirin970-spmi-controller   
+> 
+> Is 'kirin970' really the SoC name? The older ones are all 'hi[0-9]+'.
 
->
->
-> (And throughout for other child nodes).
+This SoC is named Kirin 970. Yet, you can see places where 3670 is
+used, like:
 
-Ok.
+	https://en.wikichip.org/wiki/hisilicon/kirin/970
 
->
->
-> > +
-> > +  cfg:
-> > +    description: |
-> > +      PRU-ICSS configuration space. CFG sub-module represented as a SysCon.
-> > +
-> > +    type: object
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        items:
-> > +          - const: ti,pruss-cfg
-> > +          - const: syscon
-> > +
-> > +      reg:
-> > +        maxItems: 1
-> > +
-> > +  iep:
-> > +    description: |
-> > +      Industrial Ethernet Peripheral to manage/generate Industrial Ethernet
-> > +      functions such as time stamping. Each PRUSS has either 1 IEP (on AM335x,
-> > +      AM437x, AM57xx & 66AK2G SoCs) or 2 IEPs (on K3 AM65x & J721E SoCs ). IEP
-> > +      is used for creating PTP clocks and generating PPS signals. The bindings
-> > +      for this shall be defined in ../../net/ti,icss-iep.yaml.
-> > +
-> > +    type: object
-> > +
-> > +  mii-rt:
-> > +    description: |
-> > +      Real-Time Ethernet to support multiple industrial communication protocols.
-> > +      MII-RT sub-module represented as a SysCon.
-> > +
-> > +    type: object
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        items:
-> > +          - const: ti,pruss-mii
-> > +          - const: syscon
-> > +
-> > +      reg:
-> > +        maxItems: 1
-> > +
-> > +  mii-g-rt:
-> > +    description: |
-> > +      The Real-time Media Independent Interface to support multiple industrial
-> > +      communication protocols (G stands for Gigabit). MII-G-RT sub-module
-> > +      represented as a SysCon.
-> > +
-> > +    type: object
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        items:
-> > +          - const: ti,pruss-mii-g
-> > +          - const: syscon
-> > +
-> > +      reg:
-> > +        maxItems: 1
-> > +
-> > +  interrupt-controller:
-> > +    description: |
-> > +      PRUSS INTC Node. Each PRUSS has a single interrupt controller instance
-> > +      that is common to all the PRU cores. This should be represented as an
-> > +      interrupt-controller node. The bindings for this shall be defined in
-> > +      ../../interrupt-controller/ti,pruss-intc.yaml.
->
-> Use $ref to reference the schema.
+There, it says that Hi3670 is the part number.
 
-The problem is that the mentioned binding is not merged yet. Is it ok
-for you to leave it as is and update once
-../../interrupt-controller/ti,pruss-intc.yam get merged?
-
->
->
-> > +
-> > +    type: object
-> > +
-> > +  mdio:
-> > +    description: |
-> > +      MDIO Node. Each PRUSS has an MDIO module that can be used to control
-> > +      external PHYs. The MDIO module used within the PRU-ICSS is an instance of
-> > +      the MDIO Controller used in TI Davinci SoCs.
-> > +
-> > +    allOf:
-> > +      - $ref: /schemas/net/ti,davinci-mdio.yaml#
-> > +
-> > +    type: object
-> > +
-> > +patternProperties:
-> > +  "^(pru|rtu|txpru)@[0-9a-f]+$":
-> > +    description: |
-> > +      PRU Node. Each PRUSS has dual PRU cores, each represented as a RemoteProc
-> > +      device through a PRU child node each. Each node can optionally be rendered
-> > +      inactive by using the standard DT string property, "status". The ICSSG IP
-> > +      present on K3 SoCs have additional auxiliary PRU cores with slightly
-> > +      different IP integration. The bindings for this shall be defined in
-> > +      ../../remoteproc/ti,pru-rproc.yaml
-> > +
-> > +    type: object
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - ranges
-> > +
-> > +# Due to inability of correctly verifying sub-nodes with an @address through
-> > +# the "required" list, the required sub-nodes below are commented out for now.
-> > +
-> > +#required:
-> > +# - memories
-> > +# - interrupt-controller
-> > +# - pru
->
-> Add:
->
-> additionalProperties: false
-
-Ok.
-
->
->
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        enum:
-> > +          - ti,k2g-pruss
-> > +          - ti,am654-icssg
-> > +          - ti,j721e-icssg
-> > +then:
-> > +  required:
-> > +    - power-domains
-> > +
-> > +examples:
-> > +  - |
-> > +
-> > +    /* Example 1 AM33xx PRU-ICSS */
-> > +    pruss: pruss@0 {
-> > +        compatible = "ti,am3356-pruss";
-> > +        reg = <0x0 0x80000>;
-> > +        #address-cells = <1>;
-> > +        #size-cells = <1>;
-> > +        ranges;
->
-> I would have expected a warning on this since you defined it to have 1
-> entry.
-
-I've double checked with dt_binding_check - there is no warning. For
-ranges maxItems: 1 is defined.
-
-Thank you for your review,
-Grzegorz
+Thanks,
+Mauro
