@@ -2,298 +2,320 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0212C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A34C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC2020829
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 153BF20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 06:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=KoCoConnector.onmicrosoft.com header.i=@KoCoConnector.onmicrosoft.com header.b="aD4v5buc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kSt4tcoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbgHRGXN (ORCPT
+        id S1726365AbgHRGnv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 02:23:13 -0400
-Received: from mail-eopbgr50073.outbound.protection.outlook.com ([40.107.5.73]:29071
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726382AbgHRGXK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 02:23:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JrnfNT1TrKngAn67qb4/zpjuB6GOcZ0/6+6PABJmsg2SiPxJqxCW9R+etLZNb5qpOzhn7R+WhPBV509UF73tl+xVpTvJGvzKWCdHdJHtloxJcxJhDNwnNjrqWRHZ+w7Qyf2wJC+GGBeCGCw7/jl/2dXP1pB9DLN9XpftQmZI00gHkQ4Wg7WxwaESSN21Q06KFgfltilj3Z2QxCzHqByOzl0fhW3i22D1d4PiZMH8PHbwvRD2vJPV6mwQEoZkoEtlDubgZiDOG/OeFTE5ULsB3ldDp0mwAJKy+qdcAxeuXeqbseKk1XvcUhoJmg5xayMtUlhgrDw9ykzgvnyOZBzmmQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hW7OlGYbquDA4dCFpQ8Dfd24jGf0YQM3WQTRenFnLTI=;
- b=cV6r5y1RyOS2/w1sNQSFK8hNQHGkNRU6mNKBmvj59YYmAJvBbRqMLgxJKKJeAZKulh0P3jFXkcg2pdaXc8S2ZlJRrMtTTmprdxGajj5DoWcAhynq12osgQOVKYg6ZS8NdtdKFVcS9Cj+lIG2ezQnmVVAVN+c8Ws3hbkllrEq8KW3+7YI9UQ1UBCirFU7WyEO2PVO4Q7U7DSiReDizxTOxTXl1dCkmgdxsqoSig4gXAPnVh8tKeql8LQGp3m6clue1EB8VzeRWFP/aWF5Dp5Q6Qa8ImStR+s0MIW9QDoQFUnHVXe13CWnw/VbvVlGuiLDxF8SBi1VW9lBJ5VKI8pw5w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kococonnector.com; dmarc=pass action=none
- header.from=kococonnector.com; dkim=pass header.d=kococonnector.com; arc=none
+        Tue, 18 Aug 2020 02:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726398AbgHRGnu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 02:43:50 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4884DC061342
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 23:43:50 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id v4so20239708ljd.0
+        for <devicetree@vger.kernel.org>; Mon, 17 Aug 2020 23:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=KoCoConnector.onmicrosoft.com; s=selector2-KoCoConnector-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hW7OlGYbquDA4dCFpQ8Dfd24jGf0YQM3WQTRenFnLTI=;
- b=aD4v5buc9mC/CmUCwVJPawmcTUKDLWbgSmPyVzSiQTKtwJGZsDnKjc/S9GR6n/Pzp4T8Dy0eSsyKmZ/MIoJKvuGyBKcMQ9u5+Q9SANoRXbv2kTXZ7Od8c7QPsEeI5hTLsiw1KXWgLkzZJVdvCRhYgI2oA2PuKd5yUUJxFoM421s=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=kococonnector.com;
-Received: from AM0PR09MB4067.eurprd09.prod.outlook.com (2603:10a6:208:194::14)
- by AM0PR09MB2627.eurprd09.prod.outlook.com (2603:10a6:208:e3::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.22; Tue, 18 Aug
- 2020 06:23:04 +0000
-Received: from AM0PR09MB4067.eurprd09.prod.outlook.com
- ([fe80::f9a5:ed5f:e58e:d4db]) by AM0PR09MB4067.eurprd09.prod.outlook.com
- ([fe80::f9a5:ed5f:e58e:d4db%9]) with mapi id 15.20.3283.026; Tue, 18 Aug 2020
- 06:23:04 +0000
-From:   Oliver Graute <oliver.graute@kococonnector.com>
-To:     aisheng.dong@nxp.com
-Cc:     fabio.estevam@nxp.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org,
-        Oliver Graute <oliver.graute@kococonnector.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Sebastien Fagard <sebastien.fagard@nxp.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: imx8qm: added lvds pwm
-Date:   Tue, 18 Aug 2020 08:20:47 +0200
-Message-Id: <20200818062051.16817-1-oliver.graute@kococonnector.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200813084547.20875-1-oliver.graute@kococonnector.com>
-References: <20200813084547.20875-1-oliver.graute@kococonnector.com>
-X-Patchwork-Bot: notify
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR01CA0121.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::26) To AM0PR09MB4067.eurprd09.prod.outlook.com
- (2603:10a6:208:194::14)
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ClXX7uJ60td5LnvfRgmPKtfx8z8dTsIv+iRBmNZyVoA=;
+        b=kSt4tcocrgt42fP9k7nigyYuEtJmqu/nqhLVX93E6GYGGP2Jpe8ePzae1W9m3auUDs
+         cG6SWMeqQE+bBKWbVXy7mGFD7eDplEwGDiMpr6Xi6mgcPq/Pb73h2KfhGM/kdgx4XENj
+         wEVDtGPO8aFZeRWWuOgCxOmdI51GTNwm1pjBCbQoH9ep6DVGpQkZMXL6BocCj+eL0kev
+         Jdfo4u2aleuHijhdSw6y8i7EAVmzJf2LvjgH3qZHCcf22Dkn/a0QqMn/qRacSKd91z0X
+         C56fJPtVYf6DcehfSqwGF/MsiPXowGvXjNOg68AYeCPTKRwRcWizDKPPjZ/UZurNfgQ4
+         0ibw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ClXX7uJ60td5LnvfRgmPKtfx8z8dTsIv+iRBmNZyVoA=;
+        b=nFVCArIdsd6tdLDi0cdQFkI59Uib72H8IXLYvBvG7sb25eqXDNX3pfVRCxQ5rw+5JD
+         rjnB24Ysh5wnN0XD1iKXAzzH+50f5Edz2T4CkFZFb2Ij9nw0xRqHoeC6LcrQEmlhih8o
+         Lx7mPVk+G4/FyJZPJtbjSTCFFn4K8gbPrOwhxZtFus+6Cn/ZgmsUzYoe/Ko1gmHlICJk
+         ZpAUBjkiVFtVjFrUWDLeQ9i1nQSj7Ntla94b+jYpIXyDMzBr7u2162ALWeYZGco1jxvJ
+         TRmT92C6Ebq1t0pB0EGzBTuxjJB1aZYey6w8atcy0asGhuJp1Q2AC+GL4dH5xLMHivMR
+         f9ZQ==
+X-Gm-Message-State: AOAM531ALagDHMjGd3GUmIVCh1TiVj6VL1cXPluoKPPDitBqyZgkBAxS
+        7I42LYrm7HzqosFJZ7r4/Nsy4Q==
+X-Google-Smtp-Source: ABdhPJzq4ZGEEmdILhrjYOQbVBu/H10UwBlGsgZjGCCOkKbx52gLSJfnFuD9oslfdMsAdHDuZDOOiQ==
+X-Received: by 2002:a2e:912:: with SMTP id 18mr9494717ljj.429.1597733028570;
+        Mon, 17 Aug 2020 23:43:48 -0700 (PDT)
+Received: from [192.168.118.216] (37-144-159-139.broadband.corbina.ru. [37.144.159.139])
+        by smtp.gmail.com with ESMTPSA id z22sm6149757lfb.93.2020.08.17.23.43.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Aug 2020 23:43:47 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: media: imx274: Convert to json-schema
+To:     Jacopo Mondi <jacopo@jmondi.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, Leon Luo <leonl@leopardimaging.com>,
+        mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com,
+        linux-renesas-soc@vger.kernel.org
+References: <20200817160037.255972-1-jacopo+renesas@jmondi.org>
+ <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
+From:   Andrey Konovalov <andrey.konovalov@linaro.org>
+Message-ID: <3592105f-584f-eeeb-4ece-89f3f6bb5352@linaro.org>
+Date:   Tue, 18 Aug 2020 09:43:46 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (2.207.138.2) by AM0PR01CA0121.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Tue, 18 Aug 2020 06:23:03 +0000
-X-Mailer: git-send-email 2.17.1
-X-Patchwork-Bot: notify
-X-Originating-IP: [2.207.138.2]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 73980d17-846a-4585-767c-08d8433f29e4
-X-MS-TrafficTypeDiagnostic: AM0PR09MB2627:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR09MB26271F554A928BBD87E14ADCEB5C0@AM0PR09MB2627.eurprd09.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1079;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: M0reuO6HaZiRBDb+O5ZgQMkpAQdBYdFLZk89ghcIirAKZ/G7qbXigfijYYZ9NCqKhuFnMpzTr+dENe97SyUcdWbpfwjY9qaQBlwFTrtsWrS025HLRBQ315LGbsL7o9ixlDq+UahrMy3Y7M3ltF+zu93EJt3nNunYTfdOONXPUSKoUnFN7uCwB2CuiG/O1NF5I8CW/+Lbw4gtYGbrtrhseWnz5pGX1dTv6Ihdl4icrH+vgj0Hacx2K1h3iZY0y1zzHRz3+UTIWqW8+8g69FBji1GjD+eLerBSUfJF1utuo+nyu7Q5LtqzpztiJ5HxyZCLlI1jecAAxIB3t6SKr5T/93VLmDuD+aPilBdkQS/wH9LQ8NwUmP73Blp+A6Qj28PD
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR09MB4067.eurprd09.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(136003)(376002)(396003)(346002)(39830400003)(26005)(52116002)(86362001)(36756003)(44832011)(6496006)(186003)(54906003)(6486002)(6916009)(4326008)(16526019)(7416002)(8936002)(316002)(8676002)(478600001)(66476007)(6666004)(66946007)(1076003)(5660300002)(83380400001)(2616005)(2906002)(956004)(66556008)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: RKT8Cwp5cjmFpoQc/NhL9TDVspki2wynZMJSXNZkn5hkrmc9UQsmsxR+Rmx7GCpwb5e4JkgZwbC2macTL2n1MDfMKdmAK0BAZXioUq9riZO0OTrKIaHuq4FshBEAXD0lFzrb3C4Bvjt6NwEoY/ajUU/eHUD6g2N+4Hl+LSTHsyZvtN3J0Uy6f6PooaB2DVRKeVImnXwgBA7uIeI+TaP3FbApcbmzy7VwneBBPzXZeyrBt2tg1ciiuNl+BtxOoUS2LgZ/lT19R2HylNXAGlymDUlqKOqYMD+cCy++4DvVWngm9wdXSFOj4TTcX7p1FwUzoXNc9BPFs02IYIOohuLw1bDbzEZBeh6nUEwRcRkPfq0cKixoFPeHjWnK9Fvo0AuANm1rv7rxe5EkpywCwiVSCTMDkN5If4VWgSbAQEjbNs+mgEL/dt2iPcLJuGZrxRgu380QLCyjk3QkuvwBZ4n0AR5X1YjWgdzoOO8VC52g/veLXcySnE/1pQUJ6t3f0tyt3I/delerAvlIW0pTtF2XgXwnLWB9SPwcEqGsXY9yEddVlI4Q52bT+VEZ+Yzv78EYEFAMhugTHSNVSINlDlgArQeD/mm/9sM7Qt20qqkX5r2NbxupJU6AR9kcSTBLkrwFa2doBHzTk6CtWWbv8rnE2g==
-X-OriginatorOrg: kococonnector.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73980d17-846a-4585-767c-08d8433f29e4
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR09MB4067.eurprd09.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2020 06:23:04.0362
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 59845429-0644-4099-bd7e-17fba65a2f2b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UfAgH47Cu5CYrbAEekCY8fuXqdWCFWqnT2Mb8GIEdlYdk042cZ/cwBkYpYglAH/t+0hLb9/nKrYf9C9XTo1VtSBFpSL0D1Z0RfYTKZRMPT4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR09MB2627
+In-Reply-To: <20200817191855.u55o75iby6ib7hhe@uno.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add nodes for lvds pwms
+Hi Jacopo,
 
-Signed-off-by: Oliver Graute <oliver.graute@kococonnector.com>
----
- .../boot/dts/freescale/imx8-ss-lsio.dtsi      | 84 +++++++++++++++++++
- drivers/clk/imx/clk-imx8qxp.c                 | 14 +++-
- drivers/firmware/imx/scu-pd.c                 |  6 +-
- include/dt-bindings/clock/imx8-clock.h        | 12 +++
- 4 files changed, 112 insertions(+), 4 deletions(-)
+Misprint in the subject (imx274 vs imx214)?
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-index c21e0818887b..be241813fbea 100644
---- a/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-ss-lsio.dtsi
-@@ -7,6 +7,90 @@
- #include <dt-bindings/clock/imx8-lpcg.h>
- #include <dt-bindings/firmware/imx/rsrc.h>
- 
-+lvds0_subsys: bus@56240000
-+{
-+	compatible = "simple-bus";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x56240000 0x0 0x56240000 0x10000>;
-+
-+	lvds0_ipg_clk: clock-lvds-ipg {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <24000000>;
-+			clock-output-names = "lvds0_ipg_clk";
-+	};
-+
-+	lvds0_lpcg: clock-controller@5624300c {
-+		compatible = "fsl,imx8qxp-lpcg";
-+		reg = <0x5624300c 0x4>;
-+		#clock-cells = <1>;
-+		clocks = <&clk IMX_SC_R_LVDS_0_PWM_0 IMX_SC_PM_CLK_PER>,
-+			 <&lvds0_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "lvds0_pwm_lpcg_clk",
-+					     "lvds0_pwm_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_LVDS_0_PWM_0>;
-+	};
-+
-+	lvds0_pwm: pwm@56244000 {
-+		compatible = "fsl,imx8qm-pwm", "fsl,imx27-pwm";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x56244000 0x1000>;
-+		clocks = <&lvds0_lpcg IMX_LPCG_CLK_0>,
-+		 <&lvds0_lpcg IMX_LPCG_CLK_4>;
-+		clock-names = "per", "ipg";
-+		assigned-clocks = <&clk IMX_SC_R_LVDS_0_PWM_0 IMX_SC_PM_CLK_PER>;
-+		assigned-clock-rates = <24000000>;
-+		#pwm-cells = <2>;
-+		power-domains = <&pd IMX_SC_R_LVDS_0_PWM_0>;
-+		status = "disabled";
-+	};
-+};
-+
-+lvds1_subsys: bus@57240000
-+{
-+	compatible = "simple-bus";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x57240000 0x0 0x57240000 0x10000>;
-+
-+	lvds1_ipg_clk: clock-lvds-ipg {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <24000000>;
-+			clock-output-names = "lvds1_ipg_clk";
-+		};
-+
-+	lvds1_lpcg: clock-controller@5724300c {
-+		compatible = "fsl,imx8qxp-lpcg";
-+		reg = <0x5724300c 0x4>;
-+		#clock-cells = <1>;
-+		clocks = <&clk IMX_SC_R_LVDS_1_PWM_0 IMX_SC_PM_CLK_PER>,
-+				 <&lvds1_ipg_clk>;
-+		clock-indices = <IMX_LPCG_CLK_0>, <IMX_LPCG_CLK_4>;
-+		clock-output-names = "lvds1_pwm_lpcg_clk",
-+				     "lvds1_pwm_lpcg_ipg_clk";
-+		power-domains = <&pd IMX_SC_R_LVDS_1_PWM_0>;
-+	};
-+
-+	lvds1_pwm: pwm@57244000 {
-+		compatible = "fsl,imx8qm-pwm", "fsl,imx27-pwm";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x57244000 0x1000>;
-+		clocks = <&lvds1_lpcg IMX_LPCG_CLK_0>,
-+			 <&lvds1_lpcg IMX_LPCG_CLK_4>;
-+		clock-names = "per", "ipg";
-+		assigned-clocks = <&clk IMX_SC_R_LVDS_1_PWM_0 IMX_SC_PM_CLK_PER>;
-+		assigned-clock-rates = <24000000>;
-+		#pwm-cells = <2>;
-+		power-domains = <&pd IMX_SC_R_LVDS_1_PWM_0>;
-+		status = "disabled";
-+	};
-+};
-+
- lsio_subsys: bus@5d000000 {
- 	compatible = "simple-bus";
- 	#address-cells = <1>;
-diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
-index a6b690d94025..45b63ed06619 100644
---- a/drivers/clk/imx/clk-imx8qxp.c
-+++ b/drivers/clk/imx/clk-imx8qxp.c
-@@ -97,8 +97,6 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
- 	clks[IMX_ADMA_FTM0_CLK]		= imx_clk_scu("ftm0_clk",  IMX_SC_R_FTM_0, IMX_SC_PM_CLK_PER, clk_cells);
- 	clks[IMX_ADMA_FTM1_CLK]		= imx_clk_scu("ftm1_clk",  IMX_SC_R_FTM_1, IMX_SC_PM_CLK_PER, clk_cells);
- 	clks[IMX_ADMA_ADC0_CLK]		= imx_clk_scu("adc0_clk",  IMX_SC_R_ADC_0, IMX_SC_PM_CLK_PER, clk_cells);
--	clks[IMX_ADMA_PWM_CLK]		= imx_clk_scu("pwm_clk",   IMX_SC_R_LCD_0_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
--	clks[IMX_ADMA_LCD_CLK]		= imx_clk_scu("lcd_clk",   IMX_SC_R_LCD_0, IMX_SC_PM_CLK_PER, clk_cells);
- 
- 	/* Connectivity */
- 	clks[IMX_CONN_SDHC0_CLK]	= imx_clk_scu("sdhc0_clk", IMX_SC_R_SDHC_0, IMX_SC_PM_CLK_PER, clk_cells);
-@@ -130,6 +128,18 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
- 	clks[IMX_CSI0_I2C0_CLK]		= imx_clk_scu("mipi_csi0_i2c0_clk", IMX_SC_R_CSI_0_I2C_0, IMX_SC_PM_CLK_PER, clk_cells);
- 	clks[IMX_CSI0_PWM0_CLK]		= imx_clk_scu("mipi_csi0_pwm0_clk", IMX_SC_R_CSI_0_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
- 
-+/*LVDS*/
-+	clks[IMX_LVDS0_PIXEL_CLK]       = imx_clk_scu("lvds0_pixel_clk", IMX_SC_R_LVDS_0, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS0_I2C0_CLK]        = imx_clk_scu("lvds0_i2c0_clk", IMX_SC_R_LVDS_0_I2C_0, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS0_I2C1_CLK]        = imx_clk_scu("lvds0_i2c1_clk", IMX_SC_R_LVDS_0_I2C_1, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS0_PWM0_CLK]        = imx_clk_scu("lvds0_pwm0_clk", IMX_SC_R_LVDS_0_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS0_PHY_CLK]         = imx_clk_scu("lvds0_phy_clk", IMX_SC_R_LVDS_0, IMX_SC_PM_CLK_PHY, clk_cells);
-+	clks[IMX_LVDS1_PIXEL_CLK]       = imx_clk_scu("lvds1_pixel_clk", IMX_SC_R_LVDS_1, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS1_I2C0_CLK]        = imx_clk_scu("lvds1_i2c0_clk", IMX_SC_R_LVDS_1_I2C_0, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS1_I2C1_CLK]        = imx_clk_scu("lvds1_i2c1_clk", IMX_SC_R_LVDS_1_I2C_1, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS1_PWM0_CLK]        = imx_clk_scu("lvds1_pwm0_clk", IMX_SC_R_LVDS_1_PWM_0, IMX_SC_PM_CLK_PER, clk_cells);
-+	clks[IMX_LVDS1_PHY_CLK]         = imx_clk_scu("lvds1_phy_clk", IMX_SC_R_LVDS_1, IMX_SC_PM_CLK_PHY, clk_cells);
-+
- 	/* GPU SS */
- 	clks[IMX_GPU0_CORE_CLK]		= imx_clk_scu("gpu_core0_clk",	 IMX_SC_R_GPU_0_PID0, IMX_SC_PM_CLK_PER, clk_cells);
- 	clks[IMX_GPU0_SHADER_CLK]	= imx_clk_scu("gpu_shader0_clk", IMX_SC_R_GPU_0_PID0, IMX_SC_PM_CLK_MISC, clk_cells);
-diff --git a/drivers/firmware/imx/scu-pd.c b/drivers/firmware/imx/scu-pd.c
-index e6ed965c2134..1c51a22bb72c 100644
---- a/drivers/firmware/imx/scu-pd.c
-+++ b/drivers/firmware/imx/scu-pd.c
-@@ -136,8 +136,6 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
- 	{ "ftm", IMX_SC_R_FTM_0, 2, true, 0 },
- 	{ "lpi2c", IMX_SC_R_I2C_0, 4, true, 0 },
- 	{ "adc", IMX_SC_R_ADC_0, 1, true, 0 },
--	{ "lcd", IMX_SC_R_LCD_0, 1, true, 0 },
--	{ "lcd0-pwm", IMX_SC_R_LCD_0_PWM_0, 1, true, 0 },
- 	{ "lpuart", IMX_SC_R_UART_0, 4, true, 0 },
- 	{ "lpspi", IMX_SC_R_SPI_0, 4, true, 0 },
- 	{ "irqstr_dsp", IMX_SC_R_IRQSTR_DSP, 1, false, 0 },
-@@ -163,6 +161,10 @@ static const struct imx_sc_pd_range imx8qxp_scu_pd_ranges[] = {
- 
- 	/* LVDS SS */
- 	{ "lvds0", IMX_SC_R_LVDS_0, 1, false, 0 },
-+	{ "lvds0-pwm0", IMX_SC_R_LVDS_0_PWM_0, 1, false, 0 },
-+	{ "lvds1", IMX_SC_R_LVDS_1, 1, false, 0 },
-+	{ "lvds1-i2c", IMX_SC_R_LVDS_1_I2C_0, 2, true, 0 },
-+	{ "lvds1-pwm0", IMX_SC_R_LVDS_1_PWM_0, 1, false, 0 },
- 
- 	/* DC SS */
- 	{ "dc0", IMX_SC_R_DC_0, 1, false, 0 },
-diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
-index 003b0293c9b5..d8d07833fbc2 100644
---- a/include/dt-bindings/clock/imx8-clock.h
-+++ b/include/dt-bindings/clock/imx8-clock.h
-@@ -135,6 +135,18 @@
- #define IMX_A72_CLK					191
- #define IMX_SCU_CLK_END					192
- 
-+/*LVDS*/
-+#define IMX_LVDS0_PIXEL_CLK				200
-+#define IMX_LVDS0_I2C0_CLK				201
-+#define IMX_LVDS0_I2C1_CLK				202
-+#define IMX_LVDS0_PWM0_CLK				203
-+#define IMX_LVDS0_PHY_CLK				204
-+#define IMX_LVDS1_PIXEL_CLK				205
-+#define IMX_LVDS1_I2C0_CLK				206
-+#define IMX_LVDS1_I2C1_CLK				207
-+#define IMX_LVDS1_PWM0_CLK				208
-+#define IMX_LVDS1_PHY_CLK				209
-+
- /* LPCG clocks */
- 
- /* LSIO SS LPCG */
--- 
-2.26.0
+Thanks,
+Andrey
 
+On 17.08.2020 22:18, Jacopo Mondi wrote:
+> Slightly better with a subject  =)
+> 
+> I made a formatting error, empty line between receivers list and Subject:
+> 
+> Sorry about this :)
+> 
+> On Mon, Aug 17, 2020 at 06:00:37PM +0200, Jacopo Mondi wrote:
+>> Subject: [PATCH] dt-bindings: media: imx274: Convert to json-schema
+>>
+>> Convert the imx274 bindings document to json-schema and update
+>> the MAINTAINERS file accordingly.
+>>
+>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> ---
+>>   .../bindings/media/i2c/sony,imx214.txt        |  53 --------
+>>   .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
+>>   MAINTAINERS                                   |   2 +-
+>>   3 files changed, 125 insertions(+), 54 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+>>   create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+>> deleted file mode 100644
+>> index f11f28a5fda4..000000000000
+>> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+>> +++ /dev/null
+>> @@ -1,53 +0,0 @@
+>> -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+>> -
+>> -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+>> -an active array size of 4224H x 3200V. It is programmable through an I2C
+>> -interface.
+>> -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
+>> -throughput of 1.2Gbps/lane.
+>> -
+>> -
+>> -Required Properties:
+>> -- compatible: Shall be "sony,imx214".
+>> -- reg: I2C bus address of the device. Depending on how the sensor is wired,
+>> -       it shall be <0x10> or <0x1a>;
+>> -- enable-gpios: GPIO descriptor for the enable pin.
+>> -- vdddo-supply: Chip digital IO regulator (1.8V).
+>> -- vdda-supply: Chip analog regulator (2.7V).
+>> -- vddd-supply: Chip digital core regulator (1.12V).
+>> -- clocks: Reference to the xclk clock.
+>> -- clock-frequency: Frequency of the xclk clock.
+>> -
+>> -Optional Properties:
+>> -- flash-leds: See ../video-interfaces.txt
+>> -- lens-focus: See ../video-interfaces.txt
+>> -
+>> -The imx214 device node shall contain one 'port' child node with
+>> -an 'endpoint' subnode. For further reading on port node refer to
+>> -Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> -
+>> -Required Properties on endpoint:
+>> -- data-lanes: check ../video-interfaces.txt
+>> -- link-frequencies: check ../video-interfaces.txt
+>> -- remote-endpoint: check ../video-interfaces.txt
+>> -
+>> -Example:
+>> -
+>> -	camera-sensor@1a {
+>> -		compatible = "sony,imx214";
+>> -		reg = <0x1a>;
+>> -		vdddo-supply = <&pm8994_lvs1>;
+>> -		vddd-supply = <&camera_vddd_1v12>;
+>> -		vdda-supply = <&pm8994_l17>;
+>> -		lens-focus = <&ad5820>;
+>> -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+>> -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
+>> -		clock-frequency = <24000000>;
+>> -		port {
+>> -			imx214_ep: endpoint {
+>> -				data-lanes = <1 2 3 4>;
+>> -				link-frequencies = /bits/ 64 <480000000>;
+>> -				remote-endpoint = <&csiphy0_ep>;
+>> -			};
+>> -		};
+>> -	};
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+>> new file mode 100644
+>> index 000000000000..ddd4627214b1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+>> @@ -0,0 +1,124 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+>> +
+>> +maintainers:
+>> +  - Ricardo Ribalda <ribalda@kernel.org>
+>> +
+>> +description: -|
+>> +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+>> +  an active array size of 4224H x 3200V. It is programmable through an I2C
+>> +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
+>> +  maximum throughput of 1.2Gbps/lane.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: sony,imx214
+>> +
+>> +  reg:
+>> +    description: -|
+>> +      I2C device address. Depends on how the sensor is wired, it shall be
+>> +    enum:
+>> +      - 0x10
+>> +      - 0x1a
+>> +
+>> +  clocks:
+>> +    description: Reference to the xclk clock.
+>> +    maxItems: 1
+>> +
+>> +  clock-frequency:
+>> +    description: Frequency of the xclk clock in Hz.
+>> +
+>> +  enable-gpios:
+>> +    description: GPIO descriptor for the enable pin.
+>> +    maxItems: 1
+>> +
+>> +  vdddo-supply:
+>> +    description: Chip digital IO regulator (1.8V).
+>> +    maxItems: 1
+>> +
+>> +  vdda-supply:
+>> +    description: Chip analog regulator (2.7V).
+>> +    maxItems: 1
+>> +
+>> +  vddd-supply:
+>> +    description: Chip digital core regulator (1.12V).
+>> +    maxItems: 1
+>> +
+>> +  flash-leds:
+>> +    description: See ../video-interfaces.txt
+>> +
+>> +  lens-focus:
+>> +    description: See ../video-interfaces.txt
+>> +
+>> +  port:
+>> +    type: object
+>> +    description: |
+>> +      The device node must contain one 'port' child node for its digital output
+>> +      video port, in accordance with the video interface bindings defined in
+>> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+>> +
+>> +    properties:
+>> +      endpoint:
+>> +        type: object
+>> +        properties:
+>> +          remote-endpoint:
+>> +            description: See ../video-interfaces.txt
+>> +
+>> +          data-lanes:
+>> +            description: See ../video-interfaces.txt
+>> +
+>> +          link-frequencies:
+>> +            description: See ../video-interfaces.txt
+>> +
+>> +        required:
+>> +          - data-lanes
+>> +          - link-frequencies
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - clock-frequency
+>> +  - enable-gpios
+>> +  - vdddo-supply
+>> +  - vdda-supply
+>> +  - vddd-supply
+>> +  - port
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +
+>> +    i2c0 {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        camera-sensor@1a {
+>> +            compatible = "sony,imx214";
+>> +            reg = <0x1a>;
+>> +            vdddo-supply = <&pm8994_lvs1>;
+>> +            vddd-supply = <&camera_vddd_1v12>;
+>> +            vdda-supply = <&pm8994_l17>;
+>> +            lens-focus = <&ad5820>;
+>> +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+>> +            clocks = <&camera_clk>;
+>> +            clock-frequency = <24000000>;
+>> +
+>> +            port {
+>> +                imx214_ep: endpoint {
+>> +                    data-lanes = <1 2 3 4>;
+>> +                    link-frequencies = /bits/ 64 <480000000>;
+>> +                    remote-endpoint = <&csiphy0_ep>;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> +...
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 6c8e98238a7b..d1a6173d3b64 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -15918,7 +15918,7 @@ M:	Ricardo Ribalda <ribalda@kernel.org>
+>>   L:	linux-media@vger.kernel.org
+>>   S:	Maintained
+>>   T:	git git://linuxtv.org/media_tree.git
+>> -F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+>> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+>>   F:	drivers/media/i2c/imx214.c
+>>
+>>   SONY IMX219 SENSOR DRIVER
+>> --
+>> 2.27.0
+>>
