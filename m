@@ -2,334 +2,207 @@ Return-Path: <SRS0=iTj2=B4=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D06BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 11:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA72C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 11:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8C8206B5
-	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 11:10:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597749032;
-	bh=17WXza0/GFSwV+2gDZHobE3KPOe37aWJc6fsWoWltps=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qZFA7PPWXinlUouRdkh7CvKLf991arD+Nzxyot4l1mQaFoRA0r3eWjq4tyV3fVv6Z
-	 9IN6VAvL5ssecruHCN5gNunRP5EPqM18pnIos+R9t8B7173OvlgFW0bWZPHoryAtf5
-	 k+t36Gyggw5b8yaqrKsbWN3g1fSX8z1VcHbgwgGM=
+	by mail.kernel.org (Postfix) with ESMTP id C292D206B5
+	for <linux-devicetree@archiver.kernel.org>; Tue, 18 Aug 2020 11:13:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r61kbsKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgHRLKb (ORCPT
+        id S1726598AbgHRLNS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 07:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgHRLK3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 18 Aug 2020 07:10:29 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A407120706;
-        Tue, 18 Aug 2020 11:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597749028;
-        bh=17WXza0/GFSwV+2gDZHobE3KPOe37aWJc6fsWoWltps=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KJMpED4pSE+jy+GPby584lVmd/ecIpx2xh/bUd1LppOaWqcSBf0bUFK9eAULdMi7z
-         HY6SgeT43hYFda+tWm+vhdribIOmtxxd+q8JxOslJq1dqj5tKVZjON5PlsynPme8pg
-         R9x3B2d4kc7CzmMxkMwerowm0Mz4LdUQyNup7sN4=
-Date:   Tue, 18 Aug 2020 13:10:24 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v3.1 43/44] dt: document HiSilicon SPMI controller and
- mfd/regulator properties
-Message-ID: <20200818131024.6918c5ca@coco.lan>
-In-Reply-To: <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
-References: <cover.1597647359.git.mchehab+huawei@kernel.org>
-        <2f88fed96d67b05fc033356fdbb7e3227955ab34.1597647359.git.mchehab+huawei@kernel.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Aug 2020 07:13:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbgHRLNB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 07:13:01 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61394C061342
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 04:13:00 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id w9so14759167qts.6
+        for <devicetree@vger.kernel.org>; Tue, 18 Aug 2020 04:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=QZPVo01MYYk5xHm6yZPHdluHMUcvUj34eRmnqhtEXHg=;
+        b=r61kbsKLJEEaByRouJ8Y4DCt9bcmLuo8XWaiRQB1ugCQCN0/6QF7GZaOXWtxyMP3TX
+         jOfh/kiytmv2ZDwAxcJprnDmUD2A6OG969j8UAZ6EWroUUKvmVjrdUA2Uvn/Tx1XwXAp
+         go5Ivyj1kkH9xKkiVNF9JhTt98hqMJ8cn+wdGiYXV0RedhT4iMf/BzhuomdqAYSGachv
+         OpwuI/4jS9matArh+RIstXD1hMm2LJYMsoG8NTDx6M6OXxuhtK0+iqCvPrqaWt0aQqgl
+         wVUoTj3Dzbr29+N8P89OT5fvS98sl33bJkXPyRyl3kHIVZ55YNRUuEXZZfhrJ1fr9H7I
+         QZ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QZPVo01MYYk5xHm6yZPHdluHMUcvUj34eRmnqhtEXHg=;
+        b=iIwsJKkamthCURozVAIMmzXZv3525GLrvnLoDZGjg64QAzQVuXRVrMkEbjYfPml41E
+         xKifwyDtAkN+yv4Ylmk4yKvQ9lflChSwaQgAFYHR89ueXikLhlOkAD0ufRhGQENBSWfq
+         8WUnt1zKtTq7eBp5SPMYRY+TQRq7M+nHBKLJk8H13QTKhD955YDfelTFrZPoC3cQypuJ
+         Xe6ABwKgjFQKye2w5h2B/MQw+7V3tZGuA/I7DukfiTcQeQyGGqFte8NjkfF684b+ioiE
+         T9Tooe5K6OQ1Vu4R+b/Kqmr8ftIjRGQdOROwocpNsvzdf9Ac33wDQY6wLZ6G9OeppO/R
+         xFrg==
+X-Gm-Message-State: AOAM531CGTGoZ2ug7d9eWkzm6Zt+XAa1m3lRaNfK5D5SbLVN6MDJiu1A
+        9Z1MqRHkzm26GUYxg30r4qtMSCWQal8=
+X-Google-Smtp-Source: ABdhPJza94G0Ak3u0/BkjKTiF4PRNbv2ZkFOUa5XTan91Wdx3WCz33ghFTclIPecl+wPFzuqrtMqbA==
+X-Received: by 2002:ac8:180b:: with SMTP id q11mr17591527qtj.389.1597749179420;
+        Tue, 18 Aug 2020 04:12:59 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14c:482:4fb::1000])
+        by smtp.gmail.com with ESMTPSA id t83sm19635528qke.133.2020.08.18.04.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 04:12:58 -0700 (PDT)
+From:   Fabio Estevam <festevam@gmail.com>
+To:     robh+dt@kernel.org
+Cc:     shawnguo@kernel.org, devicetree@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: [PATCH] dt-bindings: Use Shawn Guo's preferred e-mail for i.MX bindings
+Date:   Tue, 18 Aug 2020 08:12:45 -0300
+Message-Id: <20200818111245.17047-1-festevam@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-=46rom e464ec2c38c083403b556e60f189ee8ae2f2c9c6 Mon Sep 17 00:00:00 2001
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date: Fri, 31 Jul 2020 09:46:02 +0200
-Subject: [PATCH] dt: document HiSilicon SPMI controller and mfd/regulator
- properties
+Use Shawn Guo's kernel.org address for the i.MX related bindings
+as per the MAINTAINERS entries.
 
-Add documentation for the properties needed by the HiSilicon
-6421v600 driver, and by the SPMI controller used to access
-the chipset.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
 ---
+ Documentation/devicetree/bindings/clock/imx23-clock.yaml   | 2 +-
+ Documentation/devicetree/bindings/clock/imx28-clock.yaml   | 2 +-
+ Documentation/devicetree/bindings/gpio/gpio-mxs.yaml       | 2 +-
+ Documentation/devicetree/bindings/i2c/i2c-mxs.yaml         | 2 +-
+ Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml   | 2 +-
+ Documentation/devicetree/bindings/mmc/mxs-mmc.yaml         | 2 +-
+ Documentation/devicetree/bindings/pwm/mxs-pwm.yaml         | 2 +-
+ Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml    | 2 +-
+ Documentation/devicetree/bindings/thermal/imx-thermal.yaml | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-v3.1:
-  - Changed the DT properties to better match upstream requirements
+diff --git a/Documentation/devicetree/bindings/clock/imx23-clock.yaml b/Documentation/devicetree/bindings/clock/imx23-clock.yaml
+index 66cb238a1040..ad21899981af 100644
+--- a/Documentation/devicetree/bindings/clock/imx23-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx23-clock.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Clock bindings for Freescale i.MX23
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+ 
+ description: |
+   The clock consumer should specify the desired clock by having the clock
+diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.yaml b/Documentation/devicetree/bindings/clock/imx28-clock.yaml
+index 72328d5ca09a..f1af1108129e 100644
+--- a/Documentation/devicetree/bindings/clock/imx28-clock.yaml
++++ b/Documentation/devicetree/bindings/clock/imx28-clock.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Clock bindings for Freescale i.MX28
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+ 
+ description: |
+   The clock consumer should specify the desired clock by having the clock
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+index ccf5b50e798b..dfa1133f8c5e 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-mxs.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Freescale MXS GPIO controller
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+   - Anson Huang <Anson.Huang@nxp.com>
+ 
+ description: |
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-mxs.yaml b/Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
+index d3134ed775fa..21ae7bce038e 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-mxs.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Freescale MXS Inter IC (I2C) Controller
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+index 75dc1168d717..10b45966f1b8 100644
+--- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
++++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Freescale Enhanced Secure Digital Host Controller (eSDHC) for i.MX
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+ 
+ allOf:
+   - $ref: "mmc-controller.yaml"
+diff --git a/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml b/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
+index 1cccc0478d49..bec8f8c71ff2 100644
+--- a/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
++++ b/Documentation/devicetree/bindings/mmc/mxs-mmc.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Freescale MXS MMC controller
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+ 
+ description: |
+   The Freescale MXS Synchronous Serial Ports (SSP) can act as a MMC controller
+diff --git a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+index da68f4a25dd9..8740e076061e 100644
+--- a/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/mxs-pwm.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Freescale MXS PWM controller
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+   - Anson Huang <anson.huang@nxp.com>
+ 
+ properties:
+diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
+index 1b50cedbfb3e..50df1a40bbe3 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
++++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Freescale (Enhanced) Configurable Serial Peripheral Interface (CSPI/eCSPI) for i.MX
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+ 
+ allOf:
+   - $ref: "/schemas/spi/spi-controller.yaml#"
+diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+index aedac1669998..16b57f57d103 100644
+--- a/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/imx-thermal.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: NXP i.MX Thermal Binding
+ 
+ maintainers:
+-  - Shawn Guo <shawn.guo@linaro.org>
++  - Shawn Guo <shawnguo@kernel.org>
+   - Anson Huang <Anson.Huang@nxp.com>
+ 
+ properties:
+-- 
+2.17.1
 
-PS.: I opted to submit just this patch, instead of the entire
-series, in order to avoid flooding people's ML.
-
-I'll be posting the full series again after DT specs match
-upstream requirements.
-
-
-diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pm=
-ic.yaml b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.=
-yaml
-new file mode 100644
-index 000000000000..881bbd83df65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml
-@@ -0,0 +1,159 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/hisilicon,hi6421-spmi-pmic.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon 6421v600 SPMI PMIC
-+
-+maintainers:
-+  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-+
-+description: |
-+  HiSilicon 6421v600 should be connected inside a MIPI System Power Manage=
-ment
-+  (SPMI) bus. It provides interrupts and power supply.
-+
-+  The GPIO and interrupt settings are represented as part of the top-level=
- PMIC
-+  node.
-+
-+  The SPMI controller part is provided by
-+  Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller.ya=
-ml.
-+
-+properties:
-+  $nodename:
-+    pattern: "pmic@[0-9a-f]"
-+
-+  compatible:
-+    const: hisilicon,hi6421v600-spmi
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  interrupt-controller:
-+    description:
-+      Identify that the PMIC is capable of behaving as an interrupt contro=
-ller.
-+
-+  gpios:
-+    maxItems: 1
-+
-+  regulators:
-+    type: object
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      '^ldo[0-9]+@[0-9a-f]$':
-+        type: object
-+
-+        $ref: "/schemas/regulator/regulator.yaml#"
-+
-+        properties:
-+          reg:
-+            description: Enable register.
-+
-+          '#address-cells':
-+            const: 1
-+
-+          '#size-cells':
-+            const: 0
-+
-+          vsel-reg:
-+            description: Voltage selector register.
-+
-+          enable-mask:
-+            description: Bitmask used to enable the regulator.
-+
-+          voltage-table:
-+            description: Table with the selector items for the voltage reg=
-ulator.
-+            minItems: 2
-+            maxItems: 16
-+
-+          off-on-delay-us:
-+            description: Time required for changing state to enabled in mi=
-croseconds.
-+
-+          startup-delay-us:
-+            description: Startup time in microseconds.
-+
-+          idle-mode-mask:
-+            description: Bitmask used to put the regulator on idle mode.
-+
-+          eco-microamp:
-+            description: Maximum current while on idle mode.
-+
-+        required:
-+          - reg
-+          - vsel-reg
-+          - enable-mask
-+          - voltage-table
-+          - off-on-delay-us
-+          - startup-delay-us
-+
-+required:
-+  - compatible
-+  - reg
-+  - regulators
-+
-+examples:
-+  - |
-+    /* pmic properties */
-+
-+    pmic: pmic@0 {
-+      compatible =3D "hisilicon,hi6421-spmi";
-+      reg =3D <0 0>;
-+
-+      #interrupt-cells =3D <2>;
-+      interrupt-controller;
-+      gpios =3D <&gpio28 0 0>;
-+
-+      regulators {
-+          #address-cells =3D <1>;
-+          #size-cells =3D <0>;
-+
-+        ldo3: ldo3@16 {
-+          reg =3D <0x16>;
-+          vsel-reg =3D <0x51>;
-+
-+          regulator-name =3D "ldo3";
-+          regulator-min-microvolt =3D <1500000>;
-+          regulator-max-microvolt =3D <2000000>;
-+          regulator-boot-on;
-+
-+          enable-mask =3D <0x01>;
-+
-+          voltage-table =3D <1500000>, <1550000>, <1600000>, <1650000>,
-+                          <1700000>, <1725000>, <1750000>, <1775000>,
-+                          <1800000>, <1825000>, <1850000>, <1875000>,
-+                          <1900000>, <1925000>, <1950000>, <2000000>;
-+          off-on-delay-us =3D <20000>;
-+          startup-delay-us =3D <120>;
-+        };
-+
-+        ldo4: ldo4@17 { /* 40 PIN */
-+          reg =3D <0x17>;
-+          vsel-reg =3D <0x52>;
-+
-+          regulator-name =3D "ldo4";
-+          regulator-min-microvolt =3D <1725000>;
-+          regulator-max-microvolt =3D <1900000>;
-+          regulator-boot-on;
-+
-+          enable-mask =3D <0x01>;
-+          idle-mode-mask =3D <0x10>;
-+          eco-microamp =3D <10000>;
-+
-+          hi6421-vsel =3D <0x52 0x07>;
-+          voltage-table =3D <1725000>, <1750000>, <1775000>, <1800000>,
-+                          <1825000>, <1850000>, <1875000>, <1900000>;
-+          off-on-delay-us =3D <20000>;
-+          startup-delay-us =3D <120>;
-+        };
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-con=
-troller.yaml b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-c=
-ontroller.yaml
-new file mode 100644
-index 000000000000..b1cfa9c3aca6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spmi/hisilicon,hisi-spmi-controller=
-.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spmi/hisilicon,hisi-spmi-controller.yam=
-l#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon SPMI controller
-+
-+maintainers:
-+  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-+
-+description: |
-+  The HiSilicon SPMI BUS controller is found on some Kirin-based designs.
-+  It is a MIPI System Power Management (SPMI) controller.
-+
-+  The PMIC part is provided by
-+  Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yaml.
-+
-+properties:
-+  $nodename:
-+    pattern: "spmi@[0-9a-f]"
-+
-+  compatible:
-+    const: hisilicon,kirin970-spmi-controller
-+
-+  reg:
-+    maxItems: 1
-+
-+  spmi-channel:
-+    description: |
-+      number of the Kirin 970 SPMI channel where the SPMI devices are conn=
-ected.
-+
-+required:
-+ - compatible
-+ - reg
-+ - spmi-channel
-+
-+patternProperties:
-+  "^pmic@[0-9a-f]$":
-+    description: |
-+      PMIC properties, which are specific to the used SPMI PMIC device(s).
-+      When used in combination with HiSilicon 6421v600, the properties
-+      are documented at
-+      Documentation/devicetree/bindings/mfd/hisilicon,hi6421-spmi-pmic.yam=
-l.
-+
-+examples:
-+  - |
-+    bus {
-+      #address-cells =3D <2>;
-+      #size-cells =3D <2>;
-+
-+      spmi: spmi@fff24000 {
-+        compatible =3D "hisilicon,kirin970-spmi-controller";
-+        status =3D "ok";
-+        reg =3D <0x0 0xfff24000 0x0 0x1000>;
-+        spmi-channel =3D <2>;
-+
-+        pmic@0 {
-+          /* pmic properties */
-+        };
-+      };
-+    };
