@@ -2,132 +2,92 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2504FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:37:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623A8C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 22:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2B2820888
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3382078D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 22:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ta+g1ZgT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFUbxE5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgHSVhJ (ORCPT
+        id S1726482AbgHSWIh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:37:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
+        Wed, 19 Aug 2020 18:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgHSVhF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 17:37:05 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 465E9C061757
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 14:37:05 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id a65so20264312otc.8
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 14:37:05 -0700 (PDT)
+        with ESMTP id S1726209AbgHSWIg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 18:08:36 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC7AC061757;
+        Wed, 19 Aug 2020 15:08:36 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so27101516ljg.13;
+        Wed, 19 Aug 2020 15:08:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CS+1467DMyFTqT+L2iSQMSr95xvUjx22mgQhPk7Fd0U=;
-        b=Ta+g1ZgTNyWRyOadjtYmnLrqkRKTp1Yqu3v85C1PlgWit/t/GfBuyJrf7KkLtWIp5c
-         obzIbdbmc69nlF0yFwItQxDewv3hhDIcu4hovzlskeqJwIK5mpzk6z3aUtqJgZ+DSflY
-         89K5nsJMI1E2px6cL3lCPAuXNqy6alXpd5Y8B86lVTMT5axCkRcmg1r9PnfhQ5ysxkGw
-         xuEboslpGgpoBK6kcsX6zimi7fbM/InmxLfMxBl2sylTbbrjYVKKzRv0miXc9y+CbO46
-         JPua5bOPXgPoLuzKVJq2PfJRU09D5n/WRI+3dX0QohzqYTWhWbS5DQscx/5yGjUDXe5V
-         X2jA==
+        bh=QRPA5r6A792vgu7L2xso4haqi9Meln0z35JzsRxIX1U=;
+        b=VFUbxE5as5MRNGN3HpPJ5HHpZtN5/sa2FqMEJI7zPplNACsRP4hD0Dr791JSLNK8fv
+         k5SBVDGjqZirLkXw1/YJ/UMPwcYYk91G1CqC0xLXi1MGWKo1l9VoneEEz38vTsKfTOqu
+         Hj5NmyEs3sdyRKl2T9qqohmsbaDTDxsYpG5Q51nbS1e7vQ1cLBkYUYbmx0bs3nWz/ZcD
+         Jft05s5lLO1IMjbEL60ChsWquOUlJ4XDPjKd6offWjN+CoyKmVv6lxynCNAjUCxVUecn
+         mDfq3cRWLUGYb8ga2QnMQMnUIVeSdsWWmA+i4AJAGJ1Z+OPvlGetObMwz/5K/QwhKvxk
+         H/Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CS+1467DMyFTqT+L2iSQMSr95xvUjx22mgQhPk7Fd0U=;
-        b=q9vFW+1Y0bJEtSV0P/T6iQz7xq9ZN8oX9cFLh8SdIqXfuU4e3zRlrOOVeRlNH4diNR
-         H8Plabik0c9SycWvmrOrXHjpi8vOetPJK1BXBuFyQ+T4RKac63fgBe7/X/X6hw25LoXh
-         8NDbXVS0t8op08mBxzOzimNUilNpq0rJ2mvbvwfCHJYspxVxg5Scj0wRat01XStHIpFw
-         4phdhbzmNDmdV2e41bp91lcH3qA+E3FmXog1J6NjD4GYBsEF3VySnfKUF11kOhq3MJQf
-         Zsa/PTIiH9BOEDN7wNrRInmjjBj+Z3XpwhfTVHh+lwOHvygRxnxzO0iuP4qNAfULoBMf
-         0X+w==
-X-Gm-Message-State: AOAM531v8EkmmBwPcfCxTqNQOU5dTwLpd68aEDxBVFjH80fIPdm00n7z
-        BPVYkr7m8EwETX51r6oVI1XPekPoMybjYry8BywIBQ==
-X-Google-Smtp-Source: ABdhPJxpl82rAqK2FHLd0zX7VnPn8+94l8zujbb1JUnY5F6i+DaLJ+lsZzhjUgUndjPKQh1QUFVxfaVx/wGs30VKOyU=
-X-Received: by 2002:a05:6830:3196:: with SMTP id p22mr21167646ots.102.1597873024596;
- Wed, 19 Aug 2020 14:37:04 -0700 (PDT)
+        bh=QRPA5r6A792vgu7L2xso4haqi9Meln0z35JzsRxIX1U=;
+        b=brs0fdLrwSa/lYGP+MWV3pzukGu1QkVk01zSYXxCr8+dc9EHgIqIznF2dkrImq+4oW
+         63wTLZ5oEiHT8lOTgOXMDRUOpyM5ECRa0I6zncnYP8nvJ2sbS81YakrM2B8lNRYYDhs8
+         2oB/BE0d5GPMssJRPKtgWt/usb9iL/jPVqQ47XjLykQZfx/3xEwDe0hVUtEfZiZL46AH
+         gje6OwmXifpqQnZpyCggMinLt0sD5Z2yFRkFnd4sATSzZPtKCVOexVaA4MPcTJbh16Uz
+         YJQFDMLudRwWuVOmlElM7XGiZBx6+KrQ5FBDKMzdMNJ2Kv89I4AUyCyEucU+vtdyZwq8
+         zg5w==
+X-Gm-Message-State: AOAM5307t6tVy6WuGBPLU67MwxmiJmsFvHfKlBfp5nPiDj8C322wJ2b/
+        +/G+YekVcvGnp+6MPSdOh30MZ7yjulLtiOsFH4WM2xa8
+X-Google-Smtp-Source: ABdhPJzCqr+QXSEyqWgeRwzpjb8GtFJmLprLj/wkClavtr5xcbY4074z8nl5npP5BKl+3BHUgUb4aw+GF78drL/eoPo=
+X-Received: by 2002:a2e:80d3:: with SMTP id r19mr150402ljg.310.1597874914921;
+ Wed, 19 Aug 2020 15:08:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
-In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 19 Aug 2020 14:36:52 -0700
-Message-ID: <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+References: <20200817022746.3115005-1-cphealy@gmail.com>
+In-Reply-To: <20200817022746.3115005-1-cphealy@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 19 Aug 2020 19:08:24 -0300
+Message-ID: <CAOMZO5D=g-_+gmZ+=tDvEOZNqW9zBFTkKOWamzSoFWgm_fvkAQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vfxxx: Add syscon compatible with ocotp
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Liuyao An <anliuyao@huawei.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
-> So, IMO, the best is to keep it on staging for a while, until those
-> remaining bugs gets solved.
+Hi Chris,
+
+On Sun, Aug 16, 2020 at 11:28 PM Chris Healy <cphealy@gmail.com> wrote:
 >
-> I added this series, together with the regulator driver and
-> a few other patches (including a hack to fix a Kernel 5.8
-> regression at WiFi ) at:
+> From: Chris Healy <cphealy@gmail.com>
 >
->         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master
+> Add syscon compatibility with Vybrid ocotp node. This is required to
+> access the UID.
+>
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-Sorry, one more small request: Could you create a branch that only has
-the DRM driver changes in it?
-
-The reason I ask, is that since the HiKey960 isn't affected by the
-majority of the problems you listed as motivation for going through
-staging. So if we can validate that your tree works fine on HiKey960,
-the series can be cleaned up and submitted properly upstream to enable
-that SoC, and the outstanding 970 issues can be worked out afterwards
-against mainline.
-
-thanks
--john
+Would a Fixes tag be appropriate here so that it can be backported to
+older stable kernels?
