@@ -2,180 +2,115 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CD2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6A6C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F779204FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Caa2YPnn";
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="E1tz4qid"
+	by mail.kernel.org (Postfix) with ESMTP id 3A94D20885
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:31:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597854665;
+	bh=p+GmceSL3hFyKC+D+cAPmwNsVXVQUA1FR3m52kgDseU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Nuzy01I9naCgJR1GIOU+ZbSSWUlCuI5CBlbblOvwZARGTyIH3kHoZd86HGJBTCz/z
+	 k0rXHVjf3aT1pkX/HTzxtdqm3Ftk519hLB0UITdQPxDlQBjnceedkREs/qU/uKu5jV
+	 EianK+F5eLHYmYaYEM34+HbDjE0R9MydfjIpUgCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbgHSQaf (ORCPT
+        id S1726640AbgHSQbF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:30:35 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:23712 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSQab (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 12:30:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1597854631; x=1629390631;
-  h=from:to:cc:subject:date:message-id:content-id:
-   content-transfer-encoding:mime-version;
-  bh=nosNoKWfuKLgEIBPWZvOhG/88cX1NBO2W7lv0+tQgNg=;
-  b=Caa2YPnnGdHWFpbpdz3zH00lHPXV/ge208Ivyr6qJUagJ0z3ZhVez5v+
-   H2htfYLa9kz1lqy8RetUaitbGkxzATEEsYv2c2SIWkFT5VI3egHWLKlnO
-   rGS0BpsWKS405dWaQ/U60J85U1aBNqAPD8Ncw95b2Ai8ogOjyGE9iPZJC
-   cQ1j1Ttr5H9Mh1NTu09i8p+R6bdKNXKO7IF1FzY4priZkwwQRCO9FpJF5
-   0Q/iaNsqlJ8SoHdhFqGcZae0BjnurXX8FIdgnwQ6RMyuvH9lNc+0pcqmi
-   ktfz5MxivzHeSc15ewvsbODh5983Ip9i9HNMfG2n1hpbUYnrd6EAdPwkG
-   w==;
-IronPort-SDR: 7J0AK5LaJeirP5P+Q4VErvAMqinUNPcVYdKG1T6a7p8I/lsyZYYvomkjfYbCaadWlRyhB5oEN5
- bdlOiCso0yTBK1H2+Rf8/WhIDEyqlJJqqKKn5qj/EBGzsBDzRaZv9o3iEgW1k8jUWx7VbMa2C9
- pqxHFLj4jOcdN2Hxg42AcdwgmQXGfRVn5GkQbfTCOxibAK3GFaP9UBAgU7bd0yexWxxXGjA/IM
- Qiv8T213aotNjkMpaomYAj+7ohArBOPp05Kdc2+RJm3I34rV0wPQsDe8LbgjEEGZA7K0GHESjW
- aIM=
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="87760977"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Aug 2020 09:30:30 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 19 Aug 2020 09:29:31 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
- via Frontend Transport; Wed, 19 Aug 2020 09:30:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=n7Evu/JYmNouWgyqWiCD8wbos9LgPiFidJqMaBWqSbmXdgmiJk2Y/qaLlvjOLCzQDGdVR6yHWgjMrcNGgTyneY9pbq8cDf2wK+DIwAhN8WzZdbqWgfQwqQVYnd0UHN5O6B1npFg9PxC3YGoq371gDwYnFv0ZloVnxmg2uBvxkRTq5UpVcm+Gtt2DlGYA403DpkNnJLYJ57U9N/vUlcvie7KgjSXBoPsrrMk8QJdj8jKe2qa9ojprYIuVyl5RQhHy9lxxaWZL4ZS0ILNZGOAa0yrl32Fkj6qjGkGt3bJcvxcyNv0+s9CHS69l+aPqlUi6DSqcCpoHM1updLiaH/5mIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nosNoKWfuKLgEIBPWZvOhG/88cX1NBO2W7lv0+tQgNg=;
- b=JuoBewNGeTww3wwVcQU6srAlHZ/apjEOj9+e2ZMwdEAPSd7APOYzz9pEnK0Ei5SQgqLk8PzlotkYP3Yo3dDpM6HD56y4ubReJAGhY14Z0i6KdHNbO2vnLIBgZIErwJI6ibFHoMqwBmnhONLJ2NIFOze5rVtfFnE8m6/qInM00XqDmgxaGnMF3v3xUuqj0lS6o/Ozt24hP4TxFQqLcDJOi5Bcs1tHcowyFpKwFF8sQcwobayX6DVS6mjliPSHDU5FEBJJznOsl6mcmzFyn9Ma72I8Cjb4rfA5XZnB7Y0sirnLSQIKRV/db3b7re9xHsquYEM4YVmlZUDEs+XqFIPAIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nosNoKWfuKLgEIBPWZvOhG/88cX1NBO2W7lv0+tQgNg=;
- b=E1tz4qidg9WkuzpeCsd934gFQez0ueWOcf/rzzGEmoXMAxG+nHXEo5Jmbcche1GMz3TFAcDXU3x6XpKRTEmSHF03wMyhMSc8CihOtmKnxBlzJMkNr1N+6bdcc1+1zMZQ62HpO/8C4ZXz6RiIWYaQLEkbVmIQY9rRpQrEgK9BSWw=
-Received: from MN2PR11MB4269.namprd11.prod.outlook.com (2603:10b6:208:190::32)
- by BL0PR11MB2916.namprd11.prod.outlook.com (2603:10b6:208:72::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 19 Aug
- 2020 16:30:28 +0000
-Received: from MN2PR11MB4269.namprd11.prod.outlook.com
- ([fe80::2015:b551:35a7:4c12]) by MN2PR11MB4269.namprd11.prod.outlook.com
- ([fe80::2015:b551:35a7:4c12%7]) with mapi id 15.20.3305.024; Wed, 19 Aug 2020
- 16:30:28 +0000
-From:   <Daire.McNamara@microchip.com>
-To:     <robh@kernel.org>, <lorenzo.pieralisi@arm.com>,
-        <linux-pci@vger.kernel.org>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
-CC:     <david.abdurachmanov@gmail.com>
-Subject: [PATCH v15 0/2] PCI: microchip: Add host driver for Microchip PCIe
- controller
-Thread-Topic: [PATCH v15 0/2] PCI: microchip: Add host driver for Microchip
- PCIe controller
-Thread-Index: AQHWdkYMoWLOV167sUGWIi7KCE8oVg==
-Date:   Wed, 19 Aug 2020 16:30:27 +0000
-Message-ID: <954a9f86bbfe929bc37653f1e616e8acff8b4bd8.camel@microchip.com>
-Accept-Language: en-IE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=microchip.com;
-x-originating-ip: [87.42.139.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: beaec58e-4f45-4b9c-1fb4-08d8445d2ecf
-x-ms-traffictypediagnostic: BL0PR11MB2916:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR11MB29161F3047D77BAA776465A3965D0@BL0PR11MB2916.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:792;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pS5qpKPCf219sJQEK4SMeq9pC2WDGBWgYGa0ny71LTndbqZSxkwkrtqBjfLcgo6mIjUONOo2PQn7zrqhaiXDiOUgENgcZH1rmrui57tq6IlRUITZhc7JrHcWHFdUunc0eRCoA6FeX2uSh+w9B09oVwXXv6PrHbb1qAPLpDfwHIRNKe8YnlVujx1TumwcpYTUCKpMobZ1kML2QT+dlgsM2D6c5A/ddT3XcfScgAKEtCqfXK2XnSYcdYHKExVrQbqDgehpeREseYq2oTVNPUcby10Bhp/2kdSHErqe/UHftERp6LuEjqMnnPrNoQfaeb+J6Bh6tDhsjvQB++/KfHRvCA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR11MB4269.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(346002)(366004)(39860400002)(136003)(91956017)(64756008)(36756003)(83380400001)(6506007)(66446008)(66476007)(5660300002)(66556008)(186003)(6486002)(8936002)(2616005)(8676002)(2906002)(26005)(110136005)(4326008)(6512007)(71200400001)(76116006)(66946007)(316002)(86362001)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: ID/BYCE52WP8sU0SjbcQz6sJoMe9NF+euLVbbpeoGwau9b+f3U1NHvVY30G7ABoLeHohkCLBcdm+YipS+Q6akkWAfucpnTeVH9v+fBWNTGYMyDq5acLD30RViEG9c5xq3d9XsyiLZhO0hlVwPmgia+0Ea0oyiajDXhm8u96CDjgmGIqjS5WnvPg+w0eEl6en8ZsDHNz2iXfFEXDW8giQY4Ees92cszoTR2hBzg4IFE8mA/eTxFn+wq44w0B3DxGyzmhkIZKsQ6zGuhFpSb0WTS4EHwKYHxeG4PCfP/UBry3ZmAF+7qlOKk35NysNv62G895Stgv2eEt5NwVO/Xn+L3uk6qhJEmjYqkLWJa2oNwAo2Uvm6VDgqNRvGp/Jf+s+1zvLbZR/KOawMfn1c6T1OFvidnN4CknzEBAqqqL0tZtrbuj1UMta/1LjZXkWgxvGRgqC0TVACIWiv1K/Fkd9LKYeFQxg0/yjpGK/58Rq9jEB2Z1zb+62mZRooeyrE2fDhsBFwr1UN4OgoMMAu7iVkoNciS3iWbwofh6609dWqsqpeo37i9b2TWvjsZz3TyVZBbOG7b/XfIVOz5uhWkZCsyGJA5lPEZt61yUXxxDzi5r2PUqxufAWhvLPsFrVMmQxGiMxQgdIpahPq6kUPqbN5Q==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CA7696749071604D9B3F54811C12A5C9@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 19 Aug 2020 12:31:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgHSQbD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 12:31:03 -0400
+Received: from [192.168.1.28] (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A851207BB;
+        Wed, 19 Aug 2020 16:31:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597854661;
+        bh=p+GmceSL3hFyKC+D+cAPmwNsVXVQUA1FR3m52kgDseU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fbrrgDoXwxjvC+s81tECyntNe0eb7Br2UNrb/XQoM9pdzq1J979oJx89X7k6YwuIr
+         IKUjreX/XwVDP51x9/uvr2EcqBnwDZqXX5RCOCuts4esJTYIawSDfBQ7v4hF4dKPKk
+         cY0f/VGcs/535zuWgvFnKzb3VwuGb9CsLJ93wjVo=
+Subject: Re: [BUG] build error due to AGILEX_NAND_X_CLK
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+References: <1597807371.5429.28.camel@mhfsdcap03>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+Autocrypt: addr=dinguyen@kernel.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <56d67cd1-0f08-e81d-8abe-b641d8d6bf0e@kernel.org>
+Date:   Wed, 19 Aug 2020 11:30:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR11MB4269.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: beaec58e-4f45-4b9c-1fb4-08d8445d2ecf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 16:30:28.0358
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ar5FOnBIUQKJOFA87YS6augkLaqzni/66ioTp/1OyPpFv8Mk/QMhAVN7NhFJtFOjpBatanFKZd9gqAuZyKCNw0i5bxrTmGoYbd+20qEgmag=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR11MB2916
+In-Reply-To: <1597807371.5429.28.camel@mhfsdcap03>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-VGhpcyB2MTUgcGF0Y2ggYWRkcyBzdXBwb3J0IGZvciB0aGUgTWljcm9jaGlwIFBDSWUgUG9sYXJG
-aXJlIFBDSWUNCmNvbnRyb2xsZXIgd2hlbiBjb25maWd1cmVkIGluIGhvc3QgKFJvb3QgQ29tcGxl
-eCkgbW9kZS4NCg0KVXBkYXRlcyBzaW5jZSB2MTQ6DQoqIFJlbW92ZWQgY2ZnX3JlYWQvY2ZnX3dy
-aXRlIGlubGluZSBmdW5jdGlvbnMNCiogVXBkYXRlZCB0byBpcnFfZGF0YV9nZXRfaXJxX2NoaXBf
-ZGF0YSgpDQoqIFVwZGF0ZWQgdG8gdXNlIGRldm1fcGxhdGZvcm1faW9yZW1hcF9yZXNvdXJjZSgp
-DQoqIFJlcGxhY2VkIG9mX3BjaV9yYW5nZSBwYXJzaW5nIHRvIHNldHVwIHdpbmRvd3MgdmlhIGJy
-aWRnZSBwb2ludGVyLg0KDQpVcGRhdGVzIHNpbmNlIHYxMzoNCiogUmVmYWN0b3JlZCB0byB1c2Ug
-cGNpX2hvc3RfY29tbW9uX3Byb2JlKCkNCg0KVXBkYXRlcyBzaW5jZSB2MTI6DQoqIENhcGl0YWxp
-c2VkIGNvbW1pdCBtZXNzYWdlcy4gIFVzZSBzcGVjaWZpYyBzdWJqZWN0IGxpbmUgZm9yIGR0LWJp
-bmRpbmdzDQoNClVwZGF0ZXMgc2luY2UgdjExOg0KKiBBZGp1c3RlZCBzbyB5YW1sIGZpbGUgcGFz
-c3NlcyBtYWtlIGR0X2JpbmRpbmdfY2hlY2sNCg0KVXBkYXRlcyBzaW5jZSB2MTA6DQoqIEFkanVz
-dGVkIGRyaXZlciBhcyBwZXIgUm9iIEhlcnJpbmcncyBjb21tZW50cywgbm90YWJseToNCiAgLSB1
-c2UgY29tbW9uIFBDSV9NU0lfRkxBR1MgZGVmaW5lcw0KICAtIHJlZHVjZSBzdG9yYWdlIG9mIHVu
-bmVjZXNzYXJ5IHZhcnMgaW4gbWNfcGNpZSBzdHJ1Y3QNCiAgLSBzd2l0Y2hlZCB0byByZWFkL3dy
-aXRlIHJlbGF4ZWQgdmFyaWFudHMNCiAgLSBleHRlbmRlZCBsb2NrIGluIG1zaV9kb21haW5fYWxs
-b2Mgcm91dGluZQ0KICAtIGltcHJvdmVkIDMyYml0IHNhZmV0eSwgc3dpdGNoZWQgZnJvbSBmaW5k
-X2ZpcnN0X2JpdCgpIHRvIGlsb2cyKCkNCiAgLSByZW1vdmVkIHVubmVjZXNzYXJ5IHR3aWRkbGUg
-b2YgZUNBTSBjb25maWcgc3BhY2UNCg0KVXBkYXRlcyBzaW5jZSB2OToNCiogQWRqdXN0ZWQgY29t
-bWl0IGxvZ3MNCiogbWFrZSBkdF9iaW5kaW5nc19jaGVjayBwYXNzZXMNCg0KVXBkYXRlcyBzaW5j
-ZSB2ODoNCiogUmVmYWN0b3JlZCBhcyBwZXIgUm9iIEhlcnJpbmcncyBjb21tZW50czoNCiAgLSBi
-aW5kaW5ncyBpbiBzY2hlbWEgZm9ybWF0DQogIC0gQWRqdXN0ZWQgbGljZW5jZSB0byBHUEx2Mi4w
-DQogIC0gUmVmYWN0b3JlZCBhY2Nlc3MgdG8gY29uZmlnIHNwYWNlIGJldHdlZW4gZHJpdmVyIGFu
-ZCBjb21tb24gZUNBTSBjb2RlDQogIC0gQWRvcHRlZCBwY2lfaG9zdF9wcm9iZSgpDQogIC0gTWlz
-Y2VsbGFub3VzIG90aGVyIGltcHJvdmVtZW50cw0KDQpVcGRhdGVzIHNpbmNlIHY3Og0KKiBCdWls
-ZCBmb3IgNjRiaXQgUklTQ1YgYXJjaGl0ZWN0dXJlIG9ubHkNCg0KVXBkYXRlcyBzaW5jZSB2NjoN
-CiogUmVmYWN0b3JlZCB0byB1c2UgY29tbW9uIGVDQU0gZHJpdmVyDQoqIFVwZGF0ZWQgdG8gQ09O
-RklHX1BDSUVfTUlDUk9DSElQX0hPU1QgZXRjDQoqIEZvcm1hdHRpbmcgaW1wcm92ZW1lbnRzDQoq
-IFJlbW92ZWQgY29kZSBmb3Igc2VsZWN0aW9uIGJldHdlZW4gYnJpZGdlIDAgYW5kIDENCg0KVXBk
-YXRlcyBzaW5jZSB2NToNCiogRml4ZWQgS2NvbmZpZyB0eXBvIG5vdGVkIGJ5IFJhbmR5IER1bmxh
-cA0KKiBVcGRhdGVkIHdpdGggY29tbWVudHMgZnJvbSBCam9ybiBIZWxnYWFzDQoNClVwZGF0ZXMg
-c2luY2UgdjQ6DQoqIEZpeCBjb21waWxlIGlzc3Vlcy4NCg0KVXBkYXRlcyBzaW5jZSB2MzoNCiog
-VXBkYXRlIGFsbCByZWZlcmVuY2VzIHRvIE1pY3Jvc2VtaSB0byBNaWNyb2NoaXANCiogU2VwYXJh
-dGUgTVNJIGZ1bmN0aW9uYWxpdHkgZnJvbSBsZWdhY3kgUENJZSBpbnRlcnJ1cHQgaGFuZGxpbmcg
-ZnVuY3Rpb25hbGl0eQ0KDQpVcGRhdGVzIHNpbmNlIHYyOg0KKiBTcGxpdCBvdXQgRFQgYmluZGlu
-Z3MgYW5kIFZlbmRvciBJRCB1cGRhdGVzIGludG8gdGhlaXIgb3duIHBhdGNoDQogIGZyb20gUENJ
-ZSBkcml2ZXIuDQoqIFVwZGF0ZWQgQ2hhbmdlIExvZw0KDQpVcGRhdGVzIHNpbmNlIHYxOg0KKiBJ
-bmNvcnBvcmF0ZSBmZWVkYmFjayBmcm9tIEJqb3JuIEhlbGdhYXMNCg0KRGFpcmUgTWNOYW1hcmEg
-KDIpOg0KICBkdC1iaW5kaW5nczogUENJOiBtaWNyb2NoaXA6IEFkZCBNaWNyb2NoaXAgUG9sYXJG
-aXJlIGhvc3QgYmluZGluZw0KICBQQ0k6IG1pY3JvY2hpcDogQWRkIGhvc3QgZHJpdmVyIGZvciBN
-aWNyb2NoaXAgUENJZSBjb250cm9sbGVyDQoNCkRhaXJlIE1jTmFtYXJhICgyKToNCiAgZHQtYmlu
-ZGluZ3M6IFBDSTogbWljcm9jaGlwOiBBZGQgTWljcm9jaGlwIFBvbGFyRmlyZSBob3N0IGJpbmRp
-bmcNCiAgUENJOiBtaWNyb2NoaXA6IEFkZCBob3N0IGRyaXZlciBmb3IgTWljcm9jaGlwIFBDSWUg
-Y29udHJvbGxlcg0KDQogLi4uL2JpbmRpbmdzL3BjaS9taWNyb2NoaXAscGNpZS1ob3N0LnlhbWwg
-ICAgIHwgIDkzICsrKw0KIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvS2NvbmZpZyAgICAgICAgICAg
-ICAgICB8ICAgOSArDQogZHJpdmVycy9wY2kvY29udHJvbGxlci9NYWtlZmlsZSAgICAgICAgICAg
-ICAgIHwgICAxICsNCiBkcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWljcm9jaGlwLWhvc3Qu
-YyAgfCA1NjAgKysrKysrKysrKysrKysrKysrDQogNCBmaWxlcyBjaGFuZ2VkLCA2NjMgaW5zZXJ0
-aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGNpL21pY3JvY2hpcCxwY2llLWhvc3QueWFtbA0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbWljcm9jaGlwLWhvc3QuYw0KDQoNCmJhc2UtY29t
-bWl0OiAxODQ0NWJmNDA1Y2IzMzExMTdiYzk4NDI3YjFiYTZmMTI0MThhZDE3DQotLSANCjIuMTcu
-MQ0KDQo=
+Hi,
+
+This is an old error and has been fixed in v5.9-rc1.
+
+Dinh
+
+On 8/18/20 10:22 PM, Chunfeng Yun wrote:
+> tax error
+> FATAL ERROR: Unable to parse input tree
+> 
+> it's introduced by patch:
+> 
+> commit d4ae4dd346cd49302d157b129ead2f60d3a82534
