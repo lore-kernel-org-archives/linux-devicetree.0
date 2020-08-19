@@ -2,263 +2,91 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BDEC433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 15:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70F4C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 15:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 376E520888
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 15:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EDA207FF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 15:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="YTWpYxMU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GP7wxaQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgHSPbK (ORCPT
+        id S1726887AbgHSPgR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:31:10 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60072 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726570AbgHSPbI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 11:31:08 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D205F29E;
-        Wed, 19 Aug 2020 17:31:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597851063;
-        bh=DVs19L0VhTXPW2QTvGxXKfAP7MNmvNDtF8FLDixJwXI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YTWpYxMUFWq/HkzThpPGRLXevQIo6ltyyqaFIjS0BTu/E3WAJAfGMN6nDh16BrBfh
-         osiPwb5zNiVh+z/IgnIXMg1tjG9CHVOm1gKRuCZLViqVpxI9GYzsi+9M1jJn/XcsH+
-         ceXo7IQkWFgTtIgKrYX5c9MpRw8J0Qazzepv3tJE=
-Date:   Wed, 19 Aug 2020 18:30:45 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
-        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200819153045.GA18469@pendragon.ideasonboard.com>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org>
+        Wed, 19 Aug 2020 11:36:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgHSPgR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 11:36:17 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11105C061757;
+        Wed, 19 Aug 2020 08:36:17 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id y134so13570679yby.2;
+        Wed, 19 Aug 2020 08:36:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3yu6MjuffUqrvzTmREMwpNVUQPpNzcjiZEpk7Hkf/UU=;
+        b=GP7wxaQER+oRSpSmzu5Ej5ID1gIBkNWhvwX/NQjTv/WWlTjd8P0PhKTqDV3D8pmrFJ
+         zo5qjtzYtMPRsyz7gCfdmKgZ+j53mdIbfOv/wneKIk6xjspYrFNhStJJ13tYwiC4gBQv
+         iQQs5n5rZ3xzptqbzjJxnNf6tq5Y2RzS282lHG9bi4QOXFQ0tJZWxfssYSYR8pgUDVG9
+         SfvMXrZS0kxt3xkjd1QKSWfFTNJ6j7SjOfCfTsIl1EpMNXbzkR0XqXWNbQ13Y1QcyXIj
+         LY3lo5GfccJDnhyG9MXIeIK3V71KMtEdiQfbg0gfHIiSbEF/msbKiQxwN9lQMPHKoGpr
+         tBPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3yu6MjuffUqrvzTmREMwpNVUQPpNzcjiZEpk7Hkf/UU=;
+        b=KerVGtyxUxrQ0DRuBF3ELfR+ZFdrgUXw3mGvynJFo03uQfP1Ep4OuaQp7LajVFJELS
+         7BCRuLm47IJmUL6npKYetx57tkF8eW0nGxR+wQ17QErF1rc8moQfyn0YeXY9OFTXc3Xy
+         C3CxFxBmuwWu7DWLf9xLHS/3zMVv/e3ImHmHC6qJM3k3syIDq06XXIF2lhRsEaR2v+rE
+         REdgVVvYbZRRDOp7YcbvFEypQcM3pMk66GHzwJY8A84kbxZ9KhRhLtNT+nfN5cPSG8Dh
+         Nb9kYUtbDe2UaBXfGY/pKUmVBTIZrFX0yffw86sRuDCIaVf3qWc26qk/6iH0T9inU4bB
+         qnuw==
+X-Gm-Message-State: AOAM530vBlqU0/nNHu3w8DPR+31YHJnjRsz8pJPYjZd/GOA4fP8qgRL1
+        gAQgAmDV/GJ1i99oGdLz2IMBBdAjkAXo8dhNljU=
+X-Google-Smtp-Source: ABdhPJxb1DHiB8WAkFW02UkIh45i4Q5xPvVRp8zLw6H3cwZGV9k61E76rhWzFNWAtFFGW6oMEoSYH+521YpPZKnH+Mw=
+X-Received: by 2002:a5b:f4e:: with SMTP id y14mr37390161ybr.71.1597851375269;
+ Wed, 19 Aug 2020 08:36:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200819152120.GA106437@ravnborg.org>
+References: <20200819042308.19043-1-f.fainelli@gmail.com>
+In-Reply-To: <20200819042308.19043-1-f.fainelli@gmail.com>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Date:   Wed, 19 Aug 2020 17:36:03 +0200
+Message-ID: <CACna6ryhQ=pY0LgpgwbBo5WGXSSfserc3V1ELzD3WLgnTv3n+g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Fix pin controller node
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        "maintainer:BROADCOM BCM5301X ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:
-> Hi Mauro.
-> 
-> On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:
-> > This patch series port the out-of-tree driver for Hikey 970 (which
-> > should also support Hikey 960) from the official 96boards tree:
-> > 
-> >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > 
-> > Based on his history, this driver seems to be originally written
-> > for Kernel 4.4, and was later ported to Kernel 4.9. The original
-> > driver used to depend on ION (from Kernel 4.4) and had its own
-> > implementation for FB dev API.
-> > 
-> > As I need to preserve the original history (with has patches from
-> > both HiSilicon and from Linaro),  I'm starting from the original
-> > patch applied there. The remaining patches are incremental,
-> > and port this driver to work with upstream Kernel.
-> > 
-> > This driver doesn't depend on any firmware or on any special
-> > userspace code. It works as-is with both X11 and Wayland.
-> > 
-> > Yet, I'm submitting it via staging due to the following reasons:
-> > 
-> > - It depends on the LDO3 power supply, which is provided by
-> >   a regulator driver that it is currently on staging;
-> > - Due to legal reasons, I need to preserve the authorship of
-> >   each one responsbile for each patch. So, I need to start from
-> >   the original patch from Kernel 4.4;
-> > - There are still some problems I need to figure out how to solve:
-> >    - The adv7535 can't get EDID data. Maybe it is a timing issue,
-> >      but it requires more research to be sure about how to solve it;
-> >    - The driver only accept resolutions on a defined list, as there's
-> >      a known bug that this driver may have troubles with random
-> >      resolutions. Probably due to a bug at the pixel clock settings;
-> >    - Sometimes (at least with 1080p), it generates LDI underflow
-> >      errors, which in turn causes the DRM to stop working. That
-> >      happens for example when using gdm on Wayland and
-> >      gnome on X11;
-> >    - Probably related to the previous issue, when the monitor
-> >      suspends due to DPMS, it doesn't return back to life.
-> > 
-> > So, IMO, the best is to keep it on staging for a while, until those
-> > remaining bugs gets solved.
-> > 
-> > I added this series, together with the regulator driver and
-> > a few other patches (including a hack to fix a Kernel 5.8 
-> > regression at WiFi ) at:
-> > 
-> > 	https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master
-> > 
-> > 
-> > Chen Feng (1):
-> >   staging: hikey9xx: Add hisilicon DRM driver for hikey960/970
-> > 
-> > John Stultz (1):
-> >   staging: hikey9xx/gpu: port it to work with Kernel v4.9
-> > 
-> > Liwei Cai (2):
-> >   staging: hikey9xx/gpu: solve tearing issue of display
-> >   staging: hikey9xx/gpu: resolve the performance issue by interrupt
-> >     mechanism
-> > 
-> > Mauro Carvalho Chehab (38):
-> >   staging: hikey9xx/gpu: get rid of adv7535 fork
-> Very good - I was in my mind starting a rant why we needed a fork of
-> this driver, but I see it gets deleted again.
-> 
-> I do acknowledge you need to preserve history and all -
-> but this patchset is not easy to review.
+On Wed, 19 Aug 2020 at 06:23, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> The pin controller resources start at 0xc0 from the CRU base which is at
+> 0x100 from th DMU base, for a final address of 0x1800_c1c0, whereas we
+> are currently off by 0x100. The resource size of the CRU is also
+> incorrect and should end at 0x248 bytes from 0x100 which is the start
+> address. Finally, the compatibility strings defined for the
+> pin-controller node should reflect the SoC being used.
+>
+> Fixes: 9994241ac97c ("ARM: dts: BCM5301X: Describe Northstar pins mux controller")
 
-Why do we need to preserve history ? Adding relevant Signed-off-by and
-Co-developed-by should be enough, shouldn't it ? Having a public branch
-that contains the history is useful if anyone is interested, but I don't
-think it's required in mainline.
-
-> Could you follow-up with a review-able set of patches as a follow-up
-> for this?
-> I spotted some wrong bridge handling in one patch but I do not know if
-> this got changed in a later patch. And I lost the motivation to go
-> looking for it.
-> 
-> >   staging: hikey9xx/gpu: rename the Kirin9xx namespace
-> >   staging: hikey9xx/gpu: get rid of kirin9xx_fbdev.c
-> >   staging: hikey9xx/gpu: get rid of some ifdefs
-> >   staging: hikey9xx/gpu: rename the config option for Kirin970
-> >   staging: hikey9xx/gpu: change the includes to reflect upstream
-> >   staging: hikey9xx/gpu: port driver to upstream kAPIs
-> >   staging: hikey9xx/gpu: add a copy of set_reg() function there
-> >   staging: hikey9xx/gpu: get rid of ION headers
-> >   staging: hikey9xx/gpu: add support for using a reserved CMA memory
-> >   staging: hikey9xx/gpu: cleanup encoder attach logic
-> >   staging: hikey9xx/gpu: Change the logic which sets the burst mode
-> >   staging: hikey9xx/gpu: fix the DRM setting logic
-> >   staging: hikey9xx/gpu: do some code cleanups
-> >   staging: hikey9xx/gpu: use default GEM_CMA fops
-> >   staging: hikey9xx/gpu: place vblank enable/disable at the right place
-> >   staging: hikey9xx/gpu: remove an uneeded hack
-> >   staging: hikey9xx/gpu: add a possible implementation for
-> >     atomic_disable
-> >   staging: hikey9xx/gpu: register connector
-> >   staging: hikey9xx/gpu: fix driver name
-> >   staging: hikey9xx/gpu: get rid of iommu_format
-> >   staging: hikey9xx/gpu: re-work the mode validation code
-> >   staging: hikey9xx/gpu: add support for enable/disable ldo3 regulator
-> >   staging: hikey9xx/gpu: add SPMI headers
-> >   staging: hikey9xx/gpu: solve most coding style issues
-> >   staging: hikey9xx/gpu: don't use iommu code
-> >   staging: hikey9xx/gpu: add kirin9xx driver to the building system
-> >   staging: hikey9xx/gpu: get rid of typedefs
-> >   staging: hikey9xx/gpu: get rid of input/output macros
-> >   staging: hikey9xx/gpu: get rid of some unused data
-> >   staging: hikey9xx/gpu: place common definitions at kirin9xx_dpe.h
-> >   staging: hikey9xx/gpu: get rid of DRM_HISI_KIRIN970
-> >   dts: hisilicon: hi3670.dtsi: add I2C settings
-> >   dts: hikey970-pinctrl.dtsi: add missing pinctrl settings
-> >   dt: hisilicon: add support for the PMIC found on Hikey 970
-> >   dts: add support for Hikey 970 DRM
-> >   staging: hikey9xx/gpu: drop kirin9xx_pwm
-> >   dt: display: Add binds for the DPE and DSI controller for Kirin
-> >     960/970
-> > 
-> > Xiubin Zhang (7):
-> >   staging: hikey9xx/gpu: add support to hikey970 HDMI and panel
-> >   staging: hikey9xx/gpu: Solve SR Cannot Display Problems.
-> >   staging: hikey9xx/gpu: Solve HDMI compatibility Problem.
-> >   staging: hikey9xx/gpu: Support MIPI DSI 3 lanes for hikey970.
-> >   staging: hikey9xx/gpu: Solve SR test reset problem for hikey970.
-> >   staging: hikey9xx/gpu: add debug prints for this driver
-> >   staging: hikey9xx/gpu: Add support 10.1 inch special HDMI displays.
-> > 
-> >  .../display/hisilicon,hi3660-dpe.yaml         |   99 +
-> >  .../display/hisilicon,hi3660-dsi.yaml         |  102 +
-> >  .../boot/dts/hisilicon/hi3670-hikey970.dts    |   56 +-
-> >  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |   77 +
-> >  .../boot/dts/hisilicon/hikey970-drm.dtsi      |   93 +
-> >  .../boot/dts/hisilicon/hikey970-pinctrl.dtsi  |  548 +++-
-> >  .../boot/dts/hisilicon/hikey970-pmic.dtsi     |  197 ++
-> >  drivers/staging/hikey9xx/Kconfig              |    3 +
-> >  drivers/staging/hikey9xx/Makefile             |    1 +
-> >  drivers/staging/hikey9xx/gpu/Kconfig          |   22 +
-> >  drivers/staging/hikey9xx/gpu/Makefile         |    9 +
-> >  drivers/staging/hikey9xx/gpu/kirin960_defs.c  |  378 +++
-> >  .../staging/hikey9xx/gpu/kirin960_dpe_reg.h   |  233 ++
-> >  drivers/staging/hikey9xx/gpu/kirin970_defs.c  |  381 +++
-> >  .../staging/hikey9xx/gpu/kirin970_dpe_reg.h   | 1188 ++++++++
-> >  drivers/staging/hikey9xx/gpu/kirin9xx_dpe.h   | 2437 +++++++++++++++++
-> >  .../hikey9xx/gpu/kirin9xx_drm_dpe_utils.c     | 1178 ++++++++
-> >  .../hikey9xx/gpu/kirin9xx_drm_dpe_utils.h     |  286 ++
-> >  .../staging/hikey9xx/gpu/kirin9xx_drm_drv.c   |  368 +++
-> >  .../staging/hikey9xx/gpu/kirin9xx_drm_drv.h   |   57 +
-> >  .../staging/hikey9xx/gpu/kirin9xx_drm_dss.c   | 1063 +++++++
-> >  .../hikey9xx/gpu/kirin9xx_drm_overlay_utils.c | 1005 +++++++
-> >  .../hikey9xx/gpu/kirin9xx_dw_drm_dsi.c        | 2132 ++++++++++++++
-> >  .../hikey9xx/gpu/kirin9xx_dw_dsi_reg.h        |  146 +
-> >  .../staging/hikey9xx/gpu/kirin9xx_fb_panel.h  |  191 ++
-> >  25 files changed, 12229 insertions(+), 21 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/hisilicon,hi3660-dpe.yaml
-> >  create mode 100644 Documentation/devicetree/bindings/display/hisilicon,hi3660-dsi.yaml
-> 
-> Patch that intropduce new bindings must following the submitting patches
-> guidelines for bindings. For once the subject is "dt-bindings: bla bla".
-> 
-> >  create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/hisilicon/hikey970-pmic.dtsi
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/Kconfig
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/Makefile
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin960_defs.c
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin960_dpe_reg.h
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin970_defs.c
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin970_dpe_reg.h
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_dpe.h
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.c
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_drm_dpe_utils.h
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_drm_dss.c
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_drm_overlay_utils.c
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_dw_drm_dsi.c
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_dw_dsi_reg.h
-> >  create mode 100644 drivers/staging/hikey9xx/gpu/kirin9xx_fb_panel.h
-
--- 
-Regards,
-
-Laurent Pinchart
+Let me verify that fix. I'm confused as I believe I got pinctrl
+working for uart1 :|
