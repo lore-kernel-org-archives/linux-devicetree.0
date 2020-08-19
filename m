@@ -2,57 +2,118 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=BAYES_50,
-	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8382EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB8BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6842E20738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA6920855
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725497AbgHSEtg convert rfc822-to-8bit (ORCPT
+        id S1725803AbgHSE7T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 00:49:36 -0400
-Received: from mail-tibolli.vantibolli.com ([176.123.6.114]:46892 "EHLO
-        mail-tibolli.vantibolli.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725275AbgHSEtf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 00:49:35 -0400
-X-Greylist: delayed 2365 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 00:49:34 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail-tibolli.vantibolli.com (Postfix) with ESMTP id 4C4E0D0A7A59
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 06:58:49 +0300 (EEST)
-Received: from mail-tibolli.vantibolli.com ([127.0.0.1])
-        by localhost (mail-tibolli.vantibolli.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id fQOtEc1XZ-Px for <devicetree@vger.kernel.org>;
-        Wed, 19 Aug 2020 06:58:49 +0300 (EEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail-tibolli.vantibolli.com (Postfix) with ESMTP id CE56AD0A7A32
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 06:58:47 +0300 (EEST)
-X-Virus-Scanned: amavisd-new at mail-tibolli.vantibolli.com
-Received: from mail-tibolli.vantibolli.com ([127.0.0.1])
-        by localhost (mail-tibolli.vantibolli.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 1xFxYmGf3ewF for <devicetree@vger.kernel.org>;
-        Wed, 19 Aug 2020 06:58:47 +0300 (EEST)
-Received: from [23.83.134.244] (unknown [23.83.134.244])
-        by mail-tibolli.vantibolli.com (Postfix) with ESMTPSA id 1852DD0A7A1E
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 06:58:46 +0300 (EEST)
-Content-Type: text/plain; charset="iso-8859-1"
+        Wed, 19 Aug 2020 00:59:19 -0400
+Received: from mo-csw1114.securemx.jp ([210.130.202.156]:52558 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbgHSE7T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 00:59:19 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1114) id 07J4wtHw019223; Wed, 19 Aug 2020 13:58:55 +0900
+X-Iguazu-Qid: 2wGqzHwiyNEtleF4bL
+X-Iguazu-QSIG: v=2; s=0; t=1597813135; q=2wGqzHwiyNEtleF4bL; m=8+9FPYphTGg6tj4oc6AushWGgqt+wl5h3E50PUtGk7w=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1113) id 07J4wrja017883;
+        Wed, 19 Aug 2020 13:58:54 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id 07J4wrBB004514;
+        Wed, 19 Aug 2020 13:58:53 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id 07J4wr1B022665;
+        Wed, 19 Aug 2020 13:58:53 +0900
+Date:   Wed, 19 Aug 2020 13:58:51 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+        punit1.agrawal@toshiba.co.jp, linux-gpio@vger.kernel.org,
+        yuji2.ishikawa@toshiba.co.jp, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 6/8] arm64: dts: visconti: Add device tree for TMPV7708
+ RM main board
+X-TSB-HOP: ON
+Message-ID: <20200819045851.GA1256849@toshiba.co.jp>
+References: <20200817014632.595898-1-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20200817014632.595898-7-nobuhiro1.iwamatsu@toshiba.co.jp>
+ <20200817082325.GA7057@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Hello..
-To:     devicetree@vger.kernel.org
-From:   trust@info.net
-Date:   Tue, 18 Aug 2020 20:58:45 -0700
-Reply-To: trustees202000@consultant.com
-Message-Id: <20200819035847.1852DD0A7A1E@mail-tibolli.vantibolli.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817082325.GA7057@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is a final attempt to reach you as regards the estate of our deceased client who made you one of the beneficiaries of his estate. Do get back to me at your earliest convenience. The Trustees
-  
+Hi, 
+
+Thanks for your review.
+
+On Mon, Aug 17, 2020 at 09:23:25AM +0100, Sudeep Holla wrote:
+> On Mon, Aug 17, 2020 at 10:46:30AM +0900, Nobuhiro Iwamatsu wrote:
+> > Add basic support for the Visconti TMPV7708 SoC peripherals -
+> >   - CPU
+> >     - CA53 x 4 and 2 cluster.
+> >     - not support PSCI, currently only spin-table is supported.
+> 
+> Do you have plans to support PSCI in future ?
+> It is now almost more than 5 year old specification. So they should be
+> strong reason for not supporting that.
+
+I understand that the problem exists and I am considering with our firmware
+development team. Currently spin-table is set, but if the firmware supports it,
+I plan to switch to PSCI.
+
+If the firmware doesn't support PSCI now, would it be difficult to apply the patch?
+
+> 
+> 
+> [..]
+> 
+> > diff --git a/arch/arm64/boot/dts/toshiba/Makefile b/arch/arm64/boot/dts/toshiba/Makefile
+> > new file mode 100644
+> > index 000000000000..8cd460d5b68e
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/toshiba/Makefile
+> > @@ -0,0 +1,2 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +dtb-$(CONFIG_ARCH_VISCONTI) += tmpv7708-rm-mbrc.dtb
+> > diff --git a/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts b/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
+> > new file mode 100644
+> > index 000000000000..a883d3ab1858
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
+> > @@ -0,0 +1,44 @@
+> 
+> [..]
+> 
+> > +
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupt-parent = <&gic>;
+> > +		always-on;
+> 
+> Will this be true when CPU is in low power modes ?
+> 
+
+Although it is related to the above PSCI, Visconti5 does not have a low
+power mode etc., so it is set like this.
+
+> -- 
+> Regards,
+> Sudeep
+> 
+
+Best regards,
+  Nobuhiro
