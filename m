@@ -2,166 +2,151 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B7AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 17:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FECEC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 17:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B714208C7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 17:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0BB20888
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 17:21:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cf6w4ypy"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YLP9CsoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgHSRDY (ORCPT
+        id S1726482AbgHSRVm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgHSRDR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 13:03:17 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5777C061383
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 10:03:15 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id p4so22272771qkf.0
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 10:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ktYpsCxiLWJOQgFpjU6rm698Y/qLm2dIO8jCJsadEOU=;
-        b=Cf6w4ypyePA72N9OwZ/X/gIqgQ3/Z2O3rsVEAnbMsPXxSteDXfBbrAJ2YKaLKzi+2G
-         eJlNvZyKM6mcCsbB8rTNwjE0zNlCUOU27vLJyO1vH/Kf6P5hVdc0XLNeLzE0ilaNzTIL
-         c/q/2eCUoXXxQCiuP4bqs7wWJmNaxuO94MGUY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ktYpsCxiLWJOQgFpjU6rm698Y/qLm2dIO8jCJsadEOU=;
-        b=mJb5tpMQoNswIs58Yc8bQwiEm8I8Jcr4rry8vNWSVvrip+terdXVmTdOFrIyi7ooEF
-         1wqLD84IushvtPqS33ckKLoi3Zv+WJcneFth9nZT+9bEULi52oYXuUqLrQ5VLrz7oLzk
-         /tVJghTDI6KE7ajS3QLERuHReMID5/KcjdolX5w9JDeBKbYPqxlb6d0AnqWjI4LqeZbQ
-         O2yADOcfgrQH7HB+LC8MDlRIvjVnucbo7Sh+EuJ8oamhAe3KsAH1v6o8Vf6nR4qd4PbH
-         bNCRpGazbtYhLjIwrwaUSIoKGA85kuFbP6bytCxYh1jIJnabi5uEhNgWNjqDGYch0eN2
-         2svw==
-X-Gm-Message-State: AOAM531W1D5rZ0L6fiRg/JV+JXAGviNqn4T8Pg++LjUuvMSgj5gl1+/p
-        UIS3nZzJQNeezZhFa8jPV6wpqBmY+6fw6g==
-X-Google-Smtp-Source: ABdhPJzDHarbU8eY2e3+fTUv3eESoD2IU7xgNmI6dXwgitgPp15zIAMJ6sOmoQ2bADrdneFYXsBXvQ==
-X-Received: by 2002:a37:674d:: with SMTP id b74mr22633613qkc.84.1597856592910;
-        Wed, 19 Aug 2020 10:03:12 -0700 (PDT)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id y14sm28381824qtc.84.2020.08.19.10.02.38
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 10:02:42 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id u6so7870782ybf.1
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 10:02:38 -0700 (PDT)
-X-Received: by 2002:a25:d802:: with SMTP id p2mr37420399ybg.446.1597856554388;
- Wed, 19 Aug 2020 10:02:34 -0700 (PDT)
+        Wed, 19 Aug 2020 13:21:42 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:44272 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbgHSRVl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 13:21:41 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 078BA20B4908;
+        Wed, 19 Aug 2020 10:21:39 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 078BA20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597857699;
+        bh=UpCfcaHQrahaE2T3GHBLtMjY0drv+g0vhF7DKb3WEmo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YLP9CsoM9+5i4nPMXgM3TcscEWd4is442Fgao4Fs+4kG9BhBi5x8a4k4rDP/u0ObV
+         4DVtI3R8Lo+DGxV9xvdnTYzDf18hiqq0tY5jFiu0HWKeYMzzSQUZ0LOnckdcSq2Uo6
+         jmC2VNXMLvOTfqYu7iTck1JiGCglBJ1KAgoTOZm0=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, bauerman@linux.ibm.com, robh@kernel.org,
+        gregkh@linuxfoundation.org, james.morse@arm.com,
+        catalin.marinas@arm.com, sashal@kernel.org, will@kernel.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, prsriva@linux.microsoft.com,
+        balajib@linux.microsoft.com
+Subject: [PATCH v4 0/5] Carry forward IMA measurement log on kexec on ARM64
+Date:   Wed, 19 Aug 2020 10:21:29 -0700
+Message-Id: <20200819172134.11243-1-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200817220238.603465-1-robdclark@gmail.com> <20200817220238.603465-11-robdclark@gmail.com>
-In-Reply-To: <20200817220238.603465-11-robdclark@gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 19 Aug 2020 10:02:20 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
-Message-ID: <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
-Subject: Re: [PATCH 10/20] dt-bindings: arm-smmu: Add compatible string for
- Adreno GPU SMMU
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Herring <robh@kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM SMMU DRIVERS" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On kexec file load Integrgity Measurement Architecture(IMA) subsystem
+may verify the IMA signature of the kernel and initramfs, and measure
+it. The command line parameters passed to the kernel in the kexec call
+may also be measured by IMA. A remote attestation service can verify
+the measurement through the IMA log and the TPM PCR data. This can be
+achieved only if the IMA measurement log is carried over from
+the current kernel to the next kernel across the kexec call.
+However in the current implementation the IMA measurement logs are not
+carried over on ARM64 platforms. Therefore a remote attestation service
+cannot verify the authenticity of the running kernel on ARM64 platforms
+when the kernel is updated through the kexec system call.
 
-On Mon, Aug 17, 2020 at 3:03 PM Rob Clark <robdclark@gmail.com> wrote:
->
-> From: Jordan Crouse <jcrouse@codeaurora.org>
->
-> Every Qcom Adreno GPU has an embedded SMMU for its own use. These
-> devices depend on unique features such as split pagetables,
-> different stall/halt requirements and other settings. Identify them
-> with a compatible string so that they can be identified in the
-> arm-smmu implementation specific code.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index 503160a7b9a0..5ec5d0d691f6 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -40,6 +40,10 @@ properties:
->                - qcom,sm8150-smmu-500
->                - qcom,sm8250-smmu-500
->            - const: arm,mmu-500
-> +      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-> +        items:
-> +          - const: qcom,adreno-smmu
-> +          - const: qcom,smmu-v2
+This patch series adds support for carrying forward the IMA measurement
+log on kexec on ARM64. powerpc already supports carrying forward
+the IMA measurement log on kexec.
 
-I know I'm kinda late to the game, but this seems weird to me,
-especially given the later patches in the series like:
+This series refactors the platform independent code such that it can be
+reused for ARM64 as well. A chosen node namely
+"linux,ima-kexec-buffer" is added to the DTB for ARM64 to hold
+the address and the size of the memory reserved to carry
+the IMA measurement log.
 
-https://lore.kernel.org/r/20200817220238.603465-19-robdclark@gmail.com
+This patch series has been tested for ARM64 platform using QEMU.
+I would like help from the community for testing this change on powerpc.
+Thanks.
 
-Specifically in that patch you can see that this IOMMU already had a
-compatible string and we're changing it and throwing away the
-model-specific string?  I'm guessing that you're just trying to make
-it easier for code to identify the adreno iommu, but it seems like a
-better way would have been to just add the adreno compatible in the
-middle, like:
+This series is based on commit 18445bf405cb ("Merge tag 'spi-fix-v5.9-rc1'
+of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi") in
+https://github.com/torvalds/linux "master" branch.
 
-      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
-        items:
-          - enum:
-              - qcom,msm8996-smmu-v2
-              - qcom,msm8998-smmu-v2
-              - qcom,sc7180-smmu-v2
-              - qcom,sdm845-smmu-v2
-        - const: qcom,adreno-smmu
-        - const: qcom,smmu-v2
+Changelog:
 
-Then we still have the SoC-specific compatible string in case we need
-it but we also have the generic one?  It also means that we're not
-deleting the old compatible string...
+v4:
+  - Submitting the patch series on behalf of the original author
+    Prakhar Srivastava <prsriva@linux.microsoft.com>
+  - Moved FDT_PROP_IMA_KEXEC_BUFFER ("linux,ima-kexec-buffer") to
+    libfdt.h so that it can be shared by multiple platforms.
 
--Doug
+v3:
+Breakup patches further into separate patches.
+  - Refactoring non architecture specific code out of powerpc
+  - Update powerpc related code to use fdt functions
+  - Update IMA buffer read related code to use of functions
+  - Add support to store the memory information of the IMA
+    measurement logs to be carried forward.
+  - Update the property strings to align with documented nodes
+    https://github.com/devicetree-org/dt-schema/pull/46
 
+v2:
+  Break patches into separate patches.
+  - Powerpc related Refactoring
+  - Updating the docuemntation for chosen node
+  - Updating arm64 to support IMA buffer pass
 
->        - description: Marvell SoCs implementing "arm,mmu-500"
->          items:
->            - const: marvell,ap806-smmu-500
-> --
-> 2.26.2
->
+v1:
+  Refactoring carrying over IMA measuremnet logs over Kexec. This patch
+    moves the non-architecture specific code out of powerpc and adds to
+    security/ima.(Suggested by Thiago)
+  Add Documentation regarding the ima-kexec-buffer node in the chosen
+    node documentation
+
+v0:
+  Add a layer of abstraction to use the memory reserved by device tree
+    for ima buffer pass.
+  Add support for ima buffer pass using reserved memory for arm64 kexec.
+    Update the arch sepcific code path in kexec file load to store the
+    ima buffer in the reserved memory. The same reserved memory is read
+    on kexec or cold boot.
+
+Lakshmi Ramasubramanian (5):
+  powerpc: Refactor kexec functions to move arch independent code to IMA
+  powerpc: Use libfdt functions to fetch IMA buffer properties
+  IMA: Refactor do_get_kexec_buffer() to call of_ functions directly
+  arm64: Store IMA log information in kimage used for kexec
+  arm64: Add IMA kexec buffer to DTB
+
+ arch/arm64/Kconfig                     |   1 +
+ arch/arm64/include/asm/ima.h           |  17 ++++
+ arch/arm64/include/asm/kexec.h         |   3 +
+ arch/arm64/kernel/machine_kexec_file.c |  28 ++++++
+ arch/powerpc/include/asm/ima.h         |   3 -
+ arch/powerpc/kexec/ima.c               | 123 ++++++-------------------
+ include/linux/libfdt.h                 |   3 +
+ security/integrity/ima/ima_kexec.c     |  81 ++++++++++++++++
+ 8 files changed, 161 insertions(+), 98 deletions(-)
+ create mode 100644 arch/arm64/include/asm/ima.h
+
+-- 
+2.28.0
+
