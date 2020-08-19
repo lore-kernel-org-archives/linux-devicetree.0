@@ -2,93 +2,91 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E7FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDD4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79222207DE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kQ6qOHnW"
+	by mail.kernel.org (Postfix) with ESMTP id 5702E207DE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgHSVGC (ORCPT
+        id S1727769AbgHSVJb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:06:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgHSVGA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 17:06:00 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A875C061757
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 14:06:00 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v9so26971786ljk.6
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 14:06:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dFTOnPtDPtEvUDpUSHyqI2ZnkphwbLJTVI5Opdc/0TE=;
-        b=kQ6qOHnWDOmwJ0vlEkI3ORG5pFju8yQvcEnR7IiYJOjCIe0AnY7hNruws/YVPoBUfv
-         X6nfxs7V5ggO0J+DPHNkmL6zLu2Ww4vBt7TC65pIZ6wb1c5B2ItTQfI1ICjoCd7YwfJX
-         PsidhmNFtkJKjRafF3tEbcWPpx8GuH0aSJGxM555yQdyJfKlVE86j0iQ5aEfRLagVYXx
-         lCGmBjmfj1GfKaw/2Vt4bLcHtdITO3DkJD+JhUEGFVNoLrc/Orz9o7ekh2xCyJsgr2tH
-         cg1e0bnicalm3I7Q1lXqNpTRTbP7skvyU1x1eRdm0SGlcOzDvQDfxL0B+uPHAM6l5z2A
-         ZzRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dFTOnPtDPtEvUDpUSHyqI2ZnkphwbLJTVI5Opdc/0TE=;
-        b=I0CbhrkYZl5G1Uzxy/1F6uggQQJsrYsTCI15is8LJScp+lR8bMmbqEqvkZmi6GTjwn
-         dwLjVwpM9vkz0XEcjbla6CeJkhaOFAgGF1MjrUZVwj9gw53O7tA+AT5P8ZT8N7Bmy+LJ
-         WpL2clxUp5GU3tmA01Q7duR9gr0cJTgFO7z7+VEPOAbUesBaEeugQs5XxKDU0tRbmvHN
-         jq0D+dIy3y5xEG92No2ODMnG03P9v7lCq7b9GIYKsEVBe/aw2cFAYfKRNCf224RePc7M
-         D6P/MrUahNZhYO4vYMW18pp9Jhxia2/aviT98Zp72q4YxYn7+QHik2gxlNx9jsHRTaXb
-         Wlbw==
-X-Gm-Message-State: AOAM533o8GxNrfK+8p4r6EX59MMUCEG2JzuOEZdHnYU5GWV2v5qUFSKU
-        0nmHdtX6Fpoe23qkknzt6IFn2lTVClZlPmvXj1jfAg==
-X-Google-Smtp-Source: ABdhPJxJuuL0E5As02w+E0Y6Qv7IfQ8YJeKtg4XnoyFF7kGJWq96/akkY89gebYJVjnCTCDKMsYsDpG2PW6zUVAt3qs=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr39538ljb.283.1597871158426;
- Wed, 19 Aug 2020 14:05:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200812090711.2644688-1-linus.walleij@linaro.org> <e8d27b57-ac17-29e4-0e43-b72d7447d43a@gmail.com>
-In-Reply-To: <e8d27b57-ac17-29e4-0e43-b72d7447d43a@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 19 Aug 2020 23:05:47 +0200
-Message-ID: <CACRpkdYcKthp9_482ptL7YSitN-YUU4_u57ra25Ko4_-102JaQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: leds: Add DT binding for Richtek RT8515
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        newbytee@protonmail.com, Stephan Gerhold <stephan@gerhold.net>,
+        Wed, 19 Aug 2020 17:09:31 -0400
+Received: from mga14.intel.com ([192.55.52.115]:30132 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727107AbgHSVJa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 17:09:30 -0400
+IronPort-SDR: sAGR8TTRwhVSeCwFOpz4X1iNgpNghWkk7bwytvltvMsH4CMNNHGqMaj35QLXkkVcBwPPtewcWT
+ jQAYhT9Ot+5Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="154460928"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="154460928"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 14:09:30 -0700
+IronPort-SDR: 5cndTTZ4xWxk+PWXpH3ISKClr+XpZCZ8FvZ0yYib9YUt7SijssSWQhjDU7bAbvZdWB0or30SXt
+ NAhYutfpCumg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="320622515"
+Received: from abojanow-mobl4.ger.corp.intel.com (HELO localhost) ([10.252.52.107])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2020 14:09:27 -0700
+Date:   Thu, 20 Aug 2020 00:09:27 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        <devicetree@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/2] dt-bindings: Add SynQucer TPM MMIO as a trivial
+ device
+Message-ID: <20200819210927.GF9942@linux.intel.com>
+References: <20200728031433.3370-1-masahisa.kojima@linaro.org>
+ <20200728031433.3370-3-masahisa.kojima@linaro.org>
+ <20200817211440.GB44714@linux.intel.com>
+ <CAMj1kXG2h-yk_hw-HZvhAPfYRVHq=LgNp5FB1J4SmnN82Zm9jA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXG2h-yk_hw-HZvhAPfYRVHq=LgNp5FB1J4SmnN82Zm9jA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 11:06 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
+On Wed, Aug 19, 2020 at 12:22:52PM +0200, Ard Biesheuvel wrote:
+> On Mon, 17 Aug 2020 at 23:14, Jarkko Sakkinen
+> <jarkko.sakkinen@linux.intel.com> wrote:
+> >
+> > On Tue, Jul 28, 2020 at 12:14:32PM +0900, Masahisa Kojima wrote:
+> > > Add a compatible string for the SynQuacer TPM to the binding for a
+> > > TPM exposed via a memory mapped TIS frame. The MMIO window behaves
+> > > slightly differently on this hardware, so it requires its own
+> > > identifier.
+> > >
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+> >
+> > I applied these patches:
+> >
+> > http://git.infradead.org/users/jjs/linux-tpmdd.git/log/refs/heads/master
+> >
+> 
+> Thanks Jarkko
 
-> > +  led:
-> > +    type: object
-> > +    $ref: common.yaml#
-(...)
-> > +        led {
-> > +            function = LED_FUNCTION_FLASH;
-> > +            color = <LED_COLOR_ID_WHITE>;
-> > +            flash-max-timeout-us = <250000>;
->
-> Constraints for this property are needed above.
+Yeah, sorry for taking this long. I was on vacation for couple of weeks.
 
-Can you elaborate on what you expect this to look like?
-The property is from common.yaml, so should that be
-extended with a constraint?
-
-Yours,
-Linus Walleij
+/Jarkko
