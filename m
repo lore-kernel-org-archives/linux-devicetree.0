@@ -2,117 +2,111 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9360FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8742CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63CB5206B5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:01:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHECsKjI"
+	by mail.kernel.org (Postfix) with ESMTP id 71C6920786
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727005AbgHSKBq (ORCPT
+        id S1727866AbgHSKMZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgHSKBo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 06:01:44 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FD8C061757;
-        Wed, 19 Aug 2020 03:01:44 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i10so24716193ljn.2;
-        Wed, 19 Aug 2020 03:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sQDKTE/Nz4WEhS9Fa2pyUugVDwsfCPrw0tdUrr5Zp5g=;
-        b=jHECsKjIw+tx7Wr+WDaBV99aduF3sQ9B6agAyxteRQwRRXAZHVQ21Ua1yxmUezLytH
-         CcwBqt7PEI0dyOw5iXCkKiknURmmf0y/nXqHedvqnN5UfeT2s72PZtnuVAFskURPOLFb
-         M9moqGDQPsu3NKjQ90KOW/ylDFtJwkGJHmgb1Uu2lFA8yQ12QZcJAg1pqrWuYY9qzfeX
-         mZET1Ad4KaH2eRBbS4Xqy6bRc7BQVRUZ6xfjFOTaeokTs5F0hYlhhK2DHL/oZfF8TAsq
-         qAx2ulFFqb44DKb7v5GbMS0RTUoyRafHVUMRvitHbVnUgexaVRZ6Y3ZJaRyRQBjtN4Cl
-         CpxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sQDKTE/Nz4WEhS9Fa2pyUugVDwsfCPrw0tdUrr5Zp5g=;
-        b=pNg9MoIrDmQ5sNBfGwYkWnMTeot+b66fhkwlfPK72Zlp6vyWkcYoZX+Xy/h8kbIIO0
-         KH/SXP7pNW1A3OfKpco0bOO1NXjedIK/GREH0vfNMBr6swdq9D5LRGtapU7QjyYmySuZ
-         4hzd9xMRp23Zqb35bwNl2O4B6S1z2cf/ebFHXl7y2pjWkgUlZd6WrMoiXALsU/aIs/CN
-         AX5PgJOKwNybuUVU2Coildp6dCukQiNeHMKe68Srn3JY8OL6T6PMziCDd+zPx3Q/5cMK
-         pO9RedhW2sB0l9ld0nejBwFZNXjq2626gb0iXYsZXpZ/GqhZJNmo78QkrRq2vYegWppN
-         bHWQ==
-X-Gm-Message-State: AOAM533PDZtLeNWfbfJ+wwUZiLwaBDVyKhO9lBNk/+MwFBOEMbLM/USZ
-        +8rmxCnqvKUV2q1m/KQ9qBR8gsi/cwT17LYXXFI=
-X-Google-Smtp-Source: ABdhPJxjYBFNhpF22ClmBNTISHG3m2+1dC7F3jcxlxyNsMHe+zRmyGe2c4IrTBXNaOCF2j0z9Cl2lmffpaATx36J1/0=
-X-Received: by 2002:a2e:9b08:: with SMTP id u8mr11205523lji.208.1597831302269;
- Wed, 19 Aug 2020 03:01:42 -0700 (PDT)
+        Wed, 19 Aug 2020 06:12:25 -0400
+Received: from mail.v3.sk ([167.172.186.51]:51730 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727808AbgHSKMW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:12:22 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3FFD6DFA71;
+        Wed, 19 Aug 2020 10:11:24 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 3Ym15nfYp3ad; Wed, 19 Aug 2020 10:11:23 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id E05D0DFA44;
+        Wed, 19 Aug 2020 10:11:22 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id AD0s2r5Zerf0; Wed, 19 Aug 2020 10:11:22 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 81696DEE69;
+        Wed, 19 Aug 2020 10:11:22 +0000 (UTC)
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] drm/panel: Add support for Innolux LS075AT011
+Date:   Wed, 19 Aug 2020 12:12:04 +0200
+Message-Id: <20200819101206.633253-1-lkundrak@v3.sk>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <1597418824-15906-1-git-send-email-u0084500@gmail.com> <159776976828.56451.5989906126815444846.b4-ty@kernel.org>
-In-Reply-To: <159776976828.56451.5989906126815444846.b4-ty@kernel.org>
-From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
-Date:   Wed, 19 Aug 2020 18:01:30 +0800
-Message-ID: <CADiBU382qDg8sA7t1QEqY5jGr1F1VqpWN5VH6Tm6wZw3jKd0LQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] regulator: rt4801: Add support for RT4801 Display
- Bias regulator driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     lgirdwood@gmail.com, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
-        =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8819=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:57=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Fri, 14 Aug 2020 23:27:03 +0800, cy_huang wrote:
-> > Adds support for the RT4801 DSV. It has two regulators (DSVP/DSVN) with
-> > an I2C interface. DSVP/DSVN can provide the display panel module for th=
-e
-> > positive/negative voltage range from (+/-)4V to (+/-)6V.
->
-> Applied to
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git =
-for-next
->
-> Thanks!
->
-> [1/2] regulator: rt4801: Add support for RT4801 Display Bias regulator dr=
-iver
->       commit: 5bbbfc7f7f0a44b7a85ab3872dd2ccce7019f7b1
-> [2/2] regulator: rt4801: Add DT binding documentation
->       commit: fd6b928db8a05fcd8629320c52eae214a8615aae
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
-Thx.
-Add u0084500@gmail.com into cc list for the future maintenance.
->
-> Thanks,
-> Mark
+Hi,
+
+Please take a look at the patches chanied to this message and consider
+applying them. They add description of the display panel found on OLPC
+laptops to the simple panel driver.
+
+There is no datasheet for the hardware and thus the timings were
+determined on a best effort basis. The clock range is gotten from the
+data sheet of the display controller [1] and the other timings are what
+OLPC laptops actually use. The panel seems to cope with different sync
+timings, but I'm not sure wherher there's any value in attempting to
+figure out what range is actually permissible.
+
+I could not figure out the right definitions for the connector and the
+bus format. I'm not sure how necessary they are, but at least the
+drm-panel driver insists on connector type being defined so I picked
+LVDS because that seems to be used for internal laptop screens.
+
+The signalling is not actually differential. It uses TTL levels with
+data sampled on rising and falling clock edges; sort of like this (taken
+from [1], P.20):
+
+          __
+    FSTH /  \_______________________________________
+          ____      ____      ____      ____      __
+    FCLK /    \____/    \____/    \____/    \____/
+                  ____ ____ ____ ____ ____ ____ ____
+    FD00 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD01 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD10 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD11 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD20 ........X____X____X____X____X____X____X____
+                  ____ ____ ____ ____ ____ ____ ____
+    FD21 ........X____X____X____X____X____X____X____
+                   |    |    |    |
+                   data 1    data 2   ...
+                   (2x6bit)  (2x6bit)
+
+I believe the data just carries brightness because each pixel on the
+panel has a fixed color; with the red, green and blue pixels organized
+in a pattern [2]. (The HX8837 that drives the color does the conversion
+from RGB).
+
+Tested on an OLPC XO-1.75 laptop. XO-1 and XO-1.5 use the same hardware,
+but their display controllers are not supported by DRM at the moment.
+
+[1] http://wiki.laptop.org/images/0/09/DCON_datasheet_HX8837-A.pdf
+[2] http://wiki.laptop.org/go/Display
+
+Thank you!
+Lubo
+
+
