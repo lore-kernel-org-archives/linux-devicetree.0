@@ -2,71 +2,316 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504FDC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E014C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC51205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322FC205CB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WrjyiqVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgHSNNj (ORCPT
+        id S1726961AbgHSN2u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:13:39 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33328 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgHSNNQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:13:16 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k8NtJ-00A5Kz-Mp; Wed, 19 Aug 2020 15:12:33 +0200
-Date:   Wed, 19 Aug 2020 15:12:33 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Landen Chao <landen.chao@mediatek.com>
-Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>,
-        "dqfext@gmail.com" <dqfext@gmail.com>
-Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
- MT7531 switch
-Message-ID: <20200819131233.GA2403519@lunn.ch>
-References: <cover.1597729692.git.landen.chao@mediatek.com>
- <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
- <20200818160901.GF2330298@lunn.ch>
- <1597830248.31846.78.camel@mtksdccf07>
+        Wed, 19 Aug 2020 09:28:50 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58162 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgHSN2t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:28:49 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AAF4C29E;
+        Wed, 19 Aug 2020 15:28:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597843720;
+        bh=PWDzJsyk0PwukcLPwDqokKhe2VKPSIPQ9fwFSamq5gI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WrjyiqVYAKfgJuesCDNLI9YaAo3D+vkqrUs9srWfDabP/1eewBgnr6thLFRhQEfFP
+         UvPPTOIKgqu+ORhtRXtZO9GANJt8nNSpXQXRAxNzi2kOr8uUVnW/bwoFCxERhyfz0L
+         CLwhiIitRZsF3Owp8Z25roPVm6Nfcd15Q5Ooq9/Y=
+Date:   Wed, 19 Aug 2020 16:28:23 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, Ricardo Ribalda <ribalda@kernel.org>,
+        mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        hverkuil-cisco@xs4all.nl, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: media: imx214: Convert to json-schema
+Message-ID: <20200819132823.GH6049@pendragon.ideasonboard.com>
+References: <20200818121755.37706-1-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1597830248.31846.78.camel@mtksdccf07>
+In-Reply-To: <20200818121755.37706-1-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> In general, according to phy.rst, RGMII delay should be done by phy, but
-> some MoCA product need RGMII delay in MAC. These two requirements
-> conflict. Is there any suggestion to solve the conflict?
+Hi Jacopo,
 
-Implementing the delay in the PHY is just a recommendation, not a
-requirement. However, as i said, you need to be careful what is pass
-to phylib. If the MAC is implementing "rgmii-id", whatever makes it
-way down to phy_attach_direct() needs to be "rgmii". If the MAC
-implements "rgmii-rxid", the phy should be implementing "rgmii-txid",
-etc. If this is wrong, you get both the MAC and the PHY implementing
-delays, and bad things happen.
+Thank you for the patch.
 
-	Andrew
+On Tue, Aug 18, 2020 at 02:17:55PM +0200, Jacopo Mondi wrote:
+> Convert the imx214 bindings document to json-schema and update
+> the MAINTAINERS file accordingly.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../bindings/media/i2c/sony,imx214.txt        |  53 --------
+>  .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
+>  MAINTAINERS                                   |   2 +-
+>  3 files changed, 125 insertions(+), 54 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> deleted file mode 100644
+> index f11f28a5fda4..000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> +++ /dev/null
+> @@ -1,53 +0,0 @@
+> -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+> -
+> -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+> -an active array size of 4224H x 3200V. It is programmable through an I2C
+> -interface.
+> -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
+> -throughput of 1.2Gbps/lane.
+> -
+> -
+> -Required Properties:
+> -- compatible: Shall be "sony,imx214".
+> -- reg: I2C bus address of the device. Depending on how the sensor is wired,
+> -       it shall be <0x10> or <0x1a>;
+> -- enable-gpios: GPIO descriptor for the enable pin.
+> -- vdddo-supply: Chip digital IO regulator (1.8V).
+> -- vdda-supply: Chip analog regulator (2.7V).
+> -- vddd-supply: Chip digital core regulator (1.12V).
+> -- clocks: Reference to the xclk clock.
+> -- clock-frequency: Frequency of the xclk clock.
+> -
+> -Optional Properties:
+> -- flash-leds: See ../video-interfaces.txt
+> -- lens-focus: See ../video-interfaces.txt
+> -
+> -The imx214 device node shall contain one 'port' child node with
+> -an 'endpoint' subnode. For further reading on port node refer to
+> -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -Required Properties on endpoint:
+> -- data-lanes: check ../video-interfaces.txt
+> -- link-frequencies: check ../video-interfaces.txt
+> -- remote-endpoint: check ../video-interfaces.txt
+> -
+> -Example:
+> -
+> -	camera-sensor@1a {
+> -		compatible = "sony,imx214";
+> -		reg = <0x1a>;
+> -		vdddo-supply = <&pm8994_lvs1>;
+> -		vddd-supply = <&camera_vddd_1v12>;
+> -		vdda-supply = <&pm8994_l17>;
+> -		lens-focus = <&ad5820>;
+> -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
+> -		clock-frequency = <24000000>;
+> -		port {
+> -			imx214_ep: endpoint {
+> -				data-lanes = <1 2 3 4>;
+> -				link-frequencies = /bits/ 64 <480000000>;
+> -				remote-endpoint = <&csiphy0_ep>;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> new file mode 100644
+> index 000000000000..ddd4627214b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> @@ -0,0 +1,124 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+
+s/Mp/MP/
+
+> +
+> +maintainers:
+> +  - Ricardo Ribalda <ribalda@kernel.org>
+> +
+> +description: -|
+> +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+
+s/imx214/IMX214/
+
+> +  an active array size of 4224H x 3200V. It is programmable through an I2C
+> +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
+
+s/  Image/ Image/
+
+> +  maximum throughput of 1.2Gbps/lane.
+> +
+> +properties:
+> +  compatible:
+> +    const: sony,imx214
+> +
+> +  reg:
+> +    description: -|
+> +      I2C device address. Depends on how the sensor is wired.
+
+I'd drop the description, it's fairly evident as it's an I2C device,
+isn't it ?
+
+> +    enum:
+> +      - 0x10
+> +      - 0x1a
+> +
+> +  clocks:
+> +    description: Reference to the xclk clock.
+> +    maxItems: 1
+> +
+> +  clock-frequency:
+> +    description: Frequency of the xclk clock in Hz.
+> +
+> +  enable-gpios:
+> +    description: GPIO descriptor for the enable pin.
+> +    maxItems: 1
+> +
+> +  vdddo-supply:
+> +    description: Chip digital IO regulator (1.8V).
+> +    maxItems: 1
+> +
+> +  vdda-supply:
+> +    description: Chip analog regulator (2.7V).
+> +    maxItems: 1
+> +
+> +  vddd-supply:
+> +    description: Chip digital core regulator (1.12V).
+> +    maxItems: 1
+> +
+> +  flash-leds:
+> +    description: See ../video-interfaces.txt
+> +
+> +  lens-focus:
+> +    description: See ../video-interfaces.txt
+> +
+> +  port:
+> +    type: object
+> +    description: |
+> +      The device node must contain one 'port' child node for its digital output
+> +      video port, in accordance with the video interface bindings defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+
+I'd drop this, the port node is already described as required below.
+
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +        properties:
+> +          remote-endpoint:
+> +            description: See ../video-interfaces.txt
+> +
+> +          data-lanes:
+> +            description: See ../video-interfaces.txt
+
+Shouldn't this also express that only 2 or 4 data lanes are allowed ?
+
+            $ref: /schemas/types.yaml#/definitions/uint32-array
+            description: See ../video-interfaces.txt
+            anyOf:
+              - items:
+                  - const: 1
+                  - const: 2
+              - items:
+                  - const: 1
+                  - const: 2
+                  - const: 3
+                  - const: 4
+
+Maybe someone more experienced with YAML schemas could propose a better
+way to express this ? I initially tried to express it with enum instead
+of anyOf but couldn't get it to work.
+
+> +
+> +          link-frequencies:
+
+            $ref: /schemas/types.yaml#/definitions/uint64-array
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +            description: See ../video-interfaces.txt
+> +
+> +        required:
+> +          - data-lanes
+> +          - link-frequencies
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-frequency
+> +  - enable-gpios
+> +  - vdddo-supply
+> +  - vdda-supply
+> +  - vddd-supply
+> +  - port
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        camera-sensor@1a {
+> +            compatible = "sony,imx214";
+> +            reg = <0x1a>;
+> +            vdddo-supply = <&pm8994_lvs1>;
+> +            vddd-supply = <&camera_vddd_1v12>;
+> +            vdda-supply = <&pm8994_l17>;
+> +            lens-focus = <&ad5820>;
+> +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> +            clocks = <&camera_clk>;
+> +            clock-frequency = <24000000>;
+> +
+> +            port {
+> +                imx214_ep: endpoint {
+> +                    data-lanes = <1 2 3 4>;
+> +                    link-frequencies = /bits/ 64 <480000000>;
+> +                    remote-endpoint = <&csiphy0_ep>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6c8e98238a7b..d1a6173d3b64 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15918,7 +15918,7 @@ M:	Ricardo Ribalda <ribalda@kernel.org>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media_tree.git
+> -F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+>  F:	drivers/media/i2c/imx214.c
+> 
+>  SONY IMX219 SENSOR DRIVER
+
+-- 
+Regards,
+
+Laurent Pinchart
