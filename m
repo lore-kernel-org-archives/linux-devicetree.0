@@ -2,161 +2,85 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24ECC433E5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0C1C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78CC72072D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE70220738
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597838282;
-	bh=KR3x17k71nv+WZsdM0NYFQMSokf99W1AI+fOHiCMtjI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HT8wnNPfkhbvKMdKf6QY1ZVfr071FIlrIQBSYcggWR9ZSwpIO9tivpx8kvUlwLLVN
-	 Lr+EUARGKHyVoFAkA21LBvnOCKMwPbbdUMbjSASTzUMUnVaC9oG99eiu0nmtQsBzxk
-	 MCQdhwmYyVEcRKnu3pr+iXh0HumA2onwmOtsZLAs=
+	s=default; t=1597839357;
+	bh=zgqO4dt8oDjrOVT4/c1Xvgcktui1wNIAoIAn1aAlAEY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=w+GcWQQn1p73WrPyr9xEgB+u8mccnS9vRdWA3c3daWLMAbC1UFOfbwJyt0iv4d4iy
+	 XuWmn8yLOtz7klIQGBZWzZjxeryJqFs1+fnrpG7DJddFFu95duTPCMrT3q8v07y/IE
+	 qzhCKYJC5ZxUGKZjXQChgT+6lv32Xtn+z1xblTmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbgHSL5D (ORCPT
+        id S1726794AbgHSMP5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 08:15:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbgHSLtZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:49:25 -0400
-Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        id S1726752AbgHSMP5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 08:15:57 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A66812312B;
-        Wed, 19 Aug 2020 11:46:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A05B1206FA;
+        Wed, 19 Aug 2020 12:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597837583;
-        bh=KR3x17k71nv+WZsdM0NYFQMSokf99W1AI+fOHiCMtjI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdLMUM5Xi0M4wIe5eMeYRspaUaTagbNp3+Uu62CwqGQPWf8JjCegMi5LugjYO3zCF
-         KalT+ThEuqx3+7rcbxyYXE9e33yLI2Q4izRGfHmxqwvnUETV97KsnkrgS+IlhWkrCN
-         0dmmb0hjrfOi15lbpcWXhj50V7rrObFuZWYIHchs=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1k8MXt-00Euc5-JA; Wed, 19 Aug 2020 13:46:21 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 44/49] dts: hisilicon: hi3670.dtsi: add I2C settings
-Date:   Wed, 19 Aug 2020 13:46:12 +0200
-Message-Id: <577acc4d4de8f812d4f58de167a731bfc6d1d32e.1597833138.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        s=default; t=1597839356;
+        bh=zgqO4dt8oDjrOVT4/c1Xvgcktui1wNIAoIAn1aAlAEY=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=efaVO3WJCaG9BaPttCL8jMRBOA31XsXEJaCMkZ4lY1wL87sOaTuVFsUBgaJ98LxWg
+         afHJExSfN1wnl3Zg1JIDBUPhWbCbFu9MoBL7K2Pv1ln2RLR1C9r4Oxjw+It6gQqA8o
+         Pb+JnsWixqPz2axn7rjZIIbNAWiOo0vX+dv9vWs0=
+Date:   Wed, 19 Aug 2020 13:15:24 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, shengjiu.wang@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Cc:     Linux-imx@nxp.com
+In-Reply-To: <1597712771-32433-1-git-send-email-Anson.Huang@nxp.com>
+References: <1597712771-32433-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH V2] dt-bindings: sound: Convert NXP spdif to json-schema
+Message-Id: <159783932455.55025.17846366989004171430.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The I2C buses are not declared at the device tree. As this will
-be needed by further patches, add them, keeping all in
-disabled state. Per-board settings can override it.
+On Tue, 18 Aug 2020 09:06:11 +0800, Anson Huang wrote:
+> Convert the NXP SPDIF binding to DT schema format using json-schema.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- arch/arm64/boot/dts/hisilicon/hi3670.dtsi | 71 +++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+Applied to
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-index b1acb4fb1d1c..416f69c782d7 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
-@@ -723,5 +723,76 @@ dwmmc2: dwmmc2@fc183000 {
- 			card-detect-delay = <200>;
- 			status = "disabled";
- 		};
-+
-+		/* I2C */
-+		i2c0: i2c@ffd71000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xffd71000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clock-frequency = <400000>;
-+			clocks = <&iomcu HI3670_CLK_GATE_I2C0>;
-+			resets = <&iomcu_rst 0x20 3>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@ffd72000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xffd72000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clock-frequency = <400000>;
-+			clocks = <&iomcu HI3670_CLK_GATE_I2C1>;
-+			resets = <&iomcu_rst 0x20 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@ffd73000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xffd73000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clock-frequency = <400000>;
-+			clocks = <&iomcu HI3670_CLK_GATE_I2C2>;
-+			resets = <&iomcu_rst 0x20 5>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@fdf0c000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xfdf0c000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clock-frequency = <400000>;
-+			clocks = <&crg_ctrl HI3670_CLK_GATE_I2C3>;
-+			resets = <&crg_rst 0x78 7>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c3_pmx_func &i2c3_cfg_func>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@fdf0d000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xfdf0d000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clock-frequency = <400000>;
-+			clocks = <&crg_ctrl HI3670_CLK_GATE_I2C4>;
-+			resets = <&crg_rst 0x78 27>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c4_pmx_func &i2c4_cfg_func>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-2.26.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
+Thanks!
+
+[1/1] ASoC: Convert NXP spdif to json-schema
+      commit: c5040fec3d550e27d0a49f05564204da6c90d10b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
