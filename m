@@ -2,316 +2,120 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E014C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1E7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 322FC205CB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49FDF20866
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WrjyiqVY"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hv+jQXll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbgHSN2u (ORCPT
+        id S1728374AbgHSNbp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:28:50 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:58162 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgHSN2t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:28:49 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AAF4C29E;
-        Wed, 19 Aug 2020 15:28:40 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597843720;
-        bh=PWDzJsyk0PwukcLPwDqokKhe2VKPSIPQ9fwFSamq5gI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WrjyiqVYAKfgJuesCDNLI9YaAo3D+vkqrUs9srWfDabP/1eewBgnr6thLFRhQEfFP
-         UvPPTOIKgqu+ORhtRXtZO9GANJt8nNSpXQXRAxNzi2kOr8uUVnW/bwoFCxERhyfz0L
-         CLwhiIitRZsF3Owp8Z25roPVm6Nfcd15Q5Ooq9/Y=
-Date:   Wed, 19 Aug 2020 16:28:23 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, Ricardo Ribalda <ribalda@kernel.org>,
-        mchehab@kernel.org, sakari.ailus@linux.intel.com,
-        hverkuil-cisco@xs4all.nl, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: imx214: Convert to json-schema
-Message-ID: <20200819132823.GH6049@pendragon.ideasonboard.com>
-References: <20200818121755.37706-1-jacopo+renesas@jmondi.org>
+        Wed, 19 Aug 2020 09:31:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:55694 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726209AbgHSNbp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:31:45 -0400
+X-UUID: 019b1bc6ac194bd7ac7f24c8c0e9aec4-20200819
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fRw1wAcPb1VygFYYYG7J6cmcnElaUKNFwR0kNG/1s9c=;
+        b=hv+jQXllTnibs+5TIFqN979xYKZ9HSHeIi6RbMiVJg93XLXFdPqOmCDPqjHKWvLyTdO3Hs05fECia0qy8zEskKeBsw0/vmADBHAGwvQBbrVOYT+y6kYSlEr5VrjV5opFfLPPAf0ECD9XFKVV2JtyalqFK73J8g2abtxZJ+J4BZI=;
+X-UUID: 019b1bc6ac194bd7ac7f24c8c0e9aec4-20200819
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <mark-pk.tsai@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 230635700; Wed, 19 Aug 2020 21:31:38 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 19 Aug 2020 21:31:36 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 21:31:27 +0800
+From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+To:     <maz@kernel.org>, Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+CC:     <alix.wu@mediatek.com>, <daniel@0x0f.com>,
+        <devicetree@vger.kernel.org>, <jason@lakedaemon.net>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
+        <robh+dt@kernel.org>, <tglx@linutronix.de>,
+        <yj.chiang@mediatek.com>
+Subject: Re: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller support
+Date:   Wed, 19 Aug 2020 21:31:18 +0800
+Message-ID: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org> (raw)
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org>
+References: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200818121755.37706-1-jacopo+renesas@jmondi.org>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: DE83B45AC3BC27299EB076B4A9D350810BE1BE0B47BE608892730C36C974355C2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
+Message-ID: <20200819133118.U_jE70jyYxQnldtYkol1dyQ9VzdJqUxWu-94f-1YX6U@z>
 
-Hi Jacopo,
+RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPiA+ICsNCj4gPiArc3RhdGlj
+IGludCBtc3RfaW50Y19kb21haW5fYWxsb2Moc3RydWN0IGlycV9kb21haW4gKmRvbWFpbiwgdW5z
+aWduZWQgDQo+ID4gaW50IHZpcnEsDQo+ID4gKwkJCQkgdW5zaWduZWQgaW50IG5yX2lycXMsIHZv
+aWQgKmRhdGEpDQo+ID4gK3sNCj4gPiArCWludCBpOw0KPiA+ICsJaXJxX2h3X251bWJlcl90IGh3
+aXJxOw0KPiA+ICsJc3RydWN0IGlycV9md3NwZWMgcGFyZW50X2Z3c3BlYywgKmZ3c3BlYyA9IGRh
+dGE7DQo+ID4gKwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhICpjZCA9IChzdHJ1Y3QgbXN0X2lu
+dGNfY2hpcF9kYXRhDQo+ID4gKilkb21haW4tPmhvc3RfZGF0YTsNCj4gDQo+IE5vIGNhc3QgbmVj
+ZXNzYXJ5IGhlcmUuDQo+IA0KPiA+ICsNCj4gPiArCS8qIE5vdCBHSUMgY29tcGxpYW50ICovDQo+
+ID4gKwlpZiAoZndzcGVjLT5wYXJhbV9jb3VudCAhPSAzKQ0KPiA+ICsJCXJldHVybiAtRUlOVkFM
+Ow0KPiA+ICsNCj4gPiArCS8qIE5vIFBQSSBzaG91bGQgcG9pbnQgdG8gdGhpcyBkb21haW4gKi8N
+Cj4gPiArCWlmIChmd3NwZWMtPnBhcmFtWzBdKQ0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+
+ICsNCj4gPiArCWlmIChmd3NwZWMtPnBhcmFtWzFdID49IGNkLT5ucl9pcnFzKQ0KPiANCj4gVGhp
+cyBjb25kaXRpb24gaXMgYm9ndXMsIGFzIGl0IGRvZXNuJ3QgdGFrZSBpbnRvIGFjY291bnQgdGhl
+IG5yX2lycXMNCj4gcGFyYW1ldGVyLg0KPiANCg0KDQpUaGUgaHdpcnEgbnVtYmVyIG5lZWQgdG8g
+YmUgaW4gdGhlIGlycSBtYXAgcmFuZ2UuIChwcm9wZXJ0eTogbXN0YXIsaXJxcy1tYXAtcmFuZ2Up
+DQpJZiBpdCdzIG5vdCwgaXQgbXVzdCBiZSBpbmNvcnJlY3QgY29uZmlndXJhdGlvbi4NClNvIGhv
+dyBhYm91dCB1c2UgdGhlIGNvbmRpdGlvbiBhcyBmb2xsb3dpbmc/DQoNCmlmIChod2lycSA+PSBj
+ZC0+bnJfaXJxcykNCglyZXR1cm4gLUVJTlZBTDsNCg0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0K
+PiA+ICsNCj4gPiArCWh3aXJxID0gZndzcGVjLT5wYXJhbVsxXTsNCj4gPiArCWZvciAoaSA9IDA7
+IGkgPCBucl9pcnFzOyBpKyspDQo+ID4gKwkJaXJxX2RvbWFpbl9zZXRfaHdpcnFfYW5kX2NoaXAo
+ZG9tYWluLCB2aXJxICsgaSwgaHdpcnEgKyBpLA0KPiA+ICsJCQkJCSAgICAgICZtc3RfaW50Y19j
+aGlwLA0KPiA+ICsJCQkJCSAgICAgIGRvbWFpbi0+aG9zdF9kYXRhKTsNCj4gPiArDQo+ID4gKwlw
+YXJlbnRfZndzcGVjID0gKmZ3c3BlYzsNCj4gPiArCXBhcmVudF9md3NwZWMuZndub2RlID0gZG9t
+YWluLT5wYXJlbnQtPmZ3bm9kZTsNCj4gPiArCXBhcmVudF9md3NwZWMucGFyYW1bMV0gPSBjZC0+
+aXJxX3N0YXJ0ICsgaHdpcnE7DQo+ID4gKwlyZXR1cm4gaXJxX2RvbWFpbl9hbGxvY19pcnFzX3Bh
+cmVudChkb21haW4sIHZpcnEsIG5yX2lycXMsIA0KPiA+ICZwYXJlbnRfZndzcGVjKTsNCj4gPiAr
+fQ0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBpcnFfZG9tYWluX29wcyBtc3RfaW50
+Y19kb21haW5fb3BzID0gew0KPiA+ICsJLnRyYW5zbGF0ZQk9IG1zdF9pbnRjX2RvbWFpbl90cmFu
+c2xhdGUsDQo+ID4gKwkuYWxsb2MJCT0gbXN0X2ludGNfZG9tYWluX2FsbG9jLA0KPiA+ICsJLmZy
+ZWUJCT0gaXJxX2RvbWFpbl9mcmVlX2lycXNfY29tbW9uLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAr
+aW50IF9faW5pdA0KPiA+ICttc3RfaW50Y19vZl9pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZG4s
+IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaXJxX2Rv
+bWFpbiAqZG9tYWluLCAqZG9tYWluX3BhcmVudDsNCj4gPiArCXN0cnVjdCBtc3RfaW50Y19jaGlw
+X2RhdGEgKmNkOw0KPiA+ICsJdW5zaWduZWQgaW50IGlycV9zdGFydCwgaXJxX2VuZDsNCj4gDQo+
+IHVuc2lnbmVkIGludCAhPSB1MzIuDQo+IA0KPiA+ICsNCj4gPiArCWRvbWFpbl9wYXJlbnQgPSBp
+cnFfZmluZF9ob3N0KHBhcmVudCk7DQo+ID4gKwlpZiAoIWRvbWFpbl9wYXJlbnQpIHsNCj4gPiAr
+CQlwcl9lcnIoIm1zdC1pbnRjOiBpbnRlcnJ1cHQtcGFyZW50IG5vdCBmb3VuZFxuIik7DQo+ID4g
+KwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKG9mX3Byb3BlcnR5
+X3JlYWRfdTMyX2luZGV4KGRuLCAibXN0YXIsaXJxcy1tYXAtcmFuZ2UiLCAwLCANCj4gPiAmaXJx
+X3N0YXJ0KSB8fA0KPiA+ICsJICAgIG9mX3Byb3BlcnR5X3JlYWRfdTMyX2luZGV4KGRuLCAibXN0
+YXIsaXJxcy1tYXAtcmFuZ2UiLCAxLCANCj4gPiAmaXJxX2VuZCkpDQo+ID4gKwkJcmV0dXJuIC1F
+SU5WQUw7DQo+ID4gKw0KPiA+ICsJY2QgPSBremFsbG9jKHNpemVvZigqY2QpLCBHRlBfS0VSTkVM
+KTsNCj4gPiArCWlmICghY2QpDQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJ
+Y2QtPmJhc2UgPSBvZl9pb21hcChkbiwgMCk7DQo+ID4gKwlpZiAoIWNkLT5iYXNlKSB7DQo+ID4g
+KwkJa2ZyZWUoY2QpOw0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsJfQ0KPiA+ICsNCj4g
+PiArCWNkLT5ub19lb2kgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2woZG4sICJtc3RhcixpbnRjLW5v
+LWVvaSIpOw0KPiA+ICsJcmF3X3NwaW5fbG9ja19pbml0KCZjZC0+bG9jayk7DQo+ID4gKwljZC0+
+aXJxX3N0YXJ0ID0gaXJxX3N0YXJ0Ow0KPiA+ICsJY2QtPm5yX2lycXMgPSBpcnFfZW5kIC0gaXJx
+X3N0YXJ0ICsgMTsNCj4gPiArCWRvbWFpbiA9IGlycV9kb21haW5fYWRkX2hpZXJhcmNoeShkb21h
+aW5fcGFyZW50LCAwLCBjZC0+bnJfaXJxcywgZG4sDQo+ID4gKwkJCQkJICAmbXN0X2ludGNfZG9t
+YWluX29wcywgY2QpOw0KPiA+ICsJaWYgKCFkb21haW4pIHsNCj4gPiArCQlpb3VubWFwKGNkLT5i
+YXNlKTsNCj4gPiArCQlrZnJlZShjZCk7DQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKwl9
+DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK0lSUUNISVBfREVD
+TEFSRShtc3RfaW50YywgIm1zdGFyLG1zdC1pbnRjIiwgbXN0X2ludGNfb2ZfaW5pdCk7DQo+IA==
 
-Thank you for the patch.
-
-On Tue, Aug 18, 2020 at 02:17:55PM +0200, Jacopo Mondi wrote:
-> Convert the imx214 bindings document to json-schema and update
-> the MAINTAINERS file accordingly.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../bindings/media/i2c/sony,imx214.txt        |  53 --------
->  .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 125 insertions(+), 54 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> deleted file mode 100644
-> index f11f28a5fda4..000000000000
-> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> +++ /dev/null
-> @@ -1,53 +0,0 @@
-> -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> -
-> -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-> -an active array size of 4224H x 3200V. It is programmable through an I2C
-> -interface.
-> -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-> -throughput of 1.2Gbps/lane.
-> -
-> -
-> -Required Properties:
-> -- compatible: Shall be "sony,imx214".
-> -- reg: I2C bus address of the device. Depending on how the sensor is wired,
-> -       it shall be <0x10> or <0x1a>;
-> -- enable-gpios: GPIO descriptor for the enable pin.
-> -- vdddo-supply: Chip digital IO regulator (1.8V).
-> -- vdda-supply: Chip analog regulator (2.7V).
-> -- vddd-supply: Chip digital core regulator (1.12V).
-> -- clocks: Reference to the xclk clock.
-> -- clock-frequency: Frequency of the xclk clock.
-> -
-> -Optional Properties:
-> -- flash-leds: See ../video-interfaces.txt
-> -- lens-focus: See ../video-interfaces.txt
-> -
-> -The imx214 device node shall contain one 'port' child node with
-> -an 'endpoint' subnode. For further reading on port node refer to
-> -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> -
-> -Required Properties on endpoint:
-> -- data-lanes: check ../video-interfaces.txt
-> -- link-frequencies: check ../video-interfaces.txt
-> -- remote-endpoint: check ../video-interfaces.txt
-> -
-> -Example:
-> -
-> -	camera-sensor@1a {
-> -		compatible = "sony,imx214";
-> -		reg = <0x1a>;
-> -		vdddo-supply = <&pm8994_lvs1>;
-> -		vddd-supply = <&camera_vddd_1v12>;
-> -		vdda-supply = <&pm8994_l17>;
-> -		lens-focus = <&ad5820>;
-> -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
-> -		clock-frequency = <24000000>;
-> -		port {
-> -			imx214_ep: endpoint {
-> -				data-lanes = <1 2 3 4>;
-> -				link-frequencies = /bits/ 64 <480000000>;
-> -				remote-endpoint = <&csiphy0_ep>;
-> -			};
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> new file mode 100644
-> index 000000000000..ddd4627214b1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> @@ -0,0 +1,124 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-
-s/Mp/MP/
-
-> +
-> +maintainers:
-> +  - Ricardo Ribalda <ribalda@kernel.org>
-> +
-> +description: -|
-> +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-
-s/imx214/IMX214/
-
-> +  an active array size of 4224H x 3200V. It is programmable through an I2C
-> +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
-
-s/  Image/ Image/
-
-> +  maximum throughput of 1.2Gbps/lane.
-> +
-> +properties:
-> +  compatible:
-> +    const: sony,imx214
-> +
-> +  reg:
-> +    description: -|
-> +      I2C device address. Depends on how the sensor is wired.
-
-I'd drop the description, it's fairly evident as it's an I2C device,
-isn't it ?
-
-> +    enum:
-> +      - 0x10
-> +      - 0x1a
-> +
-> +  clocks:
-> +    description: Reference to the xclk clock.
-> +    maxItems: 1
-> +
-> +  clock-frequency:
-> +    description: Frequency of the xclk clock in Hz.
-> +
-> +  enable-gpios:
-> +    description: GPIO descriptor for the enable pin.
-> +    maxItems: 1
-> +
-> +  vdddo-supply:
-> +    description: Chip digital IO regulator (1.8V).
-> +    maxItems: 1
-> +
-> +  vdda-supply:
-> +    description: Chip analog regulator (2.7V).
-> +    maxItems: 1
-> +
-> +  vddd-supply:
-> +    description: Chip digital core regulator (1.12V).
-> +    maxItems: 1
-> +
-> +  flash-leds:
-> +    description: See ../video-interfaces.txt
-> +
-> +  lens-focus:
-> +    description: See ../video-interfaces.txt
-> +
-> +  port:
-> +    type: object
-> +    description: |
-> +      The device node must contain one 'port' child node for its digital output
-> +      video port, in accordance with the video interface bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-I'd drop this, the port node is already described as required below.
-
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        properties:
-> +          remote-endpoint:
-> +            description: See ../video-interfaces.txt
-> +
-> +          data-lanes:
-> +            description: See ../video-interfaces.txt
-
-Shouldn't this also express that only 2 or 4 data lanes are allowed ?
-
-            $ref: /schemas/types.yaml#/definitions/uint32-array
-            description: See ../video-interfaces.txt
-            anyOf:
-              - items:
-                  - const: 1
-                  - const: 2
-              - items:
-                  - const: 1
-                  - const: 2
-                  - const: 3
-                  - const: 4
-
-Maybe someone more experienced with YAML schemas could propose a better
-way to express this ? I initially tried to express it with enum instead
-of anyOf but couldn't get it to work.
-
-> +
-> +          link-frequencies:
-
-            $ref: /schemas/types.yaml#/definitions/uint64-array
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +            description: See ../video-interfaces.txt
-> +
-> +        required:
-> +          - data-lanes
-> +          - link-frequencies
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-frequency
-> +  - enable-gpios
-> +  - vdddo-supply
-> +  - vdda-supply
-> +  - vddd-supply
-> +  - port
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        camera-sensor@1a {
-> +            compatible = "sony,imx214";
-> +            reg = <0x1a>;
-> +            vdddo-supply = <&pm8994_lvs1>;
-> +            vddd-supply = <&camera_vddd_1v12>;
-> +            vdda-supply = <&pm8994_l17>;
-> +            lens-focus = <&ad5820>;
-> +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> +            clocks = <&camera_clk>;
-> +            clock-frequency = <24000000>;
-> +
-> +            port {
-> +                imx214_ep: endpoint {
-> +                    data-lanes = <1 2 3 4>;
-> +                    link-frequencies = /bits/ 64 <480000000>;
-> +                    remote-endpoint = <&csiphy0_ep>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6c8e98238a7b..d1a6173d3b64 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15918,7 +15918,7 @@ M:	Ricardo Ribalda <ribalda@kernel.org>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
->  T:	git git://linuxtv.org/media_tree.git
-> -F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
->  F:	drivers/media/i2c/imx214.c
-> 
->  SONY IMX219 SENSOR DRIVER
-
--- 
-Regards,
-
-Laurent Pinchart
