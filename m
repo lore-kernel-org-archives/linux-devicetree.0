@@ -2,53 +2,57 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1CBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C845C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2856206B5
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7102072D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgHSKNV (ORCPT
+        id S1727843AbgHSKW7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:13:21 -0400
-Received: from mail.v3.sk ([167.172.186.51]:51742 "EHLO shell.v3.sk"
+        Wed, 19 Aug 2020 06:22:59 -0400
+Received: from mail.v3.sk ([167.172.186.51]:51988 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727813AbgHSKMX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:12:23 -0400
+        id S1727840AbgHSKWy (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:22:54 -0400
 Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 75DD5DFA44;
-        Wed, 19 Aug 2020 10:11:24 +0000 (UTC)
+        by zimbra.v3.sk (Postfix) with ESMTP id C0E06DFA74;
+        Wed, 19 Aug 2020 10:21:57 +0000 (UTC)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id HHJNB9nMykzM; Wed, 19 Aug 2020 10:11:23 +0000 (UTC)
+        with ESMTP id RHCgBtIg0UIt; Wed, 19 Aug 2020 10:21:56 +0000 (UTC)
 Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 32538DEE69;
-        Wed, 19 Aug 2020 10:11:23 +0000 (UTC)
+        by zimbra.v3.sk (Postfix) with ESMTP id 1FE04DEE69;
+        Wed, 19 Aug 2020 10:21:56 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id vACbqImGK-dy; Wed, 19 Aug 2020 10:11:23 +0000 (UTC)
+        with ESMTP id W-4M_VkZglvD; Wed, 19 Aug 2020 10:21:55 +0000 (UTC)
 Received: from localhost (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id EA9A8DFA71;
-        Wed, 19 Aug 2020 10:11:22 +0000 (UTC)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id B66A8DFA71;
+        Wed, 19 Aug 2020 10:21:55 +0000 (UTC)
 From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
         Rob Herring <robh+dt@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 1/2] dt-bindings: display: simple: add Innolux LS075AT011
-Date:   Wed, 19 Aug 2020 12:12:05 +0200
-Message-Id: <20200819101206.633253-2-lkundrak@v3.sk>
+Subject: [PATCH v4 1/2] dt-bindings: display: himax,hx8837: Add Himax HX8837 bindings
+Date:   Wed, 19 Aug 2020 12:22:45 +0200
+Message-Id: <20200819102246.634039-2-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200819101206.633253-1-lkundrak@v3.sk>
-References: <20200819101206.633253-1-lkundrak@v3.sk>
+In-Reply-To: <20200819102246.634039-1-lkundrak@v3.sk>
+References: <[PATCH v4 0/2] drm/bridge: hx8837: add a Himax HX8837 display controller driver>
+ <20200819102246.634039-1-lkundrak@v3.sk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
@@ -56,29 +60,135 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the Innolux LS075AT011 7.5" (1200x900) color/reflective LCD panel to
-the panel-simple compatible list. This panel is used in the OLPC laptops.
+Himax HX8837 is a secondary display controller used to drive the panel
+on OLPC platforms.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple=
-.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 6deeeed59e59f..cad63a639e258 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -153,6 +153,8 @@ properties:
-       - innolux,g121i1-l01
-         # Innolux Corporation 12.1" G121X1-L03 XGA (1024x768) TFT LCD pa=
-nel
-       - innolux,g121x1-l03
-+        # Innolux LS075AT011 7.5" (1200x900) color/reflective LCD panel
-+      - innolux,ls075at011
-         # Innolux Corporation 11.6" WXGA (1366x768) TFT LCD panel
-       - innolux,n116bge
-         # InnoLux 15.6" WXGA TFT LCD panel
+---
+Changes since v3:
+- Moved to bindings/display/
+- Added the ports
+- Converted to YAML
+- Removed Pavel's Ack, because the changes are substantial
+
+Changes since v2:
+- s/betweend/between/
+
+Changes since v1:
+- s/load-gpio/load-gpios/
+- Use interrupt bindings instead of gpio for the IRQ
+
+ .../bindings/display/bridge/himax,hx8837.yaml | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/hima=
+x,hx8837.yaml
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/himax,hx883=
+7.yaml b/Documentation/devicetree/bindings/display/bridge/himax,hx8837.ya=
+ml
+new file mode 100644
+index 0000000000000..f5b0a00f5089d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/himax,hx8837.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2018,2019,2020 Lubomir Rintel <lkundrak@v3.sk>
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/himax,hx8837.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: HX8837 Display Controller Device Tree Bindings
++
++maintainers:
++  - Lubomir Rintel <lkundrak@v3.sk>
++
++properties:
++  compatible:
++    const: himax,hx8837
++
++  reg:
++    const: 0xd
++
++  load-gpios:
++    maxItems: 1
++    description: GPIO specifier of DCON_LOAD pin (active high)
++
++  stat-gpios:
++    minItems: 2
++    description: GPIO specifier of DCON_STAT0 and DCON_STAT1 pins (activ=
+e high)
++
++  interrupts:
++    maxItems: 1
++    description: Interrupt specifier of DCON_IRQ pin (edge falling)
++
++  ports:
++    type: object
++
++    properties:
++      port@0:
++        type: object
++        description: |
++          Video port for RGB input.
++
++      port@1:
++        type: object
++        description: |
++          Video port connected to the panel.
++
++    required:
++      - port@0
++      - port@1
++
++required:
++  - compatible
++  - reg
++  - load-gpios
++  - stat-gpios
++  - interrupts
++  - ports
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    i2c {
++        #address-cells =3D <1>;
++        #size-cells =3D <0>;
++       =20
++        lcd-controller@d {
++            compatible =3D "himax,hx8837";
++            reg =3D <0x0d>;
++            stat-gpios =3D <&gpio 100 GPIO_ACTIVE_HIGH>,
++                         <&gpio 101 GPIO_ACTIVE_HIGH>;
++            load-gpios =3D <&gpio 142 GPIO_ACTIVE_HIGH>;
++            interrupts =3D <&gpio 124 IRQ_TYPE_EDGE_FALLING>;
++   =20
++            ports {
++                #address-cells =3D <0x01>;
++                #size-cells =3D <0x00>;
++   =20
++                port@0 {
++                    reg =3D <0x00>;
++                    dcon_rgb_in: endpoint {
++                        remote-endpoint =3D <&lcd0_rgb_out>;
++                    };
++                };
++   =20
++                port@1 {
++                    reg =3D <0x01>;
++                    dcon_gettl_out: endpoint {
++                        remote-endpoint =3D <&panel_dettl_in>;
++                    };
++                };
++            };
++        };
++    };
 --=20
 2.26.2
 
