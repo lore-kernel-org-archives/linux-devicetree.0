@@ -2,283 +2,186 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769BBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 23:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F05C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 23:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49B7320758
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 23:08:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597878498;
-	bh=TamesVB3o/7LnyKOkXVvu5ag5T4PB78FenoS/UKflGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UOhGjo3aqc+67Bt4lAH4T5rlrYiSCaiUPU/jXzSYG7bt+nCejFTchk+qXxicYtkaY
-	 1pJwrbRYAsTyrrptlW8YwgPTbg1Ho5CSkCZ+72AqnXxXol/6PlvUE+ySe4bWa6BRjs
-	 7LXwbg/V3AuxmKfzyaGoSjXrmSMSb8s+SWoQkVm4=
+	by mail.kernel.org (Postfix) with ESMTP id 845AF208DB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 23:54:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vdorst.com header.i=@vdorst.com header.b="qGHOkhBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHSXIR (ORCPT
+        id S1726466AbgHSXyl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 19:08:17 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38374 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgHSXIQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 19:08:16 -0400
-Received: by mail-io1-f67.google.com with SMTP id h4so460546ioe.5;
-        Wed, 19 Aug 2020 16:08:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=J7r31POBJZLOOSBo+VJqxmSXzBjO/S5a91uG76wjJXI=;
-        b=d8kMlO0Awbx7yEWg3V5ZdbAb35Uf39Ezvqpi01mckCBvxuSaP4+KrtY2nfMedgYOjV
-         /jqPiJBgR9OAlDAkUfamNfbTMGDxIC38YPFqUBRUto2/Hyw0b/Pix4rEnGGX8cw1t+yd
-         WyUytTGysWSWHd/nhhM02c6+pXZ9hnNply5BQU/CQzq1m8v9daigxAXnheA9AYSQ5IcN
-         BmDtOMpUDkC5i5X1dq1/EPdnsQmtR2SNd30iacHf2TEU7YDJv7xnyla3KYngWz8dQThf
-         LoPbHKTF0CGek5noj/k+k26ZxRQpR7jaRPFgjha5STQ1Q2l2MAgVjiCrchiW8v9ciBJP
-         +3eQ==
-X-Gm-Message-State: AOAM531aYxrV2FoKHjgWatGur94F9+qWDlLcS0IUy889PosZZMk17ezU
-        mvBxS9xr2DuUN+wO5EC9AA==
-X-Google-Smtp-Source: ABdhPJzP6h5gjphI4TKmQiRlxUAke22Z1f2nyv/geon2P6h3Io9eyc2eKwRr2dmdZLEzF06epJIntQ==
-X-Received: by 2002:a05:6602:cb:: with SMTP id z11mr232792ioe.96.1597878494446;
-        Wed, 19 Aug 2020 16:08:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id p18sm215562iog.1.2020.08.19.16.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 16:08:13 -0700 (PDT)
-Received: (nullmailer pid 2136853 invoked by uid 1000);
-        Wed, 19 Aug 2020 23:08:12 -0000
-Date:   Wed, 19 Aug 2020 17:08:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Josh Cartwright <joshc@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
-Message-ID: <20200819230812.GB2090217@bogus>
-References: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
+        Wed, 19 Aug 2020 19:54:41 -0400
+Received: from mx.0dd.nl ([5.2.79.48]:54730 "EHLO mx.0dd.nl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgHSXyk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 19:54:40 -0400
+X-Greylist: delayed 504 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 19:54:38 EDT
+Received: from mail.vdorst.com (mail.vdorst.com [IPv6:fd00::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mx.0dd.nl (Postfix) with ESMTPS id 622575FB19;
+        Thu, 20 Aug 2020 01:46:13 +0200 (CEST)
+Authentication-Results: mx.0dd.nl;
+        dkim=pass (2048-bit key; secure) header.d=vdorst.com header.i=@vdorst.com header.b="qGHOkhBi";
+        dkim-atps=neutral
+Received: from www (unknown [192.168.2.222])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.vdorst.com (Postfix) with ESMTPSA id 1AE02687EC9;
+        Thu, 20 Aug 2020 01:46:13 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.vdorst.com 1AE02687EC9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vdorst.com;
+        s=default; t=1597880773;
+        bh=yV6u6+GKP89ZhLaPI4Lclma8HJH4chY3sZJwJgORk04=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qGHOkhBi2BTnqCwqZeHEocVi0xr7Hlg1vEMcqqjBkt7QaRBDN87wOOJsh+wstepJc
+         BLBrC0D257eGFvdyNvkLXFw7tnEgF9TlxcWZNKHcWzxamHDQkgWmFMvNev3biAagL+
+         obPPQiN1S161exlA+7gLw44fgJ1tA3e1wannKNZUl+omiK78VI73vMbmpdKL2JCf8M
+         jEg9PcmXnsGis7G4+BRnCdGye6An3tITSzJohT4BePTEVfdsqqsu5769Kx/vFCx4xM
+         KUMF64MUQNhaVummXc5au5TALXk37O4RdLEY22WLMnjDgzkX7ww7Je19UbkJ2njkTf
+         dYy2Z1eIRviMQ==
+Received: from pc-rene.lan.vdorst.com (pc-rene.lan.vdorst.com
+ [192.168.2.14]) by www.vdorst.com (Horde Framework) with HTTPS; Wed, 19 Aug
+ 2020 23:46:13 +0000
+Date:   Wed, 19 Aug 2020 23:46:13 +0000
+Message-ID: <20200819234613.Horde.oQiJhMCnUINwnQP-5_MyHh-@www.vdorst.com>
+From:   =?utf-8?b?UmVuw6k=?= van Dorst <opensource@vdorst.com>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, f.fainelli@gmail.com,
+        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        davem@davemloft.net, Sean Wang <Sean.Wang@mediatek.com>,
+        frank-w@public-files.de, dqfext@gmail.com
+Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
+ MT7531 switch
+References: <cover.1597729692.git.landen.chao@mediatek.com>
+ <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
+ <20200818160901.GF2330298@lunn.ch> <1597830248.31846.78.camel@mtksdccf07>
+In-Reply-To: <1597830248.31846.78.camel@mtksdccf07>
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:20:06PM +0200, Mauro Carvalho Chehab wrote:
-> Convert the SPMI bus documentation to JSON/yaml.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
-> 
-> Rob,
-> 
-> As promissed, this patch converts the spmi.txt generic bus bindings to
-> html.
+Quoting Landen Chao <landen.chao@mediatek.com>:
 
-Thanks!
+> On Wed, 2020-08-19 at 00:09 +0800, Andrew Lunn wrote:
+>> On Tue, Aug 18, 2020 at 03:14:10PM +0800, Landen Chao wrote:
+>> > Add new support for MT7531:
+>> >
+>> > MT7531 is the next generation of MT7530. It is also a 7-ports switch with
+>> > 5 giga embedded phys, 2 cpu ports, and the same MAC logic of MT7530. Cpu
+>> > port 6 only supports SGMII interface. Cpu port 5 supports either RGMII
+>> > or SGMII in different HW sku. Due to SGMII interface support, pll, and
+>> > pad setting are different from MT7530. This patch adds different initial
+>> > setting, and SGMII phylink handlers of MT7531.
+>> >
+>> > MT7531 SGMII interface can be configured in following mode:
+>> > - 'SGMII AN mode' with in-band negotiation capability
+>> >     which is compatible with PHY_INTERFACE_MODE_SGMII.
+>> > - 'SGMII force mode' without in-bnad negotiation
+>>
+>> band
+> Sorry, I'll fix it.
+>>
+>> >     which is compatible with 10B/8B encoding of
+>> >     PHY_INTERFACE_MODE_1000BASEX with fixed full-duplex and fixed pause.
+>> > - 2.5 times faster clocked 'SGMII force mode' without in-bnad negotiation
+>>
+>> band
+> Sorry, I'll fix it.
+>>
+>> > +static int mt7531_rgmii_setup(struct mt7530_priv *priv, u32 port,
+>> > +			      phy_interface_t interface)
+>> > +{
+>> > +	u32 val;
+>> > +
+>> > +	if (!mt7531_is_rgmii_port(priv, port)) {
+>> > +		dev_err(priv->dev, "RGMII mode is not available for port %d\n",
+>> > +			port);
+>> > +		return -EINVAL;
+>> > +	}
+>> > +
+>> > +	val = mt7530_read(priv, MT7531_CLKGEN_CTRL);
+>> > +	val |= GP_CLK_EN;
+>> > +	val &= ~GP_MODE_MASK;
+>> > +	val |= GP_MODE(MT7531_GP_MODE_RGMII);
+>> > +	val &= ~(TXCLK_NO_REVERSE | RXCLK_NO_DELAY);
+>> > +	switch (interface) {
+>> > +	case PHY_INTERFACE_MODE_RGMII:
+>> > +		val |= TXCLK_NO_REVERSE;
+>> > +		val |= RXCLK_NO_DELAY;
+>> > +		break;
+>> > +	case PHY_INTERFACE_MODE_RGMII_RXID:
+>> > +		val |= TXCLK_NO_REVERSE;
+>> > +		break;
+>> > +	case PHY_INTERFACE_MODE_RGMII_TXID:
+>> > +		val |= RXCLK_NO_DELAY;
+>> > +		break;
+>> > +	case PHY_INTERFACE_MODE_RGMII_ID:
+>> > +		break;
+>> > +	default:
+>> > +		return -EINVAL;
+>> > +	}
+>>
+>> You need to be careful here. If the MAC is doing the RGMII delays, you
+>> need to ensure the PHY is not. What interface mode is passed to the
+>> PHY?
+> Hi Andrew,
+>
+> mt7531 RGMII port is a MAC-only port, it can be connected to CPU MAC or
+> external phy. In bpi-r64 board, mt7531 RGMII is connected to CPU MAC, so
+> I tend to implement RGMII logic for use case of bpi-r64.
+>
+> In general, according to phy.rst, RGMII delay should be done by phy, but
+> some MoCA product need RGMII delay in MAC. These two requirements
+> conflict. Is there any suggestion to solve the conflict?
+>
+> If mt7531 RGMII implementation needs to satisfy either phy.rst or
+> special MoCA product, I would like to satisfy phy.rst and remove MAC
+> RGMII delay in v3. For special product needs MAC RGMII delay, this patch
+> can be used in its local codebase.
 
-> 
->  .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
->  .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
->  .../devicetree/bindings/spmi/spmi.txt         | 41 ------------
->  .../devicetree/bindings/spmi/spmi.yaml        | 62 +++++++++++++++++++
->  4 files changed, 65 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
->  create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> index fffc8fde3302..79367a43b27d 100644
-> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> @@ -37,7 +37,7 @@ Required properties:
->                     or generalized "qcom,spmi-pmic".
->  - reg:             Specifies the SPMI USID slave address for this device.
->                     For more information see:
-> -                   Documentation/devicetree/bindings/spmi/spmi.txt
-> +                   Documentation/devicetree/bindings/spmi/spmi.yaml
->  
->  Required properties for peripheral child nodes:
->  - compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
-> diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> index e16b9b5afc70..ca645e21fe47 100644
-> --- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> +++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> @@ -7,8 +7,8 @@ devices to control a single SPMI master.
->  The PMIC Arbiter can also act as an interrupt controller, providing interrupts
->  to slave devices.
->  
-> -See spmi.txt for the generic SPMI controller binding requirements for child
-> -nodes.
-> +See Documentation/devicetree/bindings/spmi/spmi.yaml for the generic SPMI
-> +controller binding requirements for child nodes.
->  
->  See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
->  generic interrupt controller binding documentation.
-> diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
-> deleted file mode 100644
-> index 4bb10d161a27..000000000000
-> --- a/Documentation/devicetree/bindings/spmi/spmi.txt
-> +++ /dev/null
-> @@ -1,41 +0,0 @@
-> -System Power Management Interface (SPMI) Controller
-> -
-> -This document defines a generic set of bindings for use by SPMI controllers.  A
-> -controller is modelled in device tree as a node with zero or more child nodes,
-> -each representing a unique slave on the bus.
-> -
-> -Required properties:
-> -- #address-cells : must be set to 2
-> -- #size-cells : must be set to 0
-> -
-> -Child nodes:
-> -
-> -An SPMI controller node can contain zero or more child nodes representing slave
-> -devices on the bus.  Child 'reg' properties are specified as an address, type
-> -pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
-> -SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
-> -These are the identifiers "statically assigned by the system integrator", as
-> -per the SPMI spec.
-> -
-> -Each child node must have one and only one 'reg' entry of type SPMI_USID.
-> -
-> -#include <dt-bindings/spmi/spmi.h>
-> -
-> -	spmi@.. {
-> -		compatible = "...";
-> -		reg = <...>;
-> -
-> -		#address-cells = <2>;
-> -		#size-cells = <0>;
-> -
-> -		child@0 {
-> -			compatible = "...";
-> -			reg = <0 SPMI_USID>;
-> -		};
-> -
-> -		child@7 {
-> -			compatible = "...";
-> -			reg = <7 SPMI_USID
-> -			       3 SPMI_GSID>;
-> -		};
-> -	};
-> diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
-> new file mode 100644
-> index 000000000000..8d72796b9bec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
-> @@ -0,0 +1,62 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spmi/spmi.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: System Power Management Interface (SPMI) Controller
-> +
-> +maintainers:
-> +  - Josh Cartwright <joshc@codeaurora.org>
-> +
-> +description: |
-> +  The System Power Management (SPMI) controller is a 2-wire bus defined
-> +  by the MIPI Alliance for power management control to be used on SoC designs.
-> +
-> +  SPMI controllers are modelled in device tree using a generic set of
-> +  bindings defined here, plus any bus controller specific properties, if
-> +  needed.
-> +
-> +  Each SPMI controller has zero or more child nodes (up to 16 ones), each
-> +  one representing an unique slave at the bus.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "spmi@[0-9a-f]+"
+Hi Landen,
 
-Just "spmi@.*" as we shouldn't assume unit-address details of the parent 
-bus.
+With the current mainline code [1], the dsa code tries to detect how the MAC5
+is used. All the three modes are supported. MAC5 -> PHY0, MAC5 ->  
+PHY4, MAC5 ->
+EXTERNAL PHY and MAC5 to external MAC.
 
-> +
-> +  compatible:
-> +    description: filled by the SPMI bus controller
-> +
-> +  reg:
-> +    maxItems: 1
+When MAC5 is a DSA port it skips settings the delay settings. See [2].
 
-No need for 'reg' and 'compatible' here. Those will be covered by 
-specific SPMI controller schemas. But you do need:
+Maybe you can use a similar concept.
 
-"#address-cells":
-  const: 2
+Greats,
 
-"#size-cells":
-  const: 0
+René
 
-> +
-> +patternProperties:
-> +  "@([0-9]|1[0-5])$":
 
-While buses define their own unit-address format, unit addresses are 
-normally hex.
+[1]  
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/mt7530.c#n1303
+[2]  
+https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/tree/drivers/net/dsa/mt7530.c#n598
 
-> +    description: up to 16 child PMIC nodes
+>
+> Landen
+>>
+>> 	Andrew
 
-       type: object
 
-Need to also define 'reg' constraints as defined by the bus:
 
-properties:
-  reg:
-    minItems: 1
-    maxItems: 2  #??? Not sure about this. Is it 1 SPMI_USID and 1 \
-SPMI_GSID entry at most?
-    items:
-      items:
-        - minimum: 0
-          maximum: 0xf
-        - enum: [ 0, 1 ]
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/spmi/spmi.h>
-> +
-> +    spmi@.. {
-> +      compatible = "...";
-> +      reg = <...>;
-
-Example has to build now. Just drop these 2 properties.
-
-> +
-> +      #address-cells = <2>;
-> +      #size-cells = <0>;
-> +
-> +      child@0 {
-> +        compatible = "...";
-> +        reg = <0 SPMI_USID>;
-> +      };
-> +
-> +      child@7 {
-> +        compatible = "...";
-> +        reg = <7 SPMI_USID
-> +               3 SPMI_GSID>;
-> +      };
-> +    };
-> -- 
-> 2.26.2
-> 
-> 
