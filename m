@@ -2,109 +2,71 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBF8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE11C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 08:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4AB207BB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUfV5Yv2"
+	by mail.kernel.org (Postfix) with ESMTP id 217B12067C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 08:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHSHya (ORCPT
+        id S1726640AbgHSIIu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:54:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgHSHy3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 03:54:29 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C06C061389;
-        Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id i10so5458426pgk.1;
-        Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QwAFEdEDDKqsIqgg3REMrn8uyD1d4b02qEp5VMYwHFc=;
-        b=YUfV5Yv2LLHOkYYtkzy81GZYkI754KspfwgvN8IHMM/uLtIrAFaqgi207aSOIRwAkL
-         UX9rSUoMVKZ/K+kv4DE4JrZWd+gLvJFcWnP4VMlRxU8feWyWOOfEF1DhroSkt7ooZdvU
-         DJzaTeJVvVn4dOscNdc/W/2m8WKJWSxfBDNSr6BUlcujKN+ix8ycxeTiCuV5rhejzkbc
-         /HgsIUcoKnJqkUTjDofjwqdwm7uRFrOYI1laVE4zaVMO/kAQ11OPJo9wSdSkECLr5wgF
-         G6VwgMIfoLQ/q20kPpEeSR0yQksqL3mQTlQ/MEUP1zswhMtJ/57zeq6xo4AOt/Xvv7Nm
-         JJzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QwAFEdEDDKqsIqgg3REMrn8uyD1d4b02qEp5VMYwHFc=;
-        b=ufZVrdWFRNXRdJgMT4Kj96bvSLLGpoBzp38VfOKgl1ecOgahLW/lLb0oDQqGa+v/2s
-         supn+mDuo4vcuElg28nfucZ3EEmX0JSxC3RYro6ibx6bxsERrvuiOq+IFkKrRi2rm9sy
-         v9eWdNJ78Vui0yHhyB8yE1o+VkuoTT0OdnF9pFP50dYoKJIZ1T77BxWSu4omgcb4bzU9
-         jiEyxFTod0zZDb6NO9G8oUmO+Oyxb4CDQkE9G/BC6xqOPRXD71X02Qj4PxLg3fFRFjX/
-         +H3GaIfxDZ7W/g4fbrBz0xNXSoDO+g9U6lgcAoMXvmb3ME+8Q+Id7IGaT2i45RwWEeiS
-         lMPw==
-X-Gm-Message-State: AOAM533+Q7AWGOQbVUXIfwtqw6GIMOyf5cBbCT/rC/LxQ16Vmnb4LpWt
-        Nl8cC8kfvprs5qJoY3PnMji22VM6WErKesI9vOxKjUJZagfvmw==
-X-Google-Smtp-Source: ABdhPJwACp1MR02sLehcTpPFfUhepYG7xdneExOXR2U4CUUcjuPq4pETeCnX+rbhFL6Wk9T8p7vqOqjoS/Kt4hMDTbg=
-X-Received: by 2002:a62:758f:: with SMTP id q137mr17847033pfc.170.1597823668158;
- Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
- <20200818083852.GC1891694@smile.fi.intel.com> <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
-In-Reply-To: <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Aug 2020 10:54:11 +0300
-Message-ID: <CAHp75VfDq7bRe6YQdUQyv=8jK737-QwpxZjGZ2HxCJ7iaQPwMg@mail.gmail.com>
-Subject: Re: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com, rtanwar@maxlinear.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Aug 2020 04:08:50 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:59599 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726211AbgHSIIr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:08:47 -0400
+X-IronPort-AV: E=Sophos;i="5.76,330,1592838000"; 
+   d="scan'208";a="54954361"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 19 Aug 2020 17:08:45 +0900
+Received: from localhost.localdomain (unknown [172.29.53.200])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id A860841E772C;
+        Wed, 19 Aug 2020 17:08:43 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Biju Das <biju.das@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH] arm64: dts: renesas: r8a774e1-hihope-rzg2h: Enable HS400 mode
+Date:   Wed, 19 Aug 2020 09:08:41 +0100
+Message-Id: <20200819080841.3475-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 7:18 AM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
->
->
-> Hi Andy,
->
-> On 18/8/2020 4:38 pm, Andy Shevchenko wrote:
-> > On Tue, Aug 18, 2020 at 01:48:59PM +0800, Rahul Tanwar wrote:
-> >> Patch 1 adds dt binding document in YAML format.
-> >> Patch 2 add PWM fan controller driver for LGM SoC.
-> >>
-> >> v7:
-> >> - Address code quality related review concerns.
-> >> - Rename fan related property to pwm-*.
-> >> - Fix one make dt_binding_check reported error.
-> > I guess it misses the answer why pwm-fan can't be integrated into the soup?
-> >
->
-> Can you please elaborate more? I could not understand your point clearly.
+From: Biju Das <biju.das@bp.renesas.com>
 
-It's not mine, it's Uwe's. There is an hwmon module called pwm-fan. As
-far as *I* understand this, it can be utilized to control fans via PWM
-APIs. And Uwe asked you if you considered that and why you don't
-integrated  (coupled) it here.
+This patch enables HS400 mode on HiHope RZ/G2H board.
 
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
+index 12f9242e263b..9525d5ed6fce 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774e1-hihope-rzg2h.dts
+@@ -35,3 +35,7 @@
+ 	clock-names = "du.0", "du.1", "du.3",
+ 		      "dclkin.0", "dclkin.1", "dclkin.3";
+ };
++
++&sdhi3 {
++	mmc-hs400-1_8v;
++};
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
