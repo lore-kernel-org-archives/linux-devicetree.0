@@ -4,134 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6249BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B152C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F4720738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4271020738
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgHSMkI (ORCPT
+        id S1728521AbgHSMpP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
+        Wed, 19 Aug 2020 08:45:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727926AbgHSMkH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 08:40:07 -0400
+        with ESMTP id S1728516AbgHSMoy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 08:44:54 -0400
 Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6945FC061757
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 05:40:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0E1C061383
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 05:44:53 -0700 (PDT)
 Received: from ramsan ([84.195.186.194])
         by michel.telenet-ops.be with bizsmtp
-        id HQg52300i4C55Sk06Qg5Wn; Wed, 19 Aug 2020 14:40:06 +0200
+        id HQks230014C55Sk06QksPS; Wed, 19 Aug 2020 14:44:52 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1k8NNt-0002M7-Md; Wed, 19 Aug 2020 14:40:05 +0200
+        id 1k8NSV-0002NE-US; Wed, 19 Aug 2020 14:44:51 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1k8NNt-00058v-L8; Wed, 19 Aug 2020 14:40:05 +0200
+        id 1k8NSV-0005FI-SE; Wed, 19 Aug 2020 14:44:51 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
+To:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
-Cc:     linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+Cc:     linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: mtd: spi-nor: Sort list of support chip names
-Date:   Wed, 19 Aug 2020 14:40:04 +0200
-Message-Id: <20200819124004.19728-1-geert+renesas@glider.be>
+Subject: [PATCH v2] dt-bindings: thermal: rcar-thermal: Improve schema validation
+Date:   Wed, 19 Aug 2020 14:44:50 +0200
+Message-Id: <20200819124450.20123-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Sort the list of supported chip names, using "sort -V", to take into
-account both names and numbers.
-
-This makes it easier to read and maintain the list.
+  - Document missing "#thermal-sensor-cells",
+  - Factor out common required properties,
+  - "interrupts", "clocks", and "power-domains" are required on R-Mobile
+    APE6, too,
+  - Invert logic to simplify descriptions,
+  - Add "additionalProperties: false".
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/mtd/jedec,spi-nor.txt | 34 +++++++++----------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+v2:
+  - Add Reviewed-by.
+---
+ .../bindings/thermal/rcar-thermal.yaml        | 53 ++++++++++++-------
+ 1 file changed, 34 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-index f03be904d3c228d8..654d4a2d2ba26630 100644
---- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-+++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-@@ -13,12 +13,18 @@ Required properties:
-                  at25df321a
-                  at25df641
-                  at26df081a
--                 mr25h128
--                 mr25h256
-+                 m25p16
-+                 m25p32
-+                 m25p40
-+                 m25p64
-+                 m25p80
-+                 m25p128
-                  mr25h10
-                  mr25h40
--                 mx25l4005a
-+                 mr25h128
-+                 mr25h256
-                  mx25l1606e
-+                 mx25l4005a
-                  mx25l6405d
-                  mx25l12805d
-                  mx25l25635e
-@@ -26,38 +32,32 @@ Required properties:
-                  n25q128a11
-                  n25q128a13
-                  n25q512a
-+                 s25fl008k
-+                 s25fl064k
-                  s25fl256s1
-                  s25fl512s
-                  s25sl12801
--                 s25fl008k
--                 s25fl064k
-                  sst25vf040b
--                 m25p40
--                 m25p80
--                 m25p16
--                 m25p32
--                 m25p64
--                 m25p128
--                 w25x80
--                 w25x32
-                  w25q32
--                 w25q64
-                  w25q32dw
-+                 w25q64
-                  w25q80bl
-                  w25q128
-                  w25q256
-+                 w25x32
-+                 w25x80
+diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+index 0994693d240f9ff4..88787b98992fe7c9 100644
+--- a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
+@@ -59,25 +59,40 @@ properties:
+   resets:
+     maxItems: 1
  
-                The following chip names have been used historically to
-                designate quirky versions of flash chips that do not support the
-                JEDEC READ ID opcode (0x9F):
-                  m25p05-nonjedec
-                  m25p10-nonjedec
--                 m25p20-nonjedec
--                 m25p40-nonjedec
--                 m25p80-nonjedec
-                  m25p16-nonjedec
-+                 m25p20-nonjedec
-                  m25p32-nonjedec
-+                 m25p40-nonjedec
-                  m25p64-nonjedec
-+                 m25p80-nonjedec
-                  m25p128-nonjedec
+-if:
+-  properties:
+-    compatible:
+-      contains:
+-        enum:
+-          - renesas,thermal-r8a73a4 # R-Mobile APE6
+-          - renesas,thermal-r8a7779 # R-Car H1
+-then:
+-  required:
+-    - compatible
+-    - reg
+-else:
+-  required:
+-    - compatible
+-    - reg
+-    - interrupts
+-    - clocks
+-    - power-domains
+-    - resets
++  '#thermal-sensor-cells':
++    const: 0
++
++required:
++  - compatible
++  - reg
++
++allOf:
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              enum:
++                - renesas,thermal-r8a73a4 # R-Mobile APE6
++                - renesas,thermal-r8a7779 # R-Car H1
++    then:
++      required:
++        - resets
++        - '#thermal-sensor-cells'
++
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              const: renesas,thermal-r8a7779 # R-Car H1
++    then:
++      required:
++        - interrupts
++        - clocks
++        - power-domains
++
++additionalProperties: false
  
- - reg : Chip-Select number
+ examples:
+   # Example (non interrupt support)
 -- 
 2.17.1
 
