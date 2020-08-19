@@ -2,105 +2,233 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2DCC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 14:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99120C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 15:20:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03FC320866
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 14:56:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="CuUdyapr"
+	by mail.kernel.org (Postfix) with ESMTP id 7154020897
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 15:20:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597850420;
+	bh=+CZjqAP9BwS+oTcWjIBCOd8FUJx3ft6iDVH+DtcWMB4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=DmmC9yVfY/it7UfVu0gufBmd7R2vDZUu6nl0K+91cuCgOguM//nvhWi5TJBqrOiwI
+	 Ak/yoq5tX/ga+8oOxsLfbdZFq/RD2YmsG6K0DjqhOm3qxL2k/Hj+uUuSnDj1K8Fr5v
+	 xzUwgGCJeg4fn6LzgHk8+EixAkAnx0nZyt8d2Sv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728480AbgHSO4L (ORCPT
+        id S1728677AbgHSPUP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:56:11 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:45416 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727827AbgHSO4K (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 10:56:10 -0400
-X-UUID: 9bbb8ce1d5a84066a4409b007606cfb1-20200819
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=AoeUUvCjkrCNhYfqve8JEcUAO7P8LbXeCUbXyAWumY0=;
-        b=CuUdyaprq4NzPSfPJNniWUlBoger3pChNskh8ssVrfZkkrpRIie3itK8Yk71o2YN2bvd3Htc5bWN4pkwZzpnj/sMbfMKGkfI5rd1ivuaPFfKXem+oJnEacT4gBBt2rzkacpfKEk9MZx6pL+9dtwJE8vPx0yeCm9KU05fqTUkf5M=;
-X-UUID: 9bbb8ce1d5a84066a4409b007606cfb1-20200819
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 909703223; Wed, 19 Aug 2020 22:56:06 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 22:56:05 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 22:56:02 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>, Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-CC:     <alix.wu@mediatek.com>, <daniel@0x0f.com>,
-        <devicetree@vger.kernel.org>, <jason@lakedaemon.net>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <yj.chiang@mediatek.com>
-Subject: Re: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-Date:   Wed, 19 Aug 2020 22:55:26 +0800
-Message-ID: <20200819145525.26315-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <f593f5e395c8558657a3f265b7038ec3@kernel.org>
-References: <f593f5e395c8558657a3f265b7038ec3@kernel.org>
+        Wed, 19 Aug 2020 11:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728481AbgHSPUK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:20:10 -0400
+Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D544E207FF;
+        Wed, 19 Aug 2020 15:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597850410;
+        bh=+CZjqAP9BwS+oTcWjIBCOd8FUJx3ft6iDVH+DtcWMB4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=djUeEd0jYaP/1UoT2NFZF8s/WQ4NPOTacoHKkkpD4kZ9FgvDB9EjDoeG7NyVfe2mZ
+         /ZGkTWx/FIMDIMYavM8CTiyzJ3C23ott1fbGAo50wvQGwsBhIAwct8aM5bVYK6edEZ
+         kIjkD2z8dZ3LpLvDpMdHtSDhsaFQbc6O+JP5nGt4=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1k8Psl-00F4N9-H5; Wed, 19 Aug 2020 17:20:07 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Josh Cartwright <joshc@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
+Date:   Wed, 19 Aug 2020 17:20:06 +0200
+Message-Id: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPk9uIDIwMjAtMDgtMTkgMTQ6
-MzEsIE1hcmstUEsgVHNhaSB3cm90ZToNCj4+IEZyb206IE1hcmMgWnluZ2llciA8bWF6QGtlcm5l
-bC5vcmc+DQo+PiANCj4+PiA+ICsNCj4+PiA+ICtzdGF0aWMgaW50IG1zdF9pbnRjX2RvbWFpbl9h
-bGxvYyhzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluLCB1bnNpZ25lZA0KPj4+ID4gaW50IHZpcnEs
-DQo+Pj4gPiArCQkJCSB1bnNpZ25lZCBpbnQgbnJfaXJxcywgdm9pZCAqZGF0YSkNCj4+PiA+ICt7
-DQo+Pj4gPiArCWludCBpOw0KPj4+ID4gKwlpcnFfaHdfbnVtYmVyX3QgaHdpcnE7DQo+Pj4gPiAr
-CXN0cnVjdCBpcnFfZndzcGVjIHBhcmVudF9md3NwZWMsICpmd3NwZWMgPSBkYXRhOw0KPj4+ID4g
-KwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhICpjZCA9IChzdHJ1Y3QgbXN0X2ludGNfY2hpcF9k
-YXRhDQo+Pj4gPiAqKWRvbWFpbi0+aG9zdF9kYXRhOw0KPj4+IA0KPj4+IE5vIGNhc3QgbmVjZXNz
-YXJ5IGhlcmUuDQo+Pj4gDQo+Pj4gPiArDQo+Pj4gPiArCS8qIE5vdCBHSUMgY29tcGxpYW50ICov
-DQo+Pj4gPiArCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMpDQo+Pj4gPiArCQlyZXR1cm4g
-LUVJTlZBTDsNCj4+PiA+ICsNCj4+PiA+ICsJLyogTm8gUFBJIHNob3VsZCBwb2ludCB0byB0aGlz
-IGRvbWFpbiAqLw0KPj4+ID4gKwlpZiAoZndzcGVjLT5wYXJhbVswXSkNCj4+PiA+ICsJCXJldHVy
-biAtRUlOVkFMOw0KPj4+ID4gKw0KPj4+ID4gKwlpZiAoZndzcGVjLT5wYXJhbVsxXSA+PSBjZC0+
-bnJfaXJxcykNCj4+PiANCj4+PiBUaGlzIGNvbmRpdGlvbiBpcyBib2d1cywgYXMgaXQgZG9lc24n
-dCB0YWtlIGludG8gYWNjb3VudCB0aGUgbnJfaXJxcw0KPj4+IHBhcmFtZXRlci4NCj4+PiANCj4+
-IA0KPj4gDQo+PiBUaGUgaHdpcnEgbnVtYmVyIG5lZWQgdG8gYmUgaW4gdGhlIGlycSBtYXAgcmFu
-Z2UuIChwcm9wZXJ0eToNCj4+IG1zdGFyLGlycXMtbWFwLXJhbmdlKQ0KPj4gSWYgaXQncyBub3Qs
-IGl0IG11c3QgYmUgaW5jb3JyZWN0IGNvbmZpZ3VyYXRpb24uDQo+DQo+SSBhZ3JlZS4gQW5kIHNp
-bmNlIHlvdSBhcmUgY2hlY2tpbmcgd2hldGhlciB0aGUgY29uZmlndXJhdGlvbiBpcyANCj5jb3Jy
-ZWN0LA0KPml0J2QgYmV0dGVyIGJlIGNvbXBsZXRlbHkgY29ycmVjdC4NCj4NCj4+IFNvIGhvdyBh
-Ym91dCB1c2UgdGhlIGNvbmRpdGlvbiBhcyBmb2xsb3dpbmc/DQo+PiANCj4+IGlmIChod2lycSA+
-PSBjZC0+bnJfaXJxcykNCj4+IAlyZXR1cm4gLUVJTlZBTDsNCj4NCj5BZ2FpbiwgdGhpcyBzYXlz
-IG5vdGhpbmcgb2YgdGhlIHZhbGlkaXR5IG9mIChod2lycSArIG5yX2lycXMgLSAxKS4uLg0KPg0K
-DQpIb3cgYWJvdXQgbW92ZSB0aGlzIHRvIG1zdF9pbnRjX2RvbWFpbl90cmFuc2xhdGU/IFRoZW4g
-YWxsIHRoZSBpcnFfZndzcGVjDQpwb2ludCB0byBkb21haW4gbXN0X2ludGMgc2hvdWxkIGJlIHZh
-bGlkLg0KDQpUaGUgbXN0X2ludGNfZG9tYWluX3RyYW5zbGF0ZSB3aWxsIGJlIGFzIGZvbGxvd2lu
-ZzoNCg0Kc3RhdGljIGludCBtc3RfaW50Y19kb21haW5fdHJhbnNsYXRlKHN0cnVjdCBpcnFfZG9t
-YWluICpkLA0KCQkJCSAgICAgc3RydWN0IGlycV9md3NwZWMgKmZ3c3BlYywNCgkJCQkgICAgIHVu
-c2lnbmVkIGxvbmcgKmh3aXJxLA0KCQkJCSAgICAgdW5zaWduZWQgaW50ICp0eXBlKQ0Kew0KCXN0
-cnVjdCBtc3RfaW50Y19jaGlwX2RhdGEgKmNkID0gZC0+aG9zdF9kYXRhOw0KDQoJaWYgKGlzX29m
-X25vZGUoZndzcGVjLT5md25vZGUpKSB7DQoJCWlmIChmd3NwZWMtPnBhcmFtX2NvdW50ICE9IDMp
-DQoJCQlyZXR1cm4gLUVJTlZBTDsNCg0KCQkvKiBObyBQUEkgc2hvdWxkIHBvaW50IHRvIHRoaXMg
-ZG9tYWluICovDQoJCWlmIChmd3NwZWMtPnBhcmFtWzBdICE9IDApDQoJCQlyZXR1cm4gLUVJTlZB
-TDsNCg0KCQlpZiAoZndzcGVjLT5wYXJhbVsxXSA+PSBjZC0+bnJfaXJxcykNCgkJCXJldHVybiAt
-RUlOVkFMOw0KDQoJCSpod2lycSA9IGZ3c3BlYy0+cGFyYW1bMV07DQoJCSp0eXBlID0gZndzcGVj
-LT5wYXJhbVsyXSAmIElSUV9UWVBFX1NFTlNFX01BU0s7DQoJCXJldHVybiAwOw0KCX0NCg0KCXJl
-dHVybiAtRUlOVkFMOw0KfQ0KDQoNCj4+IA0KPj4+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+Pj4g
-PiArDQo+Pj4gPiArCWh3aXJxID0gZndzcGVjLT5wYXJhbVsxXTsNCj4+PiA+ICsJZm9yIChpID0g
-MDsgaSA8IG5yX2lycXM7IGkrKykNCj4+PiA+ICsJCWlycV9kb21haW5fc2V0X2h3aXJxX2FuZF9j
-aGlwKGRvbWFpbiwgdmlycSArIGksIGh3aXJxICsgaSwNCj4+PiA+ICsJCQkJCSAgICAgICZtc3Rf
-aW50Y19jaGlwLA0KPj4+ID4gKwkJCQkJICAgICAgZG9tYWluLT5ob3N0X2RhdGEpOw==
+Convert the SPMI bus documentation to JSON/yaml.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+
+Rob,
+
+As promissed, this patch converts the spmi.txt generic bus bindings to
+html.
+
+ .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
+ .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
+ .../devicetree/bindings/spmi/spmi.txt         | 41 ------------
+ .../devicetree/bindings/spmi/spmi.yaml        | 62 +++++++++++++++++++
+ 4 files changed, 65 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
+ create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+index fffc8fde3302..79367a43b27d 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+@@ -37,7 +37,7 @@ Required properties:
+                    or generalized "qcom,spmi-pmic".
+ - reg:             Specifies the SPMI USID slave address for this device.
+                    For more information see:
+-                   Documentation/devicetree/bindings/spmi/spmi.txt
++                   Documentation/devicetree/bindings/spmi/spmi.yaml
+ 
+ Required properties for peripheral child nodes:
+ - compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
+diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+index e16b9b5afc70..ca645e21fe47 100644
+--- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+@@ -7,8 +7,8 @@ devices to control a single SPMI master.
+ The PMIC Arbiter can also act as an interrupt controller, providing interrupts
+ to slave devices.
+ 
+-See spmi.txt for the generic SPMI controller binding requirements for child
+-nodes.
++See Documentation/devicetree/bindings/spmi/spmi.yaml for the generic SPMI
++controller binding requirements for child nodes.
+ 
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+ generic interrupt controller binding documentation.
+diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
+deleted file mode 100644
+index 4bb10d161a27..000000000000
+--- a/Documentation/devicetree/bindings/spmi/spmi.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-System Power Management Interface (SPMI) Controller
+-
+-This document defines a generic set of bindings for use by SPMI controllers.  A
+-controller is modelled in device tree as a node with zero or more child nodes,
+-each representing a unique slave on the bus.
+-
+-Required properties:
+-- #address-cells : must be set to 2
+-- #size-cells : must be set to 0
+-
+-Child nodes:
+-
+-An SPMI controller node can contain zero or more child nodes representing slave
+-devices on the bus.  Child 'reg' properties are specified as an address, type
+-pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
+-SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
+-These are the identifiers "statically assigned by the system integrator", as
+-per the SPMI spec.
+-
+-Each child node must have one and only one 'reg' entry of type SPMI_USID.
+-
+-#include <dt-bindings/spmi/spmi.h>
+-
+-	spmi@.. {
+-		compatible = "...";
+-		reg = <...>;
+-
+-		#address-cells = <2>;
+-		#size-cells = <0>;
+-
+-		child@0 {
+-			compatible = "...";
+-			reg = <0 SPMI_USID>;
+-		};
+-
+-		child@7 {
+-			compatible = "...";
+-			reg = <7 SPMI_USID
+-			       3 SPMI_GSID>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
+new file mode 100644
+index 000000000000..8d72796b9bec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spmi/spmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: System Power Management Interface (SPMI) Controller
++
++maintainers:
++  - Josh Cartwright <joshc@codeaurora.org>
++
++description: |
++  The System Power Management (SPMI) controller is a 2-wire bus defined
++  by the MIPI Alliance for power management control to be used on SoC designs.
++
++  SPMI controllers are modelled in device tree using a generic set of
++  bindings defined here, plus any bus controller specific properties, if
++  needed.
++
++  Each SPMI controller has zero or more child nodes (up to 16 ones), each
++  one representing an unique slave at the bus.
++
++properties:
++  $nodename:
++    pattern: "spmi@[0-9a-f]+"
++
++  compatible:
++    description: filled by the SPMI bus controller
++
++  reg:
++    maxItems: 1
++
++patternProperties:
++  "@([0-9]|1[0-5])$":
++    description: up to 16 child PMIC nodes
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/spmi/spmi.h>
++
++    spmi@.. {
++      compatible = "...";
++      reg = <...>;
++
++      #address-cells = <2>;
++      #size-cells = <0>;
++
++      child@0 {
++        compatible = "...";
++        reg = <0 SPMI_USID>;
++      };
++
++      child@7 {
++        compatible = "...";
++        reg = <7 SPMI_USID
++               3 SPMI_GSID>;
++      };
++    };
+-- 
+2.26.2
+
 
