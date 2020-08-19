@@ -2,41 +2,42 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19119C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E47C433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BE420639
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4556520639
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="JYfK7JXk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="OLdYXz+8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgHSJRA (ORCPT
+        id S1726934AbgHSJRA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
         Wed, 19 Aug 2020 05:17:00 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:25067 "EHLO
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:8345 "EHLO
         mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgHSJQ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 05:16:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597828615;
+        with ESMTP id S1726702AbgHSJQ7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 05:16:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597828616;
         s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=KBxaiKTiUrR6hC8o8gRpoaXAi+p+Ke5nJCb3qamL0rk=;
-        b=JYfK7JXkW//QpLbOAxOEwfQb+u0hjwS/ecNIe6ZwLdfJxY8Xs4wB7eBATMt25n3Kg5
-        MTq+gpb4lMTanYJobgDIsw/EEQGwKYvVCFgOxMSG0CNjOfJ9q9QOayXr5X4sqwCd1pRw
-        ZINZjBSpUaKUKQ5mMQJhUoGQCpq1UYJN5K7XQYKRwg/XXWPW9dYU0bLAaE3KOA3NlXkN
-        7m0wPSwOWFWTjv0c4JY2gFbIvUMnAoDtxvdbNtq1OLOEYzwAqIi9Uz8yyx8wc/iCThXw
-        /fTgGTdpJe0TmcBB/C02bbcj6+nL6BxpxxhzcL2kp95gbCcV8LwObSzfMKTJGdBRxEeF
-        uELA==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=QF9pEdpob/aapYjgmPjRf6gK63aNdtYCv2gYZ1UtYsQ=;
+        b=OLdYXz+8DQJbUYYOo9Hc/vXacWtxDbM9fkWBlnnJD2ECHlKRbg5tM9jUVI5lvjmkf0
+        SshCHT+GdRRPmbocsXrISqfGrjYbjjaIp/N4CbSxqeLco3J0482E0xZfRoeRV5l0TqGs
+        KDSMufTfMeopInT+Jgl0S4MEggI6DXCS3ViZJi2XOI+J5C1+PWn5OLWUl/Uz1vGPXuXp
+        UydTltxWcMsBh4qPLFwvw3JOtb6fTkuD6EsxTM4XAlXrcZw52YRaA/GIDrs3DWrdNa1X
+        bm2znnX9gRCWG6MS40zYlZzDusPqOQZ4PRjF64+hEhYtsWjMoEXYV8O1r+XGIaB18A5j
+        sR1g==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB5m6NDwQo"
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7J9Gt0SQ
+        with ESMTPSA id g0b6c1w7J9Gt0ST
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
         Wed, 19 Aug 2020 11:16:55 +0200 (CEST)
@@ -49,10 +50,12 @@ Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 0/2] ASoC: qcom: common: Parse auxiliary devices from device tree
-Date:   Wed, 19 Aug 2020 11:15:31 +0200
-Message-Id: <20200819091533.2334-1-stephan@gerhold.net>
+Subject: [PATCH 1/2] ASoC: dt-bindings: qcom: Document "aux-devs" property
+Date:   Wed, 19 Aug 2020 11:15:32 +0200
+Message-Id: <20200819091533.2334-2-stephan@gerhold.net>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200819091533.2334-1-stephan@gerhold.net>
+References: <20200819091533.2334-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -65,22 +68,74 @@ not appear as part of the DAI links specified in the device tree.
 Examples for this are auxiliary devices such as analog amplifiers
 or codecs.
 
-The ASoC core provides a way to probe these components by adding
-them to snd_soc_card->aux_dev.
+To make them work they need to be added as part of "aux-devs"
+and connected to some other audio component using the audio routes
+configurable using "(qcom,)audio-routing".
 
-This patch set allows specifying them in the device tree through
-a new "aux-devs" property.
-
-Stephan Gerhold (2):
-  ASoC: dt-bindings: qcom: Document "aux-devs" property
-  ASoC: qcom: common: Parse auxiliary devices from device tree
-
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
  .../devicetree/bindings/sound/qcom,apq8016-sbc.txt        | 7 +++++++
  Documentation/devicetree/bindings/sound/qcom,apq8096.txt  | 8 ++++++++
  Documentation/devicetree/bindings/sound/qcom,sdm845.txt   | 8 ++++++++
- sound/soc/qcom/common.c                                   | 4 ++++
- 4 files changed, 27 insertions(+)
+ 3 files changed, 23 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt b/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+index 84b28dbe9f15..23998262a0a7 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+@@ -34,6 +34,13 @@ Required properties:
+ 			  * DMIC
+ 			  * Ext Spk
+ 
++Optional properties:
++
++- aux-devs		: A list of phandles for auxiliary devices (e.g. analog
++			  amplifiers) that do not appear directly within the DAI
++			  links. Should be connected to another audio component
++			  using "qcom,audio-routing".
++
+ Dai-link subnode properties and subnodes:
+ 
+ Required dai-link subnodes:
+diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+index c814e867850f..248df5056fec 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+@@ -55,6 +55,14 @@ This binding describes the APQ8096 sound card, which uses qdsp for audio.
+ 	Value type: <stringlist>
+ 	Definition: The user-visible name of this sound card.
+ 
++- aux-devs
++	Usage: optional
++	Value type: <phandles with arguments>
++	Definition: A list of phandles for auxiliary devices (e.g. analog
++		    amplifiers) that do not appear directly within the DAI
++		    links. Should be connected to another audio component
++		    using "audio-routing".
++
+ = dailinks
+ Each subnode of sndcard represents either a dailink, and subnodes of each
+ dailinks would be cpu/codec/platform dais.
+diff --git a/Documentation/devicetree/bindings/sound/qcom,sdm845.txt b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+index ca8c89e88bfa..3d5cbe953cf7 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+@@ -24,6 +24,14 @@ This binding describes the SDM845 sound card, which uses qdsp for audio.
+ 	Value type: <stringlist>
+ 	Definition: The user-visible name of this sound card.
+ 
++- aux-devs
++	Usage: optional
++	Value type: <phandles with arguments>
++	Definition: A list of phandles for auxiliary devices (e.g. analog
++		    amplifiers) that do not appear directly within the DAI
++		    links. Should be connected to another audio component
++		    using "audio-routing".
++
+ = dailinks
+ Each subnode of sndcard represents either a dailink, and subnodes of each
+ dailinks would be cpu/codec/platform dais.
 -- 
 2.28.0
 
