@@ -2,184 +2,241 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917ECC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41189C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71FFB20882
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB58204FD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:52:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WnncSTuU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgHSNuo (ORCPT
+        id S1728493AbgHSNw1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbgHSNn7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:43:59 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5556C061347
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 06:43:56 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by baptiste.telenet-ops.be with bizsmtp
-        id HRjl2300W4C55Sk01RjlZl; Wed, 19 Aug 2020 15:43:54 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8ONV-0003E9-Kd; Wed, 19 Aug 2020 15:43:45 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8ONV-0007Fl-Iz; Wed, 19 Aug 2020 15:43:45 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 7/7] arm64: dts: renesas: rzg2: Convert EtherAVB to explicit delay handling
-Date:   Wed, 19 Aug 2020 15:43:44 +0200
-Message-Id: <20200819134344.27813-8-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819134344.27813-1-geert+renesas@glider.be>
-References: <20200819134344.27813-1-geert+renesas@glider.be>
+        Wed, 19 Aug 2020 09:52:27 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58396 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728393AbgHSNwY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:52:24 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6AC6829E;
+        Wed, 19 Aug 2020 15:52:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597845141;
+        bh=w7VsKEZu0FsIH8x+aY7tucUSOSoA+yfIwMb6+M7XFP4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WnncSTuUlrD92QfpZIWMrRn4ngkwQj5Rtn257Usln05G1XVZuDyAD8eYpbBmxULNU
+         YqQuZvas/qEm5aCsNxZW0uGW0wSyp67VXk4pDK/gtxJs7MePy+BKJHmFVQJ+7Bxk0s
+         C41sQwivq4mKa0ts3XUgumC0JhTRWaAAFxpCjJso=
+Date:   Wed, 19 Aug 2020 16:52:04 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: media: ov772x: Convert to json-schema
+Message-ID: <20200819135204.GJ6049@pendragon.ideasonboard.com>
+References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
+ <20200818122012.37956-2-jacopo+renesas@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200818122012.37956-2-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some EtherAVB variants support internal clock delay configuration, which
-can add larger delays than the delays that are typically supported by
-the PHY (using an "rgmii-*id" PHY mode, and/or "[rt]xc-skew-ps"
-properties).
+Hi Jacopo,
 
-Historically, the EtherAVB driver configured these delays based on the
-"rgmii-*id" PHY mode.  This was wrong, as these are meant solely for the
-PHY, not for the MAC.  Hence properties were introduced for explicit
-configuration of these delays.
+Thank you for the patch.
 
-Convert the RZ/G2 DTS files from the old to the new scheme:
-  - Add default "rx-internal-delay-ps" and "tx-internal-delay-ps"
-    properties to the SoC .dtsi files, to be overridden by board files
-    where needed,
-  - Convert board files from "rgmii-*id" PHY modes to "rgmii", adding
-    the appropriate "rx-internal-delay-ps" and/or "tx-internal-delay-ps"
-    overrides.
+On Tue, Aug 18, 2020 at 02:20:10PM +0200, Jacopo Mondi wrote:
+> Convert the ov772x binding document to json-schema and update
+> the MAINTAINERS file accordingly.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov772x.txt  | 40 ---------
+>  .../devicetree/bindings/media/i2c/ov772x.yaml | 84 +++++++++++++++++++
 
-Notes:
-  - RZ/G2E does not support TX internal delay handling.
+Could yuo rename this to ovti,ov772x.yaml ?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This depends on "[PATCH v3 5/7] ravb: Add support for explicit internal
-clock delay configuration", and thus must not be applied before its
-dependency has hit upstream.
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 85 insertions(+), 41 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> deleted file mode 100644
+> index 0b3ede5b8e6a..000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> +++ /dev/null
+> @@ -1,40 +0,0 @@
+> -* Omnivision OV7720/OV7725 CMOS sensor
+> -
+> -The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
+> -such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
+> -support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
+> -
+> -Required Properties:
+> -- compatible: shall be one of
+> -	"ovti,ov7720"
+> -	"ovti,ov7725"
+> -- clocks: reference to the xclk input clock.
+> -
+> -Optional Properties:
+> -- reset-gpios: reference to the GPIO connected to the RSTB pin which is
+> -  active low, if any.
+> -- powerdown-gpios: reference to the GPIO connected to the PWDN pin which is
+> -  active high, if any.
+> -
+> -The device node shall contain one 'port' child node with one child 'endpoint'
+> -subnode for its digital output video port, in accordance with the video
+> -interface bindings defined in Documentation/devicetree/bindings/media/
+> -video-interfaces.txt.
+> -
+> -Example:
+> -
+> -&i2c0 {
+> -	ov772x: camera@21 {
+> -		compatible = "ovti,ov7725";
+> -		reg = <0x21>;
+> -		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
+> -		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
+> -		clocks = <&xclk>;
+> -
+> -		port {
+> -			ov772x_0: endpoint {
+> -				remote-endpoint = <&vcap1_in0>;
+> -			};
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> new file mode 100644
+> index 000000000000..2b84fefeb4aa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> @@ -0,0 +1,84 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/ov772x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title:  Omnivision OV7720/OV7725 CMOS sensor
+> +
+> +maintainers:
+> +  - Jacopo Mondi <jacopo@jmondi.org>
+> +
+> +description: -|
+> +  The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
+> +  such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
+> +  support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ovti,ov7720
+> +      - ovti,ov7725
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    description: -|
+> +      Reference to the GPIO connected to the RSTB pin which is active low.
+> +    maxItems: 1
+> +
+> +  powerdown-gpios:
+> +    description: -|
+> +      Reference to the GPIO connected to the PWDN pin which is active high.
+> +    maxItems: 1
+> +
+> +  port:
+> +    type: object
+> +    description: |
+> +      The device node must contain one 'port' child node for its digital output
+> +      video port, in accordance with the video interface bindings defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
 
-v3:
-  - Update new beacon-renesom-som.dtsi and r8a774e1.dtsi,
+You can simply write
 
-v2:
-  - Replace "renesas,[rt]xc-delay-ps" by "[rt]x-internal-delay-ps".
----
- arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi | 3 ++-
- arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi     | 2 +-
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi           | 2 ++
- arch/arm64/boot/dts/renesas/r8a774b1.dtsi           | 2 ++
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi           | 1 +
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi           | 2 ++
- 6 files changed, 10 insertions(+), 2 deletions(-)
+      Digital input video port. See ../video-interfaces.txt.
 
-diff --git a/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-index 97272f5fa0abf92e..8ac167aa18f04743 100644
---- a/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-+++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
-@@ -55,7 +55,8 @@
- 	pinctrl-0 = <&avb_pins>;
- 	pinctrl-names = "default";
- 	phy-handle = <&phy0>;
--	phy-mode = "rgmii-id";
-+	rx-internal-delay-ps = <1800>;
-+	tx-internal-delay-ps = <2000>;
- 	status = "okay";
- 
- 	phy0: ethernet-phy@0 {
-diff --git a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-index 178401a34cbf8d38..46f1ca0b7ef5e7c2 100644
---- a/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-+++ b/arch/arm64/boot/dts/renesas/hihope-rzg2-ex.dtsi
-@@ -19,7 +19,7 @@
- 	pinctrl-0 = <&avb_pins>;
- 	pinctrl-names = "default";
- 	phy-handle = <&phy0>;
--	phy-mode = "rgmii-txid";
-+	tx-internal-delay-ps = <2000>;
- 	status = "okay";
- 
- 	phy0: ethernet-phy@0 {
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index 8e80f50132ad55f5..ed99863f1dd09fd0 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -1115,6 +1115,8 @@
- 			power-domains = <&sysc R8A774A1_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
-+			tx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-index 49e5addcfd97af01..1c76de24d3ea4844 100644
---- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-@@ -989,6 +989,8 @@
- 			power-domains = <&sysc R8A774B1_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
-+			tx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index 42171190cce4602d..9fdca4c55ba95608 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -960,6 +960,7 @@
- 			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index 0f86cfd524258353..0975bcbc3c502535 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -1139,6 +1139,8 @@
- 			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			rx-internal-delay-ps = <0>;
-+			tx-internal-delay-ps = <0>;
- 			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +        properties:
+> +          remote-endpoint:
+> +            description: A phandle to the bus receiver's endpoint node.
+
+           required:
+	     - remote-endpoint
+
+           additionalProperties: false
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - reset-gpios
+> +  - powerdown-gpios
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        ov772x: camera@21 {
+> +            compatible = "ovti,ov7725";
+> +            reg = <0x21>;
+> +            reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
+> +            powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
+> +            clocks = <&xclk>;
+> +
+> +            port {
+> +                ov772x_0: endpoint {
+> +                    remote-endpoint = <&vcap1_in0>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d1a6173d3b64..d0a20214eaaf 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12666,7 +12666,7 @@ M:	Jacopo Mondi <jacopo@jmondi.org>
+>  L:	linux-media@vger.kernel.org
+>  S:	Odd fixes
+>  T:	git git://linuxtv.org/media_tree.git
+> -F:	Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+>  F:	drivers/media/i2c/ov772x.c
+>  F:	include/media/i2c/ov772x.h
+>  
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
