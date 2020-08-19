@@ -2,105 +2,125 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23169C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 22:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 780B1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 22:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE9B7207DE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 22:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5074B207DE
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 22:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597876236;
-	bh=107X92WlWILbgg3oOEW9J2/g9CbOmsCMKO5aA8rXW+Y=;
+	s=default; t=1597876535;
+	bh=4SyqOor5hsM6SNyfMpQkv5T0yyloegxdW5C4+Kx49DI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s8CKYe1cK69/J1hu9xycsa+xOykp8hnD0Cyn8gCXGt+WZ6JIMg1895W0n08ZEH4Cx
-	 iROzoQ0jjxzU0birgBUdYJSgLeZdOWG7oizKxaJYW4eIY+Eca5wvgtHODE/vLW8y4t
-	 A4nMQnuzBQO5ZvJd28rGO4jaVU52JhGAH7bStLZ4=
+	b=saRCZhuhgS3Z1cOaRtJs2NEQgT2V8r3bVkbYQnsdRogXEzdO470vANR3KN7+RMniS
+	 j6G8JtecuOCwcS6my4+BFy8IV/pcV41dvU/30pFr3Y2pROAiF+ZJqwYCtvoJHEDCaC
+	 8HVbSonKkaWIBtWIKaNmDY1g84meOTeYnoyzeZcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHSWag (ORCPT
+        id S1726603AbgHSWfe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:30:36 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39611 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgHSWaf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 18:30:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id z6so375913iow.6;
-        Wed, 19 Aug 2020 15:30:35 -0700 (PDT)
+        Wed, 19 Aug 2020 18:35:34 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:39656 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbgHSWfe (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 18:35:34 -0400
+Received: by mail-il1-f193.google.com with SMTP id f12so139219ils.6;
+        Wed, 19 Aug 2020 15:35:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TPAgoF6CS6LHb79mBEQMdU6QynqQNT4ADYnbP9+wi74=;
-        b=Iy3eq/WA8d3tP56uIU8z31H/+gJFoshRuzJlQVlwM8uC7l+yminCpJO5C1lxhPdqJr
-         HExhMNpxUSYz1AwLaICvNTZp8ixGXIVH6DEntjlHJnM9qgOUhW+yRTe7AK6xPEYo54YY
-         CwhIJwr/cjaZS4wIJs0K0Hz3JB5YOG1gKo5pFgHBSKScx0OWwJuBWAfrXFcDEk8/oumR
-         JaB1O8ryX0Q8L/TuSfv6P78a9J/1HS3XGLeMjM5Sl1Hb9iWDG24/z6D15E+Yc9/1IYwx
-         IcTf2o2SnahMKS8tyg4UeqY4C9+fnRJVpBQAOcAeZhN4Wn3V9z2FkzVWMfYr9RuLqTeh
-         RFVQ==
-X-Gm-Message-State: AOAM531qUo+t6ZuP5PJ3Judh1M/u0Q35r0iGZUaiSS7h5YIEpajSKrWf
-        PGNRrjZ9bZJx75dDHX/GPA==
-X-Google-Smtp-Source: ABdhPJzOVbOE3td6fQsaX3GtZOf+rgr1VvqINzVc5EPIlkHCXVE0LtV3YFDHep9Apf5exI1W+VesoQ==
-X-Received: by 2002:a02:8806:: with SMTP id r6mr533184jai.88.1597876234835;
-        Wed, 19 Aug 2020 15:30:34 -0700 (PDT)
+        bh=6B+QtEzPN1sVC0eGYcsuWTFOiOpQyG+uCCm3azOM3t0=;
+        b=NBZ2L1jPdT2j2SfI6uq36wWhtsvgJF6nBtC2Cmj3PLfZUClk9tTwUi8ki7d9xm6dgr
+         U5+M0z793xFBzXo+anbTcOY2XNnhTXAPhKEXZlqoPyX+vmQwMFM0caaPZFI6U8MBjx3N
+         Bp2KNSB8n+482+nu3IEx09nZNVCM5131pU/z7qDVIvIxksySWUhArRxdHKWtT3cuBmzh
+         63SLIdhYdTcyAa0WuqDEAPitEqGfgPR1m1GVGR1MOYY6EbsgLgc4ghqKmMCQvMHLg+k+
+         g8wEMRDdSZ79BpzOFzALx+8kY8qQH4121vCWZkMybzi4Oukf+X+rzBPG6Ih9NEspaHGt
+         r57A==
+X-Gm-Message-State: AOAM533NeWp01q6VTD3K22Uii6MrE/RfTw3kQ5gbSMzL+EZD+21rt3HA
+        pe7qnZ1NwsrZCCGaotOw+g==
+X-Google-Smtp-Source: ABdhPJzMa9dA5WjrTU+fcuAjVNSLdCDEUtDVRbc+XaDoRZEBT/nyroDUEHNUrHOkUeFtT1yxggcIuA==
+X-Received: by 2002:a92:b05:: with SMTP id b5mr228806ilf.14.1597876532950;
+        Wed, 19 Aug 2020 15:35:32 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id z26sm243083ilf.60.2020.08.19.15.30.32
+        by smtp.gmail.com with ESMTPSA id d1sm217816ila.67.2020.08.19.15.35.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 15:30:34 -0700 (PDT)
-Received: (nullmailer pid 2077672 invoked by uid 1000);
-        Wed, 19 Aug 2020 22:30:32 -0000
-Date:   Wed, 19 Aug 2020 16:30:31 -0600
+        Wed, 19 Aug 2020 15:35:32 -0700 (PDT)
+Received: (nullmailer pid 2085740 invoked by uid 1000);
+        Wed, 19 Aug 2020 22:35:30 -0000
+Date:   Wed, 19 Aug 2020 16:35:30 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>, kernel-team@android.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] of: address: Work around missing device_type property
- in pcie nodes
-Message-ID: <20200819223031.GA2077542@bogus>
-References: <20200819094255.474565-1-maz@kernel.org>
+To:     Reto Schneider <code@reto-schneider.ch>
+Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Michael Zimmermann <michael.zimmermann@grandcentrix.net>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kamel Bouhara <kamel.bouhara@bootlin.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, Stefan Roese <sr@denx.de>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Reto Schneider <reto.schneider@husqvarnagroup.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] ARM: at91: Add GARDENA smart Gateway (Art. 19000)
+ board
+Message-ID: <20200819223530.GA2083518@bogus>
+References: <20200810171921.8679-1-code@reto-schneider.ch>
+ <20200819112550.16494-1-code@reto-schneider.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819094255.474565-1-maz@kernel.org>
+In-Reply-To: <20200819112550.16494-1-code@reto-schneider.ch>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Aug 2020 10:42:55 +0100, Marc Zyngier wrote:
-> Recent changes to the DT PCI bus parsing made it mandatory for
-> device tree nodes describing a PCI controller to have the
-> 'device_type = "pci"' property for the node to be matched.
+On Wed, 19 Aug 2020 13:25:47 +0200, Reto Schneider wrote:
+> From: Reto Schneider <reto.schneider@husqvarnagroup.com>
 > 
-> Although this follows the letter of the specification, it
-> breaks existing device-trees that have been working fine
-> for years.  Rockchip rk3399-based systems are a prime example
-> of such collateral damage, and have stopped discovering their
-> PCI bus.
+> This patch adds support for the GARDENA smart Gateway, which is based on
+> the Atmel AT91SAM9G25. It is equipped with 128 MiB of DDR2 RAM and
+> 256 MiB NAND storage.
 > 
-> In order to paper over it, let's add a workaround to the code
-> matching the device type, and accept as PCI any node that is
-> named "pcie",
+> Please note that this gateway is not actually based on a AT91SAM9x5 EK
+> board, but is close enough to allow its DT to be used.
 > 
-> A warning will hopefully nudge the user into updating their
-> DT to a fixed version if they can, but the incentive is
-> obviously pretty small.
-> 
-> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Co-developed-by: Stefan Roese <sr@denx.de>
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Co-developed-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
+> Signed-off-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
+> Signed-off-by: Reto Schneider <reto.schneider@husqvarnagroup.com>
 > ---
->  drivers/of/address.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/arm/atmel-at91.yaml   |   2 +
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  .../dts/at91sam9g25-gardena-smart-gateway.dts | 157 ++++++++++++++++++
+>  3 files changed, 160 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
 > 
 
-Applied, thanks!
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/atmel-at91.yaml: properties:compatible:oneOf:2:items: [{'enum': ['overkiz,kizboxmini-base', 'overkiz,kizboxmini-mb', 'overkiz,kizboxmini-rd', 'overkiz,smartkiz', 'gardena,smart-gateway-at91sam"']}, {'const': 'atmel,at91sam9g25'}, {'const': 'atmel,at91sam9x5'}, {'const': 'atmel,at91sam9'}] is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/atmel-at91.yaml: properties:compatible:oneOf:2:items: [{'enum': ['overkiz,kizboxmini-base', 'overkiz,kizboxmini-mb', 'overkiz,kizboxmini-rd', 'overkiz,smartkiz', 'gardena,smart-gateway-at91sam"']}, {'const': 'atmel,at91sam9g25'}, {'const': 'atmel,at91sam9x5'}, {'const': 'atmel,at91sam9'}] is not of type 'object'
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/atmel-at91.yaml: properties:compatible:oneOf:2:items:0:enum:4: 'gardena,smart-gateway-at91sam"' does not match '^[a-zA-Z0-9,.\\-_ #+/]+$'
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/atmel-at91.yaml: ignoring, error in schema: properties: compatible: oneOf: 2: items
+warning: no schema found in file: ./Documentation/devicetree/bindings/arm/atmel-at91.yaml
+
+
+See https://patchwork.ozlabs.org/patch/1347723
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
