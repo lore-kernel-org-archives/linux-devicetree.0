@@ -2,131 +2,117 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C82C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11896C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7781B207DE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D58342083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:46:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YMy1Q/pc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbgHSUhh (ORCPT
+        id S1726707AbgHSUqz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:37:37 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:57012 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgHSUhg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:37:36 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B99D11A12E4;
-        Wed, 19 Aug 2020 22:37:34 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ABA4E1A04A8;
-        Wed, 19 Aug 2020 22:37:34 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 93DB320328;
-        Wed, 19 Aug 2020 22:37:34 +0200 (CEST)
-Date:   Wed, 19 Aug 2020 23:37:34 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Dong Aisheng <dongas86@gmail.com>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Subject: Re: [PATCH v2 16/17] arm64: dts: imx8mp: Add media_blk_ctrl node
-Message-ID: <20200819203734.zbndyvf534xey5xy@fsr-ub1664-175>
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
- <1597406966-13740-17-git-send-email-abel.vesa@nxp.com>
- <CAA+hA=S_wdoZvCPamW2F1Vs73t4fgnQa8LouUwzq2Vfpz3SDCg@mail.gmail.com>
+        Wed, 19 Aug 2020 16:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgHSUqy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 16:46:54 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93BAAC061757
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 13:46:54 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id b11so12796514lfe.10
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 13:46:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qi99Xq7OFQtrS3HvWRrLPLcLhnBb4j7+vDIzg/ZS78U=;
+        b=YMy1Q/pcnLqeeA4tcagxpLCBlFHveuLAHO/mv7p7YaiDnH5i01ZbfCeL3FFDRbbdDb
+         u2/F+vcssHM25YD3/byL5svh/FM6YW1ad7IHD8A9H0ZE/swjCcbNZ3QCN6qhFrw9FjGB
+         2kMCNQ/m7ygfUwNrNVnQ6sM8RsRNjvlPnSsA9p4RaUldiYDvXI0rM3Kj4vfm0qtSWaVk
+         PYQ8xmK4JwsJvbagsW4QiUNTkIlDizXPreLh4ep4JtsT24sARIsmkev0qxgI6OAUc7HJ
+         iVn6h5SJquF8Jf797Lfxz4bnBo5pHxD7N1G4fiXGOVFom2E+ahIPOKTIVZ7mK3q4hMPA
+         ga6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qi99Xq7OFQtrS3HvWRrLPLcLhnBb4j7+vDIzg/ZS78U=;
+        b=i7FGjeZITH1GfEHyGp8KpVMMX2agpQnsvsNE23gq+8yYTms1NXSz27Uv7C/AaGhy/1
+         87vspwhgc0BOCzT1PX6YwLsnJyDoLW2CtaIpP/Tfdx/ImfJi6zsi65nMvCd63WqePWAa
+         FhFmCQpYZrFkS3GUY6gk0A58T2Hi2J3ibleSR1jieE4yLDcFYBQUjrJgJj4OGS7kZW6n
+         FUiXcZwnYLgsCByipbhRD3R39QJGc+M/rLEi3aqw2wYC9J+QXauU1wYGgKqMHTi+PDW1
+         kkLk3BeAVmpXb7sJoVVVJAWCuEushgy0IQCJAHOrlhH2pADWzQ/sIGG0ayokLZjNylMb
+         atcg==
+X-Gm-Message-State: AOAM531BRBqu/aohJMRaOQyuCJKnu7xQk6B787KpsKG/6ipJ+KhVIak0
+        jy9778pav0+u0ruRi/Ss5zDWf+MV9zUhT1VsLiJn5g==
+X-Google-Smtp-Source: ABdhPJxYsaEQNSGTuSsMUNmBMUPNhsmvD7Dua6a20QK/pxww6zjEfIY87vu/7DoXyEUieTD58VtbtuACfuT4CzMc5z0=
+X-Received: by 2002:ac2:4c05:: with SMTP id t5mr13104401lfq.89.1597870012976;
+ Wed, 19 Aug 2020 13:46:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA+hA=S_wdoZvCPamW2F1Vs73t4fgnQa8LouUwzq2Vfpz3SDCg@mail.gmail.com>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20200812085850.2643820-1-linus.walleij@linaro.org> <CAL_JsqLR3HEsbuNq7i+N3ETYVoMtUP90_Ev=tO8GJr+fF4QHWQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqLR3HEsbuNq7i+N3ETYVoMtUP90_Ev=tO8GJr+fF4QHWQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 19 Aug 2020 22:46:41 +0200
+Message-ID: <CACRpkdYOym=0BOsTr=bh4Zax5euj9RcRzZ_keUL3Z1EN+UykWw@mail.gmail.com>
+Subject: Re: [PATCH 1/3 v2] dt-bindings: backlight: Add some common backlight properties
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-08-18 19:34:14, Dong Aisheng wrote:
-> On Fri, Aug 14, 2020 at 8:12 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+On Wed, Aug 12, 2020 at 5:46 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Aug 12, 2020 at 2:58 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 > >
-> > Some of the features of the media_ctrl will be used by some
-> > different drivers in a way those drivers will know best, so adding the
-> > syscon compatible we allow those to do just that. Only the resets
-> > and the clocks are registered bit the clk-blk-ctrl driver.
+> > Let's use a common.yaml include for the backlight like we do with
+> > the LEDs. The LEDs are inherently incompatible so their bindings
+> > cannot be reused for backlight.
 > >
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > Cc: devicetree@vger.kernel.org
+> > Suggested-by: Sam Ravnborg <sam@ravnborg.org>
+> > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > > ---
-> >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > index dede0ae..2d6d213 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
-> > @@ -736,6 +736,22 @@
-> >                         };
-> >                 };
-> >
-> > +               aips4: bus@32c00000 {
-> > +                       compatible = "simple-bus";
-> > +                       reg = <0x32c00000 0x400000>;
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +                       ranges;
+> > ChangeLog v1->v2:
+> > - New patch as suggested by Sam.
+> > ---
+> >  .../bindings/leds/backlight/common.yaml       | 42 +++++++++++++++++++
+> >  1 file changed, 42 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/backlight/common.yaml
+>
+> I'd expect some refactoring here with existing backlight schemas
+> including the ones I just added for 5.9.
+
+Yeah if it takes off I can certainly make a slew of refactorings,
+I would like to do that once this is applied.
+
+> > +  LED powered by a boost converter.
 > > +
-> > +                       media_blk_ctrl: clock-controller@32ec0000 {
-> 
-> For this combo device, maybe we can directly name it as blk-ctrl@32ec0000.
-> Rob, do you think if we can do that?
-> 
+> > +properties:
+> > +  default-on:
+> > +    description:
+> > +      The initial state of the backlight can be set to be on with this
+> > +      property. This is a state applied by the operating system so that the
+> > +      backlight is always turned on at boot.
+>
+> Needs a type.
 
-I think it was Stephen who suggested we change it to clock-controller in the
-last's version thread.
+Dropping this property because the subsystem maintainer
+doubts this is needed.
 
-TBH, I agree with you here, since it makes more sense to be called blk-ctrl
-provided that this is not really just a clock controller.
+Fixed the rest!
 
-> > +                               compatible = "fsl,imx8mp-media-blk-ctrl", "syscon";
-> > +                               reg = <0x32ec0000 0x10000>;
-> > +
-> 
-> Remove unnecessary blank line
-> 
-
-Will do.
-
-> Otherwise:
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
-> 
-> Regards
-> Aisheng
-> 
-> > +                               #clock-cells = <1>;
-> > +                               #reset-cells = <1>;
-> > +                       };
-> > +               };
-> > +
-> >                 aips5: bus@30c00000 {
-> >                         compatible = "fsl,aips-bus", "simple-bus";
-> >                         reg = <0x30c00000 0x400000>;
-> > --
-> > 2.7.4
-> >
+Yours,
+Linus Walleij
