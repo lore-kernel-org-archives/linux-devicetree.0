@@ -2,274 +2,184 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6354C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB77C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA26206DA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893C4206FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgHSL04 (ORCPT
+        id S1726987AbgHSLdT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgHSL0m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 07:26:42 -0400
-Received: from mxout012.mail.hostpoint.ch (mxout012.mail.hostpoint.ch [IPv6:2a00:d70:0:e::312])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F30C061757;
-        Wed, 19 Aug 2020 04:26:42 -0700 (PDT)
-Received: from [10.0.2.45] (helo=asmtp012.mail.hostpoint.ch)
-        by mxout012.mail.hostpoint.ch with esmtp (Exim 4.92.3 (FreeBSD))
-        (envelope-from <code@reto-schneider.ch>)
-        id 1k8MEa-000Pg6-IN; Wed, 19 Aug 2020 13:26:24 +0200
-Received: from [2a02:168:6182:1:2c96:ee1d:6a9a:1f33] (helo=ryzen2700.dss.husqvarnagroup.com)
-        by asmtp012.mail.hostpoint.ch with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3 (FreeBSD))
-        (envelope-from <code@reto-schneider.ch>)
-        id 1k8MEa-000HJu-FM; Wed, 19 Aug 2020 13:26:24 +0200
-X-Authenticated-Sender-Id: reto-schneider@reto-schneider.ch
-From:   Reto Schneider <code@reto-schneider.ch>
-To:     linux-arm-kernel@lists.infradead.org, alexandre.belloni@bootlin.com
-Cc:     Reto Schneider <reto.schneider@husqvarnagroup.com>,
-        Stefan Roese <sr@denx.de>,
-        Michael Zimmermann <michael.zimmermann@grandcentrix.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Kamel Bouhara <kamel.bouhara@bootlin.com>,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] ARM: at91: Add GARDENA smart Gateway (Art. 19000) board
-Date:   Wed, 19 Aug 2020 13:25:47 +0200
-Message-Id: <20200819112550.16494-1-code@reto-schneider.ch>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200810171921.8679-1-code@reto-schneider.ch>
-References: <20200810171921.8679-1-code@reto-schneider.ch>
+        Wed, 19 Aug 2020 07:33:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:33414 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgHSLdT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:33:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 270F11045;
+        Wed, 19 Aug 2020 04:33:18 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39FBA3F6CF;
+        Wed, 19 Aug 2020 04:33:15 -0700 (PDT)
+Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
+        Wei Xu <xuwei5@hisilicon.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Suzhuangluan <suzhuangluan@hisilicon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <cover.1597650455.git.mchehab+huawei@kernel.org>
+ <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
+ <20200818172909.71f5243a@coco.lan>
+ <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
+ <CALAqxLXBYvwZ9kiKSGBeO5f-eKi2DD14QtoZgFGyGd-B7EOPQA@mail.gmail.com>
+ <20200819122832.3cd5f834@coco.lan>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a2236994-7332-2321-20a8-3348343922f9@arm.com>
+Date:   Wed, 19 Aug 2020 12:33:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819122832.3cd5f834@coco.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Reto Schneider <reto.schneider@husqvarnagroup.com>
+On 2020-08-19 11:28, Mauro Carvalho Chehab wrote:
+> Em Tue, 18 Aug 2020 15:02:54 -0700
+> John Stultz <john.stultz@linaro.org> escreveu:
+> 
+>> On Tue, Aug 18, 2020 at 9:26 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>>> On 2020-08-18 16:29, Mauro Carvalho Chehab wrote:
+>>>> Em Tue, 18 Aug 2020 15:47:55 +0100
+>>>> Basically, the DT binding has this, for IOMMU:
+>>>>
+>>>>
+>>>>        smmu_lpae {
+>>>>                compatible = "hisilicon,smmu-lpae";
+>>>>        };
+>>>>
+>>>> ...
+>>>>        dpe: dpe@e8600000 {
+>>>>                compatible = "hisilicon,kirin970-dpe";
+>>>>                memory-region = <&drm_dma_reserved>;
+>>>> ...
+>>>>                iommu_info {
+>>>>                        start-addr = <0x8000>;
+>>>>                        size = <0xbfff8000>;
+>>>>                };
+>>>>        }
+>>>>
+>>>> This is used by kirin9xx_drm_dss.c in order to enable and use
+>>>> the iommu:
+>>>>
+>>>>
+>>>>        static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
+>>>>        {
+>>>>                struct device *dev = NULL;
+>>>>
+>>>>                dev = &pdev->dev;
+>>>>
+>>>>                /* create iommu domain */
+>>>>                ctx->mmu_domain = iommu_domain_alloc(dev->bus);
+>>>>                if (!ctx->mmu_domain) {
+>>>>                        pr_err("iommu_domain_alloc failed!\n");
+>>>>                        return -EINVAL;
+>>>>                }
+>>>>
+>>>>                iommu_attach_device(ctx->mmu_domain, dev);
+>>>>
+>>>>                return 0;
+>>>>        }
+>>>>
+>>>> The only place where the IOMMU domain is used is on this part of the
+>>>> code(error part simplified here) [1]:
+>>>>
+>>>>        void hisi_dss_smmu_on(struct dss_hw_ctx *ctx)
+>>>>        {
+>>>>                uint64_t fama_phy_pgd_base;
+>>>>                uint32_t phy_pgd_base;
+>>>> ...
+>>>>                fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
+>>>>                phy_pgd_base = (uint32_t)fama_phy_pgd_base;
+>>>>                if (WARN_ON(!phy_pgd_base))
+>>>>                        return;
+>>>>
+>>>>                set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
+>>>>        }
+>>>>
+>>>> [1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
+>>>>
+>>>> In other words, the driver needs to get the physical address of the frame
+>>>> buffer (mapped via iommu) in order to set some DRM-specific register.
+>>>>
+>>>> Yeah, the above code is somewhat hackish. I would love to replace
+>>>> this part by a more standard approach.
+>>>
+>>> OK, so from a quick look at that, my impression is that your display
+>>> controller has its own MMU and you don't need to pretend to use the
+>>> IOMMU API at all. Just have the DRM driver use io-pgtable directly to
+>>> run its own set of ARM_32_LPAE_S1 pagetables - see Panfrost for an
+>>> example (but try to ignore the wacky "Mali LPAE" format).
+>>
+>> Yea. For the HiKey960, there was originally a similar patch series but
+>> it was refactored out and the (still out of tree) DRM driver I'm
+>> carrying doesn't seem to need it (though looking we still have the
+>> iommu_info subnode in the dts that maybe needs to be cleaned up).
+> 
+> Funny... while the Hikey 970 DRM driver has such IOMMU code, it
+> doesn't actually use it!
+> 
+> The driver has a function called hisi_dss_smmu_config() with
+> sets the registers on a different way in order to use IOMMU
+> or not, at the hisi_fb_pan_display() function. It can also
+> use a mode called "afbcd".
+> 
+> Well, this function sets both to false:
+> 
+> 	bool afbcd = false;
+> 	bool mmu_enable = false;
+> 
+> I ended commenting out the code which depends at the iommu
+> driver and everything is working as before.
+> 
+> So, I'll just forget about this iommu driver, as we can live
+> without that.
+> 
+> For now, I'll keep the mmu code there commented out, as
+> it could be useful on a future port for it to use io-pgtable.
+> 
+> -
+> 
+> Robin,
+> 
+> Can the Panfrost driver use io-pgtable while the KMS driver
+> won't be using it? Or this would cause it to not work?
+> 
+> My end goal here is to be able to test the Panfrost driver ;-)
 
-This patch adds support for the GARDENA smart Gateway, which is based on
-the Atmel AT91SAM9G25. It is equipped with 128 MiB of DDR2 RAM and
-256 MiB NAND storage.
+Yup, the GPU has its own independent MMU, so Panfrost can import display 
+buffers regardless of whether they're physically contiguous or not. 
+Since Mesa master has recently landed AFBC support, there's probably 
+more immediate benefit in getting that AFBC decoder working before the 
+display MMU (although ultimately things are likely to work better under 
+memory pressure if you don't have to rely on CMA, so it should still be 
+worth coming back to at some point).
 
-Please note that this gateway is not actually based on a AT91SAM9x5 EK
-board, but is close enough to allow its DT to be used.
-
-Co-developed-by: Stefan Roese <sr@denx.de>
-Signed-off-by: Stefan Roese <sr@denx.de>
-Co-developed-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
-Signed-off-by: Michael Zimmermann <michael.zimmermann@grandcentrix.net>
-Signed-off-by: Reto Schneider <reto.schneider@husqvarnagroup.com>
----
- .../devicetree/bindings/arm/atmel-at91.yaml   |   2 +
- arch/arm/boot/dts/Makefile                    |   1 +
- .../dts/at91sam9g25-gardena-smart-gateway.dts | 157 ++++++++++++++++++
- 3 files changed, 160 insertions(+)
- create mode 100644 arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-index 31b0c54fa2cf..b8da32f5d0a7 100644
---- a/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-+++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-@@ -41,6 +41,8 @@ properties:
-               - overkiz,kizboxmini-mb   # Overkiz kizbox Mini Mother Board
-               - overkiz,kizboxmini-rd   # Overkiz kizbox Mini RailDIN
-               - overkiz,smartkiz        # Overkiz SmartKiz Board
-+              - gardena,smart-gateway-at91sam" # GARDENA smart Gateway (Article
-+                                               # No. 19000)
-           - const: atmel,at91sam9g25
-           - const: atmel,at91sam9x5
-           - const: atmel,at91sam9
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e6a1cac0bfc7..6368dac016dd 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -44,6 +44,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
- 	at91-wb45n.dtb \
- 	at91sam9g15ek.dtb \
- 	at91sam9g25ek.dtb \
-+	at91sam9g25-gardena-smart-gateway.dtb \
- 	at91sam9g35ek.dtb \
- 	at91sam9x25ek.dtb \
- 	at91sam9x35ek.dtb
-diff --git a/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts b/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
-new file mode 100644
-index 000000000000..6dc6e14b5f58
---- /dev/null
-+++ b/arch/arm/boot/dts/at91sam9g25-gardena-smart-gateway.dts
-@@ -0,0 +1,157 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Device Tree file for the GARDENA smart Gateway (Article No. 19000)
-+ *
-+ *  Copyright (C) 2020 GARDENA GmbH
-+ */
-+
-+/dts-v1/;
-+
-+#include "at91sam9g25.dtsi"
-+#include "at91sam9x5ek.dtsi"
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "GARDENA smart Gateway (Article No. 19000)";
-+	compatible = "gardena,smart-gateway-at91sam", "atmel,at91sam9g25", "atmel,at91sam9x5", "atmel,at91sam9";
-+
-+	aliases {
-+		serial1 = &usart3;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		user_btn1 {
-+			label = "USER_BTN1";
-+			gpios = <&pioA 24 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_PROG1>;
-+		};
-+	};
-+
-+	1wire_cm {
-+		status = "disabled";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		power_blue {
-+			label = "smartgw:power:blue";
-+			gpios = <&pioC 21 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		power_green {
-+			label = "smartgw:power:green";
-+			gpios = <&pioC 20 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		power_red {
-+			label = "smartgw:power:red";
-+			gpios = <&pioC 19 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		radio_blue {
-+			label = "smartgw:radio:blue";
-+			gpios = <&pioC 18 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		radio_green {
-+			label = "smartgw:radio:green";
-+			gpios = <&pioC 17 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		radio_red {
-+			label = "smartgw:radio:red";
-+			gpios = <&pioC 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		internet_blue {
-+			label = "smartgw:internet:blue";
-+			gpios = <&pioC 15 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		internet_green {
-+			label = "smartgw:internet:green";
-+			gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		internet_red {
-+			label = "smartgw:internet:red";
-+			gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		heartbeat {
-+			label = "smartgw:heartbeat";
-+			gpios = <&pioB 8 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		pb18 {
-+			status = "disabled";
-+		};
-+
-+		pd21 {
-+			status = "disabled";
-+		};
-+	};
-+};
-+
-+&macb0 {
-+	phy-mode = "rmii";
-+	status = "okay";
-+};
-+
-+&usart0 {
-+	status = "disabled";
-+};
-+
-+&usart2 {
-+	status = "disabled";
-+};
-+
-+&usart3 {
-+	status = "okay";
-+
-+	pinctrl-0 = <&pinctrl_usart3
-+		     &pinctrl_usart3_rts
-+		     &pinctrl_usart3_cts
-+		    >;
-+};
-+
-+&watchdog {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	status = "disabled";
-+};
-+
-+&mmc1 {
-+	status = "disabled";
-+};
-+
-+&spi0 {
-+	status = "disabled";
-+};
-+
-+&i2c0 {
-+	status = "disabled";
-+};
-+
-+&adc0 {
-+	status = "disabled";
-+};
-+
-+&ssc0 {
-+	status = "disabled";
-+};
--- 
-2.27.0
-
+Robin.
