@@ -2,120 +2,134 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1E7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCCDC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49FDF20866
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:31:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hv+jQXll"
+	by mail.kernel.org (Postfix) with ESMTP id A6DDE204FD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597844572;
+	bh=nRHlZ1MnhuRCWEVlVgqtKUWgqsrlzs+w4Nj+dZAbawc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1JvzmNpGEujjXLEaNbnaR4zhz1iYgsgLR4fsZfiTAXFaxpDqxE4HY84zUOWFI8uqW
+	 XInHTI3oK1o0s2PdLVtjoJTTMMqIm4b5CZCYSmKRQTzslaxgWNbVNA8TB0zbtzuKZU
+	 1/ilpPGOeRcBvuyAfLqLdc/cNM8xZTQxLtJ/pr1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgHSNbp (ORCPT
+        id S1727854AbgHSNmv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:31:45 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:55694 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726209AbgHSNbp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:31:45 -0400
-X-UUID: 019b1bc6ac194bd7ac7f24c8c0e9aec4-20200819
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fRw1wAcPb1VygFYYYG7J6cmcnElaUKNFwR0kNG/1s9c=;
-        b=hv+jQXllTnibs+5TIFqN979xYKZ9HSHeIi6RbMiVJg93XLXFdPqOmCDPqjHKWvLyTdO3Hs05fECia0qy8zEskKeBsw0/vmADBHAGwvQBbrVOYT+y6kYSlEr5VrjV5opFfLPPAf0ECD9XFKVV2JtyalqFK73J8g2abtxZJ+J4BZI=;
-X-UUID: 019b1bc6ac194bd7ac7f24c8c0e9aec4-20200819
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 230635700; Wed, 19 Aug 2020 21:31:38 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 21:31:36 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 21:31:27 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <maz@kernel.org>, Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-CC:     <alix.wu@mediatek.com>, <daniel@0x0f.com>,
-        <devicetree@vger.kernel.org>, <jason@lakedaemon.net>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <yj.chiang@mediatek.com>
-Subject: Re: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-Date:   Wed, 19 Aug 2020 21:31:18 +0800
-Message-ID: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org> (raw)
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org>
-References: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org>
+        Wed, 19 Aug 2020 09:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727046AbgHSNmu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:42:50 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3F5E204FD;
+        Wed, 19 Aug 2020 13:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597844569;
+        bh=nRHlZ1MnhuRCWEVlVgqtKUWgqsrlzs+w4Nj+dZAbawc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=X2p4tG/lI4UDoGQ0sW7iBjo5mfR7OsNSzk2uNq3Xhim97qLQo2BUAax5CH6LxWxQ3
+         SyLd/JY3Anlf1Vkm7UkfpDCr9hyV2G5dviys/6P/0z35NeRRb/G3vtxR+wiuYLfK9Q
+         CM9M4FOLugd4F74QfZ7XQFOx/6L3XtyEgHhh141s=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k8OMa-004DzN-87; Wed, 19 Aug 2020 14:42:48 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: DE83B45AC3BC27299EB076B4A9D350810BE1BE0B47BE608892730C36C974355C2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 19 Aug 2020 14:42:48 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc:     alix.wu@mediatek.com, daniel@0x0f.com, devicetree@vger.kernel.org,
+        jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de,
+        yj.chiang@mediatek.com
+Subject: Re: [PATCH 1/2] irqchip: irq-mst: Add MStar interrupt controller
+ support
+In-Reply-To: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org> (raw)
+References: <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org>
+ <a8ee65eb4d86963bd2b56e86eec0ab3e@kernel.org> (raw)
+User-Agent: Roundcube Webmail/1.4.7
+Message-ID: <f593f5e395c8558657a3f265b7038ec3@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: mark-pk.tsai@mediatek.com, alix.wu@mediatek.com, daniel@0x0f.com, devicetree@vger.kernel.org, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, yj.chiang@mediatek.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
-Message-ID: <20200819133118.U_jE70jyYxQnldtYkol1dyQ9VzdJqUxWu-94f-1YX6U@z>
 
-RnJvbTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KPiA+ICsNCj4gPiArc3RhdGlj
-IGludCBtc3RfaW50Y19kb21haW5fYWxsb2Moc3RydWN0IGlycV9kb21haW4gKmRvbWFpbiwgdW5z
-aWduZWQgDQo+ID4gaW50IHZpcnEsDQo+ID4gKwkJCQkgdW5zaWduZWQgaW50IG5yX2lycXMsIHZv
-aWQgKmRhdGEpDQo+ID4gK3sNCj4gPiArCWludCBpOw0KPiA+ICsJaXJxX2h3X251bWJlcl90IGh3
-aXJxOw0KPiA+ICsJc3RydWN0IGlycV9md3NwZWMgcGFyZW50X2Z3c3BlYywgKmZ3c3BlYyA9IGRh
-dGE7DQo+ID4gKwlzdHJ1Y3QgbXN0X2ludGNfY2hpcF9kYXRhICpjZCA9IChzdHJ1Y3QgbXN0X2lu
-dGNfY2hpcF9kYXRhDQo+ID4gKilkb21haW4tPmhvc3RfZGF0YTsNCj4gDQo+IE5vIGNhc3QgbmVj
-ZXNzYXJ5IGhlcmUuDQo+IA0KPiA+ICsNCj4gPiArCS8qIE5vdCBHSUMgY29tcGxpYW50ICovDQo+
-ID4gKwlpZiAoZndzcGVjLT5wYXJhbV9jb3VudCAhPSAzKQ0KPiA+ICsJCXJldHVybiAtRUlOVkFM
-Ow0KPiA+ICsNCj4gPiArCS8qIE5vIFBQSSBzaG91bGQgcG9pbnQgdG8gdGhpcyBkb21haW4gKi8N
-Cj4gPiArCWlmIChmd3NwZWMtPnBhcmFtWzBdKQ0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+
-ICsNCj4gPiArCWlmIChmd3NwZWMtPnBhcmFtWzFdID49IGNkLT5ucl9pcnFzKQ0KPiANCj4gVGhp
-cyBjb25kaXRpb24gaXMgYm9ndXMsIGFzIGl0IGRvZXNuJ3QgdGFrZSBpbnRvIGFjY291bnQgdGhl
-IG5yX2lycXMNCj4gcGFyYW1ldGVyLg0KPiANCg0KDQpUaGUgaHdpcnEgbnVtYmVyIG5lZWQgdG8g
-YmUgaW4gdGhlIGlycSBtYXAgcmFuZ2UuIChwcm9wZXJ0eTogbXN0YXIsaXJxcy1tYXAtcmFuZ2Up
-DQpJZiBpdCdzIG5vdCwgaXQgbXVzdCBiZSBpbmNvcnJlY3QgY29uZmlndXJhdGlvbi4NClNvIGhv
-dyBhYm91dCB1c2UgdGhlIGNvbmRpdGlvbiBhcyBmb2xsb3dpbmc/DQoNCmlmIChod2lycSA+PSBj
-ZC0+bnJfaXJxcykNCglyZXR1cm4gLUVJTlZBTDsNCg0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0K
-PiA+ICsNCj4gPiArCWh3aXJxID0gZndzcGVjLT5wYXJhbVsxXTsNCj4gPiArCWZvciAoaSA9IDA7
-IGkgPCBucl9pcnFzOyBpKyspDQo+ID4gKwkJaXJxX2RvbWFpbl9zZXRfaHdpcnFfYW5kX2NoaXAo
-ZG9tYWluLCB2aXJxICsgaSwgaHdpcnEgKyBpLA0KPiA+ICsJCQkJCSAgICAgICZtc3RfaW50Y19j
-aGlwLA0KPiA+ICsJCQkJCSAgICAgIGRvbWFpbi0+aG9zdF9kYXRhKTsNCj4gPiArDQo+ID4gKwlw
-YXJlbnRfZndzcGVjID0gKmZ3c3BlYzsNCj4gPiArCXBhcmVudF9md3NwZWMuZndub2RlID0gZG9t
-YWluLT5wYXJlbnQtPmZ3bm9kZTsNCj4gPiArCXBhcmVudF9md3NwZWMucGFyYW1bMV0gPSBjZC0+
-aXJxX3N0YXJ0ICsgaHdpcnE7DQo+ID4gKwlyZXR1cm4gaXJxX2RvbWFpbl9hbGxvY19pcnFzX3Bh
-cmVudChkb21haW4sIHZpcnEsIG5yX2lycXMsIA0KPiA+ICZwYXJlbnRfZndzcGVjKTsNCj4gPiAr
-fQ0KPiA+ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBpcnFfZG9tYWluX29wcyBtc3RfaW50
-Y19kb21haW5fb3BzID0gew0KPiA+ICsJLnRyYW5zbGF0ZQk9IG1zdF9pbnRjX2RvbWFpbl90cmFu
-c2xhdGUsDQo+ID4gKwkuYWxsb2MJCT0gbXN0X2ludGNfZG9tYWluX2FsbG9jLA0KPiA+ICsJLmZy
-ZWUJCT0gaXJxX2RvbWFpbl9mcmVlX2lycXNfY29tbW9uLA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiAr
-aW50IF9faW5pdA0KPiA+ICttc3RfaW50Y19vZl9pbml0KHN0cnVjdCBkZXZpY2Vfbm9kZSAqZG4s
-IHN0cnVjdCBkZXZpY2Vfbm9kZSAqcGFyZW50KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaXJxX2Rv
-bWFpbiAqZG9tYWluLCAqZG9tYWluX3BhcmVudDsNCj4gPiArCXN0cnVjdCBtc3RfaW50Y19jaGlw
-X2RhdGEgKmNkOw0KPiA+ICsJdW5zaWduZWQgaW50IGlycV9zdGFydCwgaXJxX2VuZDsNCj4gDQo+
-IHVuc2lnbmVkIGludCAhPSB1MzIuDQo+IA0KPiA+ICsNCj4gPiArCWRvbWFpbl9wYXJlbnQgPSBp
-cnFfZmluZF9ob3N0KHBhcmVudCk7DQo+ID4gKwlpZiAoIWRvbWFpbl9wYXJlbnQpIHsNCj4gPiAr
-CQlwcl9lcnIoIm1zdC1pbnRjOiBpbnRlcnJ1cHQtcGFyZW50IG5vdCBmb3VuZFxuIik7DQo+ID4g
-KwkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJaWYgKG9mX3Byb3BlcnR5
-X3JlYWRfdTMyX2luZGV4KGRuLCAibXN0YXIsaXJxcy1tYXAtcmFuZ2UiLCAwLCANCj4gPiAmaXJx
-X3N0YXJ0KSB8fA0KPiA+ICsJICAgIG9mX3Byb3BlcnR5X3JlYWRfdTMyX2luZGV4KGRuLCAibXN0
-YXIsaXJxcy1tYXAtcmFuZ2UiLCAxLCANCj4gPiAmaXJxX2VuZCkpDQo+ID4gKwkJcmV0dXJuIC1F
-SU5WQUw7DQo+ID4gKw0KPiA+ICsJY2QgPSBremFsbG9jKHNpemVvZigqY2QpLCBHRlBfS0VSTkVM
-KTsNCj4gPiArCWlmICghY2QpDQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKw0KPiA+ICsJ
-Y2QtPmJhc2UgPSBvZl9pb21hcChkbiwgMCk7DQo+ID4gKwlpZiAoIWNkLT5iYXNlKSB7DQo+ID4g
-KwkJa2ZyZWUoY2QpOw0KPiA+ICsJCXJldHVybiAtRU5PTUVNOw0KPiA+ICsJfQ0KPiA+ICsNCj4g
-PiArCWNkLT5ub19lb2kgPSBvZl9wcm9wZXJ0eV9yZWFkX2Jvb2woZG4sICJtc3RhcixpbnRjLW5v
-LWVvaSIpOw0KPiA+ICsJcmF3X3NwaW5fbG9ja19pbml0KCZjZC0+bG9jayk7DQo+ID4gKwljZC0+
-aXJxX3N0YXJ0ID0gaXJxX3N0YXJ0Ow0KPiA+ICsJY2QtPm5yX2lycXMgPSBpcnFfZW5kIC0gaXJx
-X3N0YXJ0ICsgMTsNCj4gPiArCWRvbWFpbiA9IGlycV9kb21haW5fYWRkX2hpZXJhcmNoeShkb21h
-aW5fcGFyZW50LCAwLCBjZC0+bnJfaXJxcywgZG4sDQo+ID4gKwkJCQkJICAmbXN0X2ludGNfZG9t
-YWluX29wcywgY2QpOw0KPiA+ICsJaWYgKCFkb21haW4pIHsNCj4gPiArCQlpb3VubWFwKGNkLT5i
-YXNlKTsNCj4gPiArCQlrZnJlZShjZCk7DQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4gKwl9
-DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK0lSUUNISVBfREVD
-TEFSRShtc3RfaW50YywgIm1zdGFyLG1zdC1pbnRjIiwgbXN0X2ludGNfb2ZfaW5pdCk7DQo+IA==
+On 2020-08-19 14:31, Mark-PK Tsai wrote:
+> From: Marc Zyngier <maz@kernel.org>
+> 
+>> > +
+>> > +static int mst_intc_domain_alloc(struct irq_domain *domain, unsigned
+>> > int virq,
+>> > +				 unsigned int nr_irqs, void *data)
+>> > +{
+>> > +	int i;
+>> > +	irq_hw_number_t hwirq;
+>> > +	struct irq_fwspec parent_fwspec, *fwspec = data;
+>> > +	struct mst_intc_chip_data *cd = (struct mst_intc_chip_data
+>> > *)domain->host_data;
+>> 
+>> No cast necessary here.
+>> 
+>> > +
+>> > +	/* Not GIC compliant */
+>> > +	if (fwspec->param_count != 3)
+>> > +		return -EINVAL;
+>> > +
+>> > +	/* No PPI should point to this domain */
+>> > +	if (fwspec->param[0])
+>> > +		return -EINVAL;
+>> > +
+>> > +	if (fwspec->param[1] >= cd->nr_irqs)
+>> 
+>> This condition is bogus, as it doesn't take into account the nr_irqs
+>> parameter.
+>> 
+> 
+> 
+> The hwirq number need to be in the irq map range. (property:
+> mstar,irqs-map-range)
+> If it's not, it must be incorrect configuration.
 
+I agree. And since you are checking whether the configuration is 
+correct,
+it'd better be completely correct.
+
+> So how about use the condition as following?
+> 
+> if (hwirq >= cd->nr_irqs)
+> 	return -EINVAL;
+
+Again, this says nothing of the validity of (hwirq + nr_irqs - 1)...
+
+> 
+>> > +		return -EINVAL;
+>> > +
+>> > +	hwirq = fwspec->param[1];
+>> > +	for (i = 0; i < nr_irqs; i++)
+>> > +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
+>> > +					      &mst_intc_chip,
+>> > +					      domain->host_data);
+
+... which you are using here.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
