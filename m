@@ -2,112 +2,69 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F81C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02670C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D963D207FB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="LTy05T0S"
+	by mail.kernel.org (Postfix) with ESMTP id D9F2B20639
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgHSJRE (ORCPT
+        id S1726947AbgHSJVL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:17:04 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:14350 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgHSJRB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 05:17:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597828616;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=O63GLG7sddoCYObzLYc9FbVF3AO3J5EaI5KdyvqBGk8=;
-        b=LTy05T0SmpCIdrJFcV+DLV/fKSUd+aM6G8+wa6ZBnD1anavArp3yoofhZO17+UenKi
-        5cpJInbeOsmghuZk1ib9FpBC8BGHiHJ1GNDiCPoMLEYHADBd8UZmW8/zBuaLKV+oi3EN
-        Czjf00kJ5T7RH8lP2cALAnxf2B57oTOiUYmB0u/1xbQz4zf4NoO2V1nePHNQUkAY7w4L
-        JAG0GdycG/C4UOfeIfUBs3dMrCepqi2/jkx5D6Cz1fNbonxPhYfRwnhrMxvWTm0eyZdt
-        5DVAdS/SaPnsJ3Idaa9BijWcsBKlgyf2UhAv7MBDtZuzWgQqHFjtOyoS9In24OLpj26v
-        TiIg==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB5m6NDwQo"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7J9Gu0SU
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 19 Aug 2020 11:16:56 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 2/2] ASoC: qcom: common: Parse auxiliary devices from device tree
-Date:   Wed, 19 Aug 2020 11:15:33 +0200
-Message-Id: <20200819091533.2334-3-stephan@gerhold.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819091533.2334-1-stephan@gerhold.net>
-References: <20200819091533.2334-1-stephan@gerhold.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 19 Aug 2020 05:21:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgHSJVI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 05:21:08 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8460C061757
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 02:21:07 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by michel.telenet-ops.be with bizsmtp
+        id HMLz2300s4C55Sk06MLz5z; Wed, 19 Aug 2020 11:20:59 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8KHD-0007pe-JS; Wed, 19 Aug 2020 11:20:59 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8KHD-0000Pm-HT; Wed, 19 Aug 2020 11:20:59 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: vendor-prefixes: Remove trailing whitespace
+Date:   Wed, 19 Aug 2020 11:20:58 +0200
+Message-Id: <20200819092058.1526-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-In some cases we need to probe additional audio components that do
-not appear as part of the DAI links specified in the device tree.
-Examples for this are auxiliary devices such as analog amplifiers
-or codecs.
-
-The ASoC core provides a way to probe these components by adding
-them to snd_soc_card->aux_dev. We can use the snd_soc_of_parse_aux_devs()
-function to parse them from the device tree.
-
-As an example for this, some MSM8916 smartphones have an analog
-speaker amplifier connected to the HPHR output. With the new property
-this can be modelled as follows:
-
-	speaker-amp: audio-amplifier {
-		compatible = "simple-audio-amplifier";
-		enable-gpios = <&msmgpio 114 GPIO_ACTIVE_HIGH>;
-		sound-name-prefix = "Speaker Amp";
-	};
-
-	&sound {
-		aux-devs = <&speaker_amp>;
-		audio-routing = "Speaker Amp IN", "HPHR";
-	};
-
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Fixes: f516fb704d02fff2 ("dt-bindings: Whitespace clean-ups in schema files")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- sound/soc/qcom/common.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-index 5194d90ddb96..fe6e778c31c0 100644
---- a/sound/soc/qcom/common.c
-+++ b/sound/soc/qcom/common.c
-@@ -39,6 +39,10 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 			return ret;
- 	}
- 
-+	ret = snd_soc_of_parse_aux_devs(card, "aux-devs");
-+	if (ret)
-+		return ret;
-+
- 	/* Populate links */
- 	num_links = of_get_child_count(dev->of_node);
- 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 2baee2c817c1a107..63996ab03521741b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -993,7 +993,7 @@ patternProperties:
+   "^sst,.*":
+     description: Silicon Storage Technology, Inc.
+   "^sstar,.*":
+-    description: Xiamen Xingchen(SigmaStar) Technology Co., Ltd. 
++    description: Xiamen Xingchen(SigmaStar) Technology Co., Ltd.
+       (formerly part of MStar Semiconductor, Inc.)
+   "^st,.*":
+     description: STMicroelectronics
 -- 
-2.28.0
+2.17.1
 
