@@ -2,150 +2,117 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8357DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925DBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466E0207DE
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EDE20882
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="e97zR/N5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wu6YQxWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgHSVO3 (ORCPT
+        id S1727107AbgHSVUN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56682 "EHLO
+        Wed, 19 Aug 2020 17:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgHSVO2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 17:14:28 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6085C061757
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 14:14:28 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id h12so82326pgm.7
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 14:14:28 -0700 (PDT)
+        with ESMTP id S1727769AbgHSVUE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 17:20:04 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7776C061757;
+        Wed, 19 Aug 2020 14:20:03 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id m22so105185eje.10;
+        Wed, 19 Aug 2020 14:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6vl0Zr0QfPTPUxp3kmQVySN90fESLhsCVNDcmlPX5ao=;
-        b=e97zR/N5o7Lz0AtqgugSva+F5lMAwSyEab6QESo7q2edZiuLdMYTgJcKlI35zU8Ytq
-         AidBIz2PBjBlhHt6rTBvoAStn4NGEwn4iOia1EP0AooRUq6RxB+Ms1Dl6tGcqeSjOMVm
-         p+5j4NMwCvNfiyWtmw+dXNpins8XGzW5Tz6lI=
+        bh=dc/CKh07k5BEAnG6K045hmwNfZTVgVZZuWpippFAxow=;
+        b=Wu6YQxWxxDSaNkkzuYVBZ28Ab3N73wT0L1egEq0DrP3Vm6rKoSUD/RyVw6Td4bUeJN
+         kKMTebC5P+gbktxWxbGBjoDk7I2+W0D34Z303HWWHhzKCNpCj7XNoEkpkJ89Y3D+Om+/
+         e1FHPV3OW9s0Xwydqkf6yjvy8S+N8AuBRtkYNl8yQRaBis/OVVb9a4KX8cSCnegfupSi
+         f9zJrZVtLcbTIFhGCaZ4v2KTHwCTooK2dOYeVoyqZaoREWjKtW4XxPdT5sWrPgnfpyk9
+         Vms7E2eG0gR5o4OcvIfO6L096M0Pzfgr/yHPzAvcFtAnozOkEBZLGIn2UpBYVbq/qoan
+         HLtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=6vl0Zr0QfPTPUxp3kmQVySN90fESLhsCVNDcmlPX5ao=;
-        b=svaw84cBNQbNiGkdZqRmQ1GblvpvObr81VBC8efv1n9yk9Q/iFOQPILTlmvwHFNxO3
-         jZztozeX+w+hT0FtUPFXqRIWPzLeR0d9KoUev5MyE7G9ynSdBTMIyobY1odpJZaKRM6b
-         26oSkjVo6x/9VXwDp8ZMJBi8Kl4/SvUVJnG2DdLyrzCZ0yOYm0PhNZg7lOi4SLUjZW2z
-         PFWD9JKLuPgmBkMyO+UQjVuKjkBhUFj83/zvPdoBhOlYEid+cPWxVF3MRCrxp3nZf/Ez
-         1vRmij/iyxGvza13xj5IojD15xEColCXx2i1j5VnO4D8hkaWsuQHkIh1VHhjZdibwrug
-         w5AQ==
-X-Gm-Message-State: AOAM533Ved9DMoZAHDgnWVcVUkaB53XxAjxAQhzXJiD4st9Go3TpKYyl
-        R/B6q5c/PoqmoCGEKAlTGG7h0w==
-X-Google-Smtp-Source: ABdhPJyIsZqKw66CYKr8tbkC1zsYXVMa5TLygt5HGOeUvNsPQA9V/AoHAd7Q3oSpC7rY7R5GYSzPMQ==
-X-Received: by 2002:a65:5849:: with SMTP id s9mr217988pgr.145.1597871667999;
-        Wed, 19 Aug 2020 14:14:27 -0700 (PDT)
-Received: from [10.136.8.253] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id e20sm3981728pjr.28.2020.08.19.14.14.23
+        bh=dc/CKh07k5BEAnG6K045hmwNfZTVgVZZuWpippFAxow=;
+        b=n0pNllza5H+A7EYQ3bCaF5T5xCsYlH3a4FP0MtGkkKBVdb5//LWdbV3G2fYkFBB6VC
+         81qNEe8n+bRa2jXTF91kk6rqSXa9RTvtO9G6+OmNS4HKF9g9wOvyOLdUKv7yQPRRNZwK
+         pApPliyXThMGxoHrw+zi2DwNmKFFvPZoN5XS/MHWcjbfezqlK+sfjSy7RvdyZdWj0sLY
+         vTbmWK97fMyN/QYJgiYFqomYixd0PASltsK5JZV7AtAogfkjNgnDhxcWobFuSesQTxe3
+         sSLL+UmU4YNc8+em9bOylPvToCiWjEaQn0HBgeWrgT/haYGSdjC9XqrH+0/4l+G0BmJK
+         37kw==
+X-Gm-Message-State: AOAM532e5XFkflVKKzxturA6UAW8b+BUsbtZLFzVstk+sYSm1tGWSgDp
+        4U1v4d6B+bv+/5J3C8YulKTmMFV64lA=
+X-Google-Smtp-Source: ABdhPJxTx5eyyhyR3+blZB7fCmE/P88qywmpapA2jFXKvtcU9lbZpGIFY8L1YufKx7HlkO3v1lLUyQ==
+X-Received: by 2002:a17:906:4e4f:: with SMTP id g15mr211728ejw.443.1597872002431;
+        Wed, 19 Aug 2020 14:20:02 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:65ed:677d:9795:eae9? ([2a01:110f:b59:fd00:65ed:677d:9795:eae9])
+        by smtp.gmail.com with ESMTPSA id b2sm29728ejg.70.2020.08.19.14.20.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 14:14:27 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Fix pin controller node
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        "maintainer:BROADCOM BCM5301X ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 19 Aug 2020 14:20:01 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dt-bindings: leds: Add DT binding for Richtek RT8515
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        newbytee@protonmail.com, Stephan Gerhold <stephan@gerhold.net>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200819042308.19043-1-f.fainelli@gmail.com>
- <7501cb2f-ea5a-8339-40a0-6706fea32a06@gmail.com>
- <62f89d06-e6ef-9476-1797-bec153d8e6db@gmail.com>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <a3680cea-e97f-c4a2-de21-a83a3d2c1b5d@broadcom.com>
-Date:   Wed, 19 Aug 2020 14:14:20 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        <devicetree@vger.kernel.org>
+References: <20200812090711.2644688-1-linus.walleij@linaro.org>
+ <e8d27b57-ac17-29e4-0e43-b72d7447d43a@gmail.com>
+ <CACRpkdYcKthp9_482ptL7YSitN-YUU4_u57ra25Ko4_-102JaQ@mail.gmail.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <e4ac5ea8-916d-1270-c9ae-64870b2f7c8d@gmail.com>
+Date:   Wed, 19 Aug 2020 23:20:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <62f89d06-e6ef-9476-1797-bec153d8e6db@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CACRpkdYcKthp9_482ptL7YSitN-YUU4_u57ra25Ko4_-102JaQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-
-On 8/19/2020 1:49 PM, Florian Fainelli wrote:
-> On 8/19/20 1:48 PM, Christian Lamparter wrote:
->> On 2020-08-19 06:23, Florian Fainelli wrote:
->>> The pin controller resources start at 0xc0 from the CRU base which is at
->>> 0x100 from th DMU base, for a final address of 0x1800_c1c0, whereas we
->>> are currently off by 0x100. The resource size of the CRU is also
->>> incorrect and should end at 0x248 bytes from 0x100 which is the start
->>> address. Finally, the compatibility strings defined for the
->>> pin-controller node should reflect the SoC being used.
->>>
->>> Fixes: 9994241ac97c ("ARM: dts: BCM5301X: Describe Northstar pins mux
->>> controller")
->>> Reported-by: Christian Lamparter <chunkeey@gmail.com>
->>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>> ---
->>> Christian, can you test this as a preliminary patch for your Cisco
->>> Meraki MR32 series? Thanks!
->>
->> Hm, it looks like this is more complicated than this. We should have
->> looked at pinctrl-ns.c's ns_pinctrl_probe() [0] before calling it.
->>
->> |    ns_pinctrl->regmap = syscon_node_to_regmap(of_get_parent(np));
->> |    if (IS_ERR(ns_pinctrl->regmap)) {
->> |        int err = PTR_ERR(ns_pinctrl->regmap);
->> |
->> |        dev_err(dev, "Failed to map pinctrl regs: %d\n", err);
->> |
->> |        return err;
->> |    }
->> |
->> |    if (of_property_read_u32(np, "offset", &ns_pinctrl->offset)) {
->> |        dev_err(dev, "Failed to get register offset\n");
->> |        return -ENOENT;
->> |    }
->>
->> So, the ns_pinctrl_probe() takes the address of the parent node (cru)
->> and then looks for a "offset" property to add to this (which is missing
->> in the bcm5301x.dtsi [1]).
->>
->> Thing is, for this to work, the parent-node should be a "simple-mfd" (so
->> a regmap is created for the reg), right? This would also mean that the
->> "reg" property in the pin-controller node is just cosmetic.
->>
->> I guess the reason why this sort-of-works for me is because I'm using
->> this MR32 with OpenWrt (Rafał Miłecki is probably using it too ;) ).
->>
->> (Note: We should not forget to update the binding-documentation as well!)
->>
->> BTW: I'll reply my findings for the i2c issue with the MR32 in the other
->> mail.
+On 8/19/20 11:05 PM, Linus Walleij wrote:
+> On Thu, Aug 13, 2020 at 11:06 PM Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> wrote:
 > 
-> Rafal, has this driver ever worked to begin with? None of this should be
-> necessary, we should just be using a simple platform device resource here.
+>>> +  led:
+>>> +    type: object
+>>> +    $ref: common.yaml#
+> (...)
+>>> +        led {
+>>> +            function = LED_FUNCTION_FLASH;
+>>> +            color = <LED_COLOR_ID_WHITE>;
+>>> +            flash-max-timeout-us = <250000>;
+>>
+>> Constraints for this property are needed above.
 > 
+> Can you elaborate on what you expect this to look like?
+> The property is from common.yaml, so should that be
+> extended with a constraint?
 
-Florian, what if CDRU is a shared resource whose registers are accessed
-and shared by multiple blocks (and therefore device drivers) within the
-chip? Then accessing this shared CDRU resource through syscon makes sure
-there's no race condition, isn't it?
+Constraints are specific to the hardware, so those should
+be provided in the related bindings.
+Generally it is customary in similar cases to give min, max
+and step values.
 
+I don't have json-schema example, but see old txt DT bindings:
 
+- Documentation/devicetree/bindings/leds/leds-lm3601x.txt
+- Documentation/devicetree/bindings/mfd/max77693.txt
+
+-- 
+Best regards,
+Jacek Anaszewski
