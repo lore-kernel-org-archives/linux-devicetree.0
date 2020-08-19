@@ -2,208 +2,166 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74309C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B7AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 17:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CDE5207FF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B714208C7
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 17:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GVLkRIrC"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cf6w4ypy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgHSQ5V (ORCPT
+        id S1726817AbgHSRDY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
+        Wed, 19 Aug 2020 13:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgHSQ5H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 12:57:07 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7B0C061757;
-        Wed, 19 Aug 2020 09:57:06 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8175329E;
-        Wed, 19 Aug 2020 18:56:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597856219;
-        bh=JSMuV5nAqp9B18iMvO4sKVXd8MjalDF0a0uByYXBzuw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GVLkRIrCYOJf1UNRl4LLIVufPjmaatK0mmlWAGyeaFVSQL+fT9Y4xTVY7bO+30Kbp
-         Z6SwSWnw5mdu6D1H5au9CIcWREIVZSs0nFN7euhzh2Cf/NClI8HiwY4hZWppQqaD5U
-         ljH7aYtrkszJRobor9w6E4k1Q8NsXRnNtrn6bsA8=
-Date:   Wed, 19 Aug 2020 19:56:41 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Vishal Sagar <vsagar@xilinx.com>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Hyun Kwon <hyunk@xilinx.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joe@perches.com" <joe@perches.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Dinesh Kumar <dineshk@xilinx.com>
-Subject: Re: [PATCH v3 3/3] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
- Subsystem driver
-Message-ID: <20200819165641.GS6049@pendragon.ideasonboard.com>
-References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
- <20200618053304.14551-4-vishal.sagar@xilinx.com>
- <50cc4f4b-e788-c5ad-cd6a-b428b96d5377@xs4all.nl>
- <20200715213315.GF6144@pendragon.ideasonboard.com>
- <BY5PR02MB6867211CA1F22DC01D6A8F15A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
+        with ESMTP id S1726703AbgHSRDR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 13:03:17 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5777C061383
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 10:03:15 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id p4so22272771qkf.0
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 10:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ktYpsCxiLWJOQgFpjU6rm698Y/qLm2dIO8jCJsadEOU=;
+        b=Cf6w4ypyePA72N9OwZ/X/gIqgQ3/Z2O3rsVEAnbMsPXxSteDXfBbrAJ2YKaLKzi+2G
+         eJlNvZyKM6mcCsbB8rTNwjE0zNlCUOU27vLJyO1vH/Kf6P5hVdc0XLNeLzE0ilaNzTIL
+         c/q/2eCUoXXxQCiuP4bqs7wWJmNaxuO94MGUY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ktYpsCxiLWJOQgFpjU6rm698Y/qLm2dIO8jCJsadEOU=;
+        b=mJb5tpMQoNswIs58Yc8bQwiEm8I8Jcr4rry8vNWSVvrip+terdXVmTdOFrIyi7ooEF
+         1wqLD84IushvtPqS33ckKLoi3Zv+WJcneFth9nZT+9bEULi52oYXuUqLrQ5VLrz7oLzk
+         /tVJghTDI6KE7ajS3QLERuHReMID5/KcjdolX5w9JDeBKbYPqxlb6d0AnqWjI4LqeZbQ
+         O2yADOcfgrQH7HB+LC8MDlRIvjVnucbo7Sh+EuJ8oamhAe3KsAH1v6o8Vf6nR4qd4PbH
+         bNCRpGazbtYhLjIwrwaUSIoKGA85kuFbP6bytCxYh1jIJnabi5uEhNgWNjqDGYch0eN2
+         2svw==
+X-Gm-Message-State: AOAM531W1D5rZ0L6fiRg/JV+JXAGviNqn4T8Pg++LjUuvMSgj5gl1+/p
+        UIS3nZzJQNeezZhFa8jPV6wpqBmY+6fw6g==
+X-Google-Smtp-Source: ABdhPJzDHarbU8eY2e3+fTUv3eESoD2IU7xgNmI6dXwgitgPp15zIAMJ6sOmoQ2bADrdneFYXsBXvQ==
+X-Received: by 2002:a37:674d:: with SMTP id b74mr22633613qkc.84.1597856592910;
+        Wed, 19 Aug 2020 10:03:12 -0700 (PDT)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
+        by smtp.gmail.com with ESMTPSA id y14sm28381824qtc.84.2020.08.19.10.02.38
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 10:02:42 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id u6so7870782ybf.1
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 10:02:38 -0700 (PDT)
+X-Received: by 2002:a25:d802:: with SMTP id p2mr37420399ybg.446.1597856554388;
+ Wed, 19 Aug 2020 10:02:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BY5PR02MB6867211CA1F22DC01D6A8F15A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
+References: <20200817220238.603465-1-robdclark@gmail.com> <20200817220238.603465-11-robdclark@gmail.com>
+In-Reply-To: <20200817220238.603465-11-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 19 Aug 2020 10:02:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
+Message-ID: <CAD=FV=VzYSL-3q0oFPPSP7FiEdLeTEN6Zy=kp-73B=8LAavmVw@mail.gmail.com>
+Subject: Re: [PATCH 10/20] dt-bindings: arm-smmu: Add compatible string for
+ Adreno GPU SMMU
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Herring <robh@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vishal,
+Hi,
 
-(Hans, there's a question for you below)
+On Mon, Aug 17, 2020 at 3:03 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Jordan Crouse <jcrouse@codeaurora.org>
+>
+> Every Qcom Adreno GPU has an embedded SMMU for its own use. These
+> devices depend on unique features such as split pagetables,
+> different stall/halt requirements and other settings. Identify them
+> with a compatible string so that they can be identified in the
+> arm-smmu implementation specific code.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index 503160a7b9a0..5ec5d0d691f6 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -40,6 +40,10 @@ properties:
+>                - qcom,sm8150-smmu-500
+>                - qcom,sm8250-smmu-500
+>            - const: arm,mmu-500
+> +      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+> +        items:
+> +          - const: qcom,adreno-smmu
+> +          - const: qcom,smmu-v2
 
-On Wed, Aug 19, 2020 at 01:47:49PM +0000, Vishal Sagar wrote:
-> On Thursday, July 16, 2020 3:03 AM Laurent Pinchart wrote:
-> > On Thu, Jun 25, 2020 at 11:43:01AM +0200, Hans Verkuil wrote:
-> > > On 18/06/2020 07:33, Vishal Sagar wrote:
-> > > > The Xilinx UHD-SDI Rx subsystem soft IP is used to capture native SDI
-> > > > streams from SDI sources like SDI broadcast equipment like cameras and
-> > > > mixers. This block outputs either native SDI, native video or
-> > > > AXI4-Stream compliant data stream for further processing. Please refer
-> > > > to PG290 for details.
-> > > >
-> > > > The driver is used to configure the IP to add framer, search for
-> > > > specific modes, get the detected mode, stream parameters, errors, etc.
-> > > > It also generates events for video lock/unlock, bridge over/under flow.
-> > > >
-> > > > The driver supports 10/12 bpc YUV 422 media bus format currently. It
-> > > > also decodes the stream parameters based on the ST352 packet embedded in the
-> > > > stream. In case the ST352 packet isn't present in the stream, the core's
-> > > > detected properties are used to set stream properties.
-> > > >
-> > > > The driver currently supports only the AXI4-Stream IP configuration.
-> > > >
-> > > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > > > ---
-> > > > v3
-> > > > - fixed KConfig with better description
-> > > > - removed unnecessary header files
-> > > > - converted uppercase to lowercase for all hex values
-> > > > - merged core struct to state struct
-> > > > - removed most one line functions and replaced with direct reg
-> > > >   read/write or macros
-> > > > - dt property bpp to bpc. default 10. not mandatory.
-> > > > - fixed subscribe events, log_status, s_stream
-> > > > - merged overflow/underflow to one event
-> > > > - moved all controls to xilinx-sdirxss.h
-> > > > - max events from 128 to 8
-> > > > - used FIELD_GET() instead of custom macro
-> > > > - updated the controls documentation
-> > > > - added spinlock
-> > > > - removed 3GB control and added mode to detect bitmask
-> > > > - fixed format for (width, height, colorspace, xfer func, etc)
-> > > > - added dv_timings_cap, s/g_dv_timings
-> > > > - fixed set/get_format
-> > > > - fix v4l control registrations
-> > > > - fix order of registration / deregistration in probe() remove()
-> > > > - fixed other comments from Hyun, Laurent and Hans
-> > > > - things yet to close
-> > > >   - adding source port for connector (Laurent's suggestion)
-> > > >   - adding new FIELD type for Transport Stream V4L2_FIELD_ALTERNATE_PROG (Han's suggestion)
-> > > >   - Update / remove EDH or CRC related controls
-> > > >
-> > > > v2
-> > > > - Added DV timing support based on Hans Verkuilś feedback
-> > > > - More documentation to custom v4l controls and events
-> > > > - Fixed Hyunś comments
-> > > > - Added macro for masking and shifting as per Joe Perches comments
-> > > > - Updated to latest as per Xilinx github repo driver like
-> > > >   adding new DV timings not in mainline yet uptill 03/21/20
-> > > >
-> > > >  drivers/media/platform/xilinx/Kconfig         |   11 +
-> > > >  drivers/media/platform/xilinx/Makefile        |    1 +
-> > > >  .../media/platform/xilinx/xilinx-sdirxss.c    | 2121 +++++++++++++++++
-> > > >  include/uapi/linux/v4l2-controls.h            |    6 +
-> > > >  include/uapi/linux/xilinx-sdirxss.h           |  283 +++
-> > > >  5 files changed, 2422 insertions(+)
-> > > >  create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
-> > > >  create mode 100644 include/uapi/linux/xilinx-sdirxss.h
+I know I'm kinda late to the game, but this seems weird to me,
+especially given the later patches in the series like:
 
-[snip]
+https://lore.kernel.org/r/20200817220238.603465-19-robdclark@gmail.com
 
-> > > > diff --git a/drivers/media/platform/xilinx/xilinx-sdirxss.c b/drivers/media/platform/xilinx/xilinx-sdirxss.c
-> > > > new file mode 100644
-> > > > index 000000000000..e39aab7c656a
-> > > > --- /dev/null
-> > > > +++ b/drivers/media/platform/xilinx/xilinx-sdirxss.c
-> > > > @@ -0,0 +1,2121 @@
+Specifically in that patch you can see that this IOMMU already had a
+compatible string and we're changing it and throwing away the
+model-specific string?  I'm guessing that you're just trying to make
+it easier for code to identify the adreno iommu, but it seems like a
+better way would have been to just add the adreno compatible in the
+middle, like:
 
-[snip]
+      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
+        items:
+          - enum:
+              - qcom,msm8996-smmu-v2
+              - qcom,msm8998-smmu-v2
+              - qcom,sc7180-smmu-v2
+              - qcom,sdm845-smmu-v2
+        - const: qcom,adreno-smmu
+        - const: qcom,smmu-v2
 
-> > > > +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
-> > > > +		ctrl->val = xsdirxss->ts_is_interlaced;
-> > > > +		break;
-> > >
-> > > I assume this control will disappear once you added support for
-> > > FIELD_ALTERNATE_PROG?
-> > 
-> > I'm not sure FIELD_ALTERNATE_PROG is a good idea. The v4l2_field
-> > specifies today how frames are split into multiple buffers. There's an
-> > implicit assumption that a frame split into two buffers is captured with
-> > interlacing. In the SDI case, the two concepts get decoupled, a
-> > progressive frame can be transmitted (and captured) in two separate
-> > parts. If we add a *_PROG field, we'll need to duplicate most of the
-> > v4l2_field values with a _PROG suffix, as the progressive frame can be
-> > captured in alternate buffers on a video node, but also in separate odd
-> > and even buffers on two video nodes. Tt the hardware level, data is
-> > transmitted with odd lines on one link, and even lines on a second link.
-> > There are then two instances of this IP core, one for each link. One
-> > instance would receive and process the even lines, the other instance
-> > the odd lines. The output of the two instances can then be connected to
-> > two separate DMA engines, or combined in the FPGA fabric, depending on
-> > how the user designs the system.
-> 
-> My apologies to give incorrect info regarding this.
-> In the progressive segmented frame, a progressive captured frame is sent
-> across to receiver over an interlaced transport. The 2 fields received
-> are similar to how V4L2_FIELD_ALTERNATE is except that the fields weren't
-> captured at 2 different times.
+Then we still have the SoC-specific compatible string in case we need
+it but we also have the generic one?  It also means that we're not
+deleting the old compatible string...
 
-I've now read more about progressive segmented frames, and I was indeed
-wrong about the fact that the two segments are transported over
-different links.
+-Doug
 
-I still wonder, however, if a _PROG suffix is the best option. Wouldn't
-we need to also add V4L2_FIELD_TOP_PROG, V4L2_FIELD_BOTTOM_PROG,
-V4L2_FIELD_SEQ_TB_PROG and V4L2_FIELD_SEQ_BT_PROG, not necessarily for
-this driver, but for other devices that would support capturing the
-odd/even segments only, or support capturing both segments in a single
-buffer, one after the other ?
 
-Maybe that's unavoidable, as enum v4l2_field combines both the buffer
-layout and the fact that the frame is interlaced or progressive. If we
-had to redesign it we could do better, but having to keep backward
-compatibility, duplicating most values with a _PROG suffix may be the
-best option.
-
-Hans, any opinion ?
-
-> So I will add the V4L2_FIELD_ALTERNATE_PROG in next patch version.
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+>        - description: Marvell SoCs implementing "arm,mmu-500"
+>          items:
+>            - const: marvell,ap806-smmu-500
+> --
+> 2.26.2
+>
