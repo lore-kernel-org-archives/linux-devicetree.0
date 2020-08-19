@@ -2,140 +2,78 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B152C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FA2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4271020738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9B3206B5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:47:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbgHSMpP (ORCPT
+        id S1728155AbgHSMrY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:45:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
+        Wed, 19 Aug 2020 08:47:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbgHSMoy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 08:44:54 -0400
+        with ESMTP id S1728420AbgHSMrM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 08:47:12 -0400
 Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0E1C061383
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 05:44:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 262E9C061383
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 05:47:12 -0700 (PDT)
 Received: from ramsan ([84.195.186.194])
         by michel.telenet-ops.be with bizsmtp
-        id HQks230014C55Sk06QksPS; Wed, 19 Aug 2020 14:44:52 +0200
+        id HQnA2300U4C55Sk06QnArZ; Wed, 19 Aug 2020 14:47:10 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1k8NSV-0002NE-US; Wed, 19 Aug 2020 14:44:51 +0200
+        id 1k8NUk-0002S9-LP; Wed, 19 Aug 2020 14:47:10 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1k8NSV-0005FI-SE; Wed, 19 Aug 2020 14:44:51 +0200
+        id 1k8NUk-0005Jq-KC; Wed, 19 Aug 2020 14:47:10 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: thermal: rcar-thermal: Improve schema validation
-Date:   Wed, 19 Aug 2020 14:44:50 +0200
-Message-Id: <20200819124450.20123-1-geert+renesas@glider.be>
+Subject: [PATCH v2 resend 2] scripts/dtc: dtx_diff - make help text formatting consistent
+Date:   Wed, 19 Aug 2020 14:47:09 +0200
+Message-Id: <20200819124709.20401-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-  - Document missing "#thermal-sensor-cells",
-  - Factor out common required properties,
-  - "interrupts", "clocks", and "power-domains" are required on R-Mobile
-    APE6, too,
-  - Invert logic to simplify descriptions,
-  - Add "additionalProperties: false".
+None of the help texts use capitalization, except the one for the -T
+option.  Drop the capitalization for consistency.
+Split the single long line that doesn't fit in 80 characters.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Niklas Söderlund <niklas.soderlund@ragnatech.se>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Frank Rowand <frowand.list@gmail.com>
 ---
 v2:
   - Add Reviewed-by.
 ---
- .../bindings/thermal/rcar-thermal.yaml        | 53 ++++++++++++-------
- 1 file changed, 34 insertions(+), 19 deletions(-)
+ scripts/dtc/dtx_diff | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-index 0994693d240f9ff4..88787b98992fe7c9 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.yaml
-@@ -59,25 +59,40 @@ properties:
-   resets:
-     maxItems: 1
+diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
+index 541c432e7d199457..d3422ee15e300bc7 100755
+--- a/scripts/dtc/dtx_diff
++++ b/scripts/dtc/dtx_diff
+@@ -29,7 +29,8 @@ Usage:
+        -s SRCTREE   linux kernel source tree is at path SRCTREE
+                         (default is current directory)
+        -S           linux kernel source tree is at root of current git repo
+-       -T           Annotate output .dts with input source file and line (-T -T for more details)
++       -T           annotate output .dts with input source file and line
++                        (-T -T for more details)
+        -u           unsorted, do not sort DTx
  
--if:
--  properties:
--    compatible:
--      contains:
--        enum:
--          - renesas,thermal-r8a73a4 # R-Mobile APE6
--          - renesas,thermal-r8a7779 # R-Car H1
--then:
--  required:
--    - compatible
--    - reg
--else:
--  required:
--    - compatible
--    - reg
--    - interrupts
--    - clocks
--    - power-domains
--    - resets
-+  '#thermal-sensor-cells':
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+
-+allOf:
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - renesas,thermal-r8a73a4 # R-Mobile APE6
-+                - renesas,thermal-r8a7779 # R-Car H1
-+    then:
-+      required:
-+        - resets
-+        - '#thermal-sensor-cells'
-+
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              const: renesas,thermal-r8a7779 # R-Car H1
-+    then:
-+      required:
-+        - interrupts
-+        - clocks
-+        - power-domains
-+
-+additionalProperties: false
  
- examples:
-   # Example (non interrupt support)
 -- 
 2.17.1
 
