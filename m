@@ -2,157 +2,135 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B0BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78416C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B32220639
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5082B20786
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:43:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597830188;
+	bh=eQfdoB63wdKPPwQKDY/l7Z1OnRZwiyuLG2TBV1XF/ug=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hFXdxvQuCzwNy08nPgggx6PPQ5rJEyMb3ptIP2Fmc6lRCgyBZtTxRCkyd4RiHDcvX
+	 zdGq5BZZmtyqM/ZUagF9Di7jZUfGZm+a7IWRwtsK0JzAzBsoK7u2nTk7uxDWg3hmfz
+	 qQU8cV3BBPrllQOFSIvlnnUHJVESfAMYViYLEMSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHSJWL (ORCPT
+        id S1726905AbgHSJnH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:22:11 -0400
-Received: from gecko.sbs.de ([194.138.37.40]:60372 "EHLO gecko.sbs.de"
+        Wed, 19 Aug 2020 05:43:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgHSJWJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:22:09 -0400
-X-Greylist: delayed 1150 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 05:22:07 EDT
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by gecko.sbs.de (8.15.2/8.15.2) with ESMTPS id 07J92gdZ019875
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Aug 2020 11:02:42 +0200
-Received: from [167.87.31.209] ([167.87.31.209])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 07J92fJD018281;
-        Wed, 19 Aug 2020 11:02:42 +0200
-Subject: Re: [PATCH v4 3/3] phy: omap-usb2-phy: disable PHY charger detect
-To:     Roger Quadros <rogerq@ti.com>, kishon@ti.com
-Cc:     robh+dt@kernel.org, nsekhar@ti.com, vigneshr@ti.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Bin Liu <b-liu@ti.com>
-References: <20200716082252.21266-1-rogerq@ti.com>
- <20200716082252.21266-4-rogerq@ti.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <ef391fb2-c75e-5b35-b3e2-96db21c66ab3@siemens.com>
-Date:   Wed, 19 Aug 2020 11:02:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1726803AbgHSJnF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:43:05 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85206206FA;
+        Wed, 19 Aug 2020 09:43:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597830184;
+        bh=eQfdoB63wdKPPwQKDY/l7Z1OnRZwiyuLG2TBV1XF/ug=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oTtCwPnCyX7AXZ5deKcl0ylPWh4hsAbWdc6VVFHGPIFzKZggRNOlfKISY6gZfzMKA
+         2z3aqXCQIPT8QgiUY+OXkN/3jkj0GleL54IVej5nyCAYJ/ct6priOa6uiq58oEwzQW
+         //AguAVc6yros8+HkbnrXSFPHY8EDxAxbAc9toSE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1k8KcZ-0049nd-22; Wed, 19 Aug 2020 10:43:03 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2] of: address: Work around missing device_type property in pcie nodes
+Date:   Wed, 19 Aug 2020 10:42:55 +0100
+Message-Id: <20200819094255.474565-1-maz@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200716082252.21266-4-rogerq@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com, frowand.list@gmail.com, jiaxun.yang@flygoat.com, robh+dt@kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 16.07.20 10:22, Roger Quadros wrote:
-> AM654x PG1.0 has a silicon bug that D+ is pulled high after POR, which
-> could cause enumeration failure with some USB hubs.  Disabling the
-> USB2_PHY Charger Detect function will put D+ into the normal state.
-> 
-> Using property "ti,disable-charger-det" in the DT usb2-phy node to
-> enable this workaround for AM654x PG1.0.
-> 
-> This addresses Silicon Errata:
-> i2075 - "USB2PHY: USB2PHY Charger Detect is Enabled by Default Without VBUS
-> Presence"
-> 
-> Signed-off-by: Bin Liu <b-liu@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  drivers/phy/ti/phy-omap-usb2.c | 35 +++++++++++++++++++++++++++-------
->  1 file changed, 28 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/phy/ti/phy-omap-usb2.c b/drivers/phy/ti/phy-omap-usb2.c
-> index cb2dd3230fa7..21c3904d4efc 100644
-> --- a/drivers/phy/ti/phy-omap-usb2.c
-> +++ b/drivers/phy/ti/phy-omap-usb2.c
-> @@ -26,6 +26,10 @@
->  #define USB2PHY_ANA_CONFIG1		0x4c
->  #define USB2PHY_DISCON_BYP_LATCH	BIT(31)
->  
-> +#define USB2PHY_CHRG_DET			0x14
-> +#define USB2PHY_CHRG_DET_USE_CHG_DET_REG	BIT(29)
-> +#define USB2PHY_CHRG_DET_DIS_CHG_DET		BIT(28)
-> +
->  /* SoC Specific USB2_OTG register definitions */
->  #define AM654_USB2_OTG_PD		BIT(8)
->  #define AM654_USB2_VBUS_DET_EN		BIT(5)
-> @@ -43,6 +47,7 @@
->  #define OMAP_USB2_HAS_START_SRP			BIT(0)
->  #define OMAP_USB2_HAS_SET_VBUS			BIT(1)
->  #define OMAP_USB2_CALIBRATE_FALSE_DISCONNECT	BIT(2)
-> +#define OMAP_USB2_DISABLE_CHRG_DET		BIT(3)
->  
->  struct omap_usb {
->  	struct usb_phy		phy;
-> @@ -236,6 +241,13 @@ static int omap_usb_init(struct phy *x)
->  		omap_usb_writel(phy->phy_base, USB2PHY_ANA_CONFIG1, val);
->  	}
->  
-> +	if (phy->flags & OMAP_USB2_DISABLE_CHRG_DET) {
-> +		val = omap_usb_readl(phy->phy_base, USB2PHY_CHRG_DET);
-> +		val |= USB2PHY_CHRG_DET_USE_CHG_DET_REG |
-> +		       USB2PHY_CHRG_DET_DIS_CHG_DET;
-> +		omap_usb_writel(phy->phy_base, USB2PHY_CHRG_DET, val);
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -366,14 +378,12 @@ static int omap_usb2_probe(struct platform_device *pdev)
->  	phy->mask		= phy_data->mask;
->  	phy->power_on		= phy_data->power_on;
->  	phy->power_off		= phy_data->power_off;
-> +	phy->flags		= phy_data->flags;
->  
-> -	if (phy_data->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
-> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -		phy->phy_base = devm_ioremap_resource(&pdev->dev, res);
-> -		if (IS_ERR(phy->phy_base))
-> -			return PTR_ERR(phy->phy_base);
-> -		phy->flags |= OMAP_USB2_CALIBRATE_FALSE_DISCONNECT;
-> -	}
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	phy->phy_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(phy->phy_base))
-> +		return PTR_ERR(phy->phy_base);
->  
->  	phy->syscon_phy_power = syscon_regmap_lookup_by_phandle(node,
->  							"syscon-phy-power");
-> @@ -405,6 +415,17 @@ static int omap_usb2_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	/*
-> +	 * Errata i2075: USB2PHY: USB2PHY Charger Detect is Enabled by
-> +	 * Default Without VBUS Presence.
-> +	 *
-> +	 * AM654x SR1.0 has a silicon bug due to which D+ is pulled high after
-> +	 * POR, which could cause enumeration failure with some USB hubs.
-> +	 * Disabling the USB2_PHY Charger Detect function will put D+
-> +	 * into the normal state.
-> +	 */
-> +	if (of_property_read_bool(node, "ti,disable-charger-det"))
-> +		phy->flags |= OMAP_USB2_DISABLE_CHRG_DET;
->  
->  	phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
->  	if (IS_ERR(phy->wkupclk)) {
-> 
+Recent changes to the DT PCI bus parsing made it mandatory for
+device tree nodes describing a PCI controller to have the
+'device_type = "pci"' property for the node to be matched.
 
-Why a property, rather than SoC detection like in [1] and your previous
-downstream version?
+Although this follows the letter of the specification, it
+breaks existing device-trees that have been working fine
+for years.  Rockchip rk3399-based systems are a prime example
+of such collateral damage, and have stopped discovering their
+PCI bus.
 
-Jan
+In order to paper over it, let's add a workaround to the code
+matching the device type, and accept as PCI any node that is
+named "pcie",
 
-[1] https://patchwork.kernel.org/patch/11710643/
+A warning will hopefully nudge the user into updating their
+DT to a fixed version if they can, but the incentive is
+obviously pretty small.
 
+Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
+Suggested-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/of/address.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 590493e04b01..b37bd9cc2810 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -128,15 +128,29 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+  * PCI bus specific translator
+  */
+ 
++static bool of_node_is_pcie(struct device_node *np)
++{
++	bool is_pcie = of_node_name_eq(np, "pcie");
++
++	if (is_pcie)
++		pr_warn_once("%pOF: Missing device_type\n", np);
++
++	return is_pcie;
++}
++
+ static int of_bus_pci_match(struct device_node *np)
+ {
+ 	/*
+  	 * "pciex" is PCI Express
+ 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
+ 	 * "ht" is hypertransport
++	 *
++	 * If none of the device_type match, and that the node name is
++	 * "pcie", accept the device as PCI (with a warning).
+ 	 */
+ 	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
+-		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
++		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
++		of_node_is_pcie(np);
+ }
+ 
+ static void of_bus_pci_count_cells(struct device_node *np,
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+2.27.0
+
