@@ -2,131 +2,80 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D7AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 03:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EADAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 03:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2068C207BB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 03:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41BF520855
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 03:24:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="EpmwOD8M";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="S7nD50qy"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nfgAqCib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgHSDVX (ORCPT
+        id S1726751AbgHSDYI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:21:23 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:63508 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727869AbgHSDVX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 23:21:23 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 647E67E099;
-        Tue, 18 Aug 2020 23:21:21 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=seX3cwT57k3X+Wr6pk1P7Eg3Gt4=; b=EpmwOD
-        8M1SpeJ/phxlJIaaLei3v2c/DuyrmFVlX2AlIHxNWIKebQAlQX7ySQZXCQCbw0QR
-        1ADB6uF+VDs+bBSdUAMQ2bEsbviYYwvc79Md83RPSERMnxy9iY+XlH1jiAPjO/In
-        fEu9fsOknncm6seL5h2f8hK+V2Lvgq/IxNxG8=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 5B8667E097;
-        Tue, 18 Aug 2020 23:21:21 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=meibzskveTDwdkGhaPA5kEwFNnfN54+dx3HzO8+5ngg=; b=S7nD50qytkVXXFVBJ8H3sUSSCnmdk8IoMqlV3+UO1wj86GlMNkPy7L5jjgzRt8kx6rkhAto6Spk0+q597FaXfUj3n92scH2V2vtYj3Org3rrcfvQRvP4v4mkxqjeDiU/qFBeJb7z+ZTLR6AIipM5zeZlQsQsWALtU/0sy8cCNHQ=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 9D90A7E095;
-        Tue, 18 Aug 2020 23:21:20 -0400 (EDT)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id AA9F32DA0182;
-        Tue, 18 Aug 2020 23:21:19 -0400 (EDT)
-Date:   Tue, 18 Aug 2020 23:21:19 -0400 (EDT)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org
-cc:     Rob Herring <robh+dt@kernel.org>,
-        Laura Nixon <laura.nixon@team.mipi.org>,
-        Robert Gough <robert.gough@intel.com>,
-        Matthew Schnoor <matthew.schnoor@intel.com>
-Subject: Re: [PATCH v2 1/2] MIPI I3c HCI (Host Controller Interface) driver
-In-Reply-To: <20200819031723.1398378-1-nico@fluxnic.net>
-Message-ID: <nycvar.YSQ.7.78.906.2008182319060.1479@knanqh.ubzr>
-References: <20200819031723.1398378-1-nico@fluxnic.net>
+        Tue, 18 Aug 2020 23:24:08 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:26946 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726605AbgHSDYI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Aug 2020 23:24:08 -0400
+X-UUID: fdc4a9adbbd3462b84673943caa69ae4-20200819
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:Date:CC:To:From:Subject:Message-ID; bh=UxB7ApOkoLV9jry6E7aNdOJqE9r2yvKOn5SkQhZ+HoI=;
+        b=nfgAqCibIacJhHF1+J21qX7pLK2QjJ2D2Mvw0/6VPPw6pk67eH5swD+mGr2l1LKbIAl47sA5y7H1ZR4MOsjprXFDWYbX1vtSVuIwsMVJg5hXWo5rCyfC5cpOYHeR/erV9VsSeaNpJvFXEHJgx/3CWCzFmG9bEcXj6JzAiE8ijz0=;
+X-UUID: fdc4a9adbbd3462b84673943caa69ae4-20200819
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1143645087; Wed, 19 Aug 2020 11:24:01 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug
+ 2020 11:23:56 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 11:23:59 +0800
+Message-ID: <1597807371.5429.28.camel@mhfsdcap03>
+Subject: [BUG] build error due to AGILEX_NAND_X_CLK
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Dinh Nguyen <dinguyen@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>
+Date:   Wed, 19 Aug 2020 11:22:51 +0800
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 0D56F382-E1CB-11EA-B686-01D9BED8090B-78420484!pb-smtp1.pobox.com
+X-TM-SNTS-SMTP: EA7D442FBAEB5FD76A026DBD349CEEFBEE38F2DCEC220290E177F294A39BFA5B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+SGkgRGluaCwNCg0KICAgVGhlcmUgaXMgYnVpbGQgZXJyb3IgZm9yIGFybTY0Og0KYXJjaC9hcm02
+NC9ib290L2R0cy9pbnRlbC9zb2NmcGdhX2FnaWxleC5kdHNpOjMxMy4xNS0xNiBzeW50YXggZXJy
+b3INCkZBVEFMIEVSUk9SOiBVbmFibGUgdG8gcGFyc2UgaW5wdXQgdHJlZQ0KDQppdCdzIGludHJv
+ZHVjZWQgYnkgcGF0Y2g6DQoNCmNvbW1pdCBkNGFlNGRkMzQ2Y2Q0OTMwMmQxNTdiMTI5ZWFkMmY2
+MGQzYTgyNTM0DQpBdXRob3I6IERpbmggTmd1eWVuIDxkaW5ndXllbkBrZXJuZWwub3JnPg0KRGF0
+ZTogICBUdWUgSnVuIDMwIDEzOjQ0OjM3IDIwMjAgLTA1MDANCg0KICAgIGFybTY0OiBkdHM6IGFn
+aWxleDogYWRkIG5hbmQgY2xvY2tzDQoNCiAgICBBZGQgdGhlIGNsb2NrIHByb3BlcnRpZXMgZm9y
+IHRoZSBOQU5EIGR0cyBub2RlLg0KDQogICAgU2lnbmVkLW9mZi1ieTogRGluaCBOZ3V5ZW4gPGRp
+bmd1eWVuQGtlcm5lbC5vcmc+DQoNCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2lu
+dGVsL3NvY2ZwZ2FfYWdpbGV4LmR0c2kNCmIvYXJjaC9hcm02NC9ib290L2R0cy9pbnRlbC9zb2Nm
+cGdhX2FnaWxleC5kdHNpDQppbmRleCBlMzAwMzMwLi5hYzFiMjQyIDEwMDY0NA0KLS0tIGEvYXJj
+aC9hcm02NC9ib290L2R0cy9pbnRlbC9zb2NmcGdhX2FnaWxleC5kdHNpDQorKysgYi9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL2ludGVsL3NvY2ZwZ2FfYWdpbGV4LmR0c2kNCkBAIC0zMDksNiArMzA5LDEw
+IEBADQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8MHhmZmI4MDAwMCAweDEwMDA+Ow0K
+ICAgICAgICAgICAgICAgICAgICAgICAgcmVnLW5hbWVzID0gIm5hbmRfZGF0YSIsICJkZW5hbGlf
+cmVnIjsNCiAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MCA5NyA0PjsNCisg
+ICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrbWdyIEFHSUxFWF9OQU5EX0NMSz4s
+DQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa21nciBBR0lMRVhfTkFORF9Y
+X0NMSz4sDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNsa21nciBBR0lMRVhf
+TkFORF9FQ0NfQ0xLPjsNCisgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gIm5h
+bmQiLCAibmFuZF94IiwgImVjYyI7DQogICAgICAgICAgICAgICAgICAgICAgICByZXNldHMgPSA8
+JnJzdCBOQU5EX1JFU0VUPiwgPCZyc3QNCk5BTkRfT0NQX1JFU0VUPjsNCiAgICAgICAgICAgICAg
+ICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQogICAgICAgICAgICAgICAgfTsNCg0K
 
-Of course subject prefix should have been "[PATCH v2 0/2]" here.
-
-On Tue, 18 Aug 2020, Nicolas Pitre wrote:
-
-> The MIPI I3C HCI (Host Controller Interface) specification defines
-> a common software driver interface to support compliant MIPI I3C
-> host controller hardware implementations from multiple vendors. This
-> is the initial Linux driver implementing support for this specification.
-> 
-> Due to limitations in the I3C subsystem, this driver doesn't implement
-> everything the spec specifies. For example, scheduled commands,
-> auto-commands and NCM are major features not yet supported.
-> 
-> There are different revisions of the spec: v1.0, v1.1 (to be released
-> imminently), and 2.0 (still under active development). All of them are
-> supported with varying degree due to the above. And of course v2 support
-> is likely to change as the spec is finalized, but it is included now
-> in its preliminary form as all I have for testing at the moment is based
-> on an early v2 draft.
-> 
-> Even v1.0 hardware is still scarse so it hasn't been tested yet. As more
-> hardware becomes available for testing it is expected that adjustments
-> will be needed on top of this submission. But it is best to have the
-> current code merged earlier so it gains better exposure for future
-> contributions.
-> 
-> Feedback appreciated.
-> 
-> Changes from v1:
-> 
-> - moved DT binding to schema format (Rob)
-> - fix sparse warnings (kernel test robot)
-> - fix build warnings on 32-bit targets (kernel test robot)
-> - avoid PIO_OFFSET symbol conflict (kernel test robot)
-> - minor cosmetic changes
-> 
-> diffstat:
-> 
->  .../devicetree/bindings/i3c/mipi-i3c-hci.yaml   |  41 +
->  drivers/i3c/master/Kconfig                      |  13 +
->  drivers/i3c/master/Makefile                     |   1 +
->  drivers/i3c/master/mipi-i3c-hci/Makefile        |   9 +
->  drivers/i3c/master/mipi-i3c-hci/cmd.h           | 106 ++
->  drivers/i3c/master/mipi-i3c-hci/cmd_v1.c        | 362 +++++++
->  drivers/i3c/master/mipi-i3c-hci/cmd_v2.c        | 280 +++++
->  drivers/i3c/master/mipi-i3c-hci/core.c          | 801 +++++++++++++++
->  drivers/i3c/master/mipi-i3c-hci/dat.h           |  28 +
->  drivers/i3c/master/mipi-i3c-hci/dat_v1.c        | 170 ++++
->  drivers/i3c/master/mipi-i3c-hci/dct.h           |  16 +
->  drivers/i3c/master/mipi-i3c-hci/dct_v1.c        |  36 +
->  drivers/i3c/master/mipi-i3c-hci/debug.c         |  79 ++
->  drivers/i3c/master/mipi-i3c-hci/debug.h         |  17 +
->  drivers/i3c/master/mipi-i3c-hci/dma.c           | 781 ++++++++++++++
->  drivers/i3c/master/mipi-i3c-hci/ext_caps.c      | 249 +++++
->  drivers/i3c/master/mipi-i3c-hci/ext_caps.h      |  19 +
->  drivers/i3c/master/mipi-i3c-hci/hci.h           | 150 +++
->  drivers/i3c/master/mipi-i3c-hci/ibi.h           |  42 +
->  drivers/i3c/master/mipi-i3c-hci/pio.c           | 961 ++++++++++++++++++
->  20 files changed, 4161 insertions(+)
-> 
-> 
-> 
