@@ -2,499 +2,220 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E691FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F678C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4AF9204FD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C213204FD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Vna714sS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgHSNrE (ORCPT
+        id S1727992AbgHSNsN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728504AbgHSNoC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:44:02 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A464EC06134E
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 06:44:00 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by xavier.telenet-ops.be with bizsmtp
-        id HRjl2300L4C55Sk01RjlxY; Wed, 19 Aug 2020 15:43:56 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8ONV-0003Dw-Fb; Wed, 19 Aug 2020 15:43:45 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1k8ONV-0007FZ-DR; Wed, 19 Aug 2020 15:43:45 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Magnus Damm <magnus.damm@gmail.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 3/7] dt-bindings: net: renesas,etheravb: Convert to json-schema
-Date:   Wed, 19 Aug 2020 15:43:40 +0200
-Message-Id: <20200819134344.27813-4-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200819134344.27813-1-geert+renesas@glider.be>
-References: <20200819134344.27813-1-geert+renesas@glider.be>
+        Wed, 19 Aug 2020 09:48:13 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:58328 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728684AbgHSNrk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 09:47:40 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id BD22529E;
+        Wed, 19 Aug 2020 15:47:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597844848;
+        bh=qPDwphTXyFXbPbkN7vE8BKFucRpOytrUX371l7umWAk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vna714sS+6Dd60PsDIL7WCzaNki7Jhj/tklM9k3oMXXNXReJF5Gb7lR/Ucql9rLZ1
+         3q8SMXcjSCuG6msP5/C09iJONbhhxKbLfvRvzXWBMpVO/nrBTVywcL9f3uxQnTUN23
+         ZQlinPHF6qfRRgg6MCKqRCc6Vezm94OrCGhGdSSA=
+Date:   Wed, 19 Aug 2020 16:47:11 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org, Leon Luo <leonl@leopardimaging.com>,
+        mchehab@kernel.org, sakari.ailus@linux.intel.com,
+        hverkuil-cisco@xs4all.nl, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: media: imx274: Convert to json-schema
+Message-ID: <20200819134711.GI6049@pendragon.ideasonboard.com>
+References: <20200818121821.37776-1-jacopo+renesas@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200818121821.37776-1-jacopo+renesas@jmondi.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the Renesas Ethernet AVB (EthernetAVB-IF) Device Tree binding
-documentation to json-schema.
+Hi Jacopo,
 
-Add missing properties.
-Update the example to match reality.
+Thank you for the patch.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v3:
-  - Add Reviewed-by,
+On Tue, Aug 18, 2020 at 02:18:21PM +0200, Jacopo Mondi wrote:
+> Convert the imx274 bindings document to json-schema and update
+> the MAINTAINERS file accordingly.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../devicetree/bindings/media/i2c/imx274.txt  | 33 ---------
+>  .../devicetree/bindings/media/i2c/imx274.yaml | 69 +++++++++++++++++++
 
-v2:
-  - Add Reviewed-by,
-  - Replace "renesas,[rt]xc-delay-ps" by "[rt]x-internal-delay-ps", for
-    which the base definition is imported from ethernet-controller.yaml.
----
- .../bindings/net/renesas,etheravb.yaml        | 261 ++++++++++++++++++
- .../devicetree/bindings/net/renesas,ravb.txt  | 137 ---------
- 2 files changed, 261 insertions(+), 137 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/renesas,etheravb.yaml
- delete mode 100644 Documentation/devicetree/bindings/net/renesas,ravb.txt
+Could you rename the file to sony,imx274.yaml ? Don't forget to change
+the $id.
 
-diff --git a/Documentation/devicetree/bindings/net/renesas,etheravb.yaml b/Documentation/devicetree/bindings/net/renesas,etheravb.yaml
-new file mode 100644
-index 0000000000000000..e13653051b23d5f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/renesas,etheravb.yaml
-@@ -0,0 +1,261 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/renesas,etheravb.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas Ethernet AVB
-+
-+maintainers:
-+  - Sergei Shtylyov <sergei.shtylyov@gmail.com>
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - renesas,etheravb-r8a7742      # RZ/G1H
-+              - renesas,etheravb-r8a7743      # RZ/G1M
-+              - renesas,etheravb-r8a7744      # RZ/G1N
-+              - renesas,etheravb-r8a7745      # RZ/G1E
-+              - renesas,etheravb-r8a77470     # RZ/G1C
-+              - renesas,etheravb-r8a7790      # R-Car H2
-+              - renesas,etheravb-r8a7791      # R-Car M2-W
-+              - renesas,etheravb-r8a7792      # R-Car V2H
-+              - renesas,etheravb-r8a7793      # R-Car M2-N
-+              - renesas,etheravb-r8a7794      # R-Car E2
-+          - const: renesas,etheravb-rcar-gen2 # R-Car Gen2 and RZ/G1
-+
-+      - items:
-+          - enum:
-+              - renesas,etheravb-r8a774a1     # RZ/G2M
-+              - renesas,etheravb-r8a774b1     # RZ/G2N
-+              - renesas,etheravb-r8a774c0     # RZ/G2E
-+              - renesas,etheravb-r8a7795      # R-Car H3
-+              - renesas,etheravb-r8a7796      # R-Car M3-W
-+              - renesas,etheravb-r8a77961     # R-Car M3-W+
-+              - renesas,etheravb-r8a77965     # R-Car M3-N
-+              - renesas,etheravb-r8a77970     # R-Car V3M
-+              - renesas,etheravb-r8a77980     # R-Car V3H
-+              - renesas,etheravb-r8a77990     # R-Car E3
-+              - renesas,etheravb-r8a77995     # R-Car D3
-+          - const: renesas,etheravb-rcar-gen3 # R-Car Gen3 and RZ/G2
-+
-+  reg: true
-+
-+  interrupts: true
-+
-+  interrupt-names: true
-+
-+  clocks:
-+    maxItems: 1
-+
-+  iommus:
-+    maxItems: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  phy-mode: true
-+
-+  phy-handle: true
-+
-+  '#address-cells':
-+    description: Number of address cells for the MDIO bus.
-+    const: 1
-+
-+  '#size-cells':
-+    description: Number of size cells on the MDIO bus.
-+    const: 0
-+
-+  renesas,no-ether-link:
-+    type: boolean
-+    description:
-+      Specify when a board does not provide a proper AVB_LINK signal.
-+
-+  renesas,ether-link-active-low:
-+    type: boolean
-+    description:
-+      Specify when the AVB_LINK signal is active-low instead of normal
-+      active-high.
-+
-+  rx-internal-delay-ps:
-+    enum: [0, 1800]
-+
-+  tx-internal-delay-ps:
-+    enum: [0, 2000]
-+
-+patternProperties:
-+  "^ethernet-phy@[0-9a-f]$":
-+    type: object
-+    $ref: ethernet-phy.yaml#
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - power-domains
-+  - resets
-+  - phy-mode
-+  - phy-handle
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+allOf:
-+  - $ref: ethernet-controller.yaml#
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - renesas,etheravb-rcar-gen2
-+              - renesas,etheravb-r8a7795
-+              - renesas,etheravb-r8a7796
-+              - renesas,etheravb-r8a77961
-+              - renesas,etheravb-r8a77965
-+    then:
-+      properties:
-+        reg:
-+          items:
-+            - description: MAC register block
-+            - description: Stream buffer
-+    else:
-+      properties:
-+        reg:
-+          items:
-+            - description: MAC register block
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,etheravb-rcar-gen2
-+    then:
-+      properties:
-+        interrupts:
-+          maxItems: 1
-+        interrupt-names:
-+          items:
-+            - const: mux
-+        rx-internal-delay-ps: false
-+    else:
-+      properties:
-+        interrupts:
-+          minItems: 25
-+          maxItems: 25
-+        interrupt-names:
-+          items:
-+            pattern: '^ch[0-9]+$'
-+      required:
-+        - interrupt-names
-+        - rx-internal-delay-ps
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - renesas,etheravb-r8a774a1
-+              - renesas,etheravb-r8a774b1
-+              - renesas,etheravb-r8a7795
-+              - renesas,etheravb-r8a7796
-+              - renesas,etheravb-r8a77961
-+              - renesas,etheravb-r8a77965
-+              - renesas,etheravb-r8a77970
-+              - renesas,etheravb-r8a77980
-+    then:
-+      required:
-+        - tx-internal-delay-ps
-+    else:
-+      properties:
-+        tx-internal-delay-ps: false
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,etheravb-r8a77995
-+    then:
-+      properties:
-+        rx-internal-delay-ps:
-+          const: 1800
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: renesas,etheravb-r8a77980
-+    then:
-+      properties:
-+        tx-internal-delay-ps:
-+          const: 2000
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/r8a7795-sysc.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    aliases {
-+            ethernet0 = &avb;
-+    };
-+
-+    avb: ethernet@e6800000 {
-+            compatible = "renesas,etheravb-r8a7795",
-+                         "renesas,etheravb-rcar-gen3";
-+            reg = <0xe6800000 0x800>, <0xe6a00000 0x10000>;
-+            interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
-+                         <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-+            interrupt-names = "ch0", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6",
-+                              "ch7", "ch8", "ch9", "ch10", "ch11", "ch12",
-+                              "ch13", "ch14", "ch15", "ch16", "ch17", "ch18",
-+                              "ch19", "ch20", "ch21", "ch22", "ch23", "ch24";
-+            clocks = <&cpg CPG_MOD 812>;
-+            iommus = <&ipmmu_ds0 16>;
-+            power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+            resets = <&cpg 812>;
-+            phy-mode = "rgmii";
-+            phy-handle = <&phy0>;
-+            rx-internal-delay-ps = <0>;
-+            tx-internal-delay-ps = <2000>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            phy0: ethernet-phy@0 {
-+                    rxc-skew-ps = <1500>;
-+                    reg = <0>;
-+                    interrupt-parent = <&gpio2>;
-+                    interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
-+                    reset-gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;
-+            };
-+    };
-diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-deleted file mode 100644
-index 4a62dd11d5c488f4..0000000000000000
---- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-+++ /dev/null
-@@ -1,137 +0,0 @@
--* Renesas Electronics Ethernet AVB
--
--This file provides information on what the device node for the Ethernet AVB
--interface contains.
--
--Required properties:
--- compatible: Must contain one or more of the following:
--      - "renesas,etheravb-r8a7742" for the R8A7742 SoC.
--      - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
--      - "renesas,etheravb-r8a7744" for the R8A7744 SoC.
--      - "renesas,etheravb-r8a7745" for the R8A7745 SoC.
--      - "renesas,etheravb-r8a77470" for the R8A77470 SoC.
--      - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
--      - "renesas,etheravb-r8a7791" for the R8A7791 SoC.
--      - "renesas,etheravb-r8a7792" for the R8A7792 SoC.
--      - "renesas,etheravb-r8a7793" for the R8A7793 SoC.
--      - "renesas,etheravb-r8a7794" for the R8A7794 SoC.
--      - "renesas,etheravb-rcar-gen2" as a fallback for the above
--		R-Car Gen2 and RZ/G1 devices.
--
--      - "renesas,etheravb-r8a774a1" for the R8A774A1 SoC.
--      - "renesas,etheravb-r8a774b1" for the R8A774B1 SoC.
--      - "renesas,etheravb-r8a774c0" for the R8A774C0 SoC.
--      - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
--      - "renesas,etheravb-r8a7796" for the R8A77960 SoC.
--      - "renesas,etheravb-r8a77961" for the R8A77961 SoC.
--      - "renesas,etheravb-r8a77965" for the R8A77965 SoC.
--      - "renesas,etheravb-r8a77970" for the R8A77970 SoC.
--      - "renesas,etheravb-r8a77980" for the R8A77980 SoC.
--      - "renesas,etheravb-r8a77990" for the R8A77990 SoC.
--      - "renesas,etheravb-r8a77995" for the R8A77995 SoC.
--      - "renesas,etheravb-rcar-gen3" as a fallback for the above
--		R-Car Gen3 and RZ/G2 devices.
--
--	When compatible with the generic version, nodes must list the
--	SoC-specific version corresponding to the platform first followed by
--	the generic version.
--
--- reg: Offset and length of (1) the register block and (2) the stream buffer.
--       The region for the register block is mandatory.
--       The region for the stream buffer is optional, as it is only present on
--       R-Car Gen2 and RZ/G1 SoCs, and on R-Car H3 (R8A7795), M3-W (R8A77960),
--       M3-W+ (R8A77961), and M3-N (R8A77965).
--- interrupts: A list of interrupt-specifiers, one for each entry in
--	      interrupt-names.
--	      If interrupt-names is not present, an interrupt specifier
--	      for a single muxed interrupt.
--- phy-mode: see ethernet.txt file in the same directory.
--- phy-handle: see ethernet.txt file in the same directory.
--- #address-cells: number of address cells for the MDIO bus, must be equal to 1.
--- #size-cells: number of size cells on the MDIO bus, must be equal to 0.
--- clocks: clock phandle and specifier pair.
--- pinctrl-0: phandle, referring to a default pin configuration node.
--
--Optional properties:
--- interrupt-names: A list of interrupt names.
--		   For the R-Car Gen 3 SoCs this property is mandatory;
--		   it should include one entry per channel, named "ch%u",
--		   where %u is the channel number ranging from 0 to 24.
--		   For other SoCs this property is optional; if present
--		   it should contain "mux" for a single muxed interrupt.
--- pinctrl-names: pin configuration state name ("default").
--- renesas,no-ether-link: boolean, specify when a board does not provide a proper
--			 AVB_LINK signal.
--- renesas,ether-link-active-low: boolean, specify when the AVB_LINK signal is
--				 active-low instead of normal active-high.
--- rx-internal-delay-ps: Internal RX clock delay.
--			This property is mandatory and valid only on R-Car Gen3
--			and RZ/G2 SoCs.
--			Valid values are 0 and 1800.
--			A non-zero value is allowed only if phy-mode = "rgmii".
--			Zero is not supported on R-Car D3.
--- tx-internal-delay-ps: Internal TX clock delay.
--			This property is mandatory and valid only on R-Car H3,
--			M3-W, M3-W+, M3-N, V3M, and V3H, and RZ/G2M and RZ/G2N.
--			Valid values are 0 and 2000.
--			A non-zero value is allowed only if phy-mode = "rgmii".
--			Zero is not supported on R-Car V3H.
--
--Example:
--
--	ethernet@e6800000 {
--		compatible = "renesas,etheravb-r8a7795", "renesas,etheravb-rcar-gen3";
--		reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
--		interrupt-parent = <&gic>;
--		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "ch0", "ch1", "ch2", "ch3",
--				  "ch4", "ch5", "ch6", "ch7",
--				  "ch8", "ch9", "ch10", "ch11",
--				  "ch12", "ch13", "ch14", "ch15",
--				  "ch16", "ch17", "ch18", "ch19",
--				  "ch20", "ch21", "ch22", "ch23",
--				  "ch24";
--		clocks = <&cpg CPG_MOD 812>;
--		power-domains = <&cpg>;
--		phy-mode = "rgmii";
--		phy-handle = <&phy0>;
--		rx-internal-delay-ps = <0>;
--		tx-internal-delay-ps = <2000>;
--
--		pinctrl-0 = <&ether_pins>;
--		pinctrl-names = "default";
--		renesas,no-ether-link;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		phy0: ethernet-phy@0 {
--			rxc-skew-ps = <1500>;
--			reg = <0>;
--			interrupt-parent = <&gpio2>;
--			interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
--		};
--	};
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 70 insertions(+), 34 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx274.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+> deleted file mode 100644
+> index 80f2e89568e1..000000000000
+> --- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
+> +++ /dev/null
+> @@ -1,33 +0,0 @@
+> -* Sony 1/2.5-Inch 8.51Mp CMOS Digital Image Sensor
+> -
+> -The Sony imx274 is a 1/2.5-inch CMOS active pixel digital image sensor with
+> -an active array size of 3864H x 2202V. It is programmable through I2C
+> -interface. The I2C address is fixed to 0x1a as per sensor data sheet.
+> -Image data is sent through MIPI CSI-2, which is configured as 4 lanes
+> -at 1440 Mbps.
+> -
+> -
+> -Required Properties:
+> -- compatible: value should be "sony,imx274" for imx274 sensor
+> -- reg: I2C bus address of the device
+> -
+> -Optional Properties:
+> -- reset-gpios: Sensor reset GPIO
+> -
+> -The imx274 device node should contain one 'port' child node with
+> -an 'endpoint' subnode. For further reading on port node refer to
+> -Documentation/devicetree/bindings/media/video-interfaces.txt.
+> -
+> -Example:
+> -	sensor@1a {
+> -		compatible = "sony,imx274";
+> -		reg = <0x1a>;
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		reset-gpios = <&gpio_sensor 0 0>;
+> -		port {
+> -			sensor_out: endpoint {
+> -				remote-endpoint = <&csiss_in>;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.yaml b/Documentation/devicetree/bindings/media/i2c/imx274.yaml
+> new file mode 100644
+> index 000000000000..71d67466cbd8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx274.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/i2c/imx274.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sony 1/2.5-Inch 8.51Mp CMOS Digital Image Sensor
+
+s/Mp/MP/
+
+> +
+> +maintainers:
+> +  - Leon Luo <leonl@leopardimaging.com>
+> +
+> +description: -|
+> +  The Sony imx274 is a 1/2.5-inch CMOS active pixel digital image sensor with
+
+s/imx274/IMX274/
+
+> +  an active array size of 3864H x 2202V. It is programmable through I2C
+> +  interface. The I2C address is fixed to 0x1a as per sensor data sheet.
+
+I'd drop the last sentence, and add a const: 0x1a to the reg property.
+
+> +  Image data is sent through MIPI CSI-2, which is configured as 4 lanes
+> +  at 1440 Mbps.
+> +
+> +properties:
+> +  compatible:
+> +    const: sony,imx274
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  port:
+> +    type: object
+> +    description: |
+> +      The device node must contain one 'port' child node for its digital output
+> +      video port, in accordance with the video interface bindings defined in
+> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +    properties:
+> +      endpoint:
+> +        type: object
+> +        properties:
+> +          remote-endpoint:
+> +            description: A phandle to the bus receiver's endpoint node.
+> +
+
+We probably want to add clocks and regulators, as well as data-lanes,
+but that's out of scope for the conversion.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +    additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - port
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        imx274: camera-sensor@1a {
+> +            compatible = "sony,imx274";
+> +            reg = <0x1a>;
+> +            reset-gpios = <&gpio_sensor 0 0>;
+> +
+> +            port {
+> +                sensor_out: endpoint {
+> +                    remote-endpoint = <&csiss_in>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 18bc4427e6b0..6c8e98238a7b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15941,7 +15941,7 @@ M:	Leon Luo <leonl@leopardimaging.com>
+>  L:	linux-media@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://linuxtv.org/media_tree.git
+> -F:	Documentation/devicetree/bindings/media/i2c/imx274.txt
+> +F:	Documentation/devicetree/bindings/media/i2c/imx274.yaml
+>  F:	drivers/media/i2c/imx274.c
+> 
+>  SONY IMX290 SENSOR DRIVER
+
 -- 
-2.17.1
+Regards,
 
+Laurent Pinchart
