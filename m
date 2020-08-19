@@ -2,180 +2,119 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C26C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707A0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1492075E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 13:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C60A2076E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597845351;
-	bh=PMYKWpFtARinrQbKF5MpEV0XBEswzJUxujtm4AKQ4Zs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zr6yKUcyBDw0BJw7xvn17OeEYwTFRZnO1c02ZVB+9uB5hw8viw9Ncc1S2hgtMFw4V
-	 +/hZA2lEguwOqhstt0GFRcqGwjVuLuAcW2k1sK9g12AE+q7rg4RAtO/uVIIX9s+shg
-	 KZPgXLMm6nraoE++fV3jwaAA+PwwNbP93i1VNRKk=
+	s=default; t=1597846081;
+	bh=hIHLV4cOF8AgV5MQLy5f4Vy87/PZEGKL0hxscBGc+gU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=d1LbInnrdoT+PNrBImdGO+aBnsNW2Wq1nBxp7vB59DveTTlOlH3f/AseP0Ymi/LSi
+	 ehq4ZZdyFPLwM/nIFU4CK/jrh66cf/xj0qhBPnGZPAxWsptczUVGiwubLnQN+tW8y8
+	 GuXUUYIcTU5QqLtgpr2LxG23VXvcikIfU/XBUq+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgHSNzu (ORCPT
+        id S1728225AbgHSOFx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:55:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44706 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 10:05:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbgHSNzs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:55:48 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728203AbgHSOCt (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:02:49 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E68D3204FD;
-        Wed, 19 Aug 2020 13:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF03204FD;
+        Wed, 19 Aug 2020 14:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597845348;
-        bh=PMYKWpFtARinrQbKF5MpEV0XBEswzJUxujtm4AKQ4Zs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WzpIYpjMN3v161SDcMEqzoIgqf/L8RKxIVF6V4l5+DOg61JsK1EmKu+6mUWYTqnXz
-         7Ir1ub5f22zRgODz7+Ddpi10x69YRQAarWmOZK0yCqqZVCvuY3ZhZZ6t1WWIhpdrDD
-         1PQimzt9dHALnxwa+KFQq+32Vu6sS1B1YkqXFEvA=
-Date:   Wed, 19 Aug 2020 21:55:30 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Jacky Bai <ping.bai@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
-        kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/3] arm64: dts: imx8mm: Add imx8mm ddr4 evk board support
-Message-ID: <20200819134852.GD7114@dragon>
-References: <1595918641-2325-1-git-send-email-ping.bai@nxp.com>
- <1595918641-2325-3-git-send-email-ping.bai@nxp.com>
+        s=default; t=1597845769;
+        bh=hIHLV4cOF8AgV5MQLy5f4Vy87/PZEGKL0hxscBGc+gU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FIKLAputS/I4c2U1zr0YJRhToTkWAF4Wgaxd9YkGul9N09Xcq/NqL2KS7Q4wHdH3Z
+         7sDTFe2XNYlIN8PpjxE2jjEzmAMbvADRRfYr1l0bSvd87yUSErDcbQWU7vc9Xutzmf
+         HABBiDY93Nwm4rZQ+3gn1fe3Xwr4XvaQkLJKEK3w=
+Received: by mail-oi1-f169.google.com with SMTP id u24so19947017oic.7;
+        Wed, 19 Aug 2020 07:02:49 -0700 (PDT)
+X-Gm-Message-State: AOAM531YoGmOwtO5RnxnDTwwRjHxPMImpG2J0gKfqk7S6anjZOGsU2S8
+        KwXf6H273xqETsSExvWHGyjwEw3McJg+cXDl8w==
+X-Google-Smtp-Source: ABdhPJwEuXEemEZiUqYvno+DnR9HNhcBW8VWF3alaPB45jQ7e8T7cLXTiuC51U+Q1kwMXOw6ubpK4QLrTvpO4SI7asQ=
+X-Received: by 2002:aca:90a:: with SMTP id 10mr3316933oij.106.1597845768614;
+ Wed, 19 Aug 2020 07:02:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595918641-2325-3-git-send-email-ping.bai@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200731200826.9292-1-Sergey.Semin@baikalelectronics.ru>
+ <20200731200826.9292-2-Sergey.Semin@baikalelectronics.ru> <20200803215147.GA3201744@bogus>
+ <20200817100014.GG1891694@smile.fi.intel.com>
+In-Reply-To: <20200817100014.GG1891694@smile.fi.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 19 Aug 2020 08:02:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKGqRs7DGiBcy-Ta_WkajGv-xg8GYMiDe13nQiyLj2VfA@mail.gmail.com>
+Message-ID: <CAL_JsqKGqRs7DGiBcy-Ta_WkajGv-xg8GYMiDe13nQiyLj2VfA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: dma: dw: Add optional DMA-channels
+ mask cell support
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Jul 28, 2020 at 02:44:01PM +0800, Jacky Bai wrote:
-> Add the board dts support for i.MX8MM DDR4 EVK board.
-> 
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |  1 +
->  .../boot/dts/freescale/imx8mm-ddr4-evk.dts    | 77 +++++++++++++++++++
->  2 files changed, 78 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index a39f0a1723e0..417c552480f2 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
->  
->  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mm-ddr4-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts
-> new file mode 100644
-> index 000000000000..9cd89182218e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts
-> @@ -0,0 +1,77 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright 2020 NXP
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "imx8mm-evk.dtsi"
-> +
-> +/ {
-> +	model = "FSL i.MX8MM DDR4 EVK with CYW43455 WIFI/BT board";
-> +	compatible = "fsl,imx8mm-ddr4-evk", "fsl,imx8mm";
-> +
-> +	leds {
-> +		pinctrl-0 = <&pinctrl_gpio_led_2>;
-> +
-> +		status {
-> +			gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> +
-> +&ddrc {
-> +	operating-points-v2 = <&ddrc_opp_table>;
-> +
-> +	ddrc_opp_table: opp-table {
-> +		compatible = "operating-points-v2";
-> +
-> +		opp-25M {
-> +			opp-hz = /bits/ 64 <25000000>;
-> +		};
-> +
-> +		opp-100M {
-> +			opp-hz = /bits/ 64 <100000000>;
-> +		};
-> +
-> +		opp-600M {
-> +			opp-hz = /bits/ 64 <600000000>;
-> +		};
-> +	};
+On Mon, Aug 17, 2020 at 4:17 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Aug 03, 2020 at 03:51:47PM -0600, Rob Herring wrote:
+> > On Fri, 31 Jul 2020 23:08:22 +0300, Serge Semin wrote:
+> > > Each DW DMA controller channel can be synthesized with different
+> > > parameters like maximum burst-length, multi-block support, maximum data
+> > > width, etc. Most of these parameters determine the DW DMAC channels
+> > > performance in its own aspect. On the other hand these parameters can
+> > > be implicitly responsible for the channels performance degradation
+> > > (for instance multi-block support is a very useful feature, but having
+> > > it disabled during the DW DMAC synthesize will provide a more optimized
+> > > core). Since DMA slave devices may have critical dependency on the DMA
+> > > engine performance, let's provide a way for the slave devices to have
+> > > the DMA-channels allocated from a pool of the channels, which according
+> > > to the system engineer fulfill their performance requirements.
+> > >
+> > > The pool is determined by a mask optionally specified in the fifth
+> > > DMA-cell of the DMA DT-property. If the fifth cell is omitted from the
+> > > phandle arguments or the mask is zero, then the allocation will be
+> > > performed from a set of all channels provided by the DMA controller.
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Rob, I have a question to clarify (it's not directly related to the series,
+> but to this schema and property names).
+>
+> We have two drivers for DMA controllers from Synopsys (they are different)
+> where properties with the same semantics (like block_size or data-width) have
+> different pattern of naming (okay, block_size for older driver even has _
+> instead of -), i.e. block_size vs. snps,block-size and data-width vs.
+> snps,data-width.
+>
+> I would like to unify them (*) in both drivers and would like to know which
+> naming pattern is preferred in such case?
 
-I'm trying to understand how this ddrc_opp_table is determined.  It's
-defined by SoC/DDR controller or board/DDR chip?
+Unless there's some sign we'd use it with other vendors, I'd generally
+keep the vendor prefix. But I don't think it's worth supporting 3
+variants of 'data-width' in the name of unification.
 
-> +};
-> +
-> +&gpmi {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gpmi_nand_1>;
-> +	status = "okay";
+Also, if they don't have a vendor prefix, then they should be in some
+standard units rather than an encoded register value. (Which seems to
+be the case here).
 
-Please put 'status' at end of property list.
-
-> +	nand-on-flash-bbt;
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_gpmi_nand_1: gpmi-nand-1 {
-
-The suffix "1" isn't really needed, is it?
-
-Shawn
-
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_NAND_ALE_RAWNAND_ALE		0x00000096
-> +			MX8MM_IOMUXC_NAND_CE0_B_RAWNAND_CE0_B		0x00000096
-> +			MX8MM_IOMUXC_NAND_CE1_B_RAWNAND_CE1_B		0x00000096
-> +			MX8MM_IOMUXC_NAND_CLE_RAWNAND_CLE		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA00_RAWNAND_DATA00		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA01_RAWNAND_DATA01		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA02_RAWNAND_DATA02		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA03_RAWNAND_DATA03		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA04_RAWNAND_DATA04		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA05_RAWNAND_DATA05		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA06_RAWNAND_DATA06		0x00000096
-> +			MX8MM_IOMUXC_NAND_DATA07_RAWNAND_DATA07		0x00000096
-> +			MX8MM_IOMUXC_NAND_RE_B_RAWNAND_RE_B		0x00000096
-> +			MX8MM_IOMUXC_NAND_READY_B_RAWNAND_READY_B	0x00000056
-> +			MX8MM_IOMUXC_NAND_WE_B_RAWNAND_WE_B		0x00000096
-> +			MX8MM_IOMUXC_NAND_WP_B_RAWNAND_WP_B		0x00000096
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpio_led_2: gpioled2grp {
-> +		fsl,pins = <
-> +			MX8MM_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x19
-> +		>;
-> +	};
-> +};
-> -- 
-> 2.26.2
-> 
+Rob
