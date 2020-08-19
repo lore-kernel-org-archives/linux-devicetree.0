@@ -2,69 +2,98 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16E6C433E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF02C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A75F32072D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A095206FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 12:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgHSMeT (ORCPT
+        id S1726794AbgHSMjR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:34:19 -0400
-Received: from auth-smtp.nebula.fi ([217.149.52.145]:39688 "EHLO
-        auth-smtp.nebula.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728306AbgHSMeB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 08:34:01 -0400
-Received: from developer-Precision-3630-Tower (82-203-173-204.bb.dnainternet.fi [82.203.173.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: xipheracom)
-        by auth-smtp.nebula.fi (Postfix) with ESMTPSA id 386C5444D;
-        Wed, 19 Aug 2020 15:22:03 +0300 (EEST)
-From:   Atte Tommiska <atte.tommiska@xiphera.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Atte Tommiska <atte.tommiska@xiphera.com>
-Subject: [PATCH 0/3] hwrng: add support for Xiphera XIP8001B
-Date:   Wed, 19 Aug 2020 15:21:32 +0300
-Message-Id: <20200819122135.25316-1-atte.tommiska@xiphera.com>
-X-Mailer: git-send-email 2.28.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 19 Aug 2020 08:39:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbgHSMjN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 08:39:13 -0400
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B4FC061757
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 05:39:13 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by albert.telenet-ops.be with bizsmtp
+        id HQfB2301v4C55Sk06QfBq9; Wed, 19 Aug 2020 14:39:11 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8NN1-0002J1-Ek; Wed, 19 Aug 2020 14:39:11 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k8NN1-00056x-CT; Wed, 19 Aug 2020 14:39:11 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] arm64: dts: renesas: Drop superfluous pin configuration containers
+Date:   Wed, 19 Aug 2020 14:39:10 +0200
+Message-Id: <20200819123910.19606-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patchset introduces a linux driver for Xiphera's XIP8001B IP.
-The IP is an FPGA-based TRNG which can be used in various FPGA families.
-The IP is in use in multiple customer projects and in Xiphera's own products.
+As the pin configuration child nodes for EtherAVB on the Draak and Ebisu
+boards contain only a single configuration, there is no need to wrap
+them in additional grandchild containers.  Hence remove the superfluous
+level.
 
-Atte Tommiska (3):
-  dt-bindings: vendor-prefixes: Add Xiphera vendor prefix
-  dt-bindings: rng: add bindings for Xiphera XIP8001B hwnrg
-  hwrng: xiphera-trng: add support for XIP8001B hwrng
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in renesas-devel for v5.10.
 
- .../bindings/rng/xiphera,xip8001b-trng.yaml   |  30 ++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- drivers/char/hw_random/Kconfig                |  10 ++
- drivers/char/hw_random/Makefile               |   1 +
- drivers/char/hw_random/xiphera-trng.c         | 151 ++++++++++++++++++
- 5 files changed, 194 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml
- create mode 100644 drivers/char/hw_random/xiphera-trng.c
+ arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts | 6 ++----
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 6 ++----
+ 2 files changed, 4 insertions(+), 8 deletions(-)
 
-
-base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
+diff --git a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+index 7402cfa8d4e4dfc8..e0ccca2222d2d00c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77990-ebisu.dts
+@@ -520,10 +520,8 @@
+ 
+ &pfc {
+ 	avb_pins: avb {
+-		mux {
+-			groups = "avb_link", "avb_mii";
+-			function = "avb";
+-		};
++		groups = "avb_link", "avb_mii";
++		function = "avb";
+ 	};
+ 
+ 	canfd0_pins: canfd0 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+index 79c73a99d2fed77f..8f471881b7a367db 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+@@ -393,10 +393,8 @@
+ 
+ &pfc {
+ 	avb0_pins: avb {
+-		mux {
+-			groups = "avb0_link", "avb0_mdio", "avb0_mii";
+-			function = "avb0";
+-		};
++		groups = "avb0_link", "avb0_mdio", "avb0_mii";
++		function = "avb0";
+ 	};
+ 
+ 	can0_pins: can0 {
 -- 
-2.28.0
+2.17.1
 
