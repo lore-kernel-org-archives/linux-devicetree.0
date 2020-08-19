@@ -2,239 +2,490 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA22C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B504BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460B220888
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8283F207FF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 16:52:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="MOAYogr9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mELPK41e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgHSQoo (ORCPT
+        id S1725939AbgHSQwQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:44:44 -0400
-Received: from mail-dm6nam12on2050.outbound.protection.outlook.com ([40.107.243.50]:46177
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726578AbgHSQoV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:44:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dwq48Rp2BlThdd0YK5n1ol7kp1sQVYpRv+nMqgTqOMx4iWIIHWR4nLUxT9w5rS8FQjAOTbKwGgYBP7vbGl3AjXSHGrXQnne+ISprAKquPZCfgpyFGje7mhTWpiKuLDjqhuq4EkHNADNbMHbWq7t5MFcaxkAFcmdceQUNyZCnoyjyF3Bx5ZYfMxIer+1DfWO/Rp0KMknNdevgW7ABw8a/O6lkjqvPPpZeA/dkDRkxIJXiKkqYCDd48iAxrgtrjlY7XG4LeWf7tmfaDIVoxpXA69i+yhhK0WXsVKGNIKgO7GJ8CPEoRsmVOn1Z9aHkWGhaf42DAaq7QfdGJHEB0ecDlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oiwv4EyHvBly0lGV1ps+sunoB217g11ygvpEj3Yo3Lg=;
- b=aJnTzgVjSypfQRb0TvYVKSA8Dy5dX1H7STHZ3Pc5V3YfCBjcy/LZYTqYs76ExUjMvTd4C4h++SOHcwkIqifS+D3k8+Lx0sDM7cxNjmXHzbK70AP54NS+/UWuuHL8Gm/tve2XbZrKW/a5YnGxf36D49KTAvm/WgYHS2Q1rVOY+1xnXX9Mx6nf9PyMco6MhP4lOD8z99d8wQYn9pGXvmuKwwo/vGkvD1PlFFV3wQBOtws+YPHbRNy0FmmYgN3DmJTaugb88zOs5ng12hFabQ6vogKTUjT2fvVtdUj0LanzsNjfItXSirbRJaMBGWOUZUznWd9ZyG+szOZmAKJTo0xhPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
+        Wed, 19 Aug 2020 12:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbgHSQwO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 12:52:14 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A7DC061757;
+        Wed, 19 Aug 2020 09:52:14 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id bo3so27077206ejb.11;
+        Wed, 19 Aug 2020 09:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Oiwv4EyHvBly0lGV1ps+sunoB217g11ygvpEj3Yo3Lg=;
- b=MOAYogr9MYJ338Ons9lUGoEawunT9Kc436Ks127rfV4Shtm6gCWoEZC1CLHoUcwO5UeM/XImsYWD71r2g407argUu/4g8x0Af7+HRqVsPUaLVjeFnmLQaoDBkOdXfY1pu0t6wCisjdJqgSCsuOiSXOYzXVMlul8SvaWEpyNBq1Y=
-Received: from SN4PR0501CA0106.namprd05.prod.outlook.com
- (2603:10b6:803:42::23) by BN8PR02MB5873.namprd02.prod.outlook.com
- (2603:10b6:408:af::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.18; Wed, 19 Aug
- 2020 16:44:17 +0000
-Received: from SN1NAM02FT062.eop-nam02.prod.protection.outlook.com
- (2603:10b6:803:42:cafe::e9) by SN4PR0501CA0106.outlook.office365.com
- (2603:10b6:803:42::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.10 via Frontend
- Transport; Wed, 19 Aug 2020 16:44:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT062.mail.protection.outlook.com (10.152.72.208) with Microsoft SMTP
- Server id 15.20.3305.24 via Frontend Transport; Wed, 19 Aug 2020 16:44:16
- +0000
-Received: from [149.199.38.66] (port=33073 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1k8RBt-0004Du-3j; Wed, 19 Aug 2020 09:43:57 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1k8RCC-0002LD-OF; Wed, 19 Aug 2020 09:44:16 -0700
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07JGi7Lh017364;
-        Wed, 19 Aug 2020 09:44:07 -0700
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1k8RC2-0002IZ-RU; Wed, 19 Aug 2020 09:44:07 -0700
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-To:     linux-serial@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, jslaby@suse.com, robh+dt@kernel.org,
-        git-dev@xilinx.com, gregkh@linuxfoundation.org,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH 2/2] tty: pl011: Add support for xilinx uart
-Date:   Wed, 19 Aug 2020 22:13:59 +0530
-Message-Id: <1597855439-746-2-git-send-email-shubhrajyoti.datta@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597855439-746-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-References: <1597855439-746-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Lu1L8Np4Sb1znwysVOMYeFd9PeezWxo0K5RLTh1iwF8=;
+        b=mELPK41eNWYV7XCpw+RnLESHqhS/nSXA6SruNKm9XqHomDbZgcdomg5q5FIYFGSOgF
+         57r/JqBVViqLKlIIsg4KLyBe+8DjxUn/C3Pxdj8RqwGLc09S8EnZ1QG4OsN8REr6N3cA
+         M9xwDj9I+1WK7OWfJLVMDuugstPh+OdMFKN5xF+M1U3BL7npqHGqOFaoEGxTJIZextjX
+         h51o68qT+7dEgZdmXXYLzP5h3cBRwnRkk2j8Moh/pdNLYDtvuLyYHGt0dZNXEibMbOHh
+         bf/bOUyNZb6D6Ws0NgvGv5DJ63UXWsa8GHq2DiTJysjxkCsWRM8wgyxzQehSY1O1zaar
+         i2ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Lu1L8Np4Sb1znwysVOMYeFd9PeezWxo0K5RLTh1iwF8=;
+        b=A2C3Q7SxF3ICTNUq71Iac5guKEhha+0uNvvuaH6BYGhoaAehluLisIpGCHKUoUpNMF
+         6VFhUiLIuYKPIfSstzWOfGKShc3FLgP6UtIFlgwLwgHSnGfomdRLnoaj3VO9zjumwb8i
+         8OnRW9hOj0P7igfK0Fktaspt04W47xb7TDlw1TSF1lVlnvw6PC5mG1Zm+mpJh2aIYKjx
+         CMVSGZtOU40Van43oiDqSCiar99yauynPioVIzCc74touCYArrqIQViEdHIx+za7ltnl
+         TBpB3X9yxuqxt3LOvEDK9DN7mx07jUC0X8X8Hd52vVLesQpgCZdMyv76MDGFfsR/wRlQ
+         Ykdw==
+X-Gm-Message-State: AOAM530YzW0HLHyuihCyZeCxS2biwNA0vjVD0BKU80PS+jazTJxgYU+P
+        5ry7/K07xIDPtYTPnyvSOSw=
+X-Google-Smtp-Source: ABdhPJzExkOe6H5raBLgYHpzAZF5ZdHMeGO0Fle/sZJSryqt3vGK8hjC1O2pz4tO/1tevNlhoZxw8w==
+X-Received: by 2002:a17:906:f8c3:: with SMTP id lh3mr26531749ejb.263.1597855932552;
+        Wed, 19 Aug 2020 09:52:12 -0700 (PDT)
+Received: from BV030612LT ([188.24.144.238])
+        by smtp.gmail.com with ESMTPSA id u6sm19416937ejf.98.2020.08.19.09.52.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 09:52:12 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 19:52:09 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-actions@lists.infradead.org,
+        Saravanan Sekar <sravanhome@gmail.com>
+Subject: Re: [PATCH v4 2/3] irqchip: Add Actions Semi Owl SIRQ controller
+Message-ID: <20200819165209.GA2137769@BV030612LT>
+References: <cover.1597571397.git.cristian.ciocaltea@gmail.com>
+ <addb413d192d88c076c6ed7f453aa693095bdd15.1597571397.git.cristian.ciocaltea@gmail.com>
+ <8e43fe6c6246bfd5347dc21b6f5c3f50@kernel.org>
+ <20200818174241.GA2020288@BV030612LT>
+ <87lfibn0ie.wl-maz@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: d82e202e-84c1-481f-5451-08d8445f1ce0
-X-MS-TrafficTypeDiagnostic: BN8PR02MB5873:
-X-Microsoft-Antispam-PRVS: <BN8PR02MB58739F76BA1E10D2941226E2AA5D0@BN8PR02MB5873.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OdjMzhfS3V2K/2JcMiv7yNbdeGNdRX2It+ZzJOTB0BIFCh4uLirjayO69YNKpcSvn3BT508Vzf6OLSz1yV2XQce2oyx/LMHtSck27jr/w50bpMgF3fJQpvE4/OB+TX9JNBvZkwI62S9P29baq3eD6Q0GKeGpqrZEsOHiPAJ5LpF+XTFtAq9GrKsfzpKfMg6VPC50ObWt7xCu82M/T9FQny2mmvCRaonc8o4TXJz7PNuh3JVuugyPClPXnL6bCYEOtH+poK+UJtPdNdJIT9q9bD5NkIf6b3AhEsgejHIYAvmdoR/8qUcSAhVKNwxJVBOWa0OZQc4VyUADamP4mYf9EDRgEjoT8cZ6kPvCxmzWWHu/zqU2gMsnAMXXA8QrT1ql4DOpO/NmhYlyTqUM7mUM7Q==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(136003)(346002)(39860400002)(396003)(376002)(46966005)(26005)(81166007)(316002)(8936002)(6666004)(107886003)(478600001)(2906002)(426003)(9786002)(7696005)(6916009)(4326008)(2616005)(336012)(8676002)(83380400001)(47076004)(36756003)(186003)(44832011)(5660300002)(70206006)(70586007)(356005)(82740400003)(82310400002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 16:44:16.9900
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d82e202e-84c1-481f-5451-08d8445f1ce0
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT062.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5873
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87lfibn0ie.wl-maz@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Xilinx uart is similar to sbsa but it has configurable
-parity and hardware flow. Add a compatible for the same.
+On Tue, Aug 18, 2020 at 09:48:41PM +0100, Marc Zyngier wrote:
+> On Tue, 18 Aug 2020 18:42:41 +0100,
+> Cristian Ciocaltea <cristian.ciocaltea@gmail.com> wrote:
+> > 
+> > Hi Marc,
+> > 
+> > Thanks for your quick and detailed review!
+> > 
+> > On Mon, Aug 17, 2020 at 02:52:06PM +0100, Marc Zyngier wrote:
+> > > On 2020-08-16 12:33, Cristian Ciocaltea wrote:
+> > > > This controller appears on Actions Semi Owl family SoC's S500, S700 and
+> > > > S900 and provides support for 3 external interrupt controllers through
+> > > 
+> > > Is that really 3 interrupt controllers? Or merely 3 interrupt lines?
+> > 
+> > This is mostly a leftover statement from the previous patch revision.
+> > I will change it to something like:
+> > 
+> > "This interrupt controller is found in the Actions Semi Owl SoCs (S500,
+> > S700 and S900) and provides support for handling up to 3 external
+> > interrupt lines."
+> 
+> Looks good.
+> 
+> > 
+> > > > dedicated SIRQ pins.
+> > > > 
+> > > > Each line can be independently configured as interrupt and triggers
+> > > > on either of the edges (raising or falling) or either of the levels
+> > > > (high or low). Each line can also be masked independently.
+> > > > 
+> > > > This is based on the patch series submitted by Parthiban Nallathambi:
+> > > > https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
+> > > > 
+> > > > Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> > > > Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+> > > > [cristi: optimized DT, various fixes/cleanups/improvements]
+> > > > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > > ---
+> > > >  drivers/irqchip/Makefile       |   1 +
+> > > >  drivers/irqchip/irq-owl-sirq.c | 318 +++++++++++++++++++++++++++++++++
+> > > >  2 files changed, 319 insertions(+)
+> > > >  create mode 100644 drivers/irqchip/irq-owl-sirq.c
+> > > > 
+> > > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > > > index 133f9c45744a..b8eb5b8b766d 100644
+> > > > --- a/drivers/irqchip/Makefile
+> > > > +++ b/drivers/irqchip/Makefile
+> > > > @@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
+> > > >  obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
+> > > >  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+> > > >  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
+> > > > +obj-$(CONFIG_ARCH_ACTIONS)		+= irq-owl-sirq.o
+> > > >  obj-$(CONFIG_DAVINCI_AINTC)		+= irq-davinci-aintc.o
+> > > >  obj-$(CONFIG_DAVINCI_CP_INTC)		+= irq-davinci-cp-intc.o
+> > > >  obj-$(CONFIG_EXYNOS_IRQ_COMBINER)	+= exynos-combiner.o
+> > > > diff --git a/drivers/irqchip/irq-owl-sirq.c
+> > > > b/drivers/irqchip/irq-owl-sirq.c
+> > > > new file mode 100644
+> > > > index 000000000000..29b7ffc40ac7
+> > > > --- /dev/null
+> > > > +++ b/drivers/irqchip/irq-owl-sirq.c
+> > > > @@ -0,0 +1,318 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > +/*
+> > > > + * Actions Semi Owl SoCs SIRQ interrupt controller driver
+> > > > + *
+> > > > + * Copyright (C) 2014 Actions Semi Inc.
+> > > > + * David Liu <liuwei@actions-semi.com>
+> > > > + *
+> > > > + * Author: Parthiban Nallathambi <pn@denx.de>
+> > > > + * Author: Saravanan Sekar <sravanhome@gmail.com>
+> > > > + * Author: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> > > > + */
+> > > > +
+> > > > +#include <linux/interrupt.h>
+> > > > +#include <linux/irqchip.h>
+> > > > +#include <linux/of_address.h>
+> > > > +#include <linux/of_irq.h>
+> > > > +
+> > > > +#define NUM_SIRQ			3
+> > > > +
+> > > > +#define INTC_EXTCTL_PENDING		BIT(0)
+> > > > +#define INTC_EXTCTL_CLK_SEL		BIT(4)
+> > > > +#define INTC_EXTCTL_EN			BIT(5)
+> > > > +#define INTC_EXTCTL_TYPE_MASK		GENMASK(7, 6)
+> > > > +#define INTC_EXTCTL_TYPE_HIGH		0
+> > > > +#define INTC_EXTCTL_TYPE_LOW		BIT(6)
+> > > > +#define INTC_EXTCTL_TYPE_RISING		BIT(7)
+> > > > +#define INTC_EXTCTL_TYPE_FALLING	(BIT(6) | BIT(7))
+> > > > +
+> > > > +/* S900 SIRQ1 & SIRQ2 control register offsets, relative to SIRQ0 */
+> > > > +#define INTC_EXTCTL1			0x0328
+> > > > +#define INTC_EXTCTL2			0x032c
+> > > > +
+> > > > +struct owl_sirq_params {
+> > > > +	/* INTC_EXTCTL reg shared for all three SIRQ lines */
+> > > > +	bool reg_shared;
+> > > > +	/* INTC_EXTCTL reg offsets relative to controller base address */
+> > > > +	u16 reg_offset[NUM_SIRQ];
+> > > > +};
+> > > > +
+> > > > +struct owl_sirq_chip_data {
+> > > > +	const struct owl_sirq_params *params;
+> > > > +	void __iomem *base;
+> > > > +	raw_spinlock_t lock;
+> > > > +	u32 ext_irqs[NUM_SIRQ];
+> > > > +	u8 trigger;
+> > > 
+> > > Nit: Please align data structure members vertically:
+> > > 
+> > > struct owl_sirq_chip_data {
+> > > 	const struct owl_sirq_params *params;
+> > > 	void __iomem                 *base;
+> > > 	raw_spinlock_t               lock;
+> > > 	u32                          ext_irqs[NUM_SIRQ];
+> > > 	u8                           trigger;
+> > > };
+> > 
+> > Done.
+> > 
+> > > > +};
+> > > > +
+> > > > +/* S500 and S700 SoCs */
+> > > > +static const struct owl_sirq_params owl_sirq_s500_params = {
+> > > > +	.reg_shared = true,
+> > > > +	.reg_offset = { 0, 0, 0 },
+> > > > +};
+> > > > +
+> > > > +/* S900 SoC */
+> > > > +static const struct owl_sirq_params owl_sirq_s900_params = {
+> > > > +	.reg_shared = false,
+> > > > +	.reg_offset = { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
+> > > 
+> > > 0 *is* an offset, right? Why doesn't it have a name too?
+> > 
+> > Right, I updated the defines section:
+> > 
+> > /* S900 SIRQ control register offsets, relative to controller base address */
+> > #define INTC_EXTCTL0			0x0000
+> > #define INTC_EXTCTL1			0x0328
+> > [...]
+> > 
+> > The controller base address points to SIRQ0 control register, so this
+> > offset is always 0, but I totally agree we should have a name for it.
+> > 
+> > > > +};
+> > > > +
+> > > > +static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32
+> > > > index)
+> > > > +{
+> > > > +	u32 val;
+> > > > +
+> > > > +	val = readl_relaxed(data->base + data->params->reg_offset[index]);
+> > > > +	if (data->params->reg_shared)
+> > > > +		val = (val >> (2 - index) * 8) & 0xff;
+> > > 
+> > >         base = (2 - index) * 8;
+> > >         val = FIELD_GET(GENMASK(base + 7, base), val);
+> > 
+> > Unfortunately the context doesn't allow using FIELD_GET:
+> > 
+> > ./include/linux/compiler.h:392:38: error: call to ‘__compiletime_assert_159’ 
+> >  declared with attribute error: FIELD_GET: mask is not constant
+> 
+> Bah. Turning the whole thing into compile-time values would actually
+> be more readable, so how about this:
+> 
+> diff --git a/drivers/irqchip/irq-owl-sirq.c b/drivers/irqchip/irq-owl-sirq.c
+> index 29b7ffc40ac7..b771acbda7d5 100644
+> --- a/drivers/irqchip/irq-owl-sirq.c
+> +++ b/drivers/irqchip/irq-owl-sirq.c
+> @@ -57,13 +57,39 @@ static const struct owl_sirq_params owl_sirq_s900_params = {
+>  	.reg_offset = { 0, INTC_EXTCTL1, INTC_EXTCTL2 },
+>  };
+>  
+> +static u32 owl_field_get(u32 val, int index)
+> +{
+> +	switch(index) {
+> +	case 0:
+> +		return FIELD_GET(GENMASK(23, 16), val);
+> +	case 1:
+> +		return FIELD_GET(GENMASK(15, 8), val);
+> +	case 2:
+> +	default:
+> +		return FIELD_GET(GENMASK(7, 0), val);
+> +	}
+> +}
+> +
+> +static u32 owl_field_prep(u32 val, int index)
+> +{
+> +	switch(index) {
+> +	case 0:
+> +		return FIELD_PREP(GENMASK(23, 16), val);
+> +	case 1:
+> +		return FIELD_PREP(GENMASK(15, 8), val);
+> +	case 2:
+> +	default:
+> +		return FIELD_PREP(GENMASK(7, 0), val);
+> +	}
+> +}
+> +
+>  static u32 owl_sirq_read_extctl(struct owl_sirq_chip_data *data, u32 index)
+>  {
+>  	u32 val;
+>  
+>  	val = readl_relaxed(data->base + data->params->reg_offset[index]);
+>  	if (data->params->reg_shared)
+> -		val = (val >> (2 - index) * 8) & 0xff;
+> +		val = owl_field_get(val, index);
+>  
+>  	return val;
+>  }
+> @@ -75,9 +101,8 @@ static void owl_sirq_write_extctl(struct owl_sirq_chip_data *data,
+>  
+>  	if (data->params->reg_shared) {
+>  		val = readl_relaxed(data->base + data->params->reg_offset[index]);
+> -		val &= ~(0xff << (2 - index) * 8);
+> -		extctl &= 0xff;
+> -		extctl = (extctl << (2 - index) * 8) | val;
+> +		val &= ~owl_field_prep(0xff, index);
+> +		extctl = owl_field_prep(extctl, index) | val;
+>  	}
+>  
+>  	writel_relaxed(extctl, data->base + data->params->reg_offset[index]);
+> 
+> Yes, this is a bit more code, but it *is* readable. Bonus points if
+> you add proper defines for the masks.
+ 
+That's great, thanks a lot!
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- drivers/tty/serial/amba-pl011.c | 77 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 1 deletion(-)
+I have submitted a new revision:
+https://lore.kernel.org/lkml/cover.1597852360.git.cristian.ciocaltea@gmail.com/
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 8efd7c2..41dbcee 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2073,6 +2073,55 @@ sbsa_uart_set_termios(struct uart_port *port, struct ktermios *termios,
- 	spin_unlock_irqrestore(&port->lock, flags);
- }
- 
-+static void
-+xlnx_sbsa_uart_set_termios(struct uart_port *port, struct ktermios *termios,
-+			   struct ktermios *old)
-+{
-+	struct uart_amba_port *uap =
-+	    container_of(port, struct uart_amba_port, port);
-+	unsigned long flags;
-+	unsigned int lcr_h, old_cr;
-+
-+	tty_termios_encode_baud_rate(termios, uap->fixed_baud, uap->fixed_baud);
-+	/* The SBSA UART only supports 8n1 without hardware flow control. */
-+	termios->c_cflag &= ~(CMSPAR | CRTSCTS);
-+	switch (termios->c_cflag & CSIZE) {
-+	case CS5:
-+		lcr_h = UART01x_LCRH_WLEN_5;
-+		break;
-+	case CS6:
-+		lcr_h = UART01x_LCRH_WLEN_6;
-+		break;
-+	case CS7:
-+		lcr_h = UART01x_LCRH_WLEN_7;
-+		break;
-+	default:
-+		lcr_h = UART01x_LCRH_WLEN_8;
-+		break;
-+	}
-+	if (termios->c_cflag & CSTOPB)
-+		lcr_h |= UART01x_LCRH_STP2;
-+	if (termios->c_cflag & PARENB) {
-+		lcr_h |= UART01x_LCRH_PEN;
-+		if (!(termios->c_cflag & PARODD))
-+			lcr_h |= UART01x_LCRH_EPS;
-+		if (termios->c_cflag & CMSPAR)
-+			lcr_h |= UART011_LCRH_SPS;
-+	}
-+	if (uap->fifosize > 1)
-+		lcr_h |= UART01x_LCRH_FEN;
-+
-+	spin_lock_irqsave(&port->lock, flags);
-+	uart_update_timeout(port, CS8, uap->fixed_baud);
-+	pl011_setup_status_masks(port, termios);
-+	/* first, disable everything */
-+	old_cr = pl011_read(uap, REG_CR);
-+	pl011_write(0, uap, REG_CR);
-+	pl011_write_lcr_h(uap, lcr_h);
-+	pl011_write(old_cr, uap, REG_CR);
-+	spin_unlock_irqrestore(&port->lock, flags);
-+}
-+
- static const char *pl011_type(struct uart_port *port)
- {
- 	struct uart_amba_port *uap =
-@@ -2179,6 +2228,28 @@ static const struct uart_ops sbsa_uart_pops = {
- #endif
- };
- 
-+static const struct uart_ops xlnx_sbsa_uart_pops = {
-+	.tx_empty	= pl011_tx_empty,
-+	.set_mctrl	= sbsa_uart_set_mctrl,
-+	.get_mctrl	= sbsa_uart_get_mctrl,
-+	.stop_tx	= pl011_stop_tx,
-+	.start_tx	= pl011_start_tx,
-+	.stop_rx	= pl011_stop_rx,
-+	.startup	= sbsa_uart_startup,
-+	.shutdown	= sbsa_uart_shutdown,
-+	.set_termios	= xlnx_sbsa_uart_set_termios,
-+	.type		= pl011_type,
-+	.release_port	= pl011_release_port,
-+	.request_port	= pl011_request_port,
-+	.config_port	= pl011_config_port,
-+	.verify_port	= pl011_verify_port,
-+#ifdef CONFIG_CONSOLE_POLL
-+	.poll_init     = pl011_hwinit,
-+	.poll_get_char = pl011_get_poll_char,
-+	.poll_put_char = pl011_put_poll_char,
-+#endif
-+};
-+
- static struct uart_amba_port *amba_ports[UART_NR];
- 
- #ifdef CONFIG_SERIAL_AMBA_PL011_CONSOLE
-@@ -2754,7 +2825,10 @@ static int sbsa_uart_probe(struct platform_device *pdev)
- 	uap->reg_offset	= uap->vendor->reg_offset;
- 	uap->fifosize	= 32;
- 	uap->port.iotype = uap->vendor->access_32b ? UPIO_MEM32 : UPIO_MEM;
--	uap->port.ops	= &sbsa_uart_pops;
-+	if (of_device_is_compatible(pdev->dev.of_node, "arm,xlnx-sbsa-uart"))
-+		uap->port.ops	= &xlnx_sbsa_uart_pops;
-+	else
-+		uap->port.ops	= &sbsa_uart_pops;
- 	uap->fixed_baud = baudrate;
- 
- 	snprintf(uap->type, sizeof(uap->type), "SBSA");
-@@ -2781,6 +2855,7 @@ static int sbsa_uart_remove(struct platform_device *pdev)
- 
- static const struct of_device_id sbsa_uart_of_match[] = {
- 	{ .compatible = "arm,sbsa-uart", },
-+	{ .compatible = "arm,xlnx-sbsa-uart", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sbsa_uart_of_match);
--- 
-2.7.4
+Regards,
+Cristi
 
+> > 
+> > > > +
+> > > > +	return val;
+> > > > +}
+> > > > +
+> > > > +static void owl_sirq_write_extctl(struct owl_sirq_chip_data *data,
+> > > > +				  u32 extctl, u32 index)
+> > > > +{
+> > > > +	u32 val;
+> > > > +
+> > > > +	if (data->params->reg_shared) {
+> > > > +		val = readl_relaxed(data->base + data->params->reg_offset[index]);
+> > > > +		val &= ~(0xff << (2 - index) * 8);
+> > > > +		extctl &= 0xff;
+> > > > +		extctl = (extctl << (2 - index) * 8) | val;
+> > > 
+> > > Please make use of FIELD_PREP, FIELD_GET and GENMASK.
+> > 
+> > I'm not sure how to deal with the mask constness restriction, except
+> > using static defines and if/else statements, which is not quite
+> > elegant.
+> 
+> See above.
+> 
+> > 
+> > > > +	}
+> > > > +
+> > > > +	writel_relaxed(extctl, data->base + data->params->reg_offset[index]);
+> > > > +}
+> > > > +
+> > > > +static void owl_sirq_clear_set_extctl(struct owl_sirq_chip_data *d,
+> > > > +				      u32 clear, u32 set, u32 index)
+> > > > +{
+> > > > +	unsigned long flags;
+> > > > +	u32 val;
+> > > > +
+> > > > +	raw_spin_lock_irqsave(&d->lock, flags);
+> > > > +	val = owl_sirq_read_extctl(d, index);
+> > > > +	val &= ~clear;
+> > > > +	val |= set;
+> > > > +	owl_sirq_write_extctl(d, val, index);
+> > > > +	raw_spin_unlock_irqrestore(&d->lock, flags);
+> > > > +}
+> > > > +
+> > > > +static void owl_sirq_eoi(struct irq_data *data)
+> > > > +{
+> > > > +	struct owl_sirq_chip_data *chip_data =
+> > > > irq_data_get_irq_chip_data(data);
+> > > > +
+> > > > +	/*
+> > > > +	 * Software must clear external interrupt pending, when interrupt type
+> > > > +	 * is edge triggered, so we need per SIRQ based clearing.
+> > > > +	 */
+> > > > +	if (chip_data->trigger & (1 << data->hwirq))
+> > > 
+> > > BIT(d->hwirq)
+> > > 
+> > > But it also begs the question: we already have all the trigger information
+> > > in the irqdesc. Why do you need some additional bookkeeping?
+> > 
+> > That's another leftover from the original work. Thanks for pointing
+> > this out, I missed it. I dropped the redundant handling of the IRQ
+> > trigger information and just replaced this with:
+> > 
+> >   if (!irqd_is_level_type(data))
+> 
+> Yup.
+> 
+> > 
+> > > > +		owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_PENDING,
+> > > > +					  data->hwirq);
+> > > > +
+> > > > +	irq_chip_eoi_parent(data);
+> > > > +}
+> > > > +
+> > > > +static void owl_sirq_mask(struct irq_data *data)
+> > > > +{
+> > > > +	struct owl_sirq_chip_data *chip_data =
+> > > > irq_data_get_irq_chip_data(data);
+> > > > +
+> > > > +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_EN, 0, data->hwirq);
+> > > > +	irq_chip_mask_parent(data);
+> > > > +}
+> > > > +
+> > > > +static void owl_sirq_unmask(struct irq_data *data)
+> > > > +{
+> > > > +	struct owl_sirq_chip_data *chip_data =
+> > > > irq_data_get_irq_chip_data(data);
+> > > > +
+> > > > +	owl_sirq_clear_set_extctl(chip_data, 0, INTC_EXTCTL_EN, data->hwirq);
+> > > > +	irq_chip_unmask_parent(data);
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * GIC does not handle falling edge or active low, hence SIRQ shall be
+> > > > + * programmed to convert falling edge to rising edge signal and active
+> > > > + * low to active high signal.
+> > > > + */
+> > > > +static int owl_sirq_set_type(struct irq_data *data, unsigned int type)
+> > > > +{
+> > > > +	struct owl_sirq_chip_data *chip_data =
+> > > > irq_data_get_irq_chip_data(data);
+> > > > +	u32 sirq_type;
+> > > > +
+> > > > +	switch (type) {
+> > > > +	case IRQ_TYPE_LEVEL_LOW:
+> > > > +		sirq_type = INTC_EXTCTL_TYPE_LOW;
+> > > > +		chip_data->trigger &= ~(1 << data->hwirq);
+> > > > +		type = IRQ_TYPE_LEVEL_HIGH;
+> > > > +		break;
+> > > > +	case IRQ_TYPE_LEVEL_HIGH:
+> > > > +		sirq_type = INTC_EXTCTL_TYPE_HIGH;
+> > > > +		chip_data->trigger &= ~(1 << data->hwirq);
+> > > > +		break;
+> > > > +	case IRQ_TYPE_EDGE_FALLING:
+> > > > +		sirq_type = INTC_EXTCTL_TYPE_FALLING;
+> > > > +		chip_data->trigger |= 1 << data->hwirq;
+> > > > +		type = IRQ_TYPE_EDGE_RISING;
+> > > > +		break;
+> > > > +	case IRQ_TYPE_EDGE_RISING:
+> > > > +		sirq_type = INTC_EXTCTL_TYPE_RISING;
+> > > > +		chip_data->trigger |= 1 << data->hwirq;
+> > > > +		break;
+> > > > +	default:
+> > > > +		WARN_ON(1);
+> > > 
+> > > No need for this WARN_ON(), the core kernel is loud enough.
+> > 
+> > Done.
+> > 
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	owl_sirq_clear_set_extctl(chip_data, INTC_EXTCTL_TYPE_MASK, sirq_type,
+> > > > +				  data->hwirq);
+> > > > +
+> > > > +	return irq_chip_set_type_parent(data, type);
+> > > > +}
+> > > > +
+> > > > +static struct irq_chip owl_sirq_chip = {
+> > > > +	.name		= "owl-sirq",
+> > > > +	.irq_mask	= owl_sirq_mask,
+> > > > +	.irq_unmask	= owl_sirq_unmask,
+> > > > +	.irq_eoi	= owl_sirq_eoi,
+> > > > +	.irq_set_type	= owl_sirq_set_type,
+> > > > +	.irq_retrigger	= irq_chip_retrigger_hierarchy,
+> > > 
+> > > How about irq_set_affinity? Or does it only exist on UP systems?
+> > 
+> > I have just added:
+> > 
+> > #ifdef CONFIG_SMP
+> > 	.irq_set_affinity = irq_chip_set_affinity_parent,
+> > #endif
+> 
+> Looks OK.
+> 
+> Cheers,
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
