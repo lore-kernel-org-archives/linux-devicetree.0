@@ -2,105 +2,99 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA891C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BA3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 882532083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nth9Ndu3"
+	by mail.kernel.org (Postfix) with ESMTP id 2AFAA207FF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:09:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHSUHh (ORCPT
+        id S1726617AbgHSUJW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgHSUHg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 16:07:36 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE95C061757
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 13:07:34 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id o184so12612782vsc.0
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 13:07:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qeG68/iGaDfUT5GNDRtXeBjtRxO2lzb4494Br3HhoQ8=;
-        b=nth9Ndu3BBX7zAieFztilD8MMhjA3cdKplDrlZ5W49D+qhHUXF16NTrUFVUtNZIS5h
-         nrjyXqD0UKvz/RmioArJ9MppfKV1DecA3144QIXSTdy70+pM6+C0j1wW1xWuwQI0vTGk
-         xwDrfNSyE9v1KWX6aTq33r618HHrmZ26rfI20=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qeG68/iGaDfUT5GNDRtXeBjtRxO2lzb4494Br3HhoQ8=;
-        b=jhGKICELLddaNCTyJ8gmTU+TjxjnbPhzScrD97Ugu18sEwh7GRVgNSfr0b9QSNEQgF
-         2/EKnxBsP+45xXBwns30SGTADrt28jtnyZkzzjNaicNgAusFTQ01ViNHq6zDKsfm0p7f
-         /4gSKXXP/VqRXd6nWET1xJDwKq0o1jpxxMqxuORGTJ4nf3MafdUL8aqF+NQGDDw18I5h
-         sWwQVG9Ak3yewYP47By88NFNhvUXdht/MI8mr3CMa5LZi5JuS3BzU0d+PCrH0Yi5h9SU
-         CYih9v+0oHrDuEaZUBo+qbvCZh2tucBP7XbYOPXSWDEXc/4z6ehpnJP1XfaHWzEHOA8D
-         oqPg==
-X-Gm-Message-State: AOAM533XypLSZ4f2eFH2wc9aPRMD02UmN3co+BSyZ5CZufK1wuZSFdVt
-        xy0BMWzwonl7wzgLw8dXznVYwxbePB4FMA==
-X-Google-Smtp-Source: ABdhPJzB1sn4na/2E8X1BL79lA73gi6qvCSG7DHFlPcLBNYEdJHt0AEPBCvVLqX2bO5P8oPC48Zbqg==
-X-Received: by 2002:a67:7c11:: with SMTP id x17mr17290661vsc.155.1597867651298;
-        Wed, 19 Aug 2020 13:07:31 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id y136sm2256570vsy.4.2020.08.19.13.07.30
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 13:07:30 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id a127so5862558vsd.1
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 13:07:30 -0700 (PDT)
-X-Received: by 2002:a67:fd67:: with SMTP id h7mr14388451vsa.121.1597867649964;
- Wed, 19 Aug 2020 13:07:29 -0700 (PDT)
+        Wed, 19 Aug 2020 16:09:22 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:50522 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725275AbgHSUJW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 16:09:22 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 19B801A04AE;
+        Wed, 19 Aug 2020 22:09:20 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CC681A02B3;
+        Wed, 19 Aug 2020 22:09:20 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id EB6AC20328;
+        Wed, 19 Aug 2020 22:09:19 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 23:09:19 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Dong Aisheng <dongas86@gmail.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Subject: Re: [PATCH v2 09/17] arm64: dts: Remove imx-hdmimix-reset header file
+Message-ID: <20200819200919.jck4j6gcuogw3z4h@fsr-ub1664-175>
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
+ <1597406966-13740-10-git-send-email-abel.vesa@nxp.com>
+ <CAA+hA=R+zVeVEX_DcsTWD0FtaEHdeyapa4gR-_8Y=yzZD3ku1w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200806163126.22667-1-georgi.djakov@linaro.org> <20200806163126.22667-6-georgi.djakov@linaro.org>
-In-Reply-To: <20200806163126.22667-6-georgi.djakov@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 19 Aug 2020 13:07:18 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UBhxxd2zc6uu7z7LDc7q5sfVRONuJZXQrwKjZYuyMy=w@mail.gmail.com>
-Message-ID: <CAD=FV=UBhxxd2zc6uu7z7LDc7q5sfVRONuJZXQrwKjZYuyMy=w@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] arm64: dts: qcom: sdm845: Increase the number of
- interconnect cells
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA+hA=R+zVeVEX_DcsTWD0FtaEHdeyapa4gR-_8Y=yzZD3ku1w@mail.gmail.com>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On 20-08-17 15:51:13, Dong Aisheng wrote:
+> On Fri, Aug 14, 2020 at 8:13 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+> >
+> > The hdmi BLK_CTRL ids have been moved to imx8mp-reset.h
+> >
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> 
+> The change seems do not comply with the patch title?
+> 
 
-On Thu, Aug 6, 2020 at 9:31 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
->
-> Increase the number of interconnect-cells, as now we can include
-> the tag information. The consumers can specify the path tag as an
-> additional argument to the endpoints.
->
-> Tested-by: Sibi Sankar <sibis@codeaurora.org>
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 44 ++++++++++++++--------------
->  1 file changed, 22 insertions(+), 22 deletions(-)
+Will fix it in the next version.
 
-I believe you missed updating a few places...  Fixup can be found at
-<https://crrev.com/c/2364731> or look carefully under "ipa@1e40000"
-and "gpu@5000000".
-
--Doug
+> Regards
+> Aisheng
+> 
+> > ---
+> >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > index 9de2aa1..daa1769 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > @@ -4,6 +4,7 @@
+> >   */
+> >
+> >  #include <dt-bindings/clock/imx8mp-clock.h>
+> > +#include <dt-bindings/reset/imx8mp-reset.h>
+> >  #include <dt-bindings/gpio/gpio.h>
+> >  #include <dt-bindings/input/input.h>
+> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > --
+> > 2.7.4
+> >
