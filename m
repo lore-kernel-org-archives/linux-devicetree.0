@@ -2,154 +2,356 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 650D1C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CA5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 380072083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 20:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iqx9MNXu"
+	by mail.kernel.org (Postfix) with ESMTP id 93A452083B
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 21:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbgHSUwF (ORCPT
+        id S1726934AbgHSVCI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHSUwE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 16:52:04 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81671C061757
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 13:52:04 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id w25so26870789ljo.12
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 13:52:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=klnwjmccKXa83diz/UPM1wfkPLBuKxflt6KGqDpoJIA=;
-        b=iqx9MNXuK9IoffrzNcqTU41PFdUMB91XH71inx1n2Tiz4S5KKqLMmBMh2CkqU+HxTK
-         2NodYjaUeQBcdmgPNeWEwyUgePGIoo5qWkdmI7x0ITRwV6yUIEGHVWLHPYm62g1ZfgLe
-         06BETNmHkSkmN1fZ6q8o4fzGgUNIZJAy1/dXU64TqjyuQrZsTsYxx8ivEJzwYQ+IKi7W
-         1U/sU1KgFu84MyeJkOJN/3VzwhW2LKAKn5Pm/Gv/2HN9RkMAPa7KApzb6AN0I3yx760B
-         D9YYJByO495l8YChELhS10ikO2fb6z5pFV1FbppTFHLDj6Cfqk5nW0CeZu7QqcwaClmK
-         DveQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=klnwjmccKXa83diz/UPM1wfkPLBuKxflt6KGqDpoJIA=;
-        b=E34nhPpvuBwZe/Ipr7Gv8bxEHBnAYyCEn1Fdl7R+m+AamcTGUW8JaxNDlblEDXaWbb
-         ImSO7Kz/jXthk7L1cU13DWcN9Uj840yqZ86+vbqPQqVrIj3yUHsmAAijOpqqWtsW8v5K
-         ao4ezNbO4ZdpUmN+CEkqC3cDEGfjo4TOTvEwCzgTIlEamUC1jv7EQPG82rWDjMTz7Jnb
-         ycWO9fXqOi+X0QsDA06OmF3lkwAmb79JewFKbsYTvKrbjlmnIxWybfYvpkXF0Kf9JBPU
-         fC6SK4EMGEcjD4+ae4UCQc90+7Mek5DyYrz9AcJ9xjajs9yCRd0VFI7tlb9GLPMGuCb7
-         w9Pw==
-X-Gm-Message-State: AOAM531weMP/7FIQHHwHM/Ix2fS4JfkzEpMj/NwIiuRTyHcXnO9qus1B
-        4Qh+f+hBhTZtnPZfXUJ4rnYK6w==
-X-Google-Smtp-Source: ABdhPJzuqHZGPimvmmxbFVWte7D1lk3H6Rdx+S0uh8xMtn50T9AblBCDe5+0zwHi+dkUD38DwYY2ew==
-X-Received: by 2002:a2e:531c:: with SMTP id h28mr33256ljb.322.1597870322914;
-        Wed, 19 Aug 2020 13:52:02 -0700 (PDT)
-Received: from localhost.bredbandsbolaget (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
-        by smtp.gmail.com with ESMTPSA id u10sm8188lfo.39.2020.08.19.13.52.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 13:52:02 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        dri-devel@lists.freedesktop.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 2/3 v3] dt-bindings: backlight: Add Kinetic KTD253 bindings
-Date:   Wed, 19 Aug 2020 22:51:49 +0200
-Message-Id: <20200819205150.164403-2-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200819205150.164403-1-linus.walleij@linaro.org>
-References: <20200819205150.164403-1-linus.walleij@linaro.org>
+        Wed, 19 Aug 2020 17:02:08 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:44682 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgHSVCI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 17:02:08 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id E9457804AF;
+        Wed, 19 Aug 2020 23:02:01 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 23:02:00 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        John Fastabend <john.fastabend@gmail.com>, linuxarm@huawei.com,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wei Xu <xuwei5@hisilicon.com>, netdev@vger.kernel.org,
+        mauro.chehab@huawei.com, Jakub Kicinski <kuba@kernel.org>,
+        bpf@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 49/49] dt: display: Add binds for the DPE and DSI
+ controller for Kirin 960/970
+Message-ID: <20200819210200.GA111674@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <6471642f74779fecfc9d5e990d90f9475d8b32d4.1597833138.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6471642f74779fecfc9d5e990d90f9475d8b32d4.1597833138.git.mchehab+huawei@kernel.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8 a=e5mUnYsNAAAA:8
+        a=XeRH_zU2q6342Vot-4MA:9 a=ADdo6PvC8_0S2ZMR:21 a=xHdfXTxBxwXe2MVT:21
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=sptkURWiP4Gy88Gu7hUp:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Kinetic KTD253
-white LED backlight driver.
+Hi Mauro.
 
-Cc: devicetree@vger.kernel.org
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v2->v3:
-- Drop the pointless cargo-culted "default-on" property that
-  we were not using
-- Correct the brightness in the example to something legal (13)
-ChangeLog v1->v2:
-- Create common.yaml for backlight as suggested by Sam and
-  use that.
-- Rename the GPIO line "enable-gpios"
----
- .../leds/backlight/kinetic,ktd253.yaml        | 46 +++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
+Some feedback in the following.
+Good to see DT schma files and not .txt files - but needs a bit more
+work.
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-new file mode 100644
-index 000000000000..7a6ec1f8c0f3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/kinetic,ktd253.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/backlight/kinetic,ktd253.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Kinetic Technologies KTD253 one-wire backlight
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  The Kinetic Technologies KTD253 is a white LED backlight that is
-+  controlled by a single GPIO line. If you just turn on the backlight
-+  it goes to maximum backlight then you can set the level of backlight
-+  using pulses on the enable wire. This is sometimes referred to as
-+  "expresswire".
-+
-+allOf:
-+  - $ref: common.yaml#
-+
-+properties:
-+  compatible:
-+    const: kinetic,ktd253
-+
-+  enable-gpios:
-+    description: GPIO to use to enable/disable and dim the backlight.
-+    maxItems: 1
-+
-+  default-brightness: true
-+  max-brightness: true
-+
-+required:
-+  - compatible
-+  - enable-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    backlight {
-+        compatible = "kinetic,ktd253";
-+        enable-gpios = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-+        default-brightness = <13>;
-+    };
--- 
-2.26.2
+	Sam
 
+On Wed, Aug 19, 2020 at 01:46:17PM +0200, Mauro Carvalho Chehab wrote:
+> Add a description of the bindings used by Kirin 960/970 Display
+> Serial Interface (DSI) controller and by its Display Engine (DPE).
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> ---
+>  .../display/hisilicon,hi3660-dpe.yaml         |  99 +++++++++++++++++
+>  .../display/hisilicon,hi3660-dsi.yaml         | 102 ++++++++++++++++++
+>  .../boot/dts/hisilicon/hikey970-drm.dtsi      |   4 +-
+>  3 files changed, 203 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon,hi3660-dpe.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/hisilicon,hi3660-dsi.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/hisilicon,hi3660-dpe.yaml b/Documentation/devicetree/bindings/display/hisilicon,hi3660-dpe.yaml
+> new file mode 100644
+> index 000000000000..074997354417
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/hisilicon,hi3660-dpe.yaml
+> @@ -0,0 +1,99 @@
+> +# SPDX-License-Identifier: GPL-2.0
+New bindings should be dual licensed if poossible.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/hisilicon,hi3660-dpe.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HiSilicon SPMI controller
+> +
+> +maintainers:
+> +  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> +
+> +description: |
+> +  The HiSilicon Display Engine (DPE) s the display controller which grab
+s/s/is/
+> +  image data from memory, do composition, do post image processing,
+> +  generate RGB timing stream and transfer to DSI.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "dpe@[0-9a-f]+"
+compatible will match, no need for the nodename.
+
+> +
+> +  compatible:
+> +    enum:
+> +      - hisilicon,kirin960-dpe
+> +      - hisilicon,kirin970-dpe
+> +
+> +  reg:
+> +    minItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    description: Clocks used by the ISP and by the display
+All clocks must be described.
+> +
+> +  clock-names:
+> +    description: Names for the clock lines
+Specify clock names here.
+
+> +
+> +  dma-coherent: true
+> +
+> +  port:
+> +    type: object
+> +    description: A port node pointing to the display output endpoint.
+> +
+> +
+> +  iommu-info:
+> +    type: object
+> +    description: IOMMU address and size to be used by GPU
+> +
+> +    properties:
+> +      start-addr:
+> +        const: start address for IOMMU
+> +      size:
+> +        const: size of the mapped region
+
+additionalProperties: false?
+- So a DT do not use undocumented properties.
+
+required:?
+- So a DT always includes the mandatory properties
+
+> +
+> +examples:
+> +  - |
+> +    dpe: dpe@e8600000 {
+> +      compatible = "hisilicon,kirin970-dpe";
+> +      memory-region = <&drm_dma_reserved>;
+memory-region not included in the binding.
+> +      reg = <0 0xE8600000 0 0xC0000>,
+> +            <0 0xFFF35000 0 0x1000>,
+> +            <0 0xFFF0A000 0 0x1000>,
+> +            <0 0xE8A09000 0 0x1000>,
+> +            <0 0xE86C0000 0 0x10000>,
+> +            <0 0xFFF31000 0 0x1000>,
+> +            <0 0xE87FF000 0 0x1000>;
+> +
+> +      interrupts = <0 245 4>;
+> +
+> +      clocks = <&media1_crg HI3670_ACLK_GATE_DSS>,
+> +               <&media1_crg HI3670_PCLK_GATE_DSS>,
+> +               <&media1_crg HI3670_CLK_GATE_EDC0>,
+> +               <&media1_crg HI3670_CLK_GATE_LDI0>,
+> +               <&media1_crg HI3670_CLK_GATE_DSS_AXI_MM>,
+> +               <&media1_crg HI3670_PCLK_GATE_MMBUF>,
+> +               <&crg_ctrl   HI3670_PCLK_GATE_PCTRL>;
+The validation will fail as HI3670_PCLK_GATE_PCTRL is unknown.
+Include the relevant header.
+Use make dt_binding_check to validate the binding files.
+
+> +
+> +      clock-names = "aclk_dss",
+> +                    "pclk_dss",
+> +                    "clk_edc0",
+> +                    "clk_ldi0",
+> +                    "clk_dss_axi_mm",
+> +                    "pclk_mmbuf",
+> +                    "pclk_pctrl";
+> +
+> +      dma-coherent;
+> +
+> +      port {
+> +        dpe_out: endpoint {
+> +          remote-endpoint = <&dsi_in>;
+> +        };
+> +      };
+> +
+> +      iommu_info {
+> +        start-addr = <0x8000>;
+> +        size = <0xbfff8000>;
+> +      };
+> +    };
+End file with:
+<empty line>
+...
+
+> diff --git a/Documentation/devicetree/bindings/display/hisilicon,hi3660-dsi.yaml b/Documentation/devicetree/bindings/display/hisilicon,hi3660-dsi.yaml
+> new file mode 100644
+> index 000000000000..2265267fc53d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/hisilicon,hi3660-dsi.yaml
+> @@ -0,0 +1,102 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/hisilicon,hi3660-dsi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HiSilicon SPMI controller
+> +
+> +maintainers:
+> +  - Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> +
+> +description: |
+> +  The HiSilicon Display Serial Interface (DSI) Host Controller for
+> +  Kirin 960 and 970 resides in the middle of display controller and
+> +  an external HDMI converter or panel.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "dsi@[0-9a-f]+"
+Same comment as before.
+
+> +
+> +  compatible:
+> +    enum:
+> +      - hisilicon,kirin960-dsi
+> +      - hisilicon,kirin970-dsi
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 4
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 8
+> +    description: Clocks used by the ISP and by the display.
+> +
+> +  clock-names:
+> +    description: Names for the clock lines.
+Add the names.
+
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +  mux-gpio:
+> +    description: GPIO used by the mux.
+Must be named mux-gpios - added 's' even with a single gpio.
+> +
+> +  ports:
+> +    type: object
+> +    description: Display input and output ports.
+> +
+> +examples:
+> +  - |
+> +    dsi: dsi@e8601000 {
+> +      compatible = "hisilicon,kirin970-dsi";
+> +      reg = <0 0xE8601000 0 0x7F000>,
+> +        <0 0xFFF35000 0 0x1000>,
+> +        <0 0xE8A09000 0 0x1000>;
+> +
+> +      clocks = <&crg_ctrl HI3670_CLK_GATE_TXDPHY0_REF>,
+> +        <&crg_ctrl HI3670_CLK_GATE_TXDPHY1_REF>,
+> +        <&crg_ctrl HI3670_CLK_GATE_TXDPHY0_CFG>,
+> +        <&crg_ctrl HI3670_CLK_GATE_TXDPHY1_CFG>,
+> +        <&crg_ctrl HI3670_PCLK_GATE_DSI0>,
+> +        <&crg_ctrl HI3670_PCLK_GATE_DSI1>;
+> +      clock-names = "clk_txdphy0_ref",
+> +            "clk_txdphy1_ref",
+> +            "clk_txdphy0_cfg",
+> +            "clk_txdphy1_cfg",
+> +            "pclk_dsi0",
+> +            "pclk_dsi1";
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      mux-gpio = <&gpio25 7 0>;
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        port@0 {
+> +          reg = <0>;
+> +          dsi_in: endpoint {
+> +            remote-endpoint = <&dpe_out>;
+> +          };
+> +        };
+> +
+> +        port@1 {
+> +          #address-cells = <1>;
+> +          #size-cells = <0>;
+> +          reg = <1>;
+> +
+> +          dsi_out0: endpoint@0 {
+> +            reg = <0>;
+> +            remote-endpoint = <&adv7533_in>;
+> +          };
+> +
+> +          dsi_out1: endpoint@1 {
+> +            reg = <1>;
+> +            remote-endpoint = <&panel0_in>;
+> +          };
+> +        };
+> +      };
+> diff --git a/arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi b/arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi
+> index 503c7c9425c8..5758d7d181e5 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hikey970-drm.dtsi
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  / {
+> -	dpe: dpe@E8600000 {
+> +	dpe: dpe@e8600000 {
+>  		compatible = "hisilicon,kirin970-dpe";
+>  		memory-region = <&drm_dma_reserved>;
+>  		// DSS, PERI_CRG, SCTRL, PCTRL, NOC_DSS_Service_Target, PMCTRL, MEDIA_CRG
+> @@ -44,7 +44,7 @@ iommu_info {
+>  		};
+>  	};
+>  
+> -	dsi: dsi@E8601000 {
+> +	dsi: dsi@e8601000 {
+>  		compatible = "hisilicon,kirin970-dsi";
+>  		reg = <0 0xE8601000 0 0x7F000>,
+>  			<0 0xFFF35000 0 0x1000>,
+> -- 
+> 2.26.2
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
