@@ -2,184 +2,121 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB77C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA332C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 893C4206FA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86EBD20866
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 11:37:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="H95Be/lv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHSLdT (ORCPT
+        id S1727850AbgHSLhO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:33:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:33414 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHSLdT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:33:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 270F11045;
-        Wed, 19 Aug 2020 04:33:18 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39FBA3F6CF;
-        Wed, 19 Aug 2020 04:33:15 -0700 (PDT)
-Subject: Re: [PATCH 00/16] IOMMU driver for Kirin 960/970
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Joerg Roedel <jroedel@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chenfeng <puck.chen@hisilicon.com>, linuxarm@huawei.com,
-        Wei Xu <xuwei5@hisilicon.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Suzhuangluan <suzhuangluan@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <cover.1597650455.git.mchehab+huawei@kernel.org>
- <5c7918b6-c506-680b-cb0f-9e5f6a7038d9@arm.com>
- <20200818172909.71f5243a@coco.lan>
- <79f40595-7769-aa6a-fbba-53adcffca327@arm.com>
- <CALAqxLXBYvwZ9kiKSGBeO5f-eKi2DD14QtoZgFGyGd-B7EOPQA@mail.gmail.com>
- <20200819122832.3cd5f834@coco.lan>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a2236994-7332-2321-20a8-3348343922f9@arm.com>
-Date:   Wed, 19 Aug 2020 12:33:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 19 Aug 2020 07:37:14 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:45559 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727079AbgHSLhM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:37:12 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8MOzkc5mbuuXO8MP0kgj4W; Wed, 19 Aug 2020 13:37:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597837030; bh=on3DJuNUCZBYzh3vyKVks+qUN0daYY+qcqHSyxAtABs=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=H95Be/lv/Z6sIV2ZjHnezlJeoXNXGSJox1mqCQdOpG7Ot7IbrXAC5w5bBW9RAi9XG
+         O1zcUUWgj1di8ZybVj8HJYG0HO+WwnA4EMJF3/W0ZoCXLbrm8RsatHZtI53iaOyuAX
+         1bzN656HdjSujpxy/AcA1LbCfZ61bGLem3kZFUZ9bGrwEf+oitaXfHhtWBTeCsIu8R
+         AaKyG1XFmKZTMnZIbFb5aKP/dQ1cYDH4fDqkluLOit6jXh+KV12sleISEI2/sac0Je
+         FgwjUEccqqXdUxb1EckRVvzp1eMO6BLXU8l9zFcGnpIy6t+Op4X35XVRdKC7iUvDh/
+         pPyebpuGH7FNQ==
+Subject: Re: [PATCH v12 25/29] arm: dts: mt2701: Add jpeg enc device tree node
+To:     Xia Jiang <xia.jiang@mediatek.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tomasz Figa <tfiga@chromium.org>, srv_heupstream@mediatek.com,
+        senozhatsky@chromium.org, mojahsu@chromium.org,
+        drinkcat@chromium.org, maoguang.meng@mediatek.com
+References: <20200814071202.25067-1-xia.jiang@mediatek.com>
+ <20200814071202.25067-27-xia.jiang@mediatek.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <9a35791d-51f6-2429-5bcc-2149ac1b60c7@xs4all.nl>
+Date:   Wed, 19 Aug 2020 13:37:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200819122832.3cd5f834@coco.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <20200814071202.25067-27-xia.jiang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBpjNEODcQO4JphfVy6aBaq/j9bEl9E8js4YNmvSiO0Bv837GBTpHXA6jtL2w1CMAv8Jmpc2mcp6RnvgCrWdrB1beAzVXNrT66JiYvfczlfYx06XV8CB
+ B98UpcGJa7XDNnxwdu2DifltSLBFjf8NeYIcfeCup84Mr8jAzdIj+Des65oJu1GlPGL0YMXcMb8CWSfS2RFDmWKAf1tFZrDT+yO5sKApps5l4D6oucLLfOM+
+ kMakCGE7HijJoy1Sjg8caHFTqlteIYiug6vF1rNK7+OZZ7wmcLC9nxcvHz9tsm4r+Rgcv/4JymkYZ9GgA/X8mxzLvjcwBp/+s0EIeN2Dphpyi1BjDRUvZZ0z
+ mOZsThJ3nnYUlEA3H4FZYo8p72u7MHowzEW5UfWhi67fICV6FgV+eUre65EI1My60vU68FAFmcewcLoxCQ7nzoDcLBygZrWjVYwPACskFS5ztjgH/ZLzXokH
+ C/gPdfUjVbFV7YQudvj214sx4lhUr7ZvvKSlNDSHq6o7xpMFn75OWNI7EOmpNh7sVjnYIiLQCH7TvB2YX+DCPr3dFbBhk/C7P45pSgKLo3fFap+33+4XUOQl
+ /hZbTunleSAz7YPhRbfSa59y7BCOTQFO+T1/ZJILjAy+iVe97UpVGQY4G5aEklGqHzHfrvzOfAgQV40HBjpSflKzAttaKJGSjyRGxTuAlIoErAxMHZxPHsX3
+ HOxmzsnsza51QQyGbe0nQp0CNHINjjul4QnZ/gzeINq6wvpz3Mn7G44ePwx2cVLWdqtQ9QeDeHbVWnq5gwc4PowVx0eOmHsnvd72aWjgWrNpO8ifx0q1+kEO
+ REvQxerPdF3ZEZvMWWJzZ1QZwA8wDp1V+NPDFSumOJssS+oz3TRA6r3YvrwsaQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-19 11:28, Mauro Carvalho Chehab wrote:
-> Em Tue, 18 Aug 2020 15:02:54 -0700
-> John Stultz <john.stultz@linaro.org> escreveu:
-> 
->> On Tue, Aug 18, 2020 at 9:26 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>> On 2020-08-18 16:29, Mauro Carvalho Chehab wrote:
->>>> Em Tue, 18 Aug 2020 15:47:55 +0100
->>>> Basically, the DT binding has this, for IOMMU:
->>>>
->>>>
->>>>        smmu_lpae {
->>>>                compatible = "hisilicon,smmu-lpae";
->>>>        };
->>>>
->>>> ...
->>>>        dpe: dpe@e8600000 {
->>>>                compatible = "hisilicon,kirin970-dpe";
->>>>                memory-region = <&drm_dma_reserved>;
->>>> ...
->>>>                iommu_info {
->>>>                        start-addr = <0x8000>;
->>>>                        size = <0xbfff8000>;
->>>>                };
->>>>        }
->>>>
->>>> This is used by kirin9xx_drm_dss.c in order to enable and use
->>>> the iommu:
->>>>
->>>>
->>>>        static int dss_enable_iommu(struct platform_device *pdev, struct dss_hw_ctx *ctx)
->>>>        {
->>>>                struct device *dev = NULL;
->>>>
->>>>                dev = &pdev->dev;
->>>>
->>>>                /* create iommu domain */
->>>>                ctx->mmu_domain = iommu_domain_alloc(dev->bus);
->>>>                if (!ctx->mmu_domain) {
->>>>                        pr_err("iommu_domain_alloc failed!\n");
->>>>                        return -EINVAL;
->>>>                }
->>>>
->>>>                iommu_attach_device(ctx->mmu_domain, dev);
->>>>
->>>>                return 0;
->>>>        }
->>>>
->>>> The only place where the IOMMU domain is used is on this part of the
->>>> code(error part simplified here) [1]:
->>>>
->>>>        void hisi_dss_smmu_on(struct dss_hw_ctx *ctx)
->>>>        {
->>>>                uint64_t fama_phy_pgd_base;
->>>>                uint32_t phy_pgd_base;
->>>> ...
->>>>                fama_phy_pgd_base = iommu_iova_to_phys(ctx->mmu_domain, 0);
->>>>                phy_pgd_base = (uint32_t)fama_phy_pgd_base;
->>>>                if (WARN_ON(!phy_pgd_base))
->>>>                        return;
->>>>
->>>>                set_reg(smmu_base + SMMU_CB_TTBR0, phy_pgd_base, 32, 0);
->>>>        }
->>>>
->>>> [1] https://github.com/mchehab/linux/commit/36da105e719b47bbe9d6cb7e5619b30c7f3eb1bd
->>>>
->>>> In other words, the driver needs to get the physical address of the frame
->>>> buffer (mapped via iommu) in order to set some DRM-specific register.
->>>>
->>>> Yeah, the above code is somewhat hackish. I would love to replace
->>>> this part by a more standard approach.
->>>
->>> OK, so from a quick look at that, my impression is that your display
->>> controller has its own MMU and you don't need to pretend to use the
->>> IOMMU API at all. Just have the DRM driver use io-pgtable directly to
->>> run its own set of ARM_32_LPAE_S1 pagetables - see Panfrost for an
->>> example (but try to ignore the wacky "Mali LPAE" format).
->>
->> Yea. For the HiKey960, there was originally a similar patch series but
->> it was refactored out and the (still out of tree) DRM driver I'm
->> carrying doesn't seem to need it (though looking we still have the
->> iommu_info subnode in the dts that maybe needs to be cleaned up).
-> 
-> Funny... while the Hikey 970 DRM driver has such IOMMU code, it
-> doesn't actually use it!
-> 
-> The driver has a function called hisi_dss_smmu_config() with
-> sets the registers on a different way in order to use IOMMU
-> or not, at the hisi_fb_pan_display() function. It can also
-> use a mode called "afbcd".
-> 
-> Well, this function sets both to false:
-> 
-> 	bool afbcd = false;
-> 	bool mmu_enable = false;
-> 
-> I ended commenting out the code which depends at the iommu
-> driver and everything is working as before.
-> 
-> So, I'll just forget about this iommu driver, as we can live
-> without that.
-> 
-> For now, I'll keep the mmu code there commented out, as
-> it could be useful on a future port for it to use io-pgtable.
-> 
-> -
-> 
-> Robin,
-> 
-> Can the Panfrost driver use io-pgtable while the KMS driver
-> won't be using it? Or this would cause it to not work?
-> 
-> My end goal here is to be able to test the Panfrost driver ;-)
+Hi Xia,
 
-Yup, the GPU has its own independent MMU, so Panfrost can import display 
-buffers regardless of whether they're physically contiguous or not. 
-Since Mesa master has recently landed AFBC support, there's probably 
-more immediate benefit in getting that AFBC decoder working before the 
-display MMU (although ultimately things are likely to work better under 
-memory pressure if you don't have to rely on CMA, so it should still be 
-worth coming back to at some point).
+I made a PR for all other patches of this series for 5.10, so this patch can be merged
+by whoever takes care of these dts patches.
 
-Robin.
+Regards,
+
+	Hans
+
+On 14/08/2020 09:11, Xia Jiang wrote:
+> Add jpeg enc device tree node.
+> 
+> Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> Signed-off-by: Xia Jiang <xia.jiang@mediatek.com>
+> ---
+> v12: no changes
+> ---
+>  arch/arm/boot/dts/mt2701.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 8d43a502aada..1c1c2132234f 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -568,6 +568,19 @@
+>  			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+>  	};
+>  
+> +	jpegenc: jpegenc@1500a000 {
+> +		compatible = "mediatek,mt2701-jpgenc",
+> +			     "mediatek,mtk-jpgenc";
+> +		reg = <0 0x1500a000 0 0x1000>;
+> +		interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks =  <&imgsys CLK_IMG_VENC>;
+> +		clock-names = "jpgenc";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+> +		mediatek,larb = <&larb2>;
+> +		iommus = <&iommu MT2701_M4U_PORT_JPGENC_RDMA>,
+> +			 <&iommu MT2701_M4U_PORT_JPGENC_BSDMA>;
+> +	};
+> +
+>  	vdecsys: syscon@16000000 {
+>  		compatible = "mediatek,mt2701-vdecsys", "syscon";
+>  		reg = <0 0x16000000 0 0x1000>;
+> 
+
