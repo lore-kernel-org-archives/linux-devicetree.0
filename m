@@ -2,135 +2,93 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78416C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB08C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5082B20786
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597830188;
-	bh=eQfdoB63wdKPPwQKDY/l7Z1OnRZwiyuLG2TBV1XF/ug=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hFXdxvQuCzwNy08nPgggx6PPQ5rJEyMb3ptIP2Fmc6lRCgyBZtTxRCkyd4RiHDcvX
-	 zdGq5BZZmtyqM/ZUagF9Di7jZUfGZm+a7IWRwtsK0JzAzBsoK7u2nTk7uxDWg3hmfz
-	 qQU8cV3BBPrllQOFSIvlnnUHJVESfAMYViYLEMSA=
+	by mail.kernel.org (Postfix) with ESMTP id B5BB120658
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 09:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dO+ybYB+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgHSJnH (ORCPT
+        id S1726970AbgHSJuk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:43:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43490 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgHSJnF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:43:05 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85206206FA;
-        Wed, 19 Aug 2020 09:43:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597830184;
-        bh=eQfdoB63wdKPPwQKDY/l7Z1OnRZwiyuLG2TBV1XF/ug=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oTtCwPnCyX7AXZ5deKcl0ylPWh4hsAbWdc6VVFHGPIFzKZggRNOlfKISY6gZfzMKA
-         2z3aqXCQIPT8QgiUY+OXkN/3jkj0GleL54IVej5nyCAYJ/ct6priOa6uiq58oEwzQW
-         //AguAVc6yros8+HkbnrXSFPHY8EDxAxbAc9toSE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k8KcZ-0049nd-22; Wed, 19 Aug 2020 10:43:03 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, kernel-team@android.com,
-        Frank Rowand <frowand.list@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2] of: address: Work around missing device_type property in pcie nodes
-Date:   Wed, 19 Aug 2020 10:42:55 +0100
-Message-Id: <20200819094255.474565-1-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Wed, 19 Aug 2020 05:50:40 -0400
+Received: from mailgw02.mediatek.com ([216.200.240.185]:48161 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgHSJui (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 05:50:38 -0400
+X-UUID: 1192dd65be0d4c80beae905e55f63a14-20200819
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=uVPKfloKa5GwHkVwJn0RmJIN/Tl5KQ2eePuutn7nOAQ=;
+        b=dO+ybYB+ZMfqyhqSrEgUhWB1eHCNrnIY6xxoB3vofGTLCkPYzK6UTQ5+eX7J5fAjYkReioch2SFCdpfxTbheDMfYAHtdAJqlPmzqgKoFqByQrNJyroDW9XgOBdBoMgGxcQMUKJBwOvfvgIu3GWaW5hRnoKZeF/CAqdHthkbPO0w=;
+X-UUID: 1192dd65be0d4c80beae905e55f63a14-20200819
+Received: from mtkcas67.mediatek.inc [(172.29.193.45)] by mailgw02.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (musrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 687292246; Wed, 19 Aug 2020 01:50:31 -0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS62N2.mediatek.inc (172.29.193.42) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 19 Aug 2020 02:50:29 -0700
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 19 Aug 2020 17:50:28 +0800
+Message-ID: <1597830629.31846.83.camel@mtksdccf07>
+Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
+ MT7531 switch
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "vivien.didelot@savoirfairelinux.com" 
+        <vivien.didelot@savoirfairelinux.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        "opensource@vdorst.com" <opensource@vdorst.com>,
+        "frank-w@public-files.de" <frank-w@public-files.de>,
+        "dqfext@gmail.com" <dqfext@gmail.com>
+Date:   Wed, 19 Aug 2020 17:50:29 +0800
+In-Reply-To: <20200818082347.353fe926@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+References: <cover.1597729692.git.landen.chao@mediatek.com>
+         <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
+         <20200818082347.353fe926@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, lorenzo.pieralisi@arm.com, robh@kernel.org, bhelgaas@google.com, heiko@sntech.de, kernel-team@android.com, frowand.list@gmail.com, jiaxun.yang@flygoat.com, robh+dt@kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Recent changes to the DT PCI bus parsing made it mandatory for
-device tree nodes describing a PCI controller to have the
-'device_type = "pci"' property for the node to be matched.
-
-Although this follows the letter of the specification, it
-breaks existing device-trees that have been working fine
-for years.  Rockchip rk3399-based systems are a prime example
-of such collateral damage, and have stopped discovering their
-PCI bus.
-
-In order to paper over it, let's add a workaround to the code
-matching the device type, and accept as PCI any node that is
-named "pcie",
-
-A warning will hopefully nudge the user into updating their
-DT to a fixed version if they can, but the incentive is
-obviously pretty small.
-
-Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-Suggested-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/of/address.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 590493e04b01..b37bd9cc2810 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -128,15 +128,29 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
-  * PCI bus specific translator
-  */
- 
-+static bool of_node_is_pcie(struct device_node *np)
-+{
-+	bool is_pcie = of_node_name_eq(np, "pcie");
-+
-+	if (is_pcie)
-+		pr_warn_once("%pOF: Missing device_type\n", np);
-+
-+	return is_pcie;
-+}
-+
- static int of_bus_pci_match(struct device_node *np)
- {
- 	/*
-  	 * "pciex" is PCI Express
- 	 * "vci" is for the /chaos bridge on 1st-gen PCI powermacs
- 	 * "ht" is hypertransport
-+	 *
-+	 * If none of the device_type match, and that the node name is
-+	 * "pcie", accept the device as PCI (with a warning).
- 	 */
- 	return of_node_is_type(np, "pci") || of_node_is_type(np, "pciex") ||
--		of_node_is_type(np, "vci") || of_node_is_type(np, "ht");
-+		of_node_is_type(np, "vci") || of_node_is_type(np, "ht") ||
-+		of_node_is_pcie(np);
- }
- 
- static void of_bus_pci_count_cells(struct device_node *np,
--- 
-2.27.0
+SGkgSmFrdWIsDQoNClRoZXNlIDIgZnVuY3Rpb24gYXJlIHVzZWQgaW4gdGhlIHNhbWUgZmlsZSBv
+bmx5Lg0KSSdsbCBmaXggd2FybmluZ3MgYnkgbWFraW5nIDIgZnVuY3Rpb25zICdzdGF0aWMnIGlu
+IHYzLg0KDQpMYW5kZW4NCk9uIFR1ZSwgMjAyMC0wOC0xOCBhdCAyMzoyMyArMDgwMCwgSmFrdWIg
+S2ljaW5za2kgd3JvdGU6DQpbc25pcF0NCj4gUGxlYXNlIGZpeCB0aGVzZSBXPTEgd2FybmluZ3M6
+DQo+IA0KPiAuLi9kcml2ZXJzL25ldC9kc2EvbXQ3NTMwLmM6MTk3NjoxOiB3YXJuaW5nOiBubyBw
+cmV2aW91cyBwcm90b3R5cGUgZm9yIOKAmG10NzUzMV9zZ21paV9saW5rX3VwX2ZvcmNl4oCZIFst
+V21pc3NpbmctcHJvdG90eXBlc10NCj4gIDE5NzYgfCBtdDc1MzFfc2dtaWlfbGlua191cF9mb3Jj
+ZShzdHJ1Y3QgZHNhX3N3aXRjaCAqZHMsIGludCBwb3J0LA0KPiAgICAgICB8IF5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+DQo+IC4uL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAuYzoyMDgxOjY6IHdh
+cm5pbmc6IG5vIHByZXZpb3VzIHByb3RvdHlwZSBmb3Ig4oCYbXQ3NTMxX3NnbWlpX3Jlc3RhcnRf
+YW7igJkgWy1XbWlzc2luZy1wcm90b3R5cGVzXQ0KPiAgMjA4MSB8IHZvaWQgbXQ3NTMxX3NnbWlp
+X3Jlc3RhcnRfYW4oc3RydWN0IGRzYV9zd2l0Y2ggKmRzLCBpbnQgcG9ydCkNCj4gICAgICAgfCAg
+ICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+DQo+IC4uL2RyaXZlcnMvbmV0L2RzYS9tdDc1MzAu
+YzoxOTc2OjE6IHdhcm5pbmc6IHN5bWJvbCAnbXQ3NTMxX3NnbWlpX2xpbmtfdXBfZm9yY2UnIHdh
+cyBub3QgZGVjbGFyZWQuIFNob3VsZCBpdCBiZSBzdGF0aWM/DQo+IC4uL2RyaXZlcnMvbmV0L2Rz
+YS9tdDc1MzAuYzoyMDgxOjY6IHdhcm5pbmc6IHN5bWJvbCAnbXQ3NTMxX3NnbWlpX3Jlc3RhcnRf
+YW4nIHdhcyBub3QgZGVjbGFyZWQuIFNob3VsZCBpdCBiZSBzdGF0aWM/DQoNCg==
 
