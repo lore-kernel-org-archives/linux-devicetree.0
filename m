@@ -2,85 +2,156 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721A5C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132CBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A7D207BB
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E185420772
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 04:23:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvjKs12h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725497AbgHSEQI (ORCPT
+        id S1725788AbgHSEXQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 00:16:08 -0400
-Received: from mga02.intel.com ([134.134.136.20]:21778 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725275AbgHSEQI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 00:16:08 -0400
-IronPort-SDR: B2HGZKG4e5Xha573wK//ux9O2DJoyvRC7j7DtVe1sKYu8nSPodfo0p5SsoG+FsgPjeLOgd3n7d
- EFa5KqU3m3ag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="142860431"
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="142860431"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 21:16:07 -0700
-IronPort-SDR: yYEEsBJ88Yp4/3npUb5lXtlgmB1mqHQqfVYBWDeimD0/xCJwSnI81Tba7k1a/8xHc6fFLoVO07
- zgaQ+Oin+3cw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="278226300"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Aug 2020 21:16:06 -0700
-Received: from [10.249.73.187] (rtanwar-MOBL.gar.corp.intel.com [10.249.73.187])
-        by linux.intel.com (Postfix) with ESMTP id A6E45580583;
-        Tue, 18 Aug 2020 21:16:02 -0700 (PDT)
-Subject: Re: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
- <20200818083852.GC1891694@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
-Date:   Wed, 19 Aug 2020 12:16:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 19 Aug 2020 00:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725275AbgHSEXP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 00:23:15 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDDCC061389;
+        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id h12so10753793pgm.7;
+        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gs2moho+8LLh/szOeFyTur0O43lNxC9IiDOCEh8TM9E=;
+        b=UvjKs12h9DQKYGQRS1toiyg8jpbgB/8nWdastjYJyhssofp6FGxo18MSWkuH0QDrwd
+         siZVLO/1UJDEU+s5+LyT+g+t2VLvL6JqUBYARntwh3hZjzJCWz5Mv8W6XwAaJWpSvcik
+         YR/+H8WC0WYRgp9Y4rSD+qEicdkVKDxxu6DuYVI2zpuV5p+qHoe11O7UBoU6hhGE8izQ
+         Z3mkaCnpA592d3lX2Vgv+5K4fbKsIpF7asJwTh7yhxfe8n4AqQ5hgxwEdf9c/Y9y5rxQ
+         7jW3s013pIaxCiW46KfTfmRSc74jNDwlIGMBQ4ATLFIgKuktPHekhV5ctVel0WL5w4nu
+         MVlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gs2moho+8LLh/szOeFyTur0O43lNxC9IiDOCEh8TM9E=;
+        b=iVUOL9Vsft+WU9JIalL1FL/g+tyYgNQTtnC5O0hyx36xXHWeedk79VETcYv2fyJy0S
+         xgCLmm0Z0dgzqCB+V2y1NlnckL8H75d6cuKXwWpBrTVJQ/URBfn+vkej9eJkK+h94OD0
+         5O82AUPFzKruLJRdGyW3tQYlV5HosffYy78aRnaOa8hTfHrUVdwF6cZT1nyUvNJitrH3
+         0t530xVPUUAAwbMukvakv+JbXqB28ntp7IHAnCoxhwDtg1eDsiGcSYMNCvkkqd5cDx1E
+         8XDYYXWUdXzi78N85Uh5b1nO9PQhmnW8YBvHcHyxnx7xIC9BDM1yJAb7QVL7yy6U2bjF
+         5GbQ==
+X-Gm-Message-State: AOAM531EJ1tYkd7Lzg/Ny7HG+Bh3aN/UPtPic6+31GLsCENhwULhuJOX
+        47LkpjoWRAzZ99Kwp4cPhQA=
+X-Google-Smtp-Source: ABdhPJz9/1ooO+46V/DifjOQSnAS8Pt2MsME2bhXJp+E69XSJuk0FgwL2E0diO6Usx/r2k+Hg2D1rw==
+X-Received: by 2002:a63:5515:: with SMTP id j21mr15011312pgb.31.1597810994235;
+        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id x11sm10723336pgl.65.2020.08.18.21.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Aug 2020 21:23:13 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Christian Lamparter <chunkeey@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM5301X ARM
+        ARCHITECTURE), Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ARM: dts: BCM5301X: Fix pin controller node
+Date:   Tue, 18 Aug 2020 21:23:07 -0700
+Message-Id: <20200819042308.19043-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200818083852.GC1891694@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+The pin controller resources start at 0xc0 from the CRU base which is at
+0x100 from th DMU base, for a final address of 0x1800_c1c0, whereas we
+are currently off by 0x100. The resource size of the CRU is also
+incorrect and should end at 0x248 bytes from 0x100 which is the start
+address. Finally, the compatibility strings defined for the
+pin-controller node should reflect the SoC being used.
 
-Hi Andy,
+Fixes: 9994241ac97c ("ARM: dts: BCM5301X: Describe Northstar pins mux controller")
+Reported-by: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Christian, can you test this as a preliminary patch for your Cisco
+Meraki MR32 series? Thanks!
 
-On 18/8/2020 4:38 pm, Andy Shevchenko wrote:
-> On Tue, Aug 18, 2020 at 01:48:59PM +0800, Rahul Tanwar wrote:
->> Patch 1 adds dt binding document in YAML format.
->> Patch 2 add PWM fan controller driver for LGM SoC.
->>
->> v7:
->> - Address code quality related review concerns.
->> - Rename fan related property to pwm-*.
->> - Fix one make dt_binding_check reported error.
-> I guess it misses the answer why pwm-fan can't be integrated into the soup?
->
+ arch/arm/boot/dts/bcm4708.dtsi  | 4 ++++
+ arch/arm/boot/dts/bcm4709.dtsi  | 4 ++++
+ arch/arm/boot/dts/bcm5301x.dtsi | 8 ++++----
+ 3 files changed, 12 insertions(+), 4 deletions(-)
 
-Can you please elaborate more? I could not understand your point clearly.
+diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
+index 1a19e97a987d..5064fe51e402 100644
+--- a/arch/arm/boot/dts/bcm4708.dtsi
++++ b/arch/arm/boot/dts/bcm4708.dtsi
+@@ -43,6 +43,10 @@ cpu@1 {
+ 
+ };
+ 
++&pinctrl {
++	compatible = "brcm,bcm4708-pinmux";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm4709.dtsi b/arch/arm/boot/dts/bcm4709.dtsi
+index e1bb8661955f..7417c275ea9d 100644
+--- a/arch/arm/boot/dts/bcm4709.dtsi
++++ b/arch/arm/boot/dts/bcm4709.dtsi
+@@ -5,6 +5,10 @@
+ 
+ #include "bcm4708.dtsi"
+ 
++&pinctrl {
++	compatible = "brcm,bcm4709-pinmux";
++};
++
+ &uart0 {
+ 	clock-frequency = <125000000>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index 2d9b4dd05830..bf49943f504a 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -402,14 +402,14 @@ dmu@1800c000 {
+ 
+ 		cru@100 {
+ 			compatible = "simple-bus";
+-			reg = <0x100 0x1a4>;
++			reg = <0x100 0x248>;
+ 			ranges;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+-			pin-controller@1c0 {
+-				compatible = "brcm,bcm4708-pinmux";
+-				reg = <0x1c0 0x24>;
++			pinctrl: pin-controller@c0 {
++				compatible = "brcm,bcm53012-pinmux";
++				reg = <0xc0 0x24>;
+ 				reg-names = "cru_gpio_control";
+ 
+ 				spi-pins {
+-- 
+2.25.1
 
-Regards,
-Rahul
