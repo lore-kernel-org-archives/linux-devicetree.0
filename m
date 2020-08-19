@@ -2,95 +2,109 @@ Return-Path: <SRS0=VXX5=B5=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487E8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 07:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBF8C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 283D820772
-	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 07:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D4AB207BB
+	for <linux-devicetree@archiver.kernel.org>; Wed, 19 Aug 2020 07:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Wq6KxU26"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YUfV5Yv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHSHpv (ORCPT
+        id S1726531AbgHSHya (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:45:51 -0400
-Received: from mailgw01.mediatek.com ([216.200.240.184]:46722 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgHSHpu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 03:45:50 -0400
-X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Aug 2020 03:45:50 EDT
-X-UUID: f89b5b861c5f43ee874e5302307a12a6-20200818
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=fA1ZbejQFXPVLQG+Xp5gLcjblRbOlo94pfMY0RDgam0=;
-        b=Wq6KxU26E3Hy1RaGgPDFkuiC1wtJh3NWU9TaEzhThMlD9GaXmHENZhNPnsPC7HQnnjXE2BwAhxR3HTpvzjVFRgW27h3lhsGvukd7t/hGDk2y7Wzq9Um8IcuWMPZ8ccC2tLjz+4opqS8oZ16viCadWg7a9/nrJLEIyjPMCuQ/D5Y=;
-X-UUID: f89b5b861c5f43ee874e5302307a12a6-20200818
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1275055599; Tue, 18 Aug 2020 23:40:44 -0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- MTKMBS62DR.mediatek.inc (172.29.94.18) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 00:38:35 -0700
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 15:38:23 +0800
-Message-ID: <1597822704.31846.27.camel@mtksdccf07>
-Subject: Re: [PATCH net-next v2 0/7] net-next: dsa: mt7530: add support for
- MT7531
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     DENG Qingfang <dqfext@gmail.com>
-CC:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        David Miller <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        =?ISO-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
-        Frank Wunderlich <frank-w@public-files.de>
-Date:   Wed, 19 Aug 2020 15:38:24 +0800
-In-Reply-To: <CALW65jZRWwW4DqpsCM9J=GRp6KnxqT-9MHUO7WSRJtp4E9vnFw@mail.gmail.com>
-References: <cover.1597729692.git.landen.chao@mediatek.com>
-         <CALW65jZRWwW4DqpsCM9J=GRp6KnxqT-9MHUO7WSRJtp4E9vnFw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 19 Aug 2020 03:54:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgHSHy3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 03:54:29 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C06C061389;
+        Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id i10so5458426pgk.1;
+        Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QwAFEdEDDKqsIqgg3REMrn8uyD1d4b02qEp5VMYwHFc=;
+        b=YUfV5Yv2LLHOkYYtkzy81GZYkI754KspfwgvN8IHMM/uLtIrAFaqgi207aSOIRwAkL
+         UX9rSUoMVKZ/K+kv4DE4JrZWd+gLvJFcWnP4VMlRxU8feWyWOOfEF1DhroSkt7ooZdvU
+         DJzaTeJVvVn4dOscNdc/W/2m8WKJWSxfBDNSr6BUlcujKN+ix8ycxeTiCuV5rhejzkbc
+         /HgsIUcoKnJqkUTjDofjwqdwm7uRFrOYI1laVE4zaVMO/kAQ11OPJo9wSdSkECLr5wgF
+         G6VwgMIfoLQ/q20kPpEeSR0yQksqL3mQTlQ/MEUP1zswhMtJ/57zeq6xo4AOt/Xvv7Nm
+         JJzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QwAFEdEDDKqsIqgg3REMrn8uyD1d4b02qEp5VMYwHFc=;
+        b=ufZVrdWFRNXRdJgMT4Kj96bvSLLGpoBzp38VfOKgl1ecOgahLW/lLb0oDQqGa+v/2s
+         supn+mDuo4vcuElg28nfucZ3EEmX0JSxC3RYro6ibx6bxsERrvuiOq+IFkKrRi2rm9sy
+         v9eWdNJ78Vui0yHhyB8yE1o+VkuoTT0OdnF9pFP50dYoKJIZ1T77BxWSu4omgcb4bzU9
+         jiEyxFTod0zZDb6NO9G8oUmO+Oyxb4CDQkE9G/BC6xqOPRXD71X02Qj4PxLg3fFRFjX/
+         +H3GaIfxDZ7W/g4fbrBz0xNXSoDO+g9U6lgcAoMXvmb3ME+8Q+Id7IGaT2i45RwWEeiS
+         lMPw==
+X-Gm-Message-State: AOAM533+Q7AWGOQbVUXIfwtqw6GIMOyf5cBbCT/rC/LxQ16Vmnb4LpWt
+        Nl8cC8kfvprs5qJoY3PnMji22VM6WErKesI9vOxKjUJZagfvmw==
+X-Google-Smtp-Source: ABdhPJwACp1MR02sLehcTpPFfUhepYG7xdneExOXR2U4CUUcjuPq4pETeCnX+rbhFL6Wk9T8p7vqOqjoS/Kt4hMDTbg=
+X-Received: by 2002:a62:758f:: with SMTP id q137mr17847033pfc.170.1597823668158;
+ Wed, 19 Aug 2020 00:54:28 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <cover.1597729246.git.rahul.tanwar@linux.intel.com>
+ <20200818083852.GC1891694@smile.fi.intel.com> <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
+In-Reply-To: <37f7526e-5a04-1d27-347c-772fe085771e@linux.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Aug 2020 10:54:11 +0300
+Message-ID: <CAHp75VfDq7bRe6YQdUQyv=8jK737-QwpxZjGZ2HxCJ7iaQPwMg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/2] pwm: intel: Add PWM driver for a new SoC
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        rahul.tanwar.linux@gmail.com, rtanwar@maxlinear.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-SGkgREVORywNCg0KTVQ3NTMxIG1pcnJvciBwb3J0IGhhcyBiZWVuIGZpeGVkIGJ5IG5ldyBkZWZp
-bml0aW9uIG9mIHJlZ2lzdGVyIGJhc2UgaW4gDQpoZWFkZXIgZmlsZS4gVGhlIGxvZ2ljIG9mIG1p
-cnJvciBwb3J0IHNldHRpbmcgaW4gNzUzMC5jIGlzIHJldXNlZC4NCg0KQEAgLTQxLDYgKzQyLDMz
-IEBAICBlbnVtIG10NzUzeF9pZCB7DQogI2RlZmluZSAgTUlSUk9SX1BPUlQoeCkJCQkoKHgpICYg
-MHg3KQ0KICNkZWZpbmUgIE1JUlJPUl9NQVNLCQkJMHg3DQogDQorLyogUmVnaXN0ZXJzIGZvciBD
-UFUgZm9yd2FyZCBjb250cm9sICovDQorI2RlZmluZSBNVDc1MzFfQ0ZDCQkJMHg0DQorI2RlZmlu
-ZSAgTVQ3NTMxX01JUlJPUl9FTgkJQklUKDE5KQ0KKyNkZWZpbmUgIE1UNzUzMV9NSVJST1JfTUFT
-SwkJKE1JUlJPUl9NQVNLIDw8IDE2KQ0KKyNkZWZpbmUgIE1UNzUzMV9NSVJST1JfUE9SVF9HRVQo
-eCkJKCgoeCkgPj4gMTYpICYgTUlSUk9SX01BU0spDQorI2RlZmluZSAgTVQ3NTMxX01JUlJPUl9Q
-T1JUX1NFVCh4KQkoKCh4KSAmIE1JUlJPUl9NQVNLKSA8PCAxNikNCisjZGVmaW5lICBNVDc1MzFf
-Q1BVX1BNQVBfTUFTSwkJR0VOTUFTSyg3LCAwKQ0KKw0KKyNkZWZpbmUgTVQ3NTNYX01JUlJPUl9S
-RUcoaWQpCQkoKChpZCkgPT0gSURfTVQ3NTMxKSA/IFwNCisJCQkJCSBNVDc1MzFfQ0ZDIDogTVQ3
-NTMwX01GQykNCisjZGVmaW5lIE1UNzUzWF9NSVJST1JfRU4oaWQpCQkoKChpZCkgPT0gSURfTVQ3
-NTMxKSA/IFwNCisJCQkJCSBNVDc1MzFfTUlSUk9SX0VOIDogTUlSUk9SX0VOKQ0KKyNkZWZpbmUg
-TVQ3NTNYX01JUlJPUl9NQVNLKGlkKQkJKCgoaWQpID09IElEX01UNzUzMSkgPyBcDQorCQkJCQkg
-TVQ3NTMxX01JUlJPUl9NQVNLIDogTUlSUk9SX01BU0spDQoNCg0KT24gV2VkLCAyMDIwLTA4LTE5
-IGF0IDExOjQ5ICswODAwLCBERU5HIFFpbmdmYW5nIHdyb3RlOg0KPiBIaSwNCj4gDQo+IElzIHBv
-cnQgbWlycm9yaW5nIHdvcmtpbmc/IFBvcnQgbWlycm9yaW5nIHJlZ2lzdGVycyBvbiBNVDc1MzEg
-aGF2ZQ0KPiBtb3ZlZCwgYWNjb3JkaW5nIHRvIGJwaSdzIE1UNzUzMSByZWZlcmVuY2UgbWFudWFs
-Lg0KPiBQbGVhc2UgZml4IHRoYXQgYXMgd2VsbC4NCg0K
+On Wed, Aug 19, 2020 at 7:18 AM Tanwar, Rahul
+<rahul.tanwar@linux.intel.com> wrote:
+>
+>
+> Hi Andy,
+>
+> On 18/8/2020 4:38 pm, Andy Shevchenko wrote:
+> > On Tue, Aug 18, 2020 at 01:48:59PM +0800, Rahul Tanwar wrote:
+> >> Patch 1 adds dt binding document in YAML format.
+> >> Patch 2 add PWM fan controller driver for LGM SoC.
+> >>
+> >> v7:
+> >> - Address code quality related review concerns.
+> >> - Rename fan related property to pwm-*.
+> >> - Fix one make dt_binding_check reported error.
+> > I guess it misses the answer why pwm-fan can't be integrated into the soup?
+> >
+>
+> Can you please elaborate more? I could not understand your point clearly.
 
+It's not mine, it's Uwe's. There is an hwmon module called pwm-fan. As
+far as *I* understand this, it can be utilized to control fans via PWM
+APIs. And Uwe asked you if you considered that and why you don't
+integrated  (coupled) it here.
+
+-- 
+With Best Regards,
+Andy Shevchenko
