@@ -2,92 +2,139 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088FEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 13:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD01C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFF08207DA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 13:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8863820658
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Luk7a5dJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgHTNFm (ORCPT
+        id S1730845AbgHTNZ3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:05:42 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46206 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730133AbgHTNFi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 09:05:38 -0400
-Received: by mail-ot1-f68.google.com with SMTP id v6so1353927ota.13;
-        Thu, 20 Aug 2020 06:05:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sg8ZwoLVDdjGpQuxoN9M/5AY3B7WmgGus1lYO1T9dMo=;
-        b=VOje/ZOvdbR4Kzl9Pq7i5MK4qY0v4TY9gexkiK5NB+alFvQorGZ9GvZmbGJ75n1ZO0
-         2kItntJC6uMsGNxfsVtIx/59/U0Fg1tWWjBxxvl7RbKmk0WAx4BhQxlm31qPPm2QHj1U
-         K1hYhOpl7Y+uq2G5+Gkm1OcMqmLMyNKGedpYwDSCPrc3pEcHoP9R9Gv6TYs2tz6l/pAT
-         4sl0h5kD0RjIhoa8ikpUeJjeN+4aLfmehasNlgmZgStUKRCNKgcdJLLbVWjqW2Zsr5lf
-         OClGZI0FZa8B5kLi6/zhaKz6OEZoJwyY17AASdTYOk/LxK+SzhnLLg3JhPmqEzboD0Of
-         08Qg==
-X-Gm-Message-State: AOAM53358gS8tGTqrCyeEHZe1TKQBGTAxOd617qtUQRNNboBzfozQBCG
-        pIN27BejbKdA8BgiJuex/G3HulECZvTI6lk109w=
-X-Google-Smtp-Source: ABdhPJwUV3KXd1HI11sLhl5ptjIK3LAapipNtJfRztkV8qdLHzVc7KCPljUS3MazWyrN26NRAgTnugJUC1FbS8aKnic=
-X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr1920248ote.107.1597928737463;
- Thu, 20 Aug 2020 06:05:37 -0700 (PDT)
+        Thu, 20 Aug 2020 09:25:29 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50318 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730830AbgHTNZR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 09:25:17 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07KDPCbj060069;
+        Thu, 20 Aug 2020 08:25:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597929912;
+        bh=y/l56dAGpjnshDm3cxwCsETuPKtCmIdz45bEU/nlU3Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Luk7a5dJiMJPu/WNwCJd94xOsRD4SxChJpgQylGZK0LBl4t3sit0cjYX6qw2eChrL
+         Xm6ZKi05oC0zUxkPdKbi3NqKsMroKjfc1F1PhAtx1AxTEab1itcZIkmaigPzjG+aLK
+         7Wn9ZTkzDJiTs+n1B+Qe9C/OohCoRLpDijNz4cGQ=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07KDPC4Z023311
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 08:25:12 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
+ Aug 2020 08:25:12 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 20 Aug 2020 08:25:12 -0500
+Received: from [10.250.32.29] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07KDPCtK095800;
+        Thu, 20 Aug 2020 08:25:12 -0500
+Subject: Re: [PATCH 2/7] arm64: dts: ti: k3-j721e-common-proc-board: Add
+ mailboxes to C66x DSPs
+To:     Nishanth Menon <nm@ti.com>
+CC:     Tero Kristo <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200820010331.2911-1-s-anna@ti.com>
+ <20200820010331.2911-3-s-anna@ti.com> <20200820114238.7ovvxq5n3fogzowi@akan>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <8491a1bf-3665-8f23-6b75-34890566fcae@ti.com>
+Date:   Thu, 20 Aug 2020 08:25:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200819124539.20239-1-geert+renesas@glider.be> <df7f61fe-3103-168e-0744-d6b20ee42224@gmail.com>
-In-Reply-To: <df7f61fe-3103-168e-0744-d6b20ee42224@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 20 Aug 2020 15:05:25 +0200
-Message-ID: <CAMuHMdVA2-c+T_XHEV9GrQ0Dmf9OfsmiO4UeNKvPu26fQXKU-w@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: net: renesas,ether: Improve schema validation
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200820114238.7ovvxq5n3fogzowi@akan>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Nishanth,
 
-On Thu, Aug 20, 2020 at 2:26 PM Sergei Shtylyov
-<sergei.shtylyov@gmail.com> wrote:
-> On 8/19/20 3:45 PM, Geert Uytterhoeven wrote:
->
-> >   - Remove pinctrl consumer properties, as they are handled by core
->
->    So you're removing them even from the example?
+On 8/20/20 6:42 AM, Nishanth Menon wrote:
+> On 20:03-20200819, Suman Anna wrote:
+>> Add the required 'mboxes' property to both the C66x DSP processors on the
+>> TI J721E common processor board. The mailboxes and some shared memory
+> 
+> I am not sure I understand the logic here. The carveout is added to
+> p0 SOM - and the mbox is added to common_proc_board. I am not sure I
+> get the difference. The C66x processors are on the SoC, stack is as
+> follows: - SoC - SoM - Common Proc board
+> 
+> I am just wondering if the carveouts and mbox linkage should be in the
+> common processor board? if that makes sense at all? I know we already
+> have other definitions.. Trying to see if we are making it harder to
+> understand the definition than that is necessary..
 
-Yes, as they're completely generic.
+In general, I consider these as stuff that needs to be added to the board dts
+files. You will see that this is what I have followed on all the TI
+AM57xx/DRA7xx boards. For J721E, we have a weird organization as the memory
+node, typically a board property, is defined in the som dtsi file, so the
+reserved memory nodes are also added in the som dtsi file. The convention I
+followed in general is to have the reserved-memory and memory nodes together.
 
-> >     dt-schema,
-> >   - Document missing properties,
-> >   - Document missing PHY child node,
-> >   - Add "additionalProperties: false".
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> [...]
->
-> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+If you think the mailbox nodes should be moved into the SoM dts file, I could do
+it as a follow-on cleanup series, but would wait for the ABI 3.0 changes to be
+merged first.
 
-Gr{oetje,eeting}s,
+regards
+Suman
 
-                        Geert
+> 
+>> are required for running the Remote Processor Messaging (RPMsg) stack
+>> between the host processor and each of the R5Fs. The chosen sub-mailboxes
+>> match the values used in the current firmware images. This can be changed,
+>> if needed, as per the system integration needs after making appropriate
+>> changes on the firmware side as well.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>>  arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+>> index e8fc01d97ada..ff541dc09eca 100644
+>> --- a/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+>> +++ b/arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
+>> @@ -379,6 +379,14 @@ &mailbox0_cluster11 {
+>>  	status = "disabled";
+>>  };
+>>  
+>> +&c66_0 {
+>> +	mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
+>> +};
+>> +
+>> +&c66_1 {
+>> +	mboxes = <&mailbox0_cluster3 &mbox_c66_1>;
+>> +};
+>> +
+>>  &main_sdhci0 {
+>>  	/* eMMC */
+>>  	non-removable;
+>> -- 
+>> 2.28.0
+>>
+> 
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
