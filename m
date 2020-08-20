@@ -2,612 +2,136 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE807C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9800CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F343208B3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:54:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NERLSTC9"
+	by mail.kernel.org (Postfix) with ESMTP id 6FD6D2177B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:05:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597910700;
+	bh=OWWu+MjMbXHrGQztQRN2ylfscy+5B8mChqzjsAWtscU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vPTSIPDHLnLuqoNgCkSb2Zku9FmHVs93R1hUtD4d4PMzn1rGX8zySsfKtBrOwWXYK
+	 NWg4pSlQ4zZklhgaQhQWrVpztUk7i540T/fq42VnUmuFYxLN4XeciNrS6EcSF9zJUE
+	 ZyJKOv2ZNc9Xmkl9OHnQ/crkqkqRu8whEOcOCsUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHTHyE (ORCPT
+        id S1725925AbgHTIE6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:54:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgHTHxy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 03:53:54 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D770C061383;
-        Thu, 20 Aug 2020 00:53:54 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id z23so511218plo.8;
-        Thu, 20 Aug 2020 00:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=nMQ/v0dSeD1Wa+85ZJ+w3b3TQSUzNoMCBi9CF/67Eqc=;
-        b=NERLSTC9oOGErTQ9zg0nqZEC3mJbLTWy+QOF3RYVvUUim68I+p076n5ihEzKvTgueC
-         ApM3khTnXOUZBtjyCp5Tjdje7W7ILibvXiZ8GbYsAYW1riCpe+s43vlLGvNz+7zoSs77
-         de5JLnmCOlVGtICzQR9EiK8tP2rILfEY8l0b+zB4Hp+o4PEWG2ahBIPBx7QgCgPedCWD
-         09dteg2MNpjrpGXw4FSgJaQ4QluHyTXVOASdtwxe8nOLWpjm8aseYlrhB1PrQ4bBZYdR
-         vz7Daq0yQT+Ili9Yo5Fypj0gDjTh+taYdSZYdYjEsDUU756mQHxPWN+OUrAYtxKLhjwZ
-         QjqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=nMQ/v0dSeD1Wa+85ZJ+w3b3TQSUzNoMCBi9CF/67Eqc=;
-        b=NJcQHJUvMKmqmDi5ErjzgNm/Oim+jHV5iGiIyrLX81gGhbhI3mX+Oq1uxpWGM/cMGJ
-         POSYsyisFXhmS16lUVaZWxWqMqAMJkZdLqxqQGjf9Vr3Ri98qap96yO+DY8aW3N5XuOW
-         Dbv6EnLx0fKiGbRc3m4zy+MMAmldYllK3aVpk6+LK4QHEOUmq6e7H8PCOI7ia13N7FhJ
-         W0lWXYvVGxrN9Kk8VcXp92S6J6id7r6cNPkuThuGVdl1oRexl7a4SPdxzuO4YUJzQaWd
-         h1k/iExmUVADtuyW8z+XUfLSJnJi++v6tdzUENiVkSIt4sGh3tbQwjT2kM6/sDo1hgDb
-         gsyw==
-X-Gm-Message-State: AOAM531/TU/vOZC5PrZRjkQlg1U2ZCUFwcRbOnM421tsmxyXHSkEhEaX
-        jwLdtdwkUKTTa8mTK5s4nWwlKLm8xpg=
-X-Google-Smtp-Source: ABdhPJwfnzK2QPH+7xk8sA5Ir6ntTtr5dzUqTXphXI/heHymvZK3DdLjuCaESLuEOEK2tDzkF3MsuQ==
-X-Received: by 2002:a17:90a:6301:: with SMTP id e1mr1510683pjj.5.1597910033964;
-        Thu, 20 Aug 2020 00:53:53 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:577:c217:67e6:a40c:a3bf:1945])
-        by smtp.gmail.com with ESMTPSA id q71sm1273832pjq.7.2020.08.20.00.53.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Aug 2020 00:53:53 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     matthias.bgg@gmail.com, robh+dt@kernel.org
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Gene Chen <gene_chen@richtek.com>
-Subject: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360 regulator
-Date:   Thu, 20 Aug 2020 15:53:41 +0800
-Message-Id: <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
-References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+        Thu, 20 Aug 2020 04:04:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgHTIEw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:04:52 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 494C22080C;
+        Thu, 20 Aug 2020 08:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597910691;
+        bh=OWWu+MjMbXHrGQztQRN2ylfscy+5B8mChqzjsAWtscU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=h5b1/133ACDgHCMmw6/rHv5Gql/4zGLxnABbEKYeU9N378GO55Fy4cGxpFyfiCyTc
+         WwVI3HJOWwe4FuMDjQEAsUTVpHVI5X8qscPaThxTdaYlForCPtCHOG8P/p6r+Lu+8p
+         CMIQRH9B5IFg3ngYjdu3Dyp2r35gyzgNbeRNFh+w=
+Date:   Thu, 20 Aug 2020 10:04:40 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Liuyao An <anliuyao@huawei.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200820100440.2d30dc02@coco.lan>
+In-Reply-To: <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+        <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+Em Wed, 19 Aug 2020 14:36:52 -0700
+John Stultz <john.stultz@linaro.org> escreveu:
 
-Add MT6360 regulator driver that contains two BUCKs and six LDOs
+> On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> > So, IMO, the best is to keep it on staging for a while, until those
+> > remaining bugs gets solved.
+> >
+> > I added this series, together with the regulator driver and
+> > a few other patches (including a hack to fix a Kernel 5.8
+> > regression at WiFi ) at:
+> >
+> >         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commi=
+ts/master =20
+>=20
+> Sorry, one more small request: Could you create a branch that only has
+> the DRM driver changes in it?
+>=20
+> The reason I ask, is that since the HiKey960 isn't affected by the
+> majority of the problems you listed as motivation for going through
+> staging. So if we can validate that your tree works fine on HiKey960,
+> the series can be cleaned up and submitted properly upstream to enable
+> that SoC, and the outstanding 970 issues can be worked out afterwards
+> against mainline.
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
----
- drivers/regulator/Kconfig                          |   9 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/mt6360-regulator.c               | 458 +++++++++++++++++++++
- .../regulator/mediatek,mt6360-regulator.h          |  16 +
- 4 files changed, 484 insertions(+)
- create mode 100644 drivers/regulator/mt6360-regulator.c
- create mode 100644 include/dt-bindings/regulator/mediatek,mt6360-regulator.h
+Well, if support for HiKey 960 is OK, I guess what we can do is to not=20
+push the patch with DT bindings for hikey970. We should probably fix
+the color swap thing at the driver first.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index de17ef7..8a6c3c6 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -711,6 +711,15 @@ config REGULATOR_MT6358
- 	  This driver supports the control of different power rails of device
- 	  through regulator interface.
- 
-+config REGULATOR_MT6360
-+	tristate "MT6360 SubPMIC Regulator"
-+	depends on MFD_MT6360
-+	help
-+	  Say Y here to enable MT6360 regulator support.
-+	  This is support MT6360 PMIC/LDO part include
-+	  2-channel buck with Thermal Shutdown and Overload Protection
-+	  6-channel High PSRR and Low Dropout LDO.
-+
- config REGULATOR_MT6380
- 	tristate "MediaTek MT6380 PMIC"
- 	depends on MTK_PMIC_WRAP
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index d8d3ecf..821a33f 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -88,6 +88,7 @@ obj-$(CONFIG_REGULATOR_MPQ7920) += mpq7920.o
- obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
- obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
- obj-$(CONFIG_REGULATOR_MT6358)	+= mt6358-regulator.o
-+obj-$(CONFIG_REGULATOR_MT6360) += mt6360-regulator.o
- obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
- obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
-diff --git a/drivers/regulator/mt6360-regulator.c b/drivers/regulator/mt6360-regulator.c
-new file mode 100644
-index 0000000..f01d1cc
---- /dev/null
-+++ b/drivers/regulator/mt6360-regulator.c
-@@ -0,0 +1,458 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+//
-+// Copyright (C) 2020 MediaTek Inc.
-+//
-+// Author: Gene Chen <gene_chen@richtek.com>
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+
-+#include <dt-bindings/regulator/mediatek,mt6360-regulator.h>
-+
-+enum {
-+	MT6360_REGULATOR_BUCK1 = 0,
-+	MT6360_REGULATOR_BUCK2,
-+	MT6360_REGULATOR_LDO6,
-+	MT6360_REGULATOR_LDO7,
-+	MT6360_REGULATOR_LDO1,
-+	MT6360_REGULATOR_LDO2,
-+	MT6360_REGULATOR_LDO3,
-+	MT6360_REGULATOR_LDO5,
-+	MT6360_REGULATOR_MAX,
-+};
-+
-+struct mt6360_irq_mapping {
-+	const char *name;
-+	irq_handler_t handler;
-+};
-+
-+struct mt6360_regulator_desc {
-+	const struct regulator_desc desc;
-+	unsigned int mode_reg;
-+	unsigned int mode_mask;
-+	unsigned int state_reg;
-+	unsigned int state_mask;
-+	const struct mt6360_irq_mapping *irq_tables;
-+	int irq_table_size;
-+};
-+
-+struct mt6360_regulator_data {
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+static irqreturn_t mt6360_pgb_event_handler(int irq, void *data)
-+{
-+	struct regulator_dev *rdev = data;
-+
-+	regulator_notifier_call_chain(rdev, REGULATOR_EVENT_FAIL, NULL);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t mt6360_oc_event_handler(int irq, void *data)
-+{
-+	struct regulator_dev *rdev = data;
-+
-+	regulator_notifier_call_chain(rdev, REGULATOR_EVENT_OVER_CURRENT, NULL);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t mt6360_ov_event_handler(int irq, void *data)
-+{
-+	struct regulator_dev *rdev = data;
-+
-+	regulator_notifier_call_chain(rdev, REGULATOR_EVENT_REGULATION_OUT, NULL);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t mt6360_uv_event_handler(int irq, void *data)
-+{
-+	struct regulator_dev *rdev = data;
-+
-+	regulator_notifier_call_chain(rdev, REGULATOR_EVENT_UNDER_VOLTAGE, NULL);
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct mt6360_irq_mapping buck1_irq_tbls[] = {
-+	{ "buck1_pgb_evt", mt6360_pgb_event_handler },
-+	{ "buck1_oc_evt", mt6360_oc_event_handler },
-+	{ "buck1_ov_evt", mt6360_ov_event_handler },
-+	{ "buck1_uv_evt", mt6360_uv_event_handler },
-+};
-+
-+static const struct mt6360_irq_mapping buck2_irq_tbls[] = {
-+	{ "buck2_pgb_evt", mt6360_pgb_event_handler },
-+	{ "buck2_oc_evt", mt6360_oc_event_handler },
-+	{ "buck2_ov_evt", mt6360_ov_event_handler },
-+	{ "buck2_uv_evt", mt6360_uv_event_handler },
-+};
-+
-+static const struct mt6360_irq_mapping ldo6_irq_tbls[] = {
-+	{ "ldo6_pgb_evt", mt6360_pgb_event_handler },
-+	{ "ldo6_oc_evt", mt6360_oc_event_handler },
-+};
-+
-+static const struct mt6360_irq_mapping ldo7_irq_tbls[] = {
-+	{ "ldo7_pgb_evt", mt6360_pgb_event_handler },
-+	{ "ldo7_oc_evt", mt6360_oc_event_handler },
-+};
-+
-+static const struct mt6360_irq_mapping ldo1_irq_tbls[] = {
-+	{ "ldo1_pgb_evt", mt6360_pgb_event_handler },
-+	{ "ldo1_oc_evt", mt6360_oc_event_handler },
-+};
-+
-+static const struct mt6360_irq_mapping ldo2_irq_tbls[] = {
-+	{ "ldo2_pgb_evt", mt6360_pgb_event_handler },
-+	{ "ldo2_oc_evt", mt6360_oc_event_handler },
-+};
-+
-+static const struct mt6360_irq_mapping ldo3_irq_tbls[] = {
-+	{ "ldo3_pgb_evt", mt6360_pgb_event_handler },
-+	{ "ldo3_oc_evt", mt6360_oc_event_handler },
-+};
-+
-+static const struct mt6360_irq_mapping ldo5_irq_tbls[] = {
-+	{ "ldo5_pgb_evt", mt6360_pgb_event_handler },
-+	{ "ldo5_oc_evt", mt6360_oc_event_handler },
-+};
-+
-+static const struct linear_range buck_vout_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(300000, 0x00, 0xc7, 5000),
-+	REGULATOR_LINEAR_RANGE(1300000, 0xc8, 0xff, 0),
-+};
-+
-+static const struct linear_range ldo_vout_ranges1[] = {
-+	REGULATOR_LINEAR_RANGE(500000, 0x00, 0x09, 10000),
-+	REGULATOR_LINEAR_RANGE(600000, 0x0a, 0x10, 0),
-+	REGULATOR_LINEAR_RANGE(610000, 0x11, 0x19, 10000),
-+	REGULATOR_LINEAR_RANGE(700000, 0x1a, 0x20, 0),
-+	REGULATOR_LINEAR_RANGE(710000, 0x21, 0x29, 10000),
-+	REGULATOR_LINEAR_RANGE(800000, 0x2a, 0x30, 0),
-+	REGULATOR_LINEAR_RANGE(810000, 0x31, 0x39, 10000),
-+	REGULATOR_LINEAR_RANGE(900000, 0x3a, 0x40, 0),
-+	REGULATOR_LINEAR_RANGE(910000, 0x41, 0x49, 10000),
-+	REGULATOR_LINEAR_RANGE(1000000, 0x4a, 0x50, 0),
-+	REGULATOR_LINEAR_RANGE(1010000, 0x51, 0x59, 10000),
-+	REGULATOR_LINEAR_RANGE(1100000, 0x5a, 0x60, 0),
-+	REGULATOR_LINEAR_RANGE(1110000, 0x61, 0x69, 10000),
-+	REGULATOR_LINEAR_RANGE(1200000, 0x6a, 0x70, 0),
-+	REGULATOR_LINEAR_RANGE(1210000, 0x71, 0x79, 10000),
-+	REGULATOR_LINEAR_RANGE(1300000, 0x7a, 0x80, 0),
-+	REGULATOR_LINEAR_RANGE(1310000, 0x81, 0x89, 10000),
-+	REGULATOR_LINEAR_RANGE(1400000, 0x8a, 0x90, 0),
-+	REGULATOR_LINEAR_RANGE(1410000, 0x91, 0x99, 10000),
-+	REGULATOR_LINEAR_RANGE(1500000, 0x9a, 0xa0, 0),
-+	REGULATOR_LINEAR_RANGE(1510000, 0xa1, 0xa9, 10000),
-+	REGULATOR_LINEAR_RANGE(1600000, 0xaa, 0xb0, 0),
-+	REGULATOR_LINEAR_RANGE(1610000, 0xb1, 0xb9, 10000),
-+	REGULATOR_LINEAR_RANGE(1700000, 0xba, 0xc0, 0),
-+	REGULATOR_LINEAR_RANGE(1710000, 0xc1, 0xc9, 10000),
-+	REGULATOR_LINEAR_RANGE(1800000, 0xca, 0xd0, 0),
-+	REGULATOR_LINEAR_RANGE(1810000, 0xd1, 0xd9, 10000),
-+	REGULATOR_LINEAR_RANGE(1900000, 0xda, 0xe0, 0),
-+	REGULATOR_LINEAR_RANGE(1910000, 0xe1, 0xe9, 10000),
-+	REGULATOR_LINEAR_RANGE(2000000, 0xea, 0xf0, 0),
-+	REGULATOR_LINEAR_RANGE(2010000, 0xf1, 0xf9, 10000),
-+	REGULATOR_LINEAR_RANGE(2100000, 0xfa, 0xff, 0),
-+};
-+
-+static const struct linear_range ldo_vout_ranges2[] = {
-+	REGULATOR_LINEAR_RANGE(1200000, 0x00, 0x09, 10000),
-+	REGULATOR_LINEAR_RANGE(1300000, 0x0a, 0x10, 0),
-+	REGULATOR_LINEAR_RANGE(1310000, 0x11, 0x19, 10000),
-+	REGULATOR_LINEAR_RANGE(1400000, 0x1a, 0x1f, 0),
-+	REGULATOR_LINEAR_RANGE(1500000, 0x20, 0x29, 10000),
-+	REGULATOR_LINEAR_RANGE(1600000, 0x2a, 0x2f, 0),
-+	REGULATOR_LINEAR_RANGE(1700000, 0x30, 0x39, 10000),
-+	REGULATOR_LINEAR_RANGE(1800000, 0x3a, 0x40, 0),
-+	REGULATOR_LINEAR_RANGE(1810000, 0x41, 0x49, 10000),
-+	REGULATOR_LINEAR_RANGE(1900000, 0x4a, 0x4f, 0),
-+	REGULATOR_LINEAR_RANGE(2000000, 0x50, 0x59, 10000),
-+	REGULATOR_LINEAR_RANGE(2100000, 0x5a, 0x60, 0),
-+	REGULATOR_LINEAR_RANGE(2110000, 0x61, 0x69, 10000),
-+	REGULATOR_LINEAR_RANGE(2200000, 0x6a, 0x6f, 0),
-+	REGULATOR_LINEAR_RANGE(2500000, 0x70, 0x79, 10000),
-+	REGULATOR_LINEAR_RANGE(2600000, 0x7a, 0x7f, 0),
-+	REGULATOR_LINEAR_RANGE(2700000, 0x80, 0x89, 10000),
-+	REGULATOR_LINEAR_RANGE(2800000, 0x8a, 0x90, 0),
-+	REGULATOR_LINEAR_RANGE(2810000, 0x91, 0x99, 10000),
-+	REGULATOR_LINEAR_RANGE(2900000, 0x9a, 0xa0, 0),
-+	REGULATOR_LINEAR_RANGE(2910000, 0xa1, 0xa9, 10000),
-+	REGULATOR_LINEAR_RANGE(3000000, 0xaa, 0xb0, 0),
-+	REGULATOR_LINEAR_RANGE(3010000, 0xb1, 0xb9, 10000),
-+	REGULATOR_LINEAR_RANGE(3100000, 0xba, 0xc0, 0),
-+	REGULATOR_LINEAR_RANGE(3110000, 0xc1, 0xc9, 10000),
-+	REGULATOR_LINEAR_RANGE(3200000, 0xca, 0xcf, 0),
-+	REGULATOR_LINEAR_RANGE(3300000, 0xd0, 0xd9, 10000),
-+	REGULATOR_LINEAR_RANGE(3400000, 0xda, 0xe0, 0),
-+	REGULATOR_LINEAR_RANGE(3410000, 0xe1, 0xe9, 10000),
-+	REGULATOR_LINEAR_RANGE(3500000, 0xea, 0xf0, 0),
-+	REGULATOR_LINEAR_RANGE(3510000, 0xf1, 0xf9, 10000),
-+	REGULATOR_LINEAR_RANGE(3600000, 0xfa, 0xff, 0),
-+};
-+
-+static const struct linear_range ldo_vout_ranges3[] = {
-+	REGULATOR_LINEAR_RANGE(2700000, 0x00, 0x09, 10000),
-+	REGULATOR_LINEAR_RANGE(2800000, 0x0a, 0x10, 0),
-+	REGULATOR_LINEAR_RANGE(2810000, 0x11, 0x19, 10000),
-+	REGULATOR_LINEAR_RANGE(2900000, 0x1a, 0x20, 0),
-+	REGULATOR_LINEAR_RANGE(2910000, 0x21, 0x29, 10000),
-+	REGULATOR_LINEAR_RANGE(3000000, 0x2a, 0x30, 0),
-+	REGULATOR_LINEAR_RANGE(3010000, 0x31, 0x39, 10000),
-+	REGULATOR_LINEAR_RANGE(3100000, 0x3a, 0x40, 0),
-+	REGULATOR_LINEAR_RANGE(3110000, 0x41, 0x49, 10000),
-+	REGULATOR_LINEAR_RANGE(3200000, 0x4a, 0x4f, 0),
-+	REGULATOR_LINEAR_RANGE(3300000, 0x50, 0x59, 10000),
-+	REGULATOR_LINEAR_RANGE(3400000, 0x5a, 0x60, 0),
-+	REGULATOR_LINEAR_RANGE(3410000, 0x61, 0x69, 10000),
-+	REGULATOR_LINEAR_RANGE(3500000, 0x6a, 0x70, 0),
-+	REGULATOR_LINEAR_RANGE(3510000, 0x71, 0x79, 10000),
-+	REGULATOR_LINEAR_RANGE(3600000, 0x7a, 0x7f, 0),
-+};
-+
-+static int mt6360_regulator_set_mode(struct regulator_dev *rdev,
-+				     unsigned int mode)
-+{
-+	const struct mt6360_regulator_desc *rdesc = (struct mt6360_regulator_desc *)rdev->desc;
-+	struct regmap *regmap = rdev_get_regmap(rdev);
-+	int shift = ffs(rdesc->mode_mask) - 1;
-+	unsigned int val;
-+	int ret;
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_NORMAL:
-+		val = MT6360_OPMODE_NORMAL;
-+		break;
-+	case REGULATOR_MODE_STANDBY:
-+		val = MT6360_OPMODE_ULP;
-+		break;
-+	case REGULATOR_MODE_IDLE:
-+		val = MT6360_OPMODE_LP;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_update_bits(regmap, rdesc->mode_reg, rdesc->mode_mask, val << shift);
-+	if (ret) {
-+		dev_err(&rdev->dev, "%s: fail (%d)\n", __func__, ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static unsigned int mt6360_regulator_get_mode(struct regulator_dev *rdev)
-+{
-+	const struct mt6360_regulator_desc *rdesc = (struct mt6360_regulator_desc *)rdev->desc;
-+	struct regmap *regmap = rdev_get_regmap(rdev);
-+	int shift = ffs(rdesc->mode_mask) - 1;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(regmap, rdesc->mode_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	val &= rdesc->mode_mask;
-+	val >>= shift;
-+
-+	switch (val) {
-+	case MT6360_OPMODE_LP:
-+		return REGULATOR_MODE_IDLE;
-+	case MT6360_OPMODE_ULP:
-+		return REGULATOR_MODE_STANDBY;
-+	case MT6360_OPMODE_NORMAL:
-+		return REGULATOR_MODE_NORMAL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int mt6360_regulator_get_status(struct regulator_dev *rdev)
-+{
-+	const struct mt6360_regulator_desc *rdesc = (struct mt6360_regulator_desc *)rdev->desc;
-+	struct regmap *regmap = rdev_get_regmap(rdev);
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(regmap, rdesc->state_reg, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & rdesc->state_mask)
-+		return REGULATOR_STATUS_ON;
-+
-+	return REGULATOR_STATUS_OFF;
-+}
-+
-+static const struct regulator_ops mt6360_regulator_ops = {
-+	.list_voltage = regulator_list_voltage_linear_range,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_mode = mt6360_regulator_set_mode,
-+	.get_mode = mt6360_regulator_get_mode,
-+	.get_status = mt6360_regulator_get_status,
-+};
-+
-+static unsigned int mt6360_regulator_of_map_mode(unsigned int hw_mode)
-+{
-+	switch (hw_mode) {
-+	case MT6360_OPMODE_NORMAL:
-+		return REGULATOR_MODE_NORMAL;
-+	case MT6360_OPMODE_LP:
-+		return REGULATOR_MODE_IDLE;
-+	case MT6360_OPMODE_ULP:
-+		return REGULATOR_MODE_STANDBY;
-+	default:
-+		return REGULATOR_MODE_INVALID;
-+	}
-+}
-+
-+#define MT6360_REGULATOR_DESC(_name, _sname, ereg, emask, vreg,	vmask,	\
-+			      mreg, mmask, streg, stmask, vranges,	\
-+			      vcnts, offon_delay, irq_tbls)		\
-+{									\
-+	.desc = {							\
-+		.name = #_name,						\
-+		.supply_name = #_sname,					\
-+		.id =  MT6360_REGULATOR_##_name,			\
-+		.of_match = of_match_ptr(#_name),			\
-+		.of_map_mode = mt6360_regulator_of_map_mode,		\
-+		.owner = THIS_MODULE,					\
-+		.ops = &mt6360_regulator_ops,				\
-+		.type = REGULATOR_VOLTAGE,				\
-+		.vsel_reg = vreg,					\
-+		.vsel_mask = vmask,					\
-+		.enable_reg = ereg,					\
-+		.enable_mask = emask,					\
-+		.linear_ranges = vranges,				\
-+		.n_linear_ranges = ARRAY_SIZE(vranges),			\
-+		.n_voltages = vcnts,					\
-+		.off_on_delay = offon_delay,				\
-+	},								\
-+	.mode_reg = mreg,						\
-+	.mode_mask = mmask,						\
-+	.state_reg = streg,						\
-+	.state_mask = stmask,						\
-+	.irq_tables = irq_tbls,						\
-+	.irq_table_size = ARRAY_SIZE(irq_tbls),				\
-+}
-+
-+static const struct mt6360_regulator_desc mt6360_regulator_descs[] =  {
-+	MT6360_REGULATOR_DESC(BUCK1, BUCK1_VIN, 0x117, 0x40, 0x110, 0xff, 0x117, 0x30, 0x117, 0x04,
-+			      buck_vout_ranges, 256, 0, buck1_irq_tbls),
-+	MT6360_REGULATOR_DESC(BUCK2, BUCK2_VIN, 0x127, 0x40, 0x120, 0xff, 0x127, 0x30, 0x127, 0x04,
-+			      buck_vout_ranges, 256, 0, buck2_irq_tbls),
-+	MT6360_REGULATOR_DESC(LDO6, LDO_VIN3, 0x137, 0x40, 0x13B, 0xff, 0x137, 0x30, 0x137, 0x04,
-+			      ldo_vout_ranges1, 256, 0, ldo6_irq_tbls),
-+	MT6360_REGULATOR_DESC(LDO7, LDO_VIN3, 0x131, 0x40, 0x135, 0xff, 0x131, 0x30, 0x131, 0x04,
-+			      ldo_vout_ranges1, 256, 0, ldo7_irq_tbls),
-+	MT6360_REGULATOR_DESC(LDO1, LDO_VIN1, 0x217, 0x40, 0x21B, 0xff, 0x217, 0x30, 0x217, 0x04,
-+			      ldo_vout_ranges2, 256, 0, ldo1_irq_tbls),
-+	MT6360_REGULATOR_DESC(LDO2, LDO_VIN1, 0x211, 0x40, 0x215, 0xff, 0x211, 0x30, 0x211, 0x04,
-+			      ldo_vout_ranges2, 256, 0, ldo2_irq_tbls),
-+	MT6360_REGULATOR_DESC(LDO3, LDO_VIN1, 0x205, 0x40, 0x209, 0xff, 0x205, 0x30, 0x205, 0x04,
-+			      ldo_vout_ranges2, 256, 100, ldo3_irq_tbls),
-+	MT6360_REGULATOR_DESC(LDO5, LDO_VIN2, 0x20B, 0x40, 0x20F, 0x7f, 0x20B, 0x30, 0x20B, 0x04,
-+			      ldo_vout_ranges3, 128, 100, ldo5_irq_tbls),
-+};
-+
-+static int mt6360_regulator_irq_register(struct platform_device *pdev,
-+					 struct regulator_dev *rdev,
-+					 const struct mt6360_irq_mapping *tbls,
-+					 int tbl_size)
-+{
-+	int i, irq, ret;
-+
-+	for (i = 0; i < tbl_size; i++) {
-+		const struct mt6360_irq_mapping *irq_desc = tbls + i;
-+
-+		irq = platform_get_irq_byname(pdev, irq_desc->name);
-+		if (irq < 0) {
-+			dev_err(&pdev->dev, "Fail to get %s irq\n", irq_desc->name);
-+			return irq;
-+		}
-+
-+		ret = devm_request_threaded_irq(&pdev->dev, irq, NULL, irq_desc->handler, 0,
-+						irq_desc->name, rdev);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Fail to request %s irq\n", irq_desc->name);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int mt6360_regulator_probe(struct platform_device *pdev)
-+{
-+	struct mt6360_regulator_data *mrd;
-+	struct regulator_config config = {};
-+	int i, ret;
-+
-+	mrd = devm_kzalloc(&pdev->dev, sizeof(*mrd), GFP_KERNEL);
-+	if (!mrd)
-+		return -ENOMEM;
-+
-+	mrd->dev = &pdev->dev;
-+
-+	mrd->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!mrd->regmap) {
-+		dev_err(&pdev->dev, "Failed to get parent regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	config.dev = &pdev->dev;
-+	config.driver_data = mrd;
-+	config.regmap = mrd->regmap;
-+
-+	for (i = 0; i < ARRAY_SIZE(mt6360_regulator_descs); i++) {
-+		const struct mt6360_regulator_desc *rdesc = mt6360_regulator_descs + i;
-+		struct regulator_dev *rdev;
-+
-+		rdev = devm_regulator_register(&pdev->dev, &rdesc->desc, &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&pdev->dev, "Failed to register  %d regulaotr\n", i);
-+			return PTR_ERR(rdev);
-+		}
-+
-+		ret = mt6360_regulator_irq_register(pdev, rdev, rdesc->irq_tables,
-+						    rdesc->irq_table_size);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to register  %d regulaotr irqs\n", i);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id __maybe_unused mt6360_regulator_of_id[] = {
-+	{ .compatible = "mediatek,mt6360-regulator", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mt6360_regulator_of_id);
-+
-+static struct platform_driver mt6360_regulator_driver = {
-+	.driver = {
-+		.name = "mt6360-regulator",
-+		.of_match_table = mt6360_regulator_of_id,
-+	},
-+	.probe = mt6360_regulator_probe,
-+};
-+module_platform_driver(mt6360_regulator_driver);
-+
-+MODULE_AUTHOR("Gene Chen <gene_chen@richtek.com>");
-+MODULE_DESCRIPTION("MT6360 Regulator Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/dt-bindings/regulator/mediatek,mt6360-regulator.h b/include/dt-bindings/regulator/mediatek,mt6360-regulator.h
-new file mode 100644
-index 0000000..21c75de
---- /dev/null
-+++ b/include/dt-bindings/regulator/mediatek,mt6360-regulator.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __DT_BINDINGS_MEDIATEK_MT6360_REGULATOR_H__
-+#define __DT_BINDINGS_MEDIATEK_MT6360_REGULATOR_H__
-+
-+/*
-+ * BUCK/LDO mode constants which may be used in devicetree properties
-+ * (eg. regulator-allowed-modes).
-+ * See the manufacturer's datasheet for more information on these modes.
-+ */
-+
-+#define MT6360_OPMODE_LP		2
-+#define MT6360_OPMODE_ULP		3
-+#define MT6360_OPMODE_NORMAL		0
-+
-+#endif
--- 
-2.7.4
+=46rom my side, provided that the history is preserved, I don't mind
+if this is merged:
 
+- via staging tree;
+- at dri-devel tree;
+- or having a the historic patchsets merged at /staging, with
+  a follow up patch moving it from staging/ into /gpu/drm/.
+
+Thanks,
+Mauro
