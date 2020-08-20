@@ -2,174 +2,141 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304B0C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20333C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06A932078B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B3B207BB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:14:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ItMFiAGp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mldFscpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgHTLs1 (ORCPT
+        id S1729498AbgHTMOD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33686 "EHLO
+        Thu, 20 Aug 2020 08:14:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730528AbgHTKCo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 06:02:44 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B25FC061757;
-        Thu, 20 Aug 2020 03:02:42 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4E5E323D;
-        Thu, 20 Aug 2020 12:02:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597917743;
-        bh=UdZW/gWpeBR8Fp2uswR4BNeR1AZf83I2Xerix6/McmU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ItMFiAGpy+m799SAJlmxoBALpCUTcBMW2ZU7dxHv3+rwmOEr6obhEyMEeRR1DmtU5
-         w83NTD2V6detNxAnQkYHTyfm7GYG23NbpofX1u6znoMCAcfcbBJQgrORodryscgxWx
-         WciTsmZ7pXmG36Axz5Ekh/zrHURi1ohdX/kph6gI=
-Date:   Thu, 20 Aug 2020 13:02:05 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        with ESMTP id S1730464AbgHTMNi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 08:13:38 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A094C061385
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 05:13:38 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d188so943627pfd.2
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 05:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EvaYpGhPiyzIV8u7Pu49cgT7qrkQ0eRWWRMKQuP5HaA=;
+        b=mldFscpKgM3ipzzkLfP0lvFj1wLLTrVWsSfCnd5CMAAxGBKOs6PZgoxS7xR5+i6RLu
+         MJOkwBORNxN3Z+BpvATXOYR4I4cXJGJzW251epBSZHOGfJP5jq2c4tfJXlMjhj/Gzp4q
+         0fj39D35xxmV+PvhLdiRR1V7jNqeDvntsSoRef7nJhb3aUoZ+z10yl4v186fyh0u8kd0
+         VLuurtQkBxy0WTB7UjeZej/yK2/Pu197/cERRpIQN4KaESH5NDdL+MnkVWxW7H2F344m
+         msuGgYxi6TmLXtMfeIDfEfz4A5AiK3lAQG7XlADOCzaVZbmBQBtVvz9Hifzv/UCD6zQr
+         12pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EvaYpGhPiyzIV8u7Pu49cgT7qrkQ0eRWWRMKQuP5HaA=;
+        b=Q4GNhwsdyV4bQHD+UWiKV1XP/Whbg8HqDktaHNmBOAEhNg9N5KMf/+xsMtJY9PsYG0
+         wQTvX+14imMCWWtgFLPxde0txcD59ShIbDU1uhM4UrB6NT+C07DE4n4/8o3y3SBGbVGf
+         5jxuPUpu09eypkMNMbe1n/YiSphyBgXyLTPJQkQAS62Oaz57RjvQVBKfJ/A0Z1IZobZJ
+         ykgjqZIRjLBd58OQEzHA1RR19Dny0jJMLL8CYz1tQ/0dC7rFMA/YlrEdpH9kFsufsjqa
+         5MXUUB9VZMk2ZN3yO4V6HUv3Tidc9nATVYPYnjHMKwGsmo0ZoUfSw9zQkJnNGlRjDPRj
+         mG/w==
+X-Gm-Message-State: AOAM532s8OrJFdo7Ax+BEOVuBTmK3u3YEli9wyo4ZvD+UnTpZoI68jx5
+        mumhzrSUPgNCQv//MCW0FtcDf77lO/o=
+X-Google-Smtp-Source: ABdhPJy10u5ElLDD6qJCDxC8DtyeOr0hEPgkm9g/Vkrdr0Rn/axi1Qz1t+rNirf2rMoaKurT/sp+gA==
+X-Received: by 2002:aa7:9569:: with SMTP id x9mr2208031pfq.16.1597925617760;
+        Thu, 20 Aug 2020 05:13:37 -0700 (PDT)
+Received: from localhost.localdomain ([45.114.62.137])
+        by smtp.gmail.com with ESMTPSA id p20sm1985937pjg.44.2020.08.20.05.13.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 05:13:37 -0700 (PDT)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liuyao An <anliuyao@huawei.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200820100205.GA5962@pendragon.ideasonboard.com>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org>
- <20200819153045.GA18469@pendragon.ideasonboard.com>
- <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
- <20200820090326.3f400a15@coco.lan>
+        Kevin Hilman <khilman@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v3 1/2] arm64: dts: meson-g12b-odroid-n2: Enable RTC controller node
+Date:   Thu, 20 Aug 2020 17:43:22 +0530
+Message-Id: <20200820121323.564-2-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820121323.564-1-linux.amoon@gmail.com>
+References: <20200820121323.564-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200820090326.3f400a15@coco.lan>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mauro,
+Enable RTC PCF8563 node on Odroid-N2 SBC, In order to
+support the RTC wakealarm feature for suspend and resume.
+Also assign an alias to the pcf8563 to rtc0 and meson-vrtc to rtc1
+timer device to prevent it being assigned to /dev/rtc0
+which disto userspace tools assume is a clock device.
 
-On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote:
-> Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu:
-> > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote:
-> > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:  
-> > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:  
-> > > > > This patch series port the out-of-tree driver for Hikey 970 (which
-> > > > > should also support Hikey 960) from the official 96boards tree:
-> > > > >
-> > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > > > >
-> > > > > Based on his history, this driver seems to be originally written
-> > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The original
-> > > > > driver used to depend on ION (from Kernel 4.4) and had its own
-> > > > > implementation for FB dev API.
-> > > > >
-> > > > > As I need to preserve the original history (with has patches from
-> > > > > both HiSilicon and from Linaro),  I'm starting from the original
-> > > > > patch applied there. The remaining patches are incremental,
-> > > > > and port this driver to work with upstream Kernel.
-> > > > >  
-> > ...
-> > > > > - Due to legal reasons, I need to preserve the authorship of
-> > > > >   each one responsbile for each patch. So, I need to start from
-> > > > >   the original patch from Kernel 4.4;  
-> > ...
-> > > > I do acknowledge you need to preserve history and all -
-> > > > but this patchset is not easy to review.  
-> > >
-> > > Why do we need to preserve history ? Adding relevant Signed-off-by and
-> > > Co-developed-by should be enough, shouldn't it ? Having a public branch
-> > > that contains the history is useful if anyone is interested, but I don't
-> > > think it's required in mainline.  
-> > 
-> > Yea. I concur with Laurent here. I'm not sure what legal reasoning you
-> > have on this but preserving the "absolute" history here is actively
-> > detrimental for review and understanding of the patch set.
-> > 
-> > Preserving Authorship, Signed-off-by lines and adding Co-developed-by
-> > lines should be sufficient to provide both atribution credit and DCO
-> > history.
-> 
-> I'm not convinced that, from legal standpoint, folding things would
-> be enough. See, there are at least 3 legal systems involved here
-> among the different patch authors:
-> 
-> 	- civil law;
-> 	- common law;
-> 	- customary law + common law.
-> 
-> Merging stuff altogether from different law systems can be problematic,
-> and trying to discuss this with experienced IP property lawyers will
-> for sure take a lot of time and efforts. I also bet that different
-> lawyers will have different opinions, because laws are subject to 
-> interpretation. With that matter I'm not aware of any court rules 
-> with regards to folded patches. So, it sounds to me that folding 
-> patches is something that has yet to be proofed in courts around
-> the globe.
-> 
-> At least for US legal system, it sounds that the Country of
-> origin of a patch is relevant, as they have a concept of
-> "national technology" that can be subject to export regulations.
-> 
-> From my side, I really prefer to play safe and stay out of any such
-> legal discussions.
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+Changes V3
+--Drop the INI GPIOAO.BIT7 pinctrl.
+--Added missing RTC alias so that rtc get assigned correcly,
+  as suggested by Chris Hewitt.
+changes v2
+--Fix the missing INT (GPIOAO.BIT7) pinctrl.
+--Fix the missing rtcwakeup.
+--Drop the clock not required clock property by the PCF8563 driver.
+---
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts      | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Let's be serious for a moment. If you think there are legal issues in
-taking GPL-v2.0-only patches and squashing them while retaining
-authorship information through tags, the Linux kernel if *full* of that.
-You also routinely modify patches that you commit to the media subsystem
-to fix "small issues".
-
-The country of origin argument makes no sense either, the kernel code
-base if full of code coming from pretty much all country on the planet.
-
-Keeping the patches separate make this hard to review. Please squash
-them.
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+index 34fffa6d859d..35a31cf181e2 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
+@@ -19,6 +19,8 @@ / {
+ 	aliases {
+ 		serial0 = &uart_AO;
+ 		ethernet0 = &ethmac;
++		rtc0 = &rtc0;
++		rtc1 = &vrtc;
+ 	};
+ 
+ 	dioo2133: audio-amplifier-0 {
+@@ -477,6 +479,18 @@ hdmi_tx_tmds_out: endpoint {
+ 	};
+ };
+ 
++&i2c3 {
++	pinctrl-0 = <&i2c3_sda_a_pins>, <&i2c3_sck_a_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	rtc0: rtc@51 {
++		reg = <0x51>;
++		compatible = "nxp,pcf8563";
++		wakeup-source;
++	};
++};
++
+ &ir {
+ 	status = "okay";
+ 	pinctrl-0 = <&remote_input_ao_pins>;
 -- 
-Regards,
+2.28.0
 
-Laurent Pinchart
