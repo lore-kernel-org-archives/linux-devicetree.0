@@ -2,100 +2,92 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A82C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088FEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 13:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DDD207BB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927695;
-	bh=pFq7iB7XnrP7Joiut7KtoVnKCKN42jGESFbYRJbWaKI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TtWNgEQU8lL9Uu28KdhprJ+YiAMQLR6VSYWlSmfGNOp1grrB0EiOYJeC0olz2Gxii
-	 SaBM7WlQAViJNJSXZSrF1m/dxYUuAfQDg/KQAbLOTv6vIL7mgQLR2hBUhaTn6c8Z/h
-	 5L+Pq0u14UwLXOkXFlTau4A01sWuWhOhLO+pivh8=
+	by mail.kernel.org (Postfix) with ESMTP id DFF08207DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 13:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgHTMr7 (ORCPT
+        id S1730147AbgHTNFm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:47:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730274AbgHTMrt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:47:49 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17AE2078B;
-        Thu, 20 Aug 2020 12:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597927668;
-        bh=pFq7iB7XnrP7Joiut7KtoVnKCKN42jGESFbYRJbWaKI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0AEFL5Uga/yx7bmcfdjXBBqx6fyLXuznCa39VkuFXi1j1NQBDJLq3mvbmldMpd+Rw
-         spaaiQ1Al2myjvxc41nBH1pzTuSK3jVfdOrfpqDVDOZArlgX5e3q96KqElaoO9sbvO
-         +p0d3GTbl1r1YfKx4bmiF5XQ0tHqMYYk537DJVUU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k8jyt-004ZAx-4r; Thu, 20 Aug 2020 13:47:47 +0100
+        Thu, 20 Aug 2020 09:05:42 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46206 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730133AbgHTNFi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 09:05:38 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v6so1353927ota.13;
+        Thu, 20 Aug 2020 06:05:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sg8ZwoLVDdjGpQuxoN9M/5AY3B7WmgGus1lYO1T9dMo=;
+        b=VOje/ZOvdbR4Kzl9Pq7i5MK4qY0v4TY9gexkiK5NB+alFvQorGZ9GvZmbGJ75n1ZO0
+         2kItntJC6uMsGNxfsVtIx/59/U0Fg1tWWjBxxvl7RbKmk0WAx4BhQxlm31qPPm2QHj1U
+         K1hYhOpl7Y+uq2G5+Gkm1OcMqmLMyNKGedpYwDSCPrc3pEcHoP9R9Gv6TYs2tz6l/pAT
+         4sl0h5kD0RjIhoa8ikpUeJjeN+4aLfmehasNlgmZgStUKRCNKgcdJLLbVWjqW2Zsr5lf
+         OClGZI0FZa8B5kLi6/zhaKz6OEZoJwyY17AASdTYOk/LxK+SzhnLLg3JhPmqEzboD0Of
+         08Qg==
+X-Gm-Message-State: AOAM53358gS8tGTqrCyeEHZe1TKQBGTAxOd617qtUQRNNboBzfozQBCG
+        pIN27BejbKdA8BgiJuex/G3HulECZvTI6lk109w=
+X-Google-Smtp-Source: ABdhPJwUV3KXd1HI11sLhl5ptjIK3LAapipNtJfRztkV8qdLHzVc7KCPljUS3MazWyrN26NRAgTnugJUC1FbS8aKnic=
+X-Received: by 2002:a05:6830:1b79:: with SMTP id d25mr1920248ote.107.1597928737463;
+ Thu, 20 Aug 2020 06:05:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Aug 2020 13:47:47 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>, alix.wu@mediatek.com,
-        DTML <devicetree@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+References: <20200819124539.20239-1-geert+renesas@glider.be> <df7f61fe-3103-168e-0744-d6b20ee42224@gmail.com>
+In-Reply-To: <df7f61fe-3103-168e-0744-d6b20ee42224@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 20 Aug 2020 15:05:25 +0200
+Message-ID: <CAMuHMdVA2-c+T_XHEV9GrQ0Dmf9OfsmiO4UeNKvPu26fQXKU-w@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: net: renesas,ether: Improve schema validation
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
-Subject: Re: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller
- support
-In-Reply-To: <CAFr9PXnzdHs2F3pyF-493xuhn9wFU1G9eLXRtiW-rYNB5bLX7w@mail.gmail.com>
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
- <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
- <CAFr9PXnzdHs2F3pyF-493xuhn9wFU1G9eLXRtiW-rYNB5bLX7w@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <ec3dd6b7664d647b2dc27926539eadda@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: daniel@0x0f.com, mark-pk.tsai@mediatek.com, alix.wu@mediatek.com, devicetree@vger.kernel.org, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, yj.chiang@mediatek.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-20 13:36, Daniel Palmer wrote:
-> Hi Mark-PK, Marc
-> 
-> I'm not sure this will be the final version but I'm going to try to
-> integrate this with my current MStar/SigmaStar tree over the weekend
-> and then I guess I can give this a tested-by?
+Hi Sergei,
 
-That'd be good.
+On Thu, Aug 20, 2020 at 2:26 PM Sergei Shtylyov
+<sergei.shtylyov@gmail.com> wrote:
+> On 8/19/20 3:45 PM, Geert Uytterhoeven wrote:
+>
+> >   - Remove pinctrl consumer properties, as they are handled by core
+>
+>    So you're removing them even from the example?
 
-> Assuming this version or the next is acceptable can I just follow up
-> with a small patch to add the instances I need in my dtsi or should I
-> wait until it's merged before doing that?
+Yes, as they're completely generic.
 
-No need to wait, although the platform-specific details should go
-via the arm-soc tree.
+> >     dt-schema,
+> >   - Document missing properties,
+> >   - Document missing PHY child node,
+> >   - Add "additionalProperties: false".
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> [...]
+>
+> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
 
-I'm not going to review the new version before next week anyway
-(I'm making a point in reviewing any given series at most once
-a week).
+Gr{oetje,eeting}s,
 
-         M.
+                        Geert
+
 -- 
-Jazz is not dead. It just smells funny...
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
