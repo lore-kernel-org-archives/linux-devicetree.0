@@ -2,170 +2,276 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1DAC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795F6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 917A720724
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:10:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="FgZg5RJO"
+	by mail.kernel.org (Postfix) with ESMTP id 5FE4320724
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHTOKb (ORCPT
+        id S1729501AbgHTNxS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:10:31 -0400
-Received: from mout02.posteo.de ([185.67.36.66]:37075 "EHLO mout02.posteo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731114AbgHTN5v (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:57:51 -0400
-Received: from submission (posteo.de [89.146.220.130]) 
-        by mout02.posteo.de (Postfix) with ESMTPS id E12A1240102
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 15:57:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-        t=1597931867; bh=d+hcOSxcO9jP1uRk6VZTRpShglcRxcZrwhKWr0yVcOQ=;
-        h=Subject:To:From:Autocrypt:Date:From;
-        b=FgZg5RJOvpgd0urLPojBDnwR0a0EnL+WXIjHEfk55DLxtz8T6N1zi73+qagolIdS/
-         9PA0pep3lrTObHjt5wDWUfZ/wcEaT4goGzKyr4crsKPNO4+tKWx+2mTwpz8lMouZDI
-         WXV/QFNftgYXojW/NRuKgREVI2PT7pPrVgROYYFAYGCmCF6Sj62WNgUnsFfHK5mn0F
-         zl69JyO/iIxkTnPj946uFFzGbTK+lw3mIm9MO4kiqJQcB6J+YhvxWtiRs9EiRmWqcI
-         3ZJH9csjHWIcvzMuG2klxfP0qAF6BqWVlN8qg5/zqr7LT7XI3Soatk2BsROYnWAqjH
-         eHSSZwTWWVm1Q==
-Received: from customer (localhost [127.0.0.1])
-        by submission (posteo.de) with ESMTPSA id 4BXR6s0DmNz6tmq;
-        Thu, 20 Aug 2020 15:57:40 +0200 (CEST)
-Subject: Re: [PATCH v2 1/4] arm64: dts: imx8mq: Add NWL MIPI DSI controller
-To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Thu, 20 Aug 2020 09:53:18 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:56214 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730323AbgHTNwC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 09:52:02 -0400
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 20 Aug 2020 06:51:58 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Aug 2020 06:51:56 -0700
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Aug 2020 19:21:33 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id 97837442B; Thu, 20 Aug 2020 19:21:32 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Li Jun <jun.li@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Walle <michael@walle.cc>,
-        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1597913263.git.agx@sigxcpu.org>
- <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
-From:   Martin Kepplinger <martink@posteo.de>
-Autocrypt: addr=martink@posteo.de; keydata=
- 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
-Message-ID: <a01e5b06-47f1-6ba9-1b74-439384b9b56c@posteo.de>
-Date:   Thu, 20 Aug 2020 15:57:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        satya priya <skakit@codeaurora.org>
+Subject: [PATCH V3 1/3] arm64: dts: sc7180: Add wakeup support over UART RX
+Date:   Thu, 20 Aug 2020 19:21:05 +0530
+Message-Id: <1597931467-24268-2-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
+References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20.08.20 10:50, Guido Günther wrote:
-> Add a node for the Northwest Logic MIPI DSI IP core, "disabled" by
-> default. This also adds the necessary port to LCDIF.
-> 
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 49 +++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
+Add the necessary pinctrl and interrupts to make UART
+wakeup capable.
 
-Hi Guido,
+Signed-off-by: satya priya <skakit@codeaurora.org>
+Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+---
+Changes in V2:
+ - As per Matthias's comment added wakeup support for all the UARTs
+   of SC7180.
 
-Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+Changes in V3:
+ - No change.
 
-on the librem5 devkit.
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 ++++++++++++++++++++++++++++++------
+ 1 file changed, 84 insertions(+), 14 deletions(-)
 
-thanks,
-                              martin
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b383..855b13e 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -793,9 +793,11 @@
+ 				reg = <0 0x00880000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart0_default>;
+-				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart0_sleep>;
++				interrupts-extended = <&intc GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 37 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -845,9 +847,11 @@
+ 				reg = <0 0x00884000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart1_default>;
+-				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart1_sleep>;
++				interrupts-extended = <&intc GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 3 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -931,9 +935,11 @@
+ 				reg = <0 0x0088c000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart3_default>;
+-				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart3_sleep>;
++				interrupts-extended = <&intc GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 41 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -1017,9 +1023,11 @@
+ 				reg = <0 0x00894000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart5_default>;
+-				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart5_sleep>;
++				interrupts-extended = <&intc GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 28 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_0 &qup_virt SLAVE_QUP_CORE_0>,
+@@ -1084,9 +1092,11 @@
+ 				reg = <0 0x00a80000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart6_default>;
+-				interrupts = <GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart6_sleep>;
++				interrupts-extended = <&intc GIC_SPI 353 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 62 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+@@ -1256,9 +1266,11 @@
+ 				reg = <0 0x00a90000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart10_default>;
+-				interrupts = <GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart10_sleep>;
++				interrupts-extended = <&intc GIC_SPI 357 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 89 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+@@ -1308,9 +1320,11 @@
+ 				reg = <0 0x00a94000 0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
+-				pinctrl-names = "default";
++				pinctrl-names = "default", "sleep";
+ 				pinctrl-0 = <&qup_uart11_default>;
+-				interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-1 = <&qup_uart11_sleep>;
++				interrupts-extended = <&intc GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>,
++							<&tlmm 56 IRQ_TYPE_EDGE_FALLING>;
+ 				power-domains = <&rpmhpd SC7180_CX>;
+ 				operating-points-v2 = <&qup_opp_table>;
+ 				interconnects = <&qup_virt MASTER_QUP_CORE_1 &qup_virt SLAVE_QUP_CORE_1>,
+@@ -1638,6 +1652,14 @@
+ 				};
+ 			};
+ 
++			qup_uart0_sleep: qup-uart0-sleep {
++				pinmux {
++					pins = "gpio34", "gpio35",
++					       "gpio36", "gpio37";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart1_default: qup-uart1-default {
+ 				pinmux {
+ 					pins = "gpio0", "gpio1",
+@@ -1646,6 +1668,14 @@
+ 				};
+ 			};
+ 
++			qup_uart1_sleep: qup-uart1-sleep {
++				pinmux {
++					pins = "gpio0", "gpio1",
++					       "gpio2", "gpio3";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart2_default: qup-uart2-default {
+ 				pinmux {
+ 					pins = "gpio15", "gpio16";
+@@ -1661,6 +1691,14 @@
+ 				};
+ 			};
+ 
++			qup_uart3_sleep: qup-uart3-sleep {
++				pinmux {
++					pins = "gpio38", "gpio39",
++					       "gpio40", "gpio41";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart4_default: qup-uart4-default {
+ 				pinmux {
+ 					pins = "gpio115", "gpio116";
+@@ -1676,6 +1714,14 @@
+ 				};
+ 			};
+ 
++			qup_uart5_sleep: qup-uart5-sleep {
++				pinmux {
++					pins = "gpio25", "gpio26",
++					       "gpio27", "gpio28";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart6_default: qup-uart6-default {
+ 				pinmux {
+ 					pins = "gpio59", "gpio60",
+@@ -1684,6 +1730,14 @@
+ 				};
+ 			};
+ 
++			qup_uart6_sleep: qup-uart6-sleep {
++				pinmux {
++					pins = "gpio59", "gpio60",
++					       "gpio61", "gpio62";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart7_default: qup-uart7-default {
+ 				pinmux {
+ 					pins = "gpio6", "gpio7";
+@@ -1713,6 +1767,14 @@
+ 				};
+ 			};
+ 
++			qup_uart10_sleep: qup-uart10-sleep {
++				pinmux {
++					pins = "gpio86", "gpio87",
++					       "gpio88", "gpio89";
++					function = "gpio";
++				};
++			};
++
+ 			qup_uart11_default: qup-uart11-default {
+ 				pinmux {
+ 					pins = "gpio53", "gpio54",
+@@ -1721,6 +1783,14 @@
+ 				};
+ 			};
+ 
++			qup_uart11_sleep: qup-uart11-sleep {
++				pinmux {
++					pins = "gpio53", "gpio54",
++					       "gpio55", "gpio56";
++					function = "gpio";
++				};
++			};
++
+ 			sdc1_on: sdc1-on {
+ 				pinconf-clk {
+ 					pins = "sdc1_clk";
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
