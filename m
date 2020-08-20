@@ -2,105 +2,110 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A5EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 04:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4A3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC8A2076E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 04:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 376BA2067C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSV5hRvo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiPpQdou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725468AbgHTEHJ (ORCPT
+        id S1725977AbgHTELQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:07:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
+        Thu, 20 Aug 2020 00:11:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgHTEHI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 00:07:08 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A773C061757;
-        Wed, 19 Aug 2020 21:07:07 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f26so651104ljc.8;
-        Wed, 19 Aug 2020 21:07:07 -0700 (PDT)
+        with ESMTP id S1725852AbgHTELP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 00:11:15 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A6C061757;
+        Wed, 19 Aug 2020 21:11:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r11so396541pfl.11;
+        Wed, 19 Aug 2020 21:11:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BO9tyh8T8tCTBMaQBV0urXMM6teq8tH6A459y0FQgpQ=;
-        b=hSV5hRvoKIvX411//W3s83AN2F0kpoWdN6nMPPCY6RGHkyTgHNlQXQhssEKWDH+smv
-         cYmg8h7+lAWv948uBqKrr8tEr7nWcCXkKifSzZrQ+GgtxWuOC4uXn2Z9x9DtcXAhyAvn
-         B5vUHqISzRU79Yk/zjY3b4Jpej1yPqx7CaZqpkwAqfirNSssWvaRiOb2caK080+cL4oa
-         GGHYEVPoT0zNpMVwFSfa/pfZj2sYXMtBYSY2CALwSCFpOXYWzHiRar9CxNAUuQxPRDYC
-         VIFfsYPT/O3Jeo6KxH6i5mx/7YD9wNNi3VLinztfa4Q7awXT/MbWSquw+I9HTukSed40
-         pCWA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDJDuKtqbHnC796AeNDtkydt/+nMCLENJLcgWPgKcQA=;
+        b=FiPpQdouEXK6VeEe9kXvQd6AlUhoKIUnly9H8vEzYRX6dpw/kifEXBclWcuhASodGk
+         5pBBDbsDsUJUdyysZgSEfsEayRBghrrTSoQYGTCL2jmt3Kbx22oErUozmlqRTgQ9LMyQ
+         UJwtlr0U9aa9iLYV6Lzpz6LXVdomWWE3i0eK5oEeTefzDVbp2MvqUV/6fMvwOA1YRz1p
+         KhtacN0Sq+j1vuOYydpn6dkczCjENlCgZtHnrHHJ/973hRw92EcUTFZUpBHKWAw/JTBy
+         O7hszoyEG9Qc9mQtO/qjK/B4uP8xc6XHcueCNF4jitZ+a+eNYpay8Sa+JfOvEh6jDNEe
+         c8WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BO9tyh8T8tCTBMaQBV0urXMM6teq8tH6A459y0FQgpQ=;
-        b=CLlq8UInFii0Yz/hg8vh2adSG7LYJJuci+wrJ8xM58xs3kkEyGyNCP7Tv9ajGWWSH+
-         9kx6Q7WxfbhSgu922SNlZC8TunrO+x6orVjlf5yfCcFXrQL0UCwn3CjhKfyKe87oEfzH
-         GkR7LP2mGZCDWW/UUPpkdNhwVD0R7OwAyW+HS8tTFf9mmEkMmW7GCM8AvBEMThS9gD65
-         T42YMpZ88bxcgYPvh/6nIA2wiEJnsc9VbxwIRJcWzF/N32FpJ93ynjWFGBbPWQq9ixGY
-         9BqrjK84paCJJTJYKwqZx4YCqDVKKeBjhkWeqg3j3M+CXp/GbH3cbEHtlMjFGx0kH5o8
-         KY3A==
-X-Gm-Message-State: AOAM5325Ap673NgOO+93EQbeej7/dna+IF9glWZ5oTSQ5IOkjz5xjbuw
-        eeJNc2C/r7CVx36Fj/mXQWYgPowyB8KCM24kUSM=
-X-Google-Smtp-Source: ABdhPJwgXZisg/Mfzp4Ub8SEXZ4V4WszrVaQY4jH2nQhnXMUhjDRn9RxHps4ovDq4mOz7ajRxULlYB3qlwTHVGfbu8g=
-X-Received: by 2002:a2e:8ed4:: with SMTP id e20mr672312ljl.403.1597896425849;
- Wed, 19 Aug 2020 21:07:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDJDuKtqbHnC796AeNDtkydt/+nMCLENJLcgWPgKcQA=;
+        b=Akb5mvOblD/aAQp5LgY6cq1BMG4bLR2wTHRxvMgW8bxC3gXZpIroBsLHnfek2pMXVb
+         9z9N5wp4ITT6/PcSMO9v4U2pz5tLH9bmzl/LCDEVQCxrV1wNkWGVLZFFUcgGMKWc3LI3
+         gxR+4VXf88WZu1rX01z5S+ts3ixaW4gOlxOYt5QJ2s6y9EKYEQPFqNUd6BrnsDCfLDwh
+         GITa7K+A6auG74hSZu4O8A+/UnzDZ74DsFDYOKLD896JNDcLJeT3M5zax2I3lhsY8TT/
+         FAhN6uhdoCvH9q/qbMxYFd+x2EoWS8ot3LPRporAcd/6YvLkUToY6eWY/N5JqXUUJ/TT
+         Uzig==
+X-Gm-Message-State: AOAM533vC5tzwe4xadXkEySQWhtZUzwKvVt4F5puaaJv4iiFaYs6AZIO
+        mNPSQngE1dWdbeNMVpRLqBg=
+X-Google-Smtp-Source: ABdhPJyEObQUFNlfFMiPl9DoKI9qG80cCF2W6A1Y0MZ7u6rMFknZKroy8E3vCjH3dZFgCJS8rRKIGA==
+X-Received: by 2002:a62:ea01:: with SMTP id t1mr868193pfh.125.1597896674617;
+        Wed, 19 Aug 2020 21:11:14 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
+        by smtp.gmail.com with ESMTPSA id b20sm847811pfp.140.2020.08.19.21.11.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 21:11:13 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+X-Google-Original-From: Chris Healy <cphealy@gmail.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        stefan@agner.ch, robh+dt@kernel.org, andrew.smirnov@gmail.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, festevam@gmail.com,
+        stable@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH v2] ARM: dts: vfxxx: Add syscon compatible with ocotp
+Date:   Wed, 19 Aug 2020 21:10:55 -0700
+Message-Id: <20200820041055.75848-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <cover.1596025057.git.agx@sigxcpu.org> <b12158087838bf8e78f06024fa65da8d94f5d185.1596025057.git.agx@sigxcpu.org>
-In-Reply-To: <b12158087838bf8e78f06024fa65da8d94f5d185.1596025057.git.agx@sigxcpu.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 20 Aug 2020 01:06:54 -0300
-Message-ID: <CAOMZO5ANrd2JCmHyxZ0Sv0WNcU9T-q3MbaeADxbOwf+31MQ4LQ@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] arm64: dts: imx8mq-librem5-devkit: Enable the LCD panel
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Li Jun <jun.li@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Walle <michael@walle.cc>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Guido,
+From: Chris Healy <cphealy@gmail.com>
 
-On Wed, Jul 29, 2020 at 9:19 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
->
-> Enable LCD panel output by adding nodes for the NWL DSI host controller,
-> the Rocktech panel and the eLCDIF display controller.
->
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+Add syscon compatibility with Vybrid ocotp node. This is required to
+access the UID.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Fixes: fa8d20c8dbb77 ("ARM: dts: vfxxx: Add node corresponding to OCOTP")
+Cc: stable@vger.kernel.org
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+Changes in v2:
+ - Add Fixes line to commit message
+
+ arch/arm/boot/dts/vfxxx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 0fe03aa0367f..2259d11af721 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -495,7 +495,7 @@ edma1: dma-controller@40098000 {
+ 			};
+ 
+ 			ocotp: ocotp@400a5000 {
+-				compatible = "fsl,vf610-ocotp";
++				compatible = "fsl,vf610-ocotp", "syscon";
+ 				reg = <0x400a5000 0x1000>;
+ 				clocks = <&clks VF610_CLK_OCOTP>;
+ 			};
+-- 
+2.26.2
+
