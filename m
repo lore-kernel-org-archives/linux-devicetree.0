@@ -2,334 +2,230 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF5AC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16642C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAE8208DB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA188207DE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="PLaQehW0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o8vlsSme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgHTMgs (ORCPT
+        id S1729105AbgHTMiZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57702 "EHLO
+        Thu, 20 Aug 2020 08:38:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729759AbgHTMgj (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 08:36:39 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8790C061385
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 05:36:34 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k8so1449692wma.2
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 05:36:34 -0700 (PDT)
+        with ESMTP id S1729549AbgHTMiS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 08:38:18 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD486C061385
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 05:38:15 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id j22so856658lfm.2
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 05:38:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Moer/SJ9KLlu3c/uwDMNvHyn5qjYDQOmB7XI8YOHHus=;
-        b=PLaQehW0vLNh+/cJ81yCL0Ml7HL17BTyC4aVxhL/dvOXOv9C7AX2jnPYMhxmMaGOs3
-         46lAnhGgNaGPhAoCnzRbhqFs0sujzr02do1qasB12aONgUbOgLR4XJmVxu0u7ByevRqZ
-         kIPUfzkx5QM11j5V8QvFuKB9TAWVuYQGkmQFU=
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/7XnOncViWciMSMHdC32gmjZ89ebFtZjOtpQqjYWCRg=;
+        b=o8vlsSme4uBPDp3l0bkE0rInTn4tnLWlSstESeOQivoaoAwYm1iDyxrg6c4dCpGRO7
+         Gv19ZIC3petRy7d9lh3gVQQLfxVrJS6V6dGWI8kPdsFlos7v+WLI0+GQki5kDK9K2rUC
+         jU0ULWrmrTg4lnBd2uLzxcNsGbSCFX9IeawTgmri+AZOQ89Ma/vEZKPtqYhDBrE6S4xp
+         vkPfnZN1u8WHbC7nTxEdkr4bPYgOV71Kly2behwDgmVPUjnuZ3pqxN3tnEiP9IwG8HmN
+         UQwdE2ll7VdC9NEE55gue+0h95Y+ZQfUrosm/RG9+274lg95LD0yUcKf1lEhOklK8hjy
+         wYzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Moer/SJ9KLlu3c/uwDMNvHyn5qjYDQOmB7XI8YOHHus=;
-        b=ZH8Vqf4MSnDbQbIXw4mtzGyf2l4O4EWIiPkE0RqTzsIAb9zGFtAcMTf0tI2wcMFhLG
-         R7/SJE7cNVF3fkAMjQbUhDETsuKAEZsxlm3T1kxKsHb+N3e50MulzIi7b422ieeLT8PN
-         Qt4TkW7Jo4WcYjMNDKEkZvkoIu4yAjO6Mh+ThOeoXT0Db26oe+dFC5q/J+bOF62gNyLQ
-         cxODxybpYn3ymOHHgNNAiN0ZXKY+F467jw3jIF2ZnCMgcbs2Eby2uN2579xF3jZPN6Qc
-         x9fOBaWFnzxttAQ6nZ5NS4K9jaCP/ChCk0E3787lughW2VWQudzE22ScUyTjz3tyjCIU
-         oG/w==
-X-Gm-Message-State: AOAM530bvl0+3Fuwr4kL1J2kWCK26YaoLMsPKWs/yT5ZtH3hhcu8qJgE
-        jtom3KEIgxbQVd5LNHfeCjkfDnNYruv5EQxJhJpPVg==
-X-Google-Smtp-Source: ABdhPJzieD2BdIwd5/DSBke56nqPwJlmPQzUB3bcJJb0oKNuOfviI7H6eOIVa6cKDK/kzUs1LFUdrdxPzKW/gK24iQ0=
-X-Received: by 2002:a7b:c0c8:: with SMTP id s8mr3467143wmh.4.1597926993474;
- Thu, 20 Aug 2020 05:36:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com> <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-In-Reply-To: <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Thu, 20 Aug 2020 21:36:22 +0900
-Message-ID: <CAFr9PXnzdHs2F3pyF-493xuhn9wFU1G9eLXRtiW-rYNB5bLX7w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     Marc Zyngier <maz@kernel.org>, alix.wu@mediatek.com,
-        DTML <devicetree@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/7XnOncViWciMSMHdC32gmjZ89ebFtZjOtpQqjYWCRg=;
+        b=VbLzh/hTAt+nv3iMzACYrWVHaOfw8rXeYS7vBgEAsb++9/VhtCistkq9/EymXMY5n3
+         6yg5JfYncPo0opi3yeUEKLp1zIDBnQ6pkTjF2gopMggFW/GqyackwJKsdddRtuGCCjC8
+         T05wmkHlqgcOzMS2altTF+gbOPb/w2e0ApXdxM5WrIFNhDD5aGy91psn1FnOPz9eSSwU
+         e/QnRIoPi73GSXXhfJGlR136dcN4Pacy+2Rnk4JLWw0+89BYo2w4IdC59xTpQUbcFN6C
+         LrW/G7B2WK47Lkj00TO7EMKIwk3U19veJiThsmBuO2cmYebX9vvjLGxhrMTWR4fJeGmq
+         vq5Q==
+X-Gm-Message-State: AOAM530yBRgWn0fBilEDIEQj82l65AJXhtKmz26WV/tzXTg5J8UBS93r
+        HN3NhV4+YXew+BAMgI7ezzxFfLwIvuI=
+X-Google-Smtp-Source: ABdhPJyZtE/1GOAYEgSY9o0Nljw0ydQ+2pPsTNubAB44qkPnZ592MXdTphQc8Tv/21nZLLgczbGqbQ==
+X-Received: by 2002:ac2:5f48:: with SMTP id 8mr1526595lfz.157.1597927092302;
+        Thu, 20 Aug 2020 05:38:12 -0700 (PDT)
+Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id 80sm431577ljf.38.2020.08.20.05.38.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 05:38:11 -0700 (PDT)
+Subject: Re: Proper DT bindings for Broadcom's DMU node
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+        Vivek Unune <npcomplete13@gmail.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <7da2db8f-66d0-24ec-d3eb-84247b383a06@gmail.com>
+Message-ID: <ef6e208d-e74f-382b-953f-1f770ab12754@gmail.com>
+Date:   Thu, 20 Aug 2020 14:38:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <7da2db8f-66d0-24ec-d3eb-84247b383a06@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark-PK, Marc
+Hi Rob, could you help me/us with Northstar bindings design, please?
 
-I'm not sure this will be the final version but I'm going to try to
-integrate this with my current MStar/SigmaStar tree over the weekend
-and then I guess I can give this a tested-by?
+On 04.05.2020 17:24, Rafał Miłecki wrote:
+> I need some help with designing proper bindings for Broadcom's DMU
+> block. We already have it partially covered but it's inconsistent, some
+> cleanups were rejected and so I want to redesign it as it should be.
+> 
+> DMU ("Device Management Unit") is a block that can be found on Broadcom
+> iProc / Northstar devices. On Northstar it's mapped at:
+> ranges = <0x1800c000 0x1000>
+> 
+> It contains:
+> 1. Few random registers, some of them shared by various hardware
+>     blocks (and possibly hard to abstract?)
+> 2. At least one sub-block with even more random registers
+> 
+> Some of known DMU registers are:
+> reg = <0x100 0x14>    CRU LCPLL control0
+> reg = <0x140 0x24>    CRU GENPLL
+> reg = <0x164 0x04>    CRU_USB2_CONTROL
+> reg = <0x180 0x04>    CRU_CLKSET_KEY
+> reg = <0x184 0x04>    CRU_RESET
+> reg = <0x1c0 0x24>    pinctrl
+> reg = <0x2a0 0x04>    CRU_STRAPS_CTRL
+> reg = <0x2c0 0x04>    PVTMON control0
+> (Broadcom never released a proper documentation)
+> 
+> 
+> As you can see there are a few CRU registers (depending on a source it's
+> a "Clock and Reset Unit" or "Central Resource Unit"). It's said to be
+> separated block and was described by Scott (from Broadcom) as: "unit
+> with a lot of random registers to perform various operations".
+> 
+> As I said, there are also some shared registers:
+> 
+> CRU_CLKSET_KEY is accessed by:
+> 1. USB 2.0 PHY driver for (un)locking DMU PLL settings
+> 2. GMAC for changing 2.66G line rate to 2Gbps
+> 
+> CRU_STRAPS_CTRL needs to be accessed by:
+> 1. USB 3.0 PHY driver for PHY connected to MDIO
+> 2. PCIE driver for PHY connected to MDIO
+> 
+> 
+> My initial idea was to have something like:
+> 
+> dmu@1800c000 {
+>      compatible = "simple-bus";
+>      ranges = <0 0x1800c000 0x1000>;
+>      #address-cells = <1>;
+>      #size-cells = <1>;
+> 
+>      cru@100 {
+>          compatible = "simple-bus";
+>          reg = <0x100 0x1a4>;
+> 
+>          lcpll { ... };
+>          genpll { ... };
+>          reset { ... };
+>      };
+> };
+> 
+> but Rob noticed that "simple-bus" requires everything in DMU to have
+> sub-nodes [0] [1].
 
-Assuming this version or the next is acceptable can I just follow up
-with a small patch to add the instances I need in my dtsi or should I
-wait until it's merged before doing that?
+"simple-bus" apparently is a no-way as some single registers may need to
+be referenced using syscon.
 
-Thanks,
 
-Daniel
+> I thought it can be solved by using compatible = "syscon", "simple-mfd"
+> and I even got one patch for that accepted [2] [3] (pinctrl). It seems
+> it slipped through and was possibly a mistake. Another similar patch was
+> rejected [4] [5] (bcm-ns-usb2-phy).
+> 
+> What I tried to achieve was something like this:
+> 
+> dmu@1800c000 {
+>      compatible = "simple-bus";
+>      ranges = <0 0x1800c000 0x1000>;
+>      #address-cells = <1>;
+>      #size-cells = <1>;
+> 
+>      cru: syscon@100 {
+>          compatible = "syscon", "simple-mfd";
+>          reg = <0x100 0x1a4>;
+>          ranges;
+>          #address-cells = <1>;
+>          #size-cells = <1>;
+> 
+>          lcpll0@0 {
+>              #clock-cells = <1>;
+>              compatible = "brcm,nsp-lcpll0";
+>              reg = <0x0 0x14>;
+>          };
+> 
+>          genpll@40 {
+>              #clock-cells = <1>;
+>              compatible = "brcm,nsp-genpll";
+>              reg = <0x40 0x24>;
+>          };
+> 
+>          pin-controller@c0 {
+>              compatible = "brcm,bcm4708-pinmux";
+>              reg = <0xc0 0x24>;
+>              reg-names = "cru_gpio_control";
+>          };
+> 
+>          thermal@1c0 {
+>              compatible = "brcm,ns-thermal";
+>              reg = <0x1c0 0x10>;
+>              #thermal-sensor-cells = <0>;
+>          };
+>      };
+> };
+> 
+> cru-reset@??? {
+>      compatible = "brcm,ns-cru-reset";
+>      syscon-cru = <&cru>; /* CRU_RESET */
+>      #reset-cells = <1>;
+> };
+> 
+> usb2-phy@??? {
+>      compatible = "brcm,ns-usb2-phy";
+>      syscon-cru = <&cru>; /* CRU_CLKSET_KEY */
+>      #phy-cells = <0>;
+> };
+> 
+> (apparently it wasn't a good idea)
 
-On Thu, 20 Aug 2020 at 00:38, Mark-PK Tsai <mark-pk.tsai@mediatek.com> wrote:
->
-> Add MStar interrupt controller support using hierarchy irq
-> domain.
->
-> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-> ---
->  drivers/irqchip/Kconfig        |   8 ++
->  drivers/irqchip/Makefile       |   1 +
->  drivers/irqchip/irq-mst-intc.c | 199 +++++++++++++++++++++++++++++++++
->  3 files changed, 208 insertions(+)
->  create mode 100644 drivers/irqchip/irq-mst-intc.c
->
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index bb70b7177f94..0b5ae5fa0d3c 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -571,4 +571,12 @@ config LOONGSON_PCH_MSI
->         help
->           Support for the Loongson PCH MSI Controller.
->
-> +config MST_IRQ
-> +       bool "MStar Interrupt Controller"
-> +       default ARCH_MEDIATEK
-> +       select IRQ_DOMAIN
-> +       select IRQ_DOMAIN_HIERARCHY
-> +       help
-> +         Support MStar Interrupt Controller.
-> +
->  endmenu
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 133f9c45744a..e2688a62403e 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -111,3 +111,4 @@ obj-$(CONFIG_LOONGSON_HTPIC)                += irq-loongson-htpic.o
->  obj-$(CONFIG_LOONGSON_HTVEC)           += irq-loongson-htvec.o
->  obj-$(CONFIG_LOONGSON_PCH_PIC)         += irq-loongson-pch-pic.o
->  obj-$(CONFIG_LOONGSON_PCH_MSI)         += irq-loongson-pch-msi.o
-> +obj-$(CONFIG_MST_IRQ)                  += irq-mst-intc.o
-> diff --git a/drivers/irqchip/irq-mst-intc.c b/drivers/irqchip/irq-mst-intc.c
-> new file mode 100644
-> index 000000000000..4be077591898
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-mst-intc.c
-> @@ -0,0 +1,199 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +/*
-> + * Copyright (c) 2020 MediaTek Inc.
-> + * Author Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-> + */
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define INTC_MASK      0x0
-> +#define INTC_EOI       0x20
-> +
-> +struct mst_intc_chip_data {
-> +       raw_spinlock_t  lock;
-> +       unsigned int    irq_start, nr_irqs;
-> +       void __iomem    *base;
-> +       bool            no_eoi;
-> +};
-> +
-> +static void mst_set_irq(struct irq_data *d, u32 offset)
-> +{
-> +       irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> +       struct mst_intc_chip_data *cd = irq_data_get_irq_chip_data(d);
-> +       u16 val, mask;
-> +       unsigned long flags;
-> +
-> +       mask = 1 << (hwirq % 16);
-> +       offset += (hwirq / 16) * 4;
-> +
-> +       raw_spin_lock_irqsave(&cd->lock, flags);
-> +       val = readw_relaxed(cd->base + offset) | mask;
-> +       writew_relaxed(val, cd->base + offset);
-> +       raw_spin_unlock_irqrestore(&cd->lock, flags);
-> +}
-> +
-> +static void mst_clear_irq(struct irq_data *d, u32 offset)
-> +{
-> +       irq_hw_number_t hwirq = irqd_to_hwirq(d);
-> +       struct mst_intc_chip_data *cd = irq_data_get_irq_chip_data(d);
-> +       u16 val, mask;
-> +       unsigned long flags;
-> +
-> +       mask = 1 << (hwirq % 16);
-> +       offset += (hwirq / 16) * 4;
-> +
-> +       raw_spin_lock_irqsave(&cd->lock, flags);
-> +       val = readw_relaxed(cd->base + offset) & ~mask;
-> +       writew_relaxed(val, cd->base + offset);
-> +       raw_spin_unlock_irqrestore(&cd->lock, flags);
-> +}
-> +
-> +static void mst_intc_mask_irq(struct irq_data *d)
-> +{
-> +       mst_set_irq(d, INTC_MASK);
-> +       irq_chip_mask_parent(d);
-> +}
-> +
-> +static void mst_intc_unmask_irq(struct irq_data *d)
-> +{
-> +       mst_clear_irq(d, INTC_MASK);
-> +       irq_chip_unmask_parent(d);
-> +}
-> +
-> +static void mst_intc_eoi_irq(struct irq_data *d)
-> +{
-> +       struct mst_intc_chip_data *cd = irq_data_get_irq_chip_data(d);
-> +
-> +       if (!cd->no_eoi)
-> +               mst_set_irq(d, INTC_EOI);
-> +
-> +       irq_chip_eoi_parent(d);
-> +}
-> +
-> +static struct irq_chip mst_intc_chip = {
-> +       .name                   = "mst-intc",
-> +       .irq_mask               = mst_intc_mask_irq,
-> +       .irq_unmask             = mst_intc_unmask_irq,
-> +       .irq_eoi                = mst_intc_eoi_irq,
-> +       .irq_get_irqchip_state  = irq_chip_get_parent_state,
-> +       .irq_set_irqchip_state  = irq_chip_set_parent_state,
-> +       .irq_set_affinity       = irq_chip_set_affinity_parent,
-> +       .irq_set_vcpu_affinity  = irq_chip_set_vcpu_affinity_parent,
-> +       .irq_set_type           = irq_chip_set_type_parent,
-> +       .irq_retrigger          = irq_chip_retrigger_hierarchy,
-> +       .flags                  = IRQCHIP_SET_TYPE_MASKED |
-> +                                 IRQCHIP_SKIP_SET_WAKE |
-> +                                 IRQCHIP_MASK_ON_SUSPEND,
-> +};
-> +
-> +static int mst_intc_domain_translate(struct irq_domain *d,
-> +                                    struct irq_fwspec *fwspec,
-> +                                    unsigned long *hwirq,
-> +                                    unsigned int *type)
-> +{
-> +       struct mst_intc_chip_data *cd = d->host_data;
-> +
-> +       if (is_of_node(fwspec->fwnode)) {
-> +               if (fwspec->param_count != 3)
-> +                       return -EINVAL;
-> +
-> +               /* No PPI should point to this domain */
-> +               if (fwspec->param[0] != 0)
-> +                       return -EINVAL;
-> +
-> +               if (fwspec->param[1] >= cd->nr_irqs)
-> +                       return -EINVAL;
-> +
-> +               *hwirq = fwspec->param[1];
-> +               *type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
-> +               return 0;
-> +       }
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +static int mst_intc_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +                                unsigned int nr_irqs, void *data)
-> +{
-> +       int i;
-> +       irq_hw_number_t hwirq;
-> +       struct irq_fwspec parent_fwspec, *fwspec = data;
-> +       struct mst_intc_chip_data *cd = domain->host_data;
-> +
-> +       /* Not GIC compliant */
-> +       if (fwspec->param_count != 3)
-> +               return -EINVAL;
-> +
-> +       /* No PPI should point to this domain */
-> +       if (fwspec->param[0])
-> +               return -EINVAL;
-> +
-> +       hwirq = fwspec->param[1];
-> +       for (i = 0; i < nr_irqs; i++)
-> +               irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-> +                                             &mst_intc_chip,
-> +                                             domain->host_data);
-> +
-> +       parent_fwspec = *fwspec;
-> +       parent_fwspec.fwnode = domain->parent->fwnode;
-> +       parent_fwspec.param[1] = cd->irq_start + hwirq;
-> +       return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &parent_fwspec);
-> +}
-> +
-> +static const struct irq_domain_ops mst_intc_domain_ops = {
-> +       .translate      = mst_intc_domain_translate,
-> +       .alloc          = mst_intc_domain_alloc,
-> +       .free           = irq_domain_free_irqs_common,
-> +};
-> +
-> +int __init
-> +mst_intc_of_init(struct device_node *dn, struct device_node *parent)
-> +{
-> +       struct irq_domain *domain, *domain_parent;
-> +       struct mst_intc_chip_data *cd;
-> +       u32 irq_start, irq_end;
-> +
-> +       domain_parent = irq_find_host(parent);
-> +       if (!domain_parent) {
-> +               pr_err("mst-intc: interrupt-parent not found\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (of_property_read_u32_index(dn, "mstar,irqs-map-range", 0, &irq_start) ||
-> +           of_property_read_u32_index(dn, "mstar,irqs-map-range", 1, &irq_end))
-> +               return -EINVAL;
-> +
-> +       cd = kzalloc(sizeof(*cd), GFP_KERNEL);
-> +       if (!cd)
-> +               return -ENOMEM;
-> +
-> +       cd->base = of_iomap(dn, 0);
-> +       if (!cd->base) {
-> +               kfree(cd);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       cd->no_eoi = of_property_read_bool(dn, "mstar,intc-no-eoi");
-> +       raw_spin_lock_init(&cd->lock);
-> +       cd->irq_start = irq_start;
-> +       cd->nr_irqs = irq_end - irq_start + 1;
-> +       domain = irq_domain_add_hierarchy(domain_parent, 0, cd->nr_irqs, dn,
-> +                                         &mst_intc_domain_ops, cd);
-> +       if (!domain) {
-> +               iounmap(cd->base);
-> +               kfree(cd);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +IRQCHIP_DECLARE(mst_intc, "mstar,mst-intc", mst_intc_of_init);
-> --
-> 2.18.0
+Here I tried "syscon", "simple-mfd" which lets me:
+1. Have subnodes for all small hardware subblocks
+2. Reference single registers using syscon
+but it appears I can't mix those two.
+
+
+> So my question is: how to properly handle this? I'm not sure what's the
+> proper "compatible" string to use. Is my idea of:
+> 1. Using sub-node for registers explicitly used by one driver
+> 2. Using syscon for shared registers
+> OK?
+> 
+> 
+> [0] https://www.spinics.net/lists/arm-kernel/msg682838.html
+> [1] https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20181015093013.31651-1-zajec5@gmail.com/
+> [2] https://spinics.net/lists/linux-gpio/msg35285.html
+> [3] https://patchwork.kernel.org/patch/10735931/
+> [4] https://lkml.org/lkml/2019/1/15/913
+> [5] https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20190108123907.19816-1-zajec5@gmail.com/
