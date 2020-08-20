@@ -2,462 +2,200 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C9EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 21:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E0C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 21:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3D620FC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 21:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88DDD2075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 21:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PSHGnsUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgHTVod (ORCPT
+        id S1728165AbgHTVx5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:44:33 -0400
-Received: from mars.blocktrron.ovh ([51.254.112.43]:43734 "EHLO
-        mail.blocktrron.ovh" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728040AbgHTVob (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 17:44:31 -0400
-Received: from localhost.localdomain (p200300e53f0d0e000467bd62be8be184.dip0.t-ipconnect.de [IPv6:2003:e5:3f0d:e00:467:bd62:be8b:e184])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.blocktrron.ovh (Postfix) with ESMTPSA id 4C02C23E94;
-        Thu, 20 Aug 2020 23:44:27 +0200 (CEST)
-From:   David Bauer <mail@david-bauer.net>
-To:     robh+dt@kernel.org, heiko@sntech.de, andy.yan@rock-chips.com,
-        jagan@amarulasolutions.com, jbx6244@gmail.com,
-        robin.murphy@arm.com, kever.yang@rock-chips.com,
-        m.reichl@fivetechno.de, t.schramm@manjaro.org, pgwipeout@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH v2 2/2] rockchip: rk3328: Add support for FriendlyARM NanoPi R2S
-Date:   Thu, 20 Aug 2020 23:44:09 +0200
-Message-Id: <20200820214409.34957-2-mail@david-bauer.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820214409.34957-1-mail@david-bauer.net>
-References: <20200820214409.34957-1-mail@david-bauer.net>
+        Thu, 20 Aug 2020 17:53:57 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58684 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgHTVxz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 17:53:55 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07KLrpUk066344;
+        Thu, 20 Aug 2020 16:53:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597960431;
+        bh=0EF0JtL6mcRJ2tR/2jpO3XDBQ1XUe4voliiNQAmlZ7E=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=PSHGnsUvaSP3XcBuScKinyIYKtQSV7UR5XHLvBdjdHtD8Sqoa+v+sPTTsAbGOninv
+         yuNTFPV3OQSlREwvm4GzPcjMykxvvAaRSIdIev9OULJF3V3PLtLH9klh9db+/ujzcW
+         EbIcNMR50Y+ycCuQFrcqOWa6VEff3I8D5THUB4Ms=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07KLrpks009770
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 16:53:51 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
+ Aug 2020 16:53:50 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 20 Aug 2020 16:53:50 -0500
+Received: from [10.250.32.29] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07KLrooR103491;
+        Thu, 20 Aug 2020 16:53:50 -0500
+Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+From:   Suman Anna <s-anna@ti.com>
+To:     Stefano Stabellini <stefano.stabellini@xilinx.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>, <stefanos@xilinx.com>,
+        <BLEVINSK@xilinx.com>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <tomase@xilinx.com>
+References: <20200630024922.32491-1-s-anna@ti.com>
+ <20200630024922.32491-2-s-anna@ti.com> <20200714171553.GA2522956@bogus>
+ <20200716171903.GA3286345@xps15>
+ <alpine.DEB.2.21.2007161232400.3886@sstabellini-ThinkPad-T480s>
+ <b7415d48-a354-5610-a657-08cdefc482a6@ti.com>
+ <8ba1f240-df9a-d63e-5c05-1a4a13e03213@ti.com>
+Message-ID: <d818fe7b-26d6-2b3f-3155-87fc58f5b273@ti.com>
+Date:   Thu, 20 Aug 2020 16:53:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <8ba1f240-df9a-d63e-5c05-1a4a13e03213@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds support for the NanoPi R2S from FriendlyARM.
+Hi Rob,
 
-Rockchip RK3328 SoC
-1GB DDR4 RAM
-Gigabit Ethernet (WAN)
-Gigabit Ethernet (USB3) (LAN)
-USB 2.0 Host Port
-MicroSD slot
-Reset button
-WAN - LAN - SYS LED
+On 8/10/20 11:52 AM, Suman Anna wrote:
+> Hi Rob,
+> 
+> On 7/27/20 5:39 PM, Suman Anna wrote:
+>> Hi Rob,
+>>
+>> On 7/16/20 2:43 PM, Stefano Stabellini wrote:
+>>> On Thu, 16 Jul 2020, Mathieu Poirier wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On Tue, Jul 14, 2020 at 11:15:53AM -0600, Rob Herring wrote:
+>>>>> On Mon, Jun 29, 2020 at 09:49:19PM -0500, Suman Anna wrote:
+>>>>>> The Texas Instruments K3 family of SoCs have one or more dual-core
+>>>>>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+>>>>>> can be split between multiple voltage domains as well. Add the device
+>>>>>> tree bindings document for these R5F subsystem devices. These R5F
+>>>>>> processors do not have an MMU, and so require fixed memory carveout
+>>>>>> regions matching the firmware image addresses. The nodes require more
+>>>>>> than one memory region, with the first memory region used for DMA
+>>>>>> allocations at runtime. The remaining memory regions are reserved
+>>>>>> and are used for the loading and running of the R5F remote processors.
+>>>>>> The R5F processors can also optionally use any internal on-chip SRAM
+>>>>>> memories either for executing code or using it as fast-access data.
+>>>>>>
+>>>>>> The added example illustrates the DT nodes for the single R5FSS device
+>>>>>> present on K3 AM65x family of SoCs.
+>>>>>>
+>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>> ---
+>>>>>> v2:
+>>>>>>   - Renamed "lockstep-mode" property to "ti,cluster-mode"
+>>>>>
+>>>>> I don't think that's a move in the right direction given this is at
+>>>>> least partially a standard feature.
+>>>>>
+>>>>> As I said before, I'm very hesistant to accept anything here given I
+>>>>> know the desires and activity to define 'system Devicetrees' of which
+>>>>> TI is participating. While maybe an rproc node is sufficient for a
+>>>>> DSP, it seems multiple vendors have R cores and want to define them in
+>>>>> system DT.
+>>
+>> Ping on this discussion. TI is participating on the System DT evolution in general, but we don't have any plans to use DTS on our remote cores. We have our own auto-generated Chip-Support-Library (CSL) code that gets used on our firmwares.
+>>
+>> Also, most of the properties I defined are rather standard properties. I have posted a revised v3 [1] after the common ti,sci properties refactoring. This series is only waiting on the bindings. I am happy to change any ti, prefixed properties. I had one open question [2] that I am waiting for a response from you for identifying the R5F Core.
+> 
+> Ping on this.
 
-Signed-off-by: David Bauer <mail@david-bauer.net>
----
-Changes in v2:
- - Change model name to FriendlyElec
- - Enable SD UHS modes
- - Add startup delay to SDIO regulator to improve
-   issues reported with some cards
- - Fix PMIC interrupt pin
- - Add pinctrl node for ethernet-PHY
- - Fix various formatting issues
+Any comments on this? This discussion is what's holding up this series from
+getting merged.
 
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../boot/dts/rockchip/rk3328-nanopi-r2s.dts   | 367 ++++++++++++++++++
- 2 files changed, 368 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
+Also, FWIW, I spent a bit of time looking at the R5s (called RPU) in the Xilinx
+ZynqMP, and the integration aspects are very different between the TI and Xilinx
+SoCs, so I do not think even a single binding is possible between the two SoCs.
+A few of them to cite:
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index b87b1f773083..20055c51e150 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3326-odroid-go2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-a1.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-evb.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-nanopi-r2s.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-rock64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3328-roc-cc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3368-evb-act8846.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-new file mode 100644
-index 000000000000..51c100ea9211
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-nanopi-r2s.dts
-@@ -0,0 +1,367 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2020 David Bauer <mail@david-bauer.net>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "rk3328.dtsi"
-+
-+/ {
-+	model = "FriendlyElec NanoPi R2S";
-+	compatible = "friendlyarm,nanopi-r2s", "rockchip,rk3328";
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
-+	gmac_clkin: external-gmac-clock {
-+		compatible = "fixed-clock";
-+		clock-frequency = <125000000>;
-+		clock-output-names = "gmac_clkin";
-+		#clock-cells = <0>;
-+	};
-+
-+	keys {
-+		compatible = "gpio-keys";
-+		pinctrl-0 = <&reset_button_pin>;
-+		pinctrl-names = "default";
-+
-+		reset {
-+			label = "Reset Button";
-+			gpios = <&gpio0 RK_PA0 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_RESTART>;
-+			debounce-interval = <50>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&wan_led_pin &sys_led_pin &wan_led_pin>;
-+		pinctrl-names = "default";
-+
-+		lan_led: led-0 {
-+			gpios = <&gpio2 RK_PB7 GPIO_ACTIVE_HIGH>;
-+			label = "nanopi-r2s:green:lan";
-+		};
-+
-+		sys_led: led-1 {
-+			gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-+			label = "nanopi-r2s:red:sys";
-+		};
-+
-+		wan_led: led-2 {
-+			gpios = <&gpio2 RK_PC2 GPIO_ACTIVE_HIGH>;
-+			label = "nanopi-r2s:green:wan";
-+		};
-+	};
-+
-+	vcc_sd: sdmmc-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpio0 RK_PD6 GPIO_ACTIVE_LOW>;
-+		pinctrl-0 = <&sdmmc0m1_gpio>;
-+		pinctrl-names = "default";
-+		regulator-name = "vcc_sd";
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_io_33>;
-+	};
-+
-+	vcc_io_sdio: sdmmcio-regulator {
-+		compatible = "regulator-gpio";
-+		enable-active-high;
-+		gpios = <&gpio1 RK_PD4 GPIO_ACTIVE_HIGH>;
-+		pinctrl-0 = <&sdio_vcc_pin>;
-+		pinctrl-names = "default";
-+		regulator-name = "vcc_io_sdio";
-+		regulator-always-on;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-settling-time-us = <5000>;
-+		regulator-type = "voltage";
-+		startup-delay-us = <2000>;
-+		states = <1800000 0x1
-+			  3300000 0x0>;
-+		vin-supply = <&vcc_io_33>;
-+	};
-+
-+	vdd_5v: vdd-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_5v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&cpu1 {
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&cpu2 {
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&cpu3 {
-+	cpu-supply = <&vdd_arm>;
-+};
-+
-+&gmac2io {
-+	assigned-clocks = <&cru SCLK_MAC2IO>, <&cru SCLK_MAC2IO_EXT>;
-+	assigned-clock-parents = <&gmac_clkin>, <&gmac_clkin>;
-+	clock_in_out = "input";
-+	phy-handle = <&rtl8211e>;
-+	phy-mode = "rgmii";
-+	phy-supply = <&vcc_io_33>;
-+	pinctrl-0 = <&rgmiim1_pins>;
-+	pinctrl-names = "default";
-+	rx_delay = <0x18>;
-+	snps,aal;
-+	tx_delay = <0x24>;
-+	status = "okay";
-+
-+	mdio {
-+		compatible = "snps,dwmac-mdio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rtl8211e: ethernet-phy@0 {
-+			pinctrl-0 = <&eth_phy_reset_pin>;
-+			pinctrl-names = "default";
-+			reg = <1>;
-+			reset-assert-us = <10000>;
-+			reset-deassert-us = <50000>;
-+			reset-gpios = <&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	rk805: pmic@18 {
-+		compatible = "rockchip,rk805";
-+		#clock-cells = <1>;
-+		clock-output-names = "xin32k", "rk805-clkout2";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <24 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-0 = <&pmic_int_l>;
-+		pinctrl-names = "default";
-+		reg = <0x18>;
-+		rockchip,system-power-controller;
-+		wakeup-source;
-+
-+		vcc1-supply = <&vdd_5v>;
-+		vcc2-supply = <&vdd_5v>;
-+		vcc3-supply = <&vdd_5v>;
-+		vcc4-supply = <&vdd_5v>;
-+		vcc5-supply = <&vcc_io_33>;
-+		vcc6-supply = <&vdd_5v>;
-+
-+		regulators {
-+			vdd_log: DCDC_REG1 {
-+				regulator-name = "vdd_log";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <712500>;
-+				regulator-max-microvolt = <1450000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1000000>;
-+				};
-+			};
-+
-+			vdd_arm: DCDC_REG2 {
-+				regulator-name = "vdd_arm";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <712500>;
-+				regulator-max-microvolt = <1450000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <950000>;
-+				};
-+			};
-+
-+			vcc_ddr: DCDC_REG3 {
-+				regulator-name = "vcc_ddr";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_io_33: DCDC_REG4 {
-+				regulator-name = "vcc_io_33";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+
-+			vcc_18: LDO_REG1 {
-+				regulator-name = "vcc_18";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vcc18_emmc: LDO_REG2 {
-+				regulator-name = "vcc18_emmc";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1800000>;
-+				};
-+			};
-+
-+			vdd_10: LDO_REG3 {
-+				regulator-name = "vdd_10";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1000000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <1000000>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&io_domains {
-+	pmuio-supply = <&vcc_io_33>;
-+	vccio1-supply = <&vcc_io_33>;
-+	vccio2-supply = <&vcc18_emmc>;
-+	vccio3-supply = <&vcc_io_sdio>;
-+	vccio4-supply = <&vcc_18>;
-+	vccio5-supply = <&vcc_io_33>;
-+	vccio6-supply = <&vcc_io_33>;
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	button {
-+		reset_button_pin: reset-button-pin {
-+			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	ethernet-phy {
-+		eth_phy_reset_pin: reset-pin {
-+			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_down>;
-+		};
-+	};
-+
-+	leds {
-+		lan_led_pin: lan-led-pin {
-+			rockchip,pins = <2 RK_PB7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		sys_led_pin: sys-led-pin {
-+			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		wan_led_pin: wan-led-pin {
-+			rockchip,pins = <2 RK_PC2 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	pmic {
-+		pmic_int_l: pmic-int-l {
-+			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	sd {
-+		sdio_vcc_pin: sdio-vcc-pin {
-+			rockchip,pins = <1 RK_PD4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_dectn &sdmmc0_bus4>;
-+	pinctrl-names = "default";
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc_sd>;
-+	vqmmc-supply = <&vcc_io_sdio>;
-+	status = "okay";
-+};
-+
-+&tsadc {
-+	rockchip,hw-tshut-mode = <0>;
-+	rockchip,hw-tshut-polarity = <0>;
-+	status = "okay";
-+};
-+
-+&u2phy {
-+	status = "okay";
-+};
-+
-+&u2phy_host {
-+	status = "okay";
-+};
-+
-+&u2phy_otg {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&usb20_otg {
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
--- 
-2.28.0
+1. TI SoCs require the power/resets to be released for both the Cores in
+LockStep-mode, while it was enough to just release the Core0 resets on ZynqMP.
+So, our binding requires that both CPUs be defined for sure as the reset
+controls are defined per core, while you don't see them on the RPU.
+
+2. There are specific core reset sequences on TI SoCs in LockStep and
+Split-modes on TI SoCs, I am not sure if there are any with Xilinx SoCs.
+
+3. The TCMs are embedded within the R5F sub-system on TI SoCs, and are
+controlled by the same power and clock as the R5Fs. There is an additional CPU
+halt line that controls the core execution, and allows us to enable the access
+to these. The ZynqMP looks to have completely independent control to the TCMs.
+This is the reason why they are represented as individual mmio-sram nodes in the
+Xilinx binding.
+
+4. The TCMs and which one appears at the R5 address 0 are programmable on TI
+SoCs, I couldn't tell if this is the case with Xilinx SoCs.
+
+Ben and Stefano,
+Please do clarify, if I am off on any of the above differences.
+
+regards
+Suman
+
+
+> 
+> regards
+> Suman
+> 
+>>
+>> regards
+>> Suman
+>>
+>> [1] https://patchwork.kernel.org/patch/11679331/
+>> [2] https://patchwork.kernel.org/comment/23273441/
+>>
+>>>>>
+>>>>> Though the system DT effort has not yet given any thought to what is the
+>>>>> view of one processor or instance to another instance (which is what
+>>>>> this binding is). We'll still need something defined for that, but I'd
+>>>>> expect that to be dependent on what is defined for system DT.
+>>>>
+>>>> Efforts related to the definition of the system DT are under way, something I
+>>>> expect to keep going on for some time to come.  I agree with the need to use the
+>>>> system DT to define remote processors and I look forward to the time we can do
+>>>> so.
+>>>
+>>> I'll take this opportunity to add that I should be able to publicly
+>>> present a System Device Tree proposal for this during the next call (the
+>>> next one after the call early next week that has already a full agenda.)
+>>>
+>>>
+>>>> That being said we need to find a concensus on how to move forward with patches
+>>>> that are ready to be merged.  What is your opinion on that?
+>>>
+>>> In my opinion we don't have to necessarily wait for System Device Tree
+>>> to make progress with those if they look OK.
+>>>
+>>
+> 
 
