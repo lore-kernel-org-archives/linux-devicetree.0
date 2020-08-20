@@ -2,349 +2,149 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FB9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 193E2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8592072D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2D4207DE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AL33o9Zf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="es8IcqaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbgHTQNK (ORCPT
+        id S1729669AbgHTQ11 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:13:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729485AbgHTQMJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:12:09 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KG6gPc061536;
-        Thu, 20 Aug 2020 12:11:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=tP+Wa4fK0xkYkbli4Pp4bz7gHXvhgdbyEHekLzmscng=;
- b=AL33o9ZfOPMT6AfaolEl4bNJbMmxF9gOB5BpUruSeKg6ugFj3/4PAmqCP/5hALhoCH20
- A4kxORXvAz1DAz+Jvbyy6XrvoOA9YYR008qeSI9v2d3dp2J637ANzfvIEgQ/SLtkJibV
- RTmQrU1X9HdXxAtr28z6lsxKaJWRJTTftscEtEm0riUHu+BZCKOUUfuXFKPGXKF0v+ia
- T95H6PgdN/XpT1IBo3786MAZo6ULWFZI0n0Zd0GvsW6fDWgrO8A00sdj0VgAnIAj7fqS
- Kx95WjJ/1mfI760hMhMwRS9MCcDTkNKH9khivA7vX2XZ+xcBrdZCVvzEakgEfJ70HRVu Lw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 330ucpfsu4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 12:11:59 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07KG6lea061942;
-        Thu, 20 Aug 2020 12:11:58 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 330ucpfstj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 12:11:58 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KGAIhZ008321;
-        Thu, 20 Aug 2020 16:11:58 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03wdc.us.ibm.com with ESMTP id 3304cedj9d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 16:11:58 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KGBvC849873210
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 16:11:57 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 75CE8112064;
-        Thu, 20 Aug 2020 16:11:57 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E0ED112062;
-        Thu, 20 Aug 2020 16:11:56 +0000 (GMT)
-Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 16:11:56 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-input@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-        joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org,
-        brendanhiggins@google.com, dmitry.torokhov@gmail.com,
-        robh+dt@kernel.org, eajames@linux.ibm.com
-Subject: [PATCH 2/5] input: misc: Add IBM Operation Panel driver
-Date:   Thu, 20 Aug 2020 11:11:49 -0500
-Message-Id: <20200820161152.22751-3-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200820161152.22751-1-eajames@linux.ibm.com>
-References: <20200820161152.22751-1-eajames@linux.ibm.com>
+        Thu, 20 Aug 2020 12:27:27 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46150 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgHTQ1Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 12:27:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KGN5Ng185569;
+        Thu, 20 Aug 2020 16:27:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=EhcIkdT5kS+atUJAy+/F2IziSwuZSev4/FziC9JMbe8=;
+ b=es8IcqaQFxFBi8AOBf0kA9WnVstw9kZSFc/PyFOtBz+UWkIi7+UaU0ap4DkgJb91usSv
+ H8seDxM3PiHpvM98191tO72kGt2d62EQYQ4B3Tbrl73uxugsOJhTTxasnZ7k4wqngt6p
+ hBuCG1G+Rx0CGFvcj4/2GPoLjaoH6KUD/1+nfnc+OMRZvdMmnKn+F+wsiuFLt7y0Mfqj
+ O95wqHhFLezeBP6BbwNNDjPIpgrgryE5Xlfs1DWjzoTr/4T5kkdbhYY+YHbKwJzlzF2e
+ AGmv1p2TdlyaU3lIXloP2Q6BOE/oFOIeJ6EEEe/ap6VRhIkEAoh/x0RWSwk1VYW79TJk 1Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32x8bnheph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 16:27:12 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KGN2tT109476;
+        Thu, 20 Aug 2020 16:27:12 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 32xsn1k4gv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 16:27:12 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07KGRAig010695;
+        Thu, 20 Aug 2020 16:27:10 GMT
+Received: from [10.74.106.11] (/10.74.106.11)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Aug 2020 09:27:10 -0700
+Subject: Re: [PATCH 0/6] Add TI PRUSS platform driver
+To:     Suman Anna <s-anna@ti.com>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        ssantosh@kernel.org, Tony Lindgren <tony@atomide.com>
+Cc:     robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        praneeth@ti.com
+References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <12a7fc2a-4c48-655f-daa1-880fd1866fd1@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <2a64dcb7-d79e-7ef8-b3e6-4c2533a19c38@oracle.com>
+Date:   Thu, 20 Aug 2020 09:27:08 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 priorityscore=1501 adultscore=0 malwarescore=0
- impostorscore=0 suspectscore=1 mlxscore=0 mlxlogscore=999 clxscore=1015
- bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008200127
+In-Reply-To: <12a7fc2a-4c48-655f-daa1-880fd1866fd1@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200133
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a driver to get the button events from the panel and provide
-them to userspace with the input subsystem. The panel is
-connected with I2C and controls the bus, so the driver registers
-as an I2C slave device.
+On 8/20/20 7:43 AM, Suman Anna wrote:
+> Hi Santosh, Tony,
+> 
+> On 7/29/20 6:02 AM, Grzegorz Jaszczyk wrote:
+>> Hi,
+>>
+>> The Programmable Real-Time Unit and Industrial Communication Subsystem
+>> (PRU-ICSS) is present on various TI SoCs. The IP is present on multiple TI SoC
+>> architecture families including the OMAP architecture SoCs such as AM33xx,
+>> AM437x and AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is also
+>> present on the Davinci based OMAPL138 SoCs and K3 architecture based AM65x and
+>> J721E SoCs as well.
+>>
+>> A PRUSS consists of dual 32-bit RISC cores (Programmable Real-Time Units, or
+>> PRUs), shared RAM, data and instruction RAMs, some internal peripheral modules
+>> to facilitate industrial communication, and an interrupt controller.
+>>
+>> The programmable nature of the PRUs provide flexibility to implement custom
+>> peripheral interfaces, fast real-time responses, or specialized data handling.
+>> The common peripheral modules include the following,
+>>    - an Ethernet MII_RT module with two MII ports
+>>    - an MDIO port to control external Ethernet PHYs
+>>    - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+>>      Ethernet functions
+>>    - an Enhanced Capture Module (eCAP)
+>>    - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
+>>    - a 16550-compatible UART to support PROFIBUS
+>>    - Enhanced GPIO with async capture and serial support
+>>
+>>
+>> A typical usage scenario would be to load the application firmware into one or
+>> more of the PRU cores, initialize one or more of the peripherals and perform I/O
+>> through shared RAM from either a kernel driver or directly from userspace.
+>>
+>> This series contains the PRUSS platform driver. This is the parent driver for
+>> the entire PRUSS and is used for managing the subsystem level resources like
+>> various memories and the CFG module.  It is responsible for the creation and
+>> deletion of the platform devices for the child PRU devices and other child
+>> devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
+>> they can be managed by specific platform drivers.
+>>
+>> Grzegorz Jaszczyk (1):
+>>    dt-bindings: soc: ti: Add TI PRUSS bindings
+>>
+>> Suman Anna (5):
+>>    soc: ti: pruss: Add a platform driver for PRUSS in TI SoCs
+>>    soc: ti: pruss: Add support for PRU-ICSSs on AM437x SoCs
+>>    soc: ti: pruss: Add support for PRU-ICSS subsystems on AM57xx SoCs
+>>    soc: ti: pruss: Add support for PRU-ICSS subsystems on 66AK2G SoC
+>>    soc: ti: pruss: enable support for ICSSG subsystems on K3 AM65x SoCs
+> 
+> Do you have any comments on the driver portions of this series before Greg posts
+> a v2 addressing the binding comments. This is one of the foundation series
+> towards enabling PRUSS, and is a dependency for the PRU remoteproc driver.
+> 
+No just post V2 addressing Rob's comment. I will line it up once
+rob acks it.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- MAINTAINERS                    |   1 +
- drivers/input/misc/Kconfig     |  10 ++
- drivers/input/misc/Makefile    |   1 +
- drivers/input/misc/ibm-panel.c | 186 +++++++++++++++++++++++++++++++++
- 4 files changed, 198 insertions(+)
- create mode 100644 drivers/input/misc/ibm-panel.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a9fd08e9cd54..077cc79ad7fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8283,6 +8283,7 @@ M:	Eddie James <eajames@linux.ibm.com>
- L:	linux-input@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/input/ibm,op-panel.yaml
-+F:	drivers/input/misc/ibm-panel.c
- 
- IBM Power 842 compression accelerator
- M:	Haren Myneni <haren@us.ibm.com>
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 362e8a01980c..88fb465a18b8 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -708,6 +708,16 @@ config INPUT_ADXL34X_SPI
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called adxl34x-spi.
- 
-+config INPUT_IBM_PANEL
-+	tristate "IBM Operation Panel driver"
-+	depends on I2C_SLAVE || COMPILE_TEST
-+	help
-+	  Supports the IBM Operation Panel as an input device. The panel is a
-+	  controller attached to the system with some buttons and an LCD display
-+	  that allows someone with physical access to the system to perform
-+	  various administrative tasks. This driver only supports the part of
-+	  the controller that sends commands to the system.
-+
- config INPUT_IMS_PCU
- 	tristate "IMS Passenger Control Unit driver"
- 	depends on USB
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index a48e5f2d859d..7e9edf0a142b 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -38,6 +38,7 @@ obj-$(CONFIG_INPUT_GPIO_DECODER)	+= gpio_decoder.o
- obj-$(CONFIG_INPUT_GPIO_VIBRA)		+= gpio-vibra.o
- obj-$(CONFIG_INPUT_HISI_POWERKEY)	+= hisi_powerkey.o
- obj-$(CONFIG_HP_SDC_RTC)		+= hp_sdc_rtc.o
-+obj-$(CONFIG_INPUT_IBM_PANEL)		+= ibm-panel.o
- obj-$(CONFIG_INPUT_IMS_PCU)		+= ims-pcu.o
- obj-$(CONFIG_INPUT_IQS269A)		+= iqs269a.o
- obj-$(CONFIG_INPUT_IXP4XX_BEEPER)	+= ixp4xx-beeper.o
-diff --git a/drivers/input/misc/ibm-panel.c b/drivers/input/misc/ibm-panel.c
-new file mode 100644
-index 000000000000..607e7dd5a0fb
---- /dev/null
-+++ b/drivers/input/misc/ibm-panel.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/*
-+ * Copyright (C) IBM Corporation 2020
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/spinlock.h>
-+
-+#define DEVICE_NAME	"ibm-panel"
-+
-+struct ibm_panel {
-+	u8 idx;
-+	u8 command[11];
-+	spinlock_t lock;	/* protects writes to idx and command */
-+	struct input_dev *input;
-+};
-+
-+static void ibm_panel_process_command(struct ibm_panel *panel, u8 command_size)
-+{
-+	u8 i;
-+	u8 chksum;
-+	u16 sum = 0;
-+	int pressed;
-+	int released;
-+
-+	if (command_size != sizeof(panel->command)) {
-+		dev_dbg(&panel->input->dev, "command too short\n");
-+		return;
-+	}
-+
-+	if (panel->command[0] != 0xff && panel->command[1] != 0xf0) {
-+		dev_dbg(&panel->input->dev, "command invalid\n");
-+		return;
-+	}
-+
-+	for (i = 0; i < sizeof(panel->command) - 1; ++i) {
-+		sum += panel->command[i];
-+		if (sum & 0xff00) {
-+			sum &= 0xff;
-+			sum++;
-+		}
-+	}
-+
-+	chksum = sum & 0xff;
-+	chksum = ~chksum;
-+	chksum++;
-+
-+	if (chksum != panel->command[sizeof(panel->command) - 1]) {
-+		dev_dbg(&panel->input->dev, "command failed checksum\n");
-+		return;
-+	}
-+
-+	released = panel->command[2] & 0x80;
-+	pressed = released ? 0 : 1;
-+
-+	switch (panel->command[2] & 0xf) {
-+	case 0:
-+		input_report_key(panel->input, BTN_NORTH, pressed);
-+		break;
-+	case 1:
-+		input_report_key(panel->input, BTN_SOUTH, pressed);
-+		break;
-+	case 2:
-+		input_report_key(panel->input, BTN_SELECT, pressed);
-+		break;
-+	default:
-+		dev_dbg(&panel->input->dev, "unknown command %u\n",
-+			panel->command[2] & 0xf);
-+		return;
-+	}
-+
-+	input_sync(panel->input);
-+}
-+
-+static int ibm_panel_i2c_slave_cb(struct i2c_client *client,
-+				  enum i2c_slave_event event, u8 *val)
-+{
-+	u8 command_size = 0;
-+	unsigned long flags;
-+	struct ibm_panel *panel = i2c_get_clientdata(client);
-+
-+	dev_dbg(&panel->input->dev, "event: %u data: %02x\n", event, *val);
-+
-+	spin_lock_irqsave(&panel->lock, flags);
-+
-+	switch (event) {
-+	case I2C_SLAVE_STOP:
-+		command_size = panel->idx;
-+		fallthrough;
-+	case I2C_SLAVE_WRITE_REQUESTED:
-+		panel->idx = 0;
-+		break;
-+	case I2C_SLAVE_WRITE_RECEIVED:
-+		if (panel->idx < sizeof(panel->command))
-+			panel->command[panel->idx++] = *val;
-+		else
-+			dev_dbg(&panel->input->dev, "command truncated\n");
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	spin_unlock_irqrestore(&panel->lock, flags);
-+
-+	if (command_size)
-+		ibm_panel_process_command(panel, command_size);
-+
-+	return 0;
-+}
-+
-+static int ibm_panel_probe(struct i2c_client *client,
-+			   const struct i2c_device_id *id)
-+{
-+	int rc;
-+	struct ibm_panel *panel = devm_kzalloc(&client->dev, sizeof(*panel),
-+					       GFP_KERNEL);
-+
-+	if (!panel)
-+		return -ENOMEM;
-+
-+	panel->input = devm_input_allocate_device(&client->dev);
-+	if (!panel->input)
-+		return -ENOMEM;
-+
-+	panel->input->name = client->name;
-+	panel->input->id.bustype = BUS_I2C;
-+	input_set_capability(panel->input, EV_KEY, BTN_NORTH);
-+	input_set_capability(panel->input, EV_KEY, BTN_SOUTH);
-+	input_set_capability(panel->input, EV_KEY, BTN_SELECT);
-+
-+	rc = input_register_device(panel->input);
-+	if (rc) {
-+		dev_err(&client->dev, "Failed to register input device: %d\n",
-+			rc);
-+		return rc;
-+	}
-+
-+	spin_lock_init(&panel->lock);
-+
-+	i2c_set_clientdata(client, panel);
-+	rc = i2c_slave_register(client, ibm_panel_i2c_slave_cb);
-+	if (rc) {
-+		input_unregister_device(panel->input);
-+		dev_err(&client->dev,
-+			"Failed to register I2C slave device: %d\n", rc);
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ibm_panel_remove(struct i2c_client *client)
-+{
-+	int rc;
-+	struct ibm_panel *panel = i2c_get_clientdata(client);
-+
-+	rc = i2c_slave_unregister(client);
-+
-+	input_unregister_device(panel->input);
-+
-+	return rc;
-+}
-+
-+static const struct of_device_id ibm_panel_match[] = {
-+	{ .compatible = "ibm,op-panel" },
-+	{ }
-+};
-+
-+static struct i2c_driver ibm_panel_driver = {
-+	.driver = {
-+		.name = DEVICE_NAME,
-+		.of_match_table = ibm_panel_match,
-+	},
-+	.probe = ibm_panel_probe,
-+	.remove = ibm_panel_remove,
-+};
-+module_i2c_driver(ibm_panel_driver);
-+
-+MODULE_AUTHOR("Eddie James <eajames@linux.ibm.com>");
-+MODULE_DESCRIPTION("IBM Operation Panel Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.26.2
-
+Regards,
+Santosh
