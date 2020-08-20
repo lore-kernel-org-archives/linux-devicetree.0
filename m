@@ -2,98 +2,103 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2410C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A51A9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD354208A9
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FBD20738
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725834AbgHTH3H (ORCPT
+        id S1725906AbgHTHaP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:29:07 -0400
-Received: from mail.netline.ch ([148.251.143.178]:42737 "EHLO
-        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgHTH3H (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 03:29:07 -0400
-X-Greylist: delayed 471 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Aug 2020 03:29:05 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by netline-mail3.netline.ch (Postfix) with ESMTP id 9BE3A2A6042;
-        Thu, 20 Aug 2020 09:21:11 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
-Received: from netline-mail3.netline.ch ([127.0.0.1])
-        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id mT6Tvc2NwglX; Thu, 20 Aug 2020 09:21:11 +0200 (CEST)
-Received: from thor (212.174.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.174.212])
-        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 0ADF22A6016;
-        Thu, 20 Aug 2020 09:21:09 +0200 (CEST)
-Received: from localhost ([::1])
-        by thor with esmtp (Exim 4.94)
-        (envelope-from <michel@daenzer.net>)
-        id 1k8esn-002Aez-Ao; Thu, 20 Aug 2020 09:21:09 +0200
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-To:     Sam Ravnborg <sam@ravnborg.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
-        netdev@vger.kernel.org, Rongrong Zou <zourongrong@gmail.com>,
-        bpf@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org> <20200819174027.70b39ee9@coco.lan>
- <20200819204800.GA110118@ravnborg.org>
-From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
-Message-ID: <0ddfd309-46d8-b69b-d1c6-e22384b78070@daenzer.net>
-Date:   Thu, 20 Aug 2020 09:21:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thu, 20 Aug 2020 03:30:15 -0400
+Received: from mga03.intel.com ([134.134.136.65]:26636 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbgHTHaO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 03:30:14 -0400
+IronPort-SDR: 8bBDYl41AyOx7NDwWl206ipj+SdbHB5Qhpi5KFLKwK5o04ELkZXK2noc/khjdoEsg7IIxDTmVg
+ FbF0k9dXR1pA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="155225865"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="155225865"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 00:30:13 -0700
+IronPort-SDR: V0bNGK+unpSW220Mv1SyOPGZuGAnuaTlwOCopnjwvfUbDavGw+l76ufZosNkFRFVu19fHTMzAO
+ M3q/6zpbWVFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="497513364"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2020 00:30:13 -0700
+Received: from [10.249.73.140] (ekotax-MOBL.gar.corp.intel.com [10.249.73.140])
+        by linux.intel.com (Postfix) with ESMTP id 0595558045A;
+        Thu, 20 Aug 2020 00:30:11 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: PCI: intel,lgm-pcie: Fix matching on all
+ snps,dw-pcie instances
+To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+References: <20200819222002.2059917-1-robh@kernel.org>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <e089ab71-e203-7d24-c1a5-6213c925b153@linux.intel.com>
+Date:   Thu, 20 Aug 2020 15:30:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200819204800.GA110118@ravnborg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819222002.2059917-1-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-19 10:48 p.m., Sam Ravnborg wrote:
-> Hi Mauro.
-> 
-> It seems my review comments failed to reach dri-devel - likely due to
-> the size of the mail.
 
-Right, some e-mails in this thread went through the dri-devel moderation
-queue due to their sizes. This mail of yours did as well, because you
-didn't trim the quoted text (hint, hint).
+On 8/20/2020 6:20 AM, Rob Herring wrote:
+> The intel,lgm-pcie binding is matching on all snps,dw-pcie instances
+> which is wrong. Add a custom 'select' entry to fix this.
+>
+> Fixes: e54ea45a4955 ("dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller")
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Dilip Kota <eswara.kota@linux.intel.com>
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> I'll take this via the DT tree.
+>
+> Rob
+>
+>   Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> index 64b2c64ca806..a1e2be737eec 100644
+> --- a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> @@ -9,6 +9,14 @@ title: PCIe RC controller on Intel Gateway SoCs
+>   maintainers:
+>     - Dilip Kota <eswara.kota@linux.intel.com>
+>   
+> +select:
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: intel,lgm-pcie
+> +  required:
+> +    - compatible
+> +
+>   properties:
+>     compatible:
+>       items:
 
+Reviewed-by: Dilip Kota <eswara.kota@linux.intel.com>
 
--- 
-Earthling Michel Dänzer               |               https://redhat.com
-Libre software enthusiast             |             Mesa and X developer
+Regards,
+Dilip
