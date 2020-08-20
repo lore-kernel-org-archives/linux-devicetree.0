@@ -2,125 +2,92 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576EAC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 389E1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6302075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:19:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="J5yOZEYZ"
+	by mail.kernel.org (Postfix) with ESMTP id 0AE5F22BEA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597915915;
+	bh=vdxripKePBWqF+bZjaYX2lU5JgkTx4UY2JsoCYkvAn0=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=YZqxAQX6cJNm/bPd0yBFedYcJoL5Fx+eug7zBMDXp0lEMBGTm5OGNSa9THU0aZOQi
+	 0qNn7zbezGA4dRUtUf0IR4aK2zYkSBFM+Doqcvwwz8isTdl9VE/g2wZYBBR78jr705
+	 h8GPxlgvK8rhQtPvG1MMlolI11fhW3K/qdrORPPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgHTJTA (ORCPT
+        id S1728250AbgHTJbo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:19:00 -0400
-Received: from mail-mw2nam10on2079.outbound.protection.outlook.com ([40.107.94.79]:58367
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725916AbgHTJSZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:18:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fHErzm8tHm7tp8V9Gc4Dk4uCmiU8fvoTyP8IcqupT2U6Zmx6lnMn6tCnfUIHkIvv3MZqqXUGwHRipTqQztQnIEdjzqC6kodEVUa0c6Sf3BaEV6JFh5aBA+k3tA1/83Gz4LGQdSZmxPfLLvuqJMF+RFlkQeowPG1SlibOBt7fuxu4UhayVf4Go/fRYlbfam0dlOOsLMtVAZ0knVVys6BZni5d1XY9ScggjzB9slvi/iTglzNsbvB2tPMj7CSsYGRadoKC+ZdVsYv+736Hzgr7q8pbXpkDOuEKRML49xXRnfqHYprl00Kr3MrQFRpnNcCYsamxxZX4O8VWRFGXrNB9yw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8S0kZq4Zvc8lWRFN2ZeHPnOrb5Btj4ZFpf+hggkO/MU=;
- b=jInirSxPmXEQx9SW3ocW/Cy5B6c5x4hQo9jUbHwydBkQmwooxAOlX2YyEi7jdQg5L+b1ISCGq/+k82bM3lBhnydtDtAU/452hTqmkyeVR8ocfnK098rEmroU/AfOyTgo8pQ0tu1AreW+Tlb5LgB2zksEIlrXG31nAw7yQDgMSqUvHGBSYzQtXajdAvtEI0yd4GkTld+Erp1IYPNji1Lbbdu87FBPlegKbvZSns/bm0vKe7lEskFOB+WPZ46AXYEpVEiqV03/e2SgQL9IV2Ti+RNlyNgyLjhx6uqOD+2BjdlNh0/eDDbO0DmZ3UC7uyEdONJXGUYn8komM0t5P0XGPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8S0kZq4Zvc8lWRFN2ZeHPnOrb5Btj4ZFpf+hggkO/MU=;
- b=J5yOZEYZFGD/3GK51f4WI+OhbyKZVVn2hB7RZSntbHnSA5wO0waJJv61aDWwussSmBtB2p4sxUp4T3FGMbs8HlFlfjUqbiGCHg9VgntdsvUp9Rxl5SBEdkhjdkkRqVz53tMXAtBXe+dXrleqmlB0YrC6Pw9GMylmJns1L3Ncer8=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
-Received: from BN7PR03MB4547.namprd03.prod.outlook.com (2603:10b6:408:9::22)
- by BN8PR03MB4738.namprd03.prod.outlook.com (2603:10b6:408:6d::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Thu, 20 Aug
- 2020 09:17:19 +0000
-Received: from BN7PR03MB4547.namprd03.prod.outlook.com
- ([fe80::3cda:7634:5802:df5f]) by BN7PR03MB4547.namprd03.prod.outlook.com
- ([fe80::3cda:7634:5802:df5f%7]) with mapi id 15.20.3305.024; Thu, 20 Aug 2020
- 09:17:19 +0000
-Date:   Thu, 20 Aug 2020 17:11:29 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 2/4] dt-bindings: regulator: mp886x: support
- mps,switch-frequency-hz
-Message-ID: <20200820171129.62bb4105@xhacker.debian>
-In-Reply-To: <20200820171020.5df4683b@xhacker.debian>
-References: <20200820171020.5df4683b@xhacker.debian>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR03CA0015.apcprd03.prod.outlook.com
- (2603:1096:404:14::27) To BN7PR03MB4547.namprd03.prod.outlook.com
- (2603:10b6:408:9::22)
+        Thu, 20 Aug 2020 05:31:44 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38410 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728227AbgHTJbX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 05:31:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a14so1358797wra.5;
+        Thu, 20 Aug 2020 02:31:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b1bNFiZgiP0kbWWwCg17EvjL33DK3FeILPEpJ0Dhl/Q=;
+        b=uA9edRSq25TmKCGVnHYoP5cHkYNbN41oRl3S0afOBoDXd5TLtLaExA7B33xt2MhSiJ
+         tynMT5tmW36TyXYGDl7xffBHurmHwGax/+S6tjoTX/P9gN3jD8iF+krSUTP/Hc+Kk6mR
+         lcKyg3SujxHl29mGtm1vGl/ZEgup7NFXxpjA0xaB6pJafcQjQQAJvaV3jgzhtVrZOa6+
+         zcPq0Y85hXtTTnLPVNIdJ4nG5+hiTBS/wHrHZ94ysK23SZi4Nft5nGZAJWpLaIAtFgcQ
+         dbX8ewA8PZpR9odN9OP6q2a6jOLHFnfcoC3tq0tn2S7siySvVqziRATeKZE1PBkjbWfy
+         3GHg==
+X-Gm-Message-State: AOAM533ZBSqaMRM6oNuol5vyFNIOeR0XYYluJov1DSv2EPYXr9WhnORU
+        3b1vtAvJ5tRtVBDlqXWTY6Y=
+X-Google-Smtp-Source: ABdhPJyp9/7bHjGRhaR63apXcQFn01iJGOXs1Poxb/moYU7gYPKQXpIuQVliKswmp5fn+tzr2fBnTw==
+X-Received: by 2002:a5d:4c45:: with SMTP id n5mr2319721wrt.68.1597915881386;
+        Thu, 20 Aug 2020 02:31:21 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id z7sm3102928wmk.6.2020.08.20.02.31.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 02:31:20 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 11:31:18 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [RESEND PATCH 4/5] ARM: dts: tango: Align L2 cache-controller
+ nodename with dtschema
+Message-ID: <20200820093118.GC15884@kozik-lap>
+References: <20200819175853.21492-1-krzk@kernel.org>
+ <20200819175853.21492-4-krzk@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by TYAPR03CA0015.apcprd03.prod.outlook.com (2603:1096:404:14::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Thu, 20 Aug 2020 09:17:17 +0000
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6b617b1e-d884-43ae-a016-08d844e9d6cf
-X-MS-TrafficTypeDiagnostic: BN8PR03MB4738:
-X-Microsoft-Antispam-PRVS: <BN8PR03MB4738A415E70E70D037AFDC3CED5A0@BN8PR03MB4738.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kmpjfDhyIK1xpHzr9dy/Qrxpn6oe6Em5FQtimyGOXaMU3+0uN11xZtGPTWwLSmBnzo9GiRJVl8gpZAiXZttLPH1u10IpIdFSDq2qQ8UFLH+dsrJOdWtJDrIXgon32vPQNuqDDnVKYisBBuxunIp/YDF88/Qhy3FNMU+xSdvUzfbP3BMAQ2MVAAxfCSCZHJe/+3GIHi+Lkqn9E0XlKnrqjvFkEZFnHdO1ZLrOkqICMDiAystCYzDnPN8FoJZRibWiLSUndNpvE8mCnEKmzus8FCvzwTs4xupU9tvYv33eVZOzod7fS/HeVoKhy8qR8xgf0guWgSkBTnFM1NF1ZJC3q0Q/mtJ1R1LBFr75q7poFZHmrUEUqe6som6tdo4AkCxhaOpGHuDOXVS9ROM+gB61xw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR03MB4547.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(396003)(346002)(366004)(376002)(136003)(316002)(2906002)(110136005)(66476007)(6486002)(66556008)(66946007)(110011004)(16576012)(4326008)(8676002)(478600001)(5660300002)(26005)(4744005)(86362001)(9686003)(6666004)(52116002)(956004)(186003)(1076003)(8936002)(142933001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Q1d9Eucka5Ezk65u8KD/HAnAj2Cfbe2TpcUoCYQ9l7erk0eXAFYnk2cXHHCEgWzJlYfWnYBxnhq2ioGyH9r4kMc44vdpqzm77iWOgWieF9FLNj1SFtxAAM+9MVd9gyltS67y5PAwYmqBTy8+OrvpBfWc9/w1zeqrZfpekRuKWd+aPepAlynwjTYthkpIapYEfLb5NOITOdXj07R7K4hbt6bQPNUAJ5SUwXpz6RIy7EcZek3SvWq5W7k6W2y0RHYaHbVHRCWyk6cWQJzwiinwHaTlcyATz0H/s/MkDHawUZm3te8Ft62yTA/Mb5XB89ClGIPpVnaeyR7T6FMQpsU5JE0qMmVw8qAB1DfjtdyKdVjz6EjVsxTy1PKzz/LBRT2hmRT1kZAjgNNfGp6U5z5VQ/ydUJngKAKMk8Yzpqy+So9QuNjZoSweR9m5rBpF8ZZk9XhxspID9x3mghxhE4w42B7FpvBvfD5y8frsCeDewkYPctcn+BTk+gk16zG2kz167gAmgBiAggxia/TKRRfkGY4A5x59YdjU8nyvhZX6rU0OFWxdz2l+zhUFKOlwAMXqw6dt9KE6ntD0Uj+6DWEkwQAN8n0AkAc/P2TPJeaoh62c9QYa7UnL204SKXh9RoC90l5mYDluBx4hqV+NohbkiQ==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b617b1e-d884-43ae-a016-08d844e9d6cf
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR03MB4547.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 09:17:19.8493
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g/44Iwdgk/yWsK3vxL7eYSH3E0F5kAN0N5Hg4joQlnZrLLwwCoE24VG+fHmsGPdrYSUXVQN37YH7OXFCpmSSZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4738
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200819175853.21492-4-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Both MP8867 and MP8869 support different switch frequency.
+On Wed, Aug 19, 2020 at 07:58:52PM +0200, Krzysztof Kozlowski wrote:
+> Fix dtschema validator warnings like:
+>     l2-cache-controller@20100000: $nodename:0:
+>         'l2-cache-controller@20100000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/tango4-common.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- Documentation/devicetree/bindings/regulator/mp886x.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+I forgot to add the tag provided on previous submission:
+Acked-by: Mans Rullgard <mans@mansr.com>
 
-diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
-index 551867829459..b05307bbb0d9 100644
---- a/Documentation/devicetree/bindings/regulator/mp886x.txt
-+++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
-@@ -9,6 +9,10 @@ Required properties:
- - mps,fb-voltage-divider: An array of two integers containing the resistor
-   values R1 and R2 of the feedback voltage divider in kilo ohms.
- 
-+Optional properties:
-+- mps,switch-frequency-hz: The valid switch frequency in Hertz. Available values
-+  are: 500000, 750000, 1000000, 1250000, 1500000
-+
- Any property defined as part of the core regulator binding, defined in
- ./regulator.txt, can also be used.
- 
--- 
-2.28.0
-
+Best regards,
+Krzysztof
