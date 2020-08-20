@@ -2,206 +2,115 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F129C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 19:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B0BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 19:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55A03207DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 19:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957A9207DE
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 19:33:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UWsCN7ZH"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="a52ZRAy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgHTT1P (ORCPT
+        id S1726766AbgHTTdW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 15:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36482 "EHLO
+        Thu, 20 Aug 2020 15:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726702AbgHTT1N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 15:27:13 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14245C061386
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 12:27:11 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u128so1527658pfb.6
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 12:27:11 -0700 (PDT)
+        with ESMTP id S1725977AbgHTTdU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 15:33:20 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BDBDC061385
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 12:33:20 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a79so1530415pfa.8
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 12:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qKgKzXlPm6LlH3TbAFNrfgNmPXIVx+pBSmSBh3BlDpQ=;
-        b=UWsCN7ZHQMvpNR61FNwCDzsjQMvWe6z3zaWJDySvgM4qXJ2owLnhOmarFsydiJefHl
-         mDOA211lJBz+xb0hnkIYj4LlBhKFpo+A3Fbev9eGS7j3zbuAEtnSe964H/tnXlBeEhtx
-         bndqvASP4kmEsMAvVUvD+VV369LU6QcLbwLjiEdcsW4h5cYGvg5tOA7vBJ2pwplx8Q/T
-         prJmHDO7Cv649ZkSCOwz1tl4ClMdYHNUQpI6sPTEa4zmWHZBTDvvg+oiG6SxAdAbjEwR
-         Hwwa2sMzIQpY7dp4emZy+lXP7J4nBQfNXGNPfDSuzWbIEt/+8X3UZj9nTFJnZUJrW9MD
-         /Aaw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=+NH/EVilIs+rc2YfZDn/KduJaW1ughyXrixoRfqTCIk=;
+        b=a52ZRAy6tM+mLgU6pf1voK51zdKMcXLuFfrZMPaNRAmgY3Rc2pCWMQLyex+qSiiX7p
+         O8kHKxTBNXujlNeS4jq8ONBrjXFYgfUkDIJbkunM5Gh/nsXqDNthTC3rLa1czC+qKzb+
+         aNrbPhZl2whNRdYJXCONnQzIDe0rdBXyZA3p1vbIb+HATQU2AsLHELWGEtW/0j6x7Mhu
+         TxUuDL2zQ4Ka1c1kSZv4r4gSE/5wzSGe1Hq6WyRGfcG9mAwogqMjpmsfBcpBaaLnb/pF
+         MXwqsHYI9FmAVFjg0PR7kUHZ2l8M07otXKANO/0dhQl4OEFylr8xrPb5PErnoGddMGNJ
+         v5+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qKgKzXlPm6LlH3TbAFNrfgNmPXIVx+pBSmSBh3BlDpQ=;
-        b=dV2Yl3E8ac2dgTAAdxZdm2GtWPPXMCUkqvqfmRL7ENnahLfp1jTDfAyV8Xiq+K1OPO
-         vrRmlTRZsYmwlreWr9D7FlU9TnnQ2Cu9N90tuN+bSTzuDtzVcwgmr2v1R8KV7KbG4Xfv
-         gxx91MQkFvmcmZR1jMWIjLQ7a/eJhVJUF1ZCyo0teSznhk0YgMtIILI0dzvTL6JJGo8T
-         FsRGxwpgw2lD8wgQPeA9FU9GT6+q8GzsxAUnowKwfvANlMxL0IqeLTogtAxIQx6/fKWp
-         Rj0ui0jj/J5pZ8hueaOAG6v7h4+tuE5zVA5JSsXO1TzoiWtWE67VDDgvAtz1MTfZ7Z0Z
-         d8yg==
-X-Gm-Message-State: AOAM530YOdyakQrO1CgESin2WtRVy9hR4ldLNlhaq9xcRFd8SMEsZvV+
-        RmSktb1KuR/vWyo9l5Z390cvkQ==
-X-Google-Smtp-Source: ABdhPJxpcaQBmyqJzVhRAz2xEFhbGD8umb7dYhhPDrVdIuIn+UoqxIHj92yxXw+U4tTEBt4uqrmX6g==
-X-Received: by 2002:a62:e704:: with SMTP id s4mr183082pfh.177.1597951630770;
-        Thu, 20 Aug 2020 12:27:10 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id gj2sm2781576pjb.21.2020.08.20.12.27.09
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+NH/EVilIs+rc2YfZDn/KduJaW1ughyXrixoRfqTCIk=;
+        b=ZF33ecoqmV45in+Nidpt5SwWlzLN+VbIRjS6uK71LOh7QIlV5IpF7dvOfnzE1seR1W
+         TC1cHLZXGjJWGbUGxv0VflZsWAlCUs3E+f+BO71ZFGgNhJcuKBjyLbbhowqHQdFgmaRO
+         eXs3CqX7NZfyL6N5iZdmTcVh2MJx7zjehcmohqZfQlQRw/XMY+RRyoXM4plBVgUlptLb
+         5Xgf8fbZsaokj97A1PGW/xmlbub9XNu8vNHP2T1itlgXCpgxnw7f4c0FeQTJ/o/HyJ0E
+         ltHIk7Cl2mqpAX94KtoCyVVOVvGcQmaGxMaRxErhRXJApO++8GGTkunuqRguK6Uer/NH
+         o+wA==
+X-Gm-Message-State: AOAM5339qsJ0Vkt/dLp3Tixe5/gatGxXoyRarOE/djL+wgFG7qzab1Jb
+        rh13z2hluahliwYFhKmytrt9sQ==
+X-Google-Smtp-Source: ABdhPJwWDh+QCKjM50OxojdKZ7o5q7ckFzlrT8jwHIcJG1vtl++X4ANR5i4yapkZVKF8T+UexxbH/A==
+X-Received: by 2002:a65:60c5:: with SMTP id r5mr208358pgv.283.1597951999356;
+        Thu, 20 Aug 2020 12:33:19 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id w16sm3457029pjd.50.2020.08.20.12.33.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 12:27:10 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 13:27:08 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 04/10] remoteproc: imx_rproc: make syscon optional
-Message-ID: <20200820192708.GA3938186@xps15>
-References: <20200724080813.24884-1-peng.fan@nxp.com>
- <20200724080813.24884-5-peng.fan@nxp.com>
- <20200818214350.GA3822080@xps15>
- <DB6PR0402MB276017AA0C124172D9BC3483885D0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200819194504.GB3845366@xps15>
- <DB6PR0402MB2760B72DA179BED8434690E1885A0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+        Thu, 20 Aug 2020 12:33:18 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: meson-g12b-odroid-n2: Enable RTC controller node
+In-Reply-To: <20200820121323.564-2-linux.amoon@gmail.com>
+References: <20200820121323.564-1-linux.amoon@gmail.com> <20200820121323.564-2-linux.amoon@gmail.com>
+Date:   Thu, 20 Aug 2020 12:33:18 -0700
+Message-ID: <7hlfi9xgch.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB6PR0402MB2760B72DA179BED8434690E1885A0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 02:04:10AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH 04/10] remoteproc: imx_rproc: make syscon optional
-> > 
-> > On Wed, Aug 19, 2020 at 12:51:27AM +0000, Peng Fan wrote:
-> > > > Subject: Re: [PATCH 04/10] remoteproc: imx_rproc: make syscon
-> > > > optional
-> > > >
-> > > > Hi Peng,
-> > > >
-> > > > On Fri, Jul 24, 2020 at 04:08:07PM +0800, Peng Fan wrote:
-> > > > > Make syscon optional, since i.MX8QM/QXP/7ULP not have SRC to
-> > > > > control
-> > > > M4.
-> > > > > But currently i.MX8QM/QXP/7ULP not added, so still check regmap
-> > > > > when start/stop to avoid unhappy things.
-> > > >
-> > > > On the i.MX8QM/QXP/7ULP processors, the remote processors are not
-> > > > handled by the remoteproc cores, as implemented in this patch.  In
-> > > > such a scenario how does the remoteproc core know the remote
-> > > > processor has crashed and how does it recover from such a condition?
-> > >
-> > > For 7ULP dual boot case, A7 is under control of M4, so if m4 crash, I
-> > > suppose
-> > > A7 would not work properly.
-> > 
-> > In that case I assume the whole system gets rebooted, which puts the A7 in a
-> > state where it can "attach" with the M4 again.
-> 
-> Yes. Whole system get rebooted.
-> 
-> > 
-> > >
-> > > For 8QM/QXP partition case, M4 is in a standalone partition, if M4
-> > > crash or reboot, the system controller unit will restart M4 and notify
-> > > Acore that M4 restart.
-> > 
-> > And how does that notification work exactly?  Does rproc_report_crash() get
-> > called somewhere in that process in order for the remoteproc core to attach
-> > to the M4 again?
-> 
-> Yes. We registered a interrupt notification handler with system controller unit.
-> When M4 rebooted, the system controller will raise interrupt to A53 core.
-> Then the notification callback will be invoked, the callback will call
-> rproc_report_crash. I not included this part code in the patchset, since
-> this patchset is to add initial support for 8M case.
+Anand Moon <linux.amoon@gmail.com> writes:
 
-All this information is really appreciated.
+> Enable RTC PCF8563 node on Odroid-N2 SBC, In order to
+> support the RTC wakealarm feature for suspend and resume.
+> Also assign an alias to the pcf8563 to rtc0 and meson-vrtc to rtc1
+> timer device to prevent it being assigned to /dev/rtc0
+> which disto userspace tools assume is a clock device.
+>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> Changes V3
+> --Drop the INI GPIOAO.BIT7 pinctrl.
 
-> 
-> Thanks,
-> Peng.
-> 
-> > 
-> > Many thanks for the help,
-> > Mathieu
-> > 
-> > >
-> > > Thanks,
-> > > Peng.
-> > >
-> > > >
-> > > > Thanks,
-> > > > Mathieu
-> > > >
-> > > > >
-> > > > > Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > > ---
-> > > > >  drivers/remoteproc/imx_rproc.c | 11 +++++++++--
-> > > > >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/remoteproc/imx_rproc.c
-> > > > > b/drivers/remoteproc/imx_rproc.c index 82594a800a1b..4fad5c0b1c05
-> > > > > 100644
-> > > > > --- a/drivers/remoteproc/imx_rproc.c
-> > > > > +++ b/drivers/remoteproc/imx_rproc.c
-> > > > > @@ -162,6 +162,9 @@ static int imx_rproc_start(struct rproc *rproc)
-> > > > >  	struct device *dev = priv->dev;
-> > > > >  	int ret;
-> > > > >
-> > > > > +	if (!priv->regmap)
-> > > > > +		return -EOPNOTSUPP;
-> > > > > +
-> > > > >  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
-> > > > >  				 dcfg->src_mask, dcfg->src_start);
-> > > > >  	if (ret)
-> > > > > @@ -177,6 +180,9 @@ static int imx_rproc_stop(struct rproc *rproc)
-> > > > >  	struct device *dev = priv->dev;
-> > > > >  	int ret;
-> > > > >
-> > > > > +	if (!priv->regmap)
-> > > > > +		return -EOPNOTSUPP;
-> > > > > +
-> > > > >  	ret = regmap_update_bits(priv->regmap, dcfg->src_reg,
-> > > > >  				 dcfg->src_mask, dcfg->src_stop);
-> > > > >  	if (ret)
-> > > > > @@ -325,9 +331,10 @@ static int imx_rproc_probe(struct
-> > > > > platform_device
-> > > > *pdev)
-> > > > >  	regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
-> > > > >  	if (IS_ERR(regmap)) {
-> > > > >  		dev_err(dev, "failed to find syscon\n");
-> > > > > -		return PTR_ERR(regmap);
-> > > > > +		regmap = NULL;
-> > > > > +	} else {
-> > > > > +		regmap_attach_dev(dev, regmap, &config);
-> > > > >  	}
-> > > > > -	regmap_attach_dev(dev, regmap, &config);
-> > > > >
-> > > > >  	/* set some other name then imx */
-> > > > >  	rproc = rproc_alloc(dev, "imx-rproc", &imx_rproc_ops,
-> > > > > --
-> > > > > 2.16.4
-> > > > >
+Why did you drop this GPIO?  Isn't this the GPIO that the RTC uses to
+wakeup the system?  If so, this should be included as part of this
+patch.
+
+It probably still works because the bootloader configures this GPIO as
+input, but the kernel should not rely on the booloader for that, so
+please include as part of this patch.
+
+Other than that, this is looking OK.
+
+Curious how you're testing this?
+
+When I tested with rtcwake (from buildroot), I'm getting this:
+
+/ # rtcwake -d rtc0 -m mem -s4
+rtcwake: RTC_RD_TIME: Invalid argument
+
+Kevin
