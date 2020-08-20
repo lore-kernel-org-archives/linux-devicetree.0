@@ -2,72 +2,141 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC45EC433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97988C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5F9920724
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7057F2075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 14:44:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fopCcyd1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730991AbgHTNxO (ORCPT
+        id S1726347AbgHTOoi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:53:14 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:33484 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbgHTNwB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 09:52:01 -0400
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 20 Aug 2020 06:51:59 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Aug 2020 06:51:58 -0700
-Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Aug 2020 19:21:33 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id 8207C440F; Thu, 20 Aug 2020 19:21:31 +0530 (IST)
-From:   satya priya <skakit@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
-        satya priya <skakit@codeaurora.org>
-Subject: [PATCH V3 0/3] Add wakeup support over UART RX
-Date:   Thu, 20 Aug 2020 19:21:04 +0530
-Message-Id: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 20 Aug 2020 10:44:38 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:32858 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbgHTOog (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 10:44:36 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07KEhFpl082349;
+        Thu, 20 Aug 2020 09:43:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597934595;
+        bh=alKUMzHacRceHiGl20u8VbwQ5t87jtgokFeHaBhYYjI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fopCcyd1UmFHdwt3hPtdu1FEJun8NB/dKNp+b5PGYzoCeNCQyo2g0QL4Fa5MZqK9E
+         shETrZBf+aGXnlQth6cWi+BQGFSgUA/NUQt02rmN4nbstWIDwC6JT5wPmSSHVO24Fc
+         l7QlehzAXCnauTrlwzv8oUpQsTpwnl9uFMueuuD4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07KEhFGG035932
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 09:43:15 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
+ Aug 2020 09:43:14 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 20 Aug 2020 09:43:14 -0500
+Received: from [10.250.32.29] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07KEhEia007737;
+        Thu, 20 Aug 2020 09:43:14 -0500
+Subject: Re: [PATCH 0/6] Add TI PRUSS platform driver
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        <ssantosh@kernel.org>, Tony Lindgren <tony@atomide.com>
+CC:     <santosh.shilimkar@oracle.com>, <robh+dt@kernel.org>,
+        <lee.jones@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>
+References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <12a7fc2a-4c48-655f-daa1-880fd1866fd1@ti.com>
+Date:   Thu, 20 Aug 2020 09:43:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Changes in V2:
- - As per Matthias's comment added wakeup support for all the UARTs
-   of SC7180.
- - Added sleep state in sc7180-idp.dts file.
- - Modify the if check in set_mctrl API in serial driver to avoid
-   making RFR high during suspend.
+Hi Santosh, Tony,
 
-Changes in V3:
- - As per Matthias's comments modify the idp dts pin config to keep
-   only the required pin settings.
- - Remove the extra parentheses from serial driver patch.
+On 7/29/20 6:02 AM, Grzegorz Jaszczyk wrote:
+> Hi,
+> 
+> The Programmable Real-Time Unit and Industrial Communication Subsystem
+> (PRU-ICSS) is present on various TI SoCs. The IP is present on multiple TI SoC
+> architecture families including the OMAP architecture SoCs such as AM33xx,
+> AM437x and AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is also
+> present on the Davinci based OMAPL138 SoCs and K3 architecture based AM65x and
+> J721E SoCs as well.
+> 
+> A PRUSS consists of dual 32-bit RISC cores (Programmable Real-Time Units, or
+> PRUs), shared RAM, data and instruction RAMs, some internal peripheral modules
+> to facilitate industrial communication, and an interrupt controller.
+> 
+> The programmable nature of the PRUs provide flexibility to implement custom
+> peripheral interfaces, fast real-time responses, or specialized data handling.
+> The common peripheral modules include the following,
+>   - an Ethernet MII_RT module with two MII ports
+>   - an MDIO port to control external Ethernet PHYs
+>   - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+>     Ethernet functions
+>   - an Enhanced Capture Module (eCAP)
+>   - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
+>   - a 16550-compatible UART to support PROFIBUS
+>   - Enhanced GPIO with async capture and serial support
+> 
+> 
+> A typical usage scenario would be to load the application firmware into one or
+> more of the PRU cores, initialize one or more of the peripherals and perform I/O
+> through shared RAM from either a kernel driver or directly from userspace.
+> 
+> This series contains the PRUSS platform driver. This is the parent driver for
+> the entire PRUSS and is used for managing the subsystem level resources like
+> various memories and the CFG module.  It is responsible for the creation and
+> deletion of the platform devices for the child PRU devices and other child
+> devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
+> they can be managed by specific platform drivers.
+> 
+> Grzegorz Jaszczyk (1):
+>   dt-bindings: soc: ti: Add TI PRUSS bindings
+> 
+> Suman Anna (5):
+>   soc: ti: pruss: Add a platform driver for PRUSS in TI SoCs
+>   soc: ti: pruss: Add support for PRU-ICSSs on AM437x SoCs
+>   soc: ti: pruss: Add support for PRU-ICSS subsystems on AM57xx SoCs
+>   soc: ti: pruss: Add support for PRU-ICSS subsystems on 66AK2G SoC
+>   soc: ti: pruss: enable support for ICSSG subsystems on K3 AM65x SoCs
 
-satya priya (3):
-  arm64: dts: sc7180: Add wakeup support over UART RX
-  arm64: dts: qcom: sc7180: Add sleep pin ctrl for BT uart
-  tty: serial: qcom_geni_serial: Fix the UART wakeup issue
+Do you have any comments on the driver portions of this series before Greg posts
+a v2 addressing the binding comments. This is one of the foundation series
+towards enabling PRUSS, and is a dependency for the PRU remoteproc driver.
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54 +++++++++++++++---
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 98 ++++++++++++++++++++++++++++-----
- drivers/tty/serial/qcom_geni_serial.c   |  2 +-
- 3 files changed, 130 insertions(+), 24 deletions(-)
+regards
+Suman
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+> 
+>  .../devicetree/bindings/soc/ti/ti,pruss.yaml       | 383 +++++++++++++++++++++
+>  drivers/soc/ti/Kconfig                             |  11 +
+>  drivers/soc/ti/Makefile                            |   1 +
+>  drivers/soc/ti/pruss.c                             | 183 ++++++++++
+>  include/linux/pruss_driver.h                       |  48 +++
+>  5 files changed, 626 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+>  create mode 100644 drivers/soc/ti/pruss.c
+>  create mode 100644 include/linux/pruss_driver.h
+> 
 
