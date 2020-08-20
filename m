@@ -2,101 +2,281 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2978C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 23:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B646DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 23:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BF62072D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 23:31:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgrTuR+J"
+	by mail.kernel.org (Postfix) with ESMTP id 911562072D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 23:35:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597966537;
+	bh=liAuRg5Rej4YmwcBjkY8n0f/tmyXRRoBRQ4qaTdkfm8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FKmwrHdD7+nUOxLBFOEPMjOvxsmpNP5yx91j/ap00B1pqaARUA7xuOl8KWxc9rHap
+	 hglzuQAn82pBlDH5AIK9cqTc6bZA5yOUT7TIFN/1z1sGNjaED4RM0+OpTND9/k5geg
+	 Bn4pgNCmBpu1X4GLeDGypNBhRL2dD/oJCRrFVZp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgHTXb1 (ORCPT
+        id S1728706AbgHTXfh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:31:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728498AbgHTXbY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 19:31:24 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BABC061385;
-        Thu, 20 Aug 2020 16:31:24 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k13so22642plk.13;
-        Thu, 20 Aug 2020 16:31:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=a01gZFrrhASVB9tqjIfzMvLjyL0nIzhC/aFyYzXQbCA=;
-        b=kgrTuR+JKFYitMZQ1XluiCdLpkdKqQPQdqR0xyH6B2zpRN9wJmd1dSDXDm+K9xQY6I
-         Fb+wXh8wAA+rKyO6EjjJ/kXe1SjtPB9R/q6F0oFKz6RhVL1TB6kzdJhgHoOE7JlrICrg
-         rEQBPgEdtOzm1+F55P0AO+dpRl1G382iEoEG6MjJCw89Cw2ZF2AHj5gU6G43CsJKWoht
-         aU59gMN+ZuBoKPtSBjYolZJwgukCYXx5QN0gUGzcy028O2HJ5nHSk87+YLuWc1QA0zUK
-         xmb8n6JNXFyOB9ver1LkksOzrr8Eg8cHAMXbsZaTViJF7c2jcLGtkdmLzPWD8ZNsMIkY
-         dxpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=a01gZFrrhASVB9tqjIfzMvLjyL0nIzhC/aFyYzXQbCA=;
-        b=W27eAxSfQe1rx4pPmwaqkGvnltrKGQWkTFl5fIcygAwVqFFSYDdUQpA5ZWJ4YDI8Cq
-         jr7FfqvexjHff60oja06/oZSqNp9RKKgdJnYZHzNIcj2eJ+/aC2Ngz9zoy+kepaNdOMU
-         aFNNl/r3TeFW45o7b5v2AB4CzY4usiETWW9VwyLb5jd1w0LfOaFNlBO+pVFOxuxvsSCs
-         8PwAtRexKQMiG8X9FDUImdmJhq9KOPWTcAthne5Sey/3tM5Qg77Y0Sg8DECfDDh7QFKd
-         o7cTbGeBmlheEgzWlsZ+Ily1MG5kVTfgR2MbQa/ElKaKASO3UoaFa+Edbv0+x9CMiYy8
-         fEsg==
-X-Gm-Message-State: AOAM530KISe9cFFqxv2LwTmG/8kkupXivRlw7SaKRpCkwMxtzAUKMm0A
-        raxPtMLBCffKriTXnDbnAR4UO7eaHT0=
-X-Google-Smtp-Source: ABdhPJzwNJMsL/Pz3OaZ+PwEpSsgST4M5xXPP+d+HfMcIXE5U62U4TqFh7FYAwI6UnI04ijWk4/sXQ==
-X-Received: by 2002:a17:90a:6881:: with SMTP id a1mr213133pjd.208.1597966283255;
-        Thu, 20 Aug 2020 16:31:23 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id q207sm122399pgq.71.2020.08.20.16.31.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Aug 2020 16:31:22 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Thu, 20 Aug 2020 19:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728605AbgHTXff (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 19:35:35 -0400
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25382207DF;
+        Thu, 20 Aug 2020 23:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597966534;
+        bh=liAuRg5Rej4YmwcBjkY8n0f/tmyXRRoBRQ4qaTdkfm8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=p39NFF2N5v4Ts0BZXAh7stjpHZvRllSbTUgMwYZ1sTcNEpuRHBYTnp2hyHCjFdZy5
+         k+HUELxjQgNyzD7dx4hxqKjparUxzIiDZwW3E8QC66ob4//YkJ+SOkwpfXM8BEc2ZK
+         fBUF9+3R1kh1I7TBt4DMyMmsoh/AgjoEgTFYK+xg=
+Received: by mail-ed1-f42.google.com with SMTP id m20so17387eds.2;
+        Thu, 20 Aug 2020 16:35:34 -0700 (PDT)
+X-Gm-Message-State: AOAM531bp6VbLzK+ovQOXsCuUe3+TtqAgzGeD78+81RbJtSQJ4FRrK7E
+        FqUugxaMqsk1OrIGI2+xK3mlyb8a7I/Myx7ZAQ==
+X-Google-Smtp-Source: ABdhPJxc1zoXaax0lawfpxhH4RkIE/MQ7k2AAa4+yAYqE6q6bk/uUEKtRba8EHNrWjtSPcsccONyrsAUWh2/KyhWn0g=
+X-Received: by 2002:a50:d9c6:: with SMTP id x6mr162434edj.271.1597966532764;
+ Thu, 20 Aug 2020 16:35:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com> <1597903458-8055-5-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1597903458-8055-5-git-send-email-yongqiang.niu@mediatek.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Fri, 21 Aug 2020 07:35:20 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__RxokjAop3cY3Xmh9KdmeZi8HbMixdvSn+41=Kg9LMiQ@mail.gmail.com>
+Message-ID: <CAAOTY__RxokjAop3cY3Xmh9KdmeZi8HbMixdvSn+41=Kg9LMiQ@mail.gmail.com>
+Subject: Re: [PATCH v1 04/21] mtk-mmsys: add mt8192 mmsys support
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Grant Likely <grant.likely@linaro.org>,
-        Pantelis Antoniou <panto@antoniou-consulting.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE)
-Subject: [PATCH] of: Export of_node_ktype for modular use of of_init_node
-Date:   Thu, 20 Aug 2020 16:31:06 -0700
-Message-Id: <1597966267-33614-1-git-send-email-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-To permit the use of of_init_node() by kernel modules, we must export
-of_node_ktype which is directly referenced by kobject_init() called from
-of_init_node() otherwise modules would be getting linking failures.
+Hi, Yongqiang:
 
-Fixes: 0829f6d1f69e ("of: device_node kobject lifecycle fixes")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/of/kobj.c | 1 +
- 1 file changed, 1 insertion(+)
+Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=8820=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:16=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> add mt8192 mmsys support
+>
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mmsys/Makefile       |   1 +
+>  drivers/soc/mediatek/mmsys/mt8192-mmsys.c | 159 ++++++++++++++++++++++++=
+++++++
+>  2 files changed, 160 insertions(+)
+>  create mode 100644 drivers/soc/mediatek/mmsys/mt8192-mmsys.c
+>
+> diff --git a/drivers/soc/mediatek/mmsys/Makefile b/drivers/soc/mediatek/m=
+msys/Makefile
+> index 62cfedf..c4bb6be 100644
+> --- a/drivers/soc/mediatek/mmsys/Makefile
+> +++ b/drivers/soc/mediatek/mmsys/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  obj-y +=3D mt2701-mmsys.o
+>  obj-y +=3D mt8183-mmsys.o
+> +obj-y +=3D mt8192-mmsys.o
+> diff --git a/drivers/soc/mediatek/mmsys/mt8192-mmsys.c b/drivers/soc/medi=
+atek/mmsys/mt8192-mmsys.c
+> new file mode 100644
+> index 0000000..006d41d
+> --- /dev/null
+> +++ b/drivers/soc/mediatek/mmsys/mt8192-mmsys.c
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2020 MediaTek Inc.
+> +
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/mediatek/mtk-mmsys.h>
+> +
+> +#define MT8192_MMSYS_OVL_MOUT_EN               0xf04
+> +#define DISP_OVL0_GO_BLEND                             BIT(0)
+> +#define DISP_OVL0_GO_BG                                        BIT(1)
+> +#define DISP_OVL0_2L_GO_BLEND                          BIT(2)
+> +#define DISP_OVL0_2L_GO_BG                             BIT(3)
+> +#define MT8192_DISP_OVL0_2L_MOUT_EN            0xf18
+> +#define MT8192_DISP_OVL0_MOUT_EN               0xf1c
+> +#define OVL0_MOUT_EN_DISP_RDMA0                                BIT(0)
+> +#define MT8192_DISP_RDMA0_SEL_IN               0xf2c
+> +#define MT8192_RDMA0_SEL_IN_OVL0_2L                    0x3
+> +#define MT8192_DISP_RDMA0_SOUT_SEL             0xf30
+> +#define MT8192_RDMA0_SOUT_COLOR0                       0x1
+> +#define MT8192_DISP_CCORR0_SOUT_SEL            0xf34
+> +#define MT8192_CCORR0_SOUT_AAL0                                0x1
+> +#define MT8192_DISP_AAL0_SEL_IN                        0xf38
+> +#define MT8192_AAL0_SEL_IN_CCORR0                      0x1
+> +#define MT8192_DISP_DITHER0_MOUT_EN            0xf3c
+> +#define MT8192_DITHER0_MOUT_DSI0                       BIT(0)
+> +#define MT8192_DISP_DSI0_SEL_IN                        0xf40
+> +#define MT8192_DSI0_SEL_IN_DITHER0                     0x1
+> +#define MT8192_DISP_OVL2_2L_MOUT_EN            0xf4c
+> +#define MT8192_OVL2_2L_MOUT_RDMA4                      BIT(0)
+> +
+> +struct mmsys_path_sel {
+> +       enum mtk_ddp_comp_id cur;
+> +       enum mtk_ddp_comp_id next;
+> +       u32 addr;
+> +       u32 val;
+> +};
+> +
+> +static struct mmsys_path_sel mmsys_mout_en[] =3D {
+> +       {
+> +               DDP_COMPONENT_OVL_2L0, DDP_COMPONENT_RDMA0,
+> +               MT8192_DISP_OVL0_MOUT_EN, OVL0_MOUT_EN_DISP_RDMA0,
+> +       },
+> +       {
+> +               DDP_COMPONENT_OVL_2L2, DDP_COMPONENT_RDMA4,
+> +               MT8192_DISP_OVL2_2L_MOUT_EN, MT8192_OVL2_2L_MOUT_RDMA4,
+> +       },
+> +       {
+> +               DDP_COMPONENT_DITHER, DDP_COMPONENT_DSI0,
+> +               MT8192_DISP_DITHER0_MOUT_EN, MT8192_DITHER0_MOUT_DSI0,
+> +       },
+> +};
+> +
+> +static struct mmsys_path_sel mmsys_sel_in[] =3D {
+> +       {
+> +               DDP_COMPONENT_OVL_2L0, DDP_COMPONENT_RDMA0,
+> +               MT8192_DISP_RDMA0_SEL_IN, MT8192_RDMA0_SEL_IN_OVL0_2L,
+> +       },
+> +       {
+> +               DDP_COMPONENT_CCORR, DDP_COMPONENT_AAL0,
+> +               MT8192_DISP_AAL0_SEL_IN, MT8192_AAL0_SEL_IN_CCORR0,
+> +       },
+> +       {
+> +               DDP_COMPONENT_DITHER, DDP_COMPONENT_DSI0,
+> +               MT8192_DISP_DSI0_SEL_IN, MT8192_DSI0_SEL_IN_DITHER0,
+> +       },
+> +};
+> +
+> +static struct mmsys_path_sel mmsys_sout_sel[] =3D {
+> +       {
+> +               DDP_COMPONENT_RDMA0, DDP_COMPONENT_COLOR0,
+> +               MT8192_DISP_RDMA0_SOUT_SEL, MT8192_RDMA0_SOUT_COLOR0,
+> +       },
+> +       {
+> +               DDP_COMPONENT_CCORR, DDP_COMPONENT_AAL0,
+> +               MT8192_DISP_CCORR0_SOUT_SEL, MT8192_CCORR0_SOUT_AAL0,
+> +       }
+> +};
+> +
+> +static unsigned int mtk_mmsys_ddp_mout_en(enum mtk_ddp_comp_id cur,
+> +                                         enum mtk_ddp_comp_id next,
+> +                                         unsigned int *addr)
+> +{
+> +       u32 i;
+> +       struct mmsys_path_sel *path;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(mmsys_mout_en); i++) {
+> +               path =3D &mmsys_mout_en[i];
+> +               if (cur =3D=3D path->cur && next =3D=3D path->next) {
+> +                       *addr =3D path->addr;
+> +                       return path->val;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static unsigned int mtk_mmsys_ddp_sel_in(enum mtk_ddp_comp_id cur,
+> +                                        enum mtk_ddp_comp_id next,
+> +                                        unsigned int *addr)
+> +{
+> +       u32 i;
+> +       struct mmsys_path_sel *path;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(mmsys_sel_in); i++) {
+> +               path =3D &mmsys_sel_in[i];
+> +               if (cur =3D=3D path->cur && next =3D=3D path->next) {
+> +                       *addr =3D path->addr;
+> +                       return path->val;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void mtk_mmsys_ddp_sout_sel(void __iomem *config_regs,
+> +                                  enum mtk_ddp_comp_id cur,
+> +                                  enum mtk_ddp_comp_id next)
+> +{
+> +       u32 i;
+> +       u32 val =3D 0;
+> +       u32 addr =3D 0;
+> +       struct mmsys_path_sel *path;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(mmsys_sout_sel); i++) {
+> +               path =3D &mmsys_sout_sel[i];
+> +               if (cur =3D=3D path->cur && next =3D=3D path->next) {
+> +                       addr =3D path->addr;
+> +                       writel_relaxed(path->val, config_regs + addr);
+> +                       return;
+> +               }
+> +       }
+> +}
+> +
+> +static struct mtk_mmsys_conn_funcs mmsys_funcs =3D {
+> +       .mout_en =3D mtk_mmsys_ddp_mout_en,
+> +       .sel_in =3D mtk_mmsys_ddp_sel_in,
+> +       .sout_sel =3D mtk_mmsys_ddp_sout_sel,
+> +};
 
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index a32e60b024b8..d7bbd156a671 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -27,6 +27,7 @@ static void of_node_release(struct kobject *kobj)
- struct kobj_type of_node_ktype = {
- 	.release = of_node_release,
- };
-+EXPORT_SYMBOL_GPL(of_node_ktype);
- 
- static ssize_t of_node_property_read(struct file *filp, struct kobject *kobj,
- 				struct bin_attribute *bin_attr, char *buf,
--- 
-2.7.4
+I would like to do routing control like [1].
 
+[1] https://chromium-review.googlesource.com/c/chromiumos/third_party/kerne=
+l/+/2345186
+
+Regards,
+Chun-Kuang.
+
+> +
+> +static int mmsys_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +
+> +       mtk_mmsys_register_conn_funcs(dev->parent, &mmsys_funcs);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver mmsys_drv =3D {
+> +       .probe =3D mmsys_probe,
+> +       .driver =3D {
+> +               .name =3D "mt8192-mmsys",
+> +       },
+> +};
+> +
+> +builtin_platform_driver(mmsys_drv);
+> --
+> 1.8.1.1.dirty
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
