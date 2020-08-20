@@ -2,172 +2,206 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E4BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 17:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9A1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 18:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8DA20885
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 17:59:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="SaByE2Ro"
+	by mail.kernel.org (Postfix) with ESMTP id 99E5E2177B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 18:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597947024;
+	bh=Xz7+J4YXfIOcYj9qIJqviJzqUAQn9cy7fLC4U9Dy87o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=La6R7iI5l1OiFSbchpvdhgzdYtuFgQ055ccDkH8i7EgcqEMb/kkEl1piTLp9NiUSU
+	 ExRQaHatFCGBvgFXyXA/PxYeWQSk7JlhkiF6etMFCO3K3DqmYhf8oAZy0sbLa8GdpQ
+	 qO4PnLpEQ+V1TjxkYi6Llyl1eqluS7vLMcoiNFuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHTR7H (ORCPT
+        id S1726919AbgHTSKX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:59:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgHTR7F (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 13:59:05 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D3AC061386
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 10:59:05 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id x25so1414072pff.4
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 10:59:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XUwiiLpVjvrVKnV1nRDg0dHhuMTCGbT6M70Ypg9exF8=;
-        b=SaByE2RoULCCW6JlWROyMquIEwP8kFxel2Fnjirhj9Vcgup6oM7bw881SOcNbNyNBL
-         3FAIr/nKfgWRcfiH+ETGsJeXCqjggIpC29O46nfNrw52PX5WH2RRoQqAT2/HLV9+Qs2C
-         L+wWjkaH7qpuOppD4bQnJkTGda3xdpNKFbjWtw2OvOiKdH4RZPLCjNgQFiASx5asMt1Z
-         jypB06/FpQPj0zr8V1DfauVVeCjVKj3+FLmsPJzRN2T17I2Emkc++1D/XS5hqsYq+xLG
-         91Z9HRsAy+blk3bTFn7e0+af2m1cybzhmWxKSa3/EmoedQOC60VZFCIv58vvv9fNq0qQ
-         MuLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=XUwiiLpVjvrVKnV1nRDg0dHhuMTCGbT6M70Ypg9exF8=;
-        b=qWl5Tyr4E6v6o7HAIn2E6/04Uf0PufazN6tBVJQQqX26uCp5wYPJVTtGuSVKbqVklC
-         iJAmXB+iyRrGh5atoGbAUqnWQUvuAcMseXIk5B+44MTOT9qLo6k7WWeIchugXQU6O8DX
-         jLcUnMIjzaivqrBZiPycXLt7RDGxeT30CSQnDT2Vo4sm1ZUi1siqMJgGAqdvbSenHJ7f
-         JjQXEdO5o/gp9sEvhmSrko5jcZf/Vu6EbaQsznwJc5AOMSV0kZ38JJmGKM6uS4NFtW2G
-         bzyHnsZTqB+DuX7XuIYdA+xDeCI+6F5sDNwtM7ZnEx0XNb2N6QU+H6CVxcZJxFVQvG/O
-         Ui1Q==
-X-Gm-Message-State: AOAM530kvv7o/IGZZanhn+gFNEeoaNqfSmmgSkl2U8MWxjEEILZ1qTDR
-        5RnE/orUWH0hycuznLTrcjKoIQ==
-X-Google-Smtp-Source: ABdhPJyv5eJgAt0AMjgMs2+J1Lnu/M6su6SmEVB56dEhXO7V6lGWKo4QGVfYZFMrGACSUk5a7edyag==
-X-Received: by 2002:aa7:9535:: with SMTP id c21mr3105531pfp.322.1597946343878;
-        Thu, 20 Aug 2020 10:59:03 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id u65sm3503940pfb.102.2020.08.20.10.59.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 10:59:03 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 10:59:03 -0700 (PDT)
-X-Google-Original-Date: Thu, 20 Aug 2020 10:58:59 PDT (-0700)
-Subject:     Re: [PATCH v7 0/4] Dedicated CLINT timer driver
-In-Reply-To: <20200817124251.508183-1-anup.patel@wdc.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        robh+dt@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        anup@brainfault.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Anup Patel <Anup.Patel@wdc.com>
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Message-ID: <mhng-2e56e640-bd21-4534-97de-005e4071e3fe@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 20 Aug 2020 14:10:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbgHTSKV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:10:21 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2827120758;
+        Thu, 20 Aug 2020 18:10:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597947020;
+        bh=Xz7+J4YXfIOcYj9qIJqviJzqUAQn9cy7fLC4U9Dy87o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=H8PQZ0ggSnM9fon3QHenKERbysvEgkei4OOjundnwg6vvABTV5ymF65Gus0H75yhB
+         K5IwahiB5V1R9130f9+JW/oLLlzVmGwRaPqm9l1a5GqC60bo4ag6CvkapofNFjvusw
+         J0Bi98zS86W/Pdxn7b2fFlwdOZ+SznYaCJJ8Ms8o=
+Date:   Thu, 20 Aug 2020 13:10:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Daire.McNamara@microchip.com
+Cc:     robh@kernel.org, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, bhelgaas@google.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com
+Subject: Re: [PATCH v15 2/2] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+Message-ID: <20200820181018.GA1551400@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d007193ce73677713436c39684602f679d7623e4.camel@microchip.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 17 Aug 2020 05:42:47 PDT (-0700), Anup Patel wrote:
-> The current RISC-V timer driver is convoluted and implements two
-> distinct timers:
->  1. S-mode timer: This is for Linux RISC-V S-mode with MMU. The
->     clocksource is implemented using TIME CSR and clockevent device
->     is implemented using SBI Timer calls.
->  2. M-mode timer: This is for Linux RISC-V M-mode without MMU. The
->     clocksource is implemented using CLINT MMIO time register and
->     clockevent device is implemented using CLINT MMIO timecmp registers.
->
-> This patchset removes clint related code from RISC-V timer driver and
-> arch/riscv directory. Instead, the series adds a dedicated MMIO based
-> CLINT driver under drivers/clocksource directory which can be used by
-> Linux RISC-V M-mode (i.e NoMMU Linux RISC-V).
->
-> The patchset is based up Linux-5.9-rc1 and can be found at riscv_clint_v7
-> branch of: https://github.com/avpatel/linux.git
->
-> This series is tested on:
->  1. QEMU RV64 virt machine using Linux RISC-V S-mode
->  2. QEMU RV32 virt machine using Linux RISC-V S-mode
->  3. QEMU RV64 virt machine using Linux RISC-V M-mode (i.e. NoMMU)
->
-> Changes since v6:
->  - Rebased series on Linux-5.9-rc1
->
-> Changes since v5:
->  - Fixed order of compatible strings in PATCH4
->  - Added "additionalProperties: false" in PATCH4
->  - Fixed register space size for example DT node in PATCH4
->
-> Changes since v4:
->  - Rebased series on Linux-5.8-rc6
->  - Updated Kconfig option as suggested by Daniel in PATCH2
->  - Removed per-CPU registered flag in PATCH2
->  - Addressed nit comments from Atish in PATCH2
->
-> Changes since v3:
->  - Updated commit description of PATCH2
->  - Use clint_get_cycles64() in clint_rdtime() of PATCH2
->  - Call clockevents_config_and_register() only once for each CPU in
->    clint_timer_starting_cpu of PATCH2
->  - Select CLINT timer driver from platform Kconfig in PATCH3
->  - Fixed 'make dt_binding_check' for PATCH4
->
-> Changes since v2:
->  - Rebased series on Linux-5.8-rc5
->  - Squashed PATCH3 onto PATCH2 to preserve GIT bisectability
->  - Moved PATCH4 before PATCH2 to preserve GIT bisectability
->  - Replaced CLINT dt-bindings text document with YAML schema
->  - Use SiFive CLINT compatible string as per SiFive IP block versioning
->
-> Changes since v1:
->  - Rebased series on Linux-5.8-rc2
->  - Added pr_warn() for case where ipi_ops not available in PATCH1
->  - Updated ipi_inject() prototype to use "struct cpumask *" in PATCH1
->  - Updated CLINT_TIMER kconfig option to depend on RISCV_M_MODE in PATCH4
->  - Added riscv,clint0 compatible string in DT bindings document
->
-> Anup Patel (4):
->   RISC-V: Add mechanism to provide custom IPI operations
->   clocksource/drivers: Add CLINT timer driver
->   RISC-V: Remove CLINT related code from timer and arch
->   dt-bindings: timer: Add CLINT bindings
->
->  .../bindings/timer/sifive,clint.yaml          |  60 +++++
->  arch/riscv/Kconfig                            |   2 +-
->  arch/riscv/Kconfig.socs                       |   2 +
->  arch/riscv/configs/nommu_virt_defconfig       |   7 +-
->  arch/riscv/include/asm/clint.h                |  39 ---
->  arch/riscv/include/asm/smp.h                  |  19 ++
->  arch/riscv/include/asm/timex.h                |  28 +--
->  arch/riscv/kernel/Makefile                    |   2 +-
->  arch/riscv/kernel/clint.c                     |  44 ----
->  arch/riscv/kernel/sbi.c                       |  14 ++
->  arch/riscv/kernel/setup.c                     |   2 -
->  arch/riscv/kernel/smp.c                       |  44 ++--
->  arch/riscv/kernel/smpboot.c                   |   4 +-
->  drivers/clocksource/Kconfig                   |  12 +-
->  drivers/clocksource/Makefile                  |   1 +
->  drivers/clocksource/timer-clint.c             | 226 ++++++++++++++++++
->  drivers/clocksource/timer-riscv.c             |  17 +-
->  include/linux/cpuhotplug.h                    |   1 +
->  18 files changed, 371 insertions(+), 153 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/timer/sifive,clint.yaml
->  delete mode 100644 arch/riscv/include/asm/clint.h
->  delete mode 100644 arch/riscv/kernel/clint.c
->  create mode 100644 drivers/clocksource/timer-clint.c
+On Wed, Aug 19, 2020 at 04:33:10PM +0000, Daire.McNamara@microchip.com wrote:
 
-Thanks.  These are on fixes.
+> + *	pcie-altera.c
+> + */
+
+Add a blank line here.
+
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/module.h>
+
+> +static struct mc_port *port;
+
+This file scope item is not ideal.  It might work in your situation if
+you can never have more than one device, but it's not a pattern we
+want other people to copy.
+
+I think I sort of see how it works:
+
+  mc_pci_host_probe
+    pci_host_common_probe
+      ops = of_device_get_match_data()              # mc_ecam_ops
+      gen_pci_init(..., ops)
+        pci_ecam_create(..., ops)
+	  ops->init                                 # mc_ecam_ops.init
+	    mc_platform_init(pci_config_window *)
+	      port = devm_kzalloc(...)              # initialized
+    mc_setup_windows
+      bridge_base_addr = port->axi_base_addr + ...  # used
+
+And you're using the file scope "port" because mc_platform_init()
+doesn't have a pointer to the platform_device.  But I think this
+abuses the pci_ecam_ops design to do host bridge initialization that
+it is not intended for.
+
+I'd suggest copying the host bridge init design from somewhere else.
+tango_pcie_probe() also calls pci_host_common_probe(), so maybe that's
+a good place.  But the fact that it's the *only* such caller makes me
+think it might not be the best thing to copy.
+
+Rob has been working in this area and probably has better insight.
+
+> +static void mc_pcie_isr(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	struct mc_port *port = irq_desc_get_handler_data(desc);
+> +	struct device *dev = port->dev;
+> +	struct mc_msi *msi = &port->msi;
+> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
+> +	unsigned long status;
+> +	unsigned long intx_status;
+> +	unsigned long msi_status;
+> +	u32 bit;
+> +	u32 virq;
+> +
+> +	/*
+> +	 * The core provides a single interrupt for both INTx/MSI messages.
+> +	 * So we'll read both INTx and MSI status.
+> +	 */
+> +	chained_irq_enter(chip, desc);
+> +
+> +	status = readl_relaxed(bridge_base_addr + MC_ISTATUS_LOCAL);
+
+readl_relaxed() is defined to return a u32, so you might as well
+declare "status" and related things as u32 instead of "unsigned long".
+
+> +static void mc_pcie_enable_msi(struct mc_port *port, void __iomem *base)
+> +{
+> +	struct mc_msi *msi = &port->msi;
+> +	u32 cap_offset = MC_MSI_CAP_CTRL_OFFSET;
+> +
+
+Remove this blank line.  We usually just separate the automatic
+variables from the code with a blank line.
+
+> +	u16 msg_ctrl = readw_relaxed(base + cap_offset + PCI_MSI_FLAGS);
+
+> +static void mc_mask_intx_irq(struct irq_data *data)
+> +{
+> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
+> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
+> +	unsigned long flags;
+> +	u32 mask, val;
+> +
+> +	mask = PCIE_LOCAL_INT_ENABLE;
+> +	raw_spin_lock_irqsave(&port->intx_mask_lock, flags);
+> +	val = readl_relaxed(bridge_base_addr + MC_IMASK_LOCAL);
+> +	val &= ~mask;
+
+Why bother with "mask" here?  It's only used once; just use
+PCIE_LOCAL_INT_ENABLE directly.
+
+> +	writel_relaxed(val, bridge_base_addr + MC_IMASK_LOCAL);
+> +	raw_spin_unlock_irqrestore(&port->intx_mask_lock, flags);
+> +}
+> +
+> +static void mc_unmask_intx_irq(struct irq_data *data)
+> +{
+> +	struct mc_port *port = irq_data_get_irq_chip_data(data);
+> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
+> +	unsigned long flags;
+> +	u32 mask, val;
+> +
+> +	mask = PCIE_LOCAL_INT_ENABLE;
+> +	raw_spin_lock_irqsave(&port->intx_mask_lock, flags);
+> +	val = readl_relaxed(bridge_base_addr + MC_IMASK_LOCAL);
+> +	val |= mask;
+
+Here also.
+
+> +static int mc_platform_init(struct pci_config_window *cfg)
+> +{
+> +	struct device *dev = cfg->parent;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	void __iomem *bridge_base_addr;
+> +	void __iomem *ctrl_base_addr;
+> +	int ret;
+> +	u32 irq;
+> +	u32 val;
+> +
+> +	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+> +	if (!port)
+> +		return -ENOMEM;
+> +	port->dev = dev;
+> +
+> +	port->axi_base_addr = devm_platform_ioremap_resource(pdev, 1);
+> +	if (IS_ERR(port->axi_base_addr))
+> +		return PTR_ERR(port->axi_base_addr);
+> +
+> +	bridge_base_addr = port->axi_base_addr + MC_PCIE1_BRIDGE_ADDR;
+> +	ctrl_base_addr = port->axi_base_addr + MC_PCIE1_CTRL_ADDR;
+> +
+> +	port->msi.vector_phy = MC_MSI_ADDR;
+> +	port->msi.num_vectors = MC_NUM_MSI_IRQS;
+> +	ret = mc_pcie_init_irq_domains(port);
+> +	if (ret) {
+> +		dev_err(dev, "failed creating IRQ domains\n");
+> +		return ret;
+> +	}
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+
+platform_get_irq() returns "int".  You declared "irq" as "u32" above,
+so this check for failure won't work correctly.
+
+> +		dev_err(dev, "unable to request IRQ%d\n", irq);
+> +		return -ENODEV;
+> +	}
+
