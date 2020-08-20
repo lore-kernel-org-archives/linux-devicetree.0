@@ -2,239 +2,171 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A57C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC68C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74A05206B5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9352072D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="n4kbYVtX"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="neeziy8I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgHTQEl (ORCPT
+        id S1729701AbgHTQMT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:04:41 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52934 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729289AbgHTQEi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 12:04:38 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 96C1A23D;
-        Thu, 20 Aug 2020 18:04:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1597939474;
-        bh=F1VgKHw+BMI5X9Ve96ajPLFVLW5J8X9PUB53EKuKqxA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=n4kbYVtXeaUIUnJ4ZuVoUMubMqYwPBWTZS2o0RjbzX6Pw5el5VtQgE0MuhIqr8FR4
-         khFv4Lg1vNyN9qKRvxQFY+84adNrDwClsyCqsFBCLRFwFMs9xnt7Er4q31UqZH7qz9
-         rjj0eD/pciCIswASHbUoaAZkP0OGx7Esxhx0Ca6Y=
-Date:   Thu, 20 Aug 2020 19:04:16 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: mt9v111: Convert to json-schema
-Message-ID: <20200820160416.GW6593@pendragon.ideasonboard.com>
-References: <20200817160129.256085-1-jacopo+renesas@jmondi.org>
+        Thu, 20 Aug 2020 12:12:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61620 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729513AbgHTQMI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 12:12:08 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KG3gcx106903;
+        Thu, 20 Aug 2020 12:11:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=p4zPpqWUijmECTtxSBrlDcEiyLdOJEP1sRcpTvKaaYQ=;
+ b=neeziy8Inkoi8duXwtfdAFoS4/raQ/C/R/83hO3co8xGg3KBfUGBd9Wm+SNggmLlnlIL
+ O6UTN2ufn8+p4/80UlHNYpPpXXgz2pRrJES3rv2P8MAA70MfTB3sdBE8au8UB3w5vxlC
+ CQH5X6ksWdDjlapM2ZC9WUFwC+QuSKMOv9U5ai628Q55Wx+ETlkFGdugcH/ulNbQgMnW
+ 9vTVib3QIIw4w9C4PMsggYjh6J3APOnT5ZAOZSsdvPpKhcWCmIhwZPJTxeOCI9rXSXel
+ WSm/eW2p3PG/FJUvtKrE3rUF9M6TU0thdtYF+LUq/jUIZLtDModWx5kIm6F4ad3nXw/O QA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3317abb9bs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 12:11:58 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07KG4ERY109718;
+        Thu, 20 Aug 2020 12:11:58 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3317abb9b2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 12:11:57 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KG9atp016038;
+        Thu, 20 Aug 2020 16:11:56 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma02dal.us.ibm.com with ESMTP id 3304cd2wqy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 16:11:56 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KGBtEU37159196
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 16:11:55 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BE505112062;
+        Thu, 20 Aug 2020 16:11:55 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2854E112061;
+        Thu, 20 Aug 2020 16:11:54 +0000 (GMT)
+Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Aug 2020 16:11:54 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-input@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+        joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org,
+        brendanhiggins@google.com, dmitry.torokhov@gmail.com,
+        robh+dt@kernel.org, eajames@linux.ibm.com
+Subject: [PATCH 1/5] dt-bindings: input: Add documentation for IBM Operation Panel
+Date:   Thu, 20 Aug 2020 11:11:48 -0500
+Message-Id: <20200820161152.22751-2-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200820161152.22751-1-eajames@linux.ibm.com>
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200817160129.256085-1-jacopo+renesas@jmondi.org>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ malwarescore=0 suspectscore=1 spamscore=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200130
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Document the bindings for the IBM Operation Panel, which provides
+a simple interface to control a server. It has a display and three
+buttons.
+Also update MAINTAINERS for the new file.
 
-Thank you for the patch.
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ .../bindings/input/ibm,op-panel.yaml          | 38 +++++++++++++++++++
+ MAINTAINERS                                   |  6 +++
+ 2 files changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/ibm,op-panel.yaml
 
-On Mon, Aug 17, 2020 at 06:01:29PM +0200, Jacopo Mondi wrote:
-> Convert the mt9v111 bindings document to json-schema and update
-> the MAINTAINERS file accordingly.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../bindings/media/i2c/aptina,mt9v111.txt     | 46 ----------
->  .../bindings/media/i2c/aptina,mt9v111.yaml    | 83 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  3 files changed, 84 insertions(+), 47 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-> deleted file mode 100644
-> index bd896e9f67d1..000000000000
-> --- a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-> +++ /dev/null
-> @@ -1,46 +0,0 @@
-> -* Aptina MT9V111 CMOS sensor
-> -----------------------------
-> -
-> -The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
-> -based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
-> -
-> -The sensor has an active pixel array of 640x480 pixels and can output a number
-> -of image resolution and formats controllable through a simple two-wires
-> -interface.
-> -
-> -Required properties:
-> ---------------------
-> -
-> -- compatible: shall be "aptina,mt9v111".
-> -- clocks: reference to the system clock input provider.
-> -
-> -Optional properties:
-> ---------------------
-> -
-> -- enable-gpios: output enable signal, pin name "OE#". Active low.
-> -- standby-gpios: low power state control signal, pin name "STANDBY".
-> -  Active high.
-> -- reset-gpios: chip reset signal, pin name "RESET#". Active low.
-> -
-> -The device node must contain one 'port' child node with one 'endpoint' child
-> -sub-node for its digital output video port, in accordance with the video
-> -interface bindings defined in:
-> -Documentation/devicetree/bindings/media/video-interfaces.txt
-> -
-> -Example:
-> ---------
-> -
-> -        &i2c1 {
-> -                camera@48 {
-> -                        compatible = "aptina,mt9v111";
-> -                        reg = <0x48>;
-> -
-> -                        clocks = <&camera_clk>;
-> -
-> -                        port {
-> -                                mt9v111_out: endpoint {
-> -                                        remote-endpoint = <&ceu_in>;
-> -                                };
-> -                        };
-> -                };
-> -        };
-> diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
-> new file mode 100644
-> index 000000000000..54cc136aa239
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
-> @@ -0,0 +1,83 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/i2c/aptina,mt9v111.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Aptina MT9V111 CMOS sensor
-> +
-> +maintainers:
-> +  - Jacopo Mondi <jacopo@jmondi.org>
-> +
-> +description: -|
-> +  The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
-> +  based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
-> +
-> +  The sensor has an active pixel array of 640x480 pixels and can output a number
-> +  of image resolution and formats controllable through a simple two-wires
-
-s/resolution/resolutions/
-
-> +  interface.
-> +
-> +properties:
-> +  compatible:
-> +    const: aptina,mt9v111
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  enable-gpios:
-> +    description: Enable signal, pin name "OE#". Active low.
-> +    maxItems: 1
-> +
-> +  standby-gpios:
-> +    description: Low power state control signal, pin name "STANBY". Active high.
-
-s/STANBY/STANDBY/
-
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description: Chip reset signal, pin name "RESET#". Active low.
-> +    maxItems: 1
-> +
-> +  port:
-> +    type: object
-> +    description: |
-> +      The device node must contain one 'port' child node for its digital output
-> +      video port, in accordance with the video interface bindings defined in
-> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-
-Just "Output video port. See ../video-interfaces.txt." should be enough.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +
-> +    properties:
-> +      endpoint:
-> +        type: object
-> +        properties:
-> +          remote-endpoint:
-> +            description: A phandle to the bus receiver's endpoint node.
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - port
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        camera@48 {
-> +            compatible = "aptina,mt9v111";
-> +            reg = <0x48>;
-> +            clocks = <&camera_clk>;
-> +
-> +            port {
-> +                mt9v111_out: endpoint {
-> +                    remote-endpoint = <&ceu_in>;
-> +                };
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5392f00cec46..18bc4427e6b0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -11688,7 +11688,7 @@ M:	Jacopo Mondi <jacopo@jmondi.org>
->  L:	linux-media@vger.kernel.org
->  S:	Maintained
->  T:	git git://linuxtv.org/media_tree.git
-> -F:	Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
-> +F:	Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
->  F:	drivers/media/i2c/mt9v111.c
-> 
->  MULTIFUNCTION DEVICES (MFD)
-
+diff --git a/Documentation/devicetree/bindings/input/ibm,op-panel.yaml b/Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+new file mode 100644
+index 000000000000..86a32e8f3ef0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+@@ -0,0 +1,38 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/ibm,op-panel.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: IBM Operation Panel
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description: |
++  The IBM Operation Panel provides a simple interface to control the connected
++  server. It has a display and three buttons: two directional arrows and one
++  'Enter' button.
++
++properties:
++  compatible:
++    const: ibm,op-panel
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ibm-op-panel@62 {
++            compatible = "ibm,op-panel";
++            reg = <0x40000062>; /* I2C_OWN_SLAVE_ADDRESS */
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ac79fdbdf8d0..a9fd08e9cd54 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8278,6 +8278,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux.git
+ F:	Documentation/ia64/
+ F:	arch/ia64/
+ 
++IBM Operation Panel Input Driver
++M:	Eddie James <eajames@linux.ibm.com>
++L:	linux-input@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/input/ibm,op-panel.yaml
++
+ IBM Power 842 compression accelerator
+ M:	Haren Myneni <haren@us.ibm.com>
+ S:	Supported
 -- 
-Regards,
+2.26.2
 
-Laurent Pinchart
