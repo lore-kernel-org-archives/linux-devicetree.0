@@ -2,176 +2,96 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C62C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DAAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1482054F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 499A02076E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597923522;
+	bh=0zMYJ5oh5YMdX4pO293LF39UhxSYtvTe+EEHCB8h2oI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BdtqeftbUhuDGqCDg3gF2YUPCIo5xLoD9QNn2ZkPSUdRjX4r0aldbAqcq81kFA6T8
+	 clvLnfjF7xSKnKmB26IMTkzXYOSGLutBSOpJBonh7qC9DIjzerBCp5MItNlC9NZakF
+	 KJaxIeWTuYLox4koUZjU2M1y2OSYSTYRtQDxrQRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgHTLZe (ORCPT
+        id S1727926AbgHTLil (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:25:34 -0400
-Received: from mail-oo1-f67.google.com ([209.85.161.67]:42045 "EHLO
-        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgHTKGm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 06:06:42 -0400
-Received: by mail-oo1-f67.google.com with SMTP id a6so283925oog.9;
-        Thu, 20 Aug 2020 03:06:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7+CSk1ksXzy7e0WIknvr7+ji8pZUrOi3fj0VsGs4weY=;
-        b=EXA02wWQsI5YuePA3VIgOVGGfySn9Nyv6KRdADkev9beQf15igej8ZcJYwdAqafunl
-         0nsIU5GeAzT41tL22DqSVj4gQIu5wBPfuXQ7IETeOb8grj+SsQi+wQhqdPFXqGiAfH6N
-         Ttvqnk082JjN2O+MoPp92mbjJX8IxjFpAsJctnAwLaYKwtJYQjIBXMjtWu3NCsqp30Tr
-         rNWJb41EQnLC/jWn/D5C3yJtaik8lb2S8nKgiSbHxydfmsntX7uJ9fkW8+j03ouQdR3m
-         TecMTKvVw8NY7VAV9NrjaFfjOMPHX5cZ2mwlVZ6JAOtTMerYKbsSMBY2cxiU38z2M8gC
-         UEZQ==
-X-Gm-Message-State: AOAM533/sBcqedcM2+5wXRGK25XzmS3U+kk0LaYQ0ZYIPWH9w5dOwWvS
-        vC4KIEnasnMf+U30xZNwp9OwUBkqpL1iqX7W0RQ=
-X-Google-Smtp-Source: ABdhPJzLpZOD1rs1p3nBtT5EFxS48HiVxoTkLH06KtZW1eQSDDDuEahrzdmBlpsHmdngJPIb1mx3MtQK7PAdAm1yD5w=
-X-Received: by 2002:a4a:4201:: with SMTP id h1mr1818497ooj.1.1597918001038;
- Thu, 20 Aug 2020 03:06:41 -0700 (PDT)
+        Thu, 20 Aug 2020 07:38:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730563AbgHTLax (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:30:53 -0400
+Received: from localhost (cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net [82.37.168.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16321204EA;
+        Thu, 20 Aug 2020 11:30:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597923048;
+        bh=0zMYJ5oh5YMdX4pO293LF39UhxSYtvTe+EEHCB8h2oI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U3iLBpGFiwiloH/TS9/0Rd657qBi5S3FKwoNOZHTEHHpXKuJzRwGAwMhI/BBvYzDt
+         cb486WvZEEZELB18sEf6e5LV89N12ykeAr7RdHoszbAsJoXc5OsKZ7RWCqFCEyTqNr
+         fFOmEtNwtxyjRdBv1EYnFHIKQOHtwNbEVUgAFQJI=
+Date:   Thu, 20 Aug 2020 12:30:15 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     matthias.bgg@gmail.com, robh+dt@kernel.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
+Message-ID: <20200820113015.GB5854@sirena.org.uk>
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
 MIME-Version: 1.0
-References: <20200807141345.6714-1-geert+renesas@glider.be>
- <20200817233253.GA1819982@bogus> <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
-In-Reply-To: <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 20 Aug 2020 12:06:29 +0200
-Message-ID: <CAMuHMdWGu5+PYiYR9rdt97Hd1ribi0Yc0q68NBU6AFRBDCCg_g@mail.gmail.com>
-Subject: Re: [PATCH/RFC v2] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rJwd6BRFiFCcLxzm"
+Content-Disposition: inline
+In-Reply-To: <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Tue, Aug 18, 2020 at 9:10 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Tue, Aug 18, 2020 at 1:32 AM Rob Herring <robh@kernel.org> wrote:
-> > On Fri, Aug 07, 2020 at 04:13:45PM +0200, Geert Uytterhoeven wrote:
-> > > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
-> > > documentation to json-schema.
-> > >
-> > > Document missing properties.
-> > > Drop deprecated and obsolete #gpio-range-cells property.
-> > > Update the example to match reality.
-> > > Drop consumer examples, as they do not belong here.
-> > >
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > ---
-> > > Still RFC, due to the FIXMEs near the enum descriptions.
-> > > If I enable the enums checks, I get e.g.:
-> > >
-> > >     [[1800]] is not one of [1800, 3300]
-> > >
-> > > Note the double square brackets around 1800.
-> > > The usual error message doesn't have them, e.g.:
-> > >
-> > >     2000 is not one of [1800, 3300]
-> > >
-> > > So this looks like a bug in the tooling?
-> >
-> > Yes, we only recently started supporting schemas under
-> > 'additionalProperties', but failed to apply fixups.
-> >
-> > I have a fix I'm testing out. I'm bumping the version requirement in
-> > 5.10, so I'll make sure it is there.
->
-> Thanks, looking forward to it.
+--rJwd6BRFiFCcLxzm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I can confirm this is fixed in v2020.08.1.
+On Thu, Aug 20, 2020 at 03:53:42PM +0800, Gene Chen wrote:
 
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
->
-> > > +  interrupts-extended:
-> >
-> > Just use 'interrupts' here. 'interrupt-extended' is always magically
-> > supported.
->
-> Apparently not everywhere...
->
->     Documentation/devicetree/bindings/pinctrl/renesas,pfc.example.dt.yaml:
-> pin-controller@e6050000: 'interrupts' is a required property
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt6360-regulator
+> +
+> +  LDO_VIN3-supply:
+> +    description: Input supply phandle(s) for LDO3
+> +
 
-The existing fixup doesn't handle "required: interrupts"  if that is inside an
-if/then/else block.
+Only LDO3 needs a supply?
 
-> > > +additionalProperties:
-> > > +  anyOf:
-> > > +    - type: object
-> > > +      allOf:
-> > > +        - $ref: pincfg-node.yaml#
-> > > +        - $ref: pinmux-node.yaml#
-> > > +
-> > > +      description:
-> > > +        Pin controller client devices use pin configuration subnodes (children
-> > > +        and grandchildren) for desired pin configuration.
-> > > +        Client device subnodes use below standard properties.
-> > > +
-> > > +      properties:
-> > > +        phandle: true
-> >
-> > Once fixed, this won't be necessary.
->
-> OK.
+--rJwd6BRFiFCcLxzm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Seems to be still an issue in v2020.08.1?
+-----BEGIN PGP SIGNATURE-----
 
-> > > +        function: true
-> > > +        groups: true
-> > > +        pins: true
-> > > +        bias-disable: true
-> > > +        bias-pull-down: true
-> > > +        bias-pull-up: true
-> > > +        drive-strength:
-> > > +          true # FIXME enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of supported values
-> > > +          # avb:pins_mdio:drive-strength: [[24]] is not one of [3, 6, 9, 12, 15, 18, 21, 24]
-> > > +        power-source:
-> > > +          true # FIXME enum: [ 1800, 3300 ]
-> > > +          # sd0_uhs:power-source: [[1800]] is not one of [1800, 3300]
-> > > +        gpio-hog: true
-> > > +        gpios: true
-> > > +        input: true
-> > > +        output-high: true
-> > > +        output-low: true
-> > > +
-> > > +      additionalProperties: false
-> > > +
-> > > +    - type: object
-> > > +      properties:
-> > > +        phandle: true
-> >
-> > For this one, you can just link it back to the first entry:
-> >
-> > - type: object
-> >   additionalProperties:
-> >     $ref: "#/additionalProperties/anyOf/0"
->
-> Thanks, cool!
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8+XscACgkQJNaLcl1U
+h9AlBAf/Rg+0tMXV5si2xJ024erGWC2hIyYtwI3+xCyY9sHhRgfsHGL0OavnQmH1
+XrzrHV2HlLPBpDOAsKc9FlToTqLxXHp6mWHlyl0AUgadrSqjIJKXKk53jrbAbWIo
+fx5TFc4o+WblH6MYd5sXUo5l5yzwESjU1zoT67WS4rIt/oVKOn5+e2VRUA+Y3nsy
+ThaA4Y1uYFRnH0IMEjw6TrHwWCHmDsSPoiNhcmt1GyQYrbVuroV3Nz4iQNS8MJDN
+zntnN8oAuDDVkPHkrSyY33fmOfKO+p7myQ+M/fR7E7gZvCNWU0f2D0hBTTLOmwXJ
+skfkHi2rhY3HPyKehk56JaL72atI7Q==
+=vywJ
+-----END PGP SIGNATURE-----
 
-Works great!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--rJwd6BRFiFCcLxzm--
