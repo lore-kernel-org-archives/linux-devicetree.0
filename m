@@ -2,43 +2,44 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6BFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DABC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A821206FA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6531B206FA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgHTIwB (ORCPT
+        id S1725819AbgHTIwv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:52:01 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:58886 "EHLO honk.sigxcpu.org"
+        Thu, 20 Aug 2020 04:52:51 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:59042 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgHTIvF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:51:05 -0400
+        id S1725823AbgHTIwu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:52:50 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id C7F74FB07;
-        Thu, 20 Aug 2020 10:51:01 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id 5A1EEFB03;
+        Thu, 20 Aug 2020 10:52:48 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LCI2PGXCr712; Thu, 20 Aug 2020 10:51:00 +0200 (CEST)
+        with ESMTP id BdvBbg0DRbpX; Thu, 20 Aug 2020 10:52:47 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 83CC7457CB; Thu, 20 Aug 2020 10:50:59 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        id BFDC2457CB; Thu, 20 Aug 2020 10:52:46 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 10:52:46 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Martin Kepplinger <martink@posteo.de>,
         "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
         Dong Aisheng <aisheng.dong@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
@@ -50,47 +51,72 @@ To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Michael Walle <michael@walle.cc>,
-        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] arm64: dts: imx8mq: Add NWL DSI host controller to Librem 5 Devkit
-Date:   Thu, 20 Aug 2020 10:50:55 +0200
-Message-Id: <cover.1597913263.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.2
+        Olof Johansson <olof@lixom.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 3/3] arm64: defconfig: Enable imx8mq-librem5-devkit
+ display stack
+Message-ID: <20200820085246.GA7671@bogon.m.sigxcpu.org>
+References: <cover.1596025057.git.agx@sigxcpu.org>
+ <a98acb7a0ed2ee6af78ba08354740d69b63b8c53.1596025057.git.agx@sigxcpu.org>
+ <CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Fabio,
+On Thu, Aug 20, 2020 at 01:11:28AM -0300, Fabio Estevam wrote:
+> Hi Guido,
+> 
+> On Wed, Jul 29, 2020 at 9:19 AM Guido Günther <agx@sigxcpu.org> wrote:
+> >
+> > Enable the panel, NWL DSI host controller and dphy. This
+> > also needs the reset controller.
+> >
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  arch/arm64/configs/defconfig | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index e0f33826819f..608019f6408d 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -640,10 +640,12 @@ CONFIG_DRM_MSM=m
+> >  CONFIG_DRM_TEGRA=m
+> >  CONFIG_DRM_PANEL_LVDS=m
+> >  CONFIG_DRM_PANEL_SIMPLE=m
+> > -CONFIG_DRM_SIMPLE_BRIDGE=m
+> > +CONFIG_DRM_PANEL_SITRONIX_ST7703=m
+> >  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+> >  CONFIG_DRM_DISPLAY_CONNECTOR=m
+> > +CONFIG_DRM_NWL_MIPI_DSI=m
+> >  CONFIG_DRM_SII902X=m
+> > +CONFIG_DRM_SIMPLE_BRIDGE=m
+> 
+> One nit: I suppose the CONFIG_DRM_SIMPLE_BRIDGE=m move comes from a
+> defconfig re-sync.
+> 
+> Maybe this re-sync could be part of a separate patch?
 
-These patches add the NWL host controller to the imx8mq and make use of it on
-the Librem 5 Devkit enabling the built in MIPI DSI LCD panel.
+I've moved re-sync of the drm related bits to a separate patch in v2. I
+didn't do a full resync since this varies between kernel version but i
+can do that too - maybe against 5.9-rc1 if that helps.
 
-I opted to add imx8mq internal ports and endpoints between nwl and lcdif to the
-generic dtsi since those are SOC rather than board specific properties.
+> Thanks for adding these options to the defconfig so that we could have
+> MIPI DSI working by default on i.MX8M:
+> 
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> 
 
-Changes from v1
-- Add Reviewed-by from Fabio Estevam, thanks!
-  https://lore.kernel.org/linux-arm-kernel/CAOMZO5DUA5eS8apZPbte0EcSQ4Vwpg6YLK7D0YdjSUy+kdBu8Q@mail.gmail.com/
-  https://lore.kernel.org/linux-arm-kernel/CAOMZO5ANrd2JCmHyxZ0Sv0WNcU9T-q3MbaeADxbOwf+31MQ4LQ@mail.gmail.com/#t
-  https://lore.kernel.org/linux-arm-kernel/CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com/
-- As per review comment by Fabio Estevam
-  Re-sync DRM related defconfig bits. I didn't resyc the whole defconfig since
-  this is pretty much kernel version dependent.
-
-Guido GÃ¼nther (4):
-  arm64: dts: imx8mq: Add NWL MIPI DSI controller
-  arm64: dts: imx8mq-librem5-devkit: Enable the LCD panel
-  arm64: defconfig: re-sync DRM related defconfig bits
-  arm64: defconfig: Enable imx8mq-librem5-devkit display stack
-
- .../dts/freescale/imx8mq-librem5-devkit.dts   | 33 +++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq.dtsi     | 49 +++++++++++++++++++
- arch/arm64/configs/defconfig                  |  6 ++-
- 3 files changed, 87 insertions(+), 1 deletion(-)
-
--- 
-2.26.2
-
+Thanks!
+ -- Guido
