@@ -2,231 +2,271 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A48C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 05:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB8EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 06:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27FC020FC3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 05:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317F520855
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 06:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HEfyNLiU"
+	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="YXDGMyNB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbgHTF2f (ORCPT
+        id S1725798AbgHTGDk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgHTF2e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 01:28:34 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0DA7C061383
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 22:28:34 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q1so145986pjd.1
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 22:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TkqRaEwUdqUnb95WVdVlCchzd1qlKL9sLuvpdnztiiE=;
-        b=HEfyNLiUb9BwML/beUT//mZWp7qHeGG07YaD02RicYRn6Bl0q7qQyZZ4/8niITC+nE
-         n6OazTrtuuQpthpqGLbS+6gdm8SLsftJZqgSW0uL5xbLqeg9d+BZHWRYA2XL7D7xm9an
-         V23P3cIGtpKRCKyPxZY6SBHZtZqtDs4xuZlnw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TkqRaEwUdqUnb95WVdVlCchzd1qlKL9sLuvpdnztiiE=;
-        b=BGwmMZSwkXyT8F1i0LQZVgX5KAiSmy/1o+i0FieOWKzimgpqIctJzLvW6AqEsPX7Er
-         P4Gnwi4gwn0aBfhUHZs+bds7RpTiVnwBnRJ+fG5+0ZfKiS1OeScNDoeBYHJidZLsOq7O
-         HmkMlnvYSsJQdj0EypxZnThosrNaLhAWq6wCmcZ7/vxEmqNKKIZRWNZWMRITKLuIk4ta
-         fXAeev5U/wtct0IqExbufnzt0uI2BR4ltswxAeqaKUZkqYrOuwJ8ff/GQqO/yfEbxPQt
-         sJ5N/Eir+GhvgHtHZHBtX9RtENbUaUTsBAkK24PWAaatWw+d3hQjzPSdO1I3xmecVdoE
-         9yxw==
-X-Gm-Message-State: AOAM5310pYakbUcJtXSodZ5jBM6Z3x38ZjX4X1GYHy52FJZQxWW3HCOe
-        GIuxt7JrxT55kdlZjokZXzZADQ==
-X-Google-Smtp-Source: ABdhPJzG23peNv1YpN3uI1M3H6MtjjsKVYg0YIfEoz+DOlg57gm3MMONcE+5PjCcUZgPUVW9OXt/ow==
-X-Received: by 2002:a17:90a:6343:: with SMTP id v3mr1089145pjs.163.1597901314127;
-        Wed, 19 Aug 2020 22:28:34 -0700 (PDT)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
-        by smtp.gmail.com with ESMTPSA id j198sm1110740pfd.205.2020.08.19.22.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 22:28:33 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bayi Cheng <bayi.cheng@mediatek.com>,
-        Chuanhong Guo <gch981213@gmail.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH] dt-bindings: spi: Convert spi-mtk-nor to json-schema
-Date:   Thu, 20 Aug 2020 13:28:27 +0800
-Message-Id: <20200820052827.2642164-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+        Thu, 20 Aug 2020 02:03:40 -0400
+Received: from mail.intenta.de ([178.249.25.132]:27966 "EHLO mail.intenta.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbgHTGDj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 02:03:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
+        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=0XLVNPWz8tDGIE9C2XvjrUhbnc0IC5Ys+PTLQnJPhvM=;
+        b=YXDGMyNBKuLkUKeEA76gKFjGW1cS0+L4fQW7jWcunECDeMpr6pfjkagTfY8kFqv1dtB3i5iFMJlzyfEdX/RGQtP86XQnqfATJxxgnGqdBwlAi96HfXvgGH3YCdQ3xXhsXDabgQDFV+ouBPxYqCX1ySR8c+0MN/Ma8nD4VVNslt1FLI+lZ7KabJMaGlyDOsFdzKEv2Jl94S0/yKsnEYagQzfrEt6FitcRaXJYiqEOGt42Y+91tMV7QihbaNn7vlEUSXyO3QXTHtiAkGwD+IYC8lv8x8zaJyzxlOhkefM5k0eWEue7ehrgfMwqHJONtphOXjggQcl3Nuaa2mZd885ZJw==;
+Date:   Thu, 20 Aug 2020 08:03:33 +0200
+From:   Helmut Grohne <helmut.grohne@intenta.de>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>
+Subject: [RESEND PATCH] net: dsa: microchip: look for phy-mode in port nodes
+Message-ID: <20200820060331.GA23489@laureti-dev>
+References: <20200716100743.GA3275@laureti-dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200716100743.GA3275@laureti-dev>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
+ (10.10.16.48)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Mediatek ARM SOC's serial NOR flash controller binding
-to json-schema format.
+Documentation/devicetree/bindings/net/dsa/dsa.txt says that the phy-mode
+property should be specified on port nodes. However, the microchip
+drivers read it from the switch node.
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Let the driver use the per-port property and fall back to the old
+location with a warning.
+
+Fix in-tree users.
+
+Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
+Link: https://lore.kernel.org/netdev/20200617082235.GA1523@laureti-dev/
 ---
- .../bindings/spi/mediatek,spi-mtk-nor.yaml    | 82 +++++++++++++++++++
- .../devicetree/bindings/spi/spi-mtk-nor.txt   | 47 -----------
- 2 files changed, 82 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+ arch/arm/boot/dts/at91-sama5d2_icp.dts |  2 +-
+ drivers/net/dsa/microchip/ksz8795.c    | 17 +++++++++++-----
+ drivers/net/dsa/microchip/ksz9477.c    | 28 +++++++++++++++++---------
+ drivers/net/dsa/microchip/ksz_common.c | 13 +++++++++++-
+ drivers/net/dsa/microchip/ksz_common.h |  3 ++-
+ 5 files changed, 45 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
-new file mode 100644
-index 000000000000..1e4bcf691539
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
-@@ -0,0 +1,82 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/mediatek,spi-mtk-nor.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+Why resend?
+
+Andrew Lunn agreed to the semantic change performed in the patch, but
+not to the implementation. He asked for a simpler implementation. I
+attempted doing that, but it ultimately failed, because the knowledge of
+which port is the cpu port is not available at the time of parsing the
+device tree. I've documented my attempts and alternatives at
+https://lore.kernel.org/netdev/20200716100743.GA3275@laureti-dev/ and
+reached the conclusion that my initial implementation is the simplest
+option. Please reconsider including it.
+
+Helmut
+
+diff --git a/arch/arm/boot/dts/at91-sama5d2_icp.dts b/arch/arm/boot/dts/at91-sama5d2_icp.dts
+index 8d19925fc09e..6783cf16ff81 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_icp.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_icp.dts
+@@ -116,7 +116,6 @@
+ 		switch0: ksz8563@0 {
+ 			compatible = "microchip,ksz8563";
+ 			reg = <0>;
+-			phy-mode = "mii";
+ 			reset-gpios = <&pioA PIN_PD4 GPIO_ACTIVE_LOW>;
+ 
+ 			spi-max-frequency = <500000>;
+@@ -140,6 +139,7 @@
+ 					reg = <2>;
+ 					label = "cpu";
+ 					ethernet = <&macb0>;
++					phy-mode = "mii";
+ 					fixed-link {
+ 						speed = <100>;
+ 						full-duplex;
+diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
+index 8f1d15ea15d9..cae77eafd533 100644
+--- a/drivers/net/dsa/microchip/ksz8795.c
++++ b/drivers/net/dsa/microchip/ksz8795.c
+@@ -932,11 +932,18 @@ static void ksz8795_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_ENABLE, true);
+ 
+ 	if (cpu_port) {
++		if (!p->interface && dev->compat_interface) {
++			dev_warn(dev->dev,
++				 "Using legacy switch \"phy-mode\" missing on port %d node. Please update your device tree.\n",
++				 port);
++			p->interface = dev->compat_interface;
++		}
 +
-+title: Serial NOR flash controller for MediaTek ARM SoCs
-+
-+maintainers:
-+  - Bayi Cheng <bayi.cheng@mediatek.com>
-+  - Chuanhong Guo <gch981213@gmail.com>
-+
-+description: |
-+  This spi controller support single, dual, or quad mode transfer for
-+  SPI NOR flash. There should be only one spi slave device following
-+  generic spi bindings. It's not recommended to use this controller
-+  for devices other than SPI NOR flash due to limited transfer
-+  capability of this controller.
-+
-+allOf:
-+  - $ref: /spi/spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - mediatek,mt2701-nor
-+              - mediatek,mt2712-nor
-+              - mediatek,mt7622-nor
-+              - mediatek,mt7623-nor
-+              - mediatek,mt7629-nor
-+          - enum:
-+              - mediatek,mt8173-nor
-+      - items:
-+          - const: mediatek,mt8173-nor
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock used for spi bus
-+      - description: clock used for controller
-+
-+  clock-names:
-+    items:
-+      - const: "spi"
-+      - const: "sf"
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/mt8173-clk.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      nor_flash: spi@1100d000 {
-+        compatible = "mediatek,mt8173-nor";
-+        reg = <0 0x1100d000 0 0xe0>;
-+        interrupts = <&spi_flash_irq>;
-+        clocks = <&pericfg CLK_PERI_SPI>, <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+        clock-names = "spi", "sf";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        flash@0 {
-+          compatible = "jedec,spi-nor";
-+          reg = <0>;
-+        };
-+      };
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-deleted file mode 100644
-index 984ae7fd4f94..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* Serial NOR flash controller for MediaTek ARM SoCs
--
--Required properties:
--- compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
--		  and it's the fallback compatible for other Soc.
--		  For every other SoC, should contain both the SoC-specific compatible
--		  string and "mediatek,mt8173-nor".
--		  The possible values are:
--		  "mediatek,mt2701-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt2712-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt7622-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt7623-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt8173-nor"
--- reg: 		  physical base address and length of the controller's register
--- interrupts:	  Interrupt number used by the controller.
--- clocks: 	  the phandle of the clocks needed by the nor controller
--- clock-names: 	  the names of the clocks
--		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
--		  and "sf" is used for controller, these are the clocks witch
--		  hardware needs to enabling nor flash and nor flash controller.
--		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
--- #address-cells: should be <1>
--- #size-cells:	  should be <0>
--
--There should be only one spi slave device following generic spi bindings.
--It's not recommended to use this controller for devices other than SPI NOR
--flash due to limited transfer capability of this controller.
--
--Example:
--
--nor_flash: spi@1100d000 {
--	compatible = "mediatek,mt8173-nor";
--	reg = <0 0x1100d000 0 0xe0>;
--	interrupts = <&spi_flash_irq>;
--	clocks = <&pericfg CLK_PERI_SPI>,
--		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
--	clock-names = "spi", "sf";
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	flash@0 {
--		compatible = "jedec,spi-nor";
--		reg = <0>;
--	};
--};
--
+ 		/* Configure MII interface for proper network communication. */
+ 		ksz_read8(dev, REG_PORT_5_CTRL_6, &data8);
+ 		data8 &= ~PORT_INTERFACE_TYPE;
+ 		data8 &= ~PORT_GMII_1GPS_MODE;
+-		switch (dev->interface) {
++		switch (p->interface) {
+ 		case PHY_INTERFACE_MODE_MII:
+ 			p->phydev.speed = SPEED_100;
+ 			break;
+@@ -952,11 +959,11 @@ static void ksz8795_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 		default:
+ 			data8 &= ~PORT_RGMII_ID_IN_ENABLE;
+ 			data8 &= ~PORT_RGMII_ID_OUT_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_RXID)
+ 				data8 |= PORT_RGMII_ID_IN_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+ 				data8 |= PORT_RGMII_ID_OUT_ENABLE;
+ 			data8 |= PORT_GMII_1GPS_MODE;
+ 			data8 |= PORT_INTERFACE_RGMII;
+diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
+index dc999406ce86..32150c76d8f7 100644
+--- a/drivers/net/dsa/microchip/ksz9477.c
++++ b/drivers/net/dsa/microchip/ksz9477.c
+@@ -1208,7 +1208,7 @@ static void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 
+ 		/* configure MAC to 1G & RGMII mode */
+ 		ksz_pread8(dev, port, REG_PORT_XMII_CTRL_1, &data8);
+-		switch (dev->interface) {
++		switch (p->interface) {
+ 		case PHY_INTERFACE_MODE_MII:
+ 			ksz9477_set_xmii(dev, 0, &data8);
+ 			ksz9477_set_gbit(dev, false, &data8);
+@@ -1229,11 +1229,11 @@ static void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
+ 			ksz9477_set_gbit(dev, true, &data8);
+ 			data8 &= ~PORT_RGMII_ID_IG_ENABLE;
+ 			data8 &= ~PORT_RGMII_ID_EG_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_RXID)
+ 				data8 |= PORT_RGMII_ID_IG_ENABLE;
+-			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
+-			    dev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
++			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
++			    p->interface == PHY_INTERFACE_MODE_RGMII_TXID)
+ 				data8 |= PORT_RGMII_ID_EG_ENABLE;
+ 			p->phydev.speed = SPEED_1000;
+ 			break;
+@@ -1269,23 +1269,31 @@ static void ksz9477_config_cpu_port(struct dsa_switch *ds)
+ 			dev->cpu_port = i;
+ 			dev->host_mask = (1 << dev->cpu_port);
+ 			dev->port_mask |= dev->host_mask;
++			p = &dev->ports[i];
+ 
+ 			/* Read from XMII register to determine host port
+ 			 * interface.  If set specifically in device tree
+ 			 * note the difference to help debugging.
+ 			 */
+ 			interface = ksz9477_get_interface(dev, i);
+-			if (!dev->interface)
+-				dev->interface = interface;
+-			if (interface && interface != dev->interface)
++			if (!p->interface) {
++				if (dev->compat_interface) {
++					dev_warn(dev->dev,
++						 "Using legacy switch \"phy-mode\" missing on port %d node. Please update your device tree.\n",
++						 i);
++					p->interface = dev->compat_interface;
++				} else {
++					p->interface = interface;
++				}
++			}
++			if (interface && interface != p->interface)
+ 				dev_info(dev->dev,
+ 					 "use %s instead of %s\n",
+-					  phy_modes(dev->interface),
++					  phy_modes(p->interface),
+ 					  phy_modes(interface));
+ 
+ 			/* enable cpu port */
+ 			ksz9477_port_setup(dev, i, true);
+-			p = &dev->ports[dev->cpu_port];
+ 			p->vid_member = dev->port_mask;
+ 			p->on = 1;
+ 		}
+diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
+index 8d53b12d40a8..d96b7ab6bb15 100644
+--- a/drivers/net/dsa/microchip/ksz_common.c
++++ b/drivers/net/dsa/microchip/ksz_common.c
+@@ -389,6 +389,8 @@ int ksz_switch_register(struct ksz_device *dev,
+ {
+ 	phy_interface_t interface;
+ 	int ret;
++	struct device_node *port;
++	unsigned int port_num;
+ 
+ 	if (dev->pdata)
+ 		dev->chip_id = dev->pdata->chip_id;
+@@ -421,10 +423,19 @@ int ksz_switch_register(struct ksz_device *dev,
+ 	/* Host port interface will be self detected, or specifically set in
+ 	 * device tree.
+ 	 */
++	for (port_num = 0; port_num < dev->port_cnt; ++port_num)
++		dev->ports[port_num].interface = PHY_INTERFACE_MODE_NA;
+ 	if (dev->dev->of_node) {
+ 		ret = of_get_phy_mode(dev->dev->of_node, &interface);
+ 		if (ret == 0)
+-			dev->interface = interface;
++			dev->compat_interface = interface;
++		for_each_available_child_of_node(dev->dev->of_node, port) {
++			if (of_property_read_u32(port, "reg", &port_num))
++				continue;
++			if (port_num >= dev->port_cnt)
++				return -EINVAL;
++			of_get_phy_mode(port, &dev->ports[port_num].interface);
++		}
+ 		dev->synclko_125 = of_property_read_bool(dev->dev->of_node,
+ 							 "microchip,synclko-125");
+ 	}
+diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
+index 206838160f49..cf866e48ff66 100644
+--- a/drivers/net/dsa/microchip/ksz_common.h
++++ b/drivers/net/dsa/microchip/ksz_common.h
+@@ -39,6 +39,7 @@ struct ksz_port {
+ 	u32 freeze:1;			/* MIB counter freeze is enabled */
+ 
+ 	struct ksz_port_mib mib;
++	phy_interface_t interface;
+ };
+ 
+ struct ksz_device {
+@@ -72,7 +73,7 @@ struct ksz_device {
+ 	int mib_cnt;
+ 	int mib_port_cnt;
+ 	int last_port;			/* ports after that not used */
+-	phy_interface_t interface;
++	phy_interface_t compat_interface;
+ 	u32 regs_size;
+ 	bool phy_errata_9477;
+ 	bool synclko_125;
 -- 
-2.28.0.220.ged08abb693-goog
+2.20.1
 
