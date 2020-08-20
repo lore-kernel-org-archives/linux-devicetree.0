@@ -2,271 +2,90 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB8EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 06:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7C4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 06:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317F520855
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 06:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11DED20855
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 06:05:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intenta.de header.i=@intenta.de header.b="YXDGMyNB"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="M7TN0zI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbgHTGDk (ORCPT
+        id S1725793AbgHTGFh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 02:03:40 -0400
-Received: from mail.intenta.de ([178.249.25.132]:27966 "EHLO mail.intenta.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbgHTGDj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 02:03:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=intenta.de; s=dkim1;
-        h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:Subject:CC:To:From:Date; bh=0XLVNPWz8tDGIE9C2XvjrUhbnc0IC5Ys+PTLQnJPhvM=;
-        b=YXDGMyNBKuLkUKeEA76gKFjGW1cS0+L4fQW7jWcunECDeMpr6pfjkagTfY8kFqv1dtB3i5iFMJlzyfEdX/RGQtP86XQnqfATJxxgnGqdBwlAi96HfXvgGH3YCdQ3xXhsXDabgQDFV+ouBPxYqCX1ySR8c+0MN/Ma8nD4VVNslt1FLI+lZ7KabJMaGlyDOsFdzKEv2Jl94S0/yKsnEYagQzfrEt6FitcRaXJYiqEOGt42Y+91tMV7QihbaNn7vlEUSXyO3QXTHtiAkGwD+IYC8lv8x8zaJyzxlOhkefM5k0eWEue7ehrgfMwqHJONtphOXjggQcl3Nuaa2mZd885ZJw==;
-Date:   Thu, 20 Aug 2020 08:03:33 +0200
-From:   Helmut Grohne <helmut.grohne@intenta.de>
-To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jakub Kicinski" <kuba@kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>
-Subject: [RESEND PATCH] net: dsa: microchip: look for phy-mode in port nodes
-Message-ID: <20200820060331.GA23489@laureti-dev>
-References: <20200716100743.GA3275@laureti-dev>
+        Thu, 20 Aug 2020 02:05:37 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:1222 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725768AbgHTGFh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 02:05:37 -0400
+X-UUID: fa639e406d5642449f4a9beced0c2978-20200820
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=T3fsiKzAfuDkPTZGpq2v7PuBxfB9dzJbAW9KikxKdO4=;
+        b=M7TN0zI3dRlluag4g7IEiQO7vMY490hKEgFXTtrMeh7nR3xWmBsE45DTOMkTOMffyMbz4BeG7hnvfvOQZd9yu+0yXZpBl0XbqtXLoAicoQu88pBHy1YMGvMpGC992SfNKPliZyyh0h7AuVe50+3Kjul2Qy4X5p2mCmdvnGSMW/c=;
+X-UUID: fa639e406d5642449f4a9beced0c2978-20200820
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <yongqiang.niu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1472691088; Thu, 20 Aug 2020 14:05:34 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 20 Aug 2020 14:05:32 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 20 Aug 2020 14:05:31 +0800
+From:   Yongqiang Niu <yongqiang.niu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH v1 01/21] drm/mediatek: add component OVL_2L2
+Date:   Thu, 20 Aug 2020 14:03:58 +0800
+Message-ID: <1597903458-8055-2-git-send-email-yongqiang.niu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200716100743.GA3275@laureti-dev>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: ICSMA002.intenta.de (10.10.16.48) To ICSMA002.intenta.de
- (10.10.16.48)
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Documentation/devicetree/bindings/net/dsa/dsa.txt says that the phy-mode
-property should be specified on port nodes. However, the microchip
-drivers read it from the switch node.
-
-Let the driver use the per-port property and fall back to the old
-location with a warning.
-
-Fix in-tree users.
-
-Signed-off-by: Helmut Grohne <helmut.grohne@intenta.de>
-Link: https://lore.kernel.org/netdev/20200617082235.GA1523@laureti-dev/
----
- arch/arm/boot/dts/at91-sama5d2_icp.dts |  2 +-
- drivers/net/dsa/microchip/ksz8795.c    | 17 +++++++++++-----
- drivers/net/dsa/microchip/ksz9477.c    | 28 +++++++++++++++++---------
- drivers/net/dsa/microchip/ksz_common.c | 13 +++++++++++-
- drivers/net/dsa/microchip/ksz_common.h |  3 ++-
- 5 files changed, 45 insertions(+), 18 deletions(-)
-
-Why resend?
-
-Andrew Lunn agreed to the semantic change performed in the patch, but
-not to the implementation. He asked for a simpler implementation. I
-attempted doing that, but it ultimately failed, because the knowledge of
-which port is the cpu port is not available at the time of parsing the
-device tree. I've documented my attempts and alternatives at
-https://lore.kernel.org/netdev/20200716100743.GA3275@laureti-dev/ and
-reached the conclusion that my initial implementation is the simplest
-option. Please reconsider including it.
-
-Helmut
-
-diff --git a/arch/arm/boot/dts/at91-sama5d2_icp.dts b/arch/arm/boot/dts/at91-sama5d2_icp.dts
-index 8d19925fc09e..6783cf16ff81 100644
---- a/arch/arm/boot/dts/at91-sama5d2_icp.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_icp.dts
-@@ -116,7 +116,6 @@
- 		switch0: ksz8563@0 {
- 			compatible = "microchip,ksz8563";
- 			reg = <0>;
--			phy-mode = "mii";
- 			reset-gpios = <&pioA PIN_PD4 GPIO_ACTIVE_LOW>;
- 
- 			spi-max-frequency = <500000>;
-@@ -140,6 +139,7 @@
- 					reg = <2>;
- 					label = "cpu";
- 					ethernet = <&macb0>;
-+					phy-mode = "mii";
- 					fixed-link {
- 						speed = <100>;
- 						full-duplex;
-diff --git a/drivers/net/dsa/microchip/ksz8795.c b/drivers/net/dsa/microchip/ksz8795.c
-index 8f1d15ea15d9..cae77eafd533 100644
---- a/drivers/net/dsa/microchip/ksz8795.c
-+++ b/drivers/net/dsa/microchip/ksz8795.c
-@@ -932,11 +932,18 @@ static void ksz8795_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- 	ksz_port_cfg(dev, port, P_PRIO_CTRL, PORT_802_1P_ENABLE, true);
- 
- 	if (cpu_port) {
-+		if (!p->interface && dev->compat_interface) {
-+			dev_warn(dev->dev,
-+				 "Using legacy switch \"phy-mode\" missing on port %d node. Please update your device tree.\n",
-+				 port);
-+			p->interface = dev->compat_interface;
-+		}
-+
- 		/* Configure MII interface for proper network communication. */
- 		ksz_read8(dev, REG_PORT_5_CTRL_6, &data8);
- 		data8 &= ~PORT_INTERFACE_TYPE;
- 		data8 &= ~PORT_GMII_1GPS_MODE;
--		switch (dev->interface) {
-+		switch (p->interface) {
- 		case PHY_INTERFACE_MODE_MII:
- 			p->phydev.speed = SPEED_100;
- 			break;
-@@ -952,11 +959,11 @@ static void ksz8795_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- 		default:
- 			data8 &= ~PORT_RGMII_ID_IN_ENABLE;
- 			data8 &= ~PORT_RGMII_ID_OUT_ENABLE;
--			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--			    dev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+			    p->interface == PHY_INTERFACE_MODE_RGMII_RXID)
- 				data8 |= PORT_RGMII_ID_IN_ENABLE;
--			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--			    dev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+			    p->interface == PHY_INTERFACE_MODE_RGMII_TXID)
- 				data8 |= PORT_RGMII_ID_OUT_ENABLE;
- 			data8 |= PORT_GMII_1GPS_MODE;
- 			data8 |= PORT_INTERFACE_RGMII;
-diff --git a/drivers/net/dsa/microchip/ksz9477.c b/drivers/net/dsa/microchip/ksz9477.c
-index dc999406ce86..32150c76d8f7 100644
---- a/drivers/net/dsa/microchip/ksz9477.c
-+++ b/drivers/net/dsa/microchip/ksz9477.c
-@@ -1208,7 +1208,7 @@ static void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- 
- 		/* configure MAC to 1G & RGMII mode */
- 		ksz_pread8(dev, port, REG_PORT_XMII_CTRL_1, &data8);
--		switch (dev->interface) {
-+		switch (p->interface) {
- 		case PHY_INTERFACE_MODE_MII:
- 			ksz9477_set_xmii(dev, 0, &data8);
- 			ksz9477_set_gbit(dev, false, &data8);
-@@ -1229,11 +1229,11 @@ static void ksz9477_port_setup(struct ksz_device *dev, int port, bool cpu_port)
- 			ksz9477_set_gbit(dev, true, &data8);
- 			data8 &= ~PORT_RGMII_ID_IG_ENABLE;
- 			data8 &= ~PORT_RGMII_ID_EG_ENABLE;
--			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--			    dev->interface == PHY_INTERFACE_MODE_RGMII_RXID)
-+			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+			    p->interface == PHY_INTERFACE_MODE_RGMII_RXID)
- 				data8 |= PORT_RGMII_ID_IG_ENABLE;
--			if (dev->interface == PHY_INTERFACE_MODE_RGMII_ID ||
--			    dev->interface == PHY_INTERFACE_MODE_RGMII_TXID)
-+			if (p->interface == PHY_INTERFACE_MODE_RGMII_ID ||
-+			    p->interface == PHY_INTERFACE_MODE_RGMII_TXID)
- 				data8 |= PORT_RGMII_ID_EG_ENABLE;
- 			p->phydev.speed = SPEED_1000;
- 			break;
-@@ -1269,23 +1269,31 @@ static void ksz9477_config_cpu_port(struct dsa_switch *ds)
- 			dev->cpu_port = i;
- 			dev->host_mask = (1 << dev->cpu_port);
- 			dev->port_mask |= dev->host_mask;
-+			p = &dev->ports[i];
- 
- 			/* Read from XMII register to determine host port
- 			 * interface.  If set specifically in device tree
- 			 * note the difference to help debugging.
- 			 */
- 			interface = ksz9477_get_interface(dev, i);
--			if (!dev->interface)
--				dev->interface = interface;
--			if (interface && interface != dev->interface)
-+			if (!p->interface) {
-+				if (dev->compat_interface) {
-+					dev_warn(dev->dev,
-+						 "Using legacy switch \"phy-mode\" missing on port %d node. Please update your device tree.\n",
-+						 i);
-+					p->interface = dev->compat_interface;
-+				} else {
-+					p->interface = interface;
-+				}
-+			}
-+			if (interface && interface != p->interface)
- 				dev_info(dev->dev,
- 					 "use %s instead of %s\n",
--					  phy_modes(dev->interface),
-+					  phy_modes(p->interface),
- 					  phy_modes(interface));
- 
- 			/* enable cpu port */
- 			ksz9477_port_setup(dev, i, true);
--			p = &dev->ports[dev->cpu_port];
- 			p->vid_member = dev->port_mask;
- 			p->on = 1;
- 		}
-diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-index 8d53b12d40a8..d96b7ab6bb15 100644
---- a/drivers/net/dsa/microchip/ksz_common.c
-+++ b/drivers/net/dsa/microchip/ksz_common.c
-@@ -389,6 +389,8 @@ int ksz_switch_register(struct ksz_device *dev,
- {
- 	phy_interface_t interface;
- 	int ret;
-+	struct device_node *port;
-+	unsigned int port_num;
- 
- 	if (dev->pdata)
- 		dev->chip_id = dev->pdata->chip_id;
-@@ -421,10 +423,19 @@ int ksz_switch_register(struct ksz_device *dev,
- 	/* Host port interface will be self detected, or specifically set in
- 	 * device tree.
- 	 */
-+	for (port_num = 0; port_num < dev->port_cnt; ++port_num)
-+		dev->ports[port_num].interface = PHY_INTERFACE_MODE_NA;
- 	if (dev->dev->of_node) {
- 		ret = of_get_phy_mode(dev->dev->of_node, &interface);
- 		if (ret == 0)
--			dev->interface = interface;
-+			dev->compat_interface = interface;
-+		for_each_available_child_of_node(dev->dev->of_node, port) {
-+			if (of_property_read_u32(port, "reg", &port_num))
-+				continue;
-+			if (port_num >= dev->port_cnt)
-+				return -EINVAL;
-+			of_get_phy_mode(port, &dev->ports[port_num].interface);
-+		}
- 		dev->synclko_125 = of_property_read_bool(dev->dev->of_node,
- 							 "microchip,synclko-125");
- 	}
-diff --git a/drivers/net/dsa/microchip/ksz_common.h b/drivers/net/dsa/microchip/ksz_common.h
-index 206838160f49..cf866e48ff66 100644
---- a/drivers/net/dsa/microchip/ksz_common.h
-+++ b/drivers/net/dsa/microchip/ksz_common.h
-@@ -39,6 +39,7 @@ struct ksz_port {
- 	u32 freeze:1;			/* MIB counter freeze is enabled */
- 
- 	struct ksz_port_mib mib;
-+	phy_interface_t interface;
- };
- 
- struct ksz_device {
-@@ -72,7 +73,7 @@ struct ksz_device {
- 	int mib_cnt;
- 	int mib_port_cnt;
- 	int last_port;			/* ports after that not used */
--	phy_interface_t interface;
-+	phy_interface_t compat_interface;
- 	u32 regs_size;
- 	bool phy_errata_9477;
- 	bool synclko_125;
--- 
-2.20.1
+VGhpcyBwYXRjaCBhZGQgY29tcG9uZW50IE9WTF8yTDINCg0KU2lnbmVkLW9mZi1ieTogWW9uZ3Fp
+YW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIHwgMSArDQogaW5jbHVkZS9saW51eC9zb2Mv
+bWVkaWF0ZWsvbXRrLW1tc3lzLmggICAgICB8IDEgKw0KIDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNl
+cnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAu
+Yw0KaW5kZXggNTdjODhkZS4uNWU5N2NhNSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcF9jb21wLmMNCkBAIC00MDEsNiArNDAxLDcgQEAgc3RydWN0IG10a19kZHBf
+Y29tcF9tYXRjaCB7DQogCVtERFBfQ09NUE9ORU5UX09WTDFdCT0geyBNVEtfRElTUF9PVkwsCTEs
+IE5VTEwgfSwNCiAJW0REUF9DT01QT05FTlRfT1ZMXzJMMF0JPSB7IE1US19ESVNQX09WTF8yTCwJ
+MCwgTlVMTCB9LA0KIAlbRERQX0NPTVBPTkVOVF9PVkxfMkwxXQk9IHsgTVRLX0RJU1BfT1ZMXzJM
+LAkxLCBOVUxMIH0sDQorCVtERFBfQ09NUE9ORU5UX09WTF8yTDJdCT0geyBNVEtfRElTUF9PVkxf
+MkwsCTIsIE5VTEwgfSwNCiAJW0REUF9DT01QT05FTlRfUFdNMF0JPSB7IE1US19ESVNQX1BXTSwJ
+MCwgTlVMTCB9LA0KIAlbRERQX0NPTVBPTkVOVF9QV00xXQk9IHsgTVRLX0RJU1BfUFdNLAkxLCBO
+VUxMIH0sDQogCVtERFBfQ09NUE9ORU5UX1BXTTJdCT0geyBNVEtfRElTUF9QV00sCTIsIE5VTEwg
+fSwNCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstbW1zeXMuaCBi
+L2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1tbXN5cy5oDQppbmRleCA4OTE4NWM2Li4y
+NjhkOTVhIDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvbXRrLW1tc3lz
+LmgNCisrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1tbXN5cy5oDQpAQCAtMjks
+NiArMjksNyBAQCBlbnVtIG10a19kZHBfY29tcF9pZCB7DQogCUREUF9DT01QT05FTlRfT1ZMMCwN
+CiAJRERQX0NPTVBPTkVOVF9PVkxfMkwwLA0KIAlERFBfQ09NUE9ORU5UX09WTF8yTDEsDQorCURE
+UF9DT01QT05FTlRfT1ZMXzJMMiwNCiAJRERQX0NPTVBPTkVOVF9PVkwxLA0KIAlERFBfQ09NUE9O
+RU5UX1BXTTAsDQogCUREUF9DT01QT05FTlRfUFdNMSwNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
 
