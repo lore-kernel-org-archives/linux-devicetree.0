@@ -2,160 +2,74 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0806C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668F7C433EA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0679207FB
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wumWcYu2"
+	by mail.kernel.org (Postfix) with ESMTP id 3CE44207FB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgHTLqm (ORCPT
+        id S1726387AbgHTKDa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:46:42 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35512 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728936AbgHTLpG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 07:45:06 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07KBiLjh034621;
-        Thu, 20 Aug 2020 06:44:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597923861;
-        bh=KekPuX5bW5OV7WGA42Ji5+dWGwrpNIKAh0IFJGWPkgw=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=wumWcYu2C1Uab0K7/BhHt6am8WARnusXkgQxTV42cLperHvWAMr73TNd+wDsAw3wy
-         hNKVGdTP4DXYch+0pLpm6EayzBWxfb8hWJXgwCbJaBPkYV500cFpib37witpJiU5fe
-         I4uAGHEHelb5GRoGXgpVe6o/YlhZ9+BiuU3VMDj8=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07KBiLbD128554
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Aug 2020 06:44:21 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
- Aug 2020 06:44:20 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 20 Aug 2020 06:44:20 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07KBiK7d068400;
-        Thu, 20 Aug 2020 06:44:20 -0500
-Date:   Thu, 20 Aug 2020 06:44:20 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-CC:     <soc@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tero Kristo <t-kristo@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH] arm64: dts: Reformat PCI ranges/dma-ranges entries
-Message-ID: <20200820114420.sjlqvn2tbpa7vcbb@akan>
-References: <20200819221750.2055932-1-robh@kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jgbt6anitnjafjun"
-Content-Disposition: inline
-In-Reply-To: <20200819221750.2055932-1-robh@kernel.org>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 20 Aug 2020 06:03:30 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:34478 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729447AbgHTKCR (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:02:17 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 8B5101A054D;
+        Thu, 20 Aug 2020 12:02:15 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7ED111A05D5;
+        Thu, 20 Aug 2020 12:02:15 +0200 (CEST)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3936B202A0;
+        Thu, 20 Aug 2020 12:02:15 +0200 (CEST)
+From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
+To:     davem@davemloft.net, netdev@vger.kernel.org
+Cc:     kuba@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Subject: [PATCH] dt-bindings: net: correct description of phy-connection-type
+Date:   Thu, 20 Aug 2020 13:02:04 +0300
+Message-Id: <1597917724-11127-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: git-send-email 2.1.0
+Content-Type: text/plain; charset="us-ascii"
+Reply-to: madalin.bucur@oss.nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---jgbt6anitnjafjun
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The phy-connection-type parameter is described in ePAPR 1.1:
 
-On 16:17-20200819, Rob Herring wrote:
-> While bracketing doesn't matter for a DTB, the DT schema checks rely on
-[..]
-> ---
-> SoC maintainers, please apply this directly.
-	  [...]
-> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/d=
-ts/ti/k3-am65-main.dtsi
-> index 9edfae5944f7..2c762e725d89 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-> @@ -678,8 +678,8 @@ pcie0_rc: pcie@5500000 {
->  		power-domains =3D <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
->  		#address-cells =3D <3>;
->  		#size-cells =3D <2>;
-> -		ranges =3D <0x81000000 0 0          0x0 0x10020000 0 0x00010000
-> -			  0x82000000 0 0x10030000 0x0 0x10030000 0 0x07FD0000>;
-> +		ranges =3D <0x81000000 0 0          0x0 0x10020000 0 0x00010000>,
-> +			 <0x82000000 0 0x10030000 0x0 0x10030000 0 0x07FD0000>;
->  		ti,syscon-pcie-id =3D <&pcie_devid>;
->  		ti,syscon-pcie-mode =3D <&pcie0_mode>;
->  		bus-range =3D <0x0 0xff>;
-> @@ -710,8 +710,8 @@ pcie1_rc: pcie@5600000 {
->  		power-domains =3D <&k3_pds 121 TI_SCI_PD_EXCLUSIVE>;
->  		#address-cells =3D <3>;
->  		#size-cells =3D <2>;
-> -		ranges =3D <0x81000000 0 0          0x0   0x18020000 0 0x00010000
-> -			  0x82000000 0 0x18030000 0x0   0x18030000 0 0x07FD0000>;
-> +		ranges =3D <0x81000000 0 0          0x0   0x18020000 0 0x00010000>,
-> +			 <0x82000000 0 0x18030000 0x0   0x18030000 0 0x07FD0000>;
->  		ti,syscon-pcie-id =3D <&pcie_devid>;
->  		ti,syscon-pcie-mode =3D <&pcie1_mode>;
->  		bus-range =3D <0x0 0xff>;
+Specifies interface type between the Ethernet device and a physical
+layer (PHY) device. The value of this property is specific to the
+implementation.
 
-For the TI chunk:
-Acked-by: Nishanth Menon <nm@ti.com>
---=20
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5=
- 849D 1736 249D
+Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+---
+ Documentation/devicetree/bindings/net/ethernet-controller.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---jgbt6anitnjafjun
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+index 1c4474036d46..fa2baca8c726 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
+@@ -54,7 +54,8 @@ properties:
+ 
+   phy-connection-type:
+     description:
+-      Operation mode of the PHY interface
++      Specifies interface type between the Ethernet device and a physical
++      layer (PHY) device.
+     enum:
+       # There is not a standard bus between the MAC and the PHY,
+       # something proprietary is being used to embed the PHY in the
+-- 
+2.1.0
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE+KKGk1TrgjIXoxo03bWEnRc2JJ0FAl8+YgwACgkQ3bWEnRc2
-JJ0WIg//YBZVg8WDT/O8r7i2UkktHsq0s0v55hHAOfcl47v8FQtw84RgUhFCn+9i
-U/VpPbU7ZvIUlpbADflEHrnXkYfhikLBFJ90DEde63M1DkFyvjnMXJVImmuiK7E7
-WbWZpo21fRKfbFje9l6upMgfiM4ZB7GS/NkKssavEX22oaG5+GTjNjEI1EJijNG/
-K0hD2jvRdQ59eyfdvKL8ezXthEaJdCyWuREOKCsE/VUDHC/KgXcpZjLA7BICegYn
-J/UeEhSJGtV2UaUkU621yg3gRF2f7on236lG4cs4QnYIzACww4MA2r3UdM+zsOI0
-RJR8/LbNzBtfzPUmyQldvvBKQ80HtgMe0jhuFGflT4rjzbMQXYbOdIFR0A2Jhw2/
-tt2YH0rmxV3rhRLsPtcmltMQW/2iccVbvHZaz8xQ9HirP2XaAvhTUfG5ayFTD3jb
-uxU9HV/SMapoo56gvFRkg09K4vNAtTwc8TZLOo29FbKSv0+PUXFDBODeygVgNYxL
-RI8OFjIgAiWTgAow/5CNkPwKLjR7F/dMj5T2hX1WVjwD5ds1bdl6dJP6WejEs3OU
-iEYUy5PR23cZoVrH6V4FMcyWv/6D+7C8UzHIqzkUulviPpSofpb8muTAlsyAe9gx
-YZPxS3DHyObqDoJbspVmD2acwVGz6KQBvvyEqvsC42qkJ0T5ByA=
-=TsAH
------END PGP SIGNATURE-----
-
---jgbt6anitnjafjun--
