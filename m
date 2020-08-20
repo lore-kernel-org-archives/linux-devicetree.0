@@ -2,177 +2,105 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78870C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 03:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231AEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 04:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4582D208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 03:28:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8C042076E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 04:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sba2bQKZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+IMfnfO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgHTD26 (ORCPT
+        id S1725468AbgHTED1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 23:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        Thu, 20 Aug 2020 00:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbgHTD26 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 23:28:58 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589CAC061757
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 20:28:57 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id v6so358862ota.13
-        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 20:28:57 -0700 (PDT)
+        with ESMTP id S1725290AbgHTEDY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 00:03:24 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521BCC061757;
+        Wed, 19 Aug 2020 21:03:23 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m22so660298ljj.5;
+        Wed, 19 Aug 2020 21:03:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fF+dRt58CyDJkqe2eFqFPurhOlRy+MhyKYgh/jsdn+Q=;
-        b=sba2bQKZNNe3zs7DYGbWWnjDeDgJKgdgFl32qpVY2IcZo+5it6qr30pLargiHNS1VF
-         9N2ljSuI1xb3X3jUO3hdYU4FwW/zbxBKCLHKGFFsylv7KVY9AwKKe/OCHH7ah7bgWAFP
-         0V/R+fYE35vhDbNT1QyHmR93yxMFHFfQuxa+rksura1/kna69BSVHKM97tFjQwmJg6Xu
-         1e73cN9AHHnV7VLtkVZmiIYzq2UYw7luIiq9vXs3LcbNgGTzGCdWCnbhSJyxl00LgsnJ
-         hcclkwsEGFVhEzVEODFZJQ+fBkc8rglEjeeUhLVeARy2aLUwp5EkeZXVFgo5EOUBJLA9
-         mH3Q==
+         :cc:content-transfer-encoding;
+        bh=6OYjRa2YFAp9GJDPztH9gcNTvoIcykOgM6tlkjols9M=;
+        b=W+IMfnfO0neSwKeVFbvWDeuWIRAvdaVfvcDLXJJ41lTXU7iPndyA9PLt28yD9GMKe4
+         C4HBzhGytXnftGN6bZUSUvWof472d4B6Dz1pquvg+xhwsp7SDdnVU634hM4h9LSiuAH9
+         hmYTr4EItQSteN4PSjXLv4iJZ5WBNrll3N34ayRio9FL+fQV3Z7wtCHpcFoRyiiHc5GP
+         RJgjqRE14sD/Yvn8YW856kH0e0A6p7Rq2lZQTTiyAnyZ6dHN4H6DV9YibWOcRpyfFdsR
+         /jeOEvyOo8NLtQGxywbWEiQLpDjdlChuCufX2VNDLcK1dzVZyxE/CK6Om5vn3HkvqL7F
+         1pRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fF+dRt58CyDJkqe2eFqFPurhOlRy+MhyKYgh/jsdn+Q=;
-        b=tDKWL2sW0KfKgutuUV08tRrJISRNhTwsHjz7+EWg1dLDMYFuIZGcU2DvR11arScryG
-         zRXFgV8SFlQvfGU7l/zEqIxGYvrJ+sDD5hXQiJWeAANwDXWIprEh0OmX2sI4jTxS8W9Z
-         AJoUfs1ILxF4q4QEpn4skwbnvGkABk0IOyx6NFBNTJyNRQ9hFNCkIuWJleixalgeYZmS
-         EQ6k5g2mnjq79QnPWrxtI+G4y5ucwLaoIRbZmXUeN7WfbwxXJFCGiVZtdub9YKPjfExN
-         17J0x1dJlyZls8NrpPNHwS8yJ/a9M5EUWIjcvqLyrJjz8SKJ6FW27m5rP4ukbMiMdlz3
-         ijHw==
-X-Gm-Message-State: AOAM530vtnYJFLXfgHRXDcLTLdcwAxj8CLIuzanbAnWSHPBmWGyPFTAz
-        iUjz61lhzZDVl0Zr4EdLrYmGvWrcyI0As+LpDZyGGQNLnZo=
-X-Google-Smtp-Source: ABdhPJxZ7nw2s4Dxik9WLGdcKtJi9XiOGz8t6RoivsF5sQizqu4GALCfVQirCeiffIuh9kOf+5CS/1tORO2ndusgNc4=
-X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr722568oth.352.1597894136679;
- Wed, 19 Aug 2020 20:28:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6OYjRa2YFAp9GJDPztH9gcNTvoIcykOgM6tlkjols9M=;
+        b=JjitZN5izmwCG2Nm6EW0cQuhA9PZBUYSvZaaqGHj7f8NwqhPC/FuJmXW9J+CutJ8mN
+         mghy9Ev/4RlnPpX1rZNvdm+sXuM4ZFajdkHFY9zc+gg2qp2SETqA1eLP5AwS6KJGnedF
+         0nIBbekBV7123xt7jKH9D9cpmETX9mx62b1BkVEBlrRKlGjptRIMs7xZyuLQ7xlO2GYu
+         W9tR8dbkNaTARMlINQ3c/ejk5gi2ZZssyRp/SXm4h+YxN+uAyfnoapS2oZjtfn4WFV9o
+         N0eJqpCjA8W6IU+a8L3UwhiiIZl0h1FetteyyxVnW/6HTtf4lvWdZQKFAJ/OJCdoTEiR
+         eBOw==
+X-Gm-Message-State: AOAM530TbEP55yODI4n6CQ9U0uCzxeJGQoL9hSN+mEw7yM7inZ/5RR66
+        Ci/fkY3lE3GAKcusI2LFaZjgUwTGv4xfRYlvG3k=
+X-Google-Smtp-Source: ABdhPJx1X9zOEzqgLSjQ4E93SffXxZgVfkOs9yIT7X25hcIxRXMs+MjFFkiDnYKpp5gtJYO1b/QtmjlOzyx0/o2H6gw=
+X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr641018ljb.452.1597896202260;
+ Wed, 19 Aug 2020 21:03:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com> <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
-In-Reply-To: <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 19 Aug 2020 20:28:44 -0700
-Message-ID: <CALAqxLULQvW3UikCHpEzSDnpeYnBy8wDSsWZNbSrmivQTW3_Sg@mail.gmail.com>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Liuyao An <anliuyao@huawei.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
+References: <cover.1596025057.git.agx@sigxcpu.org> <41adfe49c75d8bb261dc8d481e9bb537f6699cb4.1596025057.git.agx@sigxcpu.org>
+In-Reply-To: <41adfe49c75d8bb261dc8d481e9bb537f6699cb4.1596025057.git.agx@sigxcpu.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 20 Aug 2020 01:03:10 -0300
+Message-ID: <CAOMZO5DUA5eS8apZPbte0EcSQ4Vwpg6YLK7D0YdjSUy+kdBu8Q@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] arm64: dts: imx8mq: Add NWL MIPI DSI controller
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Li Jun <jun.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Walle <michael@walle.cc>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 7:01 PM John Stultz <john.stultz@linaro.org> wrote:
+Hi Guido,
+
+On Wed, Jul 29, 2020 at 9:19 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 >
-> On Wed, Aug 19, 2020 at 2:36 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
-> > <mchehab+huawei@kernel.org> wrote:
-> > > So, IMO, the best is to keep it on staging for a while, until those
-> > > remaining bugs gets solved.
-> > >
-> > > I added this series, together with the regulator driver and
-> > > a few other patches (including a hack to fix a Kernel 5.8
-> > > regression at WiFi ) at:
-> > >
-> > >         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master
-> >
-> > Sorry, one more small request: Could you create a branch that only has
-> > the DRM driver changes in it?
-> >
-> > The reason I ask, is that since the HiKey960 isn't affected by the
-> > majority of the problems you listed as motivation for going through
-> > staging. So if we can validate that your tree works fine on HiKey960,
-> > the series can be cleaned up and submitted properly upstream to enable
-> > that SoC, and the outstanding 970 issues can be worked out afterwards
-> > against mainline.
+> Add a node for the Northwest Logic MIPI DSI IP core, "disabled" by
+> default. This also adds the necessary port to LCDIF.
 >
-> Just as a heads up, I tried testing your tree with my HiKey960, and
-> after fixing the compat string inconsistency, the drivers seem to load
-> properly. However the drm_hwcomposer seems to have some trouble with
-> the driver:
-> 01-01 00:12:41.456   345   345 E hwc-drm-display-compositor: Commit
-> test failed for display 0, FIXME
-> 01-01 00:12:41.456   345   345 E hwc-drm-two: Failed to apply the
-> frame composition ret=-22
-> 01-01 00:12:41.456   351   351 E HWComposer:
-> presentAndGetReleaseFences: present failed for display 0: BadParameter
-> (4)
->
-> I'll dig in a bit further as to why, but wanted to give you a heads up.
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
 
-Ok, I've mostly gotten it sorted out:
-  - You're missing a few color formats.
-  - And I re-discovered a crash that was already fixed in my tree.
-
-I'll send those patches in a few here.
-
-That said even with the patches I've got on top of your series, I
-still see a few issues:
-1) I'm seeing red-blue swap with your driver.  I need to dig a bit to
-see what the difference is, I know gralloc has a config option for
-this, and maybe the version of the driver I'm carrying has it wrong?
-2) Performance is noticeably worse. Whereas with my tree, I see close
-to 60fps (that clk issue we mentioned earlier is why it's not exactly
-60) in most tests, but with yours it mostly hovers around 30some fps,
-occasionally speeding up to 40 and then back down.
-
-Obviously with some work I suspect we'll be able to sort these out,
-but I also do feel that the set you're starting with for upstreaming
-is pretty old. The driver I'm carrying was heavily refactored around
-5.0 to share code with the existing kirin driver, in the hopes of
-making usptreaming easier, and it seems a shame to throw that out and
-focus your efforts on the older tree.
-
-But to be fair, I've not had time to upstream the driver myself, and
-it's obviously your choice on how you spend your time.  I am really
-excited to see your efforts here, regardless of which driver you end
-up pushing.
-
-thanks
--john
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
