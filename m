@@ -2,191 +2,380 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 00:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563B9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 00:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A82F2075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 00:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BB2C2075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 00:49:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WO+SswXM"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="f2C41QlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHTAsc (ORCPT
+        id S1726823AbgHTAte (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:48:32 -0400
-Received: from mail-am6eur05on2079.outbound.protection.outlook.com ([40.107.22.79]:47009
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726609AbgHTAsb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:48:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZaRqSl65PfaijeW8euVUF0TpmlH9YXo1pWozTd6VCRSMR5AeNLjFNtNBrEy/QbxgE4HoGuonJmvlJ2/wcXF+iHFW+k7wxq+TDNI39Fc9pdFAaoNlXA1HReFa3INbdVx24l6pw5V35S2UuJIInFMvpVa5qluqX21Z1ssUHo2vHOuv5X4NE98TLdkaqG2Gfx3N+/ZKIzzYapMF2NFnwEeLgkbid8w4W51okbV79cs8TMb408Iy1FLwsVk2rq65/vIp5nP23EB6THmcc3d8uz2ku4iuNG8VS03KcHCJv5XhEEvXCqP70J8P6BpMWadvkZVtt5kUqhUeKtA1Jk8tiOryYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yOP1jsm8Tj3stkwYE1O8CRdd1hAGCh+Z8E1Fp2yvoKc=;
- b=Wn2WZ88QKUCRVV91Rea6w9IY8m/icYADAQ0ak4TQ1x0F+EGtsIx2JurXSJeYOvkelOnslqx4xD/Q48nMFsCuZFMvm6TPjIU+sfv238gkVX6I0woR9KyBZ308emfQZm1u7BQer+pq6GnLAsyghcjE8AWkyz66ou9LWbiFJ2Ut9H1cdvXwrL8MNO/OoFLuL3Lf0wtiAdHwZ42CmptGLqTrz44sRnL1uq3n/o+uCH29HgFn2eKoWnwxEbXcWqvB5TmktSvvIxkiOI77JnAXNEhu0mHeZexZ4k6ETkUFXfAHZypy3LO1E51EKA0z7gCWQv4jZZjUhfcf/kIupwbWjAAlBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yOP1jsm8Tj3stkwYE1O8CRdd1hAGCh+Z8E1Fp2yvoKc=;
- b=WO+SswXMoEjtj+uSgEn/Nvl0eQUkJX4MpxrG8u5Zqy12IDNHWVeH42FnO1o2px9miG7p2ACIhT3VqBFZJD3w87U8WgGcDvDYbpX8KZabFSX+yt3JkpbK4FEHUIirwcTM6tosuIgf1YW+2SPQfVS5lbBNI4aChEWCqQ21b/iH1fM=
-Received: from AM0PR04MB4915.eurprd04.prod.outlook.com (2603:10a6:208:c5::20)
- by AM0PR04MB6756.eurprd04.prod.outlook.com (2603:10a6:208:179::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
- 2020 00:48:24 +0000
-Received: from AM0PR04MB4915.eurprd04.prod.outlook.com
- ([fe80::8de5:80f:f11a:5fa3]) by AM0PR04MB4915.eurprd04.prod.outlook.com
- ([fe80::8de5:80f:f11a:5fa3%7]) with mapi id 15.20.3305.024; Thu, 20 Aug 2020
- 00:48:24 +0000
-From:   Jacky Bai <ping.bai@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 3/3] arm64: dts: imx8mm: Add imx8mm ddr4 evk board support
-Thread-Topic: [PATCH 3/3] arm64: dts: imx8mm: Add imx8mm ddr4 evk board
- support
-Thread-Index: AQHWZKskj+IOA/fFIEWfxpXxpSSkcqk/l3YAgACsuiA=
-Date:   Thu, 20 Aug 2020 00:48:24 +0000
-Message-ID: <AM0PR04MB4915742FE24F711C400581FA875A0@AM0PR04MB4915.eurprd04.prod.outlook.com>
-References: <1595918641-2325-1-git-send-email-ping.bai@nxp.com>
- <1595918641-2325-3-git-send-email-ping.bai@nxp.com>
- <20200819134852.GD7114@dragon>
-In-Reply-To: <20200819134852.GD7114@dragon>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fbc18a06-16dd-4bcc-5b39-08d844a2be7e
-x-ms-traffictypediagnostic: AM0PR04MB6756:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6756713AE0F89F685D174E2C875A0@AM0PR04MB6756.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9Vf8lI6O/duOeTbsldJ2j/+mwrZE+wmDOMyqy7didKpmiKknI6qShoeAuIZkygB/X/Kz0Hc9hR6NbX47sf2ZLxTCLZPwvd3Vp6g0i8be9624XYkz/kPAzZ1cX12N74+5MCCDBgV6fwxZMCdFFtN4ysl0lns9+Z12yv+tlhvLT2JDapCpNEFhRPlAnvurCsLrvEeno7LIgsMXZMLuVJ+r0UW/JDa9e/9Wjk9Y1SCJDtcl9VgY8awit9PhjsZzZ8+pW4YbDcrKMX3OLSYk1ouucAqLDuXSsMiH4adiWYLNgueTUzsOiRTU+Q41uicSPePU7nv2aTqi7BZusGzfAx+cSgl7JFtmRyVAryjJODYR2W2XBtjWmob41uTRXFp/czon
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4915.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(396003)(39860400002)(376002)(346002)(66446008)(2906002)(9686003)(66476007)(6506007)(64756008)(55016002)(76116006)(66946007)(4326008)(7696005)(6916009)(5660300002)(66556008)(53546011)(52536014)(86362001)(8676002)(71200400001)(316002)(186003)(83380400001)(478600001)(8936002)(26005)(54906003)(33656002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: MjB3jkqpswPAZNxEnmaP9iGFP1t2I4+1b2VacTPR+99IJZ4fu6dcNcBPYJYN2R60IjQ5E+VrnbMxEdrohBsu+WEQPZJxC8JBbt56XXRE8B6nBr9hHKHytMt8MJKworpG3GO/uG2vGtvnR0en0KPbbwYjFmZ7JgTSqfocjjPxY1VLqGUHYxfo6Hiq+zE9YJ7SfiGPCYcEtL/hE/bbZPO8eNJzWwZpj28psNXjBB0ZCZIuFXfKH6AtjknEO8x1uKPb3Xli0H/fQG1/+QedUOMpL8vOH+GdM+8JtYbpBdZdAAoRPxRR1F8olsuaqquG21kiTmvnM8Ey3u/xE/RtlmCQ/rpS/hoOo5AWLSMdLyA8QfC2slSkKAv17saKVKPc+TJCZWhOZzN38AHvM8gq5lGkxo2Z2RmrhzY7hyOUpdDYtiLIvkta6TFsI6UgH3PCAjxN5+9OyZeup+SHMA2uP8V82NSWHkGcr//gHr83q9cr59iKSxuDPHMxJ/YuuVlylmEtddrRXWCoFBgdm+2hgQaQuJK5kJxSnCDTNvIeaeJY/DD2v0i0e9+/tRIcncNQo6CXBmnfo6xfCK23T6WTHSKn7Id07jrOXhgk0e/tLqlT7FFbPhAPkJpcxb6asItKHj9vWEjNoNlqJRVyZMA5z0qVDQ==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 19 Aug 2020 20:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbgHTAtd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Aug 2020 20:49:33 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D63EC061383
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 17:49:33 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id r13so387538iln.0
+        for <devicetree@vger.kernel.org>; Wed, 19 Aug 2020 17:49:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iuf/RIStJLO7So922ytL0VEvieCnfpmCKWYer5gguLw=;
+        b=f2C41QlLU5hjJ1WRl14JSkNaWG7U2J2AlVnTlmAVgcFN3/SZ1s1BSiOyd5BfByJUa8
+         qNtvY/A9gOSFEA2Yt6Vm0pdVqOQA5SACw9y6gAa/8ayb3nciB2cS50KZlNy8MaPGpdJL
+         DnpHG/5m/GGcM37LfFUZnCP1qDkUlWdFGXXlAE71QjZrJ4pjPHYThbLML5m2/XmZ3giu
+         H8kF1srSN0nuYVMR7hRXSt2LcLQRvTfbSWO/3G6XmUvzq4j1KpBD5Dizd3iYMb47NQQ2
+         /Zger/z9Jy3VdT4+B5OvtacY6ALkJzs1QkReKKdoe1mtiWQ/x+Qq1lUGNwbDwu82fgSZ
+         Q6fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iuf/RIStJLO7So922ytL0VEvieCnfpmCKWYer5gguLw=;
+        b=FDvwvo84snZz+UkkqoIn/+WVt1t4a8dW+kujy5LPKzbyCr6NaCvs/zGmf04IijR9j9
+         RKW8r+I0x27+FIGIkQZM/7ZXPdQItfE45Nb8EjcYZt2hF5k+AIMh7i57gvviUNncBEr1
+         YeXL61g2JckR05vPFl1ANRySimPkwzowvamBxzmxpoaiWm9wSTNfy0DSfwDfcSQtx3Ru
+         DC2H081UR23ooSondC7e4jIk708OlkFEh9rCxOT3jwb3f4qYfjAouuKEuZ7Wba0CsR0S
+         KPNlW+lj++pDGS6dhqdmFekv0f2F/meIogXUEC89rWWxpytLfN7ONRi+WeRZashxmCo7
+         Fvpw==
+X-Gm-Message-State: AOAM5332sriG4j0cn2ighX71nteNGW6HYED0yuHg+ZgIX+2JLhxE1Q3n
+        2fIOXfk5wnublUUbCh5WospQDYLsWe87vvPUW/iw
+X-Google-Smtp-Source: ABdhPJxnP7ODRdpYvtol/5vZBhbhhy27466m4oWVmaWd11VnGKSD0xltF5sio4q02PqR99DwHTItjZu5+Rjqhi+hpfI=
+X-Received: by 2002:a05:6e02:12a3:: with SMTP id f3mr589668ilr.83.1597884571302;
+ Wed, 19 Aug 2020 17:49:31 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB4915.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc18a06-16dd-4bcc-5b39-08d844a2be7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2020 00:48:24.2918
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: szgWOUQ8aiow0cG9AG0rtOMrBWEdJAMHpn7uM/8kdIJzuEW4S1tLoKUmveTJf35mGHzuqi9JyASAdObEGPeo4g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6756
+References: <20200818124815.11029-1-vaishnav@beagleboard.org> <20200818124815.11029-2-vaishnav@beagleboard.org>
+In-Reply-To: <20200818124815.11029-2-vaishnav@beagleboard.org>
+From:   Vaishnav M A <vaishnav@beagleboard.org>
+Date:   Thu, 20 Aug 2020 06:19:14 +0530
+Message-ID: <CALudOK4R-Fu-xMXbip8e_Cuu0o4DQwjc=SMGdMBVsH=XTUShNw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] add mikrobus descriptors to greybus_manifest
+To:     greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>, arnd@arndb.de,
+        johan@kernel.org, elder@kernel.org
+Cc:     robh@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Drew Fustini <drew@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>,
+        =?UTF-8?Q?Ivan_Rajkovi=C4=87?= <rajkovic@mikroe.com>,
+        chrisfriedt@gmail.com, zoran.stojsavljevic@gmail.com,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTaGF3biBHdW8gW21haWx0bzpz
-aGF3bmd1b0BrZXJuZWwub3JnXQ0KPiBTZW50OiBXZWRuZXNkYXksIEF1Z3VzdCAxOSwgMjAyMCA5
-OjU2IFBNDQo+IFRvOiBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+DQo+IENjOiByb2JoK2R0
-QGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNvbTsN
-Cj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29t
-PjsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAz
-LzNdIGFybTY0OiBkdHM6IGlteDhtbTogQWRkIGlteDhtbSBkZHI0IGV2ayBib2FyZA0KPiBzdXBw
-b3J0DQo+IA0KPiBPbiBUdWUsIEp1bCAyOCwgMjAyMCBhdCAwMjo0NDowMVBNICswODAwLCBKYWNr
-eSBCYWkgd3JvdGU6DQo+ID4gQWRkIHRoZSBib2FyZCBkdHMgc3VwcG9ydCBmb3IgaS5NWDhNTSBE
-RFI0IEVWSyBib2FyZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEphY2t5IEJhaSA8cGluZy5i
-YWlAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-TWFrZWZpbGUgICAgICAgIHwgIDEgKw0KPiA+ICAuLi4vYm9vdC9kdHMvZnJlZXNjYWxlL2lteDht
-bS1kZHI0LWV2ay5kdHMgICAgfCA3Nw0KPiArKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmls
-ZXMgY2hhbmdlZCwgNzggaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4g
-YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1tLWRkcjQtZXZrLmR0cw0KPiA+DQo+
-ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL01ha2VmaWxlDQo+
-ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9NYWtlZmlsZQ0KPiA+IGluZGV4IGEz
-OWYwYTE3MjNlMC4uNDE3YzU1MjQ4MGYyIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZnJlZXNjYWxlL01ha2VmaWxlDQo+ID4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvTWFrZWZpbGUNCj4gPiBAQCAtMjksNiArMjksNyBAQCBkdGItJChDT05GSUdfQVJD
-SF9MQVlFUlNDQVBFKSArPQ0KPiBmc2wtbHgyMTYwYS1xZHMuZHRiDQo+ID4gIGR0Yi0kKENPTkZJ
-R19BUkNIX0xBWUVSU0NBUEUpICs9IGZzbC1seDIxNjBhLXJkYi5kdGINCj4gPg0KPiA+ICBkdGIt
-JChDT05GSUdfQVJDSF9NWEMpICs9IGlteDhtbS1ldmsuZHRiDQo+ID4gK2R0Yi0kKENPTkZJR19B
-UkNIX01YQykgKz0gaW14OG1tLWRkcjQtZXZrLmR0Yg0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9N
-WEMpICs9IGlteDhtbi1ldmsuZHRiDQo+ID4gIGR0Yi0kKENPTkZJR19BUkNIX01YQykgKz0gaW14
-OG1uLWRkcjQtZXZrLmR0Yg0KPiA+ICBkdGItJChDT05GSUdfQVJDSF9NWEMpICs9IGlteDhtcC1l
-dmsuZHRiIGRpZmYgLS1naXQNCj4gPiBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lt
-eDhtbS1kZHI0LWV2ay5kdHMNCj4gPiBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lt
-eDhtbS1kZHI0LWV2ay5kdHMNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAw
-MDAwMDAwMDAwMC4uOWNkODkxODIyMThlDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbS1kZHI0LWV2ay5kdHMNCj4gPiBAQCAt
-MCwwICsxLDc3IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0K
-PiA+ICsvKg0KPiA+ICsgKiBDb3B5cmlnaHQgMjAyMCBOWFANCj4gPiArICovDQo+ID4gKw0KPiA+
-ICsvZHRzLXYxLzsNCj4gPiArDQo+ID4gKyNpbmNsdWRlICJpbXg4bW0tZXZrLmR0c2kiDQo+ID4g
-Kw0KPiA+ICsvIHsNCj4gPiArCW1vZGVsID0gIkZTTCBpLk1YOE1NIEREUjQgRVZLIHdpdGggQ1lX
-NDM0NTUgV0lGSS9CVCBib2FyZCI7DQo+ID4gKwljb21wYXRpYmxlID0gImZzbCxpbXg4bW0tZGRy
-NC1ldmsiLCAiZnNsLGlteDhtbSI7DQo+ID4gKw0KPiA+ICsJbGVkcyB7DQo+ID4gKwkJcGluY3Ry
-bC0wID0gPCZwaW5jdHJsX2dwaW9fbGVkXzI+Ow0KPiA+ICsNCj4gPiArCQlzdGF0dXMgew0KPiA+
-ICsJCQlncGlvcyA9IDwmZ3BpbzMgNCBHUElPX0FDVElWRV9MT1c+Ow0KPiA+ICsJCX07DQo+ID4g
-Kwl9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJmRkcmMgew0KPiA+ICsJb3BlcmF0aW5nLXBvaW50
-cy12MiA9IDwmZGRyY19vcHBfdGFibGU+Ow0KPiA+ICsNCj4gPiArCWRkcmNfb3BwX3RhYmxlOiBv
-cHAtdGFibGUgew0KPiA+ICsJCWNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7DQo+
-ID4gKw0KPiA+ICsJCW9wcC0yNU0gew0KPiA+ICsJCQlvcHAtaHogPSAvYml0cy8gNjQgPDI1MDAw
-MDAwPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlvcHAtMTAwTSB7DQo+ID4gKwkJCW9wcC1o
-eiA9IC9iaXRzLyA2NCA8MTAwMDAwMDAwPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQlvcHAt
-NjAwTSB7DQo+ID4gKwkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NjAwMDAwMDAwPjsNCj4gPiArCQl9
-Ow0KPiA+ICsJfTsNCj4gDQo+IEknbSB0cnlpbmcgdG8gdW5kZXJzdGFuZCBob3cgdGhpcyBkZHJj
-X29wcF90YWJsZSBpcyBkZXRlcm1pbmVkLiAgSXQncw0KPiBkZWZpbmVkIGJ5IFNvQy9ERFIgY29u
-dHJvbGxlciBvciBib2FyZC9ERFIgY2hpcD8NCg0KSXQgaXMgcmVsYXRlZCB0byBib3RoIFNPQyBE
-RFIgY29udHJvbGxlciAmIHRoZSBib2FyZCBkZXNpZ24uIFRoZSBoaWdoZXN0IGZyZXF1ZW5jeSBp
-cyA2MDBNSHooMjQwME1UUykgZm9yIEREUjQsDQo3NTBNSHooMzAwME1UUykgb3IgODAwTUh6KDMy
-MDBNVFMpIGZvciBMUEREUjQuIFRoZSBsb3dlc3QgZnJlcXVlbmN5IGFsc28gcmVsYXRlZCB0byBE
-RFIgdHlwZS4gRm9yIExQRERSNCwNCkREUkMgY2FuIHJ1biBhdCAyNU1IeigxMDBNVFMpLCBmb3Ig
-RERSNCwgdGhlIGxvd2VzdCBmcmVxdWVuY3kgbmVlZCB0byA+MTY2TUh6Lg0KDQpUaGUgT1BQcyBk
-ZWZpbmVkIGluIGR0cyBtdXN0IGJlIGFsaWduZWQgd2l0aCB0aGUgT1BQcyBpbml0aWFsaXplZCBk
-dXJpbmcgRERSIGNhbGlicmF0aW9uIHN0YWdlIGFmdGVyIFNPQyBQT1IgQm9vdC4NCg0KaXQgc2Vl
-bXMgdGhlIGRkcmMgb3BwIHRhYmxlIGZvciBERFI0IEVWSyBpcyBub3QgY29ycmVjdCwgSSB3aWxs
-IHJlbW92ZSBpdCBmcm9tIHRoaXMgcGF0Y2hzZXQgZm9yIG5vdywgd2lsbCBhZGQgaXQgYmFjayBp
-biBhIHNlcGFyYXRlIHBhdGNoLg0KDQo+IA0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJmdwbWkgew0K
-PiA+ICsJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCXBpbmN0cmwtMCA9IDwmcGlu
-Y3RybF9ncG1pX25hbmRfMT47DQo+ID4gKwlzdGF0dXMgPSAib2theSI7DQo+IA0KPiBQbGVhc2Ug
-cHV0ICdzdGF0dXMnIGF0IGVuZCBvZiBwcm9wZXJ0eSBsaXN0Lg0KDQpUaGFua3MsIHdpbGwgZml4
-IGl0Lg0KDQo+IA0KPiA+ICsJbmFuZC1vbi1mbGFzaC1iYnQ7DQo+ID4gK307DQo+ID4gKw0KPiA+
-ICsmaW9tdXhjIHsNCj4gPiArCXBpbmN0cmxfZ3BtaV9uYW5kXzE6IGdwbWktbmFuZC0xIHsNCj4g
-DQo+IFRoZSBzdWZmaXggIjEiIGlzbid0IHJlYWxseSBuZWVkZWQsIGlzIGl0Pw0KPiANCg0KVGhh
-bmtzLCB3aWxsIGZpeCBpdCBpbiBWMi4NCg0KQlINCkphY2t5IEJhaQ0KDQo+IFNoYXduDQo+IA0K
-PiA+ICsJCWZzbCxwaW5zID0gPA0KPiA+ICsJCQlNWDhNTV9JT01VWENfTkFORF9BTEVfUkFXTkFO
-RF9BTEUNCj4gCTB4MDAwMDAwOTYNCj4gPiArCQkJTVg4TU1fSU9NVVhDX05BTkRfQ0UwX0JfUkFX
-TkFORF9DRTBfQg0KPiAJMHgwMDAwMDA5Ng0KPiA+ICsJCQlNWDhNTV9JT01VWENfTkFORF9DRTFf
-Ql9SQVdOQU5EX0NFMV9CDQo+IAkweDAwMDAwMDk2DQo+ID4gKwkJCU1YOE1NX0lPTVVYQ19OQU5E
-X0NMRV9SQVdOQU5EX0NMRQ0KPiAJMHgwMDAwMDA5Ng0KPiA+ICsJCQlNWDhNTV9JT01VWENfTkFO
-RF9EQVRBMDBfUkFXTkFORF9EQVRBMDANCj4gCTB4MDAwMDAwOTYNCj4gPiArCQkJTVg4TU1fSU9N
-VVhDX05BTkRfREFUQTAxX1JBV05BTkRfREFUQTAxDQo+IAkweDAwMDAwMDk2DQo+ID4gKwkJCU1Y
-OE1NX0lPTVVYQ19OQU5EX0RBVEEwMl9SQVdOQU5EX0RBVEEwMg0KPiAJMHgwMDAwMDA5Ng0KPiA+
-ICsJCQlNWDhNTV9JT01VWENfTkFORF9EQVRBMDNfUkFXTkFORF9EQVRBMDMNCj4gCTB4MDAwMDAw
-OTYNCj4gPiArCQkJTVg4TU1fSU9NVVhDX05BTkRfREFUQTA0X1JBV05BTkRfREFUQTA0DQo+IAkw
-eDAwMDAwMDk2DQo+ID4gKwkJCU1YOE1NX0lPTVVYQ19OQU5EX0RBVEEwNV9SQVdOQU5EX0RBVEEw
-NQ0KPiAJMHgwMDAwMDA5Ng0KPiA+ICsJCQlNWDhNTV9JT01VWENfTkFORF9EQVRBMDZfUkFXTkFO
-RF9EQVRBMDYNCj4gCTB4MDAwMDAwOTYNCj4gPiArCQkJTVg4TU1fSU9NVVhDX05BTkRfREFUQTA3
-X1JBV05BTkRfREFUQTA3DQo+IAkweDAwMDAwMDk2DQo+ID4gKwkJCU1YOE1NX0lPTVVYQ19OQU5E
-X1JFX0JfUkFXTkFORF9SRV9CDQo+IAkweDAwMDAwMDk2DQo+ID4gKwkJCU1YOE1NX0lPTVVYQ19O
-QU5EX1JFQURZX0JfUkFXTkFORF9SRUFEWV9CDQo+IAkweDAwMDAwMDU2DQo+ID4gKwkJCU1YOE1N
-X0lPTVVYQ19OQU5EX1dFX0JfUkFXTkFORF9XRV9CDQo+IAkweDAwMDAwMDk2DQo+ID4gKwkJCU1Y
-OE1NX0lPTVVYQ19OQU5EX1dQX0JfUkFXTkFORF9XUF9CDQo+IAkweDAwMDAwMDk2DQo+ID4gKwkJ
-PjsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICsJcGluY3RybF9ncGlvX2xlZF8yOiBncGlvbGVkMmdy
-cCB7DQo+ID4gKwkJZnNsLHBpbnMgPSA8DQo+ID4gKwkJCU1YOE1NX0lPTVVYQ19OQU5EX0NFM19C
-X0dQSU8zX0lPNAkweDE5DQo+ID4gKwkJPjsNCj4gPiArCX07DQo+ID4gK307DQo+ID4gLS0NCj4g
-PiAyLjI2LjINCj4gPg0K
+Hi,
+
+Trying to add more information regarding the newly added
+descriptors and describe how they are used now within the
+mikroBUS driver.
+
+On Tue, Aug 18, 2020 at 6:18 PM Vaishnav M A <vaishnav@beagleboard.org> wrote:
+>
+> This patch adds new descriptors used in the manifest parsing inside
+> the mikrobus driver, the device descriptor help to describe the
+> devices on a mikroBUS port, mikrobus descriptor is used to set up
+> the mikrobus port pinmux and GPIO states and property descriptor
+> to pass named properties to device drivers through the Unified
+> Properties API under linux/property.h
+>
+> The corresponding pull request for manifesto is updated
+> at : https://github.com/projectara/manifesto/pull/2
+>
+> Signed-off-by: Vaishnav M A <vaishnav@beagleboard.org>
+> ---
+>  include/linux/greybus/greybus_manifest.h | 47 ++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>
+> diff --git a/include/linux/greybus/greybus_manifest.h b/include/linux/greybus/greybus_manifest.h
+> index 6e62fe478712..821661ea7f01 100644
+> --- a/include/linux/greybus/greybus_manifest.h
+> +++ b/include/linux/greybus/greybus_manifest.h
+> @@ -23,6 +23,9 @@ enum greybus_descriptor_type {
+>         GREYBUS_TYPE_STRING             = 0x02,
+>         GREYBUS_TYPE_BUNDLE             = 0x03,
+>         GREYBUS_TYPE_CPORT              = 0x04,
+> +       GREYBUS_TYPE_MIKROBUS           = 0x05,
+
+The mikrobus descriptor is used to pass information about
+the specific pinmux settings and the default GPIO states on
+the mikrobus port to be set up for the add-on board to work
+correctly, this descriptor has 12 u8 fields(corresponding  to the
+12 pins on the mikrobus port) which includes information
+about the prior setup required on the mikroBUS port for the
+device(s) on the add-on board to work correctly. The mikrobus
+descriptor is a fixed-length descriptor and there will be only a
+single instance of mikrobus descriptor per add-on board manifest.
+
+> +       GREYBUS_TYPE_PROPERTY           = 0x06,
+
+The property descriptors are used to pass named properties
+to the device drivers through the Unified device property interface
+under linux/property.h , so that device drivers using the
+device_property_read_* call can get the named properties,
+the mikrobus driver fetches the information from the manifest
+binary and forms a corresponding `struct property_entry` which
+will be attached to the `struct device`.
+The property descriptor is a variable-length descriptor similar
+to the string descriptor and there can be multiple instances of
+property descriptor per add-on board manifest.
+
+> +       GREYBUS_TYPE_DEVICE             = 0x07,
+
+The device descriptor is used to describe a device on the
+mikrobus port and has necessary fields from `struct i2c_board_info`
+and `struct spi_board_info` to describe a device on these buses
+in a mikrobus port, even though  SPI/I2C device info structs are used
+this descriptor has enough information to describe other kinds of
+devices relevant to mikrobus as well.(serdev/platform devices).
+The device descriptor is a fixed-length descriptor and there can be
+multiple instances of device descriptors in an add-on board manifest
+in cases where the add-on board presents more than one device
+to the host.
+
+>  };
+>
+>  enum greybus_protocol {
+> @@ -151,6 +154,47 @@ struct greybus_descriptor_cport {
+>         __u8    protocol_id;    /* enum greybus_protocol */
+>  } __packed;
+>
+> +/*
+> + * A mikrobus descriptor is used to describe the details
+> + * about the bus ocnfiguration for the add-on board
+> + * connected to the mikrobus port.
+> + */
+> +struct greybus_descriptor_mikrobus {
+> +       __u8 pin_state[12];
+> +} __packed;
+> +
+
+These 12 u8 fields describe the state of the pins in the
+mikrobus port(in clock wise order starting from the PWM
+pin)
+mikrobus v2 standard specification :
+https://download.mikroe.com/documents/standards/mikrobus/mikrobus-standard-specification-v200.pdf
+This struct is filled from the mikrobus-descriptor
+in the manifest and can have one of the values
+for each pin group:
+MIKROBUS_STATE_INPUT = 0x01,
+MIKROBUS_STATE_OUTPUT_HIGH = 0x02,
+MIKROBUS_STATE_OUTPUT_LOW = 0x03,
+MIKROBUS_STATE_PWM = 0x04,  ( applicable only to  PWM pin)
+MIKROBUS_STATE_SPI = 0x05, ( applicable only to
+the group of MOSI, MISO, SCK , CS pins on mikroBUS port)
+MIKROBUS_STATE_I2C = 0x06, (applicable only to the SCL, SDA
+pins on the mikrobus port)
+MIKROBUS_STATE_UART = 0x07,(applicable only to the RX, TX
+pins on the mikrobus port)
+There are two purposes for adding this descriptor,
+1) for some add-on boards some of the pins might need to
+be configured as GPIOs deviating from their reserved purposes
+An example for this case is an SHT15 Click (https://www.mikroe.com/sht1x-click),
+where the SCL and SDA Pins need to be configured as GPIOs
+for the driver (drivers/hwmon/sht15.c) to work. The mikrobus
+descriptor for this case would look like this :
+[mikrobus-descriptor]
+pwm-state = 4 (default, pwm)
+int-state = 1 (default, input)
+rx-state = 7 (default, uart)
+tx-state = 7 (default, uart)
+scl-state = 3 (note the SCL Pin configured as GPIO)
+sda-state = 3 (note the SCL Pin configured as GPIO)
+mosi-state = 5 (default, spi)
+miso-state = 5 (default, spi)
+sck-state = 5 (default, spi)
+cs-state = 5 (default, spi)
+rst-state = 2 (default, GPIO)
+an-state = 1 (default, input)
+2) for some add-on boards the driver may not take care
+of some additional signals like reset/wake-up/other thus
+the mikrobus driver can set-up these GPIOs to a required
+default state from the information from the manifest, a good
+example for this is the  ENC28J60 click (https://www.mikroe.com/eth-click)
+where the reset line(RST pin on the mikrobus port) needs to be
+pulled high. The manifest example for this add-on board can
+be found here :
+https://github.com/vaishnav98/manifesto/blob/mikrobusv3/manifests/ETH-CLICK.mnfs
+
+> +/*
+> + * A property descriptor is used to pass named properties
+> + * to device drivers through the unified device properties
+> + * interface under linux/property.h
+> + */
+> +struct greybus_descriptor_property {
+> +       __u8 length;
+> +       __u8 id;
+> +       __u8 propname_stringid;
+> +       __u8 type;
+> +       __u8 value[0];
+> +} __packed;
+> +
+
+This descriptor is used to fill in `struct property_entry`
+(linux/property.h), the propname_stringid
+field is used to map to the corresponding string descriptor
+which has the property name, the type field has the types
+under dev_prop_type (linux/property.h) and there are
+some new types which are used within the mikrobus
+driver, these are the new types :
+MIKROBUS_PROPERTY_TYPE_LINK = 0x01
+MIKROBUS_PROPERTY_TYPE_GPIO = 0x02
+
+The property-link type is used to attach an array of properties
+to the corresponding device, for example, consider an SPI
+EEPROM device which works with the AT25 driver(
+drivers/misc/eeprom/at25.c), The device and property
+descriptor parts of the manifest will look like this.
+
+[device-descriptor 1]
+driver-string-id = 3
+prop-link = 1 (The ID of the property-descriptor which
+contains the list of IDs of the actual properties to attach with
+the device)
+protocol = 0xb
+reg = 0
+mode = 0x3
+max-speed-hz = 5000000
+[string-descriptor 3]
+string = at25 (driver string)
+
+[property-descriptor 1]
+name-string-id = 4
+type = 0x01 (type is property-link)
+value = <2 3 4>(attach properties with id 2,3,4 to the device)
+[string-descriptor 4]
+string = prop-link
+
+[property-descriptor 2]
+name-string-id = 5 (string id for the property name string)
+type = 0x05 (U32, driver uses device_property_read_u32 call
+to read the value)
+value = <262144>
+[string-descriptor 5]
+string = size (property name string)
+
+[property-descriptor 3]
+name-string-id = 6
+type = 0x05
+value = <256>
+[string-descriptor 6]
+string = pagesize
+
+[property-descriptor 4]
+name-string-id = 7
+type = 0x05
+value = <24>
+[string-descriptor 7]
+string = address-width
+
+The gpio-link type is very similar to property descriptor and is used to
+pass an array of named gpios to the device driver through GPIO lookup tables,
+consider an example for a SHT15 device (drivers/hwmon/sht15.c),
+the device and the property(gpio) descriptors are as follows :
+
+[device-descriptor 1]
+driver-string-id = 3
+protocol = 0xfe
+reg = 0
+gpio-link = 1 (The ID of the property-descriptor which
+contains the list of IDs of the named gpio properties to attach with
+the device)
+
+[string-descriptor 3]
+string = sht11 (device_id string)
+
+[property-descriptor 1]
+name-string-id = 4
+type = 0x02 (gpio-link)
+value = <2 3> (attach properties with id 2,3 as named gpios to the device)
+[string-descriptor 4]
+string = gpio-link
+
+[property-descriptor 2]
+name-string-id = 5
+type = 0x03
+value = <4>
+[string-descriptor 5]
+string = clk (name of the GPIO, the driver uses
+devm_gpiod_get or similar calls to get the GPIO)
+
+[property-descriptor 3]
+name-string-id = 6
+type = 0x03
+value = <5>
+[string-descriptor 6]
+string = data
+
+Note that the values here 4 and 5 for the GPIOs are
+the offset numbers(clockwise starting from PWM pin)
+within a mikrobus port, the mikrobus drivers translates this
+offset information to the actual GPIO while creating the GPIO
+lookup table, this ensures that the manifest doesn't have any
+port-specific information and a single manifest can be used for
+an add-on board over different platforms/sockets.
+
+> +/*
+> + * A device descriptor is used to describe the
+> + * details required by a add-on board device
+> + * driver.
+> + */
+> +struct greybus_descriptor_device {
+> +       __u8 id;
+> +       __u8 driver_stringid;
+> +       __u8 protocol;
+> +       __u8 reg;
+> +       __le32 max_speed_hz;
+> +       __u8 irq;
+> +       __u8 irq_type;
+> +       __u8 mode;
+> +       __u8 prop_link;
+> +       __u8 gpio_link;
+> +       __u8 pad[3];
+> +} __packed;
+> +
+
+The device descriptor is used to describe a device on the
+mikrobus port and has necessary fields from `struct i2c_board_info`
+and `struct spi_board_info`, of these fields, the irq field is similar to
+the gpio descriptor value above in that the value under irq is also
+the pin offset within the mikrobus port which will be translated to the
+actual GPIO within the mikrobus driver and the irq-type takes types
+defined under linux/interrupt.h . For a device with a
+IRQF_TRIGGER_RISING interrupt on the INT pin on the mikrobus port
+the fields will be :
+irq = 1 (offset of INT pin)
+irq_type = 1 ( IRQF_TRIGGER_RISING)
+
+>  struct greybus_descriptor_header {
+>         __le16  size;
+>         __u8    type;           /* enum greybus_descriptor_type */
+> @@ -164,6 +208,9 @@ struct greybus_descriptor {
+>                 struct greybus_descriptor_interface     interface;
+>                 struct greybus_descriptor_bundle        bundle;
+>                 struct greybus_descriptor_cport         cport;
+> +               struct greybus_descriptor_mikrobus      mikrobus;
+> +               struct greybus_descriptor_property      property;
+> +               struct greybus_descriptor_device        device;
+>         };
+>  } __packed;
+>
+> --
+> 2.25.1
+>
+Thanks and Regards,
+Vaishnav
