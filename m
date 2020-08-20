@@ -2,89 +2,91 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91935C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 17:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DB5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6BC208E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 17:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7125206B5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597943744;
+	bh=uHl9rwumtu2rtih013lnF70L1ucw8l6/5BB+iJYt+6U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qb4H4rINeZBK/ZWIjg5Rwz+GTdfdybw7HDjdwPDshjH/HRrGP/m0NxFOgfsANu5nu
+	 h60scXdOklWBp6lImIC3AsphmKfybWBINEGETwQpjhO62Q3jBQzJ+YI6jHu5Jjs+o4
+	 /QQeursGFoYRmNIpsVOiv04iBXq+mAw2SNVgVhe4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730044AbgHTROi (ORCPT
+        id S1730415AbgHTRPK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:14:38 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33704 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730203AbgHTRO2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 13:14:28 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        Thu, 20 Aug 2020 13:15:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730203AbgHTRPF (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 13:15:05 -0400
+Received: from localhost (cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net [82.37.168.47])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9F33329AB27;
-        Thu, 20 Aug 2020 18:14:26 +0100 (BST)
-Date:   Thu, 20 Aug 2020 19:14:24 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
-        Laura Nixon <laura.nixon@team.mipi.org>,
-        Robert Gough <robert.gough@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthew Schnoor <matthew.schnoor@intel.com>
-Subject: Re: [PATCH 2/2] i3c/master: add the mipi-i3c-hci driver
-Message-ID: <20200820191424.29c42972@collabora.com>
-In-Reply-To: <nycvar.YSQ.7.78.906.2008201234370.1479@knanqh.ubzr>
-References: <20200814034854.460830-1-nico@fluxnic.net>
-        <20200814034854.460830-3-nico@fluxnic.net>
-        <20200820100829.0e44200a@xps13>
-        <20200820103944.08a55ba4@collabora.com>
-        <nycvar.YSQ.7.78.906.2008201234370.1479@knanqh.ubzr>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7623E208E4;
+        Thu, 20 Aug 2020 17:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597943703;
+        bh=uHl9rwumtu2rtih013lnF70L1ucw8l6/5BB+iJYt+6U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T7cEqDiMm+cN7TjgJG5SkIhf1Loo+IeVMmngS+zPnVPMf9ef31TtQbGTXrkeeJ0L0
+         b0GudN+PV7zktBqe4YHYycKROj+Qidfnd8MLoqcG0y+eZqb4FhMTf0DjAQM+ui36Bh
+         WnXYpM1GXgAcnS5XzjEViczd1TXeuxuHMKD+5lkg=
+Date:   Thu, 20 Aug 2020 18:14:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, joel@jms.id.au,
+        bradleyb@fuzziesquirrel.com, robh+dt@kernel.org, arnd@arndb.de
+Subject: Re: [PATCH 4/7] dt-bindings: fsi: fsi2spi: Document new restricted
+ property
+Message-ID: <20200820171430.GH5854@sirena.org.uk>
+References: <20200820170228.42053-1-eajames@linux.ibm.com>
+ <20200820170228.42053-5-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3VRmKSg17yJg2MZg"
+Content-Disposition: inline
+In-Reply-To: <20200820170228.42053-5-eajames@linux.ibm.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Aug 2020 12:47:49 -0400 (EDT)
-Nicolas Pitre <nico@fluxnic.net> wrote:
 
-> On Thu, 20 Aug 2020, Boris Brezillon wrote:
-> 
-> > On Thu, 20 Aug 2020 10:08:29 +0200
-> > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >   
-> > > > +		/*
-> > > > +		 * TODO: Extend the subsystem layer to allow for registering
-> > > > +		 * new device and provide BCR/DCR/PID at the same time.    
-> > > 
-> > > Not sure this is needed if you don't use it directly as the core will
-> > > anyway (in its current form) send the relevant CCC to read these
-> > > registers.  
-> > 
-> > We considered optimizing that in the past but that means making the DAA
-> > and SETDASA registration different. I'm not sure it's worth it to be
-> > honest, PID/DCR/BCR only happens when initializing devices and I
-> > suspect the overhead of querying those DATA twice in case of DAA is
-> > negligible anyway.  
-> 
-> Wellllll... I know some people who do feel strongly about this 
-> particular issue for some reasons.
+--3VRmKSg17yJg2MZg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Mind developing a bit why? Boot-time maybe?
+On Thu, Aug 20, 2020 at 12:02:25PM -0500, Eddie James wrote:
+> Add documentation for the "fsi2spi,restricted" property which indicates
+> a controller shouldn't sequence loops and therefore has a smaller
+> transfer size.
 
-> So I'd prefer giving them some hope 
-> and leave the door open to some i3c_master_add_i3c_dev_and_info() 
-> interface. In the end, it's just a matter of pre-filling the info struct 
-> and skipping the PID retrieval in i3c_master_getpid_locked() if already 
-> available, etc.
+In what situation might someone set this?  It sounds like a
+configuration option rather than a description of the hardware.
 
-I'm definitely not closing the door, but I'd like to understand why this
-is so important to them :-). Anyway, if the changes are not invasive, I
-don't have a good reason to refuse it.
+--3VRmKSg17yJg2MZg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8+r3UACgkQJNaLcl1U
+h9Aq3wf/SqHPeYRrE3/ONd0Rh9Ufbay8ktjHb5kTNGZTI498NUBHdxCLAkaWuc2m
+j+xGVCPGzSrjMA88WwQkzqiDA+KSO0oSzmCh7Q3U6sY24upbJVIWBltKfMJ8DOd6
+A5qWIrI+m63MY83W1qQ7mO0dtd5U6b2cHwWKX8DMMdo3gqTI4FrkABHAdyDb3mdu
+9WEdsck2qWf23Z3SQTxBlTdCmTeoA2Pm6vcj7hOuJ3nM6mO0d6eCFATIFGPL5Eai
+7zLRyvoUt94GM/sSddLCwSwMfO1RtIxHPjX4+dJSMSEuGmcgCQY+nd4yO4QqcDjl
+MZ9zDEDQkkbRoZWV0Fq6LVqi3NTvJg==
+=lis6
+-----END PGP SIGNATURE-----
+
+--3VRmKSg17yJg2MZg--
