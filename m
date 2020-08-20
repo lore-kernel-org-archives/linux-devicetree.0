@@ -2,149 +2,368 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193E2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A461DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB2D4207DE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 793112054F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 16:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="es8IcqaQ"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="lb43PE57";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="wtUQOsQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgHTQ11 (ORCPT
+        id S1729847AbgHTQeb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:27:27 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46150 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727780AbgHTQ1Z (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 12:27:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KGN5Ng185569;
-        Thu, 20 Aug 2020 16:27:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=EhcIkdT5kS+atUJAy+/F2IziSwuZSev4/FziC9JMbe8=;
- b=es8IcqaQFxFBi8AOBf0kA9WnVstw9kZSFc/PyFOtBz+UWkIi7+UaU0ap4DkgJb91usSv
- H8seDxM3PiHpvM98191tO72kGt2d62EQYQ4B3Tbrl73uxugsOJhTTxasnZ7k4wqngt6p
- hBuCG1G+Rx0CGFvcj4/2GPoLjaoH6KUD/1+nfnc+OMRZvdMmnKn+F+wsiuFLt7y0Mfqj
- O95wqHhFLezeBP6BbwNNDjPIpgrgryE5Xlfs1DWjzoTr/4T5kkdbhYY+YHbKwJzlzF2e
- AGmv1p2TdlyaU3lIXloP2Q6BOE/oFOIeJ6EEEe/ap6VRhIkEAoh/x0RWSwk1VYW79TJk 1Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 32x8bnheph-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Aug 2020 16:27:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KGN2tT109476;
-        Thu, 20 Aug 2020 16:27:12 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 32xsn1k4gv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 16:27:12 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07KGRAig010695;
-        Thu, 20 Aug 2020 16:27:10 GMT
-Received: from [10.74.106.11] (/10.74.106.11)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Aug 2020 09:27:10 -0700
-Subject: Re: [PATCH 0/6] Add TI PRUSS platform driver
-To:     Suman Anna <s-anna@ti.com>,
-        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
-        ssantosh@kernel.org, Tony Lindgren <tony@atomide.com>
-Cc:     robh+dt@kernel.org, lee.jones@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        praneeth@ti.com
-References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <12a7fc2a-4c48-655f-daa1-880fd1866fd1@ti.com>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <2a64dcb7-d79e-7ef8-b3e6-4c2533a19c38@oracle.com>
-Date:   Thu, 20 Aug 2020 09:27:08 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Thu, 20 Aug 2020 12:34:31 -0400
+Received: from pb-smtp20.pobox.com ([173.228.157.52]:54318 "EHLO
+        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728439AbgHTQe0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 12:34:26 -0400
+Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id CF99FD866B;
+        Thu, 20 Aug 2020 12:34:18 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=us97tkQ6PLUX0XkrL5tU1rmprkA=; b=lb43PE
+        57IY30v/Blr1K0M3Vy34sVar9RA/Q96N41QICIi8cduo6pNgtnuyaZRB3klWrJV8
+        GSi5Vojm238/u2eVk0U8U4/ACOadYgEIhrQlKZ8nuEddNUF/WDyiaDqHRBaJ0mGV
+        fx6Hp/eZiOHOHGNzUTu75t+9BffFNsLWNzQ8M=
+Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp20.pobox.com (Postfix) with ESMTP id C74C7D866A;
+        Thu, 20 Aug 2020 12:34:18 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=BBldfq5HtCQVSDxqkIF7Q7liFlyCRCk9GmylPj0R7Po=; b=wtUQOsQJcfyrQhL6K9DS3nwbXZlB/pR2bcFj6uRdahmr14lkvh+7U5qWgVm8pIq9oQtKK3nBn2aQlhZVhG42a1lZ8U2mVGGSoIdczV80t7Yfef+od38i3SY1l9HFT4zGAe85u24/Ufn/Ggrc3gyXTBZtexnYr0UJRJDdzvLrjQU=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id A6C7AD8668;
+        Thu, 20 Aug 2020 12:34:15 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id A13F62DA01C4;
+        Thu, 20 Aug 2020 12:34:13 -0400 (EDT)
+Date:   Thu, 20 Aug 2020 12:34:13 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+        Laura Nixon <laura.nixon@team.mipi.org>,
+        Robert Gough <robert.gough@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthew Schnoor <matthew.schnoor@intel.com>
+Subject: Re: [PATCH 2/2] i3c/master: add the mipi-i3c-hci driver
+In-Reply-To: <20200820100829.0e44200a@xps13>
+Message-ID: <nycvar.YSQ.7.78.906.2008201102500.1479@knanqh.ubzr>
+References: <20200814034854.460830-1-nico@fluxnic.net> <20200814034854.460830-3-nico@fluxnic.net> <20200820100829.0e44200a@xps13>
 MIME-Version: 1.0
-In-Reply-To: <12a7fc2a-4c48-655f-daa1-880fd1866fd1@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200133
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: FCAECF80-E302-11EA-95A9-F0EA2EB3C613-78420484!pb-smtp20.pobox.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 8/20/20 7:43 AM, Suman Anna wrote:
-> Hi Santosh, Tony,
-> 
-> On 7/29/20 6:02 AM, Grzegorz Jaszczyk wrote:
->> Hi,
->>
->> The Programmable Real-Time Unit and Industrial Communication Subsystem
->> (PRU-ICSS) is present on various TI SoCs. The IP is present on multiple TI SoC
->> architecture families including the OMAP architecture SoCs such as AM33xx,
->> AM437x and AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is also
->> present on the Davinci based OMAPL138 SoCs and K3 architecture based AM65x and
->> J721E SoCs as well.
->>
->> A PRUSS consists of dual 32-bit RISC cores (Programmable Real-Time Units, or
->> PRUs), shared RAM, data and instruction RAMs, some internal peripheral modules
->> to facilitate industrial communication, and an interrupt controller.
->>
->> The programmable nature of the PRUs provide flexibility to implement custom
->> peripheral interfaces, fast real-time responses, or specialized data handling.
->> The common peripheral modules include the following,
->>    - an Ethernet MII_RT module with two MII ports
->>    - an MDIO port to control external Ethernet PHYs
->>    - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
->>      Ethernet functions
->>    - an Enhanced Capture Module (eCAP)
->>    - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
->>    - a 16550-compatible UART to support PROFIBUS
->>    - Enhanced GPIO with async capture and serial support
->>
->>
->> A typical usage scenario would be to load the application firmware into one or
->> more of the PRU cores, initialize one or more of the peripherals and perform I/O
->> through shared RAM from either a kernel driver or directly from userspace.
->>
->> This series contains the PRUSS platform driver. This is the parent driver for
->> the entire PRUSS and is used for managing the subsystem level resources like
->> various memories and the CFG module.  It is responsible for the creation and
->> deletion of the platform devices for the child PRU devices and other child
->> devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
->> they can be managed by specific platform drivers.
->>
->> Grzegorz Jaszczyk (1):
->>    dt-bindings: soc: ti: Add TI PRUSS bindings
->>
->> Suman Anna (5):
->>    soc: ti: pruss: Add a platform driver for PRUSS in TI SoCs
->>    soc: ti: pruss: Add support for PRU-ICSSs on AM437x SoCs
->>    soc: ti: pruss: Add support for PRU-ICSS subsystems on AM57xx SoCs
->>    soc: ti: pruss: Add support for PRU-ICSS subsystems on 66AK2G SoC
->>    soc: ti: pruss: enable support for ICSSG subsystems on K3 AM65x SoCs
-> 
-> Do you have any comments on the driver portions of this series before Greg posts
-> a v2 addressing the binding comments. This is one of the foundation series
-> towards enabling PRUSS, and is a dependency for the PRU remoteproc driver.
-> 
-No just post V2 addressing Rob's comment. I will line it up once
-rob acks it.
+On Thu, 20 Aug 2020, Miquel Raynal wrote:
 
-Regards,
-Santosh
+> Hi Nicolas,
+> 
+> Nicolas Pitre <nico@fluxnic.net> wrote on Thu, 13 Aug 2020 23:48:54 -0400:
+> 
+> > From: Nicolas Pitre <npitre@baylibre.com>
+> > 
+> > This adds basic support for hardware implementing the MIPI I3C HCI
+> > specification. This driver is currently limited by the capabilities
+> > of the I3C subsystem, meaning things like scheduled commands,
+> > auto-commands and NCM are not yet supported.
+> > 
+> > This supports version 1.0 of the MIPI I3C HCI spec, as well as the
+> > imminent release of version 1.1. Support for draft version 2.0 of the
+> > spec is also partially included but is guaranteed to change as the spec
+> > is still a work in progress.
+> > 
+> > This is also lightly tested as actual hardware is still very scarse,
+> > even for HCI v1.0. Further contributions to this driver are expected
+> > once vendor implementations and new I3C devices become available.
+> 
+> Nice work! I honnestly do not know a lot about HCIs and I basically
+> had only minor nits to point out, see below.
+
+Thanks for your comments.
+Please find my replies inline.
+
+> > diff --git a/drivers/i3c/master/mipi-i3c-hci/Makefile b/drivers/i3c/master/mipi-i3c-hci/Makefile
+> > new file mode 100644
+> > index 0000000000..8349960c5b
+> > --- /dev/null
+> > +++ b/drivers/i3c/master/mipi-i3c-hci/Makefile
+> > @@ -0,0 +1,9 @@
+> > +# SPDX-License-Identifier: BSD-3-Clause
+> 
+> Just out of curiosity, why this license?
+
+MIPI is sponsoring this work and they own the copyright. It is their 
+policy to license all their Open Source code as BSD.
+
+> > +
+> > +#ccflags-y := -DDEBUG
+> 
+> Probably a leftover?
+
+Well, I left it there intentionally as the code is still actively being 
+developed, so full debugging can quickly be reactivated by anyone.
+I can remove it if deemed too distracting.
+
+> [...]
+> 
+> > +#define CMD_C1_DATA_LENGTH(v)		FIELD_PREP(W1_MASK(63, 48), v)
+> > +#define CMD_C1_OFFSET(v)		FIELD_PREP(W1_MASK(47, 32), v)
+> > +#define CMD_C0_TOC			           W0_BIT_(31)
+> > +#define CMD_C0_ROC			           W0_BIT_(30)
+> > +#define CMD_C0_RNW			           W0_BIT_(29)
+> > +#define CMD_C0_MODE(v)			FIELD_PREP(W0_MASK(28, 26), v)
+> > +#define CMD_C0_16_BIT_SUBOFFSET		W0_bit(25)
+> > +#define CMD_C0_FIRST_PHASE_MODE		           W0_BIT_(24)
+> > +#define CMD_C0_DATA_LENGTH_POSITION(v)	FIELD_PREP(W0_MASK(23, 22), v)
+> > +#define CMD_C0_DEV_INDEX(v)		FIELD_PREP(W0_MASK(20, 16), v)
+> > +#define CMD_C0_CP			           W0_BIT_(15)
+> > +#define CMD_C0_CMD(v)			FIELD_PREP(W0_MASK(14, 7), v)
+> > +#define CMD_C0_TID(v)			FIELD_PREP(W0_MASK(6, 3), v)
+> > +
+> > +/*
+> > + * Internal Control Command
+> > + */
+> > +
+> > +#define CMD_0_ATTR_M			FIELD_PREP(CMD_0_ATTR, 0x7)
+> > +
+> > +#define CMD_M1_VENDOR_SPECIFIC		           W1_MASK(63, 32)
+> > +#define CMD_M0_MIPI_RESERVED		           W0_MASK(31, 12)
+> > +#define CMD_M0_MIPI_CMD			           W0_MASK(11, 8)
+> > +#define CMD_M0_VENDOR_INFO_PRESENT	           W0_BIT_(7)
+> > +#define CMD_M0_TID(v)			FIELD_PREP(W0_MASK(6, 3), v)
+> > +
+> > +
+> > +static int hci_cmd_v1_prep_ccc(struct i3c_hci *hci,
+> > +			       struct hci_xfer *xfer,
+> > +			       u8 ccc_addr, u8 ccc_cmd, bool raw)
+> > +{
+> > +	u_int dat_idx = 0;
+> 
+> I guess u_int her and below is not the preferred way to declare an unsigned int?
+
+Why not?
+
+> > +	int mode = hci_get_i3c_mode(hci);
+> > +	u8 *data = xfer->data;
+> > +	u_int data_len = xfer->data_len;
+> > +	bool rnw = xfer->rnw;
+> > +	int ret;
+> > +
+> > +	BUG_ON(raw);
+> 
+> It looks like 'raw' cannot be used with v1 (at least you seem to take
+> care of it in v2), so maybe BUG_ON is a bit radical here and you can
+> simply return an error? I think the use of BUG() is not appreciated in
+> general.
+
+That depends. Judgement is needed for BUG() usage.
+
+Here raw is absolutely impossible with v1 hardware and if ever this 
+happens this is definitely a software bug that needs fixing right away. 
+There is no point returning a runtime error code in that case as the 
+upper layer won't know what to do about it.
+
+On the other hand, you absolutely don't want to BUG() on a condition 
+that could _eventually_ happen at run time during normal usage. But 
+that's not the case here.
+
+> > +const struct hci_cmd_ops i3c_hci_cmd_v1 = {
+> > +	.prep_ccc		= hci_cmd_v1_prep_ccc,
+> > +	.prep_i3c_xfer		= hci_cmd_v1_prep_i3c_xfer,
+> > +	.prep_i2c_xfer		= hci_cmd_v1_prep_i2c_xfer,
+> > +	.perform_daa		= hci_cmd_v1_daa,
+> 
+> I know Boris does not like such space alignment :)
+
+Well... unfortunately for Boris, this is overwhelmingly prevalent in the 
+kernel code:
+
+$ git grep "^"$'\t'"\.[^ ]*"$'\t'"*= "
+
+And I do like it.  ;-P
+
+> > +void i3c_hci_pio_reset(struct i3c_hci *hci)
+> > +{
+> > +	reg_write(RESET_CONTROL, RX_FIFO_RST|TX_FIFO_RST|RESP_QUEUE_RST);
+> 
+> Style with missing spaces                  ^ ^
+
+True. Will fix.
+
+> > +static int i3c_hci_send_ccc_cmd(struct i3c_master_controller *m,
+> > +				struct i3c_ccc_cmd *ccc)
+> > +{
+> > +	struct i3c_hci *hci = to_i3c_hci(m);
+> > +	struct hci_xfer *xfer;
+> > +	bool raw = !!(hci->quirks & HCI_QUIRK_RAW_CCC);
+> > +	bool prefixed = raw && !!(ccc->id & I3C_CCC_DIRECT);
+> > +	u_int nxfers = ccc->ndests + prefixed;
+> > +	DECLARE_COMPLETION_ONSTACK(done);
+> > +	int i, last, ret = 0;
+> > +
+> > +	DBG("cmd=%#x rnw=%d ndests=%d data[0].len=%d",
+> > +	    ccc->id, ccc->rnw, ccc->ndests, ccc->dests[0].payload.len);
+> > +
+> > +	xfer = hci_alloc_xfer(nxfers);
+> > +	if (!xfer)
+> > +		return -ENOMEM;
+> > +
+> > +	if (prefixed) {
+> > +		xfer->data = NULL;
+> > +		xfer->data_len = 0;
+> > +		xfer->rnw = false;
+> > +		hci->cmd->prep_ccc(hci, xfer, I3C_BROADCAST_ADDR,
+> > +				   ccc->id, true);
+> > +		xfer++;
+> > +	}
+> > +
+> > +	for (i = 0; i < nxfers - prefixed; i++) {
+> > +		xfer[i].data = ccc->dests[i].payload.data;
+> > +		xfer[i].data_len = ccc->dests[i].payload.len;
+> > +		xfer[i].rnw = ccc->rnw;
+> > +		ret = hci->cmd->prep_ccc(hci, &xfer[i], ccc->dests[i].addr,
+> > +					 ccc->id, raw);
+> > +		if (ret)
+> > +			goto out;
+> > +		xfer[i].cmd_desc[0] |= CMD_0_ROC;
+> > +	}
+> > +	last = i - 1;
+> > +	xfer[last].cmd_desc[0] |= CMD_0_TOC;
+> > +	xfer[last].completion = &done;
+> > +
+> > +	if (prefixed)
+> > +		xfer--;
+> > +
+> > +	ret = hci->io->queue_xfer(hci, xfer, nxfers);
+> > +	if (ret)
+> > +		goto out;
+> > +	if (!wait_for_completion_timeout(&done, HZ) &&
+> > +	    hci->io->dequeue_xfer(hci, xfer, nxfers)) {
+> > +		ret = -ETIME;
+> > +		goto out;
+> > +	}
+> > +	for (i = prefixed; i < nxfers; i++) {
+> > +		if (ccc->rnw)
+> > +			ccc->dests[i - prefixed].payload.len =
+> > +				RESP_DATA_LENGTH(xfer[i].response);
+> > +		if (RESP_STATUS(xfer[i].response) != RESP_SUCCESS) {
+> > +			ret = -EIO;
+> > +			goto out;
+> > +		}
+> > +	}
+> > +
+> > +#if 0
+> > +	if (ccc->rnw) {
+> > +		HEXDUMP("got: ", ccc->dests[0].payload.data,
+> > +				 ccc->dests[0].payload.len);
+> > +	}
+> > +#endif
+> 
+> I guess this debug block can be dropped too (there are many debug
+> information the should probably be dropped or turned into dev_info()
+> or similar).
+
+Again, hardware bringup from different vendors and other developments 
+are still ongoing. I'd wish for those to stay for the time being unless 
+people feel strongly enough about these to become a merge show stopper.
+
+> > +/*
+> > + * Paul Kimelman's debug trace log facility.
+> > + * This is completely vendor and hardware specific.
+> > + */
+> > +void __PK_debug_trace(struct i3c_hci *hci, const char *func)
+> > +{
+> > +	void __iomem *trcp = (void __iomem *)hci->vendor_data + 7*4;
+> 
+> Maybe you need to define what is 7*4 , 0*4 below, v >> 27, etc
+> 
+> Also there are many missing spaces between operators (7 * 4,w & (1 <<9).
+
+I think in this case this is really crossing the distraction threshold. 
+This is used to extract debugging traces out of a specific FPGA 
+implementation and is of no use to anyone else. I'll just rip that out 
+from the next submission.
+
+> > +		if (rh->ibi_data_phys)
+> 
+> I was told that _phys was a very bad suffix for something which is a
+> DMA address an not focibly a physical address.
+
+Fair enough. The HCI spec refers to these as "physical memory" hence the 
+suffix. What were you told to use instead?
+
+> > +static bool hci_dma_dequeue_xfer(struct i3c_hci *hci,
+> > +				 struct hci_xfer *xfer_list, int n)
+> > +{
+> > +	struct hci_rings_data *rings = hci->io_data;
+> > +	struct hci_rh_data *rh = &rings->headers[xfer_list[0].ring];
+> > +	u_int i;
+> > +	bool did_unqueue = false;
+> > +
+> > +	/* stop the ring */
+> > +	rh_reg_write(RING_CONTROL, RING_CTRL_ABORT);
+> > +	if (wait_for_completion_timeout(&rh->op_done, HZ) == 0) {
+> > +		/*
+> > +		 * We're deep in it if ever this condition is ever met.
+> > +		 * Hardware might still be writing to memory, etc.
+> > +		 */
+> > +		ERR("unable to abort the ring");
+> > +		BUG();
+> 
+> Why not just treating the error as always?
+
+Again, if this ever happens, you're screwed. That means potential DMA 
+engines could still be alive and about to scribble over memory that is 
+about to be freed which may cause all sorts of impossible-to-find bugs 
+in unrelated parts of the kernel. There is no point going on reporting 
+such error condition to upper layers until the software, or possibly the 
+hardware, is fixed
+
+> > +struct hci_xfer {
+> > +	u32 cmd_desc[4];
+> > +	u32 response;
+> > +	bool rnw;
+> > +	void *data;
+> > +	u_int data_len;
+> > +	u_int cmd_tid;
+> > +	struct completion *completion;
+> > +	union {
+> > +		struct {
+> > +			/* PIO specific */
+> > +			struct hci_xfer *next_xfer;
+> > +			struct hci_xfer *next_data;
+> > +			struct hci_xfer *next_resp;
+> > +			u_int data_left;
+> > +			u32 data_word_before_partial;
+> > +		};
+> 
+> I think anonymous unions are prohibited because the kernel is supposed
+> to be built with old gcc versions which do not support it.
+
+Hmmm... let's see:
+
+According to Documentation/process/changes.rst the current minimal 
+required gcc version is 4.9.
+
+The oldest gcc I have lying around is 4.5.1 and it supports anonymous 
+unions just fine.
+
+So I think we're clear.
+
+
+Nicolas
