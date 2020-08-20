@@ -2,121 +2,144 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DABC433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA49C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6531B206FA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA42A2078B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRSU7EbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725819AbgHTIwv (ORCPT
+        id S1726347AbgHTJGh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:52:51 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:59042 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgHTIwu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:52:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 5A1EEFB03;
-        Thu, 20 Aug 2020 10:52:48 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id BdvBbg0DRbpX; Thu, 20 Aug 2020 10:52:47 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id BFDC2457CB; Thu, 20 Aug 2020 10:52:46 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 10:52:46 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Martin Kepplinger <martink@posteo.de>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Li Jun <jun.li@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Michael Walle <michael@walle.cc>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 3/3] arm64: defconfig: Enable imx8mq-librem5-devkit
- display stack
-Message-ID: <20200820085246.GA7671@bogon.m.sigxcpu.org>
-References: <cover.1596025057.git.agx@sigxcpu.org>
- <a98acb7a0ed2ee6af78ba08354740d69b63b8c53.1596025057.git.agx@sigxcpu.org>
- <CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com>
+        Thu, 20 Aug 2020 05:06:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgHTJGg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 05:06:36 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F53C061757;
+        Thu, 20 Aug 2020 02:06:35 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id v15so546933lfg.6;
+        Thu, 20 Aug 2020 02:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZB4PCuqp8Bl2dkJy5Fm6Sj2/MRT/e7zYVg69/U7Iw3A=;
+        b=jRSU7EbPYuaZa+y1ww5c1uQFbyH05AS+4/y9F7u0zfd9hNB2tnzBPNp8je59myQNMQ
+         jHPH6tBd1Wwn7BdCa00KVXc60BSdX0Ndq10P7ka8NPFWg1ZJ3LsSZv0w8HBp6uQ3NiAh
+         dj5XA0KHwLfCp0cjSlMmH6bx+JfVFMeQqSseCHBBmtyfNIM9YIojgpQJL8XUFhtSBjsW
+         EUKBfwxwlk5cLYa8WcK31DAuysfcZ2hLaBPSEULzoNNVE+3ShAUapOTgWe+4CkfB57ZP
+         mL01BWILpPiVjIBecOCA99KxCmG02TPxV3cr0jcgUSZ2kUozu8reoSXmgLtmVOjnXzBX
+         ScIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZB4PCuqp8Bl2dkJy5Fm6Sj2/MRT/e7zYVg69/U7Iw3A=;
+        b=Lsh2CwfShDBkNd0QHhxQpJ5PFwQ1O8F9BGOG7/khoezcFf5LJAMoZGtHtZ+OGM4S1t
+         W0/XsySxQa++blbuW0C9ETdM8ZGWeMkPl38hwiELgHemG4gCp9ih2UGuzNe/GujRc+FC
+         54yc/StFO5BdUEj0vM0vKtS4C/Pg/3Gk28AvEaCqo98kxuQmVHyUJkd27LPGY6zFkm7t
+         njkNlXJVXwKYs4NuSCpDj1AnYMCIuS0R51n+YLWEkE/Qh4YFMYuYsS2EpGf36FnRaT5Q
+         6eca+EpWPxIo1Wz2rxy7H44u1N+LWAtrsRqZKkahr2MAkeNdt4uxFPLnMqXWJ4fL12lV
+         JS8w==
+X-Gm-Message-State: AOAM530BxC/WcGbim/ATHLCysKAIaCi3aeOFZKnI9gM7PGg/7HvA9a6O
+        Iv8QqWBaYwqN/6Vs1jhuHPI/GMgpAa/Iwgub
+X-Google-Smtp-Source: ABdhPJx586OB1ZFNi8bmTijB1iKrXx0pOQq+0PCvDWVugFZLEr8cnAEYNYIu9kBNKKo6DTiGbe/wQw==
+X-Received: by 2002:a05:6512:3185:: with SMTP id i5mr1144189lfe.205.1597914394167;
+        Thu, 20 Aug 2020 02:06:34 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b? ([2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b])
+        by smtp.gmail.com with ESMTPSA id j2sm322988ljb.98.2020.08.20.02.06.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 02:06:33 -0700 (PDT)
+Subject: Re: [PATCH v8 4/4] arm64: boot: dts: qcom: pm8150b: Add DTS node for
+ PMIC VBUS booster
+To:     Wesley Cheng <wcheng@codeaurora.org>, sboyd@kernel.org,
+        heikki.krogerus@linux.intel.com, agross@kernel.org,
+        robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20200812071925.315-1-wcheng@codeaurora.org>
+ <20200812071925.315-5-wcheng@codeaurora.org>
+ <1ed0a34c-6219-fe3d-7d9c-13a74ce2d4d0@gmail.com>
+ <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <eaf4618c-54da-c522-52c6-1edec7744872@gmail.com>
+Date:   Thu, 20 Aug 2020 12:06:23 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Fabio,
-On Thu, Aug 20, 2020 at 01:11:28AM -0300, Fabio Estevam wrote:
-> Hi Guido,
-> 
-> On Wed, Jul 29, 2020 at 9:19 AM Guido G�nther <agx@sigxcpu.org> wrote:
-> >
-> > Enable the panel, NWL DSI host controller and dphy. This
-> > also needs the reset controller.
-> >
-> > Signed-off-by: Guido G�nther <agx@sigxcpu.org>
-> > ---
-> >  arch/arm64/configs/defconfig | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index e0f33826819f..608019f6408d 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -640,10 +640,12 @@ CONFIG_DRM_MSM=m
-> >  CONFIG_DRM_TEGRA=m
-> >  CONFIG_DRM_PANEL_LVDS=m
-> >  CONFIG_DRM_PANEL_SIMPLE=m
-> > -CONFIG_DRM_SIMPLE_BRIDGE=m
-> > +CONFIG_DRM_PANEL_SITRONIX_ST7703=m
-> >  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
-> >  CONFIG_DRM_DISPLAY_CONNECTOR=m
-> > +CONFIG_DRM_NWL_MIPI_DSI=m
-> >  CONFIG_DRM_SII902X=m
-> > +CONFIG_DRM_SIMPLE_BRIDGE=m
-> 
-> One nit: I suppose the CONFIG_DRM_SIMPLE_BRIDGE=m move comes from a
-> defconfig re-sync.
-> 
-> Maybe this re-sync could be part of a separate patch?
+On 20.08.2020 10:47, Wesley Cheng wrote:
 
-I've moved re-sync of the drm related bits to a separate patch in v2. I
-didn't do a full resync since this varies between kernel version but i
-can do that too - maybe against 5.9-rc1 if that helps.
-
-> Thanks for adding these options to the defconfig so that we could have
-> MIPI DSI working by default on i.MX8M:
+[...]
+>>> Add the required DTS node for the USB VBUS output regulator, which is
+>>> available on PM8150B.  This will provide the VBUS source to connected
+>>> peripherals.
+>>>
+>>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>>> ---
+>>>    arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
+>>>    arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 4 ++++
+>>>    2 files changed, 10 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> index 053c659734a7..9e560c1ca30d 100644
+>>> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> @@ -53,6 +53,12 @@ power-on@800 {
+>>>                status = "disabled";
+>>>            };
+>>>    +        pm8150b_vbus: dcdc@1100 {
+>>
+>>     s/dcdc/regulator/? What is "dcdc", anyway?
+>>     The device nodes must have the generic names, according to the DT spec.
+>>
 > 
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> Hi Sergei,
 > 
+> Thanks for the comment!
 
-Thanks!
- -- Guido
+     You're welcome.
+
+> DCDC is the label that we use for the DC to DC converter block, since
+> the VBUS booster will output 5V to the connected devices.  Would it make
+> more sense to have "dc-dc?"
+
+    Better use s/th like "regulator-dcdc". As I said, the names should be 
+generic, reflecting the device class.
+
+> Thanks
+> Wesley
+> 
+>>> +            compatible = "qcom,pm8150b-vbus-reg";
+>>> +            status = "disabled";
+>>> +            reg = <0x1100>;
+>>> +        };
+>>> +
+>>>            pm8150b_typec: typec@1500 {
+>>>                compatible = "qcom,pm8150b-usb-typec";
+>>>                status = "disabled";
+>> [...]
+
+MBR, Sergei
