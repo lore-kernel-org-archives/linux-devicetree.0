@@ -2,74 +2,176 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E89C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C62C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0BA22B4E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1482054F
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbgHTK7W (ORCPT
+        id S1730336AbgHTLZe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:59:22 -0400
-Received: from auth-smtp.nebula.fi ([217.149.52.145]:42118 "EHLO
-        auth-smtp.nebula.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731523AbgHTK60 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 06:58:26 -0400
-Received: from developer-Precision-3630-Tower (82-203-173-204.bb.dnainternet.fi [82.203.173.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: xipheracom)
-        by auth-smtp.nebula.fi (Postfix) with ESMTPSA id 4A0CE4447;
-        Thu, 20 Aug 2020 13:58:04 +0300 (EEST)
-From:   Atte Tommiska <atte.tommiska@xiphera.com>
-To:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Atte Tommiska <atte.tommiska@xiphera.com>
-Subject: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Xiphera vendor prefix
-Date:   Thu, 20 Aug 2020 13:51:20 +0300
-Message-Id: <70cc429f5e7e8f3213b86e4b97999580953db877.1597914503.git.atte.tommiska@xiphera.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <cover.1597914503.git.atte.tommiska@xiphera.com>
-References: <cover.1597914503.git.atte.tommiska@xiphera.com>
+        Thu, 20 Aug 2020 07:25:34 -0400
+Received: from mail-oo1-f67.google.com ([209.85.161.67]:42045 "EHLO
+        mail-oo1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbgHTKGm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 06:06:42 -0400
+Received: by mail-oo1-f67.google.com with SMTP id a6so283925oog.9;
+        Thu, 20 Aug 2020 03:06:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7+CSk1ksXzy7e0WIknvr7+ji8pZUrOi3fj0VsGs4weY=;
+        b=EXA02wWQsI5YuePA3VIgOVGGfySn9Nyv6KRdADkev9beQf15igej8ZcJYwdAqafunl
+         0nsIU5GeAzT41tL22DqSVj4gQIu5wBPfuXQ7IETeOb8grj+SsQi+wQhqdPFXqGiAfH6N
+         Ttvqnk082JjN2O+MoPp92mbjJX8IxjFpAsJctnAwLaYKwtJYQjIBXMjtWu3NCsqp30Tr
+         rNWJb41EQnLC/jWn/D5C3yJtaik8lb2S8nKgiSbHxydfmsntX7uJ9fkW8+j03ouQdR3m
+         TecMTKvVw8NY7VAV9NrjaFfjOMPHX5cZ2mwlVZ6JAOtTMerYKbsSMBY2cxiU38z2M8gC
+         UEZQ==
+X-Gm-Message-State: AOAM533/sBcqedcM2+5wXRGK25XzmS3U+kk0LaYQ0ZYIPWH9w5dOwWvS
+        vC4KIEnasnMf+U30xZNwp9OwUBkqpL1iqX7W0RQ=
+X-Google-Smtp-Source: ABdhPJzLpZOD1rs1p3nBtT5EFxS48HiVxoTkLH06KtZW1eQSDDDuEahrzdmBlpsHmdngJPIb1mx3MtQK7PAdAm1yD5w=
+X-Received: by 2002:a4a:4201:: with SMTP id h1mr1818497ooj.1.1597918001038;
+ Thu, 20 Aug 2020 03:06:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200807141345.6714-1-geert+renesas@glider.be>
+ <20200817233253.GA1819982@bogus> <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
+In-Reply-To: <CAMuHMdV-NVycDcPggYw4-pvSkkwo079bUevA2yB3XM5YfHi9mg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 20 Aug 2020 12:06:29 +0200
+Message-ID: <CAMuHMdWGu5+PYiYR9rdt97Hd1ribi0Yc0q68NBU6AFRBDCCg_g@mail.gmail.com>
+Subject: Re: [PATCH/RFC v2] dt-bindings: pinctrl: sh-pfc: Convert to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Xiphera is an FPGA-based cryptographic solutions provider based in
-Finland.
-Website of the company: https://xiphera.com/
+Hi Rob,
 
-Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+On Tue, Aug 18, 2020 at 9:10 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, Aug 18, 2020 at 1:32 AM Rob Herring <robh@kernel.org> wrote:
+> > On Fri, Aug 07, 2020 at 04:13:45PM +0200, Geert Uytterhoeven wrote:
+> > > Convert the Renesas Pin Function Controller (PFC) Device Tree binding
+> > > documentation to json-schema.
+> > >
+> > > Document missing properties.
+> > > Drop deprecated and obsolete #gpio-range-cells property.
+> > > Update the example to match reality.
+> > > Drop consumer examples, as they do not belong here.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > > Still RFC, due to the FIXMEs near the enum descriptions.
+> > > If I enable the enums checks, I get e.g.:
+> > >
+> > >     [[1800]] is not one of [1800, 3300]
+> > >
+> > > Note the double square brackets around 1800.
+> > > The usual error message doesn't have them, e.g.:
+> > >
+> > >     2000 is not one of [1800, 3300]
+> > >
+> > > So this looks like a bug in the tooling?
+> >
+> > Yes, we only recently started supporting schemas under
+> > 'additionalProperties', but failed to apply fixups.
+> >
+> > I have a fix I'm testing out. I'm bumping the version requirement in
+> > 5.10, so I'll make sure it is there.
+>
+> Thanks, looking forward to it.
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 2baee2c817c1..28ae913682b5 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1174,6 +1174,8 @@ patternProperties:
-     description: Shenzhen Xingbangda Display Technology Co., Ltd
-   "^xinpeng,.*":
-     description: Shenzhen Xinpeng Technology Co., Ltd
-+  "^xiphera,.*":
-+    description: Xiphera Ltd.
-   "^xlnx,.*":
-     description: Xilinx
-   "^xnano,.*":
+I can confirm this is fixed in v2020.08.1.
+
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc.yaml
+>
+> > > +  interrupts-extended:
+> >
+> > Just use 'interrupts' here. 'interrupt-extended' is always magically
+> > supported.
+>
+> Apparently not everywhere...
+>
+>     Documentation/devicetree/bindings/pinctrl/renesas,pfc.example.dt.yaml:
+> pin-controller@e6050000: 'interrupts' is a required property
+
+The existing fixup doesn't handle "required: interrupts"  if that is inside an
+if/then/else block.
+
+> > > +additionalProperties:
+> > > +  anyOf:
+> > > +    - type: object
+> > > +      allOf:
+> > > +        - $ref: pincfg-node.yaml#
+> > > +        - $ref: pinmux-node.yaml#
+> > > +
+> > > +      description:
+> > > +        Pin controller client devices use pin configuration subnodes (children
+> > > +        and grandchildren) for desired pin configuration.
+> > > +        Client device subnodes use below standard properties.
+> > > +
+> > > +      properties:
+> > > +        phandle: true
+> >
+> > Once fixed, this won't be necessary.
+>
+> OK.
+
+Seems to be still an issue in v2020.08.1?
+
+> > > +        function: true
+> > > +        groups: true
+> > > +        pins: true
+> > > +        bias-disable: true
+> > > +        bias-pull-down: true
+> > > +        bias-pull-up: true
+> > > +        drive-strength:
+> > > +          true # FIXME enum: [ 3, 6, 9, 12, 15, 18, 21, 24 ] # Superset of supported values
+> > > +          # avb:pins_mdio:drive-strength: [[24]] is not one of [3, 6, 9, 12, 15, 18, 21, 24]
+> > > +        power-source:
+> > > +          true # FIXME enum: [ 1800, 3300 ]
+> > > +          # sd0_uhs:power-source: [[1800]] is not one of [1800, 3300]
+> > > +        gpio-hog: true
+> > > +        gpios: true
+> > > +        input: true
+> > > +        output-high: true
+> > > +        output-low: true
+> > > +
+> > > +      additionalProperties: false
+> > > +
+> > > +    - type: object
+> > > +      properties:
+> > > +        phandle: true
+> >
+> > For this one, you can just link it back to the first entry:
+> >
+> > - type: object
+> >   additionalProperties:
+> >     $ref: "#/additionalProperties/anyOf/0"
+>
+> Thanks, cool!
+
+Works great!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.28.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
