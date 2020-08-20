@@ -2,126 +2,344 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27426C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38ECCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB7022075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="RRi7q6jE"
+	by mail.kernel.org (Postfix) with ESMTP id 12D2A2075E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:18:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHTJSY (ORCPT
+        id S1726723AbgHTJSs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:18:24 -0400
-Received: from mail-mw2nam10on2079.outbound.protection.outlook.com ([40.107.94.79]:58367
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgHTJRh (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:17:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fN1WChQBdiNk36XRchabJxQsJ21ZzDa0PAwGvOcueEluXsRc6vNOw0549EdQZnCuBOK8EjVSPiTxHFgzOSpVPT8G/59Z7LEAS4E7DzfIanC6dPGIKMO28ZNaEHP+t/QxxCgln7SsI3RTSKJssBzzzC5TPWl9cER48e/+jhC0bkSOUDqQWW/7g5yiJJDUSxNNDzK8LHlDnMFqH7mXil7mRdxcEPbGlqNZRXQ3v883vlsIdrwzH9PzYKqlATC0uqstx3xdUBVWszLUdbQba3Rq9zl6D1KwKNonRc/CVKe/hbwgvKLbn3X0kijKbqzQ/Gi/8+Gx1WoCrWPvUdhP6xaupg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DOlz0rOvq0B4LnjXQCjHWP2Xt33H2Nbm2JknmN1I6fk=;
- b=Oi2anP0zNxh9ykvnHTPRw8NFoT/Zy+CtHlq/wGS3FvEmHZ/sUaXBFLtjRYl39yli1EzlHBEFwCZuqvGSHryQhz06+qdHRQf+Sby6BbZmfal7Jgy9I3GQKngwzazz2WpI1CKu1KulpZNwrv91/0AMrRAZDI7deGD/+rs3LYVqhOTowdbtL0pWJ+7qnqCvJIJSw3oyLjoDOYAY5p+DPQP6hGuipAIBVBMzT5qxG894q/SO+FWQbdolt7WciA5fNuOOzEzKWl4a1f9kD0CBOz1i0mTl+L6IJaiCodj9WQwKcTN4hV1K6e+b6eAIhwcHxx6nzlSSy4u4HTKWNOQ/LYnsqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DOlz0rOvq0B4LnjXQCjHWP2Xt33H2Nbm2JknmN1I6fk=;
- b=RRi7q6jE4rYWsaqRTXFUVGeKzlVO4qnKv0Q1Hb7sEITX4yf6i1ZxYgsfPP45t5ZipJm3+grdaaY2KZ3kxT4WajXnX4FJuF7N+CTeiFiP0HeP3fZe2Sh6/XpCgEjy877BWP4OpXWXlJNRk7tSYl+cjD+7fEWdAc9RFIQYjrm+fcI=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
-Received: from BN7PR03MB4547.namprd03.prod.outlook.com (2603:10b6:408:9::22)
- by BN8PR03MB4738.namprd03.prod.outlook.com (2603:10b6:408:6d::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Thu, 20 Aug
- 2020 09:17:09 +0000
-Received: from BN7PR03MB4547.namprd03.prod.outlook.com
- ([fe80::3cda:7634:5802:df5f]) by BN7PR03MB4547.namprd03.prod.outlook.com
- ([fe80::3cda:7634:5802:df5f%7]) with mapi id 15.20.3305.024; Thu, 20 Aug 2020
- 09:17:09 +0000
-Date:   Thu, 20 Aug 2020 17:10:20 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 0/4] regulator: mp886x: two features and dt json convert
-Message-ID: <20200820171020.5df4683b@xhacker.debian>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR03CA0015.apcprd03.prod.outlook.com
- (2603:1096:404:14::27) To BN7PR03MB4547.namprd03.prod.outlook.com
- (2603:10b6:408:9::22)
+        Thu, 20 Aug 2020 05:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725885AbgHTJSD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 05:18:03 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C21C061757;
+        Thu, 20 Aug 2020 02:18:02 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id 51FC229A14E
+Subject: Re: [PATCH 06/13] ARM: dts: omap4-panda-common: Add CMA pools and
+ enable IPU & DSP
+To:     Suman Anna <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc:     Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernelci-results@groups.io, Corentin Labbe <clabbe@baylibre.com>
+References: <20200709231954.1973-1-s-anna@ti.com>
+ <20200709231954.1973-7-s-anna@ti.com>
+ <3e44fc46-07ac-6103-5c4d-8c7389453b87@collabora.com>
+ <f6ec1fd3-f42b-9284-44dc-e754e02ee86e@collabora.com>
+ <ee6e41e6-cfc6-145c-97a7-3aa53fc8df39@ti.com>
+ <94dbd2ee-bbac-2374-93bc-15ed67ba0e01@collabora.com>
+ <563c6edb-d55a-8f91-c8ff-06c5ee04b52e@ti.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <9b4a92e1-0f19-c7cb-182c-1f2342e28d19@collabora.com>
+Date:   Thu, 20 Aug 2020 10:17:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by TYAPR03CA0015.apcprd03.prod.outlook.com (2603:1096:404:14::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Thu, 20 Aug 2020 09:17:06 +0000
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3d3dbf7d-08ee-4446-aafd-08d844e9d04a
-X-MS-TrafficTypeDiagnostic: BN8PR03MB4738:
-X-Microsoft-Antispam-PRVS: <BN8PR03MB47381397970FD3295CA8BBD1ED5A0@BN8PR03MB4738.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GkZkKL48Vh6V8QGXGjZaLnlH0ILgelH88sPDMRnjl5s4ib88A2h/PR12aPMw++dob7gsuib33tmkus8z2a6O90A8G1N47b8Y/bYI4Eu1nIyC3at+STuHgY0zq4eKmut0lKAsfV8nOXqjBGesLbrHbmvJQURSD38lZExwwnY5Dk+tDJ+nGTy1HhEx1kACyg9Ia5m4OSaMV+G/weE6LZcluMRX2PnvzZ4civI1T//xUcFAcRkYxDFYu88JwgJafkP5YEJstvYJawmq7fW8DiuZm1/oGjGxY68Gq5TajBtXQ3nw4d8vIiV0HY4To+V7AOD9Z7tWJjXTIOqP3kCH5LlJ7MED6VKFSdI5YAyNkUhV5YtZPnkZsAJj9Eq6E2LaOF3s
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR03MB4547.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(396003)(346002)(366004)(376002)(136003)(316002)(2906002)(110136005)(66476007)(6486002)(66556008)(66946007)(110011004)(16576012)(4326008)(8676002)(478600001)(5660300002)(26005)(86362001)(9686003)(6666004)(52116002)(956004)(186003)(1076003)(83380400001)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: JXIfcYCLubFMrIDzCj+x6vgBNHJ37An6SEHC3lDbsJzErd9QmJCVhmPnhl52xtxnYMWz3MsAxVSRGn+wUfZjzMl/MH8QZKCeg7Thzyr5YdhHnJdcHuEkP2yv/LjhuWNnkCNRcshv93eeT3JhYlp49dlZrmth+M94OPoI6sgyDz9X0s1hafsu7BZj2A6MaoFiP65JtVTTuxnLBoh9qC5yBjxYu2ZKMpuo+n2QJYfkR6KVKA0shpy7qKMjsCZnKfxGnkdT9kp+oUvIJ7gJ5FTek9qoi4RCYLM0H1vGVpfbuWRZ/b8LvVCy1s7xHA2xXaIA3Rgz+UEn5SNolsTjX022qD4dqzKOx1APRKj3F5evclPaJHuEPF729ElOLHg+ZVONVkcCfzZQUChWvpibAQuuvbg4E2VSovcIyX0b4KHwmavsWrCBs1nJPC3TpOJ9ExOvBOMSb2esVwu/0XLVYXJlK1gPSBXvBFZKEU48GzWvHHe9jF0RQuPzCv406jEf70ZVZX7LYFhxgg5kU/OZfnB6in1F9/SfRjFNXyaJ03/DH6UQUpJMf7rq8CqxPCDGf7mvRFfGH35V8AXtNqa8uOC+ojnF67nEqP7NVgxSm5XZXZnBdnx/cGxiVHKvwx/wC76pCmYiWu4e3gTrhcVZ4qa/jQ==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d3dbf7d-08ee-4446-aafd-08d844e9d04a
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR03MB4547.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 09:17:08.9036
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: IEfpo9c6oiCrEj+xNP8X0rTEpBJ16sDtrMRRmiPMVGSKdMXhlOCXe9u9YcXShg1H8XQ9KfiATJp3Z7+uXzmtrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR03MB4738
+In-Reply-To: <563c6edb-d55a-8f91-c8ff-06c5ee04b52e@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This is to improve the mp886x regulator driver support.
-patch1 implments .set_ramp_delay
-patch2 and patch3 support the switch freq setting
-patch4 converts dt binding to json-schema
+On 14/08/2020 20:33, Suman Anna wrote:
+> Hi Guillaume,
+> 
+> On 8/14/20 11:33 AM, Guillaume Tucker wrote:
+>> On 14/08/2020 16:26, Suman Anna wrote:
+>>> On 8/14/20 9:32 AM, Guillaume Tucker wrote:
+>>>> On 12/08/2020 06:31, Guillaume Tucker wrote:
+>>>>> On 10/07/2020 00:19, Suman Anna wrote:
+>>>>>> The CMA reserved memory nodes have been added for the IPU and DSP
+>>>>>> remoteproc devices on all the OMAP4-based Panda boards. These nodes
+>>>>>> are assigned to the respective rproc device nodes, and both the
+>>>>>> IPU and DSP remote processors are enabled for all these boards.
+>>>>>>
+>>>>>> The current CMA pools and sizes are defined statically for each device.
+>>>>>> The starting addresses are fixed to meet current dependencies on the
+>>>>>> remote processor firmwares, and will go away when the remote-side
+>>>>>> code has been improved to gather this information runtime during
+>>>>>> its initialization.
+>>>>>>
+>>>>>> An associated pair of the rproc node and its CMA node can be disabled
+>>>>>> later on if there is no use-case defined to use that remote processor.
+>>>>>>
+>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>> ---
+>>>>>>  arch/arm/boot/dts/omap4-panda-common.dtsi | 30 +++++++++++++++++++++++
+>>>>>>  1 file changed, 30 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>> index 55ea8b6189af..ef79028fc95f 100644
+>>>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>>> @@ -12,6 +12,26 @@ memory@80000000 {
+>>>>>>  		reg = <0x80000000 0x40000000>; /* 1 GB */
+>>>>>>  	};
+>>>>>>  
+>>>>>> +	reserved-memory {
+>>>>>> +		#address-cells = <1>;
+>>>>>> +		#size-cells = <1>;
+>>>>>> +		ranges;
+>>>>>> +
+>>>>>> +		dsp_memory_region: dsp-memory@98000000 {
+>>>>>> +			compatible = "shared-dma-pool";
+>>>>>> +			reg = <0x98000000 0x800000>;
+>>>>>> +			reusable;
+>>>>>> +			status = "okay";
+>>>>>> +		};
+>>>>>> +
+>>>>>> +		ipu_memory_region: ipu-memory@98800000 {
+>>>>>> +			compatible = "shared-dma-pool";
+>>>>>> +			reg = <0x98800000 0x7000000>;
+>>>>>> +			reusable;
+>>>>>> +			status = "okay";
+>>>>>> +		};
+>>>>>> +	};
+>>>>>> +
+>>>>>>  	chosen {
+>>>>>>  		stdout-path = &uart3;
+>>>>>>  	};
+>>>>>> @@ -571,3 +591,13 @@ hdmi_out: endpoint {
+>>>>>>  		};
+>>>>>>  	};
+>>>>>>  };
+>>>>>> +
+>>>>>> +&dsp {
+>>>>>> +	status = "okay";
+>>>>>> +	memory-region = <&dsp_memory_region>;
+>>>>>> +};
+>>>>>> +
+>>>>>> +&ipu {
+>>>>>> +	status = "okay";
+>>>>>> +	memory-region = <&ipu_memory_region>;
+>>>>>> +};
+>>>>>>
+>>>>>
+>>>>> This appears to be causing some BUG alert messages:
+>>>>>
+>>>>>   BUG: Bad page state in process swapper/0  pfn:9c801
+>>>>>
+>>>>> as reported on kernelci.org:
+>>>>>
+>>>>>   https://kernelci.org/test/case/id/5f326c6661360154c452c1c9/
+>>>>>
+>>>>> I've run a bisection and it landed on this commit.  If you fix it
+>>>>> with another patch, please add:
+>>>>>
+>>>>>   Reported-by: "kernelci.org bot" <bot@kernelci.org>
+>>>>
+>>>>
+>>>> This was bisected again automatically on mainline, see the report
+>>>> below.  Is anyone available to take a look, or could the patch be
+>>>> reverted?
+>>>
+>>> Thanks Guillaume for the report. I will take a look at this today. It is strange
+>>> that the bisect is pointing to this commit as reserving a CMA pool and assigning
+>>> it to a device should be fairly normal usage. Is the issue seen only on OMAP4
+>>> Pandaboard and not any of the other OMAP5 uEVM or DRA7xx/AM57xx EVMS?
+>>
+>> Thanks for taking a look.
+>>
+>> In the extended OMAP family, aside from the Panda only the
+>> BeagleBone Black and BeagleBoard xM are being tested on
+>> kernelci.org and they don't show this problem:
+> 
+> OK, neither of these boards have these IPU remote processors, and so they do not
+> define any reserved-memory pools.
+> 
+> Anyway, the issue started popping up because of the mem arguments used in the
+> bootargs on these kernelci setups, and the current CMA pools using addresses
+> from this region, resulting in the kernel panic traces.
+> 
+> Kernel command line: console=ttyO2,115200n8 root=/dev/ram0 fixrtc nocompcache
+> vram=48M omapfb.vram=0:24M mem=456M@0x80000000 mem=512M@0xA0000000 rootdelay=5
+> console_msg_format=syslog ip=dhcp
+> 
+> The bootargs leave out a hole in the available memory for kernel, and this way
+> of specifying was coming from really very old downstream TI kernel usage (pre-DT
+> days). This carveout hole was used to define the memory used by remoteprocs.
+> This has come through a long evolution of using memblock functions in code, to
+> finally using the reserved-memory nodes in dts since then.
+> 
+> The issue should be fixed once the bootargs are fixed up to remove using these
+> mem args, and let the memory for the board be defined by the regular dts memory
+> node.
+> 
+> I have checked the next git history and these patches were first added from
+> next-20200714 onwards, and that matches the kernelci failure log history.
 
-Since v2:
- - Use mps,switch-frequency-hz instead of mps,switch-frequency
- - Add "maxItems: 2" to "mps,fb-voltage-divider" in dt-binding
- - Add a $ref to regulator.yaml in dt-binding
+Many thanks for taking the time to look into this, especially as
+it wasn't due to your patch indeed.  We'll change the kernel
+command line accordingly.
 
-Since v1:
- - put any schema conversions at the end of the series as Mark
-   suggested.
+Best wishes,
+Guillaume
 
-Jisheng Zhang (4):
-  regulator: mp886x: implement set_ramp_delay
-  dt-bindings: regulator: mp886x: support mps,switch-frequency-hz
-  regulator: mp886x: support setting switch freq
-  dt-bindings: regulator: Convert mp886x to json-schema
-
- .../devicetree/bindings/regulator/mp886x.txt  |  27 -----
- .../bindings/regulator/mps,mp886x.yaml        |  61 ++++++++++
- drivers/regulator/mp886x.c                    | 109 +++++++++++++++++-
- 3 files changed, 167 insertions(+), 30 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/regulator/mp886x.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/mps,mp886x.yaml
-
--- 
-2.28.0
+>>>> On 14/08/2020 15:22, KernelCI bot wrote:
+>>>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>>>> * This automated bisection report was sent to you on the basis  *
+>>>>> * that you may be involved with the breaking commit it has      *
+>>>>> * found.  No manual investigation has been done to verify it,   *
+>>>>> * and the root cause of the problem may be somewhere else.      *
+>>>>> *                                                               *
+>>>>> * If you do send a fix, please include this trailer:            *
+>>>>> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+>>>>> *                                                               *
+>>>>> * Hope this helps!                                              *
+>>>>> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+>>>>>
+>>>>> mainline/master bisection: baseline.dmesg.alert on panda
+>>>>>
+>>>>> Summary:
+>>>>>   Start:      a1d21081a60d Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+>>>>>   Plain log:  https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-omap4-panda.txt
+>>>>>   HTML log:   https://storage.kernelci.org/mainline/master/v5.8-13249-ga1d21081a60d/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-collabora/baseline-omap4-panda.html
+>>>>>   Result:     b4778e787fe9 ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
+>>>>>
+>>>>> Checks:
+>>>>>   revert:     PASS
+>>>>>   verify:     PASS
+>>>>>
+>>>>> Parameters:
+>>>>>   Tree:       mainline
+>>>>>   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>>>>>   Branch:     master
+>>>>>   Target:     panda
+>>>>>   CPU arch:   arm
+>>>>>   Lab:        lab-collabora
+>>>>>   Compiler:   gcc-8
+>>>>>   Config:     multi_v7_defconfig+CONFIG_SMP=n
+>>>>>   Test case:  baseline.dmesg.alert
+>>>>>
+>>>>> Breaking commit found:
+>>>>>
+>>>>> -------------------------------------------------------------------------------
+>>>>> commit b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1
+>>>>> Author: Suman Anna <s-anna@ti.com>
+>>>>> Date:   Thu Jul 9 18:19:47 2020 -0500
+>>>>>
+>>>>>     ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
+>>>>>     
+>>>>>     The CMA reserved memory nodes have been added for the IPU and DSP
+>>>>>     remoteproc devices on all the OMAP4-based Panda boards. These nodes
+>>>>>     are assigned to the respective rproc device nodes, and both the
+>>>>>     IPU and DSP remote processors are enabled for all these boards.
+>>>>>     
+>>>>>     The current CMA pools and sizes are defined statically for each device.
+>>>>>     The starting addresses are fixed to meet current dependencies on the
+>>>>>     remote processor firmwares, and will go away when the remote-side
+>>>>>     code has been improved to gather this information runtime during
+>>>>>     its initialization.
+>>>>>     
+>>>>>     An associated pair of the rproc node and its CMA node can be disabled
+>>>>>     later on if there is no use-case defined to use that remote processor.
+>>>>>     
+>>>>>     Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>     Signed-off-by: Tony Lindgren <tony@atomide.com>
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>> index 55ea8b6189af..ef79028fc95f 100644
+>>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>>> @@ -12,6 +12,26 @@
+>>>>>  		reg = <0x80000000 0x40000000>; /* 1 GB */
+>>>>>  	};
+>>>>>  
+>>>>> +	reserved-memory {
+>>>>> +		#address-cells = <1>;
+>>>>> +		#size-cells = <1>;
+>>>>> +		ranges;
+>>>>> +
+>>>>> +		dsp_memory_region: dsp-memory@98000000 {
+>>>>> +			compatible = "shared-dma-pool";
+>>>>> +			reg = <0x98000000 0x800000>;
+>>>>> +			reusable;
+>>>>> +			status = "okay";
+>>>>> +		};
+>>>>> +
+>>>>> +		ipu_memory_region: ipu-memory@98800000 {
+>>>>> +			compatible = "shared-dma-pool";
+>>>>> +			reg = <0x98800000 0x7000000>;
+>>>>> +			reusable;
+>>>>> +			status = "okay";
+>>>>> +		};
+>>>>> +	};
+>>>>> +
+>>>>>  	chosen {
+>>>>>  		stdout-path = &uart3;
+>>>>>  	};
+>>>>> @@ -571,3 +591,13 @@
+>>>>>  		};
+>>>>>  	};
+>>>>>  };
+>>>>> +
+>>>>> +&dsp {
+>>>>> +	status = "okay";
+>>>>> +	memory-region = <&dsp_memory_region>;
+>>>>> +};
+>>>>> +
+>>>>> +&ipu {
+>>>>> +	status = "okay";
+>>>>> +	memory-region = <&ipu_memory_region>;
+>>>>> +};
+>>>>> -------------------------------------------------------------------------------
+>>>>>
+>>>>>
+>>>>> Git bisection log:
+>>>>>
+>>>>> -------------------------------------------------------------------------------
+>>>>> git bisect start
+>>>>> # good: [e4cbce4d131753eca271d9d67f58c6377f27ad21] Merge tag 'sched-core-2020-08-03' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+>>>>> git bisect good e4cbce4d131753eca271d9d67f58c6377f27ad21
+>>>>> # bad: [a1d21081a60dfb7fddf4a38b66d9cef603b317a9] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+>>>>> git bisect bad a1d21081a60dfb7fddf4a38b66d9cef603b317a9
+>>>>> # bad: [47ec5303d73ea344e84f46660fff693c57641386] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+>>>>> git bisect bad 47ec5303d73ea344e84f46660fff693c57641386
+>>>>> # bad: [e4a7b2dc35d9582c253cf5e6d6c3605aabc7284d] Merge tag 'leds-5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds
+>>>>> git bisect bad e4a7b2dc35d9582c253cf5e6d6c3605aabc7284d
+>>>>> # bad: [74858abbb1032222f922487fd1a24513bbed80f9] Merge tag 'cap-checkpoint-restore-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux
+>>>>> git bisect bad 74858abbb1032222f922487fd1a24513bbed80f9
+>>>>> # bad: [2f3fbfdaf77f3ac417d0511fac221f76af79f6fc] Merge tag 'arm-dt-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+>>>>> git bisect bad 2f3fbfdaf77f3ac417d0511fac221f76af79f6fc
+>>>>> # bad: [c6e2e454baef6080ef89c2b6488e708d5fa0f052] Merge tag 'qcom-arm64-for-5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux into arm/dt
+>>>>> git bisect bad c6e2e454baef6080ef89c2b6488e708d5fa0f052
+>>>>> # bad: [3502e079c6bcff95f5c34eecb5c1d9ad1379ae0d] Merge tag 'tegra-for-5.9-arm-dt' of git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux into arm/dt
+>>>>> git bisect bad 3502e079c6bcff95f5c34eecb5c1d9ad1379ae0d
+>>>>> # bad: [39a85f6d91a1a827985ce44a346a99f68167d0ee] Merge tag 'v5.8-next-dts64' of git://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux into arm/dt
+>>>>> git bisect bad 39a85f6d91a1a827985ce44a346a99f68167d0ee
+>>>>> # good: [dfe2a4cf8e2f4c1f53877aa6cb38eda102a14681] Merge tag 'uniphier-dt64-v5.9' of git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-uniphier into arm/dt
+>>>>> git bisect good dfe2a4cf8e2f4c1f53877aa6cb38eda102a14681
+>>>>> # bad: [75f66813e081d2bd718d931ee50334c12a9e4492] Replace HTTP links with HTTPS ones: OMAP DEVICE TREE SUPPORT
+>>>>> git bisect bad 75f66813e081d2bd718d931ee50334c12a9e4492
+>>>>> # good: [9ae60ac13fc847d7175587290a1a9aa2aac091b0] ARM: dts: omap4: Update the DSP node
+>>>>> git bisect good 9ae60ac13fc847d7175587290a1a9aa2aac091b0
+>>>>> # bad: [3026ce47498dfdc92966d8d66f10afabf7190c46] ARM: dts: omap5: Add DSP and IPU nodes
+>>>>> git bisect bad 3026ce47498dfdc92966d8d66f10afabf7190c46
+>>>>> # good: [691eb1805fcfc1a2ede06aec6a4d85d312961146] ARM: dts: omap4: Add aliases for rproc nodes
+>>>>> git bisect good 691eb1805fcfc1a2ede06aec6a4d85d312961146
+>>>>> # bad: [7f7d771c00bf65d18a3e30e983b4061a418efbf4] ARM: dts: omap4-panda-common:: Add system timers to DSP and IPU
+>>>>> git bisect bad 7f7d771c00bf65d18a3e30e983b4061a418efbf4
+>>>>> # bad: [b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1] ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
+>>>>> git bisect bad b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1
+>>>>> # first bad commit: [b4778e787fe9e82dcbff8150ebfbe6fea0b6c4e1] ARM: dts: omap4-panda-common: Add CMA pools and enable IPU & DSP
+>>>>> -------------------------------------------------------------------------------
+>>>>
+>>>>
+>>>
+>>
+> 
 
