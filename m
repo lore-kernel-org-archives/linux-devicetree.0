@@ -6,63 +6,64 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E640C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 18:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6891DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 18:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50BCE207DE
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 18:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34821206DA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 18:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="DIFnGSZd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="etzM/mr8"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="FGGRRbgE";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="LqOtEcUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgHTSXG (ORCPT
+        id S1726836AbgHTSoL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:23:06 -0400
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:62310 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgHTSXG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 14:23:06 -0400
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id EB83471113;
-        Thu, 20 Aug 2020 14:22:59 -0400 (EDT)
+        Thu, 20 Aug 2020 14:44:11 -0400
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:57463 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbgHTSoK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 14:44:10 -0400
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id E4FCFD7782;
+        Thu, 20 Aug 2020 14:44:06 -0400 (EDT)
         (envelope-from nico@fluxnic.net)
 DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
         :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=ceL8lzbX4brisQe2BVsEvyqSkJw=; b=DIFnGS
-        Zd6ko9fiFr8Rr2qNT2rPV8nNXvlyzZjp7p8SDSWjVK10+JLoGusfmBEJ7T1EW8bW
-        AO8xyuMFI9OBMJIZVQ36MXT0PrCQVniLjthKfTTrYYNq7rOEtvK1i9PTF3DFuHIn
-        eH/JkuL4VnD20npBLbmg3k9HPvT48xenkAx8I=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id E1B7E71111;
-        Thu, 20 Aug 2020 14:22:59 -0400 (EDT)
+        :content-type; s=sasl; bh=UomrMm5bcgzpxgdvjlxwU/yEVXE=; b=FGGRRb
+        gELH5cyjzd1Avhb6ilcDU5hDjN9cGhPp55eKeFVvqkfctRrvWenlYmywhmcqNWA6
+        Oagp7Y/d1vJAW6bJ7rU6gZS+9bG5XkCdGaTKVrI6ZFOxlg/SiQNxZZY16Gfd3/l+
+        D/wu+zJS7u7Z9WXn9HeAfzEmzi5lX+vHVN07M=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id DD0C9D7780;
+        Thu, 20 Aug 2020 14:44:06 -0400 (EDT)
         (envelope-from nico@fluxnic.net)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=YubzaHe1BEeYnWz0VCJecRTAuQPnm7Y/to0XjC9kum4=; b=etzM/mr8nSbCBNVrbw3obv8IEAKTSGxzrim10L7bnstsh7M8pZuu7Mri9yWi+0z83KR+BaDSQiPpE2ZacdxQrpou0wqZwAd2VfJJ7owNcONGfhIYBs91cN3YRNMthHxEAQueQ04u+SiKnYI5pgSSZv6FDHPbdk47QPTF6e1weDY=
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=c/Nfirp6joUaEo3iAz0m08gMi6Aof9jBfhAxKUXLcJA=; b=LqOtEcUodIZ1k+UveOqJcwsi3xXN8Ai+9MMDlSsCa+XmHZxLaymygxKJXwkiY+HsMatTBw3hdtRfaL0yFs4RSo0//P78uETIFHPl1o5VKcUuH/asb3mK6SjeuujqfN4MPZb+OH1kP/DO25BUYOSWgLG7zM0bLhT7qMa0UOLmZZg=
 Received: from yoda.home (unknown [24.203.50.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 5B6627110F;
-        Thu, 20 Aug 2020 14:22:59 -0400 (EDT)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id C9F45D777D;
+        Thu, 20 Aug 2020 14:44:03 -0400 (EDT)
         (envelope-from nico@fluxnic.net)
 Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 60DDD2DA01C4;
-        Thu, 20 Aug 2020 14:22:58 -0400 (EDT)
-Date:   Thu, 20 Aug 2020 14:22:58 -0400 (EDT)
+        by yoda.home (Postfix) with ESMTPSA id EDCAD2DA01C4;
+        Thu, 20 Aug 2020 14:44:01 -0400 (EDT)
+Date:   Thu, 20 Aug 2020 14:44:01 -0400 (EDT)
 From:   Nicolas Pitre <nico@fluxnic.net>
 To:     Boris Brezillon <boris.brezillon@collabora.com>
-cc:     Matthew Schnoor <matthew.schnoor@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
         Laura Nixon <laura.nixon@team.mipi.org>,
         Robert Gough <robert.gough@intel.com>,
-        Rob Herring <robh+dt@kernel.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Matthew Schnoor <matthew.schnoor@intel.com>
 Subject: Re: [PATCH 2/2] i3c/master: add the mipi-i3c-hci driver
-In-Reply-To: <20200820185642.04f184e9@collabora.com>
-Message-ID: <nycvar.YSQ.7.78.906.2008201332250.1479@knanqh.ubzr>
-References: <20200814034854.460830-1-nico@fluxnic.net> <20200814034854.460830-3-nico@fluxnic.net> <20200820100829.0e44200a@xps13> <nycvar.YSQ.7.78.906.2008201102500.1479@knanqh.ubzr> <20200820185642.04f184e9@collabora.com>
+In-Reply-To: <20200820191424.29c42972@collabora.com>
+Message-ID: <nycvar.YSQ.7.78.906.2008201425490.1479@knanqh.ubzr>
+References: <20200814034854.460830-1-nico@fluxnic.net> <20200814034854.460830-3-nico@fluxnic.net> <20200820100829.0e44200a@xps13> <20200820103944.08a55ba4@collabora.com> <nycvar.YSQ.7.78.906.2008201234370.1479@knanqh.ubzr>
+ <20200820191424.29c42972@collabora.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 2D1B96BC-E312-11EA-A89B-01D9BED8090B-78420484!pb-smtp1.pobox.com
+X-Pobox-Relay-ID: 1EC7AEEA-E315-11EA-B4B7-843F439F7C89-78420484!pb-smtp21.pobox.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -70,145 +71,56 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 On Thu, 20 Aug 2020, Boris Brezillon wrote:
 
-> On Thu, 20 Aug 2020 12:34:13 -0400 (EDT)
+> On Thu, 20 Aug 2020 12:47:49 -0400 (EDT)
 > Nicolas Pitre <nico@fluxnic.net> wrote:
 > 
-> > On Thu, 20 Aug 2020, Miquel Raynal wrote:
-> 
-> > > > +
-> > > > +#ccflags-y := -DDEBUG  
+> > On Thu, 20 Aug 2020, Boris Brezillon wrote:
+> > 
+> > > On Thu, 20 Aug 2020 10:08:29 +0200
+> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> > >   
+> > > > > +		/*
+> > > > > +		 * TODO: Extend the subsystem layer to allow for registering
+> > > > > +		 * new device and provide BCR/DCR/PID at the same time.    
+> > > > 
+> > > > Not sure this is needed if you don't use it directly as the core will
+> > > > anyway (in its current form) send the relevant CCC to read these
+> > > > registers.  
 > > > 
-> > > Probably a leftover?  
+> > > We considered optimizing that in the past but that means making the DAA
+> > > and SETDASA registration different. I'm not sure it's worth it to be
+> > > honest, PID/DCR/BCR only happens when initializing devices and I
+> > > suspect the overhead of querying those DATA twice in case of DAA is
+> > > negligible anyway.  
 > > 
-> > Well, I left it there intentionally as the code is still actively being 
-> > developed, so full debugging can quickly be reactivated by anyone.
-> > I can remove it if deemed too distracting.
+> > Wellllll... I know some people who do feel strongly about this 
+> > particular issue for some reasons.
 > 
-> How about using dynamic printk instead? I'm pretty sure you don't need
-> to debug I3C stuff early enough to warrant usage of DDEBUG.
+> Mind developing a bit why? Boot-time maybe?
 
-Actually I do have DDEBUG set all the time when testing this code. The 
-entire log is captured into a file that I can search for issues when 
-they come.
+Mind you, I'd prefer for those people to argue their use case themselves 
+as I'm still not fully convinced myself. But yeah, this has something to 
+do with latency.
 
-I'm too lazy to bother about dynamic printk for now. That is nice when 
-debugging a deployed solution where you don't want to skew runtime 
-timings too much, but I'm not at the point of doing performance 
-measurements yet.
+And v2 of the spec goes a step further by making the DAA procedure give 
+you the PID/DCR/BCR of the winning device before you provide it the 
+address to be assigned, so you could skip SETDASA/SETNEWDA altogether by 
+giving it the final address up front. But in order for this to work the 
+subsystem would have to provide a query method that would go like: 
+here's some PID/DCR/BCR: please give me the best address to assign this 
+device... oh and do so within a 150ms delay.
 
-Anyway, this one has crossed the distraction threshold too at this point 
-so I'll remove it.
-
-> > > > +	BUG_ON(raw);  
-> > > 
-> > > It looks like 'raw' cannot be used with v1 (at least you seem to take
-> > > care of it in v2), so maybe BUG_ON is a bit radical here and you can
-> > > simply return an error? I think the use of BUG() is not appreciated in
-> > > general.  
-> > 
-> > That depends. Judgement is needed for BUG() usage.
-> > 
-> > Here raw is absolutely impossible with v1 hardware and if ever this 
-> > happens this is definitely a software bug that needs fixing right away. 
-> > There is no point returning a runtime error code in that case as the 
-> > upper layer won't know what to do about it.
-> > 
-> > On the other hand, you absolutely don't want to BUG() on a condition 
-> > that could _eventually_ happen at run time during normal usage. But 
-> > that's not the case here.
+> > So I'd prefer giving them some hope 
+> > and leave the door open to some i3c_master_add_i3c_dev_and_info() 
+> > interface. In the end, it's just a matter of pre-filling the info struct 
+> > and skipping the PID retrieval in i3c_master_getpid_locked() if already 
+> > available, etc.
 > 
-> Well, people have tried to eradicate BUG() occurrences, so let's not add
-> new ones if we can avoid it. How about a WARN_ON()+error:
-> 
-> 	if (WARN_ON(raw))
-> 		return -EINVAL;
+> I'm definitely not closing the door, but I'd like to understand why this
+> is so important to them :-). Anyway, if the changes are not invasive, I
+> don't have a good reason to refuse it.
 
-In this case I can agree to that. Will do.
-
-However...
-
-> > > > +		/*
-> > > > +		 * We're deep in it if ever this condition is ever met.
-> > > > +		 * Hardware might still be writing to memory, etc.
-> > > > +		 */
-> > > > +		ERR("unable to abort the ring");
-> > > > +		BUG();  
-> > > 
-> > > Why not just treating the error as always?  
-> > 
-> > Again, if this ever happens, you're screwed. That means potential DMA 
-> > engines could still be alive and about to scribble over memory that is 
-> > about to be freed which may cause all sorts of impossible-to-find bugs 
-> > in unrelated parts of the kernel. There is no point going on reporting 
-> > such error condition to upper layers until the software, or possibly the 
-> > hardware, is fixed
-> 
-> Again, I think adding a WARN_ON() and letting hci_dma_dequeue_xfer()
-> return an error code is a good compromise. 
-
-Here I disagree. You just can't return and let the system go any longer 
-if some stray DMA is not stopped, period. No compromize is possible 
-here.
-
-> > > > +const struct hci_cmd_ops i3c_hci_cmd_v1 = {
-> > > > +	.prep_ccc		= hci_cmd_v1_prep_ccc,
-> > > > +	.prep_i3c_xfer		= hci_cmd_v1_prep_i3c_xfer,
-> > > > +	.prep_i2c_xfer		= hci_cmd_v1_prep_i2c_xfer,
-> > > > +	.perform_daa		= hci_cmd_v1_daa,  
-> > > 
-> > > I know Boris does not like such space alignment :)  
-> > 
-> > Well... unfortunately for Boris, this is overwhelmingly prevalent in the 
-> > kernel code:
-> > 
-> > $ git grep "^"$'\t'"\.[^ ]*"$'\t'"*= "
-> > 
-> > And I do like it.  ;-P
-> 
-> The rational being this preference is that sooner or later someone will
-> add a field to hci_cmd_ops that messes up your nice formatting :P.
-
-When/if that happens, it is not very difficult to realign the other 
-assignments. I don't think it is likely that adding/removing fields here 
-will ever become an area of conflicting patch contention. OTOH this 
-makes for easier code reading whose occurence is more likely.
-
-> Anyway, that's definitely not a blocker.
-
-Good!
-
-> > > > +#if 0
-> > > > +	if (ccc->rnw) {
-> > > > +		HEXDUMP("got: ", ccc->dests[0].payload.data,
-> > > > +				 ccc->dests[0].payload.len);
-> > > > +	}
-> > > > +#endif  
-> > > 
-> > > I guess this debug block can be dropped too (there are many debug
-> > > information the should probably be dropped or turned into dev_info()
-> > > or similar).  
-> > 
-> > Again, hardware bringup from different vendors and other developments 
-> > are still ongoing. I'd wish for those to stay for the time being unless 
-> > people feel strongly enough about these to become a merge show stopper.
-> 
-> Can't we replace that by a dev_dbg() using the %*pE formater?
-
-Oh nice! Didn't know about that.
-
-Looks like %*ph is what I want here.
-
-> > > > +		if (rh->ibi_data_phys)  
-> > > 
-> > > I was told that _phys was a very bad suffix for something which is a
-> > > DMA address an not focibly a physical address.  
-> > 
-> > Fair enough. The HCI spec refers to these as "physical memory" hence the 
-> > suffix. What were you told to use instead?
-> 
-> Maybe _dma instead of _phys?
-
-No problem, will do.
+Right. At least now you've been warned this might be coming.
 
 
 Nicolas
