@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389E1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 578D2C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE5F22BEA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA9722B4B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 09:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915915;
-	bh=vdxripKePBWqF+bZjaYX2lU5JgkTx4UY2JsoCYkvAn0=;
+	s=default; t=1597915967;
+	bh=/zLRCStyhmJwJVkJgpnaOzUtTQF6qgqz6lJqCLgWIws=;
 	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=YZqxAQX6cJNm/bPd0yBFedYcJoL5Fx+eug7zBMDXp0lEMBGTm5OGNSa9THU0aZOQi
-	 0qNn7zbezGA4dRUtUf0IR4aK2zYkSBFM+Doqcvwwz8isTdl9VE/g2wZYBBR78jr705
-	 h8GPxlgvK8rhQtPvG1MMlolI11fhW3K/qdrORPPM=
+	b=VSKRXrl31Mx0/uii7bctYZsNIFY7q8P633oDD7pieHOxWE77kqbQ+YGnSKz3e8cBN
+	 IAqFgIiUdp9hOvbx1xdRpcAO5v4jGn3WSRtFwnkEcO26Si16paldw347tzLsxbni1u
+	 JqdAwIUIwqfdzkza47Phn2OCZkmWuZC9vc1n0pBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgHTJbo (ORCPT
+        id S1728214AbgHTJbQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:31:44 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38410 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbgHTJbX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 05:31:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a14so1358797wra.5;
-        Thu, 20 Aug 2020 02:31:22 -0700 (PDT)
+        Thu, 20 Aug 2020 05:31:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33543 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgHTJa6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 05:30:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f18so3370707wmc.0;
+        Thu, 20 Aug 2020 02:30:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b1bNFiZgiP0kbWWwCg17EvjL33DK3FeILPEpJ0Dhl/Q=;
-        b=uA9edRSq25TmKCGVnHYoP5cHkYNbN41oRl3S0afOBoDXd5TLtLaExA7B33xt2MhSiJ
-         tynMT5tmW36TyXYGDl7xffBHurmHwGax/+S6tjoTX/P9gN3jD8iF+krSUTP/Hc+Kk6mR
-         lcKyg3SujxHl29mGtm1vGl/ZEgup7NFXxpjA0xaB6pJafcQjQQAJvaV3jgzhtVrZOa6+
-         zcPq0Y85hXtTTnLPVNIdJ4nG5+hiTBS/wHrHZ94ysK23SZi4Nft5nGZAJWpLaIAtFgcQ
-         dbX8ewA8PZpR9odN9OP6q2a6jOLHFnfcoC3tq0tn2S7siySvVqziRATeKZE1PBkjbWfy
-         3GHg==
-X-Gm-Message-State: AOAM533ZBSqaMRM6oNuol5vyFNIOeR0XYYluJov1DSv2EPYXr9WhnORU
-        3b1vtAvJ5tRtVBDlqXWTY6Y=
-X-Google-Smtp-Source: ABdhPJyp9/7bHjGRhaR63apXcQFn01iJGOXs1Poxb/moYU7gYPKQXpIuQVliKswmp5fn+tzr2fBnTw==
-X-Received: by 2002:a5d:4c45:: with SMTP id n5mr2319721wrt.68.1597915881386;
-        Thu, 20 Aug 2020 02:31:21 -0700 (PDT)
+        bh=Hma56AddZUeGIsGjGqDeo/64eZyNigdifLybdInzONE=;
+        b=aXG8m8gjj/HQ7d5ZXshy23qFDkdPBCx0tb1dI6169BpbZdl5cSU0yy4ycEQgK/ZpEq
+         NkJwIg+GIlJTC22rYoEHoAHqzwWhNrZ8t8LFoXgusyaxBASEJHp6L742USCRYu7S8UGY
+         fVYFjdbhPML2eq8aYF4cYBSPpgb8qUM6oOQKs/wRmlpSQdVFZicpw5E2FzcWB1LdBG5d
+         ckEyEwro8MkuqkbyMOetahTHjFoaewHPDsh42+rXQPuOCKqYEQF/Oj43SYN1PhlPL4lM
+         pjvyEZxvxDe3Y7TZlJ22SeiRZlaaC78fIUbagdLAsojHb9jqQhDg8XD6WvBU7fc1a7wJ
+         tjTg==
+X-Gm-Message-State: AOAM533CbU/uuw3EI7tJeCnhHELKuFx/cQZ5fGjdp5EUNbDWIRbFizue
+        7mzvg5d2OuRR/+fTDuUhNik=
+X-Google-Smtp-Source: ABdhPJyiElaHdN2+8uTn/ho88gakS51vNHVG2yKIz9lnSP1m0ZXbYQwctmo3vc2ZlQAAm6cuIn5Lnw==
+X-Received: by 2002:a7b:c35a:: with SMTP id l26mr2680443wmj.42.1597915856718;
+        Thu, 20 Aug 2020 02:30:56 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id z7sm3102928wmk.6.2020.08.20.02.31.20
+        by smtp.googlemail.com with ESMTPSA id g145sm4136444wmg.23.2020.08.20.02.30.55
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Aug 2020 02:31:20 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 11:31:18 +0200
+        Thu, 20 Aug 2020 02:30:56 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 11:30:53 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Andy Gross <agross@kernel.org>,
@@ -61,33 +61,33 @@ To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [RESEND PATCH 4/5] ARM: dts: tango: Align L2 cache-controller
+Subject: Re: [RESEND PATCH 1/5] ARM: dts: prima: Align L2 cache-controller
  nodename with dtschema
-Message-ID: <20200820093118.GC15884@kozik-lap>
+Message-ID: <20200820093053.GB15884@kozik-lap>
 References: <20200819175853.21492-1-krzk@kernel.org>
- <20200819175853.21492-4-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200819175853.21492-4-krzk@kernel.org>
+In-Reply-To: <20200819175853.21492-1-krzk@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:58:52PM +0200, Krzysztof Kozlowski wrote:
+On Wed, Aug 19, 2020 at 07:58:49PM +0200, Krzysztof Kozlowski wrote:
 > Fix dtschema validator warnings like:
->     l2-cache-controller@20100000: $nodename:0:
->         'l2-cache-controller@20100000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+>     l2-cache-controller@80040000: $nodename:0:
+>         'l2-cache-controller@80040000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  arch/arm/boot/dts/tango4-common.dtsi | 2 +-
+>  arch/arm/boot/dts/prima2.dtsi | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
 I forgot to add the tag provided on previous submission:
-Acked-by: Mans Rullgard <mans@mansr.com>
+Acked-by: Barry Song <baohua@kernel.org>
 
 Best regards,
 Krzysztof
