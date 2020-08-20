@@ -2,92 +2,124 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6EFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7A4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEDE206DA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tYRgP1lx"
+	by mail.kernel.org (Postfix) with ESMTP id 39CD9208A9
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 07:21:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597908088;
+	bh=Zq62Yi8puI9hJDCGZSsFugaJwyxuNLefoKRAmrJhm3A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=fPRndceRnExIUrbgAxqhrQSXAwNlyzitLbY/wa+YH6uhfN7p0HsN9yLWkwBj84wdw
+	 zej0qOiDYNO9BGF+ihoPvI3VLMA180FiHzOOWnmQZfLceLIMp1TI58LuouiW43EwEo
+	 SZBnl+rUi/0P/Y1yggwhn626oXPOERqH4aW1ffHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgHTHHD (ORCPT
+        id S1726325AbgHTHVW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:07:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47984 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgHTHHB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 03:07:01 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07K76xpd071021;
-        Thu, 20 Aug 2020 02:06:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597907219;
-        bh=tO+VmcwGzpBAIWcmRdVeBCzVCyQm0H4wa4UHvBG9D+Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tYRgP1lxTqSSsoBQmaZaLB3lby6SAxbEVI5POeoZVoBmdVfpDna5PbzzEhnRlW3c0
-         n//ew1gyeK57A4vXjFfDGTsRq7UADufcjWA7tFOpiivfLwkQbt/+IjOGpQkjSLi/cd
-         F23FF+zI7CxGA3+MdZt3Xnd7TxBbHAVUO0r+Py74=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07K76xSV114742
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Aug 2020 02:06:59 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
- Aug 2020 02:06:59 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 20 Aug 2020 02:06:59 -0500
-Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07K76tC2095200;
-        Thu, 20 Aug 2020 02:06:56 -0500
-Subject: Re: [PATCH] dt-bindings: mmc: sdhci-am654: Document bindings for the
- host controllers on TI's J7200 devices
-To:     Rob Herring <robh@kernel.org>
-CC:     <ulf.hansson@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200802070114.9624-1-faiz_abbas@ti.com>
- <20200817211727.GA1578682@bogus>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <30d40498-847b-add7-d209-020d2ae00805@ti.com>
-Date:   Thu, 20 Aug 2020 12:36:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 03:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbgHTHVV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 03:21:21 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEDA72078B;
+        Thu, 20 Aug 2020 07:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597908081;
+        bh=Zq62Yi8puI9hJDCGZSsFugaJwyxuNLefoKRAmrJhm3A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=J9k8h5M43Qx2spsmVYYJjRUU0UEst9opFNuXhI8qbEDJS4InjWBvL+/jFNAgQSE/e
+         KY6oWBl0i07qdAXgcOKjn1UZub5AH3qe6/A149bkNB6fDwyEXfOJe0U0ysWb+cxUSQ
+         4HXpQmQNlVTYCpo2TZwichIkmrV93ZSkZYbrJiXk=
+Date:   Thu, 20 Aug 2020 09:21:11 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200820092111.2a5f348e@coco.lan>
+In-Reply-To: <20200819204800.GA110118@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+        <20200819152120.GA106437@ravnborg.org>
+        <20200819174027.70b39ee9@coco.lan>
+        <20200819204800.GA110118@ravnborg.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200817211727.GA1578682@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi Sam,
 
-On 18/08/20 2:47 am, Rob Herring wrote:
-> On Sun, 02 Aug 2020 12:31:14 +0530, Faiz Abbas wrote:
->> Add binding documentation for mmc host controllers present on
->> TI's J7200 SOC
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/sdhci-am654.txt | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+Em Wed, 19 Aug 2020 22:48:00 +0200
+Sam Ravnborg <sam@ravnborg.org> escreveu:
 
-Can you pick this up now or should I rebase to latest?
+> Hi Mauro.
+> 
+> It seems my review comments failed to reach dri-devel - likely due to
+> the size of the mail.
+
+Probably. It reached here properly.
+
+> Link:
+> https://lore.kernel.org/linux-devicetree/20200819173558.GA3733@ravnborg.org/
+> 
+> I my review feedback I refer to checkpatch a few time.
+> For drivers/gpu/ we have some nice tooling support.
+> One thing our tooling does for us is running checkpatch every time
+> we apply a patch.
+> 
+>     checkpatch -q --emacs --strict --show-types
+> 
+> So we expect patches to be more or less checkpatch --strict clean.
+> 
+> "more or less" - as common sense also plays a role.
+> And sometimes checkpatch is just wrong.
+> 
+> Just in case you wondered why checkpatch --strict was requested.
+
+We also use checkpatch --strict for media as a reference,
+ignoring the things that would make things worse during review :-)
+
+I'll run checkpatch here and ensure that the coding style
+issues will be properly addressed.
 
 Thanks,
-Faiz
+Mauro
