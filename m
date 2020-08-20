@@ -2,84 +2,81 @@ Return-Path: <SRS0=Ay4y=B6=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D18C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC63C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7672075E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED7320738
+	for <linux-devicetree@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lQC1Kdrn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFPJl3B7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbgHTMUf (ORCPT
+        id S1728245AbgHTM0V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55216 "EHLO
+        Thu, 20 Aug 2020 08:26:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730400AbgHTMU1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 08:20:27 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE81C061386;
-        Thu, 20 Aug 2020 05:20:26 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h19so1804218ljg.13;
-        Thu, 20 Aug 2020 05:20:26 -0700 (PDT)
+        with ESMTP id S1728324AbgHTM0Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 08:26:16 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4242BC061385;
+        Thu, 20 Aug 2020 05:26:14 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id g6so1831167ljn.11;
+        Thu, 20 Aug 2020 05:26:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xbINavy4gHcRxNs/5kLcdkVc1FcO3WPizBP6INYtSP4=;
-        b=lQC1KdrnOgLXAQYFuDiKTg6pUavfIoWf4LVotFU7Sl5ZiSXQekFnzcRa1vIBa4v3F/
-         Z9IZ+bJwXgvcJ326ID2k31ggk4Bsv9YP7jNCcE2oQqBD8vhQukItqJ8CjAhW+6MpVLoX
-         NZBMAkHDR8oyNgTErvVCPv97DDZUs0SOdLRQ5zLUPofrD58w2NXkmncu2jQJAAzBLYLb
-         eK1ezZV+9HZkQMds+lAc++HmmlJmfQUfII/36KGzz32excIS/af+ee38lF8dJXmOFESS
-         2/rx0qKof883/H3epULNfQgBPumc3PReyXB8wGx1NmVAbOKErkplS5xv4eLHeN3DbkYB
-         jaQg==
+        bh=eSqfcQbBFm3GesGK6cttjQeofDcApyj4QPCbAu/dN3Q=;
+        b=DFPJl3B781/WFvVelGdirLeJnJ25wfmXAH6jF8BGbpQOmQz5oeVphZSoz9xUStxRvE
+         G4Q730xU+FpPyrHyARHBkycGEBBfel0qIZW1wqzXn/utMCIrCeZkC2DmfB3F47u3QhK7
+         oz+CuMrHDXjfXqERTEgAxv3170I2QM2l4M3+AgeYitjIHURGMDQG6P4tVsinFP5ddyI2
+         P5x7yqXGQQcgKxoovW+uMw1l0pMd8FfVAv1YzG+zTLLCCpaEgkKPVRsnU288AxEttZEf
+         PlVKiMRObvqAIbQ923akmxNzh9VE+PADbGlnNJrHWtczbT+T478AZF0BsYLd4mzIDyBl
+         vREw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=xbINavy4gHcRxNs/5kLcdkVc1FcO3WPizBP6INYtSP4=;
-        b=olOWRyRdyt/XCFOD1GHyuZOibhqEsieCEk0+rk1ctb8vaZfPvIF9pQUBQrGT1DUAAC
-         Cf1JVDVonBe3dih+oGG7rGJzG9t4mUW6W61hzEcbK7vtYTS3n8zrcyl71+c5F7y/nBAD
-         J0CwQDox6PjK5kRLvajbXJbwkYO/c5XkxRumXJOOHoc1hZgwQTQ/Es6m4tcpJ1G3kAJx
-         P4lO6Rzu5s+F6GEUbj1nGKZ/kgDk64FlZn+jXHivras45Vq9uDXXbv+ARIVnlsDtyuXN
-         6A3InNEXhv7G1gFRtvg2LZf0DIkMiqzZcm0Hhl5YvG0gAFuqRpPlSnm2E05i26rDnolm
-         uJGw==
-X-Gm-Message-State: AOAM533ZGwYjXPEOHn6BgD9s+M0Ite15s8ihasCik/RX7d9x2snsyrtV
-        ay8fSoia5PKBoSd0MPdnRir8OpXLVTU=
-X-Google-Smtp-Source: ABdhPJymjxP8701lahasTauyhK7MW73ikzbXwms7TfQBLJzKvydCc/2wRunfMm73vMbg0HvMPkkCXQ==
-X-Received: by 2002:a2e:85d3:: with SMTP id h19mr1604426ljj.363.1597926024210;
-        Thu, 20 Aug 2020 05:20:24 -0700 (PDT)
-Received: from elitebook.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.googlemail.com with ESMTPSA id l10sm418503ljc.65.2020.08.20.05.20.22
+        bh=eSqfcQbBFm3GesGK6cttjQeofDcApyj4QPCbAu/dN3Q=;
+        b=Sgdyk4xkoSlfm2nd7aKkaTXtJf33/5KNYqi8VPUZQ/lTaesHipyxT6eXCR8VrXTpPS
+         whnklzKcga9zgHxrloWnrXQzPGEcpWWVNauKY7S6u293aAHOtfCm7A6tvWkaAryHKG0C
+         jz19ot3defnSzHRYzRC0ku8DQG2T+Bys7hshGiplZnCqKK8r41tmZd58xhDxWz36GRP8
+         YfvUO66ene7ExvRVOHUBydW0jHyFHvYAqwVTCEjS1oaA/dAzinBSMjg5xEJzVdhvpa9F
+         iSl/z6NpcaKZAagpANXZb9I2jlpyZMs+P52N9nlkx2CUXlmU34BO+cT1pDjaCB0gkved
+         sxxQ==
+X-Gm-Message-State: AOAM532Pd+cXY0pjskfG/SpLwMVMwjP1ITxMSAu55YF0e+NgLW5qXcUD
+        4UWom5Pke1+NBOKhBJ1Yt9xG5o4ZU2hFlg==
+X-Google-Smtp-Source: ABdhPJxuG4DEsCDL907sWu6JlNXh1nMac4n7NDiOXL3yVsSjvk+lIi59nuhn2st5soxGdvOwqun/Yg==
+X-Received: by 2002:a2e:96c3:: with SMTP id d3mr1578582ljj.270.1597926372748;
+        Thu, 20 Aug 2020 05:26:12 -0700 (PDT)
+Received: from wasted.omprussia.ru ([2a00:1fa0:46d7:4a60:acca:c7f9:9bba:62e5])
+        by smtp.gmail.com with ESMTPSA id a17sm415149ljd.123.2020.08.20.05.26.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 05:20:23 -0700 (PDT)
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Fix pin controller node
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        "maintainer:BROADCOM BCM5301X ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200819042308.19043-1-f.fainelli@gmail.com>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Message-ID: <d4a3b850-7b19-bad7-383b-dfbc0f7c896c@gmail.com>
-Date:   Thu, 20 Aug 2020 14:20:21 +0200
+        Thu, 20 Aug 2020 05:26:12 -0700 (PDT)
+Subject: Re: [PATCH v2] dt-bindings: net: renesas,ether: Improve schema
+ validation
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200819124539.20239-1-geert+renesas@glider.be>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <df7f61fe-3103-168e-0744-d6b20ee42224@gmail.com>
+Date:   Thu, 20 Aug 2020 15:26:11 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200819042308.19043-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200819124539.20239-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
@@ -87,97 +84,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 19.08.2020 06:23, Florian Fainelli wrote:
-> The pin controller resources start at 0xc0 from the CRU base which is at
-> 0x100 from th DMU base, for a final address of 0x1800_c1c0, whereas we
-> are currently off by 0x100. The resource size of the CRU is also
-> incorrect and should end at 0x248 bytes from 0x100 which is the start
-> address. Finally, the compatibility strings defined for the
-> pin-controller node should reflect the SoC being used.
+On 8/19/20 3:45 PM, Geert Uytterhoeven wrote:
 
-I can confirm 0x1800c1c0 is the correct absolute offset.
+>   - Remove pinctrl consumer properties, as they are handled by core
 
+   So you're removing them even from the example?
 
-> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-> index 2d9b4dd05830..bf49943f504a 100644
-> --- a/arch/arm/boot/dts/bcm5301x.dtsi
-> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-> @@ -402,14 +402,14 @@ dmu@1800c000 {
->   
->   		cru@100 {
->   			compatible = "simple-bus";
-> -			reg = <0x100 0x1a4>;
-> +			reg = <0x100 0x248>;
->   			ranges;
->   			#address-cells = <1>;
->   			#size-cells = <1>;
->   
-> -			pin-controller@1c0 {
-> -				compatible = "brcm,bcm4708-pinmux";
-> -				reg = <0x1c0 0x24>;
-> +			pinctrl: pin-controller@c0 {
-> +				compatible = "brcm,bcm53012-pinmux";
-> +				reg = <0xc0 0x24>;
->   				reg-names = "cru_gpio_control";
->   
->   				spi-pins {
+>     dt-schema,
+>   - Document missing properties,
+>   - Document missing PHY child node,
+>   - Add "additionalProperties: false".
 > 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+[...]
 
-That whole binding has a bit messy story.
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
 
-Initially it used to be binding like:
-	compatible = "brcm,bcm4708-pinmux";
-	reg = <0x1800c1c0 0x24>;
-	reg-names = "cru_gpio_control";
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c12fb1774deaa9c9408b19db8d43d3612f6e47a0
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=3f9f82b3ffb8bfe01988c890e3a24328e9e1c1df
-
-Later example binding was rewritten to include dmu and cru (simplified
-below):
-	dmu@1800c000 {
-		compatible = "simple-bus";
-		ranges = <0 0x1800c000 0x1000>;
-
-		cru@100 {
-			compatible = "simple-bus";
-			reg = <0x100 0x1a4>;
-			ranges;
-
-			pin-controller@1c0 {
-				compatible = "brcm,bcm4708-pinmux";
-				reg = <0x1c0 0x24>;
-				reg-names = "cru_gpio_control";
-			};
-		};
-	};
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=93d39737b29eaf1974bf850ccdc903b2418c800b
-I don't understand or remember why pin-controller reg was relative to
-dmu instead of cru. Some DT offset calculation magic?
-
-Finally I updated binding to use "offset", see:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2ae80900f239484069569380e1fc4340fd6e0089
-and then updated driver to follow:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a49d784d5a8272d0f63c448fe8dc69e589db006e
-but I never updated DTS file accordingly.
-
-To OpenWrt I pushed relevant kernel patch in the commit:
-https://git.openwrt.org/?p=openwrt/openwrt.git;a=commitdiff;h=a28f6ab27f9ae1a08c6945013cdb796b12ce150d
-(called [PATCH] ARM: dts: BCM5301X: Update Northstar pinctrl binding)
-but I never sent it upstream.
-
-Florian: your change doesn't match docs or existing Linux driver:
-1. Driver seems to ignore "reg"
-2. Driver requires "offset"
-3. Property "cru_gpio_control" is leftover (undocumented and unused)
-
-I think we need to take a step back and cleanup Northstar bindings. Few
-months ago I sent e-mail:
-Subject: Proper DT bindings for Broadcom's DMU node
-Message-ID: <7da2db8f-66d0-24ec-d3eb-84247b383a06@gmail.com>
-
-I didn't get any reply from Rob who previously pointed out that
-compatible = "syscon", "simple-mfd";
-is not a valid compatibility.
-
-I suggest we hold on on DTS update for a moment and switch back to my
-question from March on designing proper bindings.
+MBR, Sergei
