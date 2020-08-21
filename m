@@ -2,95 +2,72 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4FEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 09:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43A2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 09:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FEF0207DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 09:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5AF207BB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 09:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="d3HdPs75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgHUJVC (ORCPT
+        id S1728392AbgHUJbL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:21:02 -0400
-Received: from mx.socionext.com ([202.248.49.38]:43608 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbgHUJVC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:21:02 -0400
-Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 21 Aug 2020 18:21:00 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 236CA60060;
-        Fri, 21 Aug 2020 18:21:01 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 21 Aug 2020 18:21:01 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 959D940376;
-        Fri, 21 Aug 2020 18:21:00 +0900 (JST)
-Received: from [10.212.1.43] (unknown [10.212.1.43])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id 39EC9120137;
-        Fri, 21 Aug 2020 18:21:00 +0900 (JST)
-Subject: Re: [PATCH v4 0/2] Add new UniPhier AHCI PHY driver
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1594888344-32066-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <c60c0fc3-cb89-36e3-f18e-9a030ece72f1@socionext.com>
-Date:   Fri, 21 Aug 2020 18:20:59 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 21 Aug 2020 05:31:11 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:13938 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728095AbgHUJbK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 05:31:10 -0400
+X-UUID: 83b53a14f7754a96856088b893ad0d04-20200821
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=SAJZUx4zLi2MX2DElRX0q99dr5GWJ9MVZVXGhpyhDh4=;
+        b=d3HdPs75+1bnNVjF58ScLFubO7g+Ydqum2tHHUgMzs4YpUuzCfcGolwEvuJWn6xJqXNhAhcQfhHJ7NUZeU7t61KPeFQ9+3KK5zScErjuYDFl9pdcoSttPRCCI2ZnQrJBCwQDsNc9ej3Rouh+5CGX2k9zYsqAOI87ndowdvs8eJk=;
+X-UUID: 83b53a14f7754a96856088b893ad0d04-20200821
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <hsin-hsiung.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 167034325; Fri, 21 Aug 2020 17:31:04 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 21 Aug 2020 17:31:01 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 21 Aug 2020 17:31:01 +0800
+From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+To:     Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH 0/2] Add SPMI support for Mediatek MT6873/8192 SoC IC
+Date:   Fri, 21 Aug 2020 17:30:58 +0800
+Message-ID: <1598002260-12724-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+X-Mailer: git-send-email 2.6.4
 MIME-Version: 1.0
-In-Reply-To: <1594888344-32066-1-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Gentle ping.
-Are there any comments in this series?
+VGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBuZXcgU29DIE1UNjg3My84MTkyIHRvIHRoZSBz
+cG1pIGRyaXZlci4NCg0KSHNpbi1Ic2l1bmcgV2FuZyAoMik6DQogIGR0LWJpbmRpbmdzOiBzcG1p
+OiBkb2N1bWVudCBiaW5kaW5nIGZvciB0aGUgTWVkaWF0ZWsgU1BNSSBjb250cm9sbGVyDQogIHNw
+bWk6IG1lZGlhdGVrOiBBZGQgc3VwcG9ydCBmb3IgTVQ2ODczLzgxOTINCg0KIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NwbWkvc3BtaS1tdGstcG1pZi50eHQgICAgIHwgIDMzICsrDQogZHJpdmVy
+cy9zcG1pL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKw0KIGRy
+aXZlcnMvc3BtaS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsN
+CiBkcml2ZXJzL3NwbWkvc3BtaS1tdGstcG1pZi5jICAgICAgICAgICAgICAgICAgICAgICB8IDQ3
+OSArKysrKysrKysrKysrKysrKysrKysNCiA0IGZpbGVzIGNoYW5nZWQsIDUyMiBpbnNlcnRpb25z
+KCspDQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zcG1pL3NwbWktbXRrLXBtaWYudHh0DQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc3Bt
+aS9zcG1pLW10ay1wbWlmLmMNCg0KLS0gDQoyLjYuNA0K
 
-Thank you,
-
-On 2020/07/16 17:32, Kunihiko Hayashi wrote:
-> This series adds support for AHCI PHY interface implemented in Socionext
-> UniPhier SoCs. This driver supports PXs2 and PXs3 SoCs.
-> 
-> Changes since v3:
-> - Eliminate a meaningless blank line and a line break
-> - Fix misspelling
-> 
-> Changes since v2:
-> - Adjust copyright year
-> - Add helper for enabling the controller
-> - Remove redundant .init in uniphier_pxs2_data
-> - Add comments for dummy read accesses
-> - Fix return value in uniphier_ahciphy_init
-> - dt-bindings: Add Reviewed-by line
-> 
-> Changes since v1:
-> - dt-bindings: Fix items in reset-names
-> 
-> Kunihiko Hayashi (2):
->    dt-bindings: phy: Add UniPhier AHCI PHY description
->    phy: socionext: Add UniPhier AHCI PHY driver support
-> 
->   .../bindings/phy/socionext,uniphier-ahci-phy.yaml  |  76 +++++
->   drivers/phy/socionext/Kconfig                      |  10 +
->   drivers/phy/socionext/Makefile                     |   1 +
->   drivers/phy/socionext/phy-uniphier-ahci.c          | 321 +++++++++++++++++++++
->   4 files changed, 408 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
->   create mode 100644 drivers/phy/socionext/phy-uniphier-ahci.c
-> 
-
----
-Best Regards
-Kunihiko Hayashi
