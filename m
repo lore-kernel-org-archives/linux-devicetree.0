@@ -2,125 +2,160 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D58C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEA8C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B712075E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774F6207DE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598017084;
+	bh=Ll99DIK1T8Lkx3D20DknnJzu5dcs03ue33YMpeTIyUU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=w+3JDN56GlGuzPCTo0i+ZjUWjFERIyt9NIyABxU+6RQXVibILa3DL0AaUj3vpN5gt
+	 Bfg0wOg5+KqDulJ8lL+urnNxMJ0SVyXDhFZkYkCfcGtjN8lAX0p8RPMjG71+rt7PcY
+	 YbnVL7F90ZZxguePPEEOhj5X8t58pYyFjqQhfOjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgHUNdE (ORCPT
+        id S1727929AbgHUNiC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:33:04 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:36107 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbgHUNdD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 09:33:03 -0400
-Received: by mail-oo1-f65.google.com with SMTP id y30so343660ooj.3;
-        Fri, 21 Aug 2020 06:33:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WE/9d808AHOdfGXnnBLFXkEx9td59TWxZ9l7paPbsT4=;
-        b=k72shL9ePq1yrUu29v4Qmwdt8Zcmi6YE7Jw96hhur2CwtRUer+urRbQQbXz3+kOGGw
-         y5vyboMxTdZPp1I0Yj/nE/hTmquny4GuAwPEWp1w0S5Vfkz/d06FHY2de8Ul5pHYM2rM
-         UznN6NZ2Rnuv7H5qu6jZaVDzy1l3hV5yCdh4oyBDl3tKX2XHucKpWWXU1qr4YT+zuIaM
-         KOA/46ZdzLzVizdbQHRbiTMKVXz+hD+3QSjWmuvuJF5ggh/fHFa4mRgDdHHsNjvvE/ce
-         xFSkavtR3Yo7mNCrjb07ThNfUS//EL3peMjFZp17t7DdpH5eXpVLRuIMzJJK+eE+V/I7
-         8pTQ==
-X-Gm-Message-State: AOAM532oMwknupth+5oXca7OCiGA0hIyM81TpMh6y+msH5yRxXhLDRRO
-        3FHkapUDEPHNgTKTGPRcqS34SexcI4IRZkBbU1yZlpA5
-X-Google-Smtp-Source: ABdhPJxtKIuavgaEgjb3cdb9IXDngLMsaZHqmlIrF5H15c623DVRE2x4PTTIxCyoNY/l+m6Fxc7gW0O8P4U7CUQw8Ds=
-X-Received: by 2002:a4a:275e:: with SMTP id w30mr2078545oow.40.1598016782424;
- Fri, 21 Aug 2020 06:33:02 -0700 (PDT)
+        Fri, 21 Aug 2020 09:38:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53420 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727926AbgHUNiA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:38:00 -0400
+Received: from coco.lan (ip5f5ad5bf.dynamic.kabel-deutschland.de [95.90.213.191])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FAEF2075E;
+        Fri, 21 Aug 2020 13:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598017079;
+        bh=Ll99DIK1T8Lkx3D20DknnJzu5dcs03ue33YMpeTIyUU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QKWBRvNeIHjsvJmXUSYSgHLegxdwzMcHXG3CQqzPDoRqSjvqfitMTxyInPncgbksc
+         ewEiJwcez1JSi0ZzL0lO//cdc1CPnS2j38p1s53qqHd5jMu8h8BpHwH5ueESJ3Y407
+         MQszV343fhRhN9y+MYrw7+n6dUHclNFDknk/lK6o=
+Date:   Fri, 21 Aug 2020 15:37:49 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200821153749.08afec86@coco.lan>
+In-Reply-To: <20200819173558.GA3733@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+        <20200819152120.GA106437@ravnborg.org>
+        <20200819174027.70b39ee9@coco.lan>
+        <20200819173558.GA3733@ravnborg.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200816193316.7641-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200816193316.7641-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200816193316.7641-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 15:32:51 +0200
-Message-ID: <CAMuHMdWVOv3LC_wWi1r9EHtnmT=w8d1HgDTP3aPD7uEZcb5ZYg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: r8a7742-iwg21m: Add SPI NOR support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Hi Sam,
 
-On Sun, Aug 16, 2020 at 9:33 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for the SPI NOR device used to boot up the system
-> to the System on Module DT.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Em Wed, 19 Aug 2020 19:35:58 +0200
+Sam Ravnborg <sam@ravnborg.org> escreveu:
 
-Thanks for your patch!
+> > +	ret =3D drm_bridge_attach(encoder, bridge, NULL, 0); =20
+> The bridge should be attached with the falg that tell the bridge NOT to
+> create a connector.
+>=20
+> The display driver shall created the connector.
+>=20
+> Please see how other drivers do this (but most driver uses the old
+> pattern so so look for drm_bridge_attach() with the flag argument.
 
-> --- a/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+Not sure if I got what should be done here.
 
-> @@ -70,4 +80,28 @@
->                 groups = "mmc1_data4", "mmc1_ctrl";
->                 function = "mmc1";
->         };
-> +
-> +       qspi_pins: qspi {
-> +               groups = "qspi_ctrl", "qspi_data2";
-> +               function = "qspi";
-> +       };
-> +};
-> +
-> +&qspi {
-> +       pinctrl-0 = <&qspi_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       status = "okay";
-> +
-> +       /* WARNING - This device contains the bootloader. Handle with care. */
-> +       flash: flash@0 {
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
+=46rom what I've seen at the DRM code, one of the differences between the=20
+display engine for the first Hikey board (Kirin 620 based) and 960/970
+is with regards to bridges. The first Hikey device doesn't use any
+external bridges: both panel and HDMI support are provided by the SoC.
 
-#{address,size}-cells are not needed, unless you list legacy partitions
-(i.e. partitions not contained in a "partitions" container).
+The Hikey 960 and 970 boards may either use an external bridge
+or not. They also have two output connectors:
 
-> +               compatible = "sst,sst25vf016b", "jedec,spi-nor";
-> +               reg = <0>;
-> +               spi-max-frequency = <50000000>;
-> +               m25p,fast-read;
-> +               spi-cpol;
-> +               spi-cpha;
+- The first one doesn't use an external bridge. It is used
+  only together with an external daughter display panel board.=20
+  It sounds that one such panels is this one:
 
-Perhaps you want to add the partition layout, too?
+	https://www.96boards.org/blog/linksprite-hikey-aosp/
 
-> +       };
->  };
+  I don't have any such board. The OOT driver came with one
+  panel display, I didn't port such driver.=20
 
-With the above fixed/clarified:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+- The second one uses an external bridge (adv7535) which is connected
+  to the HDMI board's connector.
 
-Gr{oetje,eeting}s,
+As there's just one bridge, the driver uses this to find its
+OF data:
 
-                        Geert
+	struct device_node *bridge_node;
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+	bridge_node =3D of_graph_get_remote_port_parent(endpoint);
+	dsi->bridge =3D of_drm_find_bridge(bridge_node);
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Basically, it doesn't call drm_bridge_add(), and doesn't
+declare any struct drm_bridge_funcs fops, as there's just one
+bridge that it is always there.
+
+-
+
+That's said, when I ported the code from Kernel 4.9, I fixed
+some broken things at the hotplug logic, trying to use other
+drivers with external bridges as examples. Yet, as you noticed,
+I ended using some older bridge model. =20
+
+The only other driver I found that doesn't use drm_bridge_add()
+and doesn't pass 0 as flags is this one:
+
+	drivers/gpu/drm/omapdrm/omap_drv.c
+
+Is it a good example?
+
+What I see different there there is that it calls drm_bridge_attach()
+with:
+
+	ret =3D drm_bridge_attach(pipe->encoder,
+				pipe->output->bridge, NULL,
+				DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+
+Is adding this enough? Or should I do something else?
+
+
+Thanks,
+Mauro
