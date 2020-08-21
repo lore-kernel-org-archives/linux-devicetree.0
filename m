@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0536DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8426C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4A5E214F1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB63B207DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RG2wLagD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/dLDodq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgHUGKA (ORCPT
+        id S1726002AbgHUGKP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:10:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51178 "EHLO
+        Fri, 21 Aug 2020 02:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgHUGJ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 02:09:58 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F421FC061385
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 23:09:56 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id e14so289097vsa.9
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 23:09:56 -0700 (PDT)
+        with ESMTP id S1725268AbgHUGKK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 02:10:10 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C23C061386
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 23:10:09 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id b26so280028vsa.13
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 23:10:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=JW3ozXdShYYofb3XNyMiyoXtYwbQgNjFmTpyqQVrWrY=;
-        b=RG2wLagDKFi3HO0EQE0nsazch7qCSoA2b8iEkPWVJLkavPUKF4oX9jVgnY+tjFeTTP
-         vf/dUBx8o74YwjfStg+CZ2NgdNYy5OfrRNcK40Ah/nYd+0jpMOiAEW0ZK7hODdR+NS1G
-         ny3/z3E0EC6ImkP2HGojBtrpL07mCTnvUX1Quy+9NDKPhow6NReRb28keq1VGKwdGLjd
-         88h1btWlZoULcZqf1J9SQLXpE4PLyqWxV7hA2b1mItgZ3Ba0gEKy1zDRlBpKhTAwDJD4
-         xNw/LTsHv+SEUipwX4YiA/30XdQCdrx3mUQtOmSNwiQAap18eGKyRuUU6BoD7dapj0/C
-         YMQw==
+        bh=6CmmgnaEzkt8llRqb27IcigQQKm5dN+mhMmyEDhAUQk=;
+        b=n/dLDodqrSi2QB2NGxsN6yXv5Tg9CpKMDa66Um9hF+QjroPOw64gYF4gqU5woqMZtJ
+         R+scaji4pRdg3ma/nDLaVbAN45CvPK0Lg4t1CCGsuWYChQaeeP/3NKBoDcLPMym+3VA/
+         06dyXDJubrHzRGJhLGSTaOt9c1iJ4lRkpRu8mQLABuuQKDVlst69zZAgW5AqI0PUuAfD
+         DXVYvnV0Qg7OgA3QcJgY1soIJkG5NLVQXkKbr51wM2ntqJGV9uAwtCIB7mKGfmBX8dPe
+         7A+ucfhGHlbbzP+Ige6COlCwpnrebTI2oImQqSyUzj50/wdcpV63M2rmL//XogsOosiz
+         8mqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JW3ozXdShYYofb3XNyMiyoXtYwbQgNjFmTpyqQVrWrY=;
-        b=Ts+ZptzpNH4Qvvla0uDHJJnhYh9caZKbv8Ew6oDw0VVmtul3Mv2JJ3nxRgfw01h/hz
-         coIdJszA6HKD/yUzve76N3+odMCWwrMlS6uL1Wyjsdba8ThLCVjFXhkn6pLz12ZE+ktn
-         zgze8aMmLqXlc4ZeuoCLqnCQ3fNCrdg2TAeaiKz6oDJTZETEPaIjHTWzoTelhHzYrDrY
-         +0dxLUy+NfqndvVbOeWhqeHbP6zavgc1FGGiD07nxIksZJVjUH3gQ0Eo63qb64BO6Vs1
-         4iBI+ytVGg/7PYc8GQTedDtKqCAB7lz5x9ZsieM0UZHiV8xYf8MPvcAKnkPn4Nn+LjlE
-         bgCg==
-X-Gm-Message-State: AOAM531e43invmQGuRkvceUmPcU506FAPSFD5icAvpQnJHwk0jIHpiZw
-        1K18kB0nKk8qKM8HcDouNiEgCF56bzQ3IXOB5pySMg==
-X-Google-Smtp-Source: ABdhPJx8xpveXw3qZj/zMsBfKzYf/TP3PHvI91tV7PQ6vsOKw6Y9uNBFCa+7Et6BYfxQxOWRGY0c0vDMVv/ChvLsmTI=
-X-Received: by 2002:a67:e40a:: with SMTP id d10mr769663vsf.95.1597990196050;
- Thu, 20 Aug 2020 23:09:56 -0700 (PDT)
+        bh=6CmmgnaEzkt8llRqb27IcigQQKm5dN+mhMmyEDhAUQk=;
+        b=U2bKDGiuB4sUc7zCYlHlzCQ87pqU/FDg0i0IfXK0WXaTmwN9IePdwEbGMhgOhRwTbw
+         7ijfWSBbdpNx4i3BcugFZQc5qJ738sydzrXAwAKeWM+Kc63gxlCDLECNDMLYAwTJmoN+
+         gLLCb36hL0QIHZiTYzBPyuVPqyn/Yx+CoMI4ypaa0r1MnH2pE+j/cvesyVBQvqJjQZfe
+         9Ke2/YNFopkM4bExQsFPrKXHfVKdJ+l80B7D6ThG8skqbjIecN8gagQ7A6iZj/4xjRbo
+         3jbBAQvXjZz2zJxoCEk2ohinRz+BaI9hHZ6OPbMn0LS4lRoeZ9zRre0P4vCZeRjtpo0T
+         Hsow==
+X-Gm-Message-State: AOAM533fKPUpfooQR+vx+dZiAsOt5tYA2FzcE1wdKw5G4WWblkE5zCsR
+        dFqPQ0nFiL/GMsB5aIgjaRFRnLLZGiDIvK5lU8rqol2I29pSOPKm
+X-Google-Smtp-Source: ABdhPJwqFMWt/HO4S1xxju+gQabMi09PJBxALNIfHrK5+TejL/lt4JhT2+ouM8Vp9voSiNYAA0oWGbAXgLK4YJCVsPk=
+X-Received: by 2002:a67:f897:: with SMTP id h23mr826426vso.9.1597990209107;
+ Thu, 20 Aug 2020 23:10:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200715064909.9161-1-andy.tang@nxp.com>
-In-Reply-To: <20200715064909.9161-1-andy.tang@nxp.com>
+References: <20200715064909.9161-1-andy.tang@nxp.com> <20200715064909.9161-2-andy.tang@nxp.com>
+In-Reply-To: <20200715064909.9161-2-andy.tang@nxp.com>
 From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Fri, 21 Aug 2020 11:39:45 +0530
-Message-ID: <CAHLCerM6_1NW1c+y990Y052uzK39gGLgkj8wo76CF_YPaEszJA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v2] arm64: dts: ls1088a: add more thermal zone support
+Date:   Fri, 21 Aug 2020 11:39:58 +0530
+Message-ID: <CAHLCerMerO3-NR8N6NHnRuJ51xyJAthnpE8NTYr55-575YVrgw@mail.gmail.com>
+Subject: Re: [PATCH 2/2 v2] arm64: dts: ls208xa: add more thermal zone support
 To:     Yuantian Tang <andy.tang@nxp.com>
 Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -77,10 +77,8 @@ On Wed, Jul 15, 2020 at 12:25 PM <andy.tang@nxp.com> wrote:
 >
 > From: Yuantian Tang <andy.tang@nxp.com>
 >
-> There are 2 thermal zones in ls1088a soc. Add the other thermal zone
-> node to enable it.
-> Also update the values in calibration table to make the temperatures
-> monitored more precise.
+> There are 7 thermal zones in ls208xa soc. Add the other thermal zone
+> nodes to enable them.
 >
 > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 
@@ -89,151 +87,183 @@ Reviewed-by: Amit Kucheria <amitk@kernel.org>
 > ---
 > v2:
 >         - remove useless alert trip
+>         - add cooling-map to core cluster zones.
 >
->  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 94 +++++++++++--------
->  1 file changed, 56 insertions(+), 38 deletions(-)
+>  .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 141 ++++++++++++++++--
+>  1 file changed, 132 insertions(+), 9 deletions(-)
 >
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 169f4742ae3b..b961a896ede7 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -130,19 +130,19 @@
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> index 41102dacc2e1..cc36c969dd9d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+> @@ -79,20 +79,62 @@
 >         };
 >
 >         thermal-zones {
 > -               cpu_thermal: cpu-thermal {
-> +               core-cluster {
+> +               ddr-controller1 {
 >                         polling-delay-passive = <1000>;
 >                         polling-delay = <5000>;
->                         thermal-sensors = <&tmu 0>;
->
->                         trips {
-> -                               cpu_alert: cpu-alert {
-> +                               core_cluster_alert: core-cluster-alert {
->                                         temperature = <85000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
->                                 };
->
-> -                               cpu_crit: cpu-crit {
-> +                               core-cluster-crit {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "critical";
-> @@ -151,7 +151,7 @@
->
->                         cooling-maps {
->                                 map0 {
-> -                                       trip = <&cpu_alert>;
-> +                                       trip = <&core_cluster_alert>;
->                                         cooling-device =
->                                                 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->                                                 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> @@ -164,6 +164,20 @@
->                                 };
->                         };
->                 };
-> +
-> +               soc {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
 > +                       thermal-sensors = <&tmu 1>;
-> +
+>
 > +                       trips {
-> +                               soc-crit {
+> +                               ddr-ctrler1-crit {
 > +                                       temperature = <95000>;
 > +                                       hysteresis = <2000>;
 > +                                       type = "critical";
 > +                               };
 > +                       };
 > +               };
->         };
+> +
+> +               ddr-controller2 {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+> +                       thermal-sensors = <&tmu 2>;
+> +
+> +                       trips {
+> +                               ddr-ctrler2-crit {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               ddr-controller3 {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+> +                       thermal-sensors = <&tmu 3>;
+> +
+> +                       trips {
+> +                               ddr-ctrler3-crit {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +               };
+> +
+> +               core-cluster1 {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+>                         thermal-sensors = <&tmu 4>;
 >
->         timer {
-> @@ -210,45 +224,49 @@
->                         compatible = "fsl,qoriq-tmu";
->                         reg = <0x0 0x1f80000 0x0 0x10000>;
->                         interrupts = <0 23 0x4>;
-> -                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
-> +                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x70062>;
->                         fsl,tmu-calibration =
->                                 /* Calibration data group 1 */
-> -                               <0x00000000 0x00000026
-> -                               0x00000001 0x0000002d
-> -                               0x00000002 0x00000032
-> -                               0x00000003 0x00000039
-> -                               0x00000004 0x0000003f
-> -                               0x00000005 0x00000046
-> -                               0x00000006 0x0000004d
-> -                               0x00000007 0x00000054
-> -                               0x00000008 0x0000005a
-> -                               0x00000009 0x00000061
-> -                               0x0000000a 0x0000006a
-> -                               0x0000000b 0x00000071
-> +                               <0x00000000 0x00000023
-> +                               0x00000001 0x0000002a
-> +                               0x00000002 0x00000030
-> +                               0x00000003 0x00000037
-> +                               0x00000004 0x0000003d
-> +                               0x00000005 0x00000044
-> +                               0x00000006 0x0000004a
-> +                               0x00000007 0x00000051
-> +                               0x00000008 0x00000057
-> +                               0x00000009 0x0000005e
-> +                               0x0000000a 0x00000064
-> +                               0x0000000b 0x0000006b
->                                 /* Calibration data group 2 */
-> -                               0x00010000 0x00000025
-> -                               0x00010001 0x0000002c
-> -                               0x00010002 0x00000035
-> -                               0x00010003 0x0000003d
-> -                               0x00010004 0x00000045
-> -                               0x00010005 0x0000004e
-> -                               0x00010006 0x00000057
-> -                               0x00010007 0x00000061
-> -                               0x00010008 0x0000006b
-> -                               0x00010009 0x00000076
-> +                               0x00010000 0x00000022
-> +                               0x00010001 0x0000002a
-> +                               0x00010002 0x00000032
-> +                               0x00010003 0x0000003a
-> +                               0x00010004 0x00000042
-> +                               0x00010005 0x0000004a
-> +                               0x00010006 0x00000052
-> +                               0x00010007 0x0000005a
-> +                               0x00010008 0x00000062
-> +                               0x00010009 0x0000006a
->                                 /* Calibration data group 3 */
-> -                               0x00020000 0x00000029
-> -                               0x00020001 0x00000033
-> -                               0x00020002 0x0000003d
-> -                               0x00020003 0x00000049
-> -                               0x00020004 0x00000056
-> -                               0x00020005 0x00000061
-> -                               0x00020006 0x0000006d
-> +                               0x00020000 0x00000021
-> +                               0x00020001 0x0000002b
-> +                               0x00020002 0x00000035
-> +                               0x00020003 0x00000040
-> +                               0x00020004 0x0000004a
-> +                               0x00020005 0x00000054
-> +                               0x00020006 0x0000005e
->                                 /* Calibration data group 4 */
-> -                               0x00030000 0x00000021
-> -                               0x00030001 0x0000002a
-> -                               0x00030002 0x0000003c
-> -                               0x00030003 0x0000004e>;
-> +                               0x00030000 0x00000010
-> +                               0x00030001 0x0000001c
-> +                               0x00030002 0x00000027
-> +                               0x00030003 0x00000032
-> +                               0x00030004 0x0000003e
-> +                               0x00030005 0x00000049
-> +                               0x00030006 0x00000054
-> +                               0x00030007 0x00000060>;
->                         little-endian;
->                         #thermal-sensor-cells = <1>;
->                 };
+>                         trips {
+> -                               cpu_alert: cpu-alert {
+> -                                       temperature = <75000>;
+> +                               core_cluster1_alert: core-cluster1-alert {
+> +                                       temperature = <85000>;
+>                                         hysteresis = <2000>;
+>                                         type = "passive";
+>                                 };
+> -                               cpu_crit: cpu-crit {
+> -                                       temperature = <85000>;
+> +
+> +                               core-cluster1-crit {
+> +                                       temperature = <95000>;
+>                                         hysteresis = <2000>;
+>                                         type = "critical";
+>                                 };
+> @@ -100,14 +142,95 @@
+>
+>                         cooling-maps {
+>                                 map0 {
+> -                                       trip = <&cpu_alert>;
+> +                                       trip = <&core_cluster1_alert>;
+>                                         cooling-device =
+>                                                 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> -                                               <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               core-cluster2 {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+> +                       thermal-sensors = <&tmu 5>;
+> +
+> +                       trips {
+> +                               core_cluster2_alert: core-cluster2-alert {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               core-cluster2-crit {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +
+> +                       cooling-maps {
+> +                               map0 {
+> +                                       trip = <&core_cluster2_alert>;
+> +                                       cooling-device =
+>                                                 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> -                                               <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               core-cluster3 {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+> +                       thermal-sensors = <&tmu 6>;
+> +
+> +                       trips {
+> +                               core_cluster3_alert: core-cluster3-alert {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               core-cluster3-crit {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +
+> +                       cooling-maps {
+> +                               map0 {
+> +                                       trip = <&core_cluster3_alert>;
+> +                                       cooling-device =
+>                                                 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> -                                               <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +                                               <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               core-cluster4 {
+> +                       polling-delay-passive = <1000>;
+> +                       polling-delay = <5000>;
+> +                       thermal-sensors = <&tmu 7>;
+> +
+> +                       trips {
+> +                               core_cluster4_alert: core-cluster4-alert {
+> +                                       temperature = <85000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +
+> +                               core-cluster4-crit {
+> +                                       temperature = <95000>;
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                       };
+> +
+> +                       cooling-maps {
+> +                               map0 {
+> +                                       trip = <&core_cluster4_alert>;
+> +                                       cooling-device =
+>                                                 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+>                                                 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>                                 };
 > --
 > 2.17.1
 >
