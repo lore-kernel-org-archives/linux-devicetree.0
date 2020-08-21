@@ -2,108 +2,83 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C535CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8C4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1D720738
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030174;
-	bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BLuDG+KW9lPZEDeUG4OlRGcGrD0iBlBwsad2oI2U2lRttBWU7Xyk75o8f4jsAVNAO
-	 fDBVHzpKD4cDaeKg9tcKSrr8UWtZ6C7IQHHPxECdUoWFzVn4mP9RQV4nPsGeWzUpeO
-	 0+BDH3r+R38+u5++HQS+BI+nXIRUba+zLkX8p8fU=
+	by mail.kernel.org (Postfix) with ESMTP id C5C2B20738
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgHURQM (ORCPT
+        id S1729022AbgHURRd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:16:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbgHUQQe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:34 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Fri, 21 Aug 2020 13:17:33 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:52778 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729066AbgHURRE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 13:17:04 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 722E222BEB;
-        Fri, 21 Aug 2020 16:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026594;
-        bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0AolvIssbvG74Ggc0PO63MYwlCtD2QjBmJTrIGPgwz7DAwvKUCs7QCW+kaUroLPB
-         zJr/klGu6px2mldQwHY4G2dmmXb/zBlNekscWFH8aCprUVw5Q0br6EKVW+4F0AXmCR
-         py2+QWbXahfBV7K1CqI6alU9/621IyOS5WaCj8oc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 38/61] ARM: dts: ls1021a: output PPS signal on FIPER2
-Date:   Fri, 21 Aug 2020 12:15:22 -0400
-Message-Id: <20200821161545.347622-38-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
-References: <20200821161545.347622-1-sashal@kernel.org>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 0985F20022;
+        Fri, 21 Aug 2020 19:17:00 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 19:16:59 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, robdclark@chromium.org,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: display: simple: Add KD116N21-30NV-A010
+ compatible
+Message-ID: <20200821171659.GA308295@ravnborg.org>
+References: <20200821083454.1.I61e6248813d797c9eeebfbb7019c713aa71c4419@changeid>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821083454.1.I61e6248813d797c9eeebfbb7019c713aa71c4419@changeid>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=cm27Pg_UAAAA:8 a=Ivq3uMdIfu5b0hwgkMQA:9
+        a=CjuIK1q_8ugA:10 a=xmb-EsYY8bH0VWELuYED:22
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
+Hi Douglas.
 
-[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
+On Fri, Aug 21, 2020 at 08:35:14AM -0700, Douglas Anderson wrote:
+> The KD116N21-30NV-A010 is a pretty standard eDP panel.  Add it to the
+> list of compatible strings.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-The timer fixed interval period pulse generator register
-is used to generate periodic pulses. The down count
-register loads the value programmed in the fixed period
-interval (FIPER). At every tick of the timer accumulator
-overflow, the counter decrements by the value of
-TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
-counter value reaches zero. It reloads the down counter
-in the cycle following a pulse.
+Both patches applied to drm-misc-next.
 
-To use the TMR_FIPER register to generate desired periodic
-pulses. The value should programmed is,
-desired_period - tclk_period
+	Sam
 
-Current tmr-fiper2 value is to generate 100us periodic pulses.
-(But the value should have been 99995, not 99990. The tclk_period is 5.)
-This patch is to generate 1 second periodic pulses with value
-999999995 programmed which is more desired by user.
-
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/ls1021a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 760a68c163c83..b2ff27af090ec 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -772,7 +772,7 @@ ptp_clock@2d10e00 {
- 			fsl,tmr-prsc    = <2>;
- 			fsl,tmr-add     = <0xaaaaaaab>;
- 			fsl,tmr-fiper1  = <999999995>;
--			fsl,tmr-fiper2  = <99990>;
-+			fsl,tmr-fiper2  = <999999995>;
- 			fsl,max-adj     = <499999999>;
- 			fsl,extts-fifo;
- 		};
--- 
-2.25.1
-
+> ---
+> 
+>  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> index 47247ace86ac..f2204f17a9dc 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+> @@ -161,6 +161,8 @@ properties:
+>        - innolux,n156bge-l21
+>          # Innolux Corporation 7.0" WSVGA (1024x600) TFT LCD panel
+>        - innolux,zj070na-01p
+> +        # King & Display KD116N21-30NV-A010 eDP TFT LCD panel
+> +      - kingdisplay,kd116n21-30nv-a010
+>          # Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
+>        - koe,tx14d24vm1bpa
+>          # Kaohsiung Opto-Electronics Inc. 10.1" WUXGA (1920 x 1200) LVDS TFT LCD panel
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
