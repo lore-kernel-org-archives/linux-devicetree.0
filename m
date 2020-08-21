@@ -2,268 +2,111 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8426C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B45C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB63B207DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 06:10:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n/dLDodq"
+	by mail.kernel.org (Postfix) with ESMTP id 094CF20738
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgHUGKP (ORCPT
+        id S1727798AbgHUHFW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgHUGKK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 02:10:10 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C23C061386
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 23:10:09 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id b26so280028vsa.13
-        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 23:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6CmmgnaEzkt8llRqb27IcigQQKm5dN+mhMmyEDhAUQk=;
-        b=n/dLDodqrSi2QB2NGxsN6yXv5Tg9CpKMDa66Um9hF+QjroPOw64gYF4gqU5woqMZtJ
-         R+scaji4pRdg3ma/nDLaVbAN45CvPK0Lg4t1CCGsuWYChQaeeP/3NKBoDcLPMym+3VA/
-         06dyXDJubrHzRGJhLGSTaOt9c1iJ4lRkpRu8mQLABuuQKDVlst69zZAgW5AqI0PUuAfD
-         DXVYvnV0Qg7OgA3QcJgY1soIJkG5NLVQXkKbr51wM2ntqJGV9uAwtCIB7mKGfmBX8dPe
-         7A+ucfhGHlbbzP+Ige6COlCwpnrebTI2oImQqSyUzj50/wdcpV63M2rmL//XogsOosiz
-         8mqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6CmmgnaEzkt8llRqb27IcigQQKm5dN+mhMmyEDhAUQk=;
-        b=U2bKDGiuB4sUc7zCYlHlzCQ87pqU/FDg0i0IfXK0WXaTmwN9IePdwEbGMhgOhRwTbw
-         7ijfWSBbdpNx4i3BcugFZQc5qJ738sydzrXAwAKeWM+Kc63gxlCDLECNDMLYAwTJmoN+
-         gLLCb36hL0QIHZiTYzBPyuVPqyn/Yx+CoMI4ypaa0r1MnH2pE+j/cvesyVBQvqJjQZfe
-         9Ke2/YNFopkM4bExQsFPrKXHfVKdJ+l80B7D6ThG8skqbjIecN8gagQ7A6iZj/4xjRbo
-         3jbBAQvXjZz2zJxoCEk2ohinRz+BaI9hHZ6OPbMn0LS4lRoeZ9zRre0P4vCZeRjtpo0T
-         Hsow==
-X-Gm-Message-State: AOAM533fKPUpfooQR+vx+dZiAsOt5tYA2FzcE1wdKw5G4WWblkE5zCsR
-        dFqPQ0nFiL/GMsB5aIgjaRFRnLLZGiDIvK5lU8rqol2I29pSOPKm
-X-Google-Smtp-Source: ABdhPJwqFMWt/HO4S1xxju+gQabMi09PJBxALNIfHrK5+TejL/lt4JhT2+ouM8Vp9voSiNYAA0oWGbAXgLK4YJCVsPk=
-X-Received: by 2002:a67:f897:: with SMTP id h23mr826426vso.9.1597990209107;
- Thu, 20 Aug 2020 23:10:09 -0700 (PDT)
+        Fri, 21 Aug 2020 03:05:22 -0400
+Received: from mx.socionext.com ([202.248.49.38]:41769 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbgHUHFT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:05:19 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 21 Aug 2020 16:05:16 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id E271C18006E;
+        Fri, 21 Aug 2020 16:05:17 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 21 Aug 2020 16:05:17 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id BF6A14036B;
+        Fri, 21 Aug 2020 16:05:17 +0900 (JST)
+Received: from [10.212.1.43] (unknown [10.212.1.43])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 2F351120137;
+        Fri, 21 Aug 2020 16:05:17 +0900 (JST)
+Subject: Re: [PATCH v6 5/6] PCI: uniphier: Add iATU register support
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1596795922-705-6-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAL_Jsq+nGtrBpzNKU9+1cHYkuQ3KBHpgwZRQfDKKUMJVSx_b1A@mail.gmail.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <ab0f7338-045c-8565-134b-757769c9235f@socionext.com>
+Date:   Fri, 21 Aug 2020 16:05:16 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200715064909.9161-1-andy.tang@nxp.com> <20200715064909.9161-2-andy.tang@nxp.com>
-In-Reply-To: <20200715064909.9161-2-andy.tang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Fri, 21 Aug 2020 11:39:58 +0530
-Message-ID: <CAHLCerMerO3-NR8N6NHnRuJ51xyJAthnpE8NTYr55-575YVrgw@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v2] arm64: dts: ls208xa: add more thermal zone support
-To:     Yuantian Tang <andy.tang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_Jsq+nGtrBpzNKU9+1cHYkuQ3KBHpgwZRQfDKKUMJVSx_b1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Jul 15, 2020 at 12:25 PM <andy.tang@nxp.com> wrote:
->
-> From: Yuantian Tang <andy.tang@nxp.com>
->
-> There are 7 thermal zones in ls208xa soc. Add the other thermal zone
-> nodes to enable them.
->
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+On 2020/08/18 1:48, Rob Herring wrote:
+> On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+>>
+>> This gets iATU register area from reg property. In Synopsys DWC version
+>> 4.80 or later, since iATU register area is separated from core register
+>> area, this area is necessary to get from DT independently.
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-uniphier.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> index 55a7166..93ef608 100644
+>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> @@ -471,6 +471,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>>          if (IS_ERR(priv->pci.dbi_base))
+>>                  return PTR_ERR(priv->pci.dbi_base);
+>>
+>> +       priv->pci.atu_base =
+>> +               devm_platform_ioremap_resource_byname(pdev, "atu");
+>> +       if (IS_ERR(priv->pci.atu_base))
+>> +               priv->pci.atu_base = NULL;
+> 
+> Keystone has the same 'atu' resource setup. Please move its code to
+> the DW core and use that.
 
-Reviewed-by: Amit Kucheria <amitk@kernel.org>
+There are some platforms that pci.atu_base is set by other way.
+The 'atu' code shouldn't be conflicted with the following existing code.
 
-> ---
-> v2:
->         - remove useless alert trip
->         - add cooling-map to core cluster zones.
->
->  .../arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 141 ++++++++++++++++--
->  1 file changed, 132 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> index 41102dacc2e1..cc36c969dd9d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> @@ -79,20 +79,62 @@
->         };
->
->         thermal-zones {
-> -               cpu_thermal: cpu-thermal {
-> +               ddr-controller1 {
->                         polling-delay-passive = <1000>;
->                         polling-delay = <5000>;
-> +                       thermal-sensors = <&tmu 1>;
->
-> +                       trips {
-> +                               ddr-ctrler1-crit {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               ddr-controller2 {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
-> +                       thermal-sensors = <&tmu 2>;
-> +
-> +                       trips {
-> +                               ddr-ctrler2-crit {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               ddr-controller3 {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
-> +                       thermal-sensors = <&tmu 3>;
-> +
-> +                       trips {
-> +                               ddr-ctrler3-crit {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               core-cluster1 {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
->                         thermal-sensors = <&tmu 4>;
->
->                         trips {
-> -                               cpu_alert: cpu-alert {
-> -                                       temperature = <75000>;
-> +                               core_cluster1_alert: core-cluster1-alert {
-> +                                       temperature = <85000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
->                                 };
-> -                               cpu_crit: cpu-crit {
-> -                                       temperature = <85000>;
-> +
-> +                               core-cluster1-crit {
-> +                                       temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "critical";
->                                 };
-> @@ -100,14 +142,95 @@
->
->                         cooling-maps {
->                                 map0 {
-> -                                       trip = <&cpu_alert>;
-> +                                       trip = <&core_cluster1_alert>;
->                                         cooling-device =
->                                                 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -                                               <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               core-cluster2 {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
-> +                       thermal-sensors = <&tmu 5>;
-> +
-> +                       trips {
-> +                               core_cluster2_alert: core-cluster2-alert {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               core-cluster2-crit {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&core_cluster2_alert>;
-> +                                       cooling-device =
->                                                 <&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -                                               <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               core-cluster3 {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
-> +                       thermal-sensors = <&tmu 6>;
-> +
-> +                       trips {
-> +                               core_cluster3_alert: core-cluster3-alert {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               core-cluster3-crit {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&core_cluster3_alert>;
-> +                                       cooling-device =
->                                                 <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> -                                               <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +                                               <&cpu5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +                               };
-> +                       };
-> +               };
-> +
-> +               core-cluster4 {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
-> +                       thermal-sensors = <&tmu 7>;
-> +
-> +                       trips {
-> +                               core_cluster4_alert: core-cluster4-alert {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               core-cluster4-crit {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&core_cluster4_alert>;
-> +                                       cooling-device =
->                                                 <&cpu6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->                                                 <&cpu7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->                                 };
-> --
-> 2.17.1
->
+   drivers/pci/controller/dwc/pci-keystone.c:              atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
+   drivers/pci/controller/dwc/pci-keystone.c:              pci->atu_base = atu_base;
+   drivers/pci/controller/dwc/pcie-designware.c:                   pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
+   drivers/pci/controller/dwc/pcie-intel-gw.c:     pci->atu_base = pci->dbi_base + data->pcie_atu_offset;
+   drivers/pci/controller/dwc/pcie-tegra194.c:     pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+
+So I'm not sure where to move the code in the DW core.
+Is there any idea?
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
