@@ -2,95 +2,109 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4659FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 05:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CA8C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 05:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2058F21734
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 05:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597989277;
-	bh=sfQwMzKqpVq/e+wz+HzlULH4g+NYZKj4aYW2m0QVbm4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OzCrBK65AIO7dXGYs03ohp14qatYyb4Lk7AqiZnVWCZP9khingFVYeTTHMEP1UpRa
-	 XqHw47PrLPPnaloHCJLAtJJGsBzVvYzNMXDOhb3NbvWlUtgLcpQTHb/npS0q4vWfk0
-	 0os/fTsZF0VUEgCvlMFlqBqr7IiC8hypaED0T+b0=
+	by mail.kernel.org (Postfix) with ESMTP id EF73E20732
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 05:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgHUFyg (ORCPT
+        id S1725268AbgHUF44 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 01:54:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgHUFyg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 01:54:36 -0400
-Received: from localhost (p54b332e1.dip0.t-ipconnect.de [84.179.50.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F5220732;
-        Fri, 21 Aug 2020 05:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597989275;
-        bh=sfQwMzKqpVq/e+wz+HzlULH4g+NYZKj4aYW2m0QVbm4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DT8Pm1vvhmzuwosIITPXhMoO7XW7E1djHGPgQYb7YZoDeXT+RKoUV9B8tDHL9GvmY
-         KAohHpFwo6NBK/xqSLwlr+GqWz9UHoNVZb9gwvY7UvOZ7C9SfH+bWTi9vmCntvt+P3
-         vxUnDXvH/WsfFCMSJeWH/4Tst67g1oqLJu22vmVI=
-Date:   Fri, 21 Aug 2020 07:54:29 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        benh@kernel.crashing.org, brendanhiggins@google.com,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org
-Subject: Re: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
-Message-ID: <20200821055429.GA995@ninjato>
-References: <20200820161152.22751-1-eajames@linux.ibm.com>
- <20200820161152.22751-4-eajames@linux.ibm.com>
+        Fri, 21 Aug 2020 01:56:56 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:48119 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725867AbgHUF4z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 01:56:55 -0400
+X-Greylist: delayed 1195 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Aug 2020 01:56:54 EDT
+Received: from [2001:67c:670:100:1d::c5] (helo=pty.hi.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k8zjU-0004x7-IT; Fri, 21 Aug 2020 07:36:56 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1k8zjT-0003RB-CS; Fri, 21 Aug 2020 07:36:55 +0200
+Date:   Fri, 21 Aug 2020 07:36:55 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Li Jun <jun.li@nxp.com>
+Cc:     kishon@ti.com, robh+dt@kernel.org, devicetree@vger.kernel.org,
+        peter.chen@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        linux-imx@nxp.com, kernel@pengutronix.de, festevam@gmail.com
+Subject: Re: [PATCH 2/2] phy: freescale: imx8mq-usb: add support for imx8mp
+ usb phy
+Message-ID: <20200821053655.mpbp4zhbavjpgdwy@pengutronix.de>
+References: <1591621893-22363-1-git-send-email-jun.li@nxp.com>
+ <1591621893-22363-2-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820161152.22751-4-eajames@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1591621893-22363-2-git-send-email-jun.li@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:35:05 up 279 days, 20:53, 257 users,  load average: 0.03, 0.06,
+ 0.04
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 20-06-08 21:11, Li Jun wrote:
 
+...
 
-> +	irq_received &= 0xf000ffff;
+> +static int imx8mp_usb_phy_init(struct phy *phy)
+> +{
+> +	struct imx8mq_usb_phy *imx_phy = phy_get_drvdata(phy);
+> +	u32 value;
+> +
+> +	/* USB3.0 PHY signal fsel for 24M ref */
+> +	value = readl(imx_phy->base + PHY_CTRL0);
+> +	value &= ~PHY_CTRL0_FSEL_MASK;
+> +	value |= PHY_CTRL0_FSEL_24M;
+> +	writel(value, imx_phy->base + PHY_CTRL0);
+> +
+> +	/* Disable alt_clk_en and use internal MPLL clocks */
+> +	value = readl(imx_phy->base + PHY_CTRL6);
+> +	value &= ~(PHY_CTRL6_ALT_CLK_SEL | PHY_CTRL6_ALT_CLK_EN);
+> +	writel(value, imx_phy->base + PHY_CTRL6);
+> +
+> +	value = readl(imx_phy->base + PHY_CTRL1);
+> +	value &= ~(PHY_CTRL1_VDATSRCENB0 | PHY_CTRL1_VDATDETENB0);
+> +	value |= PHY_CTRL1_RESET | PHY_CTRL1_ATERESET;
+> +	writel(value, imx_phy->base + PHY_CTRL1);
+> +
+> +	value = readl(imx_phy->base + PHY_CTRL0);
+> +	value |= PHY_CTRL0_REF_SSP_EN;
+> +	writel(value, imx_phy->base + PHY_CTRL0);
+> +
+> +	value = readl(imx_phy->base + PHY_CTRL2);
+> +	value |= PHY_CTRL2_TXENABLEN0 | PHY_CTRL2_OTG_DISABLE;
+> +	writel(value, imx_phy->base + PHY_CTRL2);
+> +
+> +	udelay(10);
 
-Can we have a define for this? Like ASPEED_I2CD_INTR_MASTER_IRQS or
-something?
+Nit:
+Do we need the active wait here or is it also possible to use
+usleep_range() here?
 
-
---5vNYLRcllDrimb99
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8/YZAACgkQFA3kzBSg
-KbbHvA/+LimUqAb7M8S1x9RHr907IxGdPIa8H5nRyXeAN0PhiGmtKHMYwANpCAip
-wyZ5LdiYTk3tNqNL3LljLxdoVVRSk3K15Jrqad9kizsVnl/nLTQvjmrJ4TeG1cVK
-JjFpzG+x03OJLEMJnFlpi7NhMHdoIh+hq5EI6mDrLI1ZrwZUxQR+MwK3N45muVYJ
-8BgObMV5NNBMISWWDVm7QvB7fQVxJCo18BoURhQzDXNqe1NuPBz/H5RPwLVjnnTd
-cVewoBvY0+qd/kn+Rt1RUEYJbJwpnJp+XWOUkYJ0cC+ybaGVB8ggoMPWU4Qa6Ru8
-vn5YSf/2Kn0L5Jqx7gwPcgEqzcUtsZBfZQZxMdMAezbgQx62IV80976o5m6aeMn4
-svWGhKIH3cH6iuZnPJd3TDh3h6pAy7k4SHz+q/kVyb87j91E4RQZb4bf4a4GanC3
-+CtynnK0bGpMiti0wnPT2huC3v0MrXwuNem8L/6/sM/rCr038+EWeb7LfgwKx8Oo
-5qcjOK0kj7KVVoUNvzGu36v5onZm7PMxDap9xjZkgTulsL3z3xdD3rZFI3M6aEyH
-U3tUQYMaE2NfTeSjqs2YWZdMzsGFe2xc1z7o8B2/kYC4S17wBHs10HHlJKXWmrRV
-Ng9qE3y8rRyl/JiMztkyr4hshYWZ48cIOzH85FaSuAmXhphrOYk=
-=q7yA
------END PGP SIGNATURE-----
-
---5vNYLRcllDrimb99--
+> +
+> +	value = readl(imx_phy->base + PHY_CTRL1);
+> +	value &= ~(PHY_CTRL1_RESET | PHY_CTRL1_ATERESET);
+> +	writel(value, imx_phy->base + PHY_CTRL1);
+> +
+> +	return 0;
+> +}
