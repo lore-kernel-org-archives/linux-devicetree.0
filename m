@@ -2,84 +2,210 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D108C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B396C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57CF6208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B9B2087D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598047316;
-	bh=90PhUhoN51ucLTRzVXZzQLLzesUh30Uv+ixbaNgEC64=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HcvUjCNUV7z+ACjhMCFGX+fP84Lj4XTDi223h3KHOvCrOhRT4BP5aPUfedBZsaBmA
-	 u2f07+ArJS5nE5mESGaPko+w6ZtwRxz5Jtv8vcwOJeI6tBWYUBR1V4zlaXRPi0y2GA
-	 TZj7BB9RdZRHt+cqWI/STzIRqzPVolocwDBwFbcc=
+	s=default; t=1598047896;
+	bh=fjUhRuQKm8f1fb1XU0Zes6sQDguM9nwNey/Mjg35Qho=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DblJHlyBxoRyl5H8hkCQdnpUbX3EcXctBDwwdIsUe4FhEtVvE5GRT5OJG7YxKTbMl
+	 W81gmjlq2qCDoOzFjIxaFiUXtpgUp0T1+/yDPZWALtdu5rWneUaMKCNxhIEcBJPppm
+	 d3ppJNe0BdmmVjcqRwj+gNO6JBMPSYpF00qMrxYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbgHUWBz (ORCPT
+        id S1726761AbgHUWLg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:01:55 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:34836 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726893AbgHUWBz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 18:01:55 -0400
-Received: by mail-il1-f195.google.com with SMTP id q14so2652904ilm.2;
-        Fri, 21 Aug 2020 15:01:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7NhKPiyk6xg8AVb5g3l2MlEWghxB32ju1Cu8YCfofgw=;
-        b=t3RgOu1z8SYfySAcVvepbpsSMN4C7j64cW+XTLRZiwnUMl00pwcYcc7wVzQ5JjIx73
-         hRj4ifHQCwKHsGOqfSNcocgDSydBsT1zVdPJHEEfmvhHle9b6ESS/YvKsqolubG2/o0i
-         yMP4eNhJVqg+/23yfdqiVZzDFg76Xx6UZ/usJPPXPlGpuA8XRVbsmvAunknQbenr+bIP
-         asz5zPDyHMPrbOOO6sNt06AFiM6ofpWUt335hqYWqFZraL+zJKPiQOno6U+YsK4NiVu0
-         ey3mmoG4Szo8rpqbk28DMa6BBmd1q6S5+xWL8fWyjG4Jn6rvuKf3UYIE+qhifUh0F2Px
-         HhGA==
-X-Gm-Message-State: AOAM531Jyam4RDPqSL+nScjhf2bWco3XwOlkye9E3EYHfw0LLNbaUxvp
-        E9JUdj9MTdqsO52ao+QonZlU1PQlqw==
-X-Google-Smtp-Source: ABdhPJzogI3k0iUyC74lTsKH8a075e413GabjD7N2VO9bTT2arKFOuRcOrOJ9kQ+Qks2vMyFZeVb5w==
-X-Received: by 2002:a05:6e02:d44:: with SMTP id h4mr4116255ilj.296.1598047314352;
-        Fri, 21 Aug 2020 15:01:54 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id t14sm1971024ios.18.2020.08.21.15.01.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 15:01:53 -0700 (PDT)
-Received: (nullmailer pid 1794851 invoked by uid 1000);
-        Fri, 21 Aug 2020 22:01:53 -0000
-Date:   Fri, 21 Aug 2020 16:01:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Madalin Bucur <madalin.bucur@oss.nxp.com>
-Cc:     netdev@vger.kernel.org, kuba@kernel.org, robh+dt@kernel.org,
-        davem@davemloft.net, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: net: correct description of
- phy-connection-type
-Message-ID: <20200821220153.GA1794798@bogus>
-References: <1597917724-11127-1-git-send-email-madalin.bucur@oss.nxp.com>
+        Fri, 21 Aug 2020 18:11:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726641AbgHUWLf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 18:11:35 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B61422087D;
+        Fri, 21 Aug 2020 22:11:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598047894;
+        bh=fjUhRuQKm8f1fb1XU0Zes6sQDguM9nwNey/Mjg35Qho=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aX8ReITKM/Ta8LYT5WqOhz02VJTGSGvn7Mw8W7e+XUMMiBHEu+OeNJvyK4jVY0VCt
+         t6OjIKsIKF7mQtHBI0qaLf9egUKAq+ilN+m34gGKwGuIcfVEyw95MKpCP8mkryPOPG
+         +TydynQFsLt1TVnV3Ccq2fAClSMNql6z6T5vvzro=
+Received: by mail-oo1-f42.google.com with SMTP id x6so672494ooe.8;
+        Fri, 21 Aug 2020 15:11:34 -0700 (PDT)
+X-Gm-Message-State: AOAM530JTZVYpnhX4UVs10IrBm4iP2kne9cCAoNTuvjtJped0p8Z94B5
+        ++hEIT0ZGdGPniQNSxL425PDmsIWVmMwp9kGVA==
+X-Google-Smtp-Source: ABdhPJz4dkPtYZT5tRo0MDTYMZbIAn6jfWvcC3zGyEzPL69zfiWh34FaMbJgoP16he88SIHHwmJAUgsYOZo7pRiG0TM=
+X-Received: by 2002:a4a:a60a:: with SMTP id e10mr3730622oom.25.1598047893992;
+ Fri, 21 Aug 2020 15:11:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597917724-11127-1-git-send-email-madalin.bucur@oss.nxp.com>
+References: <1598003509-27896-1-git-send-email-wuht06@gmail.com> <1598003509-27896-2-git-send-email-wuht06@gmail.com>
+In-Reply-To: <1598003509-27896-2-git-send-email-wuht06@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 21 Aug 2020 16:11:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLtGF57Q3FEjFWhDkdwSwp6S4SERAG9AwuB-eEb=xtMKw@mail.gmail.com>
+Message-ID: <CAL_JsqLtGF57Q3FEjFWhDkdwSwp6S4SERAG9AwuB-eEb=xtMKw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: sprd: Document Unisoc PCIe RC host controller
+To:     Hongtao Wu <wuht06@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Billows Wu <billows.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Aug 2020 13:02:04 +0300, Madalin Bucur wrote:
-> The phy-connection-type parameter is described in ePAPR 1.1:
-> 
-> Specifies interface type between the Ethernet device and a physical
-> layer (PHY) device. The value of this property is specific to the
-> implementation.
-> 
-> Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-> ---
->  Documentation/devicetree/bindings/net/ethernet-controller.yaml | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+On Fri, Aug 21, 2020 at 3:52 AM Hongtao Wu <wuht06@gmail.com> wrote:
+>
+> From: Billows Wu <billows.wu@unisoc.com>
+>
+> This series adds PCIe bindings for Uisoc SoCs.
 
-Applied, thanks!
+typo
+
+> This controller is based on DesignWare PCIe IP.
+>
+> Signed-off-by: Billows Wu <billows.wu@unisoc.com>
+> ---
+>  .../devicetree/bindings/pci/sprd-pcie.yaml         | 88 ++++++++++++++++++++++
+>  1 file changed, 88 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/pci/sprd-pcie.yaml b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+> new file mode 100644
+> index 0000000..6eab4b8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
+> @@ -0,0 +1,88 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/sprd-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: SoC PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Billows Wu <billows.wu@unisoc.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +  - $ref: "sprd-pcie.yaml#"
+
+Drop this. You don't need to include yourself.
+
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: sprd,pcie
+> +      - const: sprd,pcie-ep
+> +
+> +  reg:
+> +    minItems: 2
+> +    maxItems: 3
+> +    items:
+> +      - description: Controller control and status registers.
+> +      - description: PCIe shadow registers.
+> +      - description: PCIe configuration registers.
+> +
+> +  reg-names:
+> +    items:
+> +      - const: dbi
+> +      - const: dbi2
+> +      - const: cfg
+
+'config' is the standard name.
+
+> +
+> +  ranges:
+> +    maxItems: 2
+> +
+> +  num-lanes:
+> +    maxItems: 1
+
+maxItems is for arrays and this is not an array. How many lanes are valid?
+
+enum: [ 1, 2, 27?, ... ]
+
+
+> +    description: Number of lanes to use for this port.
+> +
+> +  num-ib-windows:
+> +    maxItems: 1
+
+Not an array.
+
+> +    description: Number of inbound windows to use for this port.
+> +
+> +  num-ob-windows:
+> +    maxItems: 1
+
+Not an array.
+
+> +    description: Number of outbound windows to use for this port.
+> +
+> +  bus-range:
+> +    description: Range of bus numbers associated with this controller.
+
+Drop if you don't have constraints.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    maxItems: 1
+
+Need to define the name, though you don't really need this with only 1.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - num-lanes
+> +  - ranges
+> +  - bus-range
+> +  - interrupts
+> +  - interrupt-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    pcie0@2b100000 {
+> +        compatible = "sprd,pcie", "snps,dw-pcie";
+
+Didn't document "snps,dw-pcie". You'll need a custom 'select' to avoid
+selecting all instances of "snps,dw-pcie".
+
+> +        reg = <0x0 0x2b100000 0x0 0x2000>,
+> +              <0x2 0x00000000 0x0 0x2000>;
+> +        reg-names = "dbi", "config";
+> +        #address-cells = <3>;
+> +        #size-cells = <2>;
+> +        device_type = "pci";
+> +        ranges = <0x01000000 0x0 0x00000000 0x2 0x00002000 0x0 0x00010000
+> +                  0x03000000 0x0 0x10000000 0x2 0x10000000 0x1 0xefffffff>;
+> +        bus-range = <0  15>;
+> +        num-lanes = <1>;
+> +        num-viewport = <8>;
+> +        interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names = "msi";
+> +    };
+> --
+> 2.7.4
+>
