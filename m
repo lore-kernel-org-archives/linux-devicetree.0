@@ -2,273 +2,154 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813EAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 18:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634FEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 18:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6239A20720
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 18:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40EB020724
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 18:39:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="YZHA97Hk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iNmJIDej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725772AbgHUSUZ (ORCPT
+        id S1725781AbgHUSjf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:20:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51904 "EHLO
+        Fri, 21 Aug 2020 14:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgHUSUV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 14:20:21 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CE4C061573
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 11:20:20 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id h19so2832862ljg.13
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 11:20:20 -0700 (PDT)
+        with ESMTP id S1725768AbgHUSjf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 14:39:35 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89BB0C061575;
+        Fri, 21 Aug 2020 11:39:34 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p37so1407464pgl.3;
+        Fri, 21 Aug 2020 11:39:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Fmr7vWLbcAJsXP0YXk7CIiVY7znnA1prOK2jFX+ggUc=;
-        b=YZHA97Hkwr/oO7ID/UCj9O2C2Y/NWN5GMgh8UxwejbLK+n3AbGbKLWbGrSQl4HgdIv
-         juWu4ZhP8ZCz+cE2i9TfFe4PWvOtRI0QStb9Rv1pVnm6bl0/RttFa/Fsf0yG5UTlnoIM
-         g8v7W2+GPUZL03AE127Fpy3ginYSmRvP6GyVi8FoYMgHf5iHBWjE/3EvGcp94XqNgCGd
-         AeNKpgzI/KxpaMij4p4CL06Os8wBAzbv4STO/+T6l7eHvZPO8I2Shqlw7hlgeuZM6BBB
-         eyUDi0CCUYfBMN8c7qukU12icYUV3irNLDamKKkg4RUjJt7/qTO9eSy1cj5X9ofiibg/
-         194g==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6Wed+2KJiJXbDusUkvqx9osbk9K/bLB8+KZ5CEx8UTo=;
+        b=iNmJIDej7pY5YB0Gkj2suBA3Jwl9t7ZD0OZiL9fSPDX24XiLDEM0e95Wyn/8DSpqfX
+         zz7BjmOcvExJ8GwToRQ/le6hkexWWAnQqw8uvs2UDOBYyFUzEqPLT1AL1ErNxKqezEoe
+         LLm8hIFrN0NhqhkQOC/F2g0+GXhFbFfZnlkkTZzfYmnclUc2eJ1v2U9xTMLMViGVtm1j
+         RzF/tQwAqQhmBA4hQPqDgSH8gDK4RCI6dgEHI4JnH4guOiQEJ8U0kBA7K7xWwkVKY+zv
+         J52bpXUFixeHW5YG3B/Kb+ctBXeZArUrQO/f4pOdcUVCRpdMrYrt8pDfUw9heiB5BVLr
+         BaRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Fmr7vWLbcAJsXP0YXk7CIiVY7znnA1prOK2jFX+ggUc=;
-        b=Gnr0/15HjV82YI/3lOoJKKlN6P5E7yBF2tr7NU4DH7Gj2VvouP5QNG1RFLz3BzLocK
-         ArfXK8SzheJZOF7sDuqh5WhlwFvvuOHTfCrencyy6fMyf6D9ir7gs2ReRbEj3layW9ek
-         WZYVp9818THC6u3q31xxvCWDmwZkB00dCXNaRhtp/2ICk3KZ6932Jo4RqVMP824GLjFL
-         VjlTuCZ2uzRHqx2VJ75N10qtY1UoI02L0xHjBmIlmYC4gLybGW0PnnUvvY68PbGce4UE
-         C9rV5h2ryRqD0gNRRo+rkebICUZxDa41LA0VEXdipVNSa3Cyqf1CA05vcILEUavE6hea
-         MRaw==
-X-Gm-Message-State: AOAM53395+1+rwyD8LGofUByFDIzns6KJQLXMXMSn+sGmuk5FoXdti2N
-        UORvEaLKolnaUgU2JG+gkBy0vA==
-X-Google-Smtp-Source: ABdhPJy+G8ERNP5mgenwD9E2DAXhDoCXOcno+itf4p0DuvN2zCA8LYW0qmSkbRHJRG9Wu8vvrBJjiw==
-X-Received: by 2002:a2e:b619:: with SMTP id r25mr2257693ljn.220.1598034018932;
-        Fri, 21 Aug 2020 11:20:18 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id 14sm529956lfr.17.2020.08.21.11.20.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 11:20:18 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 20:20:17 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: renesas: Fix pin controller node names
-Message-ID: <20200821182017.GB69748@oden.dyn.berto.se>
-References: <20200821112433.5652-1-geert+renesas@glider.be>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6Wed+2KJiJXbDusUkvqx9osbk9K/bLB8+KZ5CEx8UTo=;
+        b=aRzdelHFp3ZyUcgW35z9YCJfaPywJAlaEOFRIh7PSUfDohZ2jhBBvg0NnVCDokpjy+
+         2H8oLLM+AOVkg7Y0jp2x8R4OFp/yclqQL6lp1yYzaCPZWxVVO8IrwMzAOM6y35cttUL4
+         WTL80AVHkxpLpWwXhTT1ydh760ynu9YonoGaV1P2vU3Xy2kkLgffYWFX8EXmB0fsBj4u
+         umoC3Om3Cy5gUxoCAOqHIAMh57OXSlfXGEreJCut8P0UcyhHcYTa8f8qMo5fZHOEXaoL
+         TMQ0aGyftW6sA04BSMZ5w1a9CetmYS3MvPgQxfVNcZBm+SM9zfDESGPKkAs3P83RD11A
+         eP1A==
+X-Gm-Message-State: AOAM53306pQcr8+TnLlgML8lYmnPk6xndgKnh+cyWH3DxHFqASG56n0T
+        DNTOc8/IINt+n8UC/AzJKV3gmOp+FUM=
+X-Google-Smtp-Source: ABdhPJwC0gExCDD5JxS1RpIHUTpceynmzw1eAoWQwOyTleiFyrZ/PfXx94gZCIzS9MB/9eaST4SHRg==
+X-Received: by 2002:a63:4557:: with SMTP id u23mr3120859pgk.197.1598035173716;
+        Fri, 21 Aug 2020 11:39:33 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h193sm2843300pgc.42.2020.08.21.11.39.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Aug 2020 11:39:33 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 11:39:31 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
+Cc:     Jack Lo <jack.lo@gtsys.com.hk>, devicetree@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] hwmon: shtc1: add support for device tree bindings
+Message-ID: <20200821183931.GA245345@roeck-us.net>
+References: <20200815012227.32538-1-chris.ruehl@gtsys.com.hk>
+ <20200815012227.32538-2-chris.ruehl@gtsys.com.hk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200821112433.5652-1-geert+renesas@glider.be>
+In-Reply-To: <20200815012227.32538-2-chris.ruehl@gtsys.com.hk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thanks for your patch.
-
-On 2020-08-21 13:24:33 +0200, Geert Uytterhoeven wrote:
-> According to Devicetree Specification v0.2 and later, Section "Generic
-> Names Recommendation", the node name for a pin controller device node
-> should be "pinctrl".
+On Sat, Aug 15, 2020 at 09:22:26AM +0800, Chris Ruehl wrote:
+> Add support for DTS bindings for the sensirion shtc1,shtw1 and shtc3.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Applied.
+
+Thanks,
+Guenter
 
 > ---
-> To be queued in renesas-devel for v5.10.
+>  v8: no change
 > 
->  arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a774b1.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77951.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77960.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77961.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77970.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77980.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77990.dtsi | 2 +-
->  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 2 +-
->  12 files changed, 12 insertions(+), 12 deletions(-)
+>  drivers/hwmon/shtc1.c | 25 ++++++++++++++++++++++---
+>  1 file changed, 22 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> index ed99863f1dd09fd0..0806446228ec8f14 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-> @@ -408,7 +408,7 @@
->  			resets = <&cpg 905>;
->  		};
+> diff --git a/drivers/hwmon/shtc1.c b/drivers/hwmon/shtc1.c
+> index a0078ccede03..7993a5ff8768 100644
+> --- a/drivers/hwmon/shtc1.c
+> +++ b/drivers/hwmon/shtc1.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+>  #include <linux/platform_data/shtc1.h>
+> +#include <linux/of.h>
 >  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a774a1";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-> index 1c76de24d3ea4844..40d87baa2431edfe 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774b1.dtsi
-> @@ -282,7 +282,7 @@
->  			resets = <&cpg 905>;
->  		};
+>  /* commands (high precision mode) */
+>  static const unsigned char shtc1_cmd_measure_blocking_hpm[]    = { 0x7C, 0xA2 };
+> @@ -196,6 +197,7 @@ static int shtc1_probe(struct i2c_client *client,
+>  	enum shtcx_chips chip = id->driver_data;
+>  	struct i2c_adapter *adap = client->adapter;
+>  	struct device *dev = &client->dev;
+> +	struct device_node *np = dev->of_node;
 >  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a774b1";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> index 9fdca4c55ba95608..f2a93f83781dba04 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> @@ -256,7 +256,7 @@
->  			resets = <&cpg 906>;
->  		};
+>  	if (!i2c_check_functionality(adap, I2C_FUNC_I2C)) {
+>  		dev_err(dev, "plain i2c transactions not supported\n");
+> @@ -233,8 +235,14 @@ static int shtc1_probe(struct i2c_client *client,
+>  	data->client = client;
+>  	data->chip = chip;
 >  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a774c0";
->  			reg = <0 0xe6060000 0 0x508>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> index 415727c9f23200dd..c4cd05470ed7e19d 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-> @@ -427,7 +427,7 @@
->  			resets = <&cpg 905>;
->  		};
+> -	if (client->dev.platform_data)
+> -		data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> +	if (np) {
+> +		data->setup.blocking_io = of_property_read_bool(np, "sensirion,blocking-io");
+> +		data->setup.high_precision = !of_property_read_bool(np, "sensicon,low-precision");
+> +	} else {
+> +		if (client->dev.platform_data)
+> +			data->setup = *(struct shtc1_platform_data *)dev->platform_data;
+> +	}
+> +
+>  	shtc1_select_command(data);
+>  	mutex_init(&data->update_lock);
 >  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a774e1";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77951.dtsi b/arch/arm64/boot/dts/renesas/r8a77951.dtsi
-> index 1b1a014c829a2e2a..644308dd886c4baa 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77951.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77951.dtsi
-> @@ -490,7 +490,7 @@
->  			resets = <&cpg 905>;
->  		};
+> @@ -257,8 +265,19 @@ static const struct i2c_device_id shtc1_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, shtc1_id);
 >  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a7795";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77960.dtsi b/arch/arm64/boot/dts/renesas/r8a77960.dtsi
-> index e6c88a748692b212..53b9aa26c9b13fa7 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77960.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77960.dtsi
-> @@ -459,7 +459,7 @@
->  			resets = <&cpg 905>;
->  		};
->  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a7796";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-> index 6fdc28a6d2cf0354..3ff2729528aeaeab 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
-> @@ -448,7 +448,7 @@
->  			resets = <&cpg 905>;
->  		};
->  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a77961";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> index 6206e28f37efae73..bfffc5b6104e2dfc 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> @@ -329,7 +329,7 @@
->  			resets = <&cpg 905>;
->  		};
->  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a77965";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> index 7be8ad1ca4646d79..5a5d5649332a8b1d 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> @@ -204,7 +204,7 @@
->  			resets = <&cpg 907>;
->  		};
->  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a77970";
->  			reg = <0 0xe6060000 0 0x504>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77980.dtsi b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> index f573dc0552272195..ec7ca72399ec4d54 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -234,7 +234,7 @@
->  			resets = <&cpg 907>;
->  		};
->  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a77980";
->  			reg = <0 0xe6060000 0 0x50c>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77990.dtsi b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-> index 07c35e9b049ae151..d1615474be67bac3 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77990.dtsi
-> @@ -282,7 +282,7 @@
->  			resets = <&cpg 906>;
->  		};
->  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a77990";
->  			reg = <0 0xe6060000 0 0x508>;
->  		};
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> index 624aaa6d7f20d6d4..e1af7c4782f4d768 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> @@ -188,7 +188,7 @@
->  			resets = <&cpg 906>;
->  		};
->  
-> -		pfc: pin-controller@e6060000 {
-> +		pfc: pinctrl@e6060000 {
->  			compatible = "renesas,pfc-r8a77995";
->  			reg = <0 0xe6060000 0 0x508>;
->  		};
-> -- 
-> 2.17.1
-> 
-
--- 
-Regards,
-Niklas Söderlund
+> +static const struct of_device_id shtc1_of_match[] = {
+> +	{ .compatible = "sensirion,shtc1" },
+> +	{ .compatible = "sensirion,shtw1" },
+> +	{ .compatible = "sensirion,shtc3" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, shtc1_of_match);
+> +
+>  static struct i2c_driver shtc1_i2c_driver = {
+> -	.driver.name  = "shtc1",
+> +	.driver = {
+> +		.name = "shtc1",
+> +		.of_match_table = shtc1_of_match,
+> +	},
+>  	.probe        = shtc1_probe,
+>  	.id_table     = shtc1_id,
+>  };
