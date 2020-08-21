@@ -2,88 +2,77 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92197C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5074C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A41620656
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961492078D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgHUK4Z (ORCPT
+        id S1727833AbgHULLj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:56:25 -0400
-Received: from mga01.intel.com ([192.55.52.88]:2823 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727870AbgHUK4Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:56:24 -0400
-IronPort-SDR: gSnvnVK8oPywWPZBB9Byf6WSXnIERHyvOUeeGsuma0Q/QG2slIa7vf/py4xCsJ5BtQX/rJFDXt
- YSoxwvHdic/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="173558562"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="173558562"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 03:56:24 -0700
-IronPort-SDR: CsJI5Wj63gTb3B1Tl19oudAImk8ftZNnw0BHjXy5zUCr3I316Q5cyB9SpxPu/pXvyjHqi0wDjp
- 0MoNshqIqnIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="327731752"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 03:56:20 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1k94iY-00AK7y-OP; Fri, 21 Aug 2020 13:56:18 +0300
-Date:   Fri, 21 Aug 2020 13:56:18 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-Subject: Re: [PATCH v9 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200821105618.GO1891694@smile.fi.intel.com>
-References: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
- <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Fri, 21 Aug 2020 07:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgHULLg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 07:11:36 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F755C061385
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 04:11:36 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by xavier.telenet-ops.be with bizsmtp
+        id JBBV230014C55Sk01BBVNV; Fri, 21 Aug 2020 13:11:29 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k94xE-0002eY-Tz; Fri, 21 Aug 2020 13:11:28 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k94xE-0000za-Ra; Fri, 21 Aug 2020 13:11:28 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin controller node name
+Date:   Fri, 21 Aug 2020 13:11:27 +0200
+Message-Id: <20200821111127.3771-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 05:32:11PM +0800, Rahul Tanwar wrote:
-> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-> This PWM controller does not have any other consumer, it is a
-> dedicated PWM controller for fan attached to the system. Add
-> driver for this PWM fan controller.
+According to Devicetree Specification v0.2 and later, Section "Generic
+Names Recommendation", the node name for a pin controller device node
+should be "pinctrl".
 
-...
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in sh-pfc for v5.10.
 
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
+ .../devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml       | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +#include <linux/of_device.h>
-
-We haven't settle this yet...
-
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+index b7911a994f3a9f12..ce1f7343788faeff 100644
+--- a/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza2-pinctrl.yaml
+@@ -84,7 +84,7 @@ additionalProperties: false
+ examples:
+   - |
+     #include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
+-    pinctrl: pin-controller@fcffe000 {
++    pinctrl: pinctrl@fcffe000 {
+             compatible = "renesas,r7s9210-pinctrl";
+             reg = <0xfcffe000 0x1000>;
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
