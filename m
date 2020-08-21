@@ -2,124 +2,189 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F247C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F40C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 213E22087D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604AB207DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:45:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kOxOuxMx"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jrAahD8w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgHUHkQ (ORCPT
+        id S1725908AbgHUHpz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:40:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37150 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbgHUHkJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 03:40:09 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38252C061385
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 00:40:08 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id i129so388681vsi.3
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 00:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bAU9iZW9yGALOB30mTlHDeoRf5CRh/Snlg+xCwRu8JU=;
-        b=kOxOuxMxSQ+ksSLjKg3Ni5aIYiY5w0RxKooi0DNSCKve7b14PccYxmywLlnGxld6mc
-         WqavXtK7TC9i0AqdD3XPTGzIoa5x8gqELOCV/+vAlvOIAyKSZztrQsMbO4Rg2Sd1UFPg
-         SiEMKltZUmr8lz2zr42CVDG7YdRtLuErHINARiW/rqVexyezip3RnwlVXtlEpgakssZH
-         NiFgJ9BjbUnADlw9BpI2N/RodkTY07zEH8wagrgldLZZX2bBReCzCGOX1V/M9Lb+z/Vk
-         +T51a1HYvojPzfuH4UOvwvYnJe1ukLKul84xO8Z6/4GZPuwyMPAeamxXv+di9soZ/b3m
-         KOmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bAU9iZW9yGALOB30mTlHDeoRf5CRh/Snlg+xCwRu8JU=;
-        b=PRJH+J997BJb5EhHOaPvutZS8rtqoZsBcA2LVB9p8RgE26H4zyD3vQZmZpcCuHhS1i
-         9cVPpLFVfibk75pkRqeCcsqMnz3IqlFDPYhV1egMy7bgn7Jd4tfE2QJUpy3Plhah4NZ2
-         hHjDHJF4xKMZAuR7Q6kHW7uF0cazjeB4SISs4H8kxyOCa8B1D5kEwCUgwMFNFZgLjlPH
-         qL6IFpxhxQn2Dsjl4g6QNNf62FejNr/TY+dgf86CvlBRAkQtbayAbhmTAZvBDpBFhIVD
-         IbP6RiWB7HRWif1q0s6f6k8PTzZq684G51zgYwca3kvU9H/xgDDSg4BBQh9WfeQ8Exs4
-         704Q==
-X-Gm-Message-State: AOAM533ni8ea6jAMRi6APKHu0SLwmTdBETRCf9+rEGRWd14aeQCVL4pb
-        MwYcEtHSqzY1j3E0e7g/xXOJzU7kAbcuDxn7frHWQw==
-X-Google-Smtp-Source: ABdhPJwcZWnwUZBTqM0sxN5IRp11B+ol/YTZpoa5qsJpj61ysTHH9tG19j4VKQcti7QxF7eU+rcXtzQeNyrlpU0p/zI=
-X-Received: by 2002:a67:e9d8:: with SMTP id q24mr887206vso.165.1597995607373;
- Fri, 21 Aug 2020 00:40:07 -0700 (PDT)
+        Fri, 21 Aug 2020 03:45:55 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:50410 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727846AbgHUHpw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 03:45:52 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200821074549epoutp04dca252dc41d0531c0ef5508bf47a8879~tONl3fBca1974619746epoutp04M
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 07:45:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200821074549epoutp04dca252dc41d0531c0ef5508bf47a8879~tONl3fBca1974619746epoutp04M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1597995949;
+        bh=2+53xcHFCjgELMf4X3YPM+muDniBJtUmbh8iQTB7pl0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jrAahD8wjWkV/l8lbdx7XgvoVowvobpPBGW1+Q4RX9cLnE+sSHye1jq1ijRPy+eZx
+         dVxvGIYJSrZP4O0uFCt2Isx9Lv4cnEN07sR1ue8SgkES+KGO8LdNgBVl1ZdAoBiHoG
+         4sr8gzfFoUYI0u0QiMg1NNNdZ39HZDZlSLppforw=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+        20200821074548epcas2p1327d7d86f491d1e27975c1242758a78b~tONlDT0C83190931909epcas2p1L;
+        Fri, 21 Aug 2020 07:45:48 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.40.191]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4BXtqG3P8PzMqYm0; Fri, 21 Aug
+        2020 07:45:46 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2F.06.19322.9AB7F3F5; Fri, 21 Aug 2020 16:45:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200821074545epcas2p23109c52bfe76a58b26ba1f509cb86165~tONhu-RjS0792807928epcas2p2h;
+        Fri, 21 Aug 2020 07:45:45 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200821074544epsmtrp13b02268595ebe56c8b2715fd355c1038~tONht6LLR0929109291epsmtrp1V;
+        Fri, 21 Aug 2020 07:45:44 +0000 (GMT)
+X-AuditID: b6c32a45-797ff70000004b7a-00-5f3f7ba969a2
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C3.B5.08382.8AB7F3F5; Fri, 21 Aug 2020 16:45:44 +0900 (KST)
+Received: from KEI (unknown [12.36.155.227]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200821074544epsmtip1e7d25fed313408de35eeeb6dd2b14396~tONheg87B0588805888epsmtip1C;
+        Fri, 21 Aug 2020 07:45:44 +0000 (GMT)
+Date:   Fri, 21 Aug 2020 16:38:13 +0900
+From:   Cho KyongHo <pullip.cho@samsung.com>
+To:     Brian Starkey <brian.starkey@arm.com>
+Cc:     Hyesoo Yu <hyesoo.yu@samsung.com>, sumit.semwal@linaro.org,
+        minchan@kernel.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, joaodias@google.com, linux-mm@kvack.org,
+        surenb@google.com, vbabka@suse.cz, afd@ti.com,
+        benjamin.gaignard@linaro.org, lmark@codeaurora.org,
+        labbott@redhat.com, john.stultz@linaro.org,
+        christian.koenig@amd.com, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, nd@arm.com
+Subject: Re: [PATCH 0/3] Chunk Heap Support on DMA-HEAP
+Message-ID: <20200821073813.GA190335@KEI>
 MIME-Version: 1.0
-References: <1596673949-1571-1-git-send-email-skomatineni@nvidia.com>
-In-Reply-To: <1596673949-1571-1-git-send-email-skomatineni@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 21 Aug 2020 09:39:31 +0200
-Message-ID: <CAPDyKFre3Rpfd-XW=kMzuKJAfUcr4v-vEj9KVkPyAvkbTdRuGg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Fix timeout clock used by hardware data timeout
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "# 4.0+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200819132204.2rki3xsczdy2cpsk@DESKTOP-E1NTVVP.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xTZxTfd9veXsgqlwL6haFiJ1sg41FY4UOEgYq529SxLO6VzdLADRBL
+        aXqpGzgzZPKWIgI63jU8lAKDIAqjAqEwHh0qQQREGBE2DYTHAshgBreWCwn//c45v9/3+845
+        OQRHWMy3J6IUsbRKIZOLcEvu3U5n5Fp1/gOph67FCS0as/moqK4GR4kGI46mjAMAzU/qeai0
+        6wEPDb1cxNFG2gAPVWX8hKN/tFMc1P/KFVXdW8PQytAzDD1qKcLR5fo7PPRHzX88VNA3jKHK
+        l4t81H/zMgcltXbxkXFimY9yBrU4KryoAYF7qKTBDZyqKakB1CNNJkZpG9RUgy4NpxqWrvKp
+        9PkhjBofvodTvT+/4lKTGT0Y9fT1NIdabHuMU5pGHaD6tV18qme0CaOWG/aFkF/LD0fSsnBa
+        5UgrwmLCoxQR/qKPP5MelUq8PcSuYl/kI3JUyKJpf9GxEyGux6PkplmIHM/J5GpTKkTGMCL3
+        gMOqGHUs7RgZw8T6i2hluFwpFivdGFk0o1ZEuIXFRB8Se3h4SkzMUHlk6ugGX7kk/P7WUgU3
+        ATRZpQMLApLvwycvyrB0YEkIyWYAE/Pb+GywBGBt329bwSqAo0n/gm2JRn97q9AK4HxzCZcN
+        ngFYfv8az8zikk6wvGQVN2OcdIHVxT0mNUHYks7wYpHUzOeQxVw4l5KxybEhfWCnLpVr5ghM
+        nF8mBea0gLSGffl/cs3YgvwI6q9l4WaKHXkQznb8aH4Gku0WMDtnjcN+7hgcbqvlsdgGzvY0
+        8llsD2eykvms4DqAC6UGnC3cBnBVb81iL1jwPGWzSw4ZCbsHczCzGSTfhl1jXDa9C6Z2bvDZ
+        tACmJgtZ5UH4a94wd9tK0zq6hSlYcVfDY8dTg8FLZXO8K2B/wY7WCna4sfg9qNUv4QUmCw75
+        Frz5mmChM6xrcdcCng7sppVMdATNeCrFO5fdADbvxCW4GeTM/+1mABgBDAASHJGtILPVTyoU
+        hMvi4mlVjFSlltOMAUhMa8rm2NuFxZgOTRErFUs8vb09fCVI4u2JRHsE0QcGzgjJCFksfZam
+        lbRqW4cRFvYJWJ5dn/xAfmZ9deu3Q76rhu96ix6c2js/E7kiCArYP/fGobjizwPWT/nnVXBp
+        m6npvybL1CXBtX0CqxMOT9sCx9Mmc72CA6Fi+ozFw/Pvjlc16Y8Y1erO5+33dYMLdz4sP854
+        iQNz176qS5OIT3a0/x5lXbnmfiGv4MuxNxPDP/U/qRvsz9/tGecX7l8/rVlxPXphtvt0B1E6
+        F+qdLG3IbbKta6zMtpy4cmu50GNkvXfi9NQnX8zoQquXnfo6LPbm3HhYHyrzexG/z2FlrOwq
+        HmQsW11/pzqeWJgK9u52OCdIuEGctWJw3ohGaW/zjadPzUjKrowsovDxDzmW80F65lLIkyMi
+        LhMpE7twVIzsf1gBG/OwBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzHfZ/nued5OjseyfqqiZ7F1Cpuk75+xabNwzSxWTujc6tHP9xV
+        7oRiU9GorqSUOidno3Idcghd2F1HOs2sYrf8OPnValqUKKn01Iz/Xnt/Xu/3Xx8ad39HeNEJ
+        Sft5dZJCyZJioq6R9QmqPrxWvvRh9nLU5zhNIf11E4mybA4SvXc8B6jXZRGhC/ZnItQ+2Eei
+        0ZznInQl7xiJfhre46hlJAhdaRjC0Pf2Tgy11etJpK29LUJvTeMipGt+iaHKwT4KtVRpcZR9
+        304hx5sBChW3Gkh0LrMArPPksltHSc5UYQJcW0E+xhnMqZzZmENy5v4iisvtbce41y8bSO5J
+        2QjBufKaMO7V2Aec63vwguQKbhkB12KwU1yT8w7GDZh9Ipkd4tWxvDLhAK9eErZbHN/s+Iml
+        mJlDbZmfyQxQKMkFbjRklsECy01KYHfGAmDzucip3AtW5F3Fpng2dB23i3KBeMJxAfijtgMX
+        DgSzEF6q+EEKTDIBsOZ8E8gFNO3B+MNMvVzwceYiAV/oKied2UwobDSeJARHMuFcc0mmNk0Y
+        7LpUM7kpYWbB5vKPhMD4xKZzrBsTfJzxhlVjtBC7MZugpfQUKcRzGD/YYz1aCGbp/ivr/ivr
+        /pUNADeCuXyKRhWn0khTpEn8wWCNQqVJTYoLjklWmcHkEwT43wV3jF+DbQCjgQ1AGmc9JPn3
+        V8ndJbGKtHRenSxXpyp5jQ140wTrKXHuuxjtzsQp9vN7eT6FV/+9YrSbVwZWFvj4fPL23vBR
+        W9uDs7Kz25nH+W+2he/qt2rWKRuz6o64pCt03e07V/scKg9B+YG1T7Xf/EJkUcOvzevrq0+Y
+        ykN9LUGlK6OKD6RFlLutvVd1kx3uN12IXhzztORGooQdkKVGjBTN1cqjcuxWQ7f/2y+JnmHK
+        kMxf4RtfZS1QyddE1E3TF40n7OmZFk/clc0s+VQzf1mOWDTjcuSQXGtM5zNOKaS+Z8KcyfhY
+        ybZs+CiveOvp6MSunobWWKMqyC9t6cnxORmbNwR0BCr1gfX70tlha2EXvjg6y8s3Zjp10KPT
+        uah6xWDHFkoWgd36tL6ya2D8UdmCnpn4PMPVYiv7myU08QppAK7WKP4A2KcPc3MDAAA=
+X-CMS-MailID: 20200821074545epcas2p23109c52bfe76a58b26ba1f509cb86165
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----lWUYs60uNheWdrlwd5Sxb-jVEnyT8vPvqGqUNsoxLEsY2Otg=_4f1bd_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6
+References: <CGME20200818074547epcas2p21e0c2442873d03800c7bc2c3e76405d6@epcas2p2.samsung.com>
+        <20200818080415.7531-1-hyesoo.yu@samsung.com>
+        <20200818105557.svky5c7gdvk6khzu@DESKTOP-E1NTVVP.localdomain>
+        <20200819034626.GB70898@KEI>
+        <20200819132204.2rki3xsczdy2cpsk@DESKTOP-E1NTVVP.localdomain>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 6 Aug 2020 at 02:32, Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
->
-> Tegra210/Tegra186/Tegra194 has incorrectly enabled
-> SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK from the beginning of their support.
->
-> Tegra210 and later SDMMC hardware default uses sdmmc_legacy_tm (TMCLK)
-> all the time for hardware data timeout instead of SDCLK and this TMCLK
-> need to be kept enabled by Tegra sdmmc driver.
->
-> This series includes patches to fix this for Tegra210/Tegra186/Tegra194.
->
-> These patches need to be manually backported for 4.9, 4.14 and 4.19.
->
-> Will send patches to backport separately once these patches are ack'd.
->
-> Delta between patch versions:
-> [v3]:   Same as v2 with fixes tag
->
-> [v2]:   Includes minor fix
->         - Patch-0006: parentheses around operand of '!'
->
-> Sowjanya Komatineni (6):
->   sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
->   sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
->   arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
->   arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
->   arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
->   sdhci: tegra: Add missing TMCLK for data timeout
->
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 20 +++++++++------
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 15 ++++++-----
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 20 +++++++++------
->  drivers/mmc/host/sdhci-tegra.c           | 43 ++++++++++++++++++++++++++++++--
->  4 files changed, 74 insertions(+), 24 deletions(-)
->
-> --
-> 2.7.4
->
+------lWUYs60uNheWdrlwd5Sxb-jVEnyT8vPvqGqUNsoxLEsY2Otg=_4f1bd_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-This looks good to me.
+Hi Brain,
 
-If it helps, I can also pick the arm64 patches for my fixes branch,
-but I need an ack from Thierry/Jon to do that.
+On Wed, Aug 19, 2020 at 02:22:04PM +0100, Brian Starkey wrote:
+> Hi KyongHo,
+> 
+> On Wed, Aug 19, 2020 at 12:46:26PM +0900, Cho KyongHo wrote:
+> > I have seriously considered CPA in our product but we developed our own
+> > because of the pool in CPA.
+> 
+> Oh good, I'm glad you considered it :-)
+> 
+> > The high-order pages are required by some specific users like Netflix
+> > app. Moreover required number of bytes are dramatically increasing
+> > because of high resolution videos and displays in these days.
+> > 
+> > Gathering lots of free high-order pages in the background during
+> > run-time means reserving that amount of pages from the entier available
+> > system memory. Moreover the gathered pages are soon reclaimed whenever
+> > the system is sufferring from memory pressure (i.e. camera recording,
+> > heavy games).
+> 
+> Aren't these two things in contradiction? If they're easily reclaimed
+> then they aren't "reserved" in any detrimental way. And if you don't
+> want them to be reclaimed, then you need them to be reserved...
+> 
+> The approach you have here assigns the chunk of memory as a reserved
+> CMA region which the kernel is going to try not to use too - similar
+> to the CPA pool.
+> 
+> I suppose it's a balance depending on how much you're willing to wait
+> for migration on the allocation path. CPA has the potential to get you
+> faster allocations, but the downside is you need to make it a little
+> more "greedy".
+> 
+I understand why you think it as contradiction. But I don't think so.
+Kernel page allocator now prefers free pages in CMA when allocating
+movable pages by commit
+https://lore.kernel.org/linux-mm/CAAmzW4P6+3O_RLvgy_QOKD4iXw+Hk3HE7Toc4Ky7kvQbCozCeA@mail.gmail.com/
+.
 
-Kind regards
-Uffe
+We are trying to reduce unused pages to improve performance. So, unused
+pages in a pool should be easily reclaimed. That is why we does not
+secure free pages in a special pool for a specific usecase. Instead we
+have tried to reduce performance bottle-necks in page migration to
+allocate large amount memory when the memory is needed.
+
+------lWUYs60uNheWdrlwd5Sxb-jVEnyT8vPvqGqUNsoxLEsY2Otg=_4f1bd_
+Content-Type: text/plain; charset="utf-8"
+
+
+------lWUYs60uNheWdrlwd5Sxb-jVEnyT8vPvqGqUNsoxLEsY2Otg=_4f1bd_--
