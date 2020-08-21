@@ -2,80 +2,218 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B04C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA7FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 08:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2D83207DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 07:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A7620720
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 08:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i1jeX7F9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHUHv2 (ORCPT
+        id S1726879AbgHUIL5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:51:28 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59609 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbgHUHv0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:51:26 -0400
-IronPort-SDR: 9Tx6wnEmslE4sFm2fZnnK0nk+wn04qZD8YI1ncCVbF9Xu0H5KueAxQ3vTT8LLfduPBY4ewCWDf
- GpnCWS51r/Jg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143119158"
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="143119158"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 00:51:25 -0700
-IronPort-SDR: If98b8/s7kduG3CE2pUTKpwUC5swudFLNuRksqTdhyWOu3sn3Fd5p/3pXjY6v0hqTi7ttCy+Su
- e0g0fUOZOpdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
-   d="scan'208";a="280210579"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 21 Aug 2020 00:51:25 -0700
-Received: from [10.226.38.22] (unknown [10.226.38.22])
-        by linux.intel.com (Postfix) with ESMTP id 998D258045A;
-        Fri, 21 Aug 2020 00:51:22 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v8 0/2] phy: Add USB PHY support on Intel LGM SoC
-To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, p.zabel@pengutronix.de,
-        andriy.shevchenko@intel.com, balbi@kernel.org,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <bf2301f3-7c70-06b1-898c-f18284babe75@linux.intel.com>
-Date:   Fri, 21 Aug 2020 15:51:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 21 Aug 2020 04:11:57 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40946 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgHUILx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 04:11:53 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07L8Bmbf079948;
+        Fri, 21 Aug 2020 03:11:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597997508;
+        bh=2VCLT36pEPtyUlSisx+8rIerkjeIOt34oPtb8K/pvFQ=;
+        h=From:To:CC:Subject:Date;
+        b=i1jeX7F9OD48PbZ7dV1xnRL7Un7QX3k4QxDR2qazsWEPq3UCkOdEiqVSBwhYsvNpc
+         XqRygs8M31ev0LSWU6wm0+yCb0mIAnUpXMIQ5pa30hGqS3WqhNyjA5iuCATLX2d4Zl
+         EFZrw4XaWxvOTNNpB0Hod5RcYfY1vAMPizlEfo3M=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07L8Bm6M090769
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Aug 2020 03:11:48 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 21
+ Aug 2020 03:11:48 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 21 Aug 2020 03:11:48 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07L8Bjr7004084;
+        Fri, 21 Aug 2020 03:11:46 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <kishon@ti.com>, <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <nsekhar@ti.com>, <vigneshr@ti.com>,
+        <jan.kiszka@siemens.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v4] dt-binding: phy: convert ti,omap-usb2 to YAML
+Date:   Fri, 21 Aug 2020 11:11:44 +0300
+Message-ID: <20200821081144.29288-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200817031249.36795-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kishon, Vinod,
+Move ti,omap-usb2 to its own YAML schema.
 
-Gentle reminder!, kindly can you please merge this series of patches, as 
-those patches got Reviewed-By Philipp Zabel and Rob Herring, Thanks!
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-Please do the needful.
+v4
+- fix example to fix dt_binding_check warnings
+- '#phy-cells' -> "#phy-cells"
+- Add 'oneOf' to compatible logic to allow just "ti,omap-usb2" as valid
 
-Regards
-Vadivel
+v3
+- Removed quotes from compatibles
+- changed property to "ti,disable-charger-det"
 
-On 17/8/2020 11:12 am, Ramuthevar,Vadivel MuruganX wrote:
-> The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
-> Requires minimal external components, a single resistor, for best operation.
-> Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
-> ---
-> v8:
->    - Rebase to V5.9-rc1
+v2
+- Address Rob's comments on YAML schema.
+
+ .../devicetree/bindings/phy/ti,omap-usb2.yaml | 72 +++++++++++++++++++
+ .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
+ 2 files changed, 72 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+
+diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+new file mode 100644
+index 000000000000..a05110351814
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: OMAP USB2 PHY
++
++maintainers:
++ - Kishon Vijay Abraham I <kishon@ti.com>
++ - Roger Quadros <rogerq@ti.com>
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++        - enum:
++          - ti,dra7x-usb2
++          - ti,dra7x-usb2-phy2
++          - ti,am654-usb2
++        - enum:
++          - ti,omap-usb2
++      - items:
++        - const: ti,omap-usb2
++
++  reg:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++  clocks:
++    minItems: 1
++    items:
++      - description: wakeup clock
++      - description: reference clock
++
++  clock-names:
++    minItems: 1
++    items:
++      - const: wkupclk
++      - const: refclk
++
++  syscon-phy-power:
++    $ref: /schemas/types.yaml#definitions/phandle-array
++    description:
++      phandle/offset pair. Phandle to the system control module and
++      register offset to power on/off the PHY.
++
++  ctrl-module:
++    $ref: /schemas/types.yaml#definitions/phandle
++    description:
++      (deprecated) phandle of the control module used by PHY driver
++      to power on the PHY. Use syscon-phy-power instead.
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    usb0_phy: phy@4100000 {
++      compatible = "ti,am654-usb2", "ti,omap-usb2";
++      reg = <0x4100000 0x54>;
++      syscon-phy-power = <&scm_conf 0x4000>;
++      clocks = <&k3_clks 151 0>, <&k3_clks 151 1>;
++      clock-names = "wkupclk", "refclk";
++      #phy-cells = <0>;
++    };
+diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+index 8f93c3b694a7..60c9d0ac75e6 100644
+--- a/Documentation/devicetree/bindings/phy/ti-phy.txt
++++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+@@ -27,43 +27,6 @@ omap_control_usb: omap-control-usb@4a002300 {
+         reg-names = "otghs_control";
+ };
+ 
+-OMAP USB2 PHY
+-
+-Required properties:
+- - compatible: Should be "ti,omap-usb2"
+-	       Should be "ti,dra7x-usb2" for the 1st instance of USB2 PHY on
+-	       DRA7x
+-	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
+-	       in DRA7x
+-	       Should be "ti,am654-usb2" for the USB2 PHYs on AM654.
+- - reg : Address and length of the register set for the device.
+- - #phy-cells: determine the number of cells that should be given in the
+-   phandle while referencing this phy.
+- - clocks: a list of phandles and clock-specifier pairs, one for each entry in
+-   clock-names.
+- - clock-names: should include:
+-   * "wkupclk" - wakeup clock.
+-   * "refclk" - reference clock (optional).
+-
+-Deprecated properties:
+- - ctrl-module : phandle of the control module used by PHY driver to power on
+-   the PHY.
+-
+-Recommended properies:
+-- syscon-phy-power : phandle/offset pair. Phandle to the system control
+-  module and the register offset to power on/off the PHY.
+-
+-This is usually a subnode of ocp2scp to which it is connected.
+-
+-usb2phy@4a0ad080 {
+-	compatible = "ti,omap-usb2";
+-	reg = <0x4a0ad080 0x58>;
+-	ctrl-module = <&omap_control_usb>;
+-	#phy-cells = <0>;
+-	clocks = <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
+-	clock-names = "wkupclk", "refclk";
+-};
+-
+ TI PIPE3 PHY
+ 
+ Required properties:
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
