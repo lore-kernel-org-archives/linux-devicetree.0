@@ -2,114 +2,113 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 737C7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CD9C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 02:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4715D2075E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414632177B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 02:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="iqb3h5kZ"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="DGxvlbCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgHUCTZ (ORCPT
+        id S1726973AbgHUCxZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 22:19:25 -0400
-Received: from mail-co1nam11on2075.outbound.protection.outlook.com ([40.107.220.75]:52480
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727787AbgHUCTV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 22:19:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N6f5R9aNUmLrGHuJSRq0/KI14YpFpwKJPhC9p8qIyfQIzgaUX7E4nJOi4xIRysKq8hp+m/EWZ51dBN0YIpcsLlmq6h+4BUOuCemRT9N+VXrbICafbuGkTwabYhxZymzfuO9OZwniOr7QEncK90ufbQkkBJyNQBfjbimMyA+3pvbFdlusPkPxBZQm0I2EZGwsAfXrZO088VpKyQ+HtW/tFSUQiYjxfwXFnkzUTk38cMmql9LUCH4r/BhtxxguX59yah0LES0yIc8Ba84akiR3075gA0Yb9HRDotUh9VnyNh6TTDgeKqF1O+Phw+T6WBWYDC7raq446F7+B5vfOKSllA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1fq5SiOaTYdX32V7iVt1nuK8Uq8FAEUJE5Q8hg0hsC0=;
- b=aEQJhhIuw2G1dmO7+axkjlSRk0wPKa2LVM7F+5gYaALJ1QR8jVg4HWnbWhWeFvhbEQnfMJs7d/wgoh1bHf9HynJ2dF+SlYYi522mpgzxiL54rOn2n2NtkxKT4jW6LWClYBjmQIjDJiyU8EFd+3W1NO5Fbi2t0CzWFPNn9j+SxiMzUz9ZlBpeZKQ3ywdk9Wb3c8bj1j6n7JhAtFixs488qqFXLsExKRxAnhHPAYBpLKyzWOKL4+vpzpOcd9Gs+uqRMMj4HwL1AyJT1KSYkWCQzKkS37Bl5iwzgjA7HFqjyi7vF962DytLOuQmVsBFFDwPWGI21xi1HVzD3jmdJ12r5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Thu, 20 Aug 2020 22:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgHUCxZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 20 Aug 2020 22:53:25 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A34EC061386
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 19:53:24 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id b30so195991lfj.12
+        for <devicetree@vger.kernel.org>; Thu, 20 Aug 2020 19:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1fq5SiOaTYdX32V7iVt1nuK8Uq8FAEUJE5Q8hg0hsC0=;
- b=iqb3h5kZCGIvRMQPJTPyy80RLXcq5b4of1cFOcnvsCT/kH1NmRfZwMhx58MhAd0EXI1SrhWk1ykQDhzX6NDcUEoSwH0cpPnM6AgBy/z3IpENLp36dXSPeQGMyOP1byNnnHtPffmilklwG85B8SR+VxyCiisu+2XGRj0/T9sgbBo=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=synaptics.com;
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
- by DM6PR03MB4233.namprd03.prod.outlook.com (2603:10b6:5:8::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.25; Fri, 21 Aug 2020 02:19:17 +0000
-Received: from DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
- ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
- 02:19:17 +0000
-Date:   Fri, 21 Aug 2020 10:17:29 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] regulator: mp886x: implement set_ramp_delay
-Message-ID: <20200821101729.76f1951b@xhacker.debian>
-In-Reply-To: <20200820210513.GA41191@sirena.org.uk>
-References: <20200820171020.5df4683b@xhacker.debian>
-        <20200820171051.55a238e8@xhacker.debian>
-        <20200820210513.GA41191@sirena.org.uk>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYAPR01CA0052.jpnprd01.prod.outlook.com
- (2603:1096:404:2b::16) To DM6PR03MB4555.namprd03.prod.outlook.com
- (2603:10b6:5:102::17)
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Wzatctpc+FvYoJ99XNB10sH67rwujcIhjY3BuCzGmho=;
+        b=DGxvlbCvoNaXKOL43sWgecH+O/rJOe8W4VqpjFTJYxFzJBroPwv6ZW7nKDSZ9cXAE3
+         XNV/WYUct8UNPtotuM5AqBb/psyW1ucP/6ChfXPdOyK67XVSz9pLhfkrViLGuRH+6jOs
+         G/tFEYlVdK66gecWM6blGG07JniIdL56mxlmkXr2ODHNHAi11yDYQFZI3vuGgc2IFQns
+         S/PMahcl3DrE60IYZGBc60MD14C5gbRplDkxJW7B7oS5cjBEshx669zny+WUpzTEe0HX
+         1DM0Ib5EXEWOKDWYWaLTSSDjXtV+8r4kaLoQB3MCwPLTeDbdL9IftChcG57HMlOnWTjT
+         IezA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Wzatctpc+FvYoJ99XNB10sH67rwujcIhjY3BuCzGmho=;
+        b=cHtIn4vsZKiQcdc9WrJDLENFFhgQMjV4pcplBvLhvoHxNGlYj0KMJUOsA4m2SU9cDp
+         cyFDgD5S4jp2+mfzkRBy0qH/115eTZROvosjgobg/TR7s4ujeWH2zOqgqFS0D+FNd8tS
+         /OnaiwCDYvv1haB6CFKOub0xx31PG8WahR/6FopVxUQiEgx0JzKb9swGPA3PkidBCJX7
+         wI8iwToRQIxmx/58u6uw5stegMqeeeKBI6EQDZlHia4MwphyAd5wq+/ngA4wWsd9ZbZY
+         4Qz/pYX2U0VwO5mKWm6n9WZ8yhBqrdjRCEzt8X7tYdHZLrym/PUq/Gjq8K62w+HkPuyg
+         6Uug==
+X-Gm-Message-State: AOAM532Wtqx3xVuaevDf6HgALw7CT7BDNIITa9qyu33+jOICM4AF1u1u
+        tCqcrHn+1YQELZ+pUM+jKWzmtA==
+X-Google-Smtp-Source: ABdhPJx5BACHGdQcQmOu4crig7h0bACuVOhuDxlrNBnorAknrztXwhtNeu8pBf3h5iwfb1sTggzNHA==
+X-Received: by 2002:a05:6512:3444:: with SMTP id j4mr350206lfr.161.1597978402213;
+        Thu, 20 Aug 2020 19:53:22 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id a12sm89140lfi.83.2020.08.20.19.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 19:53:20 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 18:12:37 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     soc@kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: Reformat PCI ranges/dma-ranges entries
+Message-ID: <20200821011237.GA4527@lx2k>
+References: <20200819221750.2055932-1-robh@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by TYAPR01CA0052.jpnprd01.prod.outlook.com (2603:1096:404:2b::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 02:19:15 +0000
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ae0be932-a328-45e2-e333-08d845789aee
-X-MS-TrafficTypeDiagnostic: DM6PR03MB4233:
-X-Microsoft-Antispam-PRVS: <DM6PR03MB42334F217C28FA7294542A41ED5B0@DM6PR03MB4233.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hOGGkrV+C7OX9r0qZAlZqAiSzMBE4zIdju9KtjQWjphJZDUPe+FWhEuBXN1M7T67Cvzd3hnGNIP4WrHWMGToumyHa17F3XR6FAP/6swZoqqUmOxQliqYh83suaxltmgwZhep6ieVhoMxsiOJCo+7Ci1vVbEyOZ6TE/4Rlfz64Kn9LTM2R/19I+DSn+8B8MIlZb3VAZ4Iaxb5VesbffecJ5Unn7RxiWx0kpoK/7HA0A1C85vAeD4hiCk786NylCgzB20DMyyHJ2eseRVl5Qyz6eM2qdvPeT5E1NF4e1omJJunIqepZwIxLZEdSijBKmHxmnNNhReO6EWqqWGeR3LCnyO4SE0/kIEm3lm4yTb287B/zhTNxu8viT6g2arpCUme
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(346002)(39860400002)(136003)(376002)(366004)(66556008)(316002)(4326008)(66476007)(6916009)(6666004)(2906002)(66946007)(54906003)(52116002)(1076003)(956004)(26005)(5660300002)(16576012)(86362001)(4744005)(186003)(6486002)(478600001)(8936002)(9686003)(110011004)(8676002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: G6iyJVTZ4ns74/AaPlIuXAn3k5QIEkdiq/dlqu6e6mEzZet0EVpMatDluEhGVikgu/fXLDjo2aul16i2wvl5eXBokQFPRQlChoetnmloulqzFaoHAg/ca7UeMsVighZBU/bq4G1/f4Kb+b53emNFzLXgnZSw1Aiv9e2kcLxFvwgYyI696/QpTaghLH0Hy9kNrgSmuHpmYxBWsG2GHQewD3d/sxdWhmPan5wwmVaypToCwRCyi9aLxoCrbhadafObiBVlYw9mDof4FgcgWIVLXz19ZUA/Ev2A85e8aIfpPhH9Ar8F/uPwiYlk8IQBPBSSnHVrXYnjSjmsA7h+1sT0F8s/ja/9tQJpX6KNaicD6IbPuwik7LZvEiDw7oTXPd/0snkIvjbXfFhhR7Bi4IzvwsqhycCjm3uUYQmTM94+goz3y/voFY78LyPTl4taugY2dOv48VsF8TBYQchz5WfF4Scs8Jiqzbq9XyNF2ofLfyNYyIOnBaWgAJbuKrTxP9f2oIURFqBuOUnbtOzxb9N+nVh64rCJAJRBBV6IQlM3cfc4esNWCezYnAjk52drw87A+38saZvp59tI1aKBemkrVAXUMT7SUmib3w32HqkKFSQlQnSk2hMyEDr4c39P1spvq+CvpXlQq4GyZM43GYrNdg==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae0be932-a328-45e2-e333-08d845789aee
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 02:19:17.5331
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KZ+7pgeGkBRr7w8iS8gCm3XRINGd8BWIHG8Yj6PDQxmWQA4FXWIIhRHAQazim3hM4TIgVqsFT5dKfyMg38dFwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4233
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819221750.2055932-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Aug 2020 22:05:13 +0100 Mark Brown wrote:
-
-> On Thu, Aug 20, 2020 at 05:10:51PM +0800, Jisheng Zhang wrote:
-> > Implement the .set_ramp_delay for MP8867 and MP8869. MP8867 and MP8869
-> > could share the implementation, the only difference is the slew_rates
-> > array.  
+On Wed, Aug 19, 2020 at 04:17:50PM -0600, Rob Herring wrote:
+> While bracketing doesn't matter for a DTB, the DT schema checks rely on
+> bracketing around each distinct entry. Reformat ranges and dma-ranges
+> entries to fix warnings such as:
 > 
-> This doesn't apply against current code, please check and resend.
+> arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml: pcie@f8000000: ranges: [[2197815296, 0, 4194304000, 0, 4194304000, 0, 31457280, 2164260864, 0, 4225761280, 0, 4225761280, 0, 1048576]] is not valid under any of the given schemas (Possible causes of the failure):
+>         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml: pcie@f8000000: ranges: True was expected
+>         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml: pcie@f8000000: ranges:0: [2197815296, 0, 4194304000, 0, 4194304000, 0, 31457280, 2164260864, 0, 4225761280, 0, 4225761280, 0, 1048576] is too long
+>         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml: pcie@f8000000: ranges:0:0: 2197815296 is not one of [16777216, 33554432, 50331648, 1107296256, 1124073472]
 
-I found the reason, the three patches in v2 were applied to for-next tree.
-Should I renew patches based on for-next? Since the "mps,switch-frequency"
-binding isn't released and used, I think I can send new patches to convert
-mps,switch-frequency to mps,switch-frequency-hz.
+Seems like a bug in your tool? Why would we bother with this churn?
 
-Thanks
+
+-Olof
