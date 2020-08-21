@@ -2,108 +2,113 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F9CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:28:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 922D922BEB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:20:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598026820;
-	bh=70t5adgBvf44/5oNg7PVocR68bEeQ479Hja1iNE5dd8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZqNRiRZTGoY03urHKoiDRoCGOSOuASzUAlpsfW36QwKZvxWvwUPaM0NCMr3CgoYuu
-	 GuiwA38FBts8sbne1k+xnI+pRlci8PaIRBvd2hGnOXc0k85G+NAenB+KEVPA+HCvXP
-	 yLJLGejzSsZLzYW0mqpYxMVpLAPV3JJxgLug1O7M=
+	by mail.kernel.org (Postfix) with ESMTP id 2BC2C20724
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:28:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YJdpR1xV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgHUQUH (ORCPT
+        id S1728273AbgHUQ1p (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:20:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgHUQT3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:19:29 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6210822D37;
-        Fri, 21 Aug 2020 16:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026719;
-        bh=70t5adgBvf44/5oNg7PVocR68bEeQ479Hja1iNE5dd8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ih7ut0ecoMmi3ZCJp1vqmKbQ+2g8vqjyvlZZGZxWosmgUT+qNaoT653vTptIPlHb1
-         xGKUecDwddshg1V0Gv1xH13GVT1ku4yby36MHicpa4x3EnQrtHxuj2VF565sxUBw92
-         EucJTwPyWbBtMWbXrUc3O5Fm8j4IcNKhMDJ9MIIU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/38] ARM: dts: ls1021a: output PPS signal on FIPER2
-Date:   Fri, 21 Aug 2020 12:17:53 -0400
-Message-Id: <20200821161807.348600-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
-References: <20200821161807.348600-1-sashal@kernel.org>
+        Fri, 21 Aug 2020 12:27:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728529AbgHUQ0d (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 12:26:33 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470D7C061574
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 09:26:33 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d22so1315637pfn.5
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 09:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=B9AWbTbWPp7aT8cVV5y9qjtG9r2gj7nhh9YWaOKKiuk=;
+        b=YJdpR1xVWyhRcbML3ChNs3j4d3/YmKtUkn0siTwj4xe3D70EJaZ8TS6WroZCqXa4CC
+         AnyHG9WkVzh4jPWrC0JgsToWMta4CkhAEcL3Bxg/j6Bz7oLuQ2JbQ9BBisReA6HOMt+Y
+         nmkFUIg82wwwm9Z8YdSLGBXdSC+aEbG/U29jQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=B9AWbTbWPp7aT8cVV5y9qjtG9r2gj7nhh9YWaOKKiuk=;
+        b=n0Mr9EdjmWP10xqozZ44hqnLrIRsB9Y7eN/BKjf6zQiTGmArHqdvzeIGuk9dhAk/rg
+         ub/IlbWIvFVd4LVrOxfXGO1gelwcZWXHwmWf94A5Lt5SG3NVI/+HGvVR65ejGkJnKtwe
+         LBIB2SrzMCl3UkY7KxEMMq2QhvXEMsRyJZlspz4iM4jxmsLydLuhVKcvosl0SaKJUz3S
+         +mVZtMvp+y8nzJ5uRGWUHMoze10HE/qlawpr9t+WyOPu1/zXnbRCunWOkae2v/+kziLr
+         Y/MHWIaLAY3g1H/MK9hsavQzfRM2ykfgTBF34lkyAzHYr/Yjd6zo5dKSqH1nGnDmc247
+         wblQ==
+X-Gm-Message-State: AOAM530dc6yQbSir4Ucrh0wuhB0Nq6nLH7BdACd0NC7Q61FewkyWDyHf
+        1VeVDacogLFYsdJLz+j7vZ52AA==
+X-Google-Smtp-Source: ABdhPJxA02Wr8aE7e7k0ORPqzYjpHeciFt5VagaVUucvu925wOq50WmJHhy05pdcud86/UKNZ+gUOQ==
+X-Received: by 2002:a05:6a00:78e:: with SMTP id g14mr3052283pfu.171.1598027192818;
+        Fri, 21 Aug 2020 09:26:32 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id m26sm2978275pfe.184.2020.08.21.09.26.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 09:26:31 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 09:26:30 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     satya priya <skakit@codeaurora.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V3 1/3] arm64: dts: sc7180: Add wakeup support over UART
+ RX
+Message-ID: <20200821162630.GA486007@google.com>
+References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
+ <1597931467-24268-2-git-send-email-skakit@codeaurora.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1597931467-24268-2-git-send-email-skakit@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
+On Thu, Aug 20, 2020 at 07:21:05PM +0530, satya priya wrote:
+> Add the necessary pinctrl and interrupts to make UART
+> wakeup capable.
+> 
+> Signed-off-by: satya priya <skakit@codeaurora.org>
+> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+> ---
+> Changes in V2:
+>  - As per Matthias's comment added wakeup support for all the UARTs
+>    of SC7180.
+> 
+> Changes in V3:
+>  - No change.
+> 
+>  arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 ++++++++++++++++++++++++++++++------
+>  1 file changed, 84 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> index d46b383..855b13e 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>
+> ...
+>
+> +			qup_uart0_sleep: qup-uart0-sleep {
+> +				pinmux {
+> +					pins = "gpio34", "gpio35",
+> +					       "gpio36", "gpio37";
+> +					function = "gpio";
 
-[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
+What is the reason that the GPIO function needs to be selected in sleep mode
+to support wakeup?
 
-The timer fixed interval period pulse generator register
-is used to generate periodic pulses. The down count
-register loads the value programmed in the fixed period
-interval (FIPER). At every tick of the timer accumulator
-overflow, the counter decrements by the value of
-TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
-counter value reaches zero. It reloads the down counter
-in the cycle following a pulse.
-
-To use the TMR_FIPER register to generate desired periodic
-pulses. The value should programmed is,
-desired_period - tclk_period
-
-Current tmr-fiper2 value is to generate 100us periodic pulses.
-(But the value should have been 99995, not 99990. The tclk_period is 5.)
-This patch is to generate 1 second periodic pulses with value
-999999995 programmed which is more desired by user.
-
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/ls1021a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 074b4ec520c63..d18c043264440 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -609,7 +609,7 @@ ptp_clock@2d10e00 {
- 			fsl,tmr-prsc    = <2>;
- 			fsl,tmr-add     = <0xaaaaaaab>;
- 			fsl,tmr-fiper1  = <999999995>;
--			fsl,tmr-fiper2  = <99990>;
-+			fsl,tmr-fiper2  = <999999995>;
- 			fsl,max-adj     = <499999999>;
- 		};
- 
--- 
-2.25.1
-
+This should be explained in the commit message unless it is evident.
