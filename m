@@ -2,133 +2,327 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE110C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B83C433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884DB2054F
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6+nI7Xj"
+	by mail.kernel.org (Postfix) with ESMTP id D4F6F20720
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726907AbgHULa0 (ORCPT
+        id S1727892AbgHULbY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:30:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44718 "EHLO
+        Fri, 21 Aug 2020 07:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgHULaZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 07:30:25 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E81BAC061388;
-        Fri, 21 Aug 2020 04:30:24 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id p191so876892ybg.0;
-        Fri, 21 Aug 2020 04:30:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qGFw5EG8yfKpTojIo2qI2uz1wjsdjmmuZqulpYk3hwg=;
-        b=e6+nI7XjaiG4MvgGon277b13vqct+dEWLwhlXI60baS8THml6ykMt+txx7qZ7ibBZI
-         h00+aCJF6/jKTcj3OgXInqYqf6TzPHjkxZmz3/yLU7z9f2uDxUc/61u9A9vbt+AmQFVk
-         lq/86u5hyYh5xop7HS7QwJkmN0buU6IfUDbj4u+YgcJ+pj3TxymG2lRkyamPU2KW8YIO
-         YmtOQzR0o9RCb7uYlPcTmGcpe4dN6X/gZWG44EbutxSiTzMIGZoJcols17euF0tVCe2q
-         jI1YoRsVGZjxtzh9VdKOz29iWy5xzFMSVgLeeUNqfBor0WQYH+dTlmD5p+wk9k/Ih4B3
-         kJHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qGFw5EG8yfKpTojIo2qI2uz1wjsdjmmuZqulpYk3hwg=;
-        b=ZGEVodxyxMyyC25JwcCRWAfcEm0SSpW+Z4nsrbcwmQ6jD0N8Kz3dbxCc0Tm0mh5Sqn
-         Gpe4/A2eI4qu9yuLx5p+Cku7xemODMArErkKBPpC39BlzUYV9naJu0gkNzbomEE8MHeX
-         CJDhQMf/IxjSMYReuSnLg77TQcdsqB+YOwx5HUhkFG80sl9kYN993gPAnyDM0LRHHnNZ
-         2JWd7QzYbtfZAqINyQ23WwXORSmj18yKjanypqR7ZqQf2ljdh/6uAJc41HNgoNLOtc/S
-         ah4Rmv8zRWt/eIpy+e8MR6sTro9ysU3jPNQLro9RgeLXrlcnEJi8OjBjzWlxEB1suVBt
-         JEfA==
-X-Gm-Message-State: AOAM532O3CF7Ns7lF7zSb3slhiS6ShNzLQvBaoVC2cPDOLsatZsn2e0u
-        /bv+M1kGCG2EXJYXqAbWR+WV4eT7DA6Y7VP+eAg=
-X-Google-Smtp-Source: ABdhPJzO87RlIZQJVU4eUm/FQb5ee7OcZkNqP4k1YqbHQQF8MLaSEQKjZe8DCGwNt2CyC9uW6EuJbN2kDh3E9QjO6T4=
-X-Received: by 2002:a25:86cf:: with SMTP id y15mr2802916ybm.25.1598009421523;
- Fri, 21 Aug 2020 04:30:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org> <20200818122012.37956-3-jacopo+renesas@jmondi.org>
-In-Reply-To: <20200818122012.37956-3-jacopo+renesas@jmondi.org>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 21 Aug 2020 12:29:55 +0100
-Message-ID: <CA+V-a8sa8gszi1cF3SB1QO-aaVwGigrp1m-XmC1NycDcN9MU1w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: media: ov772x: Make bus-type mandatory
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S1727833AbgHULbI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 07:31:08 -0400
+Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9BBC061342
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 04:23:56 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by michel.telenet-ops.be with bizsmtp
+        id JBPs2300F4C55Sk06BPsGH; Fri, 21 Aug 2020 13:23:52 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k959E-0002vs-7s; Fri, 21 Aug 2020 13:23:52 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1k959E-0001Rj-61; Fri, 21 Aug 2020 13:23:52 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Magnus Damm <magnus.damm@gmail.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: dts: renesas: Fix pin controller node names
+Date:   Fri, 21 Aug 2020 13:23:51 +0200
+Message-Id: <20200821112351.5518-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
+According to Devicetree Specification v0.2 and later, Section "Generic
+Names Recommendation", the node name for a pin controller device node
+should be "pinctrl".
 
-Thank you for the patch.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in renesas-devel for v5.10.
 
-On Tue, Aug 18, 2020 at 1:16 PM Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
->
-> In order to establish required properties based on the selected
-> bus type, make the 'bus-type' property mandatory.
->
-> Binary compatibility with existing DTB is kept as the driver does not
-> enforce the property to be present, and shall fall-back to default
-> parallel bus configuration, which was the only supported bus type, if
-> the property is not specified.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  Documentation/devicetree/bindings/media/i2c/ov772x.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+ arch/arm/boot/dts/emev2.dtsi     | 2 +-
+ arch/arm/boot/dts/r7s72100.dtsi  | 2 +-
+ arch/arm/boot/dts/r7s9210.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a73a4.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7740.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7742.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7743.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7744.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7745.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a77470.dtsi  | 2 +-
+ arch/arm/boot/dts/r8a7778.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7779.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7790.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7791.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7792.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7793.dtsi   | 2 +-
+ arch/arm/boot/dts/r8a7794.dtsi   | 2 +-
+ arch/arm/boot/dts/r9a06g032.dtsi | 2 +-
+ arch/arm/boot/dts/sh73a0.dtsi    | 2 +-
+ 19 files changed, 19 insertions(+), 19 deletions(-)
 
-Cheers,
-Prabhakar
+diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.dtsi
+index 96678ddbb4e6a2a9..ecfaa0b7523e83b2 100644
+--- a/arch/arm/boot/dts/emev2.dtsi
++++ b/arch/arm/boot/dts/emev2.dtsi
+@@ -195,7 +195,7 @@
+ 		clock-names = "sclk";
+ 	};
+ 
+-	pfc: pin-controller@e0140200 {
++	pfc: pinctrl@e0140200 {
+ 		compatible = "renesas,pfc-emev2";
+ 		reg = <0xe0140200 0x100>;
+ 	};
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index b9b1388880488059..45cf75b5824cbe7f 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -499,7 +499,7 @@
+ 			clock-output-names = "sdhi00", "sdhi01", "sdhi10", "sdhi11";
+ 		};
+ 
+-		pinctrl: pin-controller@fcfe3000 {
++		pinctrl: pinctrl@fcfe3000 {
+ 			compatible = "renesas,r7s72100-ports";
+ 
+ 			reg = <0xfcfe3000 0x4230>;
+diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
+index 838920aef9925c2f..85c0399b1339585b 100644
+--- a/arch/arm/boot/dts/r7s9210.dtsi
++++ b/arch/arm/boot/dts/r7s9210.dtsi
+@@ -489,7 +489,7 @@
+ 			interrupt-map-mask = <7 0>;
+ 		};
+ 
+-		pinctrl: pin-controller@fcffe000 {
++		pinctrl: pinctrl@fcffe000 {
+ 			compatible = "renesas,r7s9210-pinctrl";
+ 			reg = <0xfcffe000 0x1000>;
+ 
+diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+index b92e7257983611b1..e5fb1ce261f72f2d 100644
+--- a/arch/arm/boot/dts/r8a73a4.dtsi
++++ b/arch/arm/boot/dts/r8a73a4.dtsi
+@@ -221,7 +221,7 @@
+ 		power-domains = <&pd_c4>;
+ 	};
+ 
+-	pfc: pin-controller@e6050000 {
++	pfc: pinctrl@e6050000 {
+ 		compatible = "renesas,pfc-r8a73a4";
+ 		reg = <0 0xe6050000 0 0x9000>;
+ 		gpio-controller;
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 8048303037ee970f..1b2cf5fa322b2985 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -311,7 +311,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	pfc: pin-controller@e6050000 {
++	pfc: pinctrl@e6050000 {
+ 		compatible = "renesas,pfc-r8a7740";
+ 		reg = <0xe6050000 0x8000>,
+ 		      <0xe605800c 0x20>;
+diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+index 009827708bf44ba0..aab640da17ea942a 100644
+--- a/arch/arm/boot/dts/r8a7742.dtsi
++++ b/arch/arm/boot/dts/r8a7742.dtsi
+@@ -330,7 +330,7 @@
+ 			resets = <&cpg 907>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7742";
+ 			reg = <0 0xe6060000 0 0x250>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 896916a00b8429a6..f444e418f4085a26 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -265,7 +265,7 @@
+ 			resets = <&cpg 904>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7743";
+ 			reg = <0 0xe6060000 0 0x250>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+index 6b56aa2863377e00..0442aad4f9dba024 100644
+--- a/arch/arm/boot/dts/r8a7744.dtsi
++++ b/arch/arm/boot/dts/r8a7744.dtsi
+@@ -265,7 +265,7 @@
+ 			resets = <&cpg 904>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7744";
+ 			reg = <0 0xe6060000 0 0x250>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+index 636248f370e02be4..0f14ac22921de7d4 100644
+--- a/arch/arm/boot/dts/r8a7745.dtsi
++++ b/arch/arm/boot/dts/r8a7745.dtsi
+@@ -230,7 +230,7 @@
+ 			resets = <&cpg 905>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7745";
+ 			reg = <0 0xe6060000 0 0x11c>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index 6baa126b6590f51a..691b1a131c870df3 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -187,7 +187,7 @@
+ 			resets = <&cpg 907>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a77470";
+ 			reg = <0 0xe6060000 0 0x118>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+index 1612b003fb55ed5b..c9f8735860bf824c 100644
+--- a/arch/arm/boot/dts/r8a7778.dtsi
++++ b/arch/arm/boot/dts/r8a7778.dtsi
+@@ -142,7 +142,7 @@
+ 		interrupt-controller;
+ 	};
+ 
+-	pfc: pin-controller@fffc0000 {
++	pfc: pinctrl@fffc0000 {
+ 		compatible = "renesas,pfc-r8a7778";
+ 		reg = <0xfffc0000 0x118>;
+ 	};
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index c5634daef96f49f5..74d7e9084eabe173 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -321,7 +321,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	pfc: pin-controller@fffc0000 {
++	pfc: pinctrl@fffc0000 {
+ 		compatible = "renesas,pfc-r8a7779";
+ 		reg = <0xfffc0000 0x23c>;
+ 	};
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index 769ba2a33d39e885..b0569b4ea5c8ae96 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -363,7 +363,7 @@
+ 			resets = <&cpg 907>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7790";
+ 			reg = <0 0xe6060000 0 0x250>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+index cdc67a476d02f795..6590b91cbcc70dc3 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -287,7 +287,7 @@
+ 			resets = <&cpg 904>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7791";
+ 			reg = <0 0xe6060000 0 0x250>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
+index 597848ad4dfa109d..f5b299bfcb23796c 100644
+--- a/arch/arm/boot/dts/r8a7792.dtsi
++++ b/arch/arm/boot/dts/r8a7792.dtsi
+@@ -296,7 +296,7 @@
+ 			resets = <&cpg 913>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7792";
+ 			reg = <0 0xe6060000 0 0x144>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
+index 6d507091b163bd86..f930f69f7bcce43a 100644
+--- a/arch/arm/boot/dts/r8a7793.dtsi
++++ b/arch/arm/boot/dts/r8a7793.dtsi
+@@ -271,7 +271,7 @@
+ 			resets = <&cpg 904>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7793";
+ 			reg = <0 0xe6060000 0 0x250>;
+ 		};
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index 5f340397ab64ca47..cd5e2904068abd69 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -238,7 +238,7 @@
+ 			resets = <&cpg 905>;
+ 		};
+ 
+-		pfc: pin-controller@e6060000 {
++		pfc: pinctrl@e6060000 {
+ 			compatible = "renesas,pfc-r8a7794";
+ 			reg = <0 0xe6060000 0 0x11c>;
+ 		};
+diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
+index ee59cc84f2121488..c47896e4ab5877dd 100644
+--- a/arch/arm/boot/dts/r9a06g032.dtsi
++++ b/arch/arm/boot/dts/r9a06g032.dtsi
+@@ -165,7 +165,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		pinctrl: pin-controller@40067000 {
++		pinctrl: pinctrl@40067000 {
+ 			compatible = "renesas,r9a06g032-pinctrl", "renesas,rzn1-pinctrl";
+ 			reg = <0x40067000 0x1000>, <0x51000000 0x480>;
+ 			clocks = <&sysctrl R9A06G032_HCLK_PINCONFIG>;
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index a9bb46e007f366f4..a20134f9dc25209a 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -453,7 +453,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	pfc: pin-controller@e6050000 {
++	pfc: pinctrl@e6050000 {
+ 		compatible = "renesas,pfc-sh73a0";
+ 		reg = <0xe6050000 0x8000>,
+ 		      <0xe605801c 0x1c>;
+-- 
+2.17.1
 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> index 2b84fefeb4aa..75dad40f70cc 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> @@ -47,9 +47,15 @@ properties:
->        endpoint:
->          type: object
->          properties:
-> +          bus-type:
-> +            enum: [5, 6]
-> +
->            remote-endpoint:
->              description: A phandle to the bus receiver's endpoint node.
->
-> +        required:
-> +          - bus-type
-> +
->      additionalProperties: false
->
->  required:
-> @@ -75,6 +81,7 @@ examples:
->
->              port {
->                  ov772x_0: endpoint {
-> +                    bus-type = <5>;
->                      remote-endpoint = <&vcap1_in0>;
->                  };
->              };
-> --
-> 2.27.0
->
