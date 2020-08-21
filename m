@@ -2,101 +2,125 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927CFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D58C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66DC520724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:21:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="mKcMiFnb"
+	by mail.kernel.org (Postfix) with ESMTP id 81B712075E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgHUNVK (ORCPT
+        id S1728622AbgHUNdE (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbgHUNVJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 09:21:09 -0400
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [IPv6:2a02:418:6a02::a2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0CBC061573;
-        Fri, 21 Aug 2020 06:21:09 -0700 (PDT)
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 449775C0160;
-        Fri, 21 Aug 2020 15:21:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1598016060;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jAmn351OrHHZYEgU6zTRjzq0M49ckKbBSek16/Foebc=;
-        b=mKcMiFnbPzsC8l9AFLdkncUV9EmSxcMITYQK9r8Mbook20kfNTEZhAmXrE/rB2GmTuYNog
-        4opHaOqUBdcKd5HT9d65OES7IknI6F77qRH604l5v04B6LM8tDr9Jedh5GgCk7i1F6n9Mn
-        eXKlbEnYBy2ozI6ebEvEx28pmLwTem4=
+        Fri, 21 Aug 2020 09:33:04 -0400
+Received: from mail-oo1-f65.google.com ([209.85.161.65]:36107 "EHLO
+        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgHUNdD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 09:33:03 -0400
+Received: by mail-oo1-f65.google.com with SMTP id y30so343660ooj.3;
+        Fri, 21 Aug 2020 06:33:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WE/9d808AHOdfGXnnBLFXkEx9td59TWxZ9l7paPbsT4=;
+        b=k72shL9ePq1yrUu29v4Qmwdt8Zcmi6YE7Jw96hhur2CwtRUer+urRbQQbXz3+kOGGw
+         y5vyboMxTdZPp1I0Yj/nE/hTmquny4GuAwPEWp1w0S5Vfkz/d06FHY2de8Ul5pHYM2rM
+         UznN6NZ2Rnuv7H5qu6jZaVDzy1l3hV5yCdh4oyBDl3tKX2XHucKpWWXU1qr4YT+zuIaM
+         KOA/46ZdzLzVizdbQHRbiTMKVXz+hD+3QSjWmuvuJF5ggh/fHFa4mRgDdHHsNjvvE/ce
+         xFSkavtR3Yo7mNCrjb07ThNfUS//EL3peMjFZp17t7DdpH5eXpVLRuIMzJJK+eE+V/I7
+         8pTQ==
+X-Gm-Message-State: AOAM532oMwknupth+5oXca7OCiGA0hIyM81TpMh6y+msH5yRxXhLDRRO
+        3FHkapUDEPHNgTKTGPRcqS34SexcI4IRZkBbU1yZlpA5
+X-Google-Smtp-Source: ABdhPJxtKIuavgaEgjb3cdb9IXDngLMsaZHqmlIrF5H15c623DVRE2x4PTTIxCyoNY/l+m6Fxc7gW0O8P4U7CUQw8Ds=
+X-Received: by 2002:a4a:275e:: with SMTP id w30mr2078545oow.40.1598016782424;
+ Fri, 21 Aug 2020 06:33:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 21 Aug 2020 15:20:59 +0200
-From:   Stefan Agner <stefan@agner.ch>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        robh+dt@kernel.org, andrew.smirnov@gmail.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, festevam@gmail.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] ARM: dts: vfxxx: Add syscon compatible with ocotp
-In-Reply-To: <20200820041055.75848-1-cphealy@gmail.com>
-References: <20200820041055.75848-1-cphealy@gmail.com>
-User-Agent: Roundcube Webmail/1.4.1
-Message-ID: <1bf1c9664d8c376c87dc55aeb27da6e4@agner.ch>
-X-Sender: stefan@agner.ch
+References: <20200816193316.7641-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200816193316.7641-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200816193316.7641-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 21 Aug 2020 15:32:51 +0200
+Message-ID: <CAMuHMdWVOv3LC_wWi1r9EHtnmT=w8d1HgDTP3aPD7uEZcb5ZYg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: r8a7742-iwg21m: Add SPI NOR support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-20 06:10, Chris Healy wrote:
-> From: Chris Healy <cphealy@gmail.com>
-> 
-> Add syscon compatibility with Vybrid ocotp node. This is required to
-> access the UID.
+Hi Prabhakar,
 
-Hm, it seems today the SoC driver uses the specific compatible. It also
-should expose the UID as soc_id, see drivers/soc/imx/soc-imx.c.
+On Sun, Aug 16, 2020 at 9:33 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add support for the SPI NOR device used to boot up the system
+> to the System on Module DT.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Maybe it does make sense exposing it as syscon, but then we should
-probably also adjust
-Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt.
+Thanks for your patch!
 
---
-Stefan
+> --- a/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
 
-> 
-> Fixes: fa8d20c8dbb77 ("ARM: dts: vfxxx: Add node corresponding to OCOTP")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
-> ---
-> Changes in v2:
->  - Add Fixes line to commit message
-> 
->  arch/arm/boot/dts/vfxxx.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 0fe03aa0367f..2259d11af721 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -495,7 +495,7 @@ edma1: dma-controller@40098000 {
->  			};
->  
->  			ocotp: ocotp@400a5000 {
-> -				compatible = "fsl,vf610-ocotp";
-> +				compatible = "fsl,vf610-ocotp", "syscon";
->  				reg = <0x400a5000 0x1000>;
->  				clocks = <&clks VF610_CLK_OCOTP>;
->  			};
+> @@ -70,4 +80,28 @@
+>                 groups = "mmc1_data4", "mmc1_ctrl";
+>                 function = "mmc1";
+>         };
+> +
+> +       qspi_pins: qspi {
+> +               groups = "qspi_ctrl", "qspi_data2";
+> +               function = "qspi";
+> +       };
+> +};
+> +
+> +&qspi {
+> +       pinctrl-0 = <&qspi_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       status = "okay";
+> +
+> +       /* WARNING - This device contains the bootloader. Handle with care. */
+> +       flash: flash@0 {
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+
+#{address,size}-cells are not needed, unless you list legacy partitions
+(i.e. partitions not contained in a "partitions" container).
+
+> +               compatible = "sst,sst25vf016b", "jedec,spi-nor";
+> +               reg = <0>;
+> +               spi-max-frequency = <50000000>;
+> +               m25p,fast-read;
+> +               spi-cpol;
+> +               spi-cpha;
+
+Perhaps you want to add the partition layout, too?
+
+> +       };
+>  };
+
+With the above fixed/clarified:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
