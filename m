@@ -2,148 +2,371 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F77C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 057FFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 277EC20702
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:58:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598032682;
-	bh=SY9zNs4J6t0vv72iGwx5CHsqBISRbTZU9+hhKRgBuhc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LjGNrlE6WFmNz0ueEIZ9GT699XRRalWXzYJW+dy+yLamIPxqPOCCp3KkNH/ykqwQQ
-	 X+UwARMlGA3AvKxbxbZBzaUu5nivCpk9nBqPD333umaZVbeIanP+7NIoIvX64vRkN/
-	 Ptl45QjyZw82s8jIAE4H9KIk/m6UTeXOnCAllIVA=
+	by mail.kernel.org (Postfix) with ESMTP id C2E4820720
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="w1OTzT9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgHUR6B (ORCPT
+        id S1725876AbgHUSS4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbgHUR6A (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:58:00 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDEF2076E;
-        Fri, 21 Aug 2020 17:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598032679;
-        bh=SY9zNs4J6t0vv72iGwx5CHsqBISRbTZU9+hhKRgBuhc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QZDE8vCDkAA5jlse0gEYh+PmM32pHu7oq7I5mhX53QFRvulP+td24khjIHsDQR8JC
-         2Vz6TmZQtxsFZnwsBmRHXT5tFLTqSGZqulb3JUWDhvj+q7KcyzhoInrC2qXuS5FTOM
-         HL8EaOM65oHoT6eTbvyU+OA7SkeBPiX9ugSGXD5k=
-Received: by mail-oi1-f174.google.com with SMTP id l204so2245559oib.3;
-        Fri, 21 Aug 2020 10:57:59 -0700 (PDT)
-X-Gm-Message-State: AOAM532dC7ftBN8FTNgfCkcPTcDtINLaUOce+4mqGkVv1hK2gCkaBb9X
-        l+GzdKxGCmtwvYctelWXIO038v7ZbpLpXRaezg==
-X-Google-Smtp-Source: ABdhPJy56tMaoq7RPfeWnbGfE9RwrzQuC1O2g9otVdT7rq5KiAI44AsUU8Hy6kvdvNrjgZTmUbM4NN+8SLtytcLnC+Q=
-X-Received: by 2002:aca:c3d8:: with SMTP id t207mr2564623oif.152.1598032679079;
- Fri, 21 Aug 2020 10:57:59 -0700 (PDT)
+        Fri, 21 Aug 2020 14:18:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgHUSSz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 14:18:55 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D5AC061574
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 11:18:54 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w25so2827896ljo.12
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 11:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=uoR5hrkaKmJOEz2cwXfhbkk2C+6UoQr5PoKVBFcmbBM=;
+        b=w1OTzT9P6FoPxG9cemFiimAFfBf5pMW45wzp9VKwhyGi5aiTCUdkTMYBkOcB80/Glb
+         N4r4Ed02J/kb1uORHJlOEt+zSzmc2LTXo6kMGeAl9drq2mtY8MeQwK7MHE8fW4+GuGs2
+         iVTZkaQQXiwt+2Ghc6v3nHdZdsQN9FbUa8j9OzM0+ccFkUrpjPlrvCSNxM8G+QHJGCQV
+         dThdQoSnRlEOnl00re7CWUxpz33qRVrF4t1iXuFDtEsfw/w+YXKq2NCvQ28jlvUjjyP4
+         UMMFp9leOxO+2/WqGmG9zi0zkbNoyQZoutyuKBmcg8yRPMWst+xE7GeFxfgQAqAnu3M/
+         +MCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=uoR5hrkaKmJOEz2cwXfhbkk2C+6UoQr5PoKVBFcmbBM=;
+        b=FZ/pr3NKgRYon3ruxBjUXQSIzWqKowRN7I6dN1TsBRbSffmU0qJ6WPEnSm86RR5HZg
+         txpnjVaWlBkVbaI9UaqePS5AozSn0TxczG+2iPi/J3TyPaUPGBN7ho/Tz4jItnuGrSYf
+         rX5WG4dANa2nZIGRuevlj9Nd3F8wotGoeSE9NWy805Zq5Xzrs3m89M0j6UxRDESAeAS5
+         9E6pr+61/0yXzo27W70pFnbqRT8anuh12JEqFJj0sJ7E6W716yq98YQu9Q+KYHAFqM5O
+         Pc7pNEWK5ielTGfVrAHYZE4/2azk0HyoCgTYK0uUfI8ba5YVOiLRL1cpZ0qyyIb+Ztq6
+         zBsg==
+X-Gm-Message-State: AOAM531aIvBAlXowuU4+lUHWO/wxqpTEa6HljulaGrTC0BSRcj7AzoGA
+        Dc7By3zpcLtdH44wbYE9glXz6Q==
+X-Google-Smtp-Source: ABdhPJx5I3c1dQsgVQ5tUVX9FY89OOeZNUNaHoH/rYCPXIPwIDV2mpRgGeKhjX+AvHwvrKEdZ3RLUQ==
+X-Received: by 2002:a2e:b4f1:: with SMTP id s17mr2032614ljm.184.1598033932354;
+        Fri, 21 Aug 2020 11:18:52 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id s3sm536631ljd.44.2020.08.21.11.18.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 11:18:51 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 20:18:50 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: renesas: Fix pin controller node names
+Message-ID: <20200821181850.GA69748@oden.dyn.berto.se>
+References: <20200821112351.5518-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <d007193ce73677713436c39684602f679d7623e4.camel@microchip.com> <20200820181018.GA1551400@bjorn-Precision-5520>
-In-Reply-To: <20200820181018.GA1551400@bjorn-Precision-5520>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 21 Aug 2020 11:57:47 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL1FiQ1CxTeOcEV8Y=p1yZKkXLq5Zz3qZ+xiJqkvH+RxA@mail.gmail.com>
-Message-ID: <CAL_JsqL1FiQ1CxTeOcEV8Y=p1yZKkXLq5Zz3qZ+xiJqkvH+RxA@mail.gmail.com>
-Subject: Re: [PATCH v15 2/2] PCI: microchip: Add host driver for Microchip
- PCIe controller
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Daire McNamara <Daire.McNamara@microchip.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200821112351.5518-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 12:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Aug 19, 2020 at 04:33:10PM +0000, Daire.McNamara@microchip.com wrote:
->
-> > + *   pcie-altera.c
-> > + */
->
-> Add a blank line here.
->
-> > +#include <linux/irqchip/chained_irq.h>
-> > +#include <linux/module.h>
->
-> > +static struct mc_port *port;
->
-> This file scope item is not ideal.  It might work in your situation if
-> you can never have more than one device, but it's not a pattern we
-> want other people to copy.
+Hi Geert,
 
-Indeed.
+Thanks for your work.
 
-> I think I sort of see how it works:
->
->   mc_pci_host_probe
->     pci_host_common_probe
->       ops = of_device_get_match_data()              # mc_ecam_ops
->       gen_pci_init(..., ops)
->         pci_ecam_create(..., ops)
->           ops->init                                 # mc_ecam_ops.init
->             mc_platform_init(pci_config_window *)
->               port = devm_kzalloc(...)              # initialized
->     mc_setup_windows
->       bridge_base_addr = port->axi_base_addr + ...  # used
->
-> And you're using the file scope "port" because mc_platform_init()
-> doesn't have a pointer to the platform_device.
+On 2020-08-21 13:23:51 +0200, Geert Uytterhoeven wrote:
+> According to Devicetree Specification v0.2 and later, Section "Generic
+> Names Recommendation", the node name for a pin controller device node
+> should be "pinctrl".
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This is a simple fix. Move platform_set_drvdata to just after
-devm_pci_alloc_host_bridge() in pci_host_common_probe(). (Don't fall
-into the 'platform problem'[1] and work-around the core code.)
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-Then pci_host_common_probe can be called directly and mc_setup_windows
-can be moved to mc_platform_init().
+> ---
+> To be queued in renesas-devel for v5.10.
+> 
+>  arch/arm/boot/dts/emev2.dtsi     | 2 +-
+>  arch/arm/boot/dts/r7s72100.dtsi  | 2 +-
+>  arch/arm/boot/dts/r7s9210.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a73a4.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7740.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7742.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7743.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7744.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7745.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a77470.dtsi  | 2 +-
+>  arch/arm/boot/dts/r8a7778.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7779.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7790.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7791.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7792.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7793.dtsi   | 2 +-
+>  arch/arm/boot/dts/r8a7794.dtsi   | 2 +-
+>  arch/arm/boot/dts/r9a06g032.dtsi | 2 +-
+>  arch/arm/boot/dts/sh73a0.dtsi    | 2 +-
+>  19 files changed, 19 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/emev2.dtsi b/arch/arm/boot/dts/emev2.dtsi
+> index 96678ddbb4e6a2a9..ecfaa0b7523e83b2 100644
+> --- a/arch/arm/boot/dts/emev2.dtsi
+> +++ b/arch/arm/boot/dts/emev2.dtsi
+> @@ -195,7 +195,7 @@
+>  		clock-names = "sclk";
+>  	};
+>  
+> -	pfc: pin-controller@e0140200 {
+> +	pfc: pinctrl@e0140200 {
+>  		compatible = "renesas,pfc-emev2";
+>  		reg = <0xe0140200 0x100>;
+>  	};
+> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+> index b9b1388880488059..45cf75b5824cbe7f 100644
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -499,7 +499,7 @@
+>  			clock-output-names = "sdhi00", "sdhi01", "sdhi10", "sdhi11";
+>  		};
+>  
+> -		pinctrl: pin-controller@fcfe3000 {
+> +		pinctrl: pinctrl@fcfe3000 {
+>  			compatible = "renesas,r7s72100-ports";
+>  
+>  			reg = <0xfcfe3000 0x4230>;
+> diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
+> index 838920aef9925c2f..85c0399b1339585b 100644
+> --- a/arch/arm/boot/dts/r7s9210.dtsi
+> +++ b/arch/arm/boot/dts/r7s9210.dtsi
+> @@ -489,7 +489,7 @@
+>  			interrupt-map-mask = <7 0>;
+>  		};
+>  
+> -		pinctrl: pin-controller@fcffe000 {
+> +		pinctrl: pinctrl@fcffe000 {
+>  			compatible = "renesas,r7s9210-pinctrl";
+>  			reg = <0xfcffe000 0x1000>;
+>  
+> diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
+> index b92e7257983611b1..e5fb1ce261f72f2d 100644
+> --- a/arch/arm/boot/dts/r8a73a4.dtsi
+> +++ b/arch/arm/boot/dts/r8a73a4.dtsi
+> @@ -221,7 +221,7 @@
+>  		power-domains = <&pd_c4>;
+>  	};
+>  
+> -	pfc: pin-controller@e6050000 {
+> +	pfc: pinctrl@e6050000 {
+>  		compatible = "renesas,pfc-r8a73a4";
+>  		reg = <0 0xe6050000 0 0x9000>;
+>  		gpio-controller;
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index 8048303037ee970f..1b2cf5fa322b2985 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -311,7 +311,7 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	pfc: pin-controller@e6050000 {
+> +	pfc: pinctrl@e6050000 {
+>  		compatible = "renesas,pfc-r8a7740";
+>  		reg = <0xe6050000 0x8000>,
+>  		      <0xe605800c 0x20>;
+> diff --git a/arch/arm/boot/dts/r8a7742.dtsi b/arch/arm/boot/dts/r8a7742.dtsi
+> index 009827708bf44ba0..aab640da17ea942a 100644
+> --- a/arch/arm/boot/dts/r8a7742.dtsi
+> +++ b/arch/arm/boot/dts/r8a7742.dtsi
+> @@ -330,7 +330,7 @@
+>  			resets = <&cpg 907>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7742";
+>  			reg = <0 0xe6060000 0 0x250>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+> index 896916a00b8429a6..f444e418f4085a26 100644
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> @@ -265,7 +265,7 @@
+>  			resets = <&cpg 904>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7743";
+>  			reg = <0 0xe6060000 0 0x250>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
+> index 6b56aa2863377e00..0442aad4f9dba024 100644
+> --- a/arch/arm/boot/dts/r8a7744.dtsi
+> +++ b/arch/arm/boot/dts/r8a7744.dtsi
+> @@ -265,7 +265,7 @@
+>  			resets = <&cpg 904>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7744";
+>  			reg = <0 0xe6060000 0 0x250>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
+> index 636248f370e02be4..0f14ac22921de7d4 100644
+> --- a/arch/arm/boot/dts/r8a7745.dtsi
+> +++ b/arch/arm/boot/dts/r8a7745.dtsi
+> @@ -230,7 +230,7 @@
+>  			resets = <&cpg 905>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7745";
+>  			reg = <0 0xe6060000 0 0x11c>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+> index 6baa126b6590f51a..691b1a131c870df3 100644
+> --- a/arch/arm/boot/dts/r8a77470.dtsi
+> +++ b/arch/arm/boot/dts/r8a77470.dtsi
+> @@ -187,7 +187,7 @@
+>  			resets = <&cpg 907>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a77470";
+>  			reg = <0 0xe6060000 0 0x118>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+> index 1612b003fb55ed5b..c9f8735860bf824c 100644
+> --- a/arch/arm/boot/dts/r8a7778.dtsi
+> +++ b/arch/arm/boot/dts/r8a7778.dtsi
+> @@ -142,7 +142,7 @@
+>  		interrupt-controller;
+>  	};
+>  
+> -	pfc: pin-controller@fffc0000 {
+> +	pfc: pinctrl@fffc0000 {
+>  		compatible = "renesas,pfc-r8a7778";
+>  		reg = <0xfffc0000 0x118>;
+>  	};
+> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+> index c5634daef96f49f5..74d7e9084eabe173 100644
+> --- a/arch/arm/boot/dts/r8a7779.dtsi
+> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> @@ -321,7 +321,7 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	pfc: pin-controller@fffc0000 {
+> +	pfc: pinctrl@fffc0000 {
+>  		compatible = "renesas,pfc-r8a7779";
+>  		reg = <0xfffc0000 0x23c>;
+>  	};
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index 769ba2a33d39e885..b0569b4ea5c8ae96 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -363,7 +363,7 @@
+>  			resets = <&cpg 907>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7790";
+>  			reg = <0 0xe6060000 0 0x250>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
+> index cdc67a476d02f795..6590b91cbcc70dc3 100644
+> --- a/arch/arm/boot/dts/r8a7791.dtsi
+> +++ b/arch/arm/boot/dts/r8a7791.dtsi
+> @@ -287,7 +287,7 @@
+>  			resets = <&cpg 904>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7791";
+>  			reg = <0 0xe6060000 0 0x250>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
+> index 597848ad4dfa109d..f5b299bfcb23796c 100644
+> --- a/arch/arm/boot/dts/r8a7792.dtsi
+> +++ b/arch/arm/boot/dts/r8a7792.dtsi
+> @@ -296,7 +296,7 @@
+>  			resets = <&cpg 913>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7792";
+>  			reg = <0 0xe6060000 0 0x144>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
+> index 6d507091b163bd86..f930f69f7bcce43a 100644
+> --- a/arch/arm/boot/dts/r8a7793.dtsi
+> +++ b/arch/arm/boot/dts/r8a7793.dtsi
+> @@ -271,7 +271,7 @@
+>  			resets = <&cpg 904>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7793";
+>  			reg = <0 0xe6060000 0 0x250>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+> index 5f340397ab64ca47..cd5e2904068abd69 100644
+> --- a/arch/arm/boot/dts/r8a7794.dtsi
+> +++ b/arch/arm/boot/dts/r8a7794.dtsi
+> @@ -238,7 +238,7 @@
+>  			resets = <&cpg 905>;
+>  		};
+>  
+> -		pfc: pin-controller@e6060000 {
+> +		pfc: pinctrl@e6060000 {
+>  			compatible = "renesas,pfc-r8a7794";
+>  			reg = <0 0xe6060000 0 0x11c>;
+>  		};
+> diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
+> index ee59cc84f2121488..c47896e4ab5877dd 100644
+> --- a/arch/arm/boot/dts/r9a06g032.dtsi
+> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> @@ -165,7 +165,7 @@
+>  			status = "disabled";
+>  		};
+>  
+> -		pinctrl: pin-controller@40067000 {
+> +		pinctrl: pinctrl@40067000 {
+>  			compatible = "renesas,r9a06g032-pinctrl", "renesas,rzn1-pinctrl";
+>  			reg = <0x40067000 0x1000>, <0x51000000 0x480>;
+>  			clocks = <&sysctrl R9A06G032_HCLK_PINCONFIG>;
+> diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+> index a9bb46e007f366f4..a20134f9dc25209a 100644
+> --- a/arch/arm/boot/dts/sh73a0.dtsi
+> +++ b/arch/arm/boot/dts/sh73a0.dtsi
+> @@ -453,7 +453,7 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	pfc: pin-controller@e6050000 {
+> +	pfc: pinctrl@e6050000 {
+>  		compatible = "renesas,pfc-sh73a0";
+>  		reg = <0xe6050000 0x8000>,
+>  		      <0xe605801c 0x1c>;
+> -- 
+> 2.17.1
+> 
 
-> But I think this
-> abuses the pci_ecam_ops design to do host bridge initialization that
-> it is not intended for.
-
-What init should be done then? IMO, given this driver is using ECAM
-support already and it's all one time init that fits into init(), it
-seems like a fit to me.
-
-> I'd suggest copying the host bridge init design from somewhere else.
-> tango_pcie_probe() also calls pci_host_common_probe(), so maybe that's
-> a good place.  But the fact that it's the *only* such caller makes me
-> think it might not be the best thing to copy.
->
-> Rob has been working in this area and probably has better insight.
-
-It was my suggestion to move to the ECAM init. Prior versions had its own probe.
-
-One question I've been wrestling with is if we can do all the firmware
-setup for 'generic ECAM' on the same h/w we have drivers for, then
-shouldn't we make the kernel driver create an ECAM setup? There's also
-the question of why do root port config accesses go thru standard ECAM
-config space in ECAM mode, but use different address space for
-non-ECAM setup? DWC for example can probably do ECAM on more
-platforms. There's some that can't which are generally ones w/o the
-iATU or enough iATU entries or not enough memory space. The difference
-from a config space standpoint is just DT configuration (in the case
-of DWC with an iATU, the config space and memory space DT entries are
-just iATU configuration not h/w constraints).
-
-I think we have drivers too much in control of their initialization
-ordering and things should be more the other way around with core code
-calling h/w ops to do specific things. I don't have any grand plan
-yet, but perhaps the generic/common host stuff evolves beyond just
-ECAM and almost ECAM. The generic host would just have no h/w ops.
-
-Rob
-
-[1] https://lwn.net/Articles/443531/
+-- 
+Regards,
+Niklas Söderlund
