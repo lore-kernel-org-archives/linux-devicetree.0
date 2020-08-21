@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 273B4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C2BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F17C820738
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34AC9207DE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZlKQmE5h"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R+zAOoZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgHUKiV (ORCPT
+        id S1728397AbgHUKi4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36388 "EHLO
+        Fri, 21 Aug 2020 06:38:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728708AbgHUKhD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 06:37:03 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94675C061343
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:37:03 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y6so687912plk.10
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:37:03 -0700 (PDT)
+        with ESMTP id S1728656AbgHUKgx (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 06:36:53 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27625C06138B
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:36:53 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k13so679879plk.13
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:36:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0ogu4zyI9T8PI1xsyrjjgzgW28SyITF1aMpk9WZWLBQ=;
-        b=ZlKQmE5huNd3UC53+O+Z+U4Qjo+JXEG8uEmbtaFdRBZ6vfyId9xLnIiSmQBMFiaSCw
-         OpJoP4ZvIjPV1X5EmqOuc0/oJ78KXHxxWHukmwYwHMLZTiJ38A0Y/4IA51915uLewcAD
-         8IKcKsIwyModqp0ppwQtyBh+5CXGDdjO8HkAU=
+        bh=wSZSbDZ08cylSEX/G8IrfjovP8UHcDWFoSMCGLeK/OE=;
+        b=R+zAOoZHsNc/stod/r/22gFK6RbLZtdiNUGAaLfmTULxkEppYgt/JtzLl+/kg+PIoa
+         Cn+eEXY+M2apC2Klr5JWM02ho9+2TEBh45Viqjg9UsCOaH7VZMTCfeZB5vN4pES1P4Sy
+         Gr53ndmfioz+ugcsmrGOsngymjRQUKuQdjkOQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0ogu4zyI9T8PI1xsyrjjgzgW28SyITF1aMpk9WZWLBQ=;
-        b=V/seawmr/LSZ536O0xipaCZNGVetlZtHIxx2wvBJFpBqRj5usuilHngow/ET08bJuf
-         NJWS/GudZxL2gW0se8tCVt739GuNGJjzyfi205Q2mHcncDIHe6XU8EOTv5/ElMNJuYz9
-         BHMvVqeyDXPAauo0ijAzBmQVx/Kf3UFgmYp01mGcY54zHcAyYnQ7mxJu3Ou0UM6snj5C
-         v2OLYfi7lS2d4+nOg8yPmqsGtbEC1oRMNoMSUl5NLNQ21Ws7spREPnodeFnmPZ/WOhwE
-         0UfQNM3dB4BQm0iGu8EGyEMTZGL9ekNtgeCjPdHmWFhA8DrmNoghCaMCmQdEI7ceY/XR
-         UQlw==
-X-Gm-Message-State: AOAM531RPLYB8+ANGxSBHn8r82DYGUwyzNh4P+NNA4YHutimwdleswjN
-        m4ZoACLiU8FF9Lq8qMlDzdMKfw==
-X-Google-Smtp-Source: ABdhPJwzVHeP+hwx4rJ5StG4oZ7I43tyoQQQKXOz8JI7yIRHhQyvnjPhPiwUhan5FhWHmdG6bLPBig==
-X-Received: by 2002:a17:902:b098:: with SMTP id p24mr1833850plr.255.1598006223130;
-        Fri, 21 Aug 2020 03:37:03 -0700 (PDT)
+        bh=wSZSbDZ08cylSEX/G8IrfjovP8UHcDWFoSMCGLeK/OE=;
+        b=isnmwKm+C/rbamnVgAnLQ2V9Vw8y6/tWl68lgvU0WGm3pdA1j4nkZKN1yvVrbrpaIU
+         mHEY4kQIWh27AVsB1/NcN/dwuQI/wRqqbx+aMluEAaErvnMivRrtgRbDx6YqRVfRhsEp
+         R+g4OH0I/cdNn66n6Q2vyTUyOj25ycF6rXUvmeYHMdkeCYt2GoJ42SP1nJSWkUQ8tPdS
+         z/yuR382ZFl36vowCnd0SunE/qpDfSESTsqHCKwragn9+2DM+BwcmUK7DrtAGokXIDvJ
+         MoCFXOBwZApna3PLMtL+2tMrOZQ8FinJPPdW+6/LqHhSR9c8QMlaNDXlDF+W3QrMh4Mo
+         MsxQ==
+X-Gm-Message-State: AOAM5306jUyKxd2diDKM2jOGDsS5cSzvO1/9hdWqYq9w8/EmAtfMiIne
+        xQ6BbwpxqYUpqBdX28pYS2e/jg==
+X-Google-Smtp-Source: ABdhPJxOimO6yUX1CD+nnRroMZNOhDxgH6Dc+cxLXKfy60hZyujyWWzQxkjkFARUJ+QFUULBwkeb5g==
+X-Received: by 2002:a17:902:c286:: with SMTP id i6mr1820004pld.63.1598006212707;
+        Fri, 21 Aug 2020 03:36:52 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.37.00
+        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.36.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 03:37:02 -0700 (PDT)
+        Fri, 21 Aug 2020 03:36:51 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -65,9 +65,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v4 09/17] arm64: dts: mt8183: add encoder node
-Date:   Fri, 21 Aug 2020 19:36:00 +0900
-Message-Id: <20200821103608.2310097-10-acourbot@chromium.org>
+Subject: [PATCH v4 06/17] media: mtk-vcodec: venc: specify bitrate range per-chip
+Date:   Fri, 21 Aug 2020 19:35:57 +0900
+Message-Id: <20200821103608.2310097-7-acourbot@chromium.org>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 In-Reply-To: <20200821103608.2310097-1-acourbot@chromium.org>
 References: <20200821103608.2310097-1-acourbot@chromium.org>
@@ -78,121 +78,65 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Now that the MT8183 encoder driver is ready, add its DT node. Also pull
-the iommu and scp ones, which the encoder depends upon.
+Different chips have different supported bitrate ranges. Move the min
+and max supported bitrates to the platform data.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 10 ++++++
- .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 12 +++++++
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 36 +++++++++++++++++++
- 3 files changed, 58 insertions(+)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h     | 4 ++++
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c     | 3 ++-
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c | 2 ++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-index ae405bd8f06b..9e77b420eee8 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-@@ -25,6 +25,16 @@ memory@40000000 {
- 	chosen {
- 		stdout-path = "serial0:921600n8";
- 	};
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		scp_mem_reserved: scp_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+	};
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+index 1676c26eb229..e4b28fefcc95 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
+@@ -311,12 +311,16 @@ enum mtk_chip {
+  *
+  * @uses_ext: whether the encoder uses the extended firmware messaging format
+  * @has_lt_irq: whether the encoder uses the LT irq
++ * @min_birate: minimum supported encoding bitrate
++ * @max_bitrate: maximum supported encoding bitrate
+  */
+ struct mtk_vcodec_enc_pdata {
+ 	enum mtk_chip chip;
+ 
+ 	bool uses_ext;
+ 	bool has_lt_irq;
++	unsigned long min_bitrate;
++	unsigned long max_bitrate;
  };
  
- &auxadc {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-index f0a070535b34..3c763be658da 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-@@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
- 		regulator-max-microvolt = <3300000>;
- 	};
+ #define MTK_ENC_CTX_IS_EXT(ctx) ((ctx)->dev->venc_pdata->uses_ext)
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+index d469ff6464b2..50ba9da59153 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+@@ -1232,7 +1232,8 @@ int mtk_vcodec_enc_ctrls_setup(struct mtk_vcodec_ctx *ctx)
+ 	v4l2_ctrl_handler_init(handler, MTK_MAX_CTRLS_HINT);
  
-+	reserved_memory: reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		scp_mem_reserved: scp_mem_region {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x50000000 0 0x2900000>;
-+			no-map;
-+		};
-+	};
-+
- 	max98357a: codec0 {
- 		compatible = "maxim,max98357a";
- 		sdmode-gpios = <&pio 175 0>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 102105871db2..8f77eea6df27 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/mt8183-clk.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/memory/mt8183-larb-port.h>
- #include <dt-bindings/reset-controller/mt8183-resets.h>
- #include <dt-bindings/phy/phy.h>
- #include "mt8183-pinfunc.h"
-@@ -339,6 +340,25 @@ pwrap: pwrap@1000d000 {
- 			clock-names = "spi", "wrap";
- 		};
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_BITRATE,
+-			1, 4000000, 1, 4000000);
++			  ctx->dev->venc_pdata->min_bitrate,
++			  ctx->dev->venc_pdata->max_bitrate, 1, 4000000);
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_B_FRAMES,
+ 			0, 2, 1, 0);
+ 	v4l2_ctrl_new_std(handler, ops, V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE,
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+index 379b6638f7a9..602f6a9c13e3 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
+@@ -386,6 +386,8 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
+ static const struct mtk_vcodec_enc_pdata mt8173_pdata = {
+ 	.chip = MTK_MT8173,
+ 	.has_lt_irq = true,
++	.min_bitrate = 1,
++	.max_bitrate = 4000000,
+ };
  
-+		iommu: iommu@10205000 {
-+			compatible = "mediatek,mt8183-m4u";
-+			reg = <0 0x10205000 0 0x1000>;
-+			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		scp: scp@10500000 {
-+			compatible = "mediatek,mt8183-scp";
-+			reg = <0 0x10500000 0 0x80000>,
-+			      <0 0x105c0000 0 0x19080>;
-+			reg-names = "sram", "cfg";
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&infracfg CLK_INFRA_SCPSYS>;
-+			clock-names = "main";
-+			memory-region = <&scp_mem_reserved>;
-+			status = "disabled";
-+		};
-+
- 		systimer: timer@10017000 {
- 			compatible = "mediatek,mt8183-timer",
- 				     "mediatek,mt6765-timer";
-@@ -772,6 +792,22 @@ vencsys: syscon@17000000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		vcodec_enc: vcodec@17020000 {
-+			compatible = "mediatek,mt8183-vcodec-enc";
-+			reg = <0 0x17020000 0 0x1000>;
-+			interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>;
-+			iommus = <&iommu M4U_PORT_VENC_REC>,
-+				 <&iommu M4U_PORT_VENC_BSDMA>,
-+				 <&iommu M4U_PORT_VENC_RD_COMV>,
-+				 <&iommu M4U_PORT_VENC_CUR_LUMA>,
-+				 <&iommu M4U_PORT_VENC_CUR_CHROMA>,
-+				 <&iommu M4U_PORT_VENC_REF_LUMA>,
-+				 <&iommu M4U_PORT_VENC_REF_CHROMA>;
-+			mediatek,scp = <&scp>;
-+			clocks = <&vencsys CLK_VENC_VENC>;
-+			clock-names = "MT_CG_VENC";
-+		};
-+
- 		ipu_conn: syscon@19000000 {
- 			compatible = "mediatek,mt8183-ipu_conn", "syscon";
- 			reg = <0 0x19000000 0 0x1000>;
+ static const struct of_device_id mtk_vcodec_enc_match[] = {
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
