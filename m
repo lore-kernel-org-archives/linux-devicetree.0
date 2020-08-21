@@ -2,103 +2,100 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFC2C433E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EB3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFCC2086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25BF2078B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxcAsT2X"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K4xOshzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgHUP14 (ORCPT
+        id S1727884AbgHUPfj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53456 "EHLO
+        Fri, 21 Aug 2020 11:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbgHUP1t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 11:27:49 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A55CC061573;
-        Fri, 21 Aug 2020 08:27:49 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id x64so162780lff.0;
-        Fri, 21 Aug 2020 08:27:49 -0700 (PDT)
+        with ESMTP id S1725873AbgHUPfg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 11:35:36 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F4AC061573
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 08:35:36 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id g15so1030925plj.6
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 08:35:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=x6HtUbFf96oPZrSCaNseQpqm40kBH3Q2unc0hJKDKDU=;
-        b=lxcAsT2XFgYSVld2VwU2AUhjthG+GYo9NI7zHYolqatS03sRmCAoVxyTUtWeZhmxwy
-         iWrYkYpQaRwqbk8oTUddDkUo9fpG8tuIgQM1e9yMmd6o8xeBxaEdI1oUxGEiiebeLdJj
-         5GWaWBDAFx9pCFieuSieDLFfxFifn5/GtyqKqWbGzMaGIqMCc0OPf6MmnEjnKunjF6eU
-         tUHbawCnp7w0gkvnnCRTYZftQfdZGlDt1bMip2LSbC7xrov5uhgydtXMxhjgEjNW4Ikk
-         NrcAn09A+7U6OKsjyBKsYKFEhXBPM/m6XqTNWM0BiTi2HD8lZ6b6U4BU6OayIYg4dB2/
-         LKag==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KlcOztWWQPRGdO3GJ4i5K8dX5Ri0O0Yjm2p6XeAjX5c=;
+        b=K4xOshzvJr7aCXXwH4DAQRpEXUsdEQHd4W+925408O95RPmPvEx9o1Qfb37SCB1Gho
+         oJJeNwvIk992gMb+wjm4aBzLv0AwDdFpQqg6Sx9dh4vQgCXUjAupJMC3PN+v7fFX+V4c
+         9ww3RJgSeDEiwb0n5vIcXlfAHk3l6xWnlYojk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=x6HtUbFf96oPZrSCaNseQpqm40kBH3Q2unc0hJKDKDU=;
-        b=Cxtk7BPYWK5SeH9oOb0ZlcJQ2buQ3ds2lc6TJBJkl4I1q1uVqD3pMTzBIAJ+NyrcKS
-         tAUOr/lVSW2a3I101t4wF/hBhdigllE9CliXTCbhzwtUXw2TtivEhWy+LdY2axTj/8qZ
-         eb4npghuVvxh4d9qWXa6u7KBhUN1f5citAz54HCeFw+wMMzvwI6Fl8wA2TXIvwUIpogM
-         xDVqpblWTctUE3Bk5NhWN85oCiOkv0coFSMQMVa6vMWZ3L77X8BI6l6Pj/LADDoK37l9
-         QARbk3GX/W3gtWHVo0Udqa+rUK0Gz0MJr83gwaEQ4/VrzZuGBcQ8jZ/2qD2pNIWAXOEk
-         351A==
-X-Gm-Message-State: AOAM533oXCknEy61fekYAIvd6gJ9913yWzP/Lnw45FDsK7FP3RcTySuV
-        +kX5Py0lhM0kkmbTwhOGvlZMXf5vBhBrcg==
-X-Google-Smtp-Source: ABdhPJx7bwfv/I51vDeUMlofs4XqaObwpAWwRFfmVc+kdZs+m1DbAJB5N+nqIyIpbQkILy0QgVQikw==
-X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr1607766lfb.101.1598023667350;
-        Fri, 21 Aug 2020 08:27:47 -0700 (PDT)
-Received: from wasted.omprussia.ru ([2a00:1fa0:48e7:10e3:3a50:6605:bcd3:dc7e])
-        by smtp.gmail.com with ESMTPSA id 23sm446856lfg.59.2020.08.21.08.27.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 08:27:45 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
- controller node name
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20200821111127.3771-1-geert+renesas@glider.be>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
-Date:   Fri, 21 Aug 2020 18:27:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        bh=KlcOztWWQPRGdO3GJ4i5K8dX5Ri0O0Yjm2p6XeAjX5c=;
+        b=oysOjvLRJiKIn0qrlShzkC0TppT8TLnkhzdoh8o/IajohZJd3vp/ltZqgKrLdA7NpE
+         aJrA1gj6CFHCNdHiGI9o3ENzedbImuYUbycU0pgeYCoCwMe2DgejAFjBHdcYeidyEl8W
+         95pa4uctSFt+jhPj+kqIHYSPfeWHzGChTp0cPVt5zKoWbR0Sh+ZmwBp5QQg1k+VZlSNW
+         +1m6rxa/M6/s/0byZ8C22KAWND1wcZdYYrsJYteOG4bQtw0/qF8cI4Gfzc2fhRH22QJo
+         XbUKRf4/jt4AdeKjNrucrT5t/1GygC8M7kQULIFxHVqXQ13vv11iZm872kknpW9g0XQ8
+         a9bQ==
+X-Gm-Message-State: AOAM530M8eeJhGG467U8bBDBks6LQJsn6PWVWGjq6mA3+SmJH0ZJwV/7
+        smVLh2Ircu2hG3lVuZMTpQV2+g==
+X-Google-Smtp-Source: ABdhPJwZXxjhNDGxHTeRfEsG36o7sm8xNgtpV6HgMuiEo8kAPWL1TyuKck2o9/PPo4gkANxrXbSxMQ==
+X-Received: by 2002:a17:90a:5b:: with SMTP id 27mr2784374pjb.188.1598024135637;
+        Fri, 21 Aug 2020 08:35:35 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id u8sm2200720pjy.35.2020.08.21.08.35.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 08:35:35 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, robdclark@chromium.org,
+        Douglas Anderson <dianders@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: display: simple: Add KD116N21-30NV-A010 compatible
+Date:   Fri, 21 Aug 2020 08:35:14 -0700
+Message-Id: <20200821083454.1.I61e6248813d797c9eeebfbb7019c713aa71c4419@changeid>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-In-Reply-To: <20200821111127.3771-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello!
+The KD116N21-30NV-A010 is a pretty standard eDP panel.  Add it to the
+list of compatible strings.
 
-On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-> According to Devicetree Specification v0.2 and later, Section "Generic
-> Names Recommendation", the node name for a pin controller device node
-> should be "pinctrl".
+ .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
+ 1 file changed, 2 insertions(+)
 
-   Ugh, what a lame name! :-(
-   And they say DT should be OS agnostic...
+diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+index 47247ace86ac..f2204f17a9dc 100644
+--- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
++++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
+@@ -161,6 +161,8 @@ properties:
+       - innolux,n156bge-l21
+         # Innolux Corporation 7.0" WSVGA (1024x600) TFT LCD panel
+       - innolux,zj070na-01p
++        # King & Display KD116N21-30NV-A010 eDP TFT LCD panel
++      - kingdisplay,kd116n21-30nv-a010
+         # Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
+       - koe,tx14d24vm1bpa
+         # Kaohsiung Opto-Electronics Inc. 10.1" WUXGA (1920 x 1200) LVDS TFT LCD panel
+-- 
+2.28.0.297.g1956fa8f8d-goog
 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-   I think more DTs have "pin-controler".
-
-[...]
-
-MBR, Sergei
