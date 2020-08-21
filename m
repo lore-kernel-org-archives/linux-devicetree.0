@@ -2,146 +2,116 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B0BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76594C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C58C20724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:45:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="XNOghQuV"
+	by mail.kernel.org (Postfix) with ESMTP id 52797204EC
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgHULo5 (ORCPT
+        id S1728471AbgHULrK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:44:57 -0400
-Received: from www.zeus03.de ([194.117.254.33]:42280 "EHLO mail.zeus03.de"
+        Fri, 21 Aug 2020 07:47:10 -0400
+Received: from mga02.intel.com ([134.134.136.20]:14297 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728298AbgHULoC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:44:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=YtcCCrjutEn/fojfaD2DDf8l3Ezf
-        v6ANNQPCcLUJZv0=; b=XNOghQuVguxNvxcleajQiwkCcHIZLlx3ZL4F9zOEHRvL
-        KnGVZbiB7W2V6bP9wlNL169qwh91gsokcIOZFVCPuPU2C57SCVaimt2HLS2NhgGK
-        76Cd851vTJ8shizvwjWfRW+K9/8gqY4VClb9pFUUGBr6oQ756ktsPNllRMbL6tk=
-Received: (qmail 880608 invoked from network); 21 Aug 2020 13:43:58 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 Aug 2020 13:43:58 +0200
-X-UD-Smtp-Session: l3s3148p1@J5uewGGt8q0gAwDPXweWAG48P/WlTOIM
-Date:   Fri, 21 Aug 2020 13:43:58 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, Alain Volmat <alain.volmat@st.com>
-Subject: Re: [PATCH] i2c: add binding to mark a bus as SMBus
-Message-ID: <20200821114357.GA29628@ninjato>
-References: <20200701214830.3174-1-wsa+renesas@sang-engineering.com>
- <20200715203843.GA776042@bogus>
- <20200724193635.GC1227@ninjato>
- <20200725120700.GA1734@kunai>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Content-Disposition: inline
-In-Reply-To: <20200725120700.GA1734@kunai>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728620AbgHULju (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:39:50 -0400
+IronPort-SDR: /Wfruz/qXJM8WIdoI74mtKMHo3clJGG1ITzH6caVSDCcbu0QjaUTW9VZIMCW8y5dmFXQO470X/
+ lw6GmjkP6DFw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143305575"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="143305575"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 04:39:41 -0700
+IronPort-SDR: s6yK3Yzxk2aSzl8qQCdfQVYrzLre+gZ+9nReAKJkYqYIf1G8pV4fScPQ+8Ej3nKFeguKKzPoqp
+ OS33SLYrzNCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327740411"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 04:39:39 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
+        andriy.shevchenko@intel.com, eswara.kota@linux.intel.com,
+        vadivel.muruganx.ramuthevar@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v7 1/3] phy: intel: Rename phy-intel to phy-intel-lgm
+Date:   Fri, 21 Aug 2020 19:37:45 +0800
+Message-Id: <20200821113747.2912-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+References: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Rename phy-intel-{combo,emmc}.c to phy-intel-lgm-{combo,emmc}.c
+to make drivers/phy/intel directory more generic for future use.
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+---
+ drivers/phy/intel/Kconfig                              | 10 +++++-----
+ drivers/phy/intel/Makefile                             |  4 ++--
+ .../intel/{phy-intel-combo.c => phy-intel-lgm-combo.c} |  0
+ .../intel/{phy-intel-emmc.c => phy-intel-lgm-emmc.c}   |  0
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+ rename drivers/phy/intel/{phy-intel-combo.c => phy-intel-lgm-combo.c} (100%)
+ rename drivers/phy/intel/{phy-intel-emmc.c => phy-intel-lgm-emmc.c} (100%)
 
-On Sat, Jul 25, 2020 at 02:07:00PM +0200, Wolfram Sang wrote:
-> On Fri, Jul 24, 2020 at 09:36:35PM +0200, Wolfram Sang wrote:
-> > Hi Rob,
-> >=20
-> > > > SMBus is largely compatible with I2C but there are some specifics. =
-In
-> > > > case we need them on a bus, we can now use this new binding.
-> > > >=20
-> > > > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/i2c/i2c.txt | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Docume=
-ntation/devicetree/bindings/i2c/i2c.txt
-> > > > index 438ae123107e..d1f8cf3bd236 100644
-> > > > --- a/Documentation/devicetree/bindings/i2c/i2c.txt
-> > > > +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-> > > > @@ -77,6 +77,11 @@ wants to support one of the below features, it s=
-hould adapt these bindings.
-> > > >  	this information to detect a stalled bus more reliably, for examp=
-le.
-> > > >  	Can not be combined with 'multi-master'.
-> > > > =20
-> > > > +- smbus
-> > >=20
-> > > This is a boolean?
-> >=20
-> > Yes.
-> >=20
-> > >=20
-> > > > +	states that additional SMBus restrictions and features apply to t=
-his bus.
-> > > > +	Examples of features are SMBusHostNotify and SMBusAlert. Examples=
- of
-> > >=20
-> > > Do features need to be enumerated separately?
-> >=20
-> > They could be, do you think this is of advantage? For now, we would then
-> > need "host-notify" and "smbus-alert". Maybe later things like "timeout"
-> > could show up.
->=20
-> I also recall now that I thought that "smbus" fits better the
-> "describing hardware" aspect, i.e. "this bus is an SMBus and not I2C".
-> Enumerating features felt more like configuration to me.
+diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
+index 7b47682a4e0e..db8586c3eed8 100644
+--- a/drivers/phy/intel/Kconfig
++++ b/drivers/phy/intel/Kconfig
+@@ -1,9 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+ #
+-# Phy drivers for Intel Lightning Mountain(LGM) platform
++# Phy drivers for Intel platforms
+ #
+-config PHY_INTEL_COMBO
+-	bool "Intel ComboPHY driver"
++config PHY_INTEL_LGM_COMBO
++	bool "Intel Lightning Mountain ComboPHY driver"
+ 	depends on X86 || COMPILE_TEST
+ 	depends on OF && HAS_IOMEM
+ 	select MFD_SYSCON
+@@ -16,8 +16,8 @@ config PHY_INTEL_COMBO
+ 	  chipsets which provides PHYs for various controllers, EMAC,
+ 	  SATA and PCIe.
+ 
+-config PHY_INTEL_EMMC
+-	tristate "Intel EMMC PHY driver"
++config PHY_INTEL_LGM_EMMC
++	tristate "Intel Lightning Mountain EMMC PHY driver"
+ 	depends on X86 || COMPILE_TEST
+ 	select GENERIC_PHY
+ 	help
+diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
+index 233d530dadde..662385d0a366 100644
+--- a/drivers/phy/intel/Makefile
++++ b/drivers/phy/intel/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_PHY_INTEL_COMBO)		+= phy-intel-combo.o
+-obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
++obj-$(CONFIG_PHY_INTEL_LGM_COMBO)	+= phy-intel-lgm-combo.o
++obj-$(CONFIG_PHY_INTEL_LGM_EMMC)	+= phy-intel-lgm-emmc.o
+diff --git a/drivers/phy/intel/phy-intel-combo.c b/drivers/phy/intel/phy-intel-lgm-combo.c
+similarity index 100%
+rename from drivers/phy/intel/phy-intel-combo.c
+rename to drivers/phy/intel/phy-intel-lgm-combo.c
+diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-lgm-emmc.c
+similarity index 100%
+rename from drivers/phy/intel/phy-intel-emmc.c
+rename to drivers/phy/intel/phy-intel-lgm-emmc.c
+-- 
+2.17.1
 
-Rob, if you have some time, I'd really appreciate an ack here. I think
-it is a proper binding but I'd like to have it stress-tested with your
-experience :)
-
->=20
-> >=20
-> > >=20
-> > > > +	restrictions are more reserved addresses and timeout definitions.
-> > > > +
-> >=20
-> > All the best,
-> >=20
-> >    Wolfram
-> >=20
->=20
->=20
-
-
-
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8/s3oACgkQFA3kzBSg
-Kba9vhAAiwO/kHpYgRW5zz/G6w85eq1WPezyG1bTYXgMPTOUbfvOp21cF02ZKIs9
-DbcYX/J2wVMwb23Qy5bpQhUzER9qeT/L9fJDySvbblQdp+Rf0ffCaYS4CaIifAbN
-sfp9LimlM7osvktvehOhjvNhwVTyBJbcBWOZztQPDa//ukMz6kJHflvOeuQS+J8m
-6j1jM06El7wpQF8aMavViWh0BcPhlPhrzXFKn/9K9cfFdVVYfLfGN0YBRsoDZfkf
-etxyAHir/twItbPf0R8WFRvZmgpDuuaJ8UtaokkUXgi1ixJRbjvKc4mnxWmfexIZ
-a5sCbB7aA62kGr2OqxizrEOOUJ7hiEcaIcxkLBJYJxAnNgGM0ZJRTVDWq0NLKAuz
-cpfWSXnqUz7gn9wjiesC/K3uDaRp1osJf0t99tnxEllKcKJYaktlolmHnAJFH9e4
-JIwqfnCdNH2zFYsZyJ1dAtDvB4xv7Q3bBprIHV/eWX1naMertqEIXIJZm+hDnBuP
-337IwnUAV5WfZNBm/zs4hWxupq2VlISw+4+t7lilFdyCJGh5UG9EEgKZAxGv+69g
-dir4VfEei9Te3CtI3srfg8qMhTlTPNrrzP9u5If+XmvxuqgqlEWYtNo5iX+41HcH
-/ZP0zZUMXcUqzBMvqbOC2ZY1bSleTOO5dQVf3w2TcUVD49On/xI=
-=FS44
------END PGP SIGNATURE-----
-
---/9DWx/yDrRhgMJTb--
