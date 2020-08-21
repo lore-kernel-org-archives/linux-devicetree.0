@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C98CC433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A92C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 568E520748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2306620738
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Bt6juGPb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i6Rv+XXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgHUKhO (ORCPT
+        id S1728749AbgHUKh0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36358 "EHLO
+        Fri, 21 Aug 2020 06:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbgHUKhA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 06:37:00 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C99C061385
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:37:00 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ep8so644860pjb.3
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:37:00 -0700 (PDT)
+        with ESMTP id S1728719AbgHUKhK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 06:37:10 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A8B1C061386
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:37:10 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m8so873885pfh.3
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HTg8ZbMrnEBX6XZbAtw/YXsu/7D2NGL6yCO27qDzwAM=;
-        b=Bt6juGPbmaC1G1f3JZE/oHm9QQwPgDr5UQ3A7XNqPAM2EqDMqIbJMMvaI9zGbtYzSb
-         FoDLRkep+6Ob8+bLttjezio5g1YDbu5a1XhpuBYQHRjlyT0md+Rpi9mrpHWs8KjxgFfc
-         /NJMwiegqrTm2yh5Xue70gONScaWg/TFqN59o=
+        bh=ZBKM3WA3cxwbZdd9vidSjpRU6jIZw5t/CObNuc//DI8=;
+        b=i6Rv+XXnjNjy27SQXI/HnMTwHPPjsN5K9vvKj/YydK3hJUlen91zcGd1BJAGH71wKl
+         9ETzlShNPCuGpWfHgkbCuo3ip124aauRX0kUD+Mmy94bYAQQ/nGc2jW2U41kgwzLU/4p
+         t94XMN4WljNjgGAeyPTqBVlHygh9JVAtZaOGc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HTg8ZbMrnEBX6XZbAtw/YXsu/7D2NGL6yCO27qDzwAM=;
-        b=tDG/GbX1YztwmAU++SuYm9X7ssz0iBKWSo4ztckVqcWuxZAkXFyaVDZTF1xep1iaJp
-         siL6See/Z3RUXIzxMZGCszYxCKK1guCfu/+mlhOTVfZB9LHWy7xzvLv6XcsCGwm7ngAE
-         8a0pEcomblvea0O16Tfuj2OEL4t7RgGUbM8f+XVjd3edog8eBz2meVNMCZYT0jPxKVea
-         guJgiqIuCqoKVgqBESgKgm9cY+i7jVZFIkedn20iIhmEM1hZiibfjL2qT5MVbrgcSpGt
-         zXK206n/GtGYXLvSMLGiSeRz3hLMltXBJgBUpwaXeDUP7ip/KwKakHL/+qtW+13rLyWX
-         TWUQ==
-X-Gm-Message-State: AOAM531MQsgCkTRWzrX8Yris284MseMVtS2vyEVmTmrv630nLgxkMfIC
-        ETJJQmEG+i/qziUYNX7telIjFQ==
-X-Google-Smtp-Source: ABdhPJzN6nDyZup0sLKds7ZZBQYp8QWOg0gvyO+9HOXmutY4wIibEnN9fBRxqOPj3PZtKkGjIYQvxw==
-X-Received: by 2002:a17:902:ead2:: with SMTP id p18mr1917778pld.259.1598006219865;
-        Fri, 21 Aug 2020 03:36:59 -0700 (PDT)
+        bh=ZBKM3WA3cxwbZdd9vidSjpRU6jIZw5t/CObNuc//DI8=;
+        b=c/h0B2A8c9zkYG/N4NvqdPL1pU0jmu7asVDAtp8dggT+yCL6CP1PS4e5ZVGv7LQPok
+         DzizeO6IQC8QoiM/DXpulic/vfEYwFdzKah9s3K9nVQ5s/h5JImseobr9nR7JIMfn7n7
+         x++nT0dwEhDwRffNqxqtud9SRjBAb/oNBPOEKswvobp1S6ACbq3qqshks1zmdci/BvyI
+         A93LZXIOLcyPW/7MQVunCaA9+PTqFNVZaUwLfIKCIAxYRnYOgQ1cT55/j5asMc/XHny1
+         6Ey8G/B+DExV+2g3DQjB5+FkXRKIKjaatqvgX5B9eUUt5PKKEL74TCP2/oS7tF7wKsdP
+         eEcw==
+X-Gm-Message-State: AOAM533piuG0Pj9aZ04x9Fp0yAfI22xadza8mvOKfw72G09QKCGiQc3S
+        fpHVuaXWQw0J7+lXVld3EPFlnA==
+X-Google-Smtp-Source: ABdhPJy2dZG1ArmjW2HfNTswI284X9+chI109neRtlOF7ZLdH/tGkTT3NlNsQdVnT+PR4Ees3+cN7Q==
+X-Received: by 2002:aa7:8f3a:: with SMTP id y26mr1981877pfr.54.1598006229685;
+        Fri, 21 Aug 2020 03:37:09 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.36.56
+        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.37.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 03:36:59 -0700 (PDT)
+        Fri, 21 Aug 2020 03:37:08 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -64,11 +64,10 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Matthias Brugger <matthias.bgg@gmail.com>
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 08/17] dt-bindings: media: document mediatek,mt8183-vcodec-enc
-Date:   Fri, 21 Aug 2020 19:35:59 +0900
-Message-Id: <20200821103608.2310097-9-acourbot@chromium.org>
+        Alexandre Courbot <acourbot@chromium.org>
+Subject: [PATCH v4 11/17] Revert "media: mtk-vcodec: Remove extra area allocation in an input buffer on encoding"
+Date:   Fri, 21 Aug 2020 19:36:02 +0900
+Message-Id: <20200821103608.2310097-12-acourbot@chromium.org>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 In-Reply-To: <20200821103608.2310097-1-acourbot@chromium.org>
 References: <20200821103608.2310097-1-acourbot@chromium.org>
@@ -79,30 +78,49 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-MT8183's encoder is similar to MT8173's.
+This reverts commit 81735ecb62f882853a37a8c157407ec4aed44fd0.
+
+The hardware needs data to follow the previous alignment, so this extra
+space was not superfluous after all. Besides, this also made
+v4l2-compliance's G_FMT and S_FMT tests regress.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-index 99214faede90..8217424fd4bd 100644
---- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-+++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
-@@ -4,8 +4,9 @@ Mediatek Video Codec is the video codec hw present in Mediatek SoCs which
- supports high resolution encoding and decoding functionalities.
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+index 05743a745a11..f2ba19c32400 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
+@@ -299,12 +299,14 @@ static int vidioc_try_fmt(struct v4l2_format *f,
  
- Required properties:
--- compatible : "mediatek,mt8173-vcodec-enc" for encoder
--  "mediatek,mt8173-vcodec-dec" for decoder.
-+- compatible : "mediatek,mt8173-vcodec-enc" for MT8173 encoder
-+  "mediatek,mt8183-vcodec-enc" for MT8183 encoder.
-+  "mediatek,mt8173-vcodec-dec" for MT8173 decoder.
- - reg : Physical base address of the video codec registers and length of
-   memory mapped region.
- - interrupts : interrupt number to the cpu.
+ 		pix_fmt_mp->num_planes = fmt->num_planes;
+ 		pix_fmt_mp->plane_fmt[0].sizeimage =
+-			pix_fmt_mp->width * pix_fmt_mp->height;
++				pix_fmt_mp->width * pix_fmt_mp->height +
++				((ALIGN(pix_fmt_mp->width, 16) * 2) * 16);
+ 		pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width;
+ 
+ 		if (pix_fmt_mp->num_planes == 2) {
+ 			pix_fmt_mp->plane_fmt[1].sizeimage =
+-				(pix_fmt_mp->width * pix_fmt_mp->height) / 2;
++				(pix_fmt_mp->width * pix_fmt_mp->height) / 2 +
++				(ALIGN(pix_fmt_mp->width, 16) * 16);
+ 			pix_fmt_mp->plane_fmt[2].sizeimage = 0;
+ 			pix_fmt_mp->plane_fmt[1].bytesperline =
+ 							pix_fmt_mp->width;
+@@ -312,7 +314,8 @@ static int vidioc_try_fmt(struct v4l2_format *f,
+ 		} else if (pix_fmt_mp->num_planes == 3) {
+ 			pix_fmt_mp->plane_fmt[1].sizeimage =
+ 			pix_fmt_mp->plane_fmt[2].sizeimage =
+-				(pix_fmt_mp->width * pix_fmt_mp->height) / 4;
++				(pix_fmt_mp->width * pix_fmt_mp->height) / 4 +
++				((ALIGN(pix_fmt_mp->width, 16) / 2) * 16);
+ 			pix_fmt_mp->plane_fmt[1].bytesperline =
+ 				pix_fmt_mp->plane_fmt[2].bytesperline =
+ 				pix_fmt_mp->width / 2;
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
