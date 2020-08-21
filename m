@@ -2,27 +2,28 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E6F7C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ABBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7435120855
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F159020578
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgHUPAY (ORCPT
+        id S1727924AbgHUPA2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:00:24 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:41389 "EHLO
+        Fri, 21 Aug 2020 11:00:28 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:40807 "EHLO
         relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725828AbgHUPAY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 11:00:24 -0400
+        with ESMTP id S1727887AbgHUPA1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 11:00:27 -0400
 Received: from lhopital-XPS-13-9360.home (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
         (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPA id DDDD5100006;
-        Fri, 21 Aug 2020 15:00:17 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPA id 0D0D010000F;
+        Fri, 21 Aug 2020 15:00:23 +0000 (UTC)
 From:   =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
         <kevin.lhopital@bootlin.com>
 To:     linux-media@vger.kernel.org
@@ -33,10 +34,12 @@ Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com,
         =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
         <kevin.lhopital@bootlin.com>
-Subject: [PATCH 0/7] Support of MIPI CSI-2 for A83T and OV8865 camera
-Date:   Fri, 21 Aug 2020 16:59:28 +0200
-Message-Id: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+Subject: [PATCH 1/7] media: sun6i-csi: Fix the bpp for 10-bit bayer formats
+Date:   Fri, 21 Aug 2020 16:59:29 +0200
+Message-Id: <20200821145935.20346-2-kevin.lhopital@bootlin.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -45,43 +48,28 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+10-bit bayer formats are aligned to 16 bits in memory, so this is what
+needs to be used as bpp for calculating the size of the buffers to
+allocate.
 
-Kévin L'hôpital (7):
-  media: sun6i-csi: Fix the bpp for 10-bit bayer formats
-  dt-bindings: media: i2c: Add documentation for ov8865
-  media: i2c: Add support for the OV8865 image sensor
-  media: sunxi: sun6i-csi: Move the sun6i_csi_dev structure to the
-    common header
-  media: sunxi: sun6i-csi: Add support of MIPI CSI-2 for A83T
-  ARM: dts: sun8i: a83t: Add support for the MIPI CSI-2 in CSI node
-  [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3: Enable OV8865
-    camera
+Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
+---
+ drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../devicetree/bindings/media/i2c/ov8865.txt  |   51 +
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  |   99 +
- arch/arm/boot/dts/sun8i-a83t.dtsi             |   11 +-
- drivers/media/i2c/Kconfig                     |   12 +
- drivers/media/i2c/Makefile                    |    1 +
- drivers/media/i2c/ov8865.c                    | 2540 +++++++++++++++++
- .../media/platform/sunxi/sun6i-csi/Makefile   |    2 +-
- .../platform/sunxi/sun6i-csi/sun6i_csi.c      |   94 +-
- .../platform/sunxi/sun6i-csi/sun6i_csi.h      |   14 +-
- .../sunxi/sun6i-csi/sun8i_a83t_dphy.c         |   20 +
- .../sunxi/sun6i-csi/sun8i_a83t_dphy.h         |   16 +
- .../sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h     |   15 +
- .../sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c    |  249 ++
- .../sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h    |   16 +
- .../sun6i-csi/sun8i_a83t_mipi_csi2_reg.h      |   42 +
- 15 files changed, 3148 insertions(+), 34 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8865.txt
- create mode 100644 drivers/media/i2c/ov8865.c
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.c
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.h
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h
- create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2_reg.h
-
+diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+index c626821aaedb..8b83d15de0d0 100644
+--- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
++++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+@@ -100,7 +100,7 @@ static inline int sun6i_csi_get_bpp(unsigned int pixformat)
+ 	case V4L2_PIX_FMT_SGBRG10:
+ 	case V4L2_PIX_FMT_SGRBG10:
+ 	case V4L2_PIX_FMT_SRGGB10:
+-		return 10;
++		return 16;
+ 	case V4L2_PIX_FMT_SBGGR12:
+ 	case V4L2_PIX_FMT_SGBRG12:
+ 	case V4L2_PIX_FMT_SGRBG12:
 -- 
 2.17.1
 
