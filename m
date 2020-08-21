@@ -2,104 +2,149 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE90FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB8EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D1C20724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 19:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18248207DA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="kJrVOdIX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4kuDA23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgHUTym (ORCPT
+        id S1726599AbgHUVVa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:54:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
+        Fri, 21 Aug 2020 17:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgHUTyf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 15:54:35 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01CADC061573
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 12:54:35 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id r25so1490926lfe.5
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 12:54:34 -0700 (PDT)
+        with ESMTP id S1726457AbgHUVV3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 17:21:29 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07381C061573;
+        Fri, 21 Aug 2020 14:21:29 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id f24so394751edw.10;
+        Fri, 21 Aug 2020 14:21:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KJANaxWQksktmcdpt1vpEvTKGf7eyf5hPRoBA+TJZ88=;
-        b=kJrVOdIXLOjbRM1ug3UwwnDKa3IM7/QSTo42xxKuh8+jtUB19alU08stSTGQR5gup3
-         ENyiHOCJo3yp515bEK4VfhDUBSG1L7C3JNxbiaWeJY0CdJBGAA3d7nsvW7Cq03BA5/is
-         qBZ5fyS6KRsAoeskWWRFyCeOhxo/qsmDjzQGkD54exKLZSvg8iZYxpRpFNbo/lB771F9
-         FGB+4wQvRWUnfGBQ9+ajB/YBTEt12oflRPTl8rf5SdXsRcRgompRq7As508+P3Vpll1N
-         BysX0xoshJnX468Ewgl55HUkJuOYt97kkZ5OBvbm4tZo2LgX54L3/XUHT2xBUTnt6zc5
-         3LOQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FsSHEkxuTyYKBr+RaPBvNnmq19cuPmIHZizROaUDX+g=;
+        b=K4kuDA232grAmwo2sAq8iTB5jsLokPktZ/nMcqEO/7PrGBBspH1i2W9rLOzU0JYL7i
+         D14lVcQtQ0SoUWVJ8zQh6K1fqBT17oJ6wSz5mjGOLL/rdJSrvhiyowchckMg/lYp8f/i
+         6udNeBQph1xBiTy6QdXH/4RWosEw3BojmDcxUuz+aq0L+fWnawcHorpCiZ9/+pSnRO5O
+         xLEkO35D1ZO97U1rHChvdY51/H/U7MG9V8EvW3I1S8Ixtk2USfsBDhHQnn0EcIsN7xGc
+         xxAMpMbuOTxMw6H6CMghsZfWBzl/C9//KyJ+zfdS9L9VmtdGtTJCEwo92zha/1O2i6WM
+         Chog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KJANaxWQksktmcdpt1vpEvTKGf7eyf5hPRoBA+TJZ88=;
-        b=MK/A1v+b17pR0jkA4ilLoIJFP3DIgoM22yhLubffvOHbzj9QdOWg5gIn/alk/DQZjl
-         xSX9iS2cvBZD09MzicyrjLv3zwvfGjtCkD8eg9/+3GwjPB/PM9NfNTLqSNY9Q3g0rTuM
-         uyxlsQQnNMyHaRonITuf9MV0M8bbprBE7OtSZ7hosi37Bishl3OL9LWVPzMSPf3f/wAZ
-         h9w3xODwbdFg+Jy6j1eg8s5VgeXSe05/qWIoIW/rWZjjh4BXXZZGiQ3R5P3L8zYoArPW
-         OUDsjIGHcxn36P6UelVIdYCnhElzV11lzxXfFTm/GRYL5k1FViizs3T7hNE0TlbCPtF0
-         9P0g==
-X-Gm-Message-State: AOAM533jZ3rqIFWVtPc76Iz8qcYeX2zWaSfgUACP0imn5ay+t4vRUU1+
-        NE+si2IO0yL5wYiM8IN8VBkcug==
-X-Google-Smtp-Source: ABdhPJx61phnZE+0v199dWLX3X1fWs9S+cuOGQX5EkGw6DlUw0N2Dl3p+Q1wEGjH0LM9pfkmik+PQA==
-X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr2032156lfb.101.1598039673364;
-        Fri, 21 Aug 2020 12:54:33 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id e14sm566846ljl.96.2020.08.21.12.54.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 12:54:32 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 11:46:03 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     Daniel Palmer <daniel@0x0f.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     soc@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux@armlinux.org.uk, w@1wt.eu
-Subject: Re: [RFC PATCH 2/3] ARM: mstar: msc313-intc interrupt controller
- driver
-Message-ID: <20200821184603.GA3407@lx2k>
-References: <20200730130044.2037509-1-daniel@0x0f.com>
- <20200730130044.2037509-3-daniel@0x0f.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FsSHEkxuTyYKBr+RaPBvNnmq19cuPmIHZizROaUDX+g=;
+        b=EiGNpUPVyEkgK+dcVsPyJeY6QMaJH1kuEz5flbUBUPlwcWq+4gpvpbs66c5PqRdxY9
+         mPjdObTrtpXRyEyP4wiRuux1Lc+xErQg+icKpFfracmA0YbL7HtJYbkkbbX2mk9qV1wh
+         HE/Vl7/Xl2SuWp9imIWGwIjfkbnZoM29rbNe0SP04bBVgarafZDhx+tY82o3PX6Q7P0c
+         Xoa3FGU8piuu/vGxAvQl+RzctxXMNE9WU2OT+ByS4IhbEhIBc/bGaIxDQODN5yE4PtOM
+         Ngpub/lKmzXQmd1fJ32DoT87Ob01c93+hXL3xlPU+uVIpVUn0ii51e5ctmfRzAgk1KSg
+         tz9g==
+X-Gm-Message-State: AOAM531ApUUFqA/OQ6BeO6Oka81E2sC4r32IA3Gp4ObcE8pOXX/0UR6B
+        tno+xgAoYtbvt9eSxnrqF9Y95GJkDMKyjQ==
+X-Google-Smtp-Source: ABdhPJxdpixX0Vn75qgMUReBJYW4RhCAvJYy6dVGGHvbKdvo8mmbtSPxxIL3xj+ifrEeNisYTa8TrQ==
+X-Received: by 2002:a05:6402:22c8:: with SMTP id dm8mr5001024edb.41.1598044887418;
+        Fri, 21 Aug 2020 14:21:27 -0700 (PDT)
+Received: from [192.168.1.106] (abab36.neoplus.adsl.tpnet.pl. [83.6.165.36])
+        by smtp.gmail.com with ESMTPSA id p12sm1741093edt.27.2020.08.21.14.21.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 14:21:27 -0700 (PDT)
+Subject: Re: [PATCH v5] arm64: dts: qcom: Add support for Xiaomi Poco F1
+ (Beryllium)
+To:     Amit Pundir <amit.pundir@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <1598029961-2474-1-git-send-email-amit.pundir@linaro.org>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Message-ID: <23c4191e-4d64-80d8-e688-27d004729ea1@gmail.com>
+Date:   Fri, 21 Aug 2020 23:21:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200730130044.2037509-3-daniel@0x0f.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1598029961-2474-1-git-send-email-amit.pundir@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi
 
-On Thu, Jul 30, 2020 at 10:00:43PM +0900, Daniel Palmer wrote:
-> Add a driver for the two peripheral interrupt controllers
-> in MStar MSC313 and other MStar/Sigmastar Armv7 SoCs.
-> 
-> Supports both the "IRQ" and "FIQ" controllers that
-> forward interrupts from the various IP blocks inside the
-> SoC to the ARM GIC.
-> 
-> They are basically the same thing except for one difference:
-> The FIQ controller needs to clear the interrupt and the IRQ
-> controller doesn't.
-
-Sorry for the late response, going through patches we might have missed or that
-need replies now...
-
-This needs to go to the irqchip maintainers for review. If you get their
-acked/reviewed-by, we can merge it through our tree if that is easier. But they
-need to sign off on it. Feel free to cc soc@kernel.org on them though, and we
-always merge the dts changes through our tree.
+First of all, sorry if anybody sees this twice. I've been messing with Thunderbird lately.
 
 
--Olof
 
+> dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
+> dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
+
+[B]eryllium should come before [C]heza, no? Also, aren't the non-development boards supposed to include the vendor name? i.e. sdm845-(xiaomi/poco)-beryllium.dtb
+
+
+> +	model = "Xiaomi Technologies Inc. Beryllium";
+
+At least with Xperias, we settled on setting the model property to the "pretty" name, in this case Poco F1
+
+
+> +	pm8998-rpmh-regulators {
+> +		compatible = "qcom,pm8998-rpmh-regulators";
+> +		qcom,pmic-id = "a";
+> +
+> +		vreg_l1a_0p875: ldo1 {
+
+I think you forgot to include (regulatorname)-supply properties which should cause havoc with all things regulators..
+
+
+> +		vreg_l1a_0p875: ldo1 {
+> +			regulator-min-microvolt = <880000>;
+> +			regulator-max-microvolt = <880000>;
+0p88? Unless it's a PMIC limitation.. Please also confirm names for the rest of the regulators.
+
+Also why are there so few regulators? And none from pmi8998? Are the rest WIP/coming in a followup commit, or are they disabled on this board? AFAICS you only include SoC/PMIC DTs which would suggest they should be there.
+
+
+> +/* Reserved memory changes from downstream */
+
+Wouldn't it look better if you included that in the main {} node instead of reopening it in the middle of the file? I mean, it works, but let's hear what others have to say.
+
+
+> +			 * It seems that mmc_test reports errors if drive
+> +			 * strength is not 16 on clk, cmd, and data pins.
+
+You say that, but then you set "drive-strength = <10>;" for cmd and data, please confirm it's intentional.
+
+
+> +&ufs_mem_hc {
+
+UFS comes before USB alphabetically.
+
+
+> +&ufs_mem_phy
+
+Ditto
+
+
+> +&qup_uart6_default
+
+Ditto
+
+
+Konrad
