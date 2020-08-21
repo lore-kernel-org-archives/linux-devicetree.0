@@ -2,113 +2,95 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524D9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF76C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC2C20724
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:28:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YJdpR1xV"
+	by mail.kernel.org (Postfix) with ESMTP id C525420732
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 16:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598028164;
+	bh=pRIfmNaiNOw1L35y4l06tL/wHSPMxVTsjUkGjVve9oA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=wp6RpB/ALgIMCc2cezSu80J/mCFIrzdFQaz0n0n4DDyRVNg648hy0cihI3h9P3+KF
+	 XdLDxOrciQreUUbNMFJ6a72x6VerIadLwUjpIyM1fSRcBYfJyQBwYX2RDOwDCvnxtd
+	 1jEqP+0qaqWfVtZ+h3K6joQ1blGtXNuad2yNhckc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgHUQ1p (ORCPT
+        id S1726956AbgHUQmh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbgHUQ0d (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 12:26:33 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470D7C061574
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 09:26:33 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d22so1315637pfn.5
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 09:26:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=B9AWbTbWPp7aT8cVV5y9qjtG9r2gj7nhh9YWaOKKiuk=;
-        b=YJdpR1xVWyhRcbML3ChNs3j4d3/YmKtUkn0siTwj4xe3D70EJaZ8TS6WroZCqXa4CC
-         AnyHG9WkVzh4jPWrC0JgsToWMta4CkhAEcL3Bxg/j6Bz7oLuQ2JbQ9BBisReA6HOMt+Y
-         nmkFUIg82wwwm9Z8YdSLGBXdSC+aEbG/U29jQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B9AWbTbWPp7aT8cVV5y9qjtG9r2gj7nhh9YWaOKKiuk=;
-        b=n0Mr9EdjmWP10xqozZ44hqnLrIRsB9Y7eN/BKjf6zQiTGmArHqdvzeIGuk9dhAk/rg
-         ub/IlbWIvFVd4LVrOxfXGO1gelwcZWXHwmWf94A5Lt5SG3NVI/+HGvVR65ejGkJnKtwe
-         LBIB2SrzMCl3UkY7KxEMMq2QhvXEMsRyJZlspz4iM4jxmsLydLuhVKcvosl0SaKJUz3S
-         +mVZtMvp+y8nzJ5uRGWUHMoze10HE/qlawpr9t+WyOPu1/zXnbRCunWOkae2v/+kziLr
-         Y/MHWIaLAY3g1H/MK9hsavQzfRM2ykfgTBF34lkyAzHYr/Yjd6zo5dKSqH1nGnDmc247
-         wblQ==
-X-Gm-Message-State: AOAM530dc6yQbSir4Ucrh0wuhB0Nq6nLH7BdACd0NC7Q61FewkyWDyHf
-        1VeVDacogLFYsdJLz+j7vZ52AA==
-X-Google-Smtp-Source: ABdhPJxA02Wr8aE7e7k0ORPqzYjpHeciFt5VagaVUucvu925wOq50WmJHhy05pdcud86/UKNZ+gUOQ==
-X-Received: by 2002:a05:6a00:78e:: with SMTP id g14mr3052283pfu.171.1598027192818;
-        Fri, 21 Aug 2020 09:26:32 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id m26sm2978275pfe.184.2020.08.21.09.26.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 09:26:31 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 09:26:30 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     satya priya <skakit@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Fri, 21 Aug 2020 12:42:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728139AbgHUQkU (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:40:20 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EF0C207BB;
+        Fri, 21 Aug 2020 16:40:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598028019;
+        bh=pRIfmNaiNOw1L35y4l06tL/wHSPMxVTsjUkGjVve9oA=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=qTTDKWveXPeCEbKj/21q8Q3uNVUNe1ETGOUcRV3IABy7DtksxhPMSWk2CCZPezbFa
+         PvTZHgcJxYEOfb4IJbTUJT/c5AaQVUpPwW+aueWZHQngGv2B3Lpa4its2rHT8VHFXU
+         0UAwBVCBnScmbmCIAxsvWbHiqjVTihrgLydy/GJg=
+Date:   Fri, 21 Aug 2020 17:39:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Timur Tabi <timur@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V3 1/3] arm64: dts: sc7180: Add wakeup support over UART
- RX
-Message-ID: <20200821162630.GA486007@google.com>
-References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
- <1597931467-24268-2-git-send-email-skakit@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1597931467-24268-2-git-send-email-skakit@codeaurora.org>
+        Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
+References: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
+Subject: Re: [PATCH 1/2] ASoC: bindings: fsl-asoc-card: add compatible string for TLV320AIC32x4 codec
+Message-Id: <159802798182.25503.6288597388971978944.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 07:21:05PM +0530, satya priya wrote:
-> Add the necessary pinctrl and interrupts to make UART
-> wakeup capable.
-> 
-> Signed-off-by: satya priya <skakit@codeaurora.org>
-> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
-> ---
-> Changes in V2:
->  - As per Matthias's comment added wakeup support for all the UARTs
->    of SC7180.
-> 
-> Changes in V3:
->  - No change.
-> 
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 98 ++++++++++++++++++++++++++++++------
->  1 file changed, 84 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index d46b383..855b13e 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->
-> ...
->
-> +			qup_uart0_sleep: qup-uart0-sleep {
-> +				pinmux {
-> +					pins = "gpio34", "gpio35",
-> +					       "gpio36", "gpio37";
-> +					function = "gpio";
+On Fri, 21 Aug 2020 09:11:52 +0200, Matthias Schiffer wrote:
+> The TLV320AIC32x4 is commonly used on TQ-Systems starterkit mainboards
+> for i.MX-based SoMs (i.MX6Q/DL, i.MX6UL, i.MX7) and LS1021A.
 
-What is the reason that the GPIO function needs to be selected in sleep mode
-to support wakeup?
+Applied to
 
-This should be explained in the commit message unless it is evident.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/2] ASoC: bindings: fsl-asoc-card: add compatible string for TLV320AIC32x4 codec
+      commit: 6d3029e92f320531805e6aed33c74185e5e3f8fa
+[2/2] ASoC: fsl-asoc-card: add support for TLV320AIC32x4 codec
+      commit: b50747558855ff94523dbb7f08a8c9fadfdd9110
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
