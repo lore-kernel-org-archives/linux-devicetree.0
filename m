@@ -2,175 +2,108 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7DAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C535CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5B520738
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:14:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="qCziGrqP"
+	by mail.kernel.org (Postfix) with ESMTP id 9B1D720738
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598030174;
+	bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BLuDG+KW9lPZEDeUG4OlRGcGrD0iBlBwsad2oI2U2lRttBWU7Xyk75o8f4jsAVNAO
+	 fDBVHzpKD4cDaeKg9tcKSrr8UWtZ6C7IQHHPxECdUoWFzVn4mP9RQV4nPsGeWzUpeO
+	 0+BDH3r+R38+u5++HQS+BI+nXIRUba+zLkX8p8fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgHUROu (ORCPT
+        id S1728976AbgHURQM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:14:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgHUROo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 13:14:44 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1A6C061574
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 10:14:44 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id r13so2038134iln.0
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 10:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RTvsFOhGC05ImvCGxAXHe80DLl0Vnoh8uhjw9uG61SY=;
-        b=qCziGrqPDSVtOLmbK1hFmaPBOq+huaVij1yQ263tMaWZonY5TWfaBxMerhZMu5VEP3
-         RoPEPwzz/xcjuV+sZCG1Saoia1u3YKqx63vETf1XPu5IrA200TfHKvEGxaOTNHo5W+mG
-         tCpVqh73Ai1QJJiviJSfv/he9dZ0cRwKhv0cdp7vo+LbX6FHoujL6bkQB7Qzicv6p2hE
-         x4koMTN4PnrpDrX8npHVGmmmPy8pj+MUkr0jW05+KtnOLdeBNgPBu3vwKyD3t1KNEL7u
-         BWwPpeGGTD5KgVYO5yUReKtkMR1+S+ZD4oeEDFdPiKx6JydchJQlt24N3BzYvr5uqc7g
-         MsXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RTvsFOhGC05ImvCGxAXHe80DLl0Vnoh8uhjw9uG61SY=;
-        b=V61maIqeOIe7KjGEe4MTDTDm6r2J9fx5gNsBZ5uEevfdoEWSpGLoPUTyE+nkkVT5Ie
-         So9kKf5C8Bz0brRpBMySkg30sz5JChlTkyAPtYmHlNtw64J3jJ4/NENd0wZlWW4wQNIH
-         1tSMHJXxXxL166sPssoRN1KkmqxqpbgfECt+YayVgs6hkZEHbNPp/rcnZo5MSYd24JZH
-         1qafUJDucA1wIaOw7Ls4FGHtspHWFQMa56jXf7ZivqiGeti6tmmV2cvkdh6epDKV7nn/
-         ChvrDAX9oeVjSAiuaw9UbyrTwNlJwAwMXjWS9V2l0y1Rcltr9zqmqJWJy5xLuX1dATjv
-         Bm5w==
-X-Gm-Message-State: AOAM5329ZOcp9QzH9moWn+jgwHbVovRvIwlef3sysoTIcqBQEekbHYxF
-        f+rgH5MxdqTnXer55JDF/h5wUayyJB9U5QBP4kErUg==
-X-Google-Smtp-Source: ABdhPJzBtpIobytboUBjp0jMvWUO7qPOEborYgyUfFC+VcbkdjoC05hgYoAhDbvXVVliplquim8DuARZHvyU0DBp/us=
-X-Received: by 2002:a92:5209:: with SMTP id g9mr3383963ilb.72.1598030083248;
- Fri, 21 Aug 2020 10:14:43 -0700 (PDT)
+        Fri, 21 Aug 2020 13:16:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728090AbgHUQQe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:34 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 722E222BEB;
+        Fri, 21 Aug 2020 16:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026594;
+        bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=T0AolvIssbvG74Ggc0PO63MYwlCtD2QjBmJTrIGPgwz7DAwvKUCs7QCW+kaUroLPB
+         zJr/klGu6px2mldQwHY4G2dmmXb/zBlNekscWFH8aCprUVw5Q0br6EKVW+4F0AXmCR
+         py2+QWbXahfBV7K1CqI6alU9/621IyOS5WaCj8oc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 38/61] ARM: dts: ls1021a: output PPS signal on FIPER2
+Date:   Fri, 21 Aug 2020 12:15:22 -0400
+Message-Id: <20200821161545.347622-38-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
+References: <20200821161545.347622-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200819221750.2055932-1-robh@kernel.org> <20200821011237.GA4527@lx2k>
- <CAL_JsqLfzDMJXDdqtVBYWrvuB8kBDHECWmNkS5EJStiwSFtp-g@mail.gmail.com>
-In-Reply-To: <CAL_JsqLfzDMJXDdqtVBYWrvuB8kBDHECWmNkS5EJStiwSFtp-g@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 21 Aug 2020 10:14:31 -0700
-Message-ID: <CAOesGMhFGTZddCdusgfcUjfTP847am+F8jTAWrqYXjq1PLXxag@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: Reformat PCI ranges/dma-ranges entries
-To:     Rob Herring <robh@kernel.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     SoC Team <soc@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 9:14 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Aug 20, 2020 at 8:53 PM Olof Johansson <olof@lixom.net> wrote:
-> >
-> > On Wed, Aug 19, 2020 at 04:17:50PM -0600, Rob Herring wrote:
-> > > While bracketing doesn't matter for a DTB, the DT schema checks rely =
-on
-> > > bracketing around each distinct entry. Reformat ranges and dma-ranges
-> > > entries to fix warnings such as:
-> > >
-> > > arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml: pcie@=
-f8000000: ranges: [[2197815296, 0, 4194304000, 0, 4194304000, 0, 31457280, =
-2164260864, 0, 4225761280, 0, 4225761280, 0, 1048576]] is not valid under a=
-ny of the given schemas (Possible causes of the failure):
-> > >         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yam=
-l: pcie@f8000000: ranges: True was expected
-> > >         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yam=
-l: pcie@f8000000: ranges:0: [2197815296, 0, 4194304000, 0, 4194304000, 0, 3=
-1457280, 2164260864, 0, 4225761280, 0, 4225761280, 0, 1048576] is too long
-> > >         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yam=
-l: pcie@f8000000: ranges:0:0: 2197815296 is not one of [16777216, 33554432,=
- 50331648, 1107296256, 1124073472]
-> >
-> > Seems like a bug in your tool? Why would we bother with this churn?
->
-> It's a feature. :)
+From: Yangbo Lu <yangbo.lu@nxp.com>
 
-The feature is better linting of ranges, the new lack of being able to
-do that for the way we've always been allowed to write ranges is a
-bug.
+[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
 
-> In this case, with the entries bracketed, we can check the PCI top
-> address cell contents in the common PCI schema and check how many
-> ranges entries in the specific bridge schemas if they have some
-> constraints. The use of bracketing is useful to defining the number of
-> entries not just for ranges, but everywhere. A device binding defines
-> how many register regions or interrupts for example. It makes sense to
-> delineate entries in some way. While yes, we have #.*-cells, there's
-> not really any way to handle that in json-schema. And let's face it,
-> #.*-cells is an odd construct.
->
-> Currently, the dtc dts->yaml output maintains all this formatting. I
-> suppose we could change that such that we parse #.*-cells and define
-> the boundaries based on them. But then dtc has to know about every
-> case of #.*-cells. That's not impossible to do, but doesn't keep the
-> tool and binding data separate.
+The timer fixed interval period pulse generator register
+is used to generate periodic pulses. The down count
+register loads the value programmed in the fixed period
+interval (FIPER). At every tick of the timer accumulator
+overflow, the counter decrements by the value of
+TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
+counter value reaches zero. It reloads the down counter
+in the cycle following a pulse.
 
-That's already the case, isn't it? Run that part of the check if you
-have a new enough dtc, otherwise warn that it's too old but do all the
-other checks.
+To use the TMR_FIPER register to generate desired periodic
+pulses. The value should programmed is,
+desired_period - tclk_period
 
-It's also just a change in one place: the tool, instead of evolving
-the language by adding ad-hoc restrictions that the compiler doesn't
-even know about, and requiring old code to change.
+Current tmr-fiper2 value is to generate 100us periodic pulses.
+(But the value should have been 99995, not 99990. The tclk_period is 5.)
+This patch is to generate 1 second periodic pulses with value
+999999995 programmed which is more desired by user.
 
-This way DTC could even warn/recommend bracketing per cell, when you
-give it the ability to parse/handle it.
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Looking at it another way, do we really want to just allow anything? A
-> device with 3 interrupts could be written as:
->
-> interrupts =3D <1>, <2>, <3>;
-> interrupts =3D <1 2 3>;
-> interrupts =3D <1>, <2 3>;
-> interrupts =3D [ 00 00 00 01 00 00 00 02 00 00 00 03 ];
->
-> Or can we have some coding standards that are no more onerous or
-> pedantic than what we have everywhere else?
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 760a68c163c83..b2ff27af090ec 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -772,7 +772,7 @@ ptp_clock@2d10e00 {
+ 			fsl,tmr-prsc    = <2>;
+ 			fsl,tmr-add     = <0xaaaaaaab>;
+ 			fsl,tmr-fiper1  = <999999995>;
+-			fsl,tmr-fiper2  = <99990>;
++			fsl,tmr-fiper2  = <999999995>;
+ 			fsl,max-adj     = <499999999>;
+ 			fsl,extts-fifo;
+ 		};
+-- 
+2.25.1
 
-We're generally quite careful about applying new restrictions and
-expectations on coding standards all across the tree, and when we add
-new ones we usually don't require legacy code to change overnight,
-only when there are other relevant changes to those files.
-
-
--Olof
