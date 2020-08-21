@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31624C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC7AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0431422CAD
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FEB82075E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030780;
-	bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
+	s=default; t=1598030935;
+	bh=M2WL2UqZEDBFR9WlYCqZMED3xmrepfVxWIbSJFDcHNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rL1EpFh6F5nsARfBnWtM0lks7M1gsnKZLz7Ip31I1Lj86KwN71r0WhTgCP8Tm5kCI
-	 sgLJF0xlFPkXi0HotRtiRC/f8BClzzvYwO5qrPa+n/7Eo4jBLCR8RnD6oPJAlhjSFU
-	 E7InCildU8vh4DSFNWmg0XM/9iMlAEST2SUdcSAo=
+	b=bR283GZ3wZ6ls1OIxsHQUy7ECKKYOLPWlqrf32PMOHZ+bwaYt17qyzOjzabfBA/dK
+	 vpbBAn2s09rx9aYaJDFRDOfUeoT6T8dMffKqegX4Em6Q681tKLoFxGJprepLKA7XTB
+	 XrsK7z8TMP5TdyYUfl33QWj9VGGxUD0ltur6c6jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgHURZw (ORCPT
+        id S1727013AbgHUR2i (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:28:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbgHUQPP (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:15 -0400
+        id S1727006AbgHUQOo (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93F9822B4D;
-        Fri, 21 Aug 2020 16:15:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3956D22BF3;
+        Fri, 21 Aug 2020 16:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026514;
-        bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
+        s=default; t=1598026478;
+        bh=M2WL2UqZEDBFR9WlYCqZMED3xmrepfVxWIbSJFDcHNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pWsxVYvgtfDQCZ1RsgEi6HcWZ5rAMXETEJybafuTsoo0p21+LdEAQVtrD4k87pr5+
-         7gOFdTIasF4miQbpoLl+fACDY8TbCFIYC3+0Pwmk+J2OyjFt7JPQmUZ44tZUCPBatp
-         0QRszFyDNdmt512pCMFBkuAmGXx2AuJW/9izdKag=
+        b=wOo/FJBF5kQSAaA0b4T9cAaswPWeZ8F55RGixIKEUe10NIsrfrD7UM/sJBLEO/msx
+         /jAmNrWbfLlZ9VP4vgIYKRdqImk37t9REJJO8M+9LrGOal8e2N4YaBkJ2Vys7kKIcr
+         iUpPjHX7nGoqwH7Qi1hsrAdbx8YxibazU80oPrRM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 39/62] ARM: dts: ls1021a: output PPS signal on FIPER2
-Date:   Fri, 21 Aug 2020 12:14:00 -0400
-Message-Id: <20200821161423.347071-39-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 11/62] arm64: dts: qcom: msm8916: Pull down PDM GPIOs during sleep
+Date:   Fri, 21 Aug 2020 12:13:32 -0400
+Message-Id: <20200821161423.347071-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -61,49 +61,42 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
+[ Upstream commit e2ee9edc282961783d519c760bbaa20fed4dec38 ]
 
-The timer fixed interval period pulse generator register
-is used to generate periodic pulses. The down count
-register loads the value programmed in the fixed period
-interval (FIPER). At every tick of the timer accumulator
-overflow, the counter decrements by the value of
-TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
-counter value reaches zero. It reloads the down counter
-in the cycle following a pulse.
+The original qcom kernel changed the PDM GPIOs to be pull-down
+during sleep at some point. Reportedly this was done because
+there was some "leakage at PDM outputs during sleep":
 
-To use the TMR_FIPER register to generate desired periodic
-pulses. The value should programmed is,
-desired_period - tclk_period
+  https://source.codeaurora.org/quic/la/kernel/msm-3.10/commit/?id=0f87e08c1cd3e6484a6f7fb3e74e37340bdcdee0
 
-Current tmr-fiper2 value is to generate 100us periodic pulses.
-(But the value should have been 99995, not 99990. The tclk_period is 5.)
-This patch is to generate 1 second periodic pulses with value
-999999995 programmed which is more desired by user.
+I cannot say how effective this is, but everything seems to work
+fine with this change so let's apply the same to mainline just
+to be sure.
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-3-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 2 +-
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 760a68c163c83..b2ff27af090ec 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -772,7 +772,7 @@ ptp_clock@2d10e00 {
- 			fsl,tmr-prsc    = <2>;
- 			fsl,tmr-add     = <0xaaaaaaab>;
- 			fsl,tmr-fiper1  = <999999995>;
--			fsl,tmr-fiper2  = <99990>;
-+			fsl,tmr-fiper2  = <999999995>;
- 			fsl,max-adj     = <499999999>;
- 			fsl,extts-fifo;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 5785bf0a807ce..591f48a575353 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -569,7 +569,7 @@ pinconf {
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <2>;
+-				bias-disable;
++				bias-pull-down;
+ 			};
  		};
+ 	};
 -- 
 2.25.1
 
