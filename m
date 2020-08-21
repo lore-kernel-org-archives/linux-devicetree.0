@@ -2,81 +2,67 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BD4C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C34C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6164120FC3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A23420578
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 13:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgHUNib (ORCPT
+        id S1728964AbgHUNqX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:38:31 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34573 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgHUNi3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 09:38:29 -0400
-Received: by mail-ot1-f68.google.com with SMTP id k12so1592876otr.1;
-        Fri, 21 Aug 2020 06:38:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/v3bbRPg15ZDGPXsn2Z2ybRxn/GbKQ9wH99VF4Cr9qc=;
-        b=hFpE2ouqAZNVXtLWIat/jDgFEghkqu1oRMWp09hQPW6KQPSdzm7A0MzGz3Was9IVKl
-         NJi7N8oSaGnVAF/dzOFimn0EvARfLwbP9fzDLflBrY8DYqokgd6A6eTSdUli3BruVSXK
-         lrZ37uA97xNtSTG89UZW3pl1fwPUTLGqrTuT6iSdbn8y4OjPg/JuKJjLvocBbxYOk/yw
-         0R/tuolKH/vzjZ3f6A62SKwoqaZWD+jT5KxbthuBIF8E5+8pIt+miB+ViuwAXbVyJ2VB
-         CTC549lctaFMGbWkzzKzjQWno86xQBkyZW7nUK9FxpP1HugI1fAg+L2g2xbfaodaBQLR
-         m4YQ==
-X-Gm-Message-State: AOAM532T4o2ujRwbK8MUGe2NF4yrRZqPjIMR2sQplhFK0usEcHuw2/TG
-        C11mrtCivgaYOvZHr7m/BhLOeZ4iyMT0cH26lO8=
-X-Google-Smtp-Source: ABdhPJx0grGATdrvskmhsVyqHDs+d9cLtJv9D4J9Xk6/PuP1PkCjOlw9eUoY9GuSCOZUR7UNddY+uFqgza1rIA7xGSk=
-X-Received: by 2002:a9d:1b62:: with SMTP id l89mr1893074otl.145.1598017108648;
- Fri, 21 Aug 2020 06:38:28 -0700 (PDT)
+        Fri, 21 Aug 2020 09:46:23 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33618 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728911AbgHUNo5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 09:44:57 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id E92EA1C0BB4; Fri, 21 Aug 2020 15:44:53 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 15:44:51 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, aford@beaconembedded.com,
+        Beno??t Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] ARM: dts: omap3: Add cpu trips and cooling map for
+ omap34/36 families
+Message-ID: <20200821134451.GA3806@bug>
+References: <20200817133931.11785-1-aford173@gmail.com>
 MIME-Version: 1.0
-References: <20200819080841.3475-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20200819080841.3475-1-biju.das.jz@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 15:38:17 +0200
-Message-ID: <CAMuHMdWDB4wQw8exQLEe5VNqHCZPCeC0TRmTvoNqsz-yMDEshQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a774e1-hihope-rzg2h: Enable HS400 mode
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200817133931.11785-1-aford173@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 10:08 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> From: Biju Das <biju.das@bp.renesas.com>
->
-> This patch enables HS400 mode on HiHope RZ/G2H board.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon 2020-08-17 08:39:31, Adam Ford wrote:
+> The OMAP3530, OMAP3630, and DM3730 all show thresholds of 90C and 105C
+> depending on commercial or industrial temperature ratings.
+> 
+> This patch expands the thermal information to include the limits of 90
+> and 105C for alert and critical.  It sets the coolings-cells for the
+> 34xx and 36xx CPU's which both point to omap3-cpu-thermal.dtsi.
+> 
+> For boards who never use industrial temperatures, these can be
+> changed on their respective device trees with something like:
+> 
+> &cpu_alert0 {
+> 	temperature = <85000>; /* millicelsius */
+> };
+> 
+> &cpu_crit {
+> 	temperature = <90000>; /* millicelsius */
+> };
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+That should be the other way around. Provide safe values by default.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+										Pavel
