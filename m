@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68C2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5B9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0AF20748
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 076A120738
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 10:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VVsVupCp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iy0MSgFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgHUKi4 (ORCPT
+        id S1728010AbgHUKjU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:38:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36380 "EHLO
+        Fri, 21 Aug 2020 06:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728641AbgHUKgu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 06:36:50 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA7EC061388
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:36:49 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id z23so692639plo.8
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:36:49 -0700 (PDT)
+        with ESMTP id S1728573AbgHUKgk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 06:36:40 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1B1C061342
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:36:40 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m34so798124pgl.11
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 03:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uUmLVweupPT9zpSjaJs4mhSvJw7owWE+JplAKmE2irY=;
-        b=VVsVupCp5eFjDGFd9ZU41Id1YJvlCulewX2jC5BB77GhnCRehRUDsFPZAE9bBgkJIk
-         34tX5VEHXRSRay6IUrllskgwfaYVKIuEOYpAWOA7Hnl1KAVs9yliOfsAZM+t6hGLSK1J
-         CwrFgEnfk+zWSOBnc0MhG7U/Rf/RYF95nk+WM=
+        bh=BLvzm19F3zl+eOkSMMbBhpyNYB39d0d4Z4gVhRAGhhs=;
+        b=Iy0MSgFux7Cev845jWcIk5W1d+GN1ssj/IaGgeXfk+ZI3C12DLDxSPaO9eKgh9hnP3
+         kT63iPNAmRFK/qG+QwJ9fVto0ueIRlNan+MrfK2pKRbA6FOuGijR4Lz3+a51FJXgod/N
+         xWkJM0z8MGUmSv3M/0mwWg/4UdGwNgUAPw6Uw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uUmLVweupPT9zpSjaJs4mhSvJw7owWE+JplAKmE2irY=;
-        b=LA7UAuQTVtWa0CSTloUetEkSuFkIsvwkftwmppuHupZXGYvVaKut80i1kYEUA/ySp9
-         89cE7czZymOqom+OhBnZ/p20NIqMnb7dLDb+wutcFB4U/lK3Ay29FXa8On/IpbBKYRaj
-         WgIF+kjD0Pk0ci9FsLvncY0noRMqcTH9sN01MDwJZusC5/kPD0SIjbyTdf3bUnoF7lDV
-         e5eVqMi18oXB42scM3heMRwlvFlKXIrJN6E9cFy09Yk95IFQED2438VHO8LVU6smk5oW
-         +N23iyiFj+LroTA2NZPuWvIb895RXS6nyzu9LRhKRKSx70LDc6rNpjMok02FaviLNbbh
-         /iXQ==
-X-Gm-Message-State: AOAM533vzAE0z4ZJSxkB+rJZL2LLiFw7Q483nKjAjyyUHhe9FfdnbS71
-        W4WH9dmPrUXcY8K1pHdARGw9Uw==
-X-Google-Smtp-Source: ABdhPJz2XzngQORe/TIDCnElMpkACON2NAVCerybUn7QpaHvguSW0Ro47RBIK8dN4zMX4jvkUE7msQ==
-X-Received: by 2002:a17:90a:4214:: with SMTP id o20mr1947865pjg.232.1598006209451;
-        Fri, 21 Aug 2020 03:36:49 -0700 (PDT)
+        bh=BLvzm19F3zl+eOkSMMbBhpyNYB39d0d4Z4gVhRAGhhs=;
+        b=YKPGdAIt10ARe8UNQeAjg4idKTvjvQDRCaMVqcMrAT6CwTRepZ7HgnkH68AW5zM7cB
+         Q81w6Uff5dNCGQeBkFqyQdSltwWPauLS/EaG890lHyV0o73ddMs1nmd2YqO0dwmtT2/J
+         OwKFyySlv0YBaVcj0PpX9iailpCDrgG1+tojQugOx6Xd0H4jTfDMSzU5UsUPTZHEs1YT
+         fn4YQtlQp0BBc4VA7hNaahExFlFzTHZFSKt0IQ66qzxOt3i5VLKhVziORJtx/Cdtep4F
+         pgZBlYt29wSHq9JIkoVYtS0c/7DBMiWIKe7k6WeYtNhPJ7OnHCFbr8DE3rej+0n077Df
+         EDOw==
+X-Gm-Message-State: AOAM533TS1m6aPlGTPb6+2DInnY5Ikhf7mUePUiNRQSt7ixydC6Yqbkl
+        Nj8Z6C7miUmeZPKwt3Di+9LtPA==
+X-Google-Smtp-Source: ABdhPJxmj3MQvemdJuy54bQsLgg/tFf4axVuPDthLbNbX2Xeb4x6zKwMnT75o31enJ+GCmphNZcZNg==
+X-Received: by 2002:aa7:96db:: with SMTP id h27mr2009391pfq.26.1598006199528;
+        Fri, 21 Aug 2020 03:36:39 -0700 (PDT)
 Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
-        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.36.46
+        by smtp.gmail.com with ESMTPSA id y20sm2081525pfn.183.2020.08.21.03.36.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 03:36:48 -0700 (PDT)
+        Fri, 21 Aug 2020 03:36:38 -0700 (PDT)
 From:   Alexandre Courbot <acourbot@chromium.org>
 To:     Tiffany Lin <tiffany.lin@mediatek.com>,
         Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
@@ -65,9 +65,9 @@ To:     Tiffany Lin <tiffany.lin@mediatek.com>,
 Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v4 05/17] media: mtk-vcodec: venc: handle firmware version field
-Date:   Fri, 21 Aug 2020 19:35:56 +0900
-Message-Id: <20200821103608.2310097-6-acourbot@chromium.org>
+Subject: [PATCH v4 02/17] dt-bindings: media: mtk-vcodec: document SCP node
+Date:   Fri, 21 Aug 2020 19:35:53 +0900
+Message-Id: <20200821103608.2310097-3-acourbot@chromium.org>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 In-Reply-To: <20200821103608.2310097-1-acourbot@chromium.org>
 References: <20200821103608.2310097-1-acourbot@chromium.org>
@@ -78,147 +78,30 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Firmwares for encoders newer than MT8173 will include an ABI version
-number in their initialization ack message. Add the capacity to manage
-it and make initialization fail if the firmware ABI is of a version that
-we don't support.
-
-For MT8173, this ABI version field is reserved and thus undefined ; thus
-ignore it on this chip. There should only be one firmware version available
-for it anyway.
+The mediatek codecs can use either the VPU or the SCP as their interface
+to firmware. Reflect this in the DT bindings.
 
 Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
 Acked-by: Tiffany Lin <tiffany.lin@mediatek.com>
 ---
- .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  8 ++++++
- .../platform/mtk-vcodec/mtk_vcodec_enc_drv.c  |  1 +
- .../media/platform/mtk-vcodec/venc_ipi_msg.h  |  9 ++++---
- .../media/platform/mtk-vcodec/venc_vpu_if.c   | 27 ++++++++++++++++---
- 4 files changed, 38 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/media/mediatek-vcodec.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-index e92e52c0e601..1676c26eb229 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-@@ -300,13 +300,21 @@ struct mtk_vcodec_ctx {
+diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+index b6b5dde6abd8..99214faede90 100644
+--- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
++++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+@@ -19,7 +19,9 @@ Required properties:
+ - iommus : should point to the respective IOMMU block with master port as
+   argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+   for details.
+-- mediatek,vpu : the node of video processor unit
++One of the two following nodes:
++- mediatek,vpu : the node of the video processor unit, if using VPU.
++- mediatek,scp : the node of the SCP unit, if using SCP.
  
- };
  
-+enum mtk_chip {
-+	MTK_MT8173,
-+};
-+
- /**
-  * struct mtk_vcodec_enc_pdata - compatible data for each IC
-  *
-+ * @chip: chip this encoder is compatible with
-+ *
-  * @uses_ext: whether the encoder uses the extended firmware messaging format
-  * @has_lt_irq: whether the encoder uses the LT irq
-  */
- struct mtk_vcodec_enc_pdata {
-+	enum mtk_chip chip;
-+
- 	bool uses_ext;
- 	bool has_lt_irq;
- };
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-index c05f9614e117..379b6638f7a9 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_drv.c
-@@ -384,6 +384,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- }
- 
- static const struct mtk_vcodec_enc_pdata mt8173_pdata = {
-+	.chip = MTK_MT8173,
- 	.has_lt_irq = true,
- };
- 
-diff --git a/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h b/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
-index 316f8ecd6b4c..2feb0365179f 100644
---- a/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
-+++ b/drivers/media/platform/mtk-vcodec/venc_ipi_msg.h
-@@ -138,16 +138,17 @@ struct venc_vpu_ipi_msg_common {
-  * @venc_inst:	AP encoder instance (struct venc_vp8_inst/venc_h264_inst *)
-  * @vpu_inst_addr:	VPU encoder instance addr
-  *			(struct venc_vp8_vsi/venc_h264_vsi *)
-- * @reserved:	reserved for future use. vpu is running in 32bit. Without
-- *		this reserved field, if kernel run in 64bit. this struct size
-- *		will be different between kernel and vpu
-+ * @venc_abi_version:	ABI version of the firmware. Kernel can use it to
-+ *			ensure that it is compatible with the firmware.
-+ *			For MT8173 the value of this field is undefined and
-+ *			should not be used.
-  */
- struct venc_vpu_ipi_msg_init {
- 	uint32_t msg_id;
- 	uint32_t status;
- 	uint64_t venc_inst;
- 	uint32_t vpu_inst_addr;
--	uint32_t reserved;
-+	uint32_t venc_abi_version;
- };
- 
- /**
-diff --git a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-index c526cd504fcc..124295f0a470 100644
---- a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-+++ b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
-@@ -4,6 +4,7 @@
-  * Author: PoChun Lin <pochun.lin@mediatek.com>
-  */
- 
-+#include "mtk_vcodec_drv.h"
- #include "mtk_vcodec_fw.h"
- #include "venc_ipi_msg.h"
- #include "venc_vpu_if.h"
-@@ -15,6 +16,23 @@ static void handle_enc_init_msg(struct venc_vpu_inst *vpu, const void *data)
- 	vpu->inst_addr = msg->vpu_inst_addr;
- 	vpu->vsi = mtk_vcodec_fw_map_dm_addr(vpu->ctx->dev->fw_handler,
- 					     msg->vpu_inst_addr);
-+
-+	/* Firmware version field value is unspecified on MT8173. */
-+	if (vpu->ctx->dev->venc_pdata->chip == MTK_MT8173)
-+		return;
-+
-+	/* Check firmware version. */
-+	mtk_vcodec_debug(vpu, "firmware version: 0x%x\n",
-+			 msg->venc_abi_version);
-+	switch (msg->venc_abi_version) {
-+	case 1:
-+		break;
-+	default:
-+		mtk_vcodec_err(vpu, "unhandled firmware version 0x%x\n",
-+			       msg->venc_abi_version);
-+		vpu->failure = 1;
-+		break;
-+	}
- }
- 
- static void handle_enc_encode_msg(struct venc_vpu_inst *vpu, const void *data)
-@@ -35,6 +53,11 @@ static void vpu_enc_ipi_handler(void *data, unsigned int len, void *priv)
- 	mtk_vcodec_debug(vpu, "msg_id %x inst %p status %d",
- 			 msg->msg_id, vpu, msg->status);
- 
-+	vpu->signaled = 1;
-+	vpu->failure = (msg->status != VENC_IPI_MSG_STATUS_OK);
-+	if (vpu->failure)
-+		goto failure;
-+
- 	switch (msg->msg_id) {
- 	case VPU_IPIMSG_ENC_INIT_DONE:
- 		handle_enc_init_msg(vpu, data);
-@@ -51,9 +74,7 @@ static void vpu_enc_ipi_handler(void *data, unsigned int len, void *priv)
- 		break;
- 	}
- 
--	vpu->signaled = 1;
--	vpu->failure = (msg->status != VENC_IPI_MSG_STATUS_OK);
--
-+failure:
- 	mtk_vcodec_debug_leave(vpu);
- }
- 
+ Example:
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
