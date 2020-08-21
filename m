@@ -2,527 +2,175 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8188DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7DAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E42920702
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5B520738
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mirIi3ES"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="qCziGrqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgHURNx (ORCPT
+        id S1728431AbgHUROu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41422 "EHLO
+        Fri, 21 Aug 2020 13:14:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgHURMt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 13:12:49 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE43C061573
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 10:12:49 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x25so1382153pff.4
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 10:12:49 -0700 (PDT)
+        with ESMTP id S1726990AbgHUROo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 13:14:44 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1A6C061574
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 10:14:44 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id r13so2038134iln.0
+        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 10:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=oqpUqYWT80nq586ZEtmPbnbF2AJb/iu4OjpD88rJnjU=;
-        b=mirIi3ESrCVYY/5CuF9nmSnE5GMIQkGEjZxlqsgUG3Ke4o6T1082VjEgzynL1T3Rub
-         oV6IwlUt80xB0Y55oyYteiIlHy1cmodndj7Ud77nR+CRUPm6O0vPam/3pphdHJRJ3nB/
-         /X4JQhPQxyU0J2p52l9Xv45wRb8RSl/y0E88yVJ80PKx8XQ7FkGK8cchiezK1OaBdXXG
-         aRZdLzjAj81ejdk7j4WKrs8QtQsLOQoB0i8ni/vjoe7Jg3JxJieiYNUnrCgzoD2Mf/P2
-         5z336ojoilCUfgrFe80d7wc90eDYSk82o7vSerzf8de3W02/B7fx2Y4R58py0cG9mLf7
-         YCbg==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RTvsFOhGC05ImvCGxAXHe80DLl0Vnoh8uhjw9uG61SY=;
+        b=qCziGrqPDSVtOLmbK1hFmaPBOq+huaVij1yQ263tMaWZonY5TWfaBxMerhZMu5VEP3
+         RoPEPwzz/xcjuV+sZCG1Saoia1u3YKqx63vETf1XPu5IrA200TfHKvEGxaOTNHo5W+mG
+         tCpVqh73Ai1QJJiviJSfv/he9dZ0cRwKhv0cdp7vo+LbX6FHoujL6bkQB7Qzicv6p2hE
+         x4koMTN4PnrpDrX8npHVGmmmPy8pj+MUkr0jW05+KtnOLdeBNgPBu3vwKyD3t1KNEL7u
+         BWwPpeGGTD5KgVYO5yUReKtkMR1+S+ZD4oeEDFdPiKx6JydchJQlt24N3BzYvr5uqc7g
+         MsXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=oqpUqYWT80nq586ZEtmPbnbF2AJb/iu4OjpD88rJnjU=;
-        b=nTOElS12JhtjGTbsur397cy4upgjJ3SaNvphEJmHUlV2MYb3AQMpZ+yVdHb02pdOrZ
-         2RPzT4I3ubWwBOobu4rkucAy9p1RZFIQ/07JKAeFk43l4K4kQLLYxx3Ddgl0xAZNhfvJ
-         kqv9UVdPKt+F8K8dVfo0KHb4/WjuQksim4jTnimVMutymKXAHNjmwNr5Iu6jYl0r/nOM
-         BqrwyW08h+1fL5F/D7eJ0eqGCFq/0KXc5C6z1W8No8SmKl3oP7POsG/P51ZcJdQmaHXj
-         LOgCw+1ZJlQdERjn5W0tSNZCAv/bJ3w3FaJwX5L5OPr+0khfenIQQOvRzckpq85LhIsC
-         WR9w==
-X-Gm-Message-State: AOAM530LEgLcq9HgRbffPvyn0KtJD7N3A0QMtMcijbo+X5ZDAJlhG34c
-        cKqUkJPpZq/Zlcz65mZ5etV/YA==
-X-Google-Smtp-Source: ABdhPJyASf1T+L7nz8rKj/VIaWxtcytiy0TC8/QVasx19LjR4TqbrI+0KPiS5F9TrjBxsdfP4ttEDA==
-X-Received: by 2002:a63:9256:: with SMTP id s22mr2917045pgn.75.1598029968402;
-        Fri, 21 Aug 2020 10:12:48 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:6803:60d7:9d0c:df80:cc50:49ca])
-        by smtp.gmail.com with ESMTPSA id x8sm3353872pfp.101.2020.08.21.10.12.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Aug 2020 10:12:47 -0700 (PDT)
-From:   Amit Pundir <amit.pundir@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RTvsFOhGC05ImvCGxAXHe80DLl0Vnoh8uhjw9uG61SY=;
+        b=V61maIqeOIe7KjGEe4MTDTDm6r2J9fx5gNsBZ5uEevfdoEWSpGLoPUTyE+nkkVT5Ie
+         So9kKf5C8Bz0brRpBMySkg30sz5JChlTkyAPtYmHlNtw64J3jJ4/NENd0wZlWW4wQNIH
+         1tSMHJXxXxL166sPssoRN1KkmqxqpbgfECt+YayVgs6hkZEHbNPp/rcnZo5MSYd24JZH
+         1qafUJDucA1wIaOw7Ls4FGHtspHWFQMa56jXf7ZivqiGeti6tmmV2cvkdh6epDKV7nn/
+         ChvrDAX9oeVjSAiuaw9UbyrTwNlJwAwMXjWS9V2l0y1Rcltr9zqmqJWJy5xLuX1dATjv
+         Bm5w==
+X-Gm-Message-State: AOAM5329ZOcp9QzH9moWn+jgwHbVovRvIwlef3sysoTIcqBQEekbHYxF
+        f+rgH5MxdqTnXer55JDF/h5wUayyJB9U5QBP4kErUg==
+X-Google-Smtp-Source: ABdhPJzBtpIobytboUBjp0jMvWUO7qPOEborYgyUfFC+VcbkdjoC05hgYoAhDbvXVVliplquim8DuARZHvyU0DBp/us=
+X-Received: by 2002:a92:5209:: with SMTP id g9mr3383963ilb.72.1598030083248;
+ Fri, 21 Aug 2020 10:14:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200819221750.2055932-1-robh@kernel.org> <20200821011237.GA4527@lx2k>
+ <CAL_JsqLfzDMJXDdqtVBYWrvuB8kBDHECWmNkS5EJStiwSFtp-g@mail.gmail.com>
+In-Reply-To: <CAL_JsqLfzDMJXDdqtVBYWrvuB8kBDHECWmNkS5EJStiwSFtp-g@mail.gmail.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Fri, 21 Aug 2020 10:14:31 -0700
+Message-ID: <CAOesGMhFGTZddCdusgfcUjfTP847am+F8jTAWrqYXjq1PLXxag@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: Reformat PCI ranges/dma-ranges entries
+To:     Rob Herring <robh@kernel.org>
+List-Id: <soc.lore.kernel.org>
+Cc:     SoC Team <soc@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-Date:   Fri, 21 Aug 2020 22:42:41 +0530
-Message-Id: <1598029961-2474-1-git-send-email-amit.pundir@linaro.org>
-X-Mailer: git-send-email 2.7.4
+        Heiko Stuebner <heiko@sntech.de>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add initial dts support for Xiaomi Poco F1 (Beryllium).
+On Fri, Aug 21, 2020 at 9:14 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Aug 20, 2020 at 8:53 PM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > On Wed, Aug 19, 2020 at 04:17:50PM -0600, Rob Herring wrote:
+> > > While bracketing doesn't matter for a DTB, the DT schema checks rely =
+on
+> > > bracketing around each distinct entry. Reformat ranges and dma-ranges
+> > > entries to fix warnings such as:
+> > >
+> > > arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yaml: pcie@=
+f8000000: ranges: [[2197815296, 0, 4194304000, 0, 4194304000, 0, 31457280, =
+2164260864, 0, 4225761280, 0, 4225761280, 0, 1048576]] is not valid under a=
+ny of the given schemas (Possible causes of the failure):
+> > >         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yam=
+l: pcie@f8000000: ranges: True was expected
+> > >         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yam=
+l: pcie@f8000000: ranges:0: [2197815296, 0, 4194304000, 0, 4194304000, 0, 3=
+1457280, 2164260864, 0, 4225761280, 0, 4225761280, 0, 1048576] is too long
+> > >         arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dt.yam=
+l: pcie@f8000000: ranges:0:0: 2197815296 is not one of [16777216, 33554432,=
+ 50331648, 1107296256, 1124073472]
+> >
+> > Seems like a bug in your tool? Why would we bother with this churn?
+>
+> It's a feature. :)
 
-This initial support is based on upstream Dragonboard 845c
-(sdm845) device. With this dts, Beryllium boots AOSP up to
-ADB shell over USB-C.
+The feature is better linting of ranges, the new lack of being able to
+do that for the way we've always been allowed to write ranges is a
+bug.
 
-Supported functionality includes UFS, USB-C (peripheral),
-microSD card and Vol+/Vol-/power keys. Bluetooth should work
-too but couldn't be verified from adb command line, it is
-verified when enabled from UI with few WIP display patches.
+> In this case, with the entries bracketed, we can check the PCI top
+> address cell contents in the common PCI schema and check how many
+> ranges entries in the specific bridge schemas if they have some
+> constraints. The use of bracketing is useful to defining the number of
+> entries not just for ranges, but everywhere. A device binding defines
+> how many register regions or interrupts for example. It makes sense to
+> delineate entries in some way. While yes, we have #.*-cells, there's
+> not really any way to handle that in json-schema. And let's face it,
+> #.*-cells is an odd construct.
+>
+> Currently, the dtc dts->yaml output maintains all this formatting. I
+> suppose we could change that such that we parse #.*-cells and define
+> the boundaries based on them. But then dtc has to know about every
+> case of #.*-cells. That's not impossible to do, but doesn't keep the
+> tool and binding data separate.
 
-Just like initial db845c support, initializing the SMMU is
-clearing the mapping used for the splash screen framebuffer,
-which causes the device to hang during boot and recovery
-needs a hard power reset. This can be worked around using:
+That's already the case, isn't it? Run that part of the check if you
+have a new enough dtc, otherwise warn that it's too old but do all the
+other checks.
 
-    fastboot oem select-display-panel none
+It's also just a change in one place: the tool, instead of evolving
+the language by adding ad-hoc restrictions that the compiler doesn't
+even know about, and requiring old code to change.
 
-To switch ON the display back run:
+This way DTC could even warn/recommend bracketing per cell, when you
+give it the ability to parse/handle it.
 
-    fastboot oem select-display-panel
+> Looking at it another way, do we really want to just allow anything? A
+> device with 3 interrupts could be written as:
+>
+> interrupts =3D <1>, <2>, <3>;
+> interrupts =3D <1 2 3>;
+> interrupts =3D <1>, <2 3>;
+> interrupts =3D [ 00 00 00 01 00 00 00 02 00 00 00 03 ];
+>
+> Or can we have some coding standards that are no more onerous or
+> pedantic than what we have everywhere else?
 
-But this only works on Beryllium devices running bootloader
-version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
-Android-9 based release. Newer bootloader version do not
-support switching OFF the display panel at all. So we need
-a few additional smmu patches (under review) from here:
-https://github.com/pundiramit/linux/commits/beryllium-mainline
+We're generally quite careful about applying new restrictions and
+expectations on coding standards all across the tree, and when we add
+new ones we usually don't require legacy code to change overnight,
+only when there are other relevant changes to those files.
 
-Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
----
-v5: Bumped &tz_mem size from 0x2d00000 to 0x4900000 (to include
-    downstream &removed_region), all the way up to &qseecom_mem.
-v4: Added more downstream reserved memory regions. It probably
-    need more work, but for now I see adsp/cdsp/wlan remoteprocs
-    powering up properly. Removed the regulator nodes not
-    required for the device, as suggested by Bjorn. Also added
-    couple of clocks to protected clocks, which is needed for
-    display to work.
-v3: Added a reserved-memory region from downstream kernel to fix
-    a boot regression with recent dma-pool changes in v5.8-rc6.
-v2: Updated machine compatible string for seemingly inevitable
-    future quirks.
 
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- arch/arm64/boot/dts/qcom/sdm845-beryllium.dts | 382 ++++++++++++++++++++++++++
- 2 files changed, 383 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index d8f1466e6758..477b72dca0fc 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-new file mode 100644
-index 000000000000..5c03994bcbdd
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm845-beryllium.dts
-@@ -0,0 +1,382 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include "sdm845.dtsi"
-+#include "pm8998.dtsi"
-+#include "pmi8998.dtsi"
-+
-+/ {
-+	model = "Xiaomi Technologies Inc. Beryllium";
-+	compatible = "xiaomi,beryllium", "qcom,sdm845";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,board-id = <69 0>;
-+	qcom,msm-id = <321 0x20001>;
-+
-+	aliases {
-+		hsuart0 = &uart6;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vol_up_pin_a>;
-+
-+		vol-up {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	vreg_s4a_1p8: vreg-s4a-1p8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_s4a_1p8";
-+
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&adsp_pas {
-+	status = "okay";
-+	firmware-name = "qcom/sdm845/adsp.mdt";
-+};
-+
-+&apps_rsc {
-+	pm8998-rpmh-regulators {
-+		compatible = "qcom,pm8998-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_l1a_0p875: ldo1 {
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5a_0p8: ldo5 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a_1p8: ldo7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l13a_2p95: ldo13 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l17a_1p3: ldo17 {
-+			regulator-min-microvolt = <1304000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l20a_2p95: ldo20 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l21a_2p95: ldo21 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l24a_3p075: ldo24 {
-+			regulator-min-microvolt = <3088000>;
-+			regulator-max-microvolt = <3088000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l25a_3p3: ldo25 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3312000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l26a_1p2: ldo26 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&cdsp_pas {
-+	status = "okay";
-+	firmware-name = "qcom/sdm845/cdsp.mdt";
-+};
-+
-+&gcc {
-+	protected-clocks = <GCC_QSPI_CORE_CLK>,
-+			   <GCC_QSPI_CORE_CLK_SRC>,
-+			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
-+			   <GCC_LPASS_Q6_AXI_CLK>,
-+			   <GCC_LPASS_SWAY_CLK>;
-+};
-+
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/sdm845/a630_zap.mbn";
-+	};
-+};
-+
-+/* Reserved memory changes from downstream */
-+/delete-node/ &tz_mem;
-+/delete-node/ &adsp_mem;
-+/delete-node/ &wlan_msa_mem;
-+/delete-node/ &mpss_region;
-+/delete-node/ &venus_mem;
-+/delete-node/ &cdsp_mem;
-+/delete-node/ &mba_region;
-+/delete-node/ &slpi_mem;
-+/delete-node/ &spss_mem;
-+/delete-node/ &rmtfs_mem;
-+/ {
-+	reserved-memory {
-+		tz_mem: memory@86200000 {
-+			reg = <0 0x86200000 0 0x4900000>;
-+			no-map;
-+		};
-+
-+		adsp_mem: memory@8c500000 {
-+			reg = <0 0x8c500000 0 0x1e00000>;
-+			no-map;
-+		};
-+
-+		wlan_msa_mem: memory@8e300000 {
-+			reg = <0 0x8e300000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		mpss_region: memory@8e400000 {
-+			reg = <0 0x8e400000 0 0x7800000>;
-+			no-map;
-+		};
-+
-+		venus_mem: memory@95c00000 {
-+			reg = <0 0x95c00000 0 0x500000>;
-+			no-map;
-+		};
-+
-+		cdsp_mem: memory@96100000 {
-+			reg = <0 0x96100000 0 0x800000>;
-+			no-map;
-+		};
-+
-+		mba_region: memory@96900000 {
-+			reg = <0 0x96900000 0 0x200000>;
-+			no-map;
-+		};
-+
-+		slpi_mem: memory@96b00000 {
-+			reg = <0 0x96b00000 0 0x1400000>;
-+			no-map;
-+		};
-+
-+		spss_mem: memory@97f00000 {
-+			reg = <0 0x97f00000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		rmtfs_mem: memory@f6301000 {
-+			compatible = "qcom,rmtfs-mem";
-+			reg = <0 0xf6301000 0 0x200000>;
-+			no-map;
-+
-+			qcom,client-id = <1>;
-+			qcom,vmid = <15>;
-+		};
-+	};
-+};
-+
-+&mss_pil {
-+	status = "okay";
-+	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mdt";
-+};
-+
-+&pm8998_gpio {
-+	vol_up_pin_a: vol-up-active {
-+		pins = "gpio6";
-+		function = "normal";
-+		input-enable;
-+		bias-pull-up;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+	};
-+};
-+
-+&pm8998_pon {
-+	resin {
-+		compatible = "qcom,pm8941-resin";
-+		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+		debounce = <15625>;
-+		bias-pull-up;
-+		linux,code = <KEY_VOLUMEDOWN>;
-+	};
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
-+
-+	bus-width = <4>;
-+	cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+
-+	sdc2_default_state: sdc2-default {
-+		clk {
-+			pins = "sdc2_clk";
-+			bias-disable;
-+
-+			/*
-+			 * It seems that mmc_test reports errors if drive
-+			 * strength is not 16 on clk, cmd, and data pins.
-+			 */
-+			drive-strength = <16>;
-+		};
-+
-+		cmd {
-+			pins = "sdc2_cmd";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+
-+		data {
-+			pins = "sdc2_data";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+	};
-+
-+	sdc2_card_det_n: sd-card-det-n {
-+		pins = "gpio126";
-+		function = "gpio";
-+		bias-pull-up;
-+	};
-+};
-+
-+&uart6 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+
-+	vdd-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-+	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-+	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l26a_1p2>;
-+	vdda-pll-supply = <&vreg_l1a_0p875>;
-+};
-+
-+&ufs_mem_hc {
-+	status = "okay";
-+
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
-+	vcc-supply = <&vreg_l20a_2p95>;
-+	vcc-max-microamp = <800000>;
-+};
-+
-+&ufs_mem_phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l26a_1p2>;
-+};
-+
-+&wifi {
-+	status = "okay";
-+
-+	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
-+	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
-+	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
-+	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+};
-+
-+/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-+
-+&qup_uart6_default {
-+	pinmux {
-+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+		function = "qup6";
-+	};
-+
-+	cts {
-+		pins = "gpio45";
-+		bias-disable;
-+	};
-+
-+	rts-tx {
-+		pins = "gpio46", "gpio47";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	rx {
-+		pins = "gpio48";
-+		bias-pull-up;
-+	};
-+};
--- 
-2.7.4
-
+-Olof
