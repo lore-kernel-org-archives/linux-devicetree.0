@@ -2,93 +2,148 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1552C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F77C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6A5E20855
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 277EC20702
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 17:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598032682;
+	bh=SY9zNs4J6t0vv72iGwx5CHsqBISRbTZU9+hhKRgBuhc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LjGNrlE6WFmNz0ueEIZ9GT699XRRalWXzYJW+dy+yLamIPxqPOCCp3KkNH/ykqwQQ
+	 X+UwARMlGA3AvKxbxbZBzaUu5nivCpk9nBqPD333umaZVbeIanP+7NIoIvX64vRkN/
+	 Ptl45QjyZw82s8jIAE4H9KIk/m6UTeXOnCAllIVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726373AbgHURmC (ORCPT
+        id S1726846AbgHUR6B (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:42:02 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39347 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgHURmB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 13:42:01 -0400
-Received: by mail-oi1-f195.google.com with SMTP id a24so2190609oia.6;
-        Fri, 21 Aug 2020 10:42:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yl3DEDfQFQnci/99+y+zEAQ28FvahdOCA0UhFPv1PLI=;
-        b=TONblqxAn65mARDEYmRc/Uk1Ha/yix1SthUqUuGKQLKYQkwGuBTfIA13oVOFJ27j5r
-         bb1ZWIEqoIawxgVjghyVkOIKXp67r4tYv31CMwLF/80tYxfz9sqra5Q5I23qoo5zfc3a
-         W2IYHUT/wC/N1w/00ztSiguWJFvsi0sYh7O8XFcVP9kkWygGEgnPkJrFHF5vtVToKD1a
-         iw6deR3d6/gOPF8iTd3bGHg1eGoCs+LxRIv/TEsSXQ5tv2x+Q1uz8sUrZxYYIYsVLilB
-         17tjG0k/qvWR8SyiyjTjGbVyEdGM1TWxo4+pzMhnnsTnvmM/bDARriRt5O5Y2ZbueXDM
-         l5Yw==
-X-Gm-Message-State: AOAM533WXD5GiWIQxfPXN9CjjdNzyB8E61YRXLJzJiD2hOJZbkFEVpDz
-        HySnIC+Nmla8PFV+mB18KOxFo9jS9vhAuSEyx6E=
-X-Google-Smtp-Source: ABdhPJwrSFipn8Bb59EqkLU6EQVkGNI3mbZop4oT6xM6zzFanHfvmHxgsiKExT0kJEaL0ZhvBLQwQ2ZV+ci6elz2fDw=
-X-Received: by 2002:aca:b742:: with SMTP id h63mr2378078oif.148.1598031720424;
- Fri, 21 Aug 2020 10:42:00 -0700 (PDT)
+        Fri, 21 Aug 2020 13:58:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726723AbgHUR6A (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:58:00 -0400
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDDEF2076E;
+        Fri, 21 Aug 2020 17:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598032679;
+        bh=SY9zNs4J6t0vv72iGwx5CHsqBISRbTZU9+hhKRgBuhc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QZDE8vCDkAA5jlse0gEYh+PmM32pHu7oq7I5mhX53QFRvulP+td24khjIHsDQR8JC
+         2Vz6TmZQtxsFZnwsBmRHXT5tFLTqSGZqulb3JUWDhvj+q7KcyzhoInrC2qXuS5FTOM
+         HL8EaOM65oHoT6eTbvyU+OA7SkeBPiX9ugSGXD5k=
+Received: by mail-oi1-f174.google.com with SMTP id l204so2245559oib.3;
+        Fri, 21 Aug 2020 10:57:59 -0700 (PDT)
+X-Gm-Message-State: AOAM532dC7ftBN8FTNgfCkcPTcDtINLaUOce+4mqGkVv1hK2gCkaBb9X
+        l+GzdKxGCmtwvYctelWXIO038v7ZbpLpXRaezg==
+X-Google-Smtp-Source: ABdhPJy56tMaoq7RPfeWnbGfE9RwrzQuC1O2g9otVdT7rq5KiAI44AsUU8Hy6kvdvNrjgZTmUbM4NN+8SLtytcLnC+Q=
+X-Received: by 2002:aca:c3d8:: with SMTP id t207mr2564623oif.152.1598032679079;
+ Fri, 21 Aug 2020 10:57:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200821111127.3771-1-geert+renesas@glider.be> <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
-In-Reply-To: <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 19:41:48 +0200
-Message-ID: <CAMuHMdVr1FBD+Gto8zf-tAp4_YTP1zs_qKu=yBeS3n2yjVqX0g@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
- controller node name
-To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+References: <d007193ce73677713436c39684602f679d7623e4.camel@microchip.com> <20200820181018.GA1551400@bjorn-Precision-5520>
+In-Reply-To: <20200820181018.GA1551400@bjorn-Precision-5520>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 21 Aug 2020 11:57:47 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL1FiQ1CxTeOcEV8Y=p1yZKkXLq5Zz3qZ+xiJqkvH+RxA@mail.gmail.com>
+Message-ID: <CAL_JsqL1FiQ1CxTeOcEV8Y=p1yZKkXLq5Zz3qZ+xiJqkvH+RxA@mail.gmail.com>
+Subject: Re: [PATCH v15 2/2] PCI: microchip: Add host driver for Microchip
+ PCIe controller
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Daire McNamara <Daire.McNamara@microchip.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        devicetree@vger.kernel.org, david.abdurachmanov@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Fri, Aug 21, 2020 at 5:27 PM Sergei Shtylyov
-<sergei.shtylyov@gmail.com> wrote:
-> On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
-> > According to Devicetree Specification v0.2 and later, Section "Generic
-> > Names Recommendation", the node name for a pin controller device node
-> > should be "pinctrl".
+On Thu, Aug 20, 2020 at 12:10 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
->    Ugh, what a lame name! :-(
->    And they say DT should be OS agnostic...
+> On Wed, Aug 19, 2020 at 04:33:10PM +0000, Daire.McNamara@microchip.com wrote:
 >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > + *   pcie-altera.c
+> > + */
 >
->    I think more DTs have "pin-controler".
+> Add a blank line here.
+>
+> > +#include <linux/irqchip/chained_irq.h>
+> > +#include <linux/module.h>
+>
+> > +static struct mc_port *port;
+>
+> This file scope item is not ideal.  It might work in your situation if
+> you can never have more than one device, but it's not a pattern we
+> want other people to copy.
 
-I was surprised to discover the opposite, too:
+Indeed.
 
-$ git grep "\<pinctrl@" v5.9-rc1 | wc -l
-335
-$ git grep "\<pin-controller@" v5.9-rc1 | wc -l
-102
+> I think I sort of see how it works:
+>
+>   mc_pci_host_probe
+>     pci_host_common_probe
+>       ops = of_device_get_match_data()              # mc_ecam_ops
+>       gen_pci_init(..., ops)
+>         pci_ecam_create(..., ops)
+>           ops->init                                 # mc_ecam_ops.init
+>             mc_platform_init(pci_config_window *)
+>               port = devm_kzalloc(...)              # initialized
+>     mc_setup_windows
+>       bridge_base_addr = port->axi_base_addr + ...  # used
+>
+> And you're using the file scope "port" because mc_platform_init()
+> doesn't have a pointer to the platform_device.
 
-Gr{oetje,eeting}s,
+This is a simple fix. Move platform_set_drvdata to just after
+devm_pci_alloc_host_bridge() in pci_host_common_probe(). (Don't fall
+into the 'platform problem'[1] and work-around the core code.)
 
-                        Geert
+Then pci_host_common_probe can be called directly and mc_setup_windows
+can be moved to mc_platform_init().
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> But I think this
+> abuses the pci_ecam_ops design to do host bridge initialization that
+> it is not intended for.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+What init should be done then? IMO, given this driver is using ECAM
+support already and it's all one time init that fits into init(), it
+seems like a fit to me.
+
+> I'd suggest copying the host bridge init design from somewhere else.
+> tango_pcie_probe() also calls pci_host_common_probe(), so maybe that's
+> a good place.  But the fact that it's the *only* such caller makes me
+> think it might not be the best thing to copy.
+>
+> Rob has been working in this area and probably has better insight.
+
+It was my suggestion to move to the ECAM init. Prior versions had its own probe.
+
+One question I've been wrestling with is if we can do all the firmware
+setup for 'generic ECAM' on the same h/w we have drivers for, then
+shouldn't we make the kernel driver create an ECAM setup? There's also
+the question of why do root port config accesses go thru standard ECAM
+config space in ECAM mode, but use different address space for
+non-ECAM setup? DWC for example can probably do ECAM on more
+platforms. There's some that can't which are generally ones w/o the
+iATU or enough iATU entries or not enough memory space. The difference
+from a config space standpoint is just DT configuration (in the case
+of DWC with an iATU, the config space and memory space DT entries are
+just iATU configuration not h/w constraints).
+
+I think we have drivers too much in control of their initialization
+ordering and things should be more the other way around with core code
+calling h/w ops to do specific things. I don't have any grand plan
+yet, but perhaps the generic/common host stuff evolves beyond just
+ECAM and almost ECAM. The generic host would just have no h/w ops.
+
+Rob
+
+[1] https://lwn.net/Articles/443531/
