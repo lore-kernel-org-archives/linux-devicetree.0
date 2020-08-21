@@ -2,61 +2,80 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9054BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFC2C433E4
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 643AD207BB
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFCC2086A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ExF9oePk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxcAsT2X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgHUPPl (ORCPT
+        id S1727973AbgHUP14 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51552 "EHLO
+        Fri, 21 Aug 2020 11:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgHUPPk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 11:15:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF0A5C061573;
-        Fri, 21 Aug 2020 08:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Ahg5nela1JUC9KKhjqVH9llbBwk/SBHjRly3x+0Iphs=; b=ExF9oePk725V3Fkj0cDJnMOL29
-        fRGLS/wZGNIy8iKl6MYajnMRsjNpX14e78K4xXUyBRfLvSm22SPfN9WA0jxJ3W+GXb3CXb1xps5ME
-        MRreSSGlboy+cQ3W9cryCB49lfytJEK/O568Hc+KXtvEgmmtBMSzj5j+BHXPRLV/ZwqzOaX3p9jci
-        njbH6fgXL8Z3IjBIo6h98RVM5elwbjZP5n4pjj/TL1bwAzd7xatpSLHUa6MhKp4oZ2YNhNhIYle4l
-        XM8c7RmwQp9Dk2+wOi4qbBhh+pcTkDtZl2qIBqDhJKea8RlVQIlPxVbZfGa7QijyV/AeN/SCpLjdh
-        cgPg0tAw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k98lK-0003zK-K7; Fri, 21 Aug 2020 15:15:26 +0000
-Subject: Re: [PATCH 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe
- controller
-To:     Hongtao Wu <wuht06@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Billows Wu <billows.wu@unisoc.com>
-References: <1598003509-27896-1-git-send-email-wuht06@gmail.com>
- <1598003509-27896-3-git-send-email-wuht06@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a9e4caef-08b5-51c7-848d-1f360c9f3ea2@infradead.org>
-Date:   Fri, 21 Aug 2020 08:15:21 -0700
+        with ESMTP id S1728137AbgHUP1t (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 11:27:49 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A55CC061573;
+        Fri, 21 Aug 2020 08:27:49 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id x64so162780lff.0;
+        Fri, 21 Aug 2020 08:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=x6HtUbFf96oPZrSCaNseQpqm40kBH3Q2unc0hJKDKDU=;
+        b=lxcAsT2XFgYSVld2VwU2AUhjthG+GYo9NI7zHYolqatS03sRmCAoVxyTUtWeZhmxwy
+         iWrYkYpQaRwqbk8oTUddDkUo9fpG8tuIgQM1e9yMmd6o8xeBxaEdI1oUxGEiiebeLdJj
+         5GWaWBDAFx9pCFieuSieDLFfxFifn5/GtyqKqWbGzMaGIqMCc0OPf6MmnEjnKunjF6eU
+         tUHbawCnp7w0gkvnnCRTYZftQfdZGlDt1bMip2LSbC7xrov5uhgydtXMxhjgEjNW4Ikk
+         NrcAn09A+7U6OKsjyBKsYKFEhXBPM/m6XqTNWM0BiTi2HD8lZ6b6U4BU6OayIYg4dB2/
+         LKag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=x6HtUbFf96oPZrSCaNseQpqm40kBH3Q2unc0hJKDKDU=;
+        b=Cxtk7BPYWK5SeH9oOb0ZlcJQ2buQ3ds2lc6TJBJkl4I1q1uVqD3pMTzBIAJ+NyrcKS
+         tAUOr/lVSW2a3I101t4wF/hBhdigllE9CliXTCbhzwtUXw2TtivEhWy+LdY2axTj/8qZ
+         eb4npghuVvxh4d9qWXa6u7KBhUN1f5citAz54HCeFw+wMMzvwI6Fl8wA2TXIvwUIpogM
+         xDVqpblWTctUE3Bk5NhWN85oCiOkv0coFSMQMVa6vMWZ3L77X8BI6l6Pj/LADDoK37l9
+         QARbk3GX/W3gtWHVo0Udqa+rUK0Gz0MJr83gwaEQ4/VrzZuGBcQ8jZ/2qD2pNIWAXOEk
+         351A==
+X-Gm-Message-State: AOAM533oXCknEy61fekYAIvd6gJ9913yWzP/Lnw45FDsK7FP3RcTySuV
+        +kX5Py0lhM0kkmbTwhOGvlZMXf5vBhBrcg==
+X-Google-Smtp-Source: ABdhPJx7bwfv/I51vDeUMlofs4XqaObwpAWwRFfmVc+kdZs+m1DbAJB5N+nqIyIpbQkILy0QgVQikw==
+X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr1607766lfb.101.1598023667350;
+        Fri, 21 Aug 2020 08:27:47 -0700 (PDT)
+Received: from wasted.omprussia.ru ([2a00:1fa0:48e7:10e3:3a50:6605:bcd3:dc7e])
+        by smtp.gmail.com with ESMTPSA id 23sm446856lfg.59.2020.08.21.08.27.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 08:27:45 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
+ controller node name
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20200821111127.3771-1-geert+renesas@glider.be>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
+Date:   Fri, 21 Aug 2020 18:27:44 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <1598003509-27896-3-git-send-email-wuht06@gmail.com>
+In-Reply-To: <20200821111127.3771-1-geert+renesas@glider.be>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -65,59 +84,21 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 8/21/20 2:51 AM, Hongtao Wu wrote:
-> From: Billows Wu <billows.wu@unisoc.com>
-> 
-> This series adds PCIe controller driver for Unisoc SoCs.
-> This controller is based on DesignWare PCIe IP.
-> 
-> Signed-off-by: Billows Wu <billows.wu@unisoc.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig     |  12 ++
->  drivers/pci/controller/dwc/Makefile    |   1 +
->  drivers/pci/controller/dwc/pcie-sprd.c | 256 +++++++++++++++++++++++++++++++++
->  3 files changed, 269 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
+Hello!
 
-Hi,
+On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 044a376..d26ce94 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -311,4 +311,16 @@ config PCIE_AL
->  	  required only for DT-based platforms. ACPI platforms with the
->  	  Annapurna Labs PCIe controller don't need to enable this.
-> 
-> +config PCIE_SPRD
-> +       tristate "Unisoc PCIe controller - RC mode"
-> +       depends on ARCH_SPRD
-> +       depends on PCI_MSI_IRQ_DOMAIN
-> +       select PCIE_DW_HOST
-> +       help
-> +         Some Uisoc SoCs contain two PCIe controllers as RC: One is gen2,
+> According to Devicetree Specification v0.2 and later, Section "Generic
+> Names Recommendation", the node name for a pin controller device node
+> should be "pinctrl".
 
-	         Unisoc
+   Ugh, what a lame name! :-(
+   And they say DT should be OS agnostic...
 
-> +         and the other is gen3. While other Unisoc SoCs may have only one
-> +         PCIe controller which can be configured as an Endpoint(EP) or a Root
-> +         complex(RC). In order to enable host-specific features PCIE_SPRD must
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-	    complex (RC).
+   I think more DTs have "pin-controler".
 
-> +         be selected, which uses the Designware core.
-> +
->  endmenu
+[...]
 
-Also, please follow Documentation/process/coding-style.rst for
-Kconfig entries:
-
-  For all of the Kconfig* configuration files throughout the source tree,
-  the indentation is somewhat different.  Lines under a ``config`` definition
-  are indented with one tab, while help text is indented an additional two
-  spaces.
-
-
--- 
-~Randy
-
+MBR, Sergei
