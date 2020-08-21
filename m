@@ -2,184 +2,116 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3623C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE48C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81C182078B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT/984PP"
+	by mail.kernel.org (Postfix) with ESMTP id 544DC2078D
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 11:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHULiR (ORCPT
+        id S1728653AbgHULlp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:38:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbgHULiD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 07:38:03 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA2CC061385;
-        Fri, 21 Aug 2020 04:38:03 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id p191so887278ybg.0;
-        Fri, 21 Aug 2020 04:38:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OkIK/dZ2Mgt//fkmDHOJQ3SHXplluJWee1ZVxzLQD9E=;
-        b=cT/984PPUunLzXowyppHLeT4YU0JjTauMQNZzsugiYeMiLoHw6rZKaH3TbbmKAdJi1
-         ej91Eaq+KcwmvIFhjjFj4SMKoQNE1s0d5eZVF+EoXpUkm+AU+Tjk2zm8d2mmDk3jjAbm
-         fI0wgP8Q4lZBtFhs3lQz0d6WMyvbPoNnQ/n2R1NSxETDX2z2/cxZCmfIgzRxk9PCeAmI
-         i1HeRmJTKG6H9eYCW9y4/9rEuEgOFFjH7CvVofgGcshy6szHurdQ9hn046p/J+ROD9y2
-         A5LBZfLFYhFNxGcYg7N/FTNTW7y8D29myCFN+LU3tD28MPiKKqE9zp8DI26V4kqeO1w+
-         MCDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OkIK/dZ2Mgt//fkmDHOJQ3SHXplluJWee1ZVxzLQD9E=;
-        b=HuBJEzO4rqQaXfLD2WcTX4fibp8j3/W4XvZGQPgPs9U5gj5PfLGZnSG4Z7rlcSANOW
-         RlUIL6B+Ez+J193LSmsGiBcHLulDUSee7iUbf00lD6eL0dYHxKhMh4SIVGG2ZoX0/3PD
-         43LCyl+fjK+g6xE2UTpILvtQzEAgPqXI47HhuEdvoRL7yWjqdXzd4vBidsjB/PiT+6C4
-         YC61T9SM85lO+sXobjV+4jRXS5mU/y1HOKpg4Mj5pYsFSkhD5RApulbrNFjwVJJWZLkY
-         vleFHvYcoUlPEMAH/ZYvVcb6nS8OdekKWMe2Ard977B6ONX9wbwEs6T68lxcw3XSUJoH
-         eE9g==
-X-Gm-Message-State: AOAM532YDb0DmrLRDUKTFjASCm2g+fxl+qDAUm865GwvSFRFxl4wWbOG
-        xBwGXDbUCDWQmKC8MWw+j10GBMSdP5M0WLlTYaY=
-X-Google-Smtp-Source: ABdhPJzOUQ7z+wYHExuvCZTZfc4BvrCPM5gPv8JOYJe952Ot0fbk9SzYIqjPi/4vrcYDl96EqC1S8XBMBg26dzJtdNw=
-X-Received: by 2002:a25:2f4d:: with SMTP id v74mr2868323ybv.401.1598009881871;
- Fri, 21 Aug 2020 04:38:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
- <20200818122012.37956-4-jacopo+renesas@jmondi.org> <20200819135423.GL6049@pendragon.ideasonboard.com>
-In-Reply-To: <20200819135423.GL6049@pendragon.ideasonboard.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 21 Aug 2020 12:37:35 +0100
-Message-ID: <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: media: ov772x: Document endpoint props
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Aug 2020 07:41:45 -0400
+Received: from mga02.intel.com ([134.134.136.20]:14303 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727873AbgHULju (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:39:50 -0400
+IronPort-SDR: fgUnRgWQzunzS5OIwHzKX9K2ggJI2gXIkuwK4CZyTCWr+z+ys+ajGa0+6KV9eD8WRcN2/ZPmj9
+ 1FJLWiihfpRQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143305584"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="143305584"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 04:39:44 -0700
+IronPort-SDR: JVTI3XBCtwgCkEz1A7Ppe+paPAV42meD9gCCamrSIwPKnJb2dmRDzWXT8fObjR9LHZpL44ahCu
+ qnIgU8SRVX/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327740415"
+Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 04:39:42 -0700
+From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
+        andriy.shevchenko@intel.com, eswara.kota@linux.intel.com,
+        vadivel.muruganx.ramuthevar@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH v7 2/3] dt-bindings: phy: intel: Add Keem Bay eMMC PHY bindings
+Date:   Fri, 21 Aug 2020 19:37:46 +0800
+Message-Id: <20200821113747.2912-3-wan.ahmad.zainie.wan.mohamad@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+References: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent and Jacopo
+Binding description for Intel Keem Bay eMMC PHY.
 
-On Wed, Aug 19, 2020 at 2:54 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Tue, Aug 18, 2020 at 02:20:12PM +0200, Jacopo Mondi wrote:
-> > Document endpoint properties for the parallel bus type and
-> > add them to the example.
-> >
-> > Specify a few constraints:
-> > - If the bus type is BT.656 no hsync or vsycn polarities can be
-> >   specified.
-> > - If the bus width is 10 bits, not data-shift can be applied.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  .../devicetree/bindings/media/i2c/ov772x.yaml | 43 +++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > index 75dad40f70cc..3fad5dffd19a 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > @@ -50,9 +50,47 @@ properties:
-> >            bus-type:
-> >              enum: [5, 6]
-> >
-> > +          bus-width:
-> > +            enum: [8, 10]
-> > +            default: 10
-> > +
-> > +          data-shift:
-> > +            enum: [0, 2]
-> > +            default: 0
-> > +
-> > +          hsync-active:
-> > +            enum: [0, 1]
-> > +            default: 1
-> > +
-> > +          vsync-active:
-> > +            enum: [0, 1]
-> > +            default: 1
-> > +
-> > +          pclk-sample:
-> > +            enum: [0, 1]
-> > +            default: 1
-> > +
-> >            remote-endpoint:
-> >              description: A phandle to the bus receiver's endpoint node.
-> >
-> > +        allOf:
-> > +          - if:
-> > +              properties:
-> > +                bus-type:
-> > +                  const: 6
-> > +            then:
-> > +                properties:
-> > +                  hsync-active: false
-> > +                  vsync-active: false
-> > +
-> > +          - if:
-> > +              properties:
-> > +                bus-width:
-> > +                  const: 10
-> > +            then:
-> > +                properties:
-> > +                  data-shift:
-> > +                    const: 0
->
-> I'd add a blank line here.
->
-> >          required:
-> >            - bus-type
->
-> Should some of the properties be required ? Possibly conditioned on
-> bus-type ?
->
-Agreed, would be interesting to know how this can be handled (split
-out bus-type and add required properties for each) ?
+Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/phy/intel,keembay-emmc-phy.yaml  | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
 
-Cheers,
-Prabhakar
+diff --git a/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+new file mode 100644
+index 000000000000..4cbbd3887c13
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,keembay-emmc-phy.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/intel,keembay-emmc-phy.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Intel Keem Bay eMMC PHY bindings
++
++maintainers:
++  - Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
++
++properties:
++  compatible:
++    const: intel,keembay-emmc-phy
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: emmcclk
++
++  "#phy-cells":
++    const: 0
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    phy@20290000 {
++          compatible = "intel,keembay-emmc-phy";
++          reg = <0x20290000 0x54>;
++          clocks = <&emmc>;
++          clock-names = "emmcclk";
++          #phy-cells = <0>;
++    };
+-- 
+2.17.1
 
-> >
-> > @@ -82,6 +120,11 @@ examples:
-> >              port {
-> >                  ov772x_0: endpoint {
-> >                      bus-type = <5>;
-> > +                    vsync-active = <0>;
-> > +                    hsync-active = <0>;
-> > +                    pclk-sample = <0>;
-> > +                    bus-width = <8>;
-> > +                    data-shift = <0>;
-> >                      remote-endpoint = <&vcap1_in0>;
-> >                  };
-> >              };
->
-> --
-> Regards,
->
-> Laurent Pinchart
