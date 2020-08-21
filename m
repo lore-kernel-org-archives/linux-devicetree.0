@@ -2,210 +2,153 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B396C433DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995B4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1B9B2087D
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598047896;
-	bh=fjUhRuQKm8f1fb1XU0Zes6sQDguM9nwNey/Mjg35Qho=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DblJHlyBxoRyl5H8hkCQdnpUbX3EcXctBDwwdIsUe4FhEtVvE5GRT5OJG7YxKTbMl
-	 W81gmjlq2qCDoOzFjIxaFiUXtpgUp0T1+/yDPZWALtdu5rWneUaMKCNxhIEcBJPppm
-	 d3ppJNe0BdmmVjcqRwj+gNO6JBMPSYpF00qMrxYw=
+	by mail.kernel.org (Postfix) with ESMTP id 7422F208DB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:19:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7e8QLL/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgHUWLg (ORCPT
+        id S1726765AbgHUWT7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:11:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbgHUWLf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:11:35 -0400
-Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B61422087D;
-        Fri, 21 Aug 2020 22:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598047894;
-        bh=fjUhRuQKm8f1fb1XU0Zes6sQDguM9nwNey/Mjg35Qho=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aX8ReITKM/Ta8LYT5WqOhz02VJTGSGvn7Mw8W7e+XUMMiBHEu+OeNJvyK4jVY0VCt
-         t6OjIKsIKF7mQtHBI0qaLf9egUKAq+ilN+m34gGKwGuIcfVEyw95MKpCP8mkryPOPG
-         +TydynQFsLt1TVnV3Ccq2fAClSMNql6z6T5vvzro=
-Received: by mail-oo1-f42.google.com with SMTP id x6so672494ooe.8;
-        Fri, 21 Aug 2020 15:11:34 -0700 (PDT)
-X-Gm-Message-State: AOAM530JTZVYpnhX4UVs10IrBm4iP2kne9cCAoNTuvjtJped0p8Z94B5
-        ++hEIT0ZGdGPniQNSxL425PDmsIWVmMwp9kGVA==
-X-Google-Smtp-Source: ABdhPJz4dkPtYZT5tRo0MDTYMZbIAn6jfWvcC3zGyEzPL69zfiWh34FaMbJgoP16he88SIHHwmJAUgsYOZo7pRiG0TM=
-X-Received: by 2002:a4a:a60a:: with SMTP id e10mr3730622oom.25.1598047893992;
- Fri, 21 Aug 2020 15:11:33 -0700 (PDT)
+        Fri, 21 Aug 2020 18:19:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgHUWT5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 18:19:57 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42756C061573;
+        Fri, 21 Aug 2020 15:19:56 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id si26so4268232ejb.12;
+        Fri, 21 Aug 2020 15:19:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7Euhqf0kKa8bJk8hY6VIiEQD27H+m7/Zjj9fyz771ww=;
+        b=W7e8QLL/UILxZwiAdklCeQIidO1LLzLv/jj477YznHokzrs/jwc4XDHBocvHEKRcS7
+         C4k4OTeS2MJBKjJp2p1+UZRWaoGFznWR4y2r15ULdQud9LkesE/Og1hyjN+N5ddNKj54
+         eR0xfYGRlGOzsoLkDrFOgS2PPL/E80Ybd1I9Bs5NePnuitGku4JdnUlGtNqomoUsCBx7
+         rUwvGwZVmjc/ayRjLa84HTtY9OYDVx7nMKIJBlMluEpZ0KBxS4pEg5jg3djiJI3oVfx4
+         AUrJtyP2Zh187WNwWe5fKJ4mnNymXPMpe9PSM757wZuI53P/EuXETwae+Uj9pTbhcknV
+         hTlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=7Euhqf0kKa8bJk8hY6VIiEQD27H+m7/Zjj9fyz771ww=;
+        b=qcb+n+aoy9P+/d8VPKzsgMm3vBvDlZz7hGpIaUBvs+FgWM/dwaAioz8XZX8zpQeiJZ
+         GZQL/r8BVFuIKJTp6Dt9Qdpc/G7wRrjBn06xHbZ8GVVBxlosGGwqaI4xqbE43/rwBOEq
+         gelRw3ke4wU43jz7VBGNu1vzZi826IqkMPBuRgCSFAQpXAs/siww3Ks0CzecnXNnI1BC
+         em9AUN2DIHfWXDdukjEsco3V2onjkqnKPtuhOCG9bI2BH8HI8AD8eE3Yehjd1hMRafGj
+         wy4wYDNRho4jbyHhEaqJ0tkA5z4SPxXyHsi89IuMbz0ocpRDO/O5h2YvpnPpsgL96QA0
+         ehdw==
+X-Gm-Message-State: AOAM533UA5vXULaFwEmzbf8I4IOEs/YDrg7c6bOrHdv3ua617DD4uAsm
+        VUD6hVOlxoVKOv1G6DZv14I=
+X-Google-Smtp-Source: ABdhPJytrtdq9zPLl7O5jmDFGa+bREqtkDfuGd6hS1X1/YZJjB0xIhkRKGNYMWTMKR6aiTXJBfI1eQ==
+X-Received: by 2002:a17:906:d971:: with SMTP id rp17mr3788200ejb.31.1598048394799;
+        Fri, 21 Aug 2020 15:19:54 -0700 (PDT)
+Received: from localhost.localdomain ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id p23sm1780147edm.31.2020.08.21.15.19.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 15:19:54 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v2 0/6] Add initial support for ATC260x PMICs
+Date:   Sat, 22 Aug 2020 01:19:46 +0300
+Message-Id: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <1598003509-27896-1-git-send-email-wuht06@gmail.com> <1598003509-27896-2-git-send-email-wuht06@gmail.com>
-In-Reply-To: <1598003509-27896-2-git-send-email-wuht06@gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 21 Aug 2020 16:11:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLtGF57Q3FEjFWhDkdwSwp6S4SERAG9AwuB-eEb=xtMKw@mail.gmail.com>
-Message-ID: <CAL_JsqLtGF57Q3FEjFWhDkdwSwp6S4SERAG9AwuB-eEb=xtMKw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: sprd: Document Unisoc PCIe RC host controller
-To:     Hongtao Wu <wuht06@gmail.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        PCI <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Billows Wu <billows.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 3:52 AM Hongtao Wu <wuht06@gmail.com> wrote:
->
-> From: Billows Wu <billows.wu@unisoc.com>
->
-> This series adds PCIe bindings for Uisoc SoCs.
+This is re-spin of the patch series submitted some time ago by Mani,
+who added initial support (MFD core and regulators) for the Actions
+Semi ATC260x PMICs:
+https://lore.kernel.org/lkml/20190617155011.15376-1-manivannan.sadhasivam@linaro.org/
 
-typo
+The ATC260x family of PMICs integrates Audio Codec, Power management,
+Clock generation and GPIO controller blocks. There are currently 3
+variants: ATC2603A, ATC2603C and ATC2609A.
 
-> This controller is based on DesignWare PCIe IP.
->
-> Signed-off-by: Billows Wu <billows.wu@unisoc.com>
-> ---
->  .../devicetree/bindings/pci/sprd-pcie.yaml         | 88 ++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/sprd-pcie.yaml
->
-> diff --git a/Documentation/devicetree/bindings/pci/sprd-pcie.yaml b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
-> new file mode 100644
-> index 0000000..6eab4b8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/sprd-pcie.yaml
-> @@ -0,0 +1,88 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/sprd-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SoC PCIe Host Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Billows Wu <billows.wu@unisoc.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +  - $ref: "sprd-pcie.yaml#"
+In addition to the ATC2609A regulator functionality provided that time,
+this patchset adds support for the ATC2603C variant, together with some
+new functionalities for both chips: power controller and onkey input.
+The ATC2603A variant remains unsupported for the moment.
 
-Drop this. You don't need to include yourself.
+This has been tested on RoseapplePi, a SBC based on the Action Semi S500
+SoC, which integrates ATC2603C PMIC. An initial support for this board
+has been already submitted:
+https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
 
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: sprd,pcie
-> +      - const: sprd,pcie-ep
-> +
-> +  reg:
-> +    minItems: 2
-> +    maxItems: 3
-> +    items:
-> +      - description: Controller control and status registers.
-> +      - description: PCIe shadow registers.
-> +      - description: PCIe configuration registers.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: dbi2
-> +      - const: cfg
+Please note that enabling the ATC260x PMICs on the compatible Actions
+Semi Owl SoC based boards depends on the following:
 
-'config' is the standard name.
+* Actions Semi SIRQ driver (for PMIC DTS setup):
+  https://lore.kernel.org/lkml/cover.1597852360.git.cristian.ciocaltea@gmail.com/
 
-> +
-> +  ranges:
-> +    maxItems: 2
-> +
-> +  num-lanes:
-> +    maxItems: 1
+* I2C Atomic transfers in Actions Semi Owl driver (for proper operation
+  of the power controller driver):
+  https://lore.kernel.org/lkml/b086ef6d355d9730c839359e15eb06175283e323.1596485741.git.cristian.ciocaltea@gmail.com/
+  
+Thanks,
+Cristi
 
-maxItems is for arrays and this is not an array. How many lanes are valid?
+Cristian Ciocaltea (6):
+  dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
+  mfd: Add MFD driver for ATC260x PMICs
+  regulator: Add regulator driver for ATC260x PMICs
+  power: reset: Add poweroff driver for ATC260x PMICs
+  input: atc260x: Add onkey driver for ATC260x PMICs
+  MAINTAINERS: Add entry for ATC260x PMIC
 
-enum: [ 1, 2, 27?, ... ]
+ .../bindings/mfd/actions,atc260x.yaml         | 221 ++++++++
+ MAINTAINERS                                   |  12 +
+ drivers/input/misc/Kconfig                    |  11 +
+ drivers/input/misc/Makefile                   |   2 +-
+ drivers/input/misc/atc260x-onkey.c            | 304 +++++++++++
+ drivers/mfd/Kconfig                           |  18 +
+ drivers/mfd/Makefile                          |   3 +
+ drivers/mfd/atc260x-core.c                    | 290 ++++++++++
+ drivers/mfd/atc260x-i2c.c                     |  73 +++
+ drivers/power/reset/Kconfig                   |   8 +-
+ drivers/power/reset/Makefile                  |   1 +
+ drivers/power/reset/atc260x-poweroff.c        | 274 ++++++++++
+ drivers/regulator/Kconfig                     |   8 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/atc260x-regulator.c         | 511 ++++++++++++++++++
+ include/linux/mfd/atc260x/atc2603c.h          | 281 ++++++++++
+ include/linux/mfd/atc260x/atc2609a.h          | 308 +++++++++++
+ include/linux/mfd/atc260x/core.h              |  86 +++
+ 18 files changed, 2410 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
+ create mode 100644 drivers/input/misc/atc260x-onkey.c
+ create mode 100644 drivers/mfd/atc260x-core.c
+ create mode 100644 drivers/mfd/atc260x-i2c.c
+ create mode 100644 drivers/power/reset/atc260x-poweroff.c
+ create mode 100644 drivers/regulator/atc260x-regulator.c
+ create mode 100644 include/linux/mfd/atc260x/atc2603c.h
+ create mode 100644 include/linux/mfd/atc260x/atc2609a.h
+ create mode 100644 include/linux/mfd/atc260x/core.h
 
+-- 
+2.28.0
 
-> +    description: Number of lanes to use for this port.
-> +
-> +  num-ib-windows:
-> +    maxItems: 1
-
-Not an array.
-
-> +    description: Number of inbound windows to use for this port.
-> +
-> +  num-ob-windows:
-> +    maxItems: 1
-
-Not an array.
-
-> +    description: Number of outbound windows to use for this port.
-> +
-> +  bus-range:
-> +    description: Range of bus numbers associated with this controller.
-
-Drop if you don't have constraints.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    maxItems: 1
-
-Need to define the name, though you don't really need this with only 1.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - num-lanes
-> +  - ranges
-> +  - bus-range
-> +  - interrupts
-> +  - interrupt-names
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    pcie0@2b100000 {
-> +        compatible = "sprd,pcie", "snps,dw-pcie";
-
-Didn't document "snps,dw-pcie". You'll need a custom 'select' to avoid
-selecting all instances of "snps,dw-pcie".
-
-> +        reg = <0x0 0x2b100000 0x0 0x2000>,
-> +              <0x2 0x00000000 0x0 0x2000>;
-> +        reg-names = "dbi", "config";
-> +        #address-cells = <3>;
-> +        #size-cells = <2>;
-> +        device_type = "pci";
-> +        ranges = <0x01000000 0x0 0x00000000 0x2 0x00002000 0x0 0x00010000
-> +                  0x03000000 0x0 0x10000000 0x2 0x10000000 0x1 0xefffffff>;
-> +        bus-range = <0  15>;
-> +        num-lanes = <1>;
-> +        num-viewport = <8>;
-> +        interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-names = "msi";
-> +    };
-> --
-> 2.7.4
->
