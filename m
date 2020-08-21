@@ -2,145 +2,114 @@ Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE95C433E1
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 01:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737C7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F19208E4
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 01:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4715D2075E
+	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 02:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="P3IYe87q"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="iqb3h5kZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725859AbgHUBjx (ORCPT
+        id S1727772AbgHUCTZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 20 Aug 2020 21:39:53 -0400
-Received: from mail-am6eur05on2062.outbound.protection.outlook.com ([40.107.22.62]:44672
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        Thu, 20 Aug 2020 22:19:25 -0400
+Received: from mail-co1nam11on2075.outbound.protection.outlook.com ([40.107.220.75]:52480
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726819AbgHUBjs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 20 Aug 2020 21:39:48 -0400
+        id S1727787AbgHUCTV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Aug 2020 22:19:21 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UCrg/RBoBu+fr7ETMOLkJcDRag8BXsiYEcIxIBog7JZEjAzaElqrPGiVjw6owu70yqEHDWbM+jvyXK/CF4QEBaoPkZ2Nigq0LW9tr/p2WG5tk8TI+Qc1/A9tega0rZclU+//ndjF9HBjSwmB98+29NrpoGzlrbDZski6bkM8gMC+3PWTiMmHFPWvA3ykFYCUfTNCKmGuPCpOhRNpGcvCT4J/Fs2lRhn2ZTkal1siSdyOHnq8l/FIOC/EEE6QbID0+Z90OXjT4JIwt1V3q5hVkeFQ/E/6MA1uzReDLOdlHvtvrTvUDtp5p9aW2qH87ByvoSa8zdTLglQ8pQigP315NA==
+ b=N6f5R9aNUmLrGHuJSRq0/KI14YpFpwKJPhC9p8qIyfQIzgaUX7E4nJOi4xIRysKq8hp+m/EWZ51dBN0YIpcsLlmq6h+4BUOuCemRT9N+VXrbICafbuGkTwabYhxZymzfuO9OZwniOr7QEncK90ufbQkkBJyNQBfjbimMyA+3pvbFdlusPkPxBZQm0I2EZGwsAfXrZO088VpKyQ+HtW/tFSUQiYjxfwXFnkzUTk38cMmql9LUCH4r/BhtxxguX59yah0LES0yIc8Ba84akiR3075gA0Yb9HRDotUh9VnyNh6TTDgeKqF1O+Phw+T6WBWYDC7raq446F7+B5vfOKSllA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2E26P83qh6qUHmDG++MBPWcTeXfxsHO9ucmb063ch6I=;
- b=kCzzoQzLrlqHSXYr//q2JDVcBvkzzvcftXvmwcErI2gYXVpR3HKHaJN6evr5zZCING1MgBbZhijgrr1eBJcNLY9KPme7Bqbu6iEm6BH4+8/4eOTwjSqyOT8qUUS3vLj+t1gawRJS65KrPGCyGZMWrAB9nFnrb+Njs+aFMfUgwq1cw2UpC1MVZaPI2XLz1v7bylBgpYO38/JUGzaaOaKD0qDn198u2hBwyNd4QV11UiBh9vwCpwB75AHUbq2GXZjC/mSpLHLTpoNSIRIbHDoJCp5JvwhC1fFi55qN2wH98X7rZZvuKhE92to7eit7Oxx059y96aDSAYnqsvepRHHBSw==
+ bh=1fq5SiOaTYdX32V7iVt1nuK8Uq8FAEUJE5Q8hg0hsC0=;
+ b=aEQJhhIuw2G1dmO7+axkjlSRk0wPKa2LVM7F+5gYaALJ1QR8jVg4HWnbWhWeFvhbEQnfMJs7d/wgoh1bHf9HynJ2dF+SlYYi522mpgzxiL54rOn2n2NtkxKT4jW6LWClYBjmQIjDJiyU8EFd+3W1NO5Fbi2t0CzWFPNn9j+SxiMzUz9ZlBpeZKQ3ywdk9Wb3c8bj1j6n7JhAtFixs488qqFXLsExKRxAnhHPAYBpLKyzWOKL4+vpzpOcd9Gs+uqRMMj4HwL1AyJT1KSYkWCQzKkS37Bl5iwzgjA7HFqjyi7vF962DytLOuQmVsBFFDwPWGI21xi1HVzD3jmdJ12r5g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2E26P83qh6qUHmDG++MBPWcTeXfxsHO9ucmb063ch6I=;
- b=P3IYe87qOlx+gsfZttnqsbJ8QliWEmALTb8OAQlvvDNICuG43UphQ+yjYpcbGUu4JDnG/SO4+MXyW8IxxqAqtlE/9qht562lN2F3uIPJA8A8N2o3SHLi3XQW3N/bisXptAfWEDUeqnDBZs4tQCKBw6IdkOYFQgRA6KcdBF8mL1o=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM6PR04MB4856.eurprd04.prod.outlook.com (2603:10a6:20b:b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
- 2020 01:39:44 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1023:be8d:40c:efe1]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1023:be8d:40c:efe1%3]) with mapi id 15.20.3283.028; Fri, 21 Aug 2020
- 01:39:44 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] arm64: dts: imx8mm-evk: add two parameters for
- samsung picophy tuning
-Thread-Topic: [PATCH v3 3/4] arm64: dts: imx8mm-evk: add two parameters for
- samsung picophy tuning
-Thread-Index: AQHWYYCFfcI/EL75wkqE5gg4u6HvralB9JWA
-Date:   Fri, 21 Aug 2020 01:39:44 +0000
-Message-ID: <20200821013839.GA24960@b29397-desktop>
-References: <20200724060532.3878-1-peter.chen@nxp.com>
- <20200724060532.3878-3-peter.chen@nxp.com>
-In-Reply-To: <20200724060532.3878-3-peter.chen@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7a18fd7c-86c7-41cd-c43c-08d8457314b2
-x-ms-traffictypediagnostic: AM6PR04MB4856:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB48563F778474358ABB14B99F8B5B0@AM6PR04MB4856.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EAkR3N4dGvJd19kf+QkkJLaN/Kgmf9/rPXeHWXi3PA+4NzQl6X0xdFT2mw5EO5fDJiHX99CZma033GXdo/pCFgCibkTtoDyh/13xaXfhFAG2CFqfmkqPgP6Lhg85E2VFEssX781H+UojXF7A+mL6DqtSu3rG4UPorkMbZirdzIy+tMir7hREuu9OkEc/LXuvg8xg4mIRoj2WFhKVuMcTp5Z3qGuc9qz00B5KVKZbgJ9pW1ePtiPiFZXeihiZaOx3UoRdjEsvI6yIHk1jTJHnde41MDmRGhjEG73qeu32STI4oI1syDpObBEctg79229WffqqEEE+fj3qNxD9Zw+rQhb0MZTeyxByvD1r4DgMlTgqy+HwpwquYVa3t8CzNVqW
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(71200400001)(64756008)(66556008)(66446008)(66946007)(66476007)(53546011)(8676002)(478600001)(4326008)(91956017)(6486002)(76116006)(8936002)(33716001)(9686003)(33656002)(6512007)(6506007)(86362001)(1076003)(44832011)(316002)(26005)(4744005)(110136005)(2906002)(54906003)(186003)(5660300002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: cPMUF5UBsdLbPNe5g1zvVhMSq+2tlcD9mY+do06GZ9G8eybqWoBUA+mEYMAWOdEVksPkYrw9rffHDjAKHU07q9a8RI5Y+KOyTpZbQMif9Gq5uQkFEkKGRSx6gGxw3jPVWjNVcV69jC5H/y0R5OhBL6Lz44NcDL5NQZvxYSlc4akkRGp0GMXwkR+nAJ8M4YYPA6/i5OQedSuUtaDuf+oqM5k7C0xYR8Ji2yIVS3OI78pTus9PWt3a52MLQfciIIYohNqpwfF082DZ+/hV4z43yoBkp222BqM4ubrKZ7Osj2IZFH/QYakzsQkgVrumDlTXsZCy4TXUSYfgO+JJz90X3MM18H8yglST31mx9o+J2zPnaaLbUyjukRPfJ1U5Xug6fp0F2UQxLp6DmGMe5IPbRpFXtrT6XrQnEqBZomr7V3i3+5wpenKwmRbRsY3uc+c5pkBycOOEqcnnDjz9au5D08ulqieTePARzp0grF6MpQjNtrAXbHm+kD92eajVXp/CMAJTa+jq+Pk4yrJnps1RKfgRtLZ1mi16lBhi3/INZfsLQN/LVvhjgTtBWf/U8lqwp7RepgkXYZ58J1lI2kffUd/O9Uu4DIe4TfiLQ49n0m50f0YVpV9Fbo6b7Epd7cJzYWKN7E+apfcAFG4fg58HUg==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C7FAC2D6C90BAE468A8E5158C48F9009@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ bh=1fq5SiOaTYdX32V7iVt1nuK8Uq8FAEUJE5Q8hg0hsC0=;
+ b=iqb3h5kZCGIvRMQPJTPyy80RLXcq5b4of1cFOcnvsCT/kH1NmRfZwMhx58MhAd0EXI1SrhWk1ykQDhzX6NDcUEoSwH0cpPnM6AgBy/z3IpENLp36dXSPeQGMyOP1byNnnHtPffmilklwG85B8SR+VxyCiisu+2XGRj0/T9sgbBo=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=synaptics.com;
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com (2603:10b6:5:102::17)
+ by DM6PR03MB4233.namprd03.prod.outlook.com (2603:10b6:5:8::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.25; Fri, 21 Aug 2020 02:19:17 +0000
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3305.025; Fri, 21 Aug 2020
+ 02:19:17 +0000
+Date:   Fri, 21 Aug 2020 10:17:29 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] regulator: mp886x: implement set_ramp_delay
+Message-ID: <20200821101729.76f1951b@xhacker.debian>
+In-Reply-To: <20200820210513.GA41191@sirena.org.uk>
+References: <20200820171020.5df4683b@xhacker.debian>
+        <20200820171051.55a238e8@xhacker.debian>
+        <20200820210513.GA41191@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYAPR01CA0052.jpnprd01.prod.outlook.com
+ (2603:1096:404:2b::16) To DM6PR03MB4555.namprd03.prod.outlook.com
+ (2603:10b6:5:102::17)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by TYAPR01CA0052.jpnprd01.prod.outlook.com (2603:1096:404:2b::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Fri, 21 Aug 2020 02:19:15 +0000
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ae0be932-a328-45e2-e333-08d845789aee
+X-MS-TrafficTypeDiagnostic: DM6PR03MB4233:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB42334F217C28FA7294542A41ED5B0@DM6PR03MB4233.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hOGGkrV+C7OX9r0qZAlZqAiSzMBE4zIdju9KtjQWjphJZDUPe+FWhEuBXN1M7T67Cvzd3hnGNIP4WrHWMGToumyHa17F3XR6FAP/6swZoqqUmOxQliqYh83suaxltmgwZhep6ieVhoMxsiOJCo+7Ci1vVbEyOZ6TE/4Rlfz64Kn9LTM2R/19I+DSn+8B8MIlZb3VAZ4Iaxb5VesbffecJ5Unn7RxiWx0kpoK/7HA0A1C85vAeD4hiCk786NylCgzB20DMyyHJ2eseRVl5Qyz6eM2qdvPeT5E1NF4e1omJJunIqepZwIxLZEdSijBKmHxmnNNhReO6EWqqWGeR3LCnyO4SE0/kIEm3lm4yTb287B/zhTNxu8viT6g2arpCUme
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(346002)(39860400002)(136003)(376002)(366004)(66556008)(316002)(4326008)(66476007)(6916009)(6666004)(2906002)(66946007)(54906003)(52116002)(1076003)(956004)(26005)(5660300002)(16576012)(86362001)(4744005)(186003)(6486002)(478600001)(8936002)(9686003)(110011004)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: G6iyJVTZ4ns74/AaPlIuXAn3k5QIEkdiq/dlqu6e6mEzZet0EVpMatDluEhGVikgu/fXLDjo2aul16i2wvl5eXBokQFPRQlChoetnmloulqzFaoHAg/ca7UeMsVighZBU/bq4G1/f4Kb+b53emNFzLXgnZSw1Aiv9e2kcLxFvwgYyI696/QpTaghLH0Hy9kNrgSmuHpmYxBWsG2GHQewD3d/sxdWhmPan5wwmVaypToCwRCyi9aLxoCrbhadafObiBVlYw9mDof4FgcgWIVLXz19ZUA/Ev2A85e8aIfpPhH9Ar8F/uPwiYlk8IQBPBSSnHVrXYnjSjmsA7h+1sT0F8s/ja/9tQJpX6KNaicD6IbPuwik7LZvEiDw7oTXPd/0snkIvjbXfFhhR7Bi4IzvwsqhycCjm3uUYQmTM94+goz3y/voFY78LyPTl4taugY2dOv48VsF8TBYQchz5WfF4Scs8Jiqzbq9XyNF2ofLfyNYyIOnBaWgAJbuKrTxP9f2oIURFqBuOUnbtOzxb9N+nVh64rCJAJRBBV6IQlM3cfc4esNWCezYnAjk52drw87A+38saZvp59tI1aKBemkrVAXUMT7SUmib3w32HqkKFSQlQnSk2hMyEDr4c39P1spvq+CvpXlQq4GyZM43GYrNdg==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae0be932-a328-45e2-e333-08d845789aee
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a18fd7c-86c7-41cd-c43c-08d8457314b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2020 01:39:44.2655
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 02:19:17.5331
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jITiqyNNN3Jz7EmhtRRNDC/ptoCcCHPbxZiV3ap1GYk0ruPbdcFKhbpizCdGPnp7ZtZTZ4QuMpemRQ5JU2lyow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4856
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KZ+7pgeGkBRr7w8iS8gCm3XRINGd8BWIHG8Yj6PDQxmWQA4FXWIIhRHAQazim3hM4TIgVqsFT5dKfyMg38dFwQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4233
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-24 14:05:31, Peter Chen wrote:
-> With these two parameters tuning, it can pass USB eye diagram at evk boar=
-d.
->=20
-> Reviewed-by: Jun Li <jun.li@nxp.com>
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> ---
-> Changes for v3:
-> - Using the new property name
-> Changes for v2
-> - Address Shawn's comment to change subject.
->=20
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/bo=
-ot/dts/freescale/imx8mm-evk.dts
-> index 0f1d7f8aeac4..7c652b898114 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> @@ -324,6 +324,8 @@
->  	srp-disable;
->  	adp-disable;
->  	usb-role-switch;
-> +	samsung,picophy-pre-emp-curr-control =3D <3>;
-> +	samsung,picophy-dc-vol-level-adjust =3D <7>;
->  	status =3D "okay";
-> =20
->  	port {
-> --=20
+On Thu, 20 Aug 2020 22:05:13 +0100 Mark Brown wrote:
 
-Hi Shawn,
+> On Thu, Aug 20, 2020 at 05:10:51PM +0800, Jisheng Zhang wrote:
+> > Implement the .set_ramp_delay for MP8867 and MP8869. MP8867 and MP8869
+> > could share the implementation, the only difference is the slew_rates
+> > array.  
+> 
+> This doesn't apply against current code, please check and resend.
 
-Rob has already acked the binding-doc changes, would you please queue
-these two dts changes?
+I found the reason, the three patches in v2 were applied to for-next tree.
+Should I renew patches based on for-next? Since the "mps,switch-frequency"
+binding isn't released and used, I think I can send new patches to convert
+mps,switch-frequency to mps,switch-frequency-hz.
 
---=20
-
-Thanks,
-Peter Chen=
+Thanks
