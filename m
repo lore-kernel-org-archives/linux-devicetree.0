@@ -4,67 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF337C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 12:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B84C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 12:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3D1F2072D
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 12:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED09F207CD
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 12:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598098286;
-	bh=Rmwj8j/pac59JIQtuGiaHYfye1VdNBzCXR1+q7FatQw=;
+	s=default; t=1598098901;
+	bh=iOZfGBE0h3jxelwCCPCwiQUT0Y4ul5c/EvwS0sBHGtQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wuozdUyOhqkCQfFuZqV3hy4FUxrHO5Ngj3pqTk4n5n4o8O1OiD5E9XI4yguO0/WMn
-	 I9b3ViYjo6gjchQzi29a91Pm9HkwafRcfE30PFzVE6lqYmvxpmxd9E7VVkXb2UmvVl
-	 lvRaPIslej4zs5x8c5b4/iOVF5mzVWcr5+S2hSqE=
+	b=dWK7Mcf4OuvunyktbzP+DrQPcgs0xKS3HLvKO2xEbDGaeD/xeWP1wLM1/K6dqCgH2
+	 5zdcnbiVO1Q0gYzNqyx2canDDlqYm8KYJPqeH2ntaeJ+FB+TpsnWFdS6CIrLHIwgcI
+	 UeufxsvwxsapXIsOgcZ4uqmZqqTwFVRLemfG3d0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbgHVML0 (ORCPT
+        id S1727113AbgHVMVk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 08:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
+        Sat, 22 Aug 2020 08:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbgHVMLX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Aug 2020 08:11:23 -0400
+        id S1726920AbgHVMVj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Aug 2020 08:21:39 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1D192072D;
-        Sat, 22 Aug 2020 12:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 602BC20738;
+        Sat, 22 Aug 2020 12:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598098283;
-        bh=Rmwj8j/pac59JIQtuGiaHYfye1VdNBzCXR1+q7FatQw=;
+        s=default; t=1598098899;
+        bh=iOZfGBE0h3jxelwCCPCwiQUT0Y4ul5c/EvwS0sBHGtQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i2MgQA/JH/ZcwNHHPE2fCfow7B+Xo4GzFoO/gnM4b+mKYRmnc1J032j9nOrH5vJlf
-         sxbos4AB/GUQdiPhPHhK3Ap2t9TpH/dcVIC2ZKp3vLlHjNEilkQVklMjcV6bje5S2X
-         y2ZQ0ec0B8Ez8AT673DIGINh/yI7DG7LAIaLXi7Q=
-Date:   Sat, 22 Aug 2020 20:11:18 +0800
+        b=cXyGyKKEX6nOHAhVSqDWT8vBxp2LWLe9nmyg4chMKAkIzSMXdlq6HmIK+mJ4d0J+U
+         nJP+7Ym/asL12B2rH0drC9wdlCaOMo33KMedtnh3ZHtreTGEM4hCJjfnwDOIjl7CQo
+         edL2nJ94x1JwCqmeaZ+VJA/8HuPrzj59Fj+mInHg=
+Date:   Sat, 22 Aug 2020 20:21:29 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH 1/2] ARM: dts: imx27: Change nand node name to
- nand-controller
-Message-ID: <20200822121117.GG27575@dragon>
-References: <1596114246-26579-1-git-send-email-Anson.Huang@nxp.com>
+To:     Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] =?iso-8859-1?Q?dt-bindings?=
+ =?iso-8859-1?Q?=3A_arm=3A_fsl=3A_Add_Y_Soft_IOTA=A0Orion?= board
+Message-ID: <20200822122118.GH27575@dragon>
+References: <1596196808-5067-1-git-send-email-michal.vokac@ysoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1596114246-26579-1-git-send-email-Anson.Huang@nxp.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1596196808-5067-1-git-send-email-michal.vokac@ysoft.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Jul 30, 2020 at 09:04:05PM +0800, Anson Huang wrote:
-> Change i.MX27 nand node name from "nand" to "nand-controller" to
-> be compliant with yaml schema, it requires the nodename to be
-> "nand-controller".
+On Fri, Jul 31, 2020 at 02:00:06PM +0200, Michal Vokáč wrote:
+> Add devicetree binding for Orion - new board variant in the Y Soft
+> IOTA family.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 
-Applied both, thanks.
+Applied all, thanks.
