@@ -2,63 +2,90 @@ Return-Path: <SRS0=iyGu=CA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D36C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 16:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB0AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 16:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3713C20738
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 16:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C991D2072D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 16:22:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7eEdIWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgHVQI6 (ORCPT
+        id S1728282AbgHVQWB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 12:08:58 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:38226 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726408AbgHVQI4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Aug 2020 12:08:56 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1k9W4Q-00Akq6-Ec; Sat, 22 Aug 2020 18:08:42 +0200
-Date:   Sat, 22 Aug 2020 18:08:42 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Dan Murphy <dmurphy@ti.com>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] net: phy: dp83867: apply ti,led-function
- and ti,led-ctrl to registers
-Message-ID: <20200822160842.GE2347062@lunn.ch>
-References: <20200821072146.8117-1-matthias.schiffer@ew.tq-group.com>
- <20200821072146.8117-2-matthias.schiffer@ew.tq-group.com>
+        Sat, 22 Aug 2020 12:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57748 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728255AbgHVQV7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Aug 2020 12:21:59 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD2AC061573;
+        Sat, 22 Aug 2020 09:21:59 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d19so2448926pgl.10;
+        Sat, 22 Aug 2020 09:21:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v6Eq/Tjzvf6HcWrWSGQuyz+ZESZxc7q+AWHXE8G7it4=;
+        b=N7eEdIWHuVFHn9O1UpKk07XIIsTcR0EkQaLdMqF5pmBD/yq3NWLAwT/UBG2Ns9vC38
+         3ZrlV0+SSHodm25DGLmpf8mWArgx3zTwZrDuBS1xPFqBa6QQVBKG/w9In8z+Pa103r4+
+         nFrIzd1wLlIDVJ/ZoIYHs2bN3EuA2glX8W3t+P2JId2nfbzqLylYocGZzDUPYyKLFZxN
+         X3NO6yaUSrbYuML6hCb04FpDCuUT57Wyh9YE/ktJaI0rwKNle+bRAzA+NNy6kvwq9VUR
+         Xx7n6KKf7dhbpi4GCGjwhgaYIL11kaYi6Dm6r7TRFRJvy/N5v/sW2dp6+RY2H3VLm+/0
+         vYqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v6Eq/Tjzvf6HcWrWSGQuyz+ZESZxc7q+AWHXE8G7it4=;
+        b=ZxPyIio7BxDLPzSqRDTtxNcwUey7CzG3ZHM3OCntS7r44E9dhaa5wSSiwgg1/EymvW
+         09KVWyHBhtCJkeK6hcNhR86qjO7bLC76O4Rlj+cU0rq3u4HS138GsniYv0iMc49XUykx
+         RJZaA6ji94p2MWMU6esUGfkuyBzOKP1gE4fYzuIhnyH4uBuI7mk43gM3tzcSA2/vf3oD
+         y3R/oP3eugbJoIxSQPWgEx3lLJFHxDQadha6kL++I7rR8k2GDAG7PJ4RxcatQk5XRKyT
+         3iNrVf1DH+JOJLBDDv2lqng5X+Bd772RV6w47shD9xwZrZEDxHP221eKDlJJtoM3FOUs
+         EN9w==
+X-Gm-Message-State: AOAM532KMS2L4+Q5r3pTo9gWC2oP49tVIepI8ZajN/dLzCiX2Ho8qOPf
+        bmiSYmRdorJDkjvvwgyl0QM=
+X-Google-Smtp-Source: ABdhPJypqbX4OK3Q0iEmI9LZm142cRGsviKzvBZudFj8Hv8MT4tTGBp9E6XjbWCUjGwz2zjVeVy65g==
+X-Received: by 2002:a62:206:: with SMTP id 6mr6555079pfc.228.1598113319092;
+        Sat, 22 Aug 2020 09:21:59 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k125sm5143259pga.48.2020.08.22.09.21.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Aug 2020 09:21:58 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 09:21:56 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     alexandru.tachici@analog.com
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: [PATCH v8 0/6] hwmon: pmbus: adm1266: add support
+Message-ID: <20200822162156.GA258960@roeck-us.net>
+References: <20200812142055.9213-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200821072146.8117-2-matthias.schiffer@ew.tq-group.com>
+In-Reply-To: <20200812142055.9213-1-alexandru.tachici@analog.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:21:46AM +0200, Matthias Schiffer wrote:
-> These DT bindings are already in use by the imx7-mba7 DTS, but they were
-> not supported by the PHY driver so far.
+On Wed, Aug 12, 2020 at 05:20:49PM +0300, alexandru.tachici@analog.com wrote:
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
 > 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> Add PMBus probing driver for the adm1266 Cascadable
+> Super Sequencer with Margin Control and Fault Recording.
+> Driver is using the pmbus_core, creating sysfs files
+> under hwmon for inputs: vh1->vh4 and vp1->vp13.
+> 
 
-Sorry, but NACK.
+Series applied.
 
-Please look at the work Marek Behún is doing
-
-https://lkml.org/lkml/2020/7/28/765
-
-	Andrew
-	
+Thanks,
+Guenter
