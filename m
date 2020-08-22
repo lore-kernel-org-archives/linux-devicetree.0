@@ -2,161 +2,136 @@ Return-Path: <SRS0=iyGu=CA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B213C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 01:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAC6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 03:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03554207C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 01:36:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="p1PQJNuU"
+	by mail.kernel.org (Postfix) with ESMTP id 3831B2071A
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 03:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598066747;
+	bh=xlhQkGmI3gqs8Rn+xfQZmEbO8eg97WedoOV5mkmLgZg=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=q4jEi3wGKCSWHcjdJ6F+UEjGXsiyGwZN/dzQMmnsOyl6cNI9hEBXDKpx0D8DG7W6p
+	 AGebcrQ30Dlcyrz8u9tA7G7TNA4E7ShPxxsoaxqemktykbPhoYsq6/zNERuQ2NL58d
+	 R764RbsIywgVP8RU1noH0bmAE6jybr6uaelZkCC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgHVBgY (ORCPT
+        id S1726796AbgHVDZq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 21:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbgHVBgX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 21:36:23 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433D1C061573;
-        Fri, 21 Aug 2020 18:36:22 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 55ED629E;
-        Sat, 22 Aug 2020 03:36:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598060176;
-        bh=QDNGF3NmwLXJQKvrzC4omNcWs6Mrszdv+yYWd/Dv/Dw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p1PQJNuUaGl76WmEz4RoRcK5xhuL8c0rjIQ/kO9DBiEOfN69buNLPhtuDOrKtFbf3
-         JcPaaZs0yVGO6pB5BEbxmcSgyGdY9PjsoQBgVZ/AdXOj6Vd2Q+TCMnDe8iDYRwVZAg
-         ZWmq0sjFObr4sZ6wYQnrEMKBUjjTuWLDo0vj4LfI=
-Date:   Sat, 22 Aug 2020 04:35:58 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: media: ov772x: Document endpoint props
-Message-ID: <20200822013558.GN5967@pendragon.ideasonboard.com>
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
- <20200818122012.37956-4-jacopo+renesas@jmondi.org>
- <20200819135423.GL6049@pendragon.ideasonboard.com>
- <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
+        Fri, 21 Aug 2020 23:25:46 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33522 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgHVDZp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 23:25:45 -0400
+Received: by mail-il1-f193.google.com with SMTP id r13so3058395iln.0;
+        Fri, 21 Aug 2020 20:25:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=qSqyCkB8+mSR0rZwtTlPRNJYmpR982y/9gGfbXhSmyM=;
+        b=B4Ad5fd0AybT41vd0oQZqajw7EyzUnyIxhgsemWMw8ArsdZ2QJWaCnmdWu+7fZHw5O
+         LipRByrPI9ig5ypU8DyQRYw5Q/GcAfRmM3z0/aNJEXXw+CxKJT+vagB16A7M5JjrjI5p
+         IlPHSTdpFX3b3xN8Rtn7oCmvYC00/Qi3sl3vGsZX4gBGVw/+8xlQ0GSxUiBIf7S0GGhj
+         uBWJW2aBMK799KnDyo2GuK/g798p66pLNoEx79tw2SsY71hNowsPy9ZDj5ruxtZ4LyDA
+         XmpEjg8YzsrtPie5XVvAC9VRevGUxr3RG/4I9FV4wn2fr1qOimjgR4ci6aL6RYWJTqZj
+         nfxg==
+X-Gm-Message-State: AOAM5321t6yKeZJxo5Pju6QVWiV1BeLIBf9LJznrnDpc1RDE1++ryoTj
+        ek9zp4hmQs8WmH7HxC+YQg==
+X-Google-Smtp-Source: ABdhPJyrjLJDcHhwycd/UHxrLz/TRh62kzDFH4kLAmu7MDEwiPhBoLX59cpjoDc69tBscL/O8b2GrA==
+X-Received: by 2002:a92:1b85:: with SMTP id f5mr4699106ill.308.1598066744001;
+        Fri, 21 Aug 2020 20:25:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id a9sm2415256iol.9.2020.08.21.20.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 20:25:43 -0700 (PDT)
+Received: (nullmailer pid 2217434 invoked by uid 1000);
+        Sat, 22 Aug 2020 03:25:40 -0000
+Date:   Fri, 21 Aug 2020 21:25:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: [GIT PULL] Devicetree fixes for v5.9, take 2
+Message-ID: <20200822032540.GA2215775@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Linus,
 
-On Fri, Aug 21, 2020 at 12:37:35PM +0100, Lad, Prabhakar wrote:
-> On Wed, Aug 19, 2020 at 2:54 PM Laurent Pinchart wrote:
-> > On Tue, Aug 18, 2020 at 02:20:12PM +0200, Jacopo Mondi wrote:
-> > > Document endpoint properties for the parallel bus type and
-> > > add them to the example.
-> > >
-> > > Specify a few constraints:
-> > > - If the bus type is BT.656 no hsync or vsycn polarities can be
-> > >   specified.
-> > > - If the bus width is 10 bits, not data-shift can be applied.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  .../devicetree/bindings/media/i2c/ov772x.yaml | 43 +++++++++++++++++++
-> > >  1 file changed, 43 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > index 75dad40f70cc..3fad5dffd19a 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > @@ -50,9 +50,47 @@ properties:
-> > >            bus-type:
-> > >              enum: [5, 6]
-> > >
-> > > +          bus-width:
-> > > +            enum: [8, 10]
-> > > +            default: 10
-> > > +
-> > > +          data-shift:
-> > > +            enum: [0, 2]
-> > > +            default: 0
-> > > +
-> > > +          hsync-active:
-> > > +            enum: [0, 1]
-> > > +            default: 1
-> > > +
-> > > +          vsync-active:
-> > > +            enum: [0, 1]
-> > > +            default: 1
-> > > +
-> > > +          pclk-sample:
-> > > +            enum: [0, 1]
-> > > +            default: 1
-> > > +
-> > >            remote-endpoint:
-> > >              description: A phandle to the bus receiver's endpoint node.
-> > >
-> > > +        allOf:
-> > > +          - if:
-> > > +              properties:
-> > > +                bus-type:
-> > > +                  const: 6
-> > > +            then:
-> > > +                properties:
-> > > +                  hsync-active: false
-> > > +                  vsync-active: false
-> > > +
-> > > +          - if:
-> > > +              properties:
-> > > +                bus-width:
-> > > +                  const: 10
-> > > +            then:
-> > > +                properties:
-> > > +                  data-shift:
-> > > +                    const: 0
-> >
-> > I'd add a blank line here.
-> >
-> > >          required:
-> > >            - bus-type
-> >
-> > Should some of the properties be required ? Possibly conditioned on
-> > bus-type ?
->
-> Agreed, would be interesting to know how this can be handled (split
-> out bus-type and add required properties for each) ?
+Please pull another set of DT fixes.
 
-We can add required: statements to the above if/then/else.
+Rob
 
-> > > @@ -82,6 +120,11 @@ examples:
-> > >              port {
-> > >                  ov772x_0: endpoint {
-> > >                      bus-type = <5>;
-> > > +                    vsync-active = <0>;
-> > > +                    hsync-active = <0>;
-> > > +                    pclk-sample = <0>;
-> > > +                    bus-width = <8>;
-> > > +                    data-shift = <0>;
-> > >                      remote-endpoint = <&vcap1_in0>;
-> > >                  };
-> > >              };
 
--- 
-Regards,
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
 
-Laurent Pinchart
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git tags/devicetree-fixes-for-5.9-2
+
+for you to fetch changes up to 5cd841d2676a702e5f79a8bacbfbae3bfc2411f7:
+
+  dt-bindings: vendor-prefixes: Remove trailing whitespace (2020-08-21 16:27:57 -0600)
+
+----------------------------------------------------------------
+Devicetree fixes for v5.9, take 2:
+
+- Restore range parsing error check
+
+- Workaround PCI range parsing with missing 'device_type' now required
+
+- Correct description of 'phy-connection-type'
+
+- Fix erroneous matching on 'snps,dw-pcie' by 'intel,lgm-pcie' schema
+
+- A couple of grammar and whitespace fixes
+
+- Update Shawn Guo's email
+
+----------------------------------------------------------------
+Colin Ian King (1):
+      of/address: check for invalid range.cpu_addr
+
+Fabio Estevam (1):
+      dt-bindings: Use Shawn Guo's preferred e-mail for i.MX bindings
+
+Geert Uytterhoeven (2):
+      dt: writing-schema: Miscellaneous grammar fixes
+      dt-bindings: vendor-prefixes: Remove trailing whitespace
+
+Madalin Bucur (1):
+      dt-bindings: net: correct description of phy-connection-type
+
+Marc Zyngier (1):
+      of: address: Work around missing device_type property in pcie nodes
+
+Rob Herring (1):
+      dt-bindings: PCI: intel,lgm-pcie: Fix matching on all snps,dw-pcie instances
+
+ .../devicetree/bindings/clock/imx23-clock.yaml      |  2 +-
+ .../devicetree/bindings/clock/imx28-clock.yaml      |  2 +-
+ .../devicetree/bindings/gpio/gpio-mxs.yaml          |  2 +-
+ Documentation/devicetree/bindings/i2c/i2c-mxs.yaml  |  2 +-
+ .../devicetree/bindings/mmc/fsl-imx-esdhc.yaml      |  2 +-
+ Documentation/devicetree/bindings/mmc/mxs-mmc.yaml  |  2 +-
+ .../bindings/net/ethernet-controller.yaml           |  3 ++-
+ .../devicetree/bindings/pci/intel-gw-pcie.yaml      |  8 ++++++++
+ Documentation/devicetree/bindings/pwm/mxs-pwm.yaml  |  2 +-
+ .../devicetree/bindings/spi/fsl-imx-cspi.yaml       |  2 +-
+ .../devicetree/bindings/thermal/imx-thermal.yaml    |  2 +-
+ .../devicetree/bindings/vendor-prefixes.yaml        |  2 +-
+ Documentation/devicetree/writing-schema.rst         |  4 ++--
+ drivers/of/address.c                                | 21 ++++++++++++++++++++-
+ 14 files changed, 42 insertions(+), 14 deletions(-)
