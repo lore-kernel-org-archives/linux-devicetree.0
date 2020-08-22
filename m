@@ -1,79 +1,162 @@
-Return-Path: <SRS0=+ed7=B7=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=iyGu=CA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460F9C433E3
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B213C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 01:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18FBF2076E
-	for <linux-devicetree@archiver.kernel.org>; Fri, 21 Aug 2020 22:28:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598048887;
-	bh=wlABeF2wHRGKFWcrW1qcmJlOxJFFx4ELaysDi+OGuaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q+ao6GeGOWy7kBoxc/0fvtKtd+W5GIoSmkaJVY28l7vKL8r9yTQjn/mJDV63zKl9H
-	 /S2I3jcPMFxzGozg+kV8Xm+VIkWoBiQRjH27E9/vKGHoWOncfo+Gf/dPlDLHERtPPQ
-	 AppQVpuzBYHggsneNsIN9xeMCBXF38yTfv0vlLqM=
+	by mail.kernel.org (Postfix) with ESMTP id 03554207C3
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 01:36:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="p1PQJNuU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgHUW2G (ORCPT
+        id S1726431AbgHVBgY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:28:06 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41267 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbgHUW2G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 18:28:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id m23so2653142iol.8;
-        Fri, 21 Aug 2020 15:28:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mzaI9sAfILdFuQlpBeNIrRuh+tzXLS66g4kfINbIeTc=;
-        b=q2rweMEQmzYPVWzvPAfZS7IH7uKSZhUSFZw43A83w7SKVaYG0sqYjgoqDA2tXJNsrA
-         zgNEm93P+DCpcQUzRqpL32ow1ONA8eZqTaYWmtXUHw8xy8DXTcmVR9aHM7F5J3hdthDE
-         TlFF7anIdaX//NkoCxWkf+SmBpl83W+7wsGIeeBoFlPcAm7WpoRSTHpvpuBYI11m+FPf
-         MBO5F9Bqc+3RpqJwlhxO24VDQcRjaoKdXw+KrULmB4QmskBfufHi7vfT1Z9R50D5CVLu
-         w57CywtS9m+5b9vMd9RPgRh6n6b0rto3aDbzti2dOHZPm9VB7gXx7tGarzK6M3RFu46i
-         wrrQ==
-X-Gm-Message-State: AOAM530lr2Y8CbuqF912vx47zfhmvk4d9TWmOgzP5RN3sAUrjLz60dkt
-        /9jC+/rluc9KycANwS/IUw==
-X-Google-Smtp-Source: ABdhPJxMNUycBKYVIrQkrb7DSHaYpXi7X7D27/OGPkK+s7+NskTrfg6aPBxmpAd9eaq2f16bIJmYPw==
-X-Received: by 2002:a05:6638:214d:: with SMTP id z13mr4643568jaj.7.1598048885479;
-        Fri, 21 Aug 2020 15:28:05 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id 3sm2102716ily.31.2020.08.21.15.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 15:28:04 -0700 (PDT)
-Received: (nullmailer pid 1829396 invoked by uid 1000);
-        Fri, 21 Aug 2020 22:28:04 -0000
-Date:   Fri, 21 Aug 2020 16:28:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: vendor-prefixes: Remove trailing whitespace
-Message-ID: <20200821222804.GA1829240@bogus>
-References: <20200819092058.1526-1-geert+renesas@glider.be>
+        Fri, 21 Aug 2020 21:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbgHVBgX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Aug 2020 21:36:23 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433D1C061573;
+        Fri, 21 Aug 2020 18:36:22 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 55ED629E;
+        Sat, 22 Aug 2020 03:36:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1598060176;
+        bh=QDNGF3NmwLXJQKvrzC4omNcWs6Mrszdv+yYWd/Dv/Dw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p1PQJNuUaGl76WmEz4RoRcK5xhuL8c0rjIQ/kO9DBiEOfN69buNLPhtuDOrKtFbf3
+         JcPaaZs0yVGO6pB5BEbxmcSgyGdY9PjsoQBgVZ/AdXOj6Vd2Q+TCMnDe8iDYRwVZAg
+         ZWmq0sjFObr4sZ6wYQnrEMKBUjjTuWLDo0vj4LfI=
+Date:   Sat, 22 Aug 2020 04:35:58 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 3/3] dt-bindings: media: ov772x: Document endpoint props
+Message-ID: <20200822013558.GN5967@pendragon.ideasonboard.com>
+References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
+ <20200818122012.37956-4-jacopo+renesas@jmondi.org>
+ <20200819135423.GL6049@pendragon.ideasonboard.com>
+ <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200819092058.1526-1-geert+renesas@glider.be>
+In-Reply-To: <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Aug 2020 11:20:58 +0200, Geert Uytterhoeven wrote:
-> Fixes: f516fb704d02fff2 ("dt-bindings: Whitespace clean-ups in schema files")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+Hi Prabhakar,
 
-Applied, thanks!
+On Fri, Aug 21, 2020 at 12:37:35PM +0100, Lad, Prabhakar wrote:
+> On Wed, Aug 19, 2020 at 2:54 PM Laurent Pinchart wrote:
+> > On Tue, Aug 18, 2020 at 02:20:12PM +0200, Jacopo Mondi wrote:
+> > > Document endpoint properties for the parallel bus type and
+> > > add them to the example.
+> > >
+> > > Specify a few constraints:
+> > > - If the bus type is BT.656 no hsync or vsycn polarities can be
+> > >   specified.
+> > > - If the bus width is 10 bits, not data-shift can be applied.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >  .../devicetree/bindings/media/i2c/ov772x.yaml | 43 +++++++++++++++++++
+> > >  1 file changed, 43 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > index 75dad40f70cc..3fad5dffd19a 100644
+> > > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > @@ -50,9 +50,47 @@ properties:
+> > >            bus-type:
+> > >              enum: [5, 6]
+> > >
+> > > +          bus-width:
+> > > +            enum: [8, 10]
+> > > +            default: 10
+> > > +
+> > > +          data-shift:
+> > > +            enum: [0, 2]
+> > > +            default: 0
+> > > +
+> > > +          hsync-active:
+> > > +            enum: [0, 1]
+> > > +            default: 1
+> > > +
+> > > +          vsync-active:
+> > > +            enum: [0, 1]
+> > > +            default: 1
+> > > +
+> > > +          pclk-sample:
+> > > +            enum: [0, 1]
+> > > +            default: 1
+> > > +
+> > >            remote-endpoint:
+> > >              description: A phandle to the bus receiver's endpoint node.
+> > >
+> > > +        allOf:
+> > > +          - if:
+> > > +              properties:
+> > > +                bus-type:
+> > > +                  const: 6
+> > > +            then:
+> > > +                properties:
+> > > +                  hsync-active: false
+> > > +                  vsync-active: false
+> > > +
+> > > +          - if:
+> > > +              properties:
+> > > +                bus-width:
+> > > +                  const: 10
+> > > +            then:
+> > > +                properties:
+> > > +                  data-shift:
+> > > +                    const: 0
+> >
+> > I'd add a blank line here.
+> >
+> > >          required:
+> > >            - bus-type
+> >
+> > Should some of the properties be required ? Possibly conditioned on
+> > bus-type ?
+>
+> Agreed, would be interesting to know how this can be handled (split
+> out bus-type and add required properties for each) ?
+
+We can add required: statements to the above if/then/else.
+
+> > > @@ -82,6 +120,11 @@ examples:
+> > >              port {
+> > >                  ov772x_0: endpoint {
+> > >                      bus-type = <5>;
+> > > +                    vsync-active = <0>;
+> > > +                    hsync-active = <0>;
+> > > +                    pclk-sample = <0>;
+> > > +                    bus-width = <8>;
+> > > +                    data-shift = <0>;
+> > >                      remote-endpoint = <&vcap1_in0>;
+> > >                  };
+> > >              };
+
+-- 
+Regards,
+
+Laurent Pinchart
