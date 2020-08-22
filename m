@@ -2,119 +2,126 @@ Return-Path: <SRS0=iyGu=CA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3676DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34896C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 10:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E0D207C3
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 09:23:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjRC2XO6"
+	by mail.kernel.org (Postfix) with ESMTP id 101702075E
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 10:34:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598092499;
+	bh=lT8ePGnV0IpH+H8t5vaX3Xg/C0JW0P4Ev85+R0m/tqo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ComAJJEU7/KN4mwHxY9lYu2rKgOvGR8wONsAvffq4s6U2vT1X1s0tKHUdqnNFHzIw
+	 wUuSqxm9toicFYUb1LNKLWrxpPHOxTZr6zU6M2AL9W2w8djMSo/n4LhHpIJ1YzCYCf
+	 u8BCmrYiJlR00aiXlq58NSjGpg/16vyHxDHOWF6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbgHVJXa (ORCPT
+        id S1727889AbgHVKe6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 05:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbgHVJXa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Aug 2020 05:23:30 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DC2C061573;
-        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id v15so2134841pgh.6;
-        Sat, 22 Aug 2020 02:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
-        b=BjRC2XO6ziRv5s9rs7O7otCwVIpQS+qXELx0bfeHcgi7yZMg4ZDjYCKCzeE3cSrn7J
-         h4rt+xfTU7u3rEtLqLTGv/nx/hmTQOJM5YZIJH2l2TP+6Z9sWo6O0X+LDYXWfDrGHZFJ
-         Aha7B53M6BI+GRJorY7VSNxeD7kQ82nnZeclcZICDoVEFKn1GwaFbFkmNZvRVFMWjcLk
-         ygWjIEK/hsHVLQbtAM+aq9UkdYx1spA51nTnAHVL+b+nu1B6VMIIY2vW6F6KkIXUIwfb
-         zzBeU9UXeVKXTAmxcK+hVjZq4b7zZxDNIi/Q55A/2LmnGUHt45k1x0ry0jfeNHoWkAZA
-         RlQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aI39wUQrT4gwVKkfiPc/6BrYsBsFxtTiYiQuKGUyQNc=;
-        b=CgHdDhIh1TS0kOaQCWSKo5f9MMBiPgtCe34Ot5b9FLpy85E60P42c3Ho1ivcEvN91D
-         1VpE3vHAoSGx0dZSsBBK93Ql6tOFuwkHoCSqpyNBJwFhCGgeg5W6T5gYJfoQSKYLBLQQ
-         IUynCCG1hnGubSITmGiqqfD9ckIVHOir9PqexS+rYPNHv/UBN9P8Jj8A996B4Wy36oS5
-         VUfqcfOn/K75uspeAo+z07KFcHeclMI0SpP0/QEQpu9noidie69ZttrQr6TtSkFsiX+9
-         iILXAviE1S9UYRBa42Uq+HCt6YCjqSftcpwzlRSOwnbsyDXg2fa6nvfkqfzgY4ncTv5r
-         UKBA==
-X-Gm-Message-State: AOAM530GjCK3lEzGRl/2h0i12UvH0QXuoh/M21OwH0Eax+WbibpkuHpb
-        mW8Gb9htfwPYzl8BIrQ5U4nTBETIynx/wJRmXlH3svQkzGKsfw==
-X-Google-Smtp-Source: ABdhPJz4qAwL/hficWhPP7/Q7Cn9/sFEW/U3BO4PJc8qZ0j+3vpx+hdgMhcqDNRluDgzEX2ahyveuiGTLzTTJBe0Qco=
-X-Received: by 2002:a62:c319:: with SMTP id v25mr5537864pfg.130.1598088209565;
- Sat, 22 Aug 2020 02:23:29 -0700 (PDT)
+        Sat, 22 Aug 2020 06:34:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726728AbgHVKe5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Aug 2020 06:34:57 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1212D206BE;
+        Sat, 22 Aug 2020 10:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598092496;
+        bh=lT8ePGnV0IpH+H8t5vaX3Xg/C0JW0P4Ev85+R0m/tqo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IKoiGQqILh/XFTtwnFg5HDAm6QP7yG8pbjfZfsRb/PkZijmWPlXCgKY+hBothX7u2
+         qQB/U0V7O1DMukfOv/74OHPviNgDJ/lZ2dIgnYZyerIh/OMxAbBcxBgeIP7TxMqlvn
+         G/JdBKT1VrQmdDc/MSvWZDc8m67WBuFvYybH31/Y=
+Date:   Sat, 22 Aug 2020 11:34:52 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     LKML <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v5 09/15] iio: sx9310: Update copyright
+Message-ID: <20200822113452.49082e69@archlinux>
+In-Reply-To: <CAHcu+Vb3ezGgRAPWgmHMGAisOQzEm-kKs7bj0ssgyASx-fqoXA@mail.gmail.com>
+References: <20200803235815.778997-1-campello@chromium.org>
+        <20200803175559.v5.9.If88afce92bbc1e97a532874cca35e642a9566172@changeid>
+        <CAHcu+Vb3ezGgRAPWgmHMGAisOQzEm-kKs7bj0ssgyASx-fqoXA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
- <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
- <20200821105618.GO1891694@smile.fi.intel.com> <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
-In-Reply-To: <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 22 Aug 2020 12:23:12 +0300
-Message-ID: <CAHp75Vc1=_SeYHtQvXrV+G-b5t4vWS6ga3s_Zmez7rQPORWr7w@mail.gmail.com>
-Subject: Re: [PATCH v9 2/2] Add PWM fan controller driver for LGM SoC
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, songjun.Wu@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        rahul.tanwar.linux@gmail.com, rtanwar@maxlinear.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 8:25 AM Tanwar, Rahul
-<rahul.tanwar@linux.intel.com> wrote:
-> On 21/8/2020 6:56 pm, Andy Shevchenko wrote:
-> > On Fri, Aug 21, 2020 at 05:32:11PM +0800, Rahul Tanwar wrote:
+On Mon, 17 Aug 2020 19:45:59 -0600
+Daniel Campello <campello@chromium.org> wrote:
 
-...
+> On Mon, Aug 3, 2020 at 5:58 PM Daniel Campello <campello@chromium.org> wrote:
+> >
+> > Fixes wrong copyright year.
+> >
+> > Signed-off-by: Daniel Campello <campello@chromium.org>
+> > ---
+> >
+> > Changes in v5: None
+> > Changes in v4: None
+> > Changes in v3: None
+> > Changes in v2: None
+> >
+> >  drivers/iio/proximity/sx9310.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/iio/proximity/sx9310.c b/drivers/iio/proximity/sx9310.c
+> > index cd7de40a55c2f6..87b2de0d7b55a3 100644
+> > --- a/drivers/iio/proximity/sx9310.c
+> > +++ b/drivers/iio/proximity/sx9310.c
+> > @@ -1,13 +1,13 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  /*
+> > - * Copyright 2018 Google LLC.
+> > + * Copyright 2020 Google LLC.
+> >   *
+> >   * Driver for Semtech's SX9310/SX9311 capacitive proximity/button solution.
+> >   * Based on SX9500 driver and Semtech driver using the input framework
+> >   * <https://my.syncplicity.com/share/teouwsim8niiaud/
+> >   *          linux-driver-SX9310_NoSmartHSensing>.
+> > - * Reworked April 2019 by Evan Green <evgreen@chromium.org>
+> > - * and January 2020 by Daniel Campello <campello@chromium.org>
+> > + * Reworked in April 2019 by Evan Green <evgreen@chromium.org>
+> > + * and in January 2020 by Daniel Campello <campello@chromium.org>.
+> >   */
+> >
+> >  #include <linux/acpi.h>
+> > --
+> > 2.28.0.163.g6104cc2f0b6-goog
+> >  
+> 
+> Hi Jonathan,
+> 
+> After discussing with Gwendal on crrev.com/c/2360467 it seems that the
+> right year for the copyright is 2018 as it was before this change.
+> Sorry about the inconvenience.
+No problem.  I've put the 2018 date back as it was.
 
-> >> +#include <linux/bitfield.h>
-> >> +#include <linux/clk.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/of_device.h>
-> > We haven't settle this yet...
->
-> I investigated more about it. I was getting build error because we were
-> relying on of_device.h for including platform_device.h. You are right that
-> we are not using anything from of_device.h. So i removed of_device.h from
-> driver and added include <linux/platform_device.h> & build is ok.
->
-> Regarding mod_devicetable.h header, it gets included indirectly from
-> <linux/pwm.h> which includes of.h which includes mod_devicetable.h. So i
-> think no point including it again in the driver.
+Thanks,
 
-Ideally you should include all headers you have direct users of.
-mod_devicetable.h is exactly one and I doubt the pwm.h should include
-it, but it's another story.
+Jonathan
 
-There are, of course, some cases when not all required because there
-is a guarantee that upper one includes lower one. For example, if you
-use bitops.h there is no need to include bits.h.
+> 
+> Regards,
+> Daniel Campello
 
-> >> +#include <linux/pwm.h>
-> >> +#include <linux/regmap.h>
-> >> +#include <linux/reset.h>
-
--- 
-With Best Regards,
-Andy Shevchenko
