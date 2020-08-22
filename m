@@ -2,114 +2,99 @@ Return-Path: <SRS0=iyGu=CA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DCFC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 04:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56841C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 05:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB44B20825
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 04:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=0x0f.com header.i=@0x0f.com header.b="E04jO1Xa"
+	by mail.kernel.org (Postfix) with ESMTP id 4169D20724
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 05:21:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725917AbgHVEs2 (ORCPT
+        id S1725863AbgHVFVe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 00:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbgHVEs1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Aug 2020 00:48:27 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B914CC061574
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 21:48:26 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id k8so3615440wma.2
-        for <devicetree@vger.kernel.org>; Fri, 21 Aug 2020 21:48:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8EpfXuOfl5Lc4X03a/2NthXamDtm3ZTxJlpaERf1P2M=;
-        b=E04jO1XaLwTEoC5F7ckK/3aQt1ozC0Fcmt/b8GJiWlnGHUdQBoV46zHaqX8lhyuA6t
-         61+o8lWe+YunryUin42fuZz646fxNWnJy0TAxA/h6js4kvJ1SF9qesCf7SuIuuoB8HGl
-         AVSzLN/Orw0rBpLQpmsY/cxB9ued9UHWTnUR4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8EpfXuOfl5Lc4X03a/2NthXamDtm3ZTxJlpaERf1P2M=;
-        b=U3NNo3iieo8krqTPjmGbMwGPGbBt5conEbJUtgWRRtzXMhzIojhGidybRB6rbUYoqF
-         ga1k4PU6vPbjUloleMt/myxgptK4eWJl7m/Z8h3GGayOSq/+q6QPaQ/N7iSi3t54Ygfy
-         r+5FuNznWDWGryzCeGc7ZF1LxtIu+Fc67ZKz4KQ8nVPf86fekDtzO7tYIevCzrt3YOZu
-         8EJyE3UkwJhqD9zyXXeQlECgdIFySWlPMoxMAYCPlzTnJPGvi5afmOrbDfZqAp7E2bJb
-         yZD/RYcIfwZwix9TA508RhDIltDqT7fyHPwQAbB0mo9rDSIUBjo0k6vAsLhMlxaDsW/E
-         tiSw==
-X-Gm-Message-State: AOAM5306hR9jvN9HecYjULMQzZ8TWk+fAhygUw0TyvljubBdkjJKCQA/
-        PgT9epCQuBXoKsA9Xg4dayvyTezTyOR3OAQYhqWWxg==
-X-Google-Smtp-Source: ABdhPJw7xCkJoXDkG4cyA0Eab/W2Nf7VdU8EymJP8iNVywtv1/Z8GU515lX7IbfzvyLf86zSlVJwlLuih6meBwQ3rx0=
-X-Received: by 2002:a7b:c10d:: with SMTP id w13mr6535376wmi.2.1598071704261;
- Fri, 21 Aug 2020 21:48:24 -0700 (PDT)
+        Sat, 22 Aug 2020 01:21:34 -0400
+Received: from mga07.intel.com ([134.134.136.100]:31199 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725811AbgHVFVd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Aug 2020 01:21:33 -0400
+IronPort-SDR: /tgECFdLSz61qZ4rt/WqgVHIIGVNmxu8azP01t3xuApMr09oFS7l8wOcmpIN8WKrqZMWqqV/Ui
+ jkF0KmEewaEA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="219954727"
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="219954727"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 22:21:33 -0700
+IronPort-SDR: w+1lVZezxPiYtIAfwBALW9KJ6hUs7BWHPRIy8uzlAaArGVbklPYIzdYbBPISVJZxENsW3sWluk
+ sE62Ty4DVTCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,339,1592895600"; 
+   d="scan'208";a="311634014"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 21 Aug 2020 22:21:33 -0700
+Received: from [10.214.149.112] (rtanwar-MOBL.gar.corp.intel.com [10.214.149.112])
+        by linux.intel.com (Postfix) with ESMTP id C15CE58081E;
+        Fri, 21 Aug 2020 22:21:29 -0700 (PDT)
+Subject: Re: [PATCH v9 2/2] Add PWM fan controller driver for LGM SoC
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+References: <cover.1598001442.git.rahul.tanwar@linux.intel.com>
+ <fedf5d1ace7c389a5fc0116865b9b88aa3ddeaa5.1598001442.git.rahul.tanwar@linux.intel.com>
+ <20200821105618.GO1891694@smile.fi.intel.com>
+From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Message-ID: <d8c85de1-dacf-e8eb-6e49-131d007f3a6b@linux.intel.com>
+Date:   Sat, 22 Aug 2020 13:21:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com> <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-In-Reply-To: <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Sat, 22 Aug 2020 13:48:13 +0900
-Message-ID: <CAFr9PXni=BmDY6_iuJPnYb3d6XB1VrxE6WP3YtSBxT6NciZMMA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller support
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     Marc Zyngier <maz@kernel.org>, alix.wu@mediatek.com,
-        DTML <devicetree@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200821105618.GO1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mark-PK,
 
-On Thu, 20 Aug 2020 at 00:38, Mark-PK Tsai <mark-pk.tsai@mediatek.com> wrote:
+Hi Andy,
+
+On 21/8/2020 6:56 pm, Andy Shevchenko wrote:
+> On Fri, Aug 21, 2020 at 05:32:11PM +0800, Rahul Tanwar wrote:
+>> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+>> This PWM controller does not have any other consumer, it is a
+>> dedicated PWM controller for fan attached to the system. Add
+>> driver for this PWM fan controller.
+> ...
 >
-> Add MStar interrupt controller support using hierarchy irq
-> domain.
->
-> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+> We haven't settle this yet...
 
-I've integrated this version into my MStar/SigmaStar tree and tested
-on an MStar MSC313E
-based board (BreadBee) and I'm happy to say it seems to be working:
+I investigated more about it. I was getting build error because we were
+relying on of_device.h for including platform_device.h. You are right that
+we are not using anything from of_device.h. So i removed of_device.h from
+driver and added include <linux/platform_device.h> & build is ok.
 
-$ cat /proc/interrupts
-          CPU0
-17:       1219     GIC-0  29 Level     arch_timer
-18:          0     GIC-0  30 Level     arch_timer
-21:          0     GIC-0  42 Level     arm-pmu
-24:          0  mst-intc  44 Level     1f002400.rtc
-30:          0  mst-intc   2 Level     1f006000.wdt
-31:          0  mst-intc   0 Level     1f006040.timer
-32:          0  mst-intc   1 Level     1f006080.timer
-33:          0  mst-intc  12 Level     1f0060c0.timer
-34:          0  mst-intc  40 Level     1f200400.bdma
-35:       3977  mst-intc  41 Level     1f200400.bdma
-37:        196  mst-intc  34 Level     ttyS0
-40:          0  mst-intc  30 Level     soc:usbphy@0
-<snip>
+Regarding mod_devicetable.h header, it gets included indirectly from
+<linux/pwm.h> which includes of.h which includes mod_devicetable.h. So i
+think no point including it again in the driver.
 
-So here's my tested by:
+Regards,
+Rahul
 
-Tested-by: Daniel Palmer <daniel@thingy.jp>
+>> +#include <linux/pwm.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/reset.h>
 
-I don't think your series contained an update to MAINTAINERS.
-If/when you add this could you add my address above as a reviewer so
-I'm in the loop if anyone makes changes to this going forward?
-
-Thanks,
-
-Daniel
