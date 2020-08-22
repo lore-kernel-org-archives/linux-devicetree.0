@@ -2,181 +2,121 @@ Return-Path: <SRS0=iyGu=CA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03481C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 13:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFF6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 14:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C53D820720
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 13:17:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CgEAJmXJ"
+	by mail.kernel.org (Postfix) with ESMTP id E565C206B5
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 14:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgHVNRX (ORCPT
+        id S1728083AbgHVOcD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 09:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgHVNRW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Aug 2020 09:17:22 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D95C061573
-        for <devicetree@vger.kernel.org>; Sat, 22 Aug 2020 06:17:22 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id g15so2107572plj.6
-        for <devicetree@vger.kernel.org>; Sat, 22 Aug 2020 06:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uvSBHWeP6GEaswZL6yzDoYivAMYOOsA1ly+Tj65rYYY=;
-        b=CgEAJmXJoAaa21ok3qK45ifn1N3OO5xyOxP8uOCth76qK95hh7O6T3U6NNt8sgRW/l
-         y5O28MwukNJvBDEbfqHr+e4Y4b848of6dpD3g/SjED5ypsou4MsUfCyEEGJMSBiLGEvv
-         P1qjWBylcXMNht1OYekpnKO2j3QrdmlZNqNfKCYeETelZohRERd9qy7qhHR4PieF7qm/
-         UCABdjqWJ5P3EFtGl+auwiJTbuaLm3KkJzYA4bjUVpzDAxZYdx8FTWEBBNHPRm99ZOj9
-         rhYPgebhNpPeoqVY8EVqG7iXvZO2Ug4sXx7ytxNMqC2WmEppeP++PggLcODkhl4KoF+j
-         rm8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uvSBHWeP6GEaswZL6yzDoYivAMYOOsA1ly+Tj65rYYY=;
-        b=p2+7v1WdnCWnTmfJTBd1v/+tGb4RYyFfG5cbaWTsXqCfCh1fNpL4m7qe75I5kZ8MZN
-         a+6kgPZM/GYGAGkSUYA/Y+nVg6qY1wMTjXEO679UFL9KHJYlub6b6UhiMNq7unvzU4h/
-         pId0pyiw+Sw0jaWe3B9N7P5R4kFUCGkBHEde7zLA6jOdfCJsZ65gaodk0v6JQmTbrJJL
-         D8qFMlUxw4M1e3kSjG8pDevzNnjzoTnKPOcARZvLgczXGzqBcecuQWbmyAstaUiHUV3/
-         t/zBEr81aWOnNqgwI45bAEEIrDP/A8391CvY3/tGJEUNfLop6d5Ibqurb6U/s/p3zD8S
-         /KYw==
-X-Gm-Message-State: AOAM533rAY5lBA0INciKxBZYs2szBhxVLuEct4qEFQNxyi9ouA7vzzHI
-        8axuqA4J9FxTNVESTu4pEb3O
-X-Google-Smtp-Source: ABdhPJwOsJeYk9LimzE2AZ60+CzIaTmvSKan9nOgwRtOiiLzpEkTuKvaoO/bku3P7PmyV3WaS5680w==
-X-Received: by 2002:a17:902:6b45:: with SMTP id g5mr2394152plt.163.1598102242150;
-        Sat, 22 Aug 2020 06:17:22 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:6d94:5e90:8021:8773:d646:5b0b])
-        by smtp.gmail.com with ESMTPSA id q6sm4482757pjr.20.2020.08.22.06.17.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sat, 22 Aug 2020 06:17:21 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 18:47:12 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 0/3] Add Actions Semi Owl family sirq support
-Message-ID: <20200822131712.GB5954@Mani-XPS-13-9360>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Sat, 22 Aug 2020 10:32:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:6683 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbgHVOcD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Aug 2020 10:32:03 -0400
+IronPort-SDR: CShm0dmIpP6GVrFJRj00YQlo8LgTqR4UrVJXduxzsjNzTzYUUDyABEmjcxbeoTiMRVg5yjwVIL
+ yOwTu7Aun8oA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="155690637"
+X-IronPort-AV: E=Sophos;i="5.76,341,1592895600"; 
+   d="scan'208";a="155690637"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2020 07:32:02 -0700
+IronPort-SDR: EWQbZ4MIuo23j1GJX/BlVcgAy9mtKfCq8mMWQ4+VqDEhbpX9FPqg3pJyzdPI9Na8EFvVHch43+
+ FohSM2k4B+IQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,341,1592895600"; 
+   d="scan'208";a="335569333"
+Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Aug 2020 07:32:00 -0700
+From:   vineetha.g.jaya.kumaran@intel.com
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        robh+dt@kernel.org
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        wan.ahmad.zainie.wan.mohamad@intel.com,
+        andriy.shevchenko@intel.com, lakshmi.bai.raja.subramanian@intel.com
+Subject: [PATCH v4 0/2] Add PWM support for Intel Keem Bay SoC
+Date:   Sat, 22 Aug 2020 22:30:44 +0800
+Message-Id: <1598106646-16595-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Cristi,
+From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
-On Wed, Aug 19, 2020 at 07:37:55PM +0300, Cristian Ciocaltea wrote:
-> This patch series adds support for the external interrupt controller
-> (SIRQ) found in the Actions Semi Owl family of SoC's (S500, S700 and
-> S900). The controller handles up to 3 external interrupt lines through
-> dedicated SIRQ pins.
-> 
-> This is a rework of the patch series submitted some time ago by 
-> Parthiban Nallathambi: 
-> https://lore.kernel.org/lkml/20181126100356.2840578-1-pn@denx.de/
-> 
+Hi,
 
-You need to preserve the authorship while reposting the patches. If you'd
-like to take the authorship intentionally then please explain the reason in
-cover letter.
+This patch set enables support for PWM on the Intel Keem Bay SoC.
+Keem Bay is an ARM based SoC, and the GPIO module allows
+configuration of 6 PWM outputs. Patch 1 adds the PWM driver and
+Patch 2 is for the required Device Tree bindings documentation.
 
-Thanks,
-Mani
+This driver was tested on the Keem Bay evaluation module board.
 
-> Please note I have dropped, for the moment, the S700 related patches 
-> since I do not own a compatible hardware for testing. I'm using instead
-> an S500 SoC based board for which I have already provided the initial
-> support:
-> https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
-> 
-> The SIRQ controller support is a prerequisite of the soon to be submitted
-> MFD driver for the Actions Semi ATC260x PMICs.
-> 
-> Thanks and regards,
-> Cristi
-> 
-> Changes in v5:
-> - Integrated Marc's review (more details in the driver patch changelog)
-> - Rebased patch series on v5.9-rc1
-> 
-> Changes in v4:
-> - Simplified the DTS structure:
->   * dropped 'actions,sirq-shared-reg' node, now the differentiation
->     between SoC variants is handled now via the compatible property
->   * dropped 'actions,sirq-reg-offset', now controller base address in
->     DTS points to SIRQ0 register, so no additional information is
->     required for S500 and S700, while for S900 SoC the offsets of SIRQ1
->     and SIRQ2 regs are provided by the driver
->   * 'actions,ext-irq-range' was replaced with 'actions,ext-interrupts',
->     an array of the GIC interrupts triggered by the controller
-> - Fixed wrong INTC_EXTCTL_TYPE_MASK definition
-> - Removed redundant irq_fwspec checks in owl_sirq_domain_alloc()
-> - Improved error handling in owl_sirq_of_init()
-> - Added yaml binding document
-> - Dropped S700 related DTS patches for lack of testing hardware:
->   * arm64: dts: actions: Add sirq node for Actions Semi S700
->   * arm64: dts: actions: s700-cubieboard7: Enable SIRQ
-> - Updated MAINTAINERS
-> - Rebased patchset on kernel v5.8
-> - Cosmetic changes
->  * Ordered include statements alphabetically
->  * Added comment to owl_sirq_set_type() describing conversion of falling
->    edge or active low signals
->  * Replaced IRQF_TRIGGER_* with corresponding IRQ_TYPE_* variants
->  * Ensured data types and function naming are consistent regarding the
->    'owl_sirq' prefix
-> 
-> Changes in v3 (Parthiban Nallathambi):
-> - Set default operating frequency to 24MHz
-> - Falling edge and Low Level interrupts translated to rising edge and high level
-> - Introduced common function with lock handling for register read and write
-> - Used direct GIC interrupt number for interrupt local hwirq and finding offset
-> using DT entry (range) when registers are shared 
-> - Changed irq_ack to irq_eoi
-> - Added translation method for irq_domain_ops
-> - Clearing interrupt pending based on bitmask for edge triggered
-> - Added pinctrl definition for sirq for cubieboard7. This depends on,
-> https://lore.kernel.org/patchwork/patch/1012859/
-> 
-> Changes in v2 (Parthiban Nallathambi):
-> - Added SIRQ as hierarchical chip
->         GIC <----> SIRQ <----> External interrupt controller/Child devices
-> - Device binding updates with vendor prefix
-> - Register sharing handled globally and common init sequence/data for all
-> actions SoC family
-> 
-> Cristian Ciocaltea (3):
->   dt-bindings: interrupt-controller: Add Actions SIRQ controller binding
->   irqchip: Add Actions Semi Owl SIRQ controller
->   MAINTAINERS: Add entries for Actions Semi Owl SIRQ controller
-> 
->  .../actions,owl-sirq.yaml                     |  68 ++++
->  MAINTAINERS                                   |   2 +
->  drivers/irqchip/Makefile                      |   1 +
->  drivers/irqchip/irq-owl-sirq.c                | 347 ++++++++++++++++++
->  4 files changed, 418 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
->  create mode 100644 drivers/irqchip/irq-owl-sirq.c
-> 
-> -- 
-> 2.28.0
-> 
+Thank you.
+
+Best regards,
+Vineetha
+
+Changes since v3:
+-Removed variable for address and calculate in place instead
+-Utilized u32_replace_bits() when updating KMB_PWM_LEADIN_OFFSET
+-Utilized dev_err_probe() for error reporting
+-Updated comments to use physical units
+-Updated error check for pwmchip_add()
+
+Changes since v2:
+-Include documentation about HW limitation/behaviour
+-Use hex values for KMB_PWM_COUNT_MAX
+-Redefine register macros
+-Utilize FIELD_GET/FIELD_PREP for calculating pwm_l/h_count and pwm_count
+-Round up duty cycle/period values
+-Get current hardware state in .apply instead of cached values
+-Do a polarity check before .enabled
+-Round high time/low time to closest value
+-Set enable bit in KMB_PWM_LEADIN_OFFSET to 0 in probe
+-Correct the naming for MODULE_ALIAS
+-Add additionalProperties: false in DT bindings
+
+Changes since v1:
+-Updated licensing info, "clocks" property and example in DT bindings
+-Updated name of DT bindings document to match compatible string
+-Removed 1 patch for addition of new sysfs attribute "count"
+-Added support for COMPILE_TEST in Kconfig
+-Updated naming of defines and regmap attribute
+-Updated calculation of waveform high time and low time
+-Added range checking for waveform high/low time
+-Implemented .get_state
+-Removed register writes for lead-in and count values (left to default)
+-Updated register access to single-access
+-Folded keembay_pwm_enable/disable_channel, keembay_pwm_config_period/duty_cycle,
+ and keembay_pwm_config into keembay_pwm_apply
+-Updated error messages/error codes
+-Removed pwm_disable from keembay_pwm_remove
+-Removed clk_prepare/clk_enable/clk_disable from driver
+
+Lai, Poey Seng (1):
+  pwm: Add PWM driver for Intel Keem Bay
+
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
+
+ .../devicetree/bindings/pwm/intel,keembay-pwm.yaml |  47 +++++
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-keembay.c                          | 229 +++++++++++++++++++++
+ 4 files changed, 286 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-keembay.c
+
+-- 
+1.9.1
+
