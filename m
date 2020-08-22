@@ -2,128 +2,196 @@ Return-Path: <SRS0=iyGu=CA=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C9CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 12:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CDAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 13:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C07B207CD
-	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 12:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598100979;
-	bh=U7mpvXQdGn70HSUWKU7XcQpkVB9QbWSEISFpglwYwS4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z4c8sBV2H05c7pAMI1G6OxHW6WZ+lg+n7Q4dhHtHBISCNRH2MxnbmwC9qyHUyvnWv
-	 utFYxgpPm3oipntAXH3lNtfmw357mNkrFTjvTVjb4wKk3dDO+DQY/JFgeJNdaKBtKc
-	 bk9XOloXqsiNpYRwDoRGPYgfXXEonPSmDp1CJOqs=
+	by mail.kernel.org (Postfix) with ESMTP id 0ADAC2072D
+	for <linux-devicetree@archiver.kernel.org>; Sat, 22 Aug 2020 13:14:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C4Y072XU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728022AbgHVM4S (ORCPT
+        id S1728093AbgHVNOB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 08:56:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgHVM4S (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Aug 2020 08:56:18 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D51F82072D;
-        Sat, 22 Aug 2020 12:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598100977;
-        bh=U7mpvXQdGn70HSUWKU7XcQpkVB9QbWSEISFpglwYwS4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AlfQxWFsWhmKfzWnAHHFfLVNhMPknCbfM+oVBfuFyrNefc+Rl1q3wGvlJEQ04nN0E
-         yNLn1K7SqTbUMMkoq0h4iOwo96M3tno5eT218LzUQ54Qyd0RMTXQjVliHYNhBpzJPp
-         biPgxg9wU3ChokDdpaBjulOTIEMj15a0EEYMxeho=
-Date:   Sat, 22 Aug 2020 20:56:12 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx25-pinfunc: Fix gpio function name for pads
- GPIO_[A-F]
-Message-ID: <20200822125611.GB30094@dragon>
-References: <20200810084725.16112-1-u.kleine-koenig@pengutronix.de>
+        Sat, 22 Aug 2020 09:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57034 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728084AbgHVNN5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Aug 2020 09:13:57 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 756CEC061755
+        for <devicetree@vger.kernel.org>; Sat, 22 Aug 2020 06:13:57 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 74so2422310pfx.13
+        for <devicetree@vger.kernel.org>; Sat, 22 Aug 2020 06:13:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xQFZ3Sv5y18I7wZ9EvV1kNK7LL9SLdrdcRtoUoCFnvA=;
+        b=C4Y072XUAIYZyfmRrshf5l95PKNCWRwbELitDleGUvIdERcUpFcVgCGYWWXxXo3+vG
+         8BPaFHw/m1aeMNF8psDMprEv/tZXx39vj8amuMaLWdebvAPjysgxNmt9sgLSGkgHWp3B
+         jAxXX1Y8EbBER6csHNYJU8QIxOfMbOMxBINcNC+g+re1je9Nf3dv3BOl7mseXgz0Hjnu
+         uSyzMi3CyCgojgN13U2OTkpESZnzjTZHY+oZpPCO3Vjw2KnMMb7QaRtY2DmA2zTyxVFy
+         y3bYbFtml8cHTQYaSw+yThBfrEO0DpO9OZMCcddOhggEtsLenCi93krz/vdgD6d5nbsP
+         3+sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xQFZ3Sv5y18I7wZ9EvV1kNK7LL9SLdrdcRtoUoCFnvA=;
+        b=rShbqMX138rcarH6Jylxi94fNKKCLoV24JD7fUhR3Zs73DO5du5DxsGBKIAGqUPqT4
+         SEIyegjmTMsXJ/+AFIXclQVr94auLNSo20XHEj2cNdFO86+oFy0GiS5ks75ap8c1T21G
+         vIIksZs9leoOPk4QyLXgddIgyGyEN5mLYjCoGEbyYQIRkTYQaIxaiXwOetXkBsgIdb0q
+         6wEOw5dsrdlc2NBt0PcikrK3wzJl8XV26RJcVJu+lwk4V1WHBz1BpN/yLbbiZjRsQD5+
+         fcTiHKMvqNzNMmoqm+sj1ozl6GHrc/LTNMJFP6jLFSlmETTypkXJUvswsM0LjZNU0/fA
+         I42A==
+X-Gm-Message-State: AOAM533osvHDAe9/jaU8+rhyechwc4aREaHANivk4L02tYp/53DhExlL
+        ETy4qQz3NnIyNokf6PcTyteE
+X-Google-Smtp-Source: ABdhPJyRlCojM5NMEXP9w3XIS/sCcanKf8LrNsIJpeQOfBQ0femryhqcgTQIORPf0+wab+FZ1K3W0A==
+X-Received: by 2002:aa7:8a0d:: with SMTP id m13mr6118466pfa.13.1598102035821;
+        Sat, 22 Aug 2020 06:13:55 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2409:4072:6d94:5e90:8021:8773:d646:5b0b])
+        by smtp.gmail.com with ESMTPSA id ha17sm580529pjb.6.2020.08.22.06.13.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 22 Aug 2020 06:13:54 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 18:43:43 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Add initial support for ATC260x PMICs
+Message-ID: <20200822131343.GA5954@Mani-XPS-13-9360>
+References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
+ <20200821222653.GA2255465@BV030612LT>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200810084725.16112-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20200821222653.GA2255465@BV030612LT>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 10:47:25AM +0200, Uwe Kleine-König wrote:
-> The pinfunc definitions used GPIO_A as function instead of GPIO_1_0 as
+Hi Cristi,
 
-Is this how i.MX25 RM names the function?
+Thanks for the series! I'll take a look soon but there is a quick comment
+below.
 
-Shawn
+On Sat, Aug 22, 2020 at 01:26:53AM +0300, Cristian Ciocaltea wrote:
+> I have just realized I had omitted the changelog - sorry:
+> 
+> Changes in v2:
+> - Reworked MFD core & I2C driver
+>   * Integrated Lee's feedback
+>   * Added support for using the regmap within atomic contexts
+>   * Added support for ATC2603C chip variant
+>   * Reorganized KConfig entries
+> - Improved regulator driver
+>   * Added support for ATC2603C variant
+>   * Used helper macros for more compact specification of regulator_desc items
+>   * Added more regulator capabilities
+> - Added power controller driver
+>   * Provides system poweroff/reboot functionalities
+>   * Requires support for I2C Atomic transfers in the Owl driver (already submitted)
+> - Added onkey driver: exposes the power button as an input device
+> - Added yaml binding doc
+> - Rebased patchset on kernel v5.9-rc1
+> 
+> Kind regards,
+> Cristi
+> 
+> On Sat, Aug 22, 2020 at 01:19:46AM +0300, Cristian Ciocaltea wrote:
+> > This is re-spin of the patch series submitted some time ago by Mani,
+> > who added initial support (MFD core and regulators) for the Actions
+> > Semi ATC260x PMICs:
+> > https://lore.kernel.org/lkml/20190617155011.15376-1-manivannan.sadhasivam@linaro.org/
+> > 
+> > The ATC260x family of PMICs integrates Audio Codec, Power management,
+> > Clock generation and GPIO controller blocks. There are currently 3
+> > variants: ATC2603A, ATC2603C and ATC2609A.
+> > 
+> > In addition to the ATC2609A regulator functionality provided that time,
+> > this patchset adds support for the ATC2603C variant, together with some
+> > new functionalities for both chips: power controller and onkey input.
+> > The ATC2603A variant remains unsupported for the moment.
+> > 
+> > This has been tested on RoseapplePi, a SBC based on the Action Semi S500
+> > SoC, which integrates ATC2603C PMIC. An initial support for this board
+> > has been already submitted:
+> > https://lore.kernel.org/lkml/cover.1592123160.git.cristian.ciocaltea@gmail.com/
+> > 
+> > Please note that enabling the ATC260x PMICs on the compatible Actions
+> > Semi Owl SoC based boards depends on the following:
+> > 
+> > * Actions Semi SIRQ driver (for PMIC DTS setup):
+> >   https://lore.kernel.org/lkml/cover.1597852360.git.cristian.ciocaltea@gmail.com/
+> > 
+> > * I2C Atomic transfers in Actions Semi Owl driver (for proper operation
+> >   of the power controller driver):
+> >   https://lore.kernel.org/lkml/b086ef6d355d9730c839359e15eb06175283e323.1596485741.git.cristian.ciocaltea@gmail.com/
+> >   
+> > Thanks,
+> > Cristi
+> > 
+> > Cristian Ciocaltea (6):
+> >   dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
+> >   mfd: Add MFD driver for ATC260x PMICs
+> >   regulator: Add regulator driver for ATC260x PMICs
 
-> done for all the other pins with GPIO functionality. Fix for consistency.
-> 
-> There are no mainline users that needs adaption.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->  arch/arm/boot/dts/imx25-pinfunc.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx25-pinfunc.h b/arch/arm/boot/dts/imx25-pinfunc.h
-> index e14140e62b9b..55948e668410 100644
-> --- a/arch/arm/boot/dts/imx25-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx25-pinfunc.h
-> @@ -563,15 +563,15 @@
->  #define MX25_PAD_DE_B__DE_B			0x1f0 0x3ec 0x000 0x00 0x000
->  #define MX25_PAD_DE_B__GPIO_2_20		0x1f0 0x3ec 0x000 0x05 0x000
->  
-> -#define MX25_PAD_GPIO_A__GPIO_A			0x1f4 0x3f0 0x000 0x00 0x000
-> +#define MX25_PAD_GPIO_A__GPIO_1_0		0x1f4 0x3f0 0x000 0x00 0x000
->  #define MX25_PAD_GPIO_A__CAN1_TX		0x1f4 0x3f0 0x000 0x06 0x000
->  #define MX25_PAD_GPIO_A__USBOTG_PWR		0x1f4 0x3f0 0x000 0x02 0x000
->  
-> -#define MX25_PAD_GPIO_B__GPIO_B			0x1f8 0x3f4 0x000 0x00 0x000
-> +#define MX25_PAD_GPIO_B__GPIO_1_1		0x1f8 0x3f4 0x000 0x00 0x000
->  #define MX25_PAD_GPIO_B__USBOTG_OC		0x1f8 0x3f4 0x57c 0x02 0x001
->  #define MX25_PAD_GPIO_B__CAN1_RX		0x1f8 0x3f4 0x480 0x06 0x001
->  
-> -#define MX25_PAD_GPIO_C__GPIO_C			0x1fc 0x3f8 0x000 0x00 0x000
-> +#define MX25_PAD_GPIO_C__GPIO_1_2		0x1fc 0x3f8 0x000 0x00 0x000
->  #define MX25_PAD_GPIO_C__PWM4_PWMO		0x1fc 0x3f8 0x000 0x01 0x000
->  #define MX25_PAD_GPIO_C__I2C2_SCL		0x1fc 0x3f8 0x51c 0x02 0x001
->  #define MX25_PAD_GPIO_C__KPP_COL4		0x1fc 0x3f8 0x52c 0x03 0x001
-> @@ -579,18 +579,18 @@
->  #define MX25_PAD_GPIO_C__CAN2_TX		0x1fc 0x3f8 0x000 0x06 0x000
->  #define MX25_PAD_GPIO_C__CSPI2_SS2		0x1fc 0x3f8 0x000 0x07 0x000
->  
-> -#define MX25_PAD_GPIO_D__GPIO_D			0x200 0x3fc 0x000 0x00 0x000
-> +#define MX25_PAD_GPIO_D__GPIO_1_3		0x200 0x3fc 0x000 0x00 0x000
->  #define MX25_PAD_GPIO_D__I2C2_SDA		0x200 0x3fc 0x520 0x02 0x001
->  #define MX25_PAD_GPIO_D__CAN2_RX		0x200 0x3fc 0x484 0x06 0x001
->  #define MX25_PAD_GPIO_D__CSPI3_SS2		0x200 0x3fc 0x4c4 0x07 0x001
->  
-> -#define MX25_PAD_GPIO_E__GPIO_E			0x204 0x400 0x000 0x00 0x000
-> +#define MX25_PAD_GPIO_E__GPIO_1_4		0x204 0x400 0x000 0x00 0x000
->  #define MX25_PAD_GPIO_E__I2C3_CLK		0x204 0x400 0x524 0x01 0x002
->  #define MX25_PAD_GPIO_E__LD16			0x204 0x400 0x000 0x02 0x000
->  #define MX25_PAD_GPIO_E__AUD7_TXD		0x204 0x400 0x000 0x04 0x000
->  #define MX25_PAD_GPIO_E__UART4_RXD		0x204 0x400 0x570 0x06 0x002
->  
-> -#define MX25_PAD_GPIO_F__GPIO_F			0x208 0x404 0x000 0x00 0x000
-> +#define MX25_PAD_GPIO_F__GPIO_1_5		0x208 0x404 0x000 0x00 0x000
->  #define MX25_PAD_GPIO_F__LD17			0x208 0x404 0x000 0x02 0x000
->  #define MX25_PAD_GPIO_F__AUD7_TXC		0x208 0x404 0x000 0x04 0x000
->  #define MX25_PAD_GPIO_F__UART4_TXD		0x208 0x404 0x000 0x06 0x000
-> -- 
-> 2.27.0
-> 
+You need to preserve my authorship for above two patches. Adding the signed-off-by
+is not enough.
+
+> >   power: reset: Add poweroff driver for ATC260x PMICs
+> >   input: atc260x: Add onkey driver for ATC260x PMICs
+> >   MAINTAINERS: Add entry for ATC260x PMIC
+
+I think this one too.
+
+Thanks,
+Mani
+
+> > 
+> >  .../bindings/mfd/actions,atc260x.yaml         | 221 ++++++++
+> >  MAINTAINERS                                   |  12 +
+> >  drivers/input/misc/Kconfig                    |  11 +
+> >  drivers/input/misc/Makefile                   |   2 +-
+> >  drivers/input/misc/atc260x-onkey.c            | 304 +++++++++++
+> >  drivers/mfd/Kconfig                           |  18 +
+> >  drivers/mfd/Makefile                          |   3 +
+> >  drivers/mfd/atc260x-core.c                    | 290 ++++++++++
+> >  drivers/mfd/atc260x-i2c.c                     |  73 +++
+> >  drivers/power/reset/Kconfig                   |   8 +-
+> >  drivers/power/reset/Makefile                  |   1 +
+> >  drivers/power/reset/atc260x-poweroff.c        | 274 ++++++++++
+> >  drivers/regulator/Kconfig                     |   8 +
+> >  drivers/regulator/Makefile                    |   1 +
+> >  drivers/regulator/atc260x-regulator.c         | 511 ++++++++++++++++++
+> >  include/linux/mfd/atc260x/atc2603c.h          | 281 ++++++++++
+> >  include/linux/mfd/atc260x/atc2609a.h          | 308 +++++++++++
+> >  include/linux/mfd/atc260x/core.h              |  86 +++
+> >  18 files changed, 2410 insertions(+), 2 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/actions,atc260x.yaml
+> >  create mode 100644 drivers/input/misc/atc260x-onkey.c
+> >  create mode 100644 drivers/mfd/atc260x-core.c
+> >  create mode 100644 drivers/mfd/atc260x-i2c.c
+> >  create mode 100644 drivers/power/reset/atc260x-poweroff.c
+> >  create mode 100644 drivers/regulator/atc260x-regulator.c
+> >  create mode 100644 include/linux/mfd/atc260x/atc2603c.h
+> >  create mode 100644 include/linux/mfd/atc260x/atc2609a.h
+> >  create mode 100644 include/linux/mfd/atc260x/core.h
+> > 
+> > -- 
+> > 2.28.0
+> > 
