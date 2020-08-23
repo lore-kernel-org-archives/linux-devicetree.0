@@ -2,97 +2,128 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25476C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 23:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D56C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 23:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0549720720
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 23:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D11920720
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 23:26:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="HxrdpSIn"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="kOIZkfXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgHWXSB (ORCPT
+        id S1726737AbgHWX0Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 19:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33076 "EHLO
+        Sun, 23 Aug 2020 19:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbgHWXSA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 19:18:00 -0400
+        with ESMTP id S1726693AbgHWX0X (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 19:26:23 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E41B6C061573;
-        Sun, 23 Aug 2020 16:17:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746CCC061573
+        for <devicetree@vger.kernel.org>; Sun, 23 Aug 2020 16:26:23 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4A436279;
-        Mon, 24 Aug 2020 01:17:56 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AC160279;
+        Mon, 24 Aug 2020 01:26:21 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598224676;
-        bh=5pNVaxdIH2zklieYTCrcATi7SEHr44vYPcKJt9zZAqA=;
+        s=mail; t=1598225181;
+        bh=j95pElnESYCX30E2SE8Ad9EQbgQWT6k8KuqUviG92Tw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HxrdpSIncsK7SqIusa7ueSzkfiflhHGkJDYNSGu6BlfSrEIj6iPb5P6E74uL2HJUf
-         j07c4xhbbMghXdxzf9ap0czkBscavCYTkThGloDytYBZJsvhZxFxKBJSyzTe8yQJr5
-         2kIPV+bULEXPuH/3EIUbDD8IOo1Gc/Bil1AETxKQ=
-Date:   Mon, 24 Aug 2020 02:17:37 +0300
+        b=kOIZkfXLKzc45KI4X227eqB/o2OnHF3xIepJZTqUBMksikgV0fFuVsRMauhsUSJKY
+         A5x7FWdDQxB+KbHtTPXLaNqwkmo1cuIl7xnlS5WqyYkSPNicGlqDYJUfT3iFkYI5IU
+         K3+CH12kgV3mkwjfTXX2LD1s+tC8C6MECkJy5mVA=
+Date:   Mon, 24 Aug 2020 02:26:03 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Hyun Kwon <hyun.kwon@xilinx.com>
-Cc:     Kenneth Sloat <ksloat@designlinxhs.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Michal Simek <michals@xilinx.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: dt-bindings: display: xlnx: mixer: Inconsistent pixel format
- terminology in dt docs
-Message-ID: <20200823231737.GM6002@pendragon.ideasonboard.com>
-References: <1ac0eeed-7455-b0a3-a3e4-4501ae3129df@designlinxhs.com>
- <20200820233817.GA508@xilinx.com>
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, Rob Herring <robh+dt@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>
+Subject: Re: [PATCH 2/8] dt-bindings: display: mxsfb: Add and fix compatible
+ strings
+Message-ID: <20200823232603.GO6002@pendragon.ideasonboard.com>
+References: <20200813012910.13576-1-laurent.pinchart@ideasonboard.com>
+ <20200813012910.13576-3-laurent.pinchart@ideasonboard.com>
+ <c9e8e63c2ac1e1ecfd8e664e2605b81f@agner.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200820233817.GA508@xilinx.com>
+In-Reply-To: <c9e8e63c2ac1e1ecfd8e664e2605b81f@agner.ch>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Hi Stefan,
 
-On Thu, Aug 20, 2020 at 04:38:18PM -0700, Hyun Kwon wrote:
-> On Thursday, August 20, 2020 2:18 PM, Kenneth Sloat write:
-> > Hello,
+On Fri, Aug 21, 2020 at 04:53:56PM +0200, Stefan Agner wrote:
+> On 2020-08-13 03:29, Laurent Pinchart wrote:
+> > Additional compatible strings have been added in DT source for the
+> > i.MX6SL, i.MX6SLL, i.MX6UL and i.MX7D without updating the bindings.
+> > Most of the upstream DT sources use the fsl,imx28-lcdif compatible
+> > string, which mostly predates the realization that the LCDIF in the
+> > i.MX6 and newer SoCs have extra features compared to the i.MX28.
+> 
+> Agreed, we should add fsl,imx6sx-lcdif for those devices.
+> 
+> But shouldn't we also keep fsl,imx28-lcdif? From what I can tell, the
+> devices can be driven by a driver only supporting fsl,imx28-lcdif
+> semantics, right?
+
+Isn't it kept by this patch ?
+
+> > Update the bindings to add the missing compatible strings, with the
+> > correct fallback values. This fails to validate some of the upstream DT
+> > sources. Instead of adding the incorrect compatible fallback to the
+> > binding, the sources should be updated separately.
 > > 
-> > The Xilinx Video mixer IP uses the DRM fourcc string as a device tree binding in
-> > order to describe the format for a specific DRM layer/plane. Currently, in the
-> > device tree doc in
-> > "Documentation/devicetree/bindings/dma/xilinx/xilinx_frmbuf.txt" there is a list
-> > called "VIDEO FORMATS" with a table containing "Mixer IP Format" and
-> > associated "Driver supported Format String" (fourcc). In general, this table is not
-> > helpful, because "Mixer IP Format" does not match the Xilinx IP datasheet
-> > terminology for formats but rather some other commonly used nomenclature.
-> > This is also inconsistent from other Xilinx dts binding docs which specify the
-> > actual correct IP name and at times list other format nomenclature where
-> > helpful (i.e. xilinx_frmbuf.txt)
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> >  .../devicetree/bindings/display/mxsfb.yaml     | 18 +++++++++++++-----
+> >  1 file changed, 13 insertions(+), 5 deletions(-)
 > > 
-> > My suggestion is to remove the current "Mixer IP Format" strings in the doc and
-> > replace them with the actual IP names in the datasheet (which also match those
-> > used in Xilinx's Vivado FPGA tool). Otherwise, the programmer must cross
-> > reference other dts documentation or the code in order to figure these out. I am
-> > happy to provide a patch for this but wanted to throw out the suggestion first.
+> > diff --git a/Documentation/devicetree/bindings/display/mxsfb.yaml
+> > b/Documentation/devicetree/bindings/display/mxsfb.yaml
+> > index 202381ec5bb7..ec6533b1d4a3 100644
+> > --- a/Documentation/devicetree/bindings/display/mxsfb.yaml
+> > +++ b/Documentation/devicetree/bindings/display/mxsfb.yaml
+> > @@ -15,11 +15,19 @@ description: |
+> >  
+> >  properties:
+> >    compatible:
+> > -    enum:
+> > -      - fsl,imx23-lcdif
+> > -      - fsl,imx28-lcdif
+> > -      - fsl,imx6sx-lcdif
+> > -      - fsl,imx8mq-lcdif
+> > +    oneOf:
+> > +      - enum:
+> > +          - fsl,imx23-lcdif
+> > +          - fsl,imx28-lcdif
 
-Are you talking about the "Video Format" column in table 2-8 of PG243 ?
-Those values seem good to me.
+Here -----------------^
 
-Documentation/devicetree/bindings/media/xilinx/video.txt also defines a
-xlnx,video-format property that uses the values from UG934 for the AXI
-streaming interface.
+The binding now support any of "fsl,imx23-lcdif", "fsl,imx28-lcdif" or
+"fsl,imx6sx-lcdif" alone, or "fsl,imx6sx-lcdif" with another
+device-specific compatible string. The driver supports the three base
+compatible strings, for V3, V4 and V6 of the IP core.
 
-> I agree. The bindings should be in sync with datasheet and not rely on
-> software definitions. Since the driver is only in Xilinx vendor tree,
-> please send directly to git@xilinx.com.
+> > +          - fsl,imx6sx-lcdif
+> > +      - items:
+> > +        - enum:
+> > +          - fsl,imx6sl-lcdif
+> > +          - fsl,imx6sll-lcdif
+> > +          - fsl,imx6ul-lcdif
+> > +          - fsl,imx7d-lcdif
+> > +          - fsl,imx8mq-lcdif
+> > +        - const: fsl,imx6sx-lcdif
+> >  
+> >    reg:
+> >      maxItems: 1
 
 -- 
 Regards,
