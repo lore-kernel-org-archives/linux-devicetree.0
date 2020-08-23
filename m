@@ -2,329 +2,121 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19709C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 08:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B208FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:00:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E79CB2075B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 08:58:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598173133;
-	bh=EXBOnoskmtCv9SoSv1Nu7jWTkyLtDFIsYjuVMPanlLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ztK40y6a+IDMMJv+vvoRUEe8PLzGRy9k9j69B06BhET8fS9kmQbhewNFfeVh+lilt
-	 RdO/MrZWgRRPRw3V6+d5KC67xl34kXQRoL2MetN6j242WJbMhREsrN9WfMrAJDqVZH
-	 lT7988EbzSkt3OthZVEzL5LoCdinTD0nUrmL5Ys4=
+	by mail.kernel.org (Postfix) with ESMTP id 8C17A2075B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:00:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7GWEbuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726371AbgHWI6x (ORCPT
+        id S1728662AbgHWJAH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 04:58:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35024 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbgHWI6w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 04:58:52 -0400
-Received: by mail-wm1-f65.google.com with SMTP id o21so5530799wmc.0;
-        Sun, 23 Aug 2020 01:58:50 -0700 (PDT)
+        Sun, 23 Aug 2020 05:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgHWJAF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 05:00:05 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E94C061573;
+        Sun, 23 Aug 2020 02:00:04 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id i14so848260lfl.12;
+        Sun, 23 Aug 2020 02:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3mHHF/cCj93mk9O+OuFBr+f2r8uD6QtsJ9FKZ/VeVys=;
+        b=U7GWEbuIeOO0w0xHHWNMw3+dnz700u7oHf0ht6OuIzKu2f6N1+FNJx1mKR6CjN7QEh
+         K6ec2Gqjf/7eFIoVAdCcVpvzBkxhViv4eHmYoGGv6RwiruWoXl7ixk8cLIZ14Z0D2fTP
+         8ybOgvh+oM3pTdfNzyVA8qmQQUwTlfqqNr4bPb80vX89xRpZPABcMon6RoLW4+qC4suA
+         dpoc4FEW8DhNxzU5AaiMJLu5zde6psMDxeu9mn2/dT5FU9IRMl8L7klE2eocKGAYqgLU
+         C39jNV1Zj63jBl/n1LyKxysBseR8xNgQntbTCsbVpdKR6SI+pC/gqb7XNV+zXY3V/1Ra
+         hIZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=viEQQ0usSckhrn0C7JCLFxxV3CMZUjtmTLKCclnLX+g=;
-        b=G6KWwyrQ5CJICtr/8Uz+PIgPr8DWZqjQ4yfaGSD2qC7jSEoaH1Jq6nS9Gcwn239Teb
-         RPa8EGj+L8XYb2jYBZ8B8IdoaKsa+F0OOiZ+FZUboNq91diVQbRTaPBR9G3OS2C0jpr6
-         f7KwhHqYp0fQCxjW35uvwxBZbqvCPqHS5ZrWw3rUXXk01VIMso8kvlh0GhNa4t3HZd8J
-         yqlO3+okEBWdMv17P3AfnDI9kQxBUTkbdbZPtQyNv+wOy0uHb0YzBAVDXqLKdxQE1cjV
-         hI/4OCcUjhi6fd5nTH0yBpey2fjGI6C4zraiEGdN6B7YKnuIAyiBE+1gYedUYk1hcIIZ
-         XxeQ==
-X-Gm-Message-State: AOAM530nGIyuIHKPKs+7S9sbDQSThbr3fnzOVg8Wyiu9dqDw8TcZfCyN
-        lbYFyCvY0qEqk4eD/lFV8Pg=
-X-Google-Smtp-Source: ABdhPJxpdmtmzOkq7B7XVVLIYxvPQuRJ4WCziA67k3OjXNsm9wgkmeRgXG5nhrJ8ISYtQwGAjgr8NQ==
-X-Received: by 2002:a1c:964b:: with SMTP id y72mr720949wmd.69.1598173129897;
-        Sun, 23 Aug 2020 01:58:49 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id z6sm16496008wml.41.2020.08.23.01.58.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Aug 2020 01:58:49 -0700 (PDT)
-Date:   Sun, 23 Aug 2020 10:58:47 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm64: dts: imx8mm-var-som-symphony: Add
- Variscite Symphony board with VAR-SOM-MX8MM
-Message-ID: <20200823085847.GC2886@kozik-lap>
-References: <20200817070120.4937-1-krzk@kernel.org>
- <20200817070120.4937-4-krzk@kernel.org>
- <20200823020051.GJ30094@dragon>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=3mHHF/cCj93mk9O+OuFBr+f2r8uD6QtsJ9FKZ/VeVys=;
+        b=XDnPd6G8Mx0v3E+kTuHlLaXzoFcixENQKdbT1sHMtOFgWSh01X18TDC2Ye4AVW1ywC
+         XFuIpdQ9MLqiRjy7wOGeJqUG0Uboy5O4zsvs975tST7BxE07+6gkswGpiC6+X2qy2VFH
+         p6hx/LabX9wfOEpLyG0RT5qKcz5lY3iV2TUKr4/mOOseNxEssXeGoONUf5sXWlfnAMbd
+         PL4I8an7Qx27y1FbDCxS/G3+J+SX6jmP7lgLRSji1Bh067yQ5UjBF/UHiQ1LlDjsggQK
+         vEcmNxYC3UiWpHF1LJhDgspswWol/Xn4r4Ld3OExJ4YjxW+GWTeDUwuez4VziJlw/JvJ
+         MmfQ==
+X-Gm-Message-State: AOAM530d0q1l/hMt4er+WjjofRvC0pWZpBFFRkJtl34E4Q9huuE5RW6k
+        DU9CO9ZgmmFnae8nlerjchzDcgVFVgkeg10w
+X-Google-Smtp-Source: ABdhPJzMdOPdz1GhTaMiiqCx7dIoBnM1kFz9bqv0bvdaqscSYZt40TyrCvd1FoT2ZsXF9zNrGbX7MA==
+X-Received: by 2002:a19:843:: with SMTP id 64mr305637lfi.156.1598173203065;
+        Sun, 23 Aug 2020 02:00:03 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:84d:ebc0:4575:2d62:792b:cde7? ([2a00:1fa0:84d:ebc0:4575:2d62:792b:cde7])
+        by smtp.gmail.com with ESMTPSA id o24sm1459226ljg.69.2020.08.23.02.00.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Aug 2020 02:00:02 -0700 (PDT)
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
+ controller node name
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20200821111127.3771-1-geert+renesas@glider.be>
+ <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
+ <CAMuHMdVr1FBD+Gto8zf-tAp4_YTP1zs_qKu=yBeS3n2yjVqX0g@mail.gmail.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <b270e095-441c-bef3-f841-4bb24d31c646@gmail.com>
+Date:   Sun, 23 Aug 2020 12:00:01 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200823020051.GJ30094@dragon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAMuHMdVr1FBD+Gto8zf-tAp4_YTP1zs_qKu=yBeS3n2yjVqX0g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 10:00:51AM +0800, Shawn Guo wrote:
-> On Mon, Aug 17, 2020 at 09:01:20AM +0200, Krzysztof Kozlowski wrote:
-> > Add a DTS for Variscite Symphony evaluation kit with VAR-SOM-MX8MM
-> > System on Module.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > ---
-> > 
-> > Changes since v1:
-> > 1. Remove duplicated "leds" node,
-> > 2. Fix heartbeat to active low,
-> > 3. Add nxp,ptn5150 extcon.
-> > ---
-> >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> >  .../dts/freescale/imx8mm-var-som-symphony.dts | 248 ++++++++++++++++++
-> >  2 files changed, 249 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> > index a39f0a1723e0..dcfb8750cd78 100644
-> > --- a/arch/arm64/boot/dts/freescale/Makefile
-> > +++ b/arch/arm64/boot/dts/freescale/Makefile
-> > @@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
-> >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
-> >  
-> >  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
-> > +dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
-> >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
-> >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
-> >  dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > new file mode 100644
-> > index 000000000000..2d3c30ac5e04
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > @@ -0,0 +1,248 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "imx8mm-var-som.dtsi"
-> > +
-> > +/ {
-> > +	model = "Variscite VAR-SOM-MX8MM Symphony evaluation board";
-> > +	compatible = "variscite,var-som-mx8mm-symphony", "variscite,var-som-mx8mm", "fsl,imx8mm";
-> > +
-> > +	reg_usdhc2_vmmc: regulator-1 {
+On 21.08.2020 20:41, Geert Uytterhoeven wrote:
+
+>> On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
+>>> According to Devicetree Specification v0.2 and later, Section "Generic
+>>> Names Recommendation", the node name for a pin controller device node
+>>> should be "pinctrl".
+>>
+>>     Ugh, what a lame name! :-(
+>>     And they say DT should be OS agnostic...
+>>
+>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>>     I think more DTs have "pin-controler".
 > 
-> regulator-usdhc2-vmmc
-
-You mean the node name? If so, it's not correct with device tree
-specification:
-"The node-name (...) should describe the general class of device.:
-If appropriate, the name should be one of the following choices:
-(...)
- - regulator"
-
-Adding specific function/type/usage to the name of the node is a
-opposite choice to "general class".
-
-
+> I was surprised to discover the opposite, too:
 > 
-> > +		compatible = "regulator-fixed";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
-> > +		regulator-name = "VSD_3V3";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	reg_usb_otg2_vbus: regulator-2 {
-> 
-> regulator-usb-otg2-vbus
-> 
-> > +		compatible = "regulator-fixed";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_reg_usb_otg2_vbus>;
-> > +		regulator-name = "usb_otg2_vbus";
-> > +		regulator-min-microvolt = <5000000>;
-> > +		regulator-max-microvolt = <5000000>;
-> > +		gpio = <&gpio5 1 GPIO_ACTIVE_HIGH>;
-> > +		enable-active-high;
-> > +	};
-> > +
-> > +	gpio-keys {
-> > +		compatible = "gpio-keys";
-> > +
-> > +		back {
-> > +			label = "Back";
-> > +			gpios = <&pca9534 1 GPIO_ACTIVE_LOW>;
-> > +			linux,code = <KEY_BACK>;
-> > +		};
-> > +
-> > +		home {
-> > +			label = "Home";
-> > +			gpios = <&pca9534 2 GPIO_ACTIVE_LOW>;
-> > +			linux,code = <KEY_HOME>;
-> > +		};
-> > +
-> > +		menu {
-> > +			label = "Menu";
-> > +			gpios = <&pca9534 3 GPIO_ACTIVE_LOW>;
-> > +			linux,code = <KEY_MENU>;
-> > +		};
-> > +	};
-> > +
-> > +	leds {
-> > +		compatible = "gpio-leds";
-> > +
-> > +		heartbeat {
-> > +			label = "Heartbeat";
-> > +			gpios = <&pca9534 0 GPIO_ACTIVE_LOW>;
-> > +			linux,default-trigger = "heartbeat";
-> > +		};
-> > +	};
-> > +};
-> > +
-> > +&ethphy {
-> > +	reset-gpios = <&pca9534 5 GPIO_ACTIVE_HIGH>;
-> > +};
-> > +
-> > +&i2c2 {
-> > +	clock-frequency = <400000>;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_i2c2>;
-> > +	status = "okay";
-> > +
-> > +	pca9534: gpio@20 {
-> > +		compatible = "nxp,pca9534";
-> > +		reg = <0x20>;
-> > +		gpio-controller;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_pca9534>;
-> > +		interrupt-parent = <&gpio1>;
-> > +		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-> > +		#gpio-cells = <2>;
-> > +		wakeup-source;
-> > +
-> > +		/* USB 3.0 OTG (usbotg1) / SATA port switch, set to USB 3.0 */
-> > +		usb3-sata-sel-hog {
-> > +			gpio-hog;
-> > +			gpios = <4 GPIO_ACTIVE_HIGH>;
-> > +			output-low;
-> > +			line-name = "usb3_sata_sel";
-> > +		};
-> > +
-> > +		som-vselect-hog {
-> > +			gpio-hog;
-> > +			gpios = <6 GPIO_ACTIVE_HIGH>;
-> > +			output-low;
-> > +			line-name = "som_vselect";
-> > +		};
-> > +
-> > +		enet-sel-hog {
-> > +			gpio-hog;
-> > +			gpios = <7 GPIO_ACTIVE_HIGH>;
-> > +			output-low;
-> > +			line-name = "enet_sel";
-> > +		};
-> > +	};
-> > +
-> > +	extcon_usbotg1: typec@3d {
-> > +		compatible = "nxp,ptn5150";
-> > +		reg = <0x3d>;
-> > +		int-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_ptn5150>;
-> > +		status = "okay";
-> > +	};
-> > +};
-> > +
-> > +&i2c3 {
-> > +	clock-frequency = <400000>;
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_i2c3>;
-> > +	status = "okay";
-> > +
-> > +	/* Capacitive touch controller */
-> > +	ft5x06_ts: touchscreen@38 {
-> > +		compatible = "edt,edt-ft5406";
-> > +		reg = <0x38>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pinctrl_captouch>;
-> > +		interrupt-parent = <&gpio5>;
-> > +		interrupts = <4 GPIO_ACTIVE_HIGH>;
-> > +
-> > +		touchscreen-size-x = <800>;
-> > +		touchscreen-size-y = <480>;
-> > +		touchscreen-inverted-x;
-> > +		touchscreen-inverted-y;
-> > +	};
-> > +
-> > +	rtc@68 {
-> > +		compatible = "dallas,ds1337";
-> > +		reg = <0x68>;
-> > +		wakeup-source;
-> > +	};
-> > +};
-> > +
-> > +/* Header */
-> > +&uart1 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_uart1>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +/* Header */
-> > +&uart3 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&pinctrl_uart3>;
-> > +	status = "okay";
-> > +};
-> > +
-> > +&usbotg1 {
-> > +	disable-over-current;
-> > +	extcon = <&extcon_usbotg1>, <&extcon_usbotg1>;
-> > +};
-> > +
-> > +&usbotg2 {
-> > +	dr_mode = "host";
-> > +	vbus-supply = <&reg_usb_otg2_vbus>;
-> > +	srp-disable;
-> > +	hnp-disable;
-> > +	adp-disable;
-> > +	disable-over-current;
-> > +	/delete-property/ usb-role-switch;
-> > +	/*
-> > +	 * FIXME: having USB2 enabled hangs the boot just after:
-> > +	 * [    1.943365] ci_hdrc ci_hdrc.1: EHCI Host Controller
-> > +	 * [    1.948287] ci_hdrc ci_hdrc.1: new USB bus registered, assigned bus number 1
-> > +	 * [    1.971006] ci_hdrc ci_hdrc.1: USB 2.0 started, EHCI 1.00
-> > +	 * [    1.977203] hub 1-0:1.0: USB hub found
-> > +	 * [    1.980987] hub 1-0:1.0: 1 port detected
-> > +	 */
-> > +	status = "disabled";
-> > +};
-> > +
-> > +&iomuxc {
-> > +	pinctrl-names = "default";
-> 
-> Drop this.
+> $ git grep "\<pinctrl@" v5.9-rc1 | wc -l
+> 335
+> $ git grep "\<pin-controller@" v5.9-rc1 | wc -l
+> 102
 
-Indeed, thanks.
+    Sorry, I was probably thinking that I was replying to a DT patch, not the 
+bindings patch, hence this comment (it only meant Renesas DTs). It doesn't 
+really surprise me that more DTs overall have "pinctrl", sigh...
 
-Best regards,
-Krzysztof
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+
+MBR, Sergei
