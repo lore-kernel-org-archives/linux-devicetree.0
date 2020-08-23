@@ -2,131 +2,92 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AF5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D03D72177B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BA82078A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViEZr59x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bbSDWEMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgHWOKZ (ORCPT
+        id S1726257AbgHWOMY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 10:10:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33564 "EHLO
+        Sun, 23 Aug 2020 10:12:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbgHWOKI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 10:10:08 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89BCC0613ED;
-        Sun, 23 Aug 2020 07:10:07 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id f26so6725602ljc.8;
-        Sun, 23 Aug 2020 07:10:07 -0700 (PDT)
+        with ESMTP id S1725996AbgHWOMV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 10:12:21 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8856C061573;
+        Sun, 23 Aug 2020 07:12:20 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id j15so3102986lfg.7;
+        Sun, 23 Aug 2020 07:12:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=35wLUHHiL0jcYl7dr+ydbL6W/M+IENF1DgF9AQYM8t8=;
-        b=ViEZr59xlFFxHAnvxlgRZc5ssiXQT0tzUGBTDv4KYhMnBX4cL3HYXEhKeV4X6q53mZ
-         Gsa/A5B34Coz+f9z5jB8hRMsbh4soP1UUqGjvUzx5WX4pYY38a2jEqINeekxEGxNq737
-         ssRpEZ+FRFKBIbZ+lG7mUfRcSB+fFprInOdoEa+iUzJC1+WxIrnKAYPYLi93IZM9Bgsa
-         n7TEZLWkHPo0eLDn4nv5HqsPKHh207111jOcsknhv2FJ/+MutqkNnR1I7GHpVXtTozHS
-         2k2u5b9QlNVmBvtMMVzbXmWDlpolC4Omgsu+gPNiv7uQ1CoK04RG7d1TMg/gOeQneZ7Y
-         kJqw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TSlo4b8ovN8j9ufmCxToQYw7EM4pY/SThcXYNxp45Nw=;
+        b=bbSDWEMrNigm9slWkT5KqfUYK5OtYrdkHoE5553RGh0BehhoZj7vSGT0VzumMHfjYR
+         oj7zjyDghGHeRTNLY6AG9t0gWrN138M9PYNFyizwNOd2jWkqAvrE9rCUJcao4jMQHNE1
+         odfb9/FxVSr7DTzyvxnL5KJbfYnUiOJGm+oQBomMO7FPqimEX4JzcyQXtwGRgLT6ikoa
+         WsChrxXwbiBaoe6mpYJtWgTe7m30cHBn+PjfsivnArGWDsetq7gwDrib6tC2OTgSXFrx
+         hwvhMksq+RQM4nw3wDtV/uA3dQvmJ4PUQPvgEHc11l37d7yaCxM6FQI7CvOQLb2/C0E9
+         xRZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=35wLUHHiL0jcYl7dr+ydbL6W/M+IENF1DgF9AQYM8t8=;
-        b=TTxZehyuqs65e1M+axUL//z7yukLfnQkzsJ7DrQQrasBUC/fFCbbsu2NSrKsJ4b8nZ
-         2qmd1rkGpekQN/QYkgjMw3949T7VnbpMWznhBjCnVCLGHWtKUJ++HywlT4H2AZJnHOLa
-         vaJpNXKbWHqYPvFEUqAmJRCVGZ5tNhhBAUv3eQ7vja0Mw0Dl4vnTQcQejBkEw2OJv2cq
-         uNZ2UKS1pPE6f34xhXcmA46e1YsmABJjJXRFOTKIudwLsNp4ofLRL63WUvFXcX0mEMOT
-         QXxLscGder8cCHhTMKCvzusrAyvXFy0qHDhevo3jXMgbEFm4j7kwsyR87i22+PRmz3Rm
-         hn/A==
-X-Gm-Message-State: AOAM531BfQkNz1DfAiwfdamGYeM9+VwLVTLmLo86ik7hQUak+r09Lz6V
-        rkg3F8PCNttHq3oWq9eTYEQ=
-X-Google-Smtp-Source: ABdhPJzU2EqrkTFmH1289oQBf1AS7N5fRURLGWkSQCB7ihkYlFD87c3JcUWU8O9Fzhze9kCZLws/Lg==
-X-Received: by 2002:a2e:9557:: with SMTP id t23mr676484ljh.85.1598191806202;
-        Sun, 23 Aug 2020 07:10:06 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id b17sm1641342ljp.9.2020.08.23.07.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Aug 2020 07:10:05 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>
-Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 6/6] ARM: tegra: acer-a500: Add Embedded Controller
-Date:   Sun, 23 Aug 2020 17:08:46 +0300
-Message-Id: <20200823140846.19299-7-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200823140846.19299-1-digetx@gmail.com>
-References: <20200823140846.19299-1-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TSlo4b8ovN8j9ufmCxToQYw7EM4pY/SThcXYNxp45Nw=;
+        b=rC3xDOsCyHxtOc7w4IwSlD8KjKKyMwKr0gll0Yf7Y93U+7Qh7HtKA96B4QlyYWJix+
+         7huw3K+9chQwVUSqMCVCgWs8/aSZTZYyUW1I1K5TLz/jvir2YG3o0X4snUItku0VdFYX
+         e6Y66tDjKPwCzvwBJdFYDnTZApL902Q+QULW2kee25LEKbCgKt7XBsK2HMQVYZkOd9Xo
+         26wzoJW/PSvwcxnuh/G7xShrwOwBBY3DwvJx2tWJ8UUdP5k89nOi9Gy03tJJ/Z5NxPGs
+         ojse/HAkjpoGhAcMD8jQ0/4YZWBWlGnOjokUCyxySDw5jIdW7+JJOk82C/HVn2Sx+Tg3
+         8fEg==
+X-Gm-Message-State: AOAM531qwFhShNdkskJsRsI15zbuk0Rz/v7Id5zBGjLJiWDbOxU+cx1y
+        6jFwjYN4MzSOAt0qqPmCoXaOVyGCoRv4ghA56M0=
+X-Google-Smtp-Source: ABdhPJzpc9xnXVWN7kBxunjdAXR4CZlJ5vyIKYmlyoGgNSI2LACUJ+7D5x14pIBIsL45fGZyV0/MJBlrDIz0SPaKO84=
+X-Received: by 2002:a19:4801:: with SMTP id v1mr370564lfa.56.1598191939039;
+ Sun, 23 Aug 2020 07:12:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <VI1PR0402MB33427CE688DB9D28DDFC000EE3590@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB33427CE688DB9D28DDFC000EE3590@VI1PR0402MB3342.eurprd04.prod.outlook.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sun, 23 Aug 2020 11:12:08 -0300
+Message-ID: <CAOMZO5AQdOONXgYFYGV+=0u8KqXUfJm-J53YoKdJDPXJmLtW0Q@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6sx-sdb: Add headphone detection for sound card
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch adds device-tree node for the Embedded Controller which is
-found on the Picasso board. The Embedded Controller itself is ENE KB930,
-it provides functions like battery-gauge/LED/GPIO/etc and it uses firmware
-that is specifically customized for the Acer A500 device.
+Hi Wang Shengjiu and Shawn,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- arch/arm/boot/dts/tegra20-acer-a500-picasso.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+On Sun, Aug 23, 2020 at 9:31 AM S.j. Wang <shengjiu.wang@nxp.com> wrote:
 
-diff --git a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
-index 2d683c9a1a5d..f92712e4bd34 100644
---- a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
-+++ b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
-@@ -502,6 +502,16 @@ panel_ddc: i2c@1 {
- 			reg = <1>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+
-+			embedded-controller@58 {
-+				compatible = "acer,a500-iconia-ec", "ene,kb930";
-+				reg = <0x58>;
-+
-+				system-power-controller;
-+
-+				monitored-battery = <&bat1010>;
-+				power-supplies = <&mains>;
-+			};
- 		};
- 	};
- 
-@@ -780,6 +790,13 @@ backlight: backlight {
- 		default-brightness-level = <20>;
- 	};
- 
-+	bat1010: battery-2s1p {
-+		compatible = "simple-battery";
-+		charge-full-design-microamp-hours = <3260000>;
-+		energy-full-design-microwatt-hours = <24000000>;
-+		operating-range-celsius = <0 40>;
-+	};
-+
- 	/* PMIC has a built-in 32KHz oscillator which is used by PMC */
- 	clk32k_in: clock@0 {
- 		compatible = "fixed-clock";
--- 
-2.27.0
+> I would like to know your opinion, should I move headphone detect GPIO
+> To audmux group?
 
+What about adding a dedicated pinctrl_hp for the headphone detect pin
+like it is done at:
+https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/tree/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi?h=for-next&id=8f0216b006e5f553d28c4c1a991b5234693a49cb#n130
+
+My point is that we should avoid adding a hog group when possible.
+
+Thanks
