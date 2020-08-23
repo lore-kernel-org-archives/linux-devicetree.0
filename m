@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D123CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9C5C433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A11042072D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8772075B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598199516;
-	bh=CnRSnps+AJEG/CNxkZZ3JT+RUcAXLf0eIGA4Cov4d+8=;
+	s=default; t=1598199517;
+	bh=p7s6/RTngu5wO+BXh/RckmKOH+s+BJOz4PP9eHTqfjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=elpcR1Fx4YCJWB9Ky9wLWBPRJulIU22d8pC8OlGRn3IgecNZq56UwEhk9hzhpAtui
-	 fs3MVqsa2kTQPCPmJ2XCkjhixxFGantpRkTw4vW8VCD62KxHujRaB2BIMQ26glnPS1
-	 OrY+1s9pfbVRcztnBEFdtUQPVMyUVPNayGF8sK6s=
+	b=nxUASHuaiXn89ylK9wcBv+vWn0CfMc/0OVO+Dg8Ae8Ll0nnllB9MEIkqNg9+CgPjp
+	 0rW9J0G/CHOoCOorzx8RnLxs4vTChC3ImwoFhN5V323a5/bBSLa1hoEoRYYwjxairR
+	 TIrHfYYO74pCbH781PwhVF1sFwwp3rVbpstF2PzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgHWQRZ (ORCPT
+        id S1726502AbgHWQSg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47000 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 12:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728174AbgHWQRV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:17:21 -0400
+        id S1726257AbgHWQRg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:17:36 -0400
 Received: from kozik-lap.proceq-device.com (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79BBE2072D;
-        Sun, 23 Aug 2020 16:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56912072D;
+        Sun, 23 Aug 2020 16:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598199440;
-        bh=CnRSnps+AJEG/CNxkZZ3JT+RUcAXLf0eIGA4Cov4d+8=;
+        s=default; t=1598199456;
+        bh=p7s6/RTngu5wO+BXh/RckmKOH+s+BJOz4PP9eHTqfjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auHjhuwkCd7pI2CH8VXG0d4rXiAOTn7549CnoGcR0isa3OD6lmhUbuPzOQeSVZ2Ih
-         qVsrJdktxrWBmkpSbH+5Sl4u13xqmc1p6yFv6zxyhnjr+kO/H8kNuaJDzjtVUDoAr3
-         09SCTA+NPhmxWpLwgijMlDyTnp+5VG7+YvKvAKes=
+        b=kGNoYo8F+u5NxDsg/u+guoF6LVbrYlOdkltihyzc6zveKIDkwzfULbcZHjwfVJg0C
+         Xmk2S2MUUOG7JdQ1C+N6UxwYOvGhgFHd5Az7ofdPWAYCF1FCRSLlVBGEcREVJq3DLY
+         fI1g8/7lamehuBVzD/kMOxUBfZiw4aLmNN4xXulk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -56,9 +56,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Anson Huang <Anson.Huang@nxp.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 18/22] arm64: dts: imx8mq-zii-ultra: Add hog suffixes to GPIO hogs
-Date:   Sun, 23 Aug 2020 18:15:46 +0200
-Message-Id: <20200823161550.3981-18-krzk@kernel.org>
+Subject: [PATCH 21/22] arm64: dts: imx8qxp: Remove i.MX7 compatible from USDHC
+Date:   Sun, 23 Aug 2020 18:15:49 +0200
+Message-Id: <20200823161550.3981-21-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200823161550.3981-1-krzk@kernel.org>
 References: <20200823161550.3981-1-krzk@kernel.org>
@@ -67,52 +67,53 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-According to device tree specification, device node names should be
-somewhat generic and reflecting the function of the device so add the
-"hog" suffixes to all GPIO hog nodes.
+The USDHC on i.MX 8QXP has its own compatible described in bindings
+and used in the driver (with its own quirks).  Remove additional
+fsl,imx7d-usdhc compatible to fix dtbs_check warnings like:
+
+  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: mmc@5b010000:
+    compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
+    From schema: /ocumentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+
+  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: mmc@5b010000:
+    compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-index 0d1088dcaa02..fa7a041ffcfd 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-zii-ultra.dtsi
-@@ -229,28 +229,28 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_gpio3_hog>;
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 61bccb69f09e..26c4fcdfe290 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -362,7 +362,7 @@
+ 		};
  
--	usb-emulation {
-+	usb-emulation-hog {
- 		gpio-hog;
- 		gpios = <10 GPIO_ACTIVE_HIGH>;
- 		output-low;
- 		line-name = "usb-emulation";
- 	};
+ 		usdhc1: mmc@5b010000 {
+-			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
++			compatible = "fsl,imx8qxp-usdhc";
+ 			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x5b010000 0x10000>;
+ 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
+@@ -374,7 +374,7 @@
+ 		};
  
--	usb-mode1 {
-+	usb-mode1-hog {
- 		gpio-hog;
- 		gpios = <11 GPIO_ACTIVE_HIGH>;
- 		output-high;
- 		line-name = "usb-mode1";
- 	};
+ 		usdhc2: mmc@5b020000 {
+-			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
++			compatible = "fsl,imx8qxp-usdhc";
+ 			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x5b020000 0x10000>;
+ 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
+@@ -388,7 +388,7 @@
+ 		};
  
--	usb-pwr {
-+	usb-pwr-hog {
- 		gpio-hog;
- 		gpios = <12 GPIO_ACTIVE_LOW>;
- 		output-high;
- 		line-name = "usb-pwr-ctrl-en-n";
- 	};
- 
--	usb-mode2 {
-+	usb-mode2-hog {
- 		gpio-hog;
- 		gpios = <13 GPIO_ACTIVE_HIGH>;
- 		output-high;
+ 		usdhc3: mmc@5b030000 {
+-			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
++			compatible = "fsl,imx8qxp-usdhc";
+ 			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x5b030000 0x10000>;
+ 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
 -- 
 2.17.1
 
