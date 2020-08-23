@@ -2,125 +2,129 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14317C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7D5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E12AA2078A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:03:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598191430;
-	bh=EFE6jLBhE8IxwiWnVnZDQ7Ja0ooQMNmVgY6jo4NDWiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bJO1p1RD1WVk3iiZKFEGO+8ic9m5ZD6k9zCxc/TnqW9fnHLNVoNSTAw7IpVQ3s3vx
-	 bIm4kefo3y+XXnySnc914pRyTTMiqSVOYSuJ49Urb0kDHwupRM8BuJ7QCeYagCdFiC
-	 OIl0Z/20p1q1X2NvPxhQ54cTwVw5oWbx8u82F70M=
+	by mail.kernel.org (Postfix) with ESMTP id ABA032177B
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 14:10:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="se7nC3ie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726086AbgHWODu (ORCPT
+        id S1726480AbgHWOKC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 10:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbgHWODt (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 10:03:49 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 312FB206C0;
-        Sun, 23 Aug 2020 14:03:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598191429;
-        bh=EFE6jLBhE8IxwiWnVnZDQ7Ja0ooQMNmVgY6jo4NDWiA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OsSeugnElqiXFjOtTQ748aijFNETUw3KGWbIcsy7UZo9pqxwCmpmffSAYma5R/lDi
-         BNw6CV+0c8GwnvLGLyEBw4SKlB9udN9H5NQj1nia8v75HIVQJGAm+tYz93n+rxVM5o
-         IDE4kRvhz3j5CFIGOvPsG2m2GKD6+545ZEnWcGXQ=
-Date:   Sun, 23 Aug 2020 19:33:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     kishon@ti.com, thierry.reding@gmail.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Sun, 23 Aug 2020 10:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbgHWOKB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 10:10:01 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4865C061573;
+        Sun, 23 Aug 2020 07:10:00 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id 12so3096124lfb.11;
+        Sun, 23 Aug 2020 07:10:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NANA31JWruLrcn0siO3feQHx3tJIbgJqM7ymNtCvW4I=;
+        b=se7nC3ieNSWbQcrWRlZWnEm0UwbgQEkWzMIJyNWKVgztbcdN5FVT8yZmPCfoBDrVYL
+         Pl6s3ffUjrOkZePrtacE6bfgcuPUsk9mkMpAFHlkmLqUIyvOawp/Z+bIbbimQO07ESn0
+         Q6Pv817OwLR+EMmgKOlVMRkZQB6henNF5bAv07lKSJehzTUnL5O+7OKE9DycMoL4k6yJ
+         MV6AwKfga4/ofhETYNmHUnif7oqnIY2B2JgUdfNvJPFduS7KjR9dpRQYuv9YH36jGAp2
+         UM3beAvcU16jlA826yXrouYf4/CiA/l2iDWE+rtEadyIcICZGcB5f4awho4tf4M8OCIG
+         shHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NANA31JWruLrcn0siO3feQHx3tJIbgJqM7ymNtCvW4I=;
+        b=H2MklGk71A5MbUbZ92iNzvimXrp57HgZNiQhwWa5Fe+yXFJ4waOtlH/xSuNhjWi/DQ
+         2F7LP2vfCIaKc6ll0sq42VKtz+VLItHSETpgCYocDsyviXNGDabzxR2JhvJsw3aI5lqC
+         1vN0mzpxAkZajAzZ6Z3khSGUi5WhyG+mhGTzsWZGZlw1V2JhL/QhRjowXfKhM/b5hbtQ
+         KvQiBfe/F1bjVmYM5dHUtFwQpJobSPLE2Rrj+ld5mfoamJLlTZJY+PLXThTpAH8MwJE8
+         AzSFZt2A9xTmoRsSZhsL/vmf8KXBAW9FaxqQzPVTobyIUzTrhpwIqsL+YUKIoFNSfAQN
+         //yQ==
+X-Gm-Message-State: AOAM531793wQDjPZLM9Bvz4YPCxhCPjDQCub9i7GrjwnThmaMDwhbHv7
+        dUQxkw+jmMzMSzEXPSwnpWo=
+X-Google-Smtp-Source: ABdhPJzz2yv1BREoxRroH14+MKjC5hu6os1OBV+zXQ2MCDvKPCCgUYXPDeHI0kBsS1R+ICioZP8o2w==
+X-Received: by 2002:a19:848d:: with SMTP id g135mr649800lfd.1.1598191799388;
+        Sun, 23 Aug 2020 07:09:59 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id b17sm1641342ljp.9.2020.08.23.07.09.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 07:09:58 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>
+Cc:     devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V5 3/7] phy: tegra: xusb: Add USB2 pad power control
- support for Tegra210
-Message-ID: <20200823140345.GP2639@vkoul-mobl>
-References: <1595238948-20531-1-git-send-email-nkristam@nvidia.com>
- <1595238948-20531-4-git-send-email-nkristam@nvidia.com>
+Subject: [PATCH v1 0/6] Introduce Embedded Controller driver for Acer A500
+Date:   Sun, 23 Aug 2020 17:08:40 +0300
+Message-Id: <20200823140846.19299-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1595238948-20531-4-git-send-email-nkristam@nvidia.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-07-20, 15:25, Nagarjuna Kristam wrote:
-> Add USB2 pad power on and off API's for TEgra210 and provide its control
-> via soc ops. It can be used by operations like charger detect to power on
-> and off USB2 pad if needed.
-> 
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> ---
-> V5:
->  - Made tegra210_usb2_pad_power_on() and tegra210_usb2_pad_power_down() static.
-> ---
-> V4:
->  - No changes
-> ---
-> V3:
->  - Added Acked-by updates to commit message.
-> ---
-> V2:
->  - Patch re-based.
-> ---
->  drivers/phy/tegra/xusb-tegra210.c | 190 ++++++++++++++++++++++++++------------
->  1 file changed, 133 insertions(+), 57 deletions(-)
-> 
-> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-> index 66bd461..2e5f71c 100644
-> --- a/drivers/phy/tegra/xusb-tegra210.c
-> +++ b/drivers/phy/tegra/xusb-tegra210.c
-> @@ -994,6 +994,128 @@ static int tegra210_xusb_padctl_id_override(struct tegra_xusb_padctl *padctl,
->  	return 0;
->  }
->  
-> +static void tegra210_usb2_bias_pad_power_on(struct tegra_xusb_usb2_pad *pad)
-> +{
-> +	struct tegra_xusb_padctl *padctl = pad->base.padctl;
-> +	u32 value;
-> +
-> +	if (pad->enable++ > 0)
-> +		return;
-> +
-> +	dev_dbg(padctl->dev, "power on BIAS PAD & USB2 tracking\n");
-> +
-> +	if (clk_prepare_enable(pad->clk))
-> +		dev_warn(padctl->dev, "failed to enable BIAS PAD & USB2 tracking\n");
+Hello!
 
-do you want to proceed ahead even if clock is not enabled..?
+This series adds support for the Embedded Controller which is found on
+Acer Iconia Tab A500 (Android tablet device).
 
-> +
-> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL1);
-> +	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_MASK <<
-> +		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
-> +		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_MASK <<
-> +		    XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT));
-> +	value |= (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_VAL <<
-> +		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_START_TIMER_SHIFT) |
-> +		 (XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_VAL <<
-> +		  XUSB_PADCTL_USB2_BIAS_PAD_CTL1_TRK_DONE_RESET_TIMER_SHIFT);
+The Embedded Controller is ENE KB930 and it's running firmware customized
+for the A500. The firmware interface may be reused by some other sibling
+Acer tablets, although none of those tablets are supported in upstream yet.
+Please review and apply, thanks in advance!
 
-I recently found <linux/bitfield.h> I think this would look lot neater
-if we use FIELD_PREP or u32_encode_bits() and you can drop shift defines
+ATTENTION! This series depends on a-yet-unapplied patch from Lubomir Rintel
+           which adds the device-tree binding for the ENE controller [1].
 
-Since this is not new code but moved here, I will leave it upto you to
-change this, either ways is fine by me.
+           It also depend on the pending patch that adds battery temperature
+           properties to the battery binding [2].
+
+[1] https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20200309203818.31266-4-lkundrak@v3.sk/
+[2] https://patchwork.ozlabs.org/project/linux-tegra/patch/20200813213409.24222-2-digetx@gmail.com/
+
+Dmitry Osipenko (6):
+  mfd: Add driver for Embedded Controller found on Acer Iconia Tab A500
+  power: supply: Add battery gauge driver for Acer Iconia Tab A500
+  leds: Add driver for Acer Iconia Tab A500
+  dt-bindings: mfd: ene-kb3930: Add compatibles for KB930 and Acer A500
+  dt-bindings: mfd: ene-kb3930: Document power-supplies and
+    monitored-battery properties
+  ARM: tegra: acer-a500: Add Embedded Controller
+
+ .../devicetree/bindings/mfd/ene-kb3930.yaml   |  23 +-
+ .../boot/dts/tegra20-acer-a500-picasso.dts    |  17 +
+ drivers/leds/Kconfig                          |   7 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-acer-a500.c                 | 121 ++++++
+ drivers/mfd/Kconfig                           |  10 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/acer-ec-a500.c                    | 196 ++++++++++
+ drivers/power/supply/Kconfig                  |   6 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/acer_a500_battery.c      | 369 ++++++++++++++++++
+ include/linux/mfd/acer-ec-a500.h              |  80 ++++
+ 12 files changed, 831 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/leds/leds-acer-a500.c
+ create mode 100644 drivers/mfd/acer-ec-a500.c
+ create mode 100644 drivers/power/supply/acer_a500_battery.c
+ create mode 100644 include/linux/mfd/acer-ec-a500.h
 
 -- 
-~Vinod
+2.27.0
+
