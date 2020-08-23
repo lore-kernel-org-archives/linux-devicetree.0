@@ -2,89 +2,138 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC29EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 17:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B194CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 18:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89542207CD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 17:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598203266;
-	bh=CqYRHo/0iH7tLsT9o8PS32qjWWTfkPRR9VIUe5p42aw=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hIcL6OKbF5nDcZygWGcD51QTt+ZZQg5M4M5vnNbSzOxp+FGW/tRXMcCnmU0N8Qvtb
-	 uROMsskI/olT1Uw4H5pmU9LapMumwhiqS7RIimx5IuOmIpzC7LagehCJvYi/91ZSbH
-	 G1N73x3Csks37BcnyXhBynyPqIR+YvLqoyqelGLE=
+	by mail.kernel.org (Postfix) with ESMTP id 94689206B5
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 18:00:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgHWRVG (ORCPT
+        id S1727776AbgHWSAw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 13:21:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51084 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgHWRUg (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 13:20:36 -0400
-Received: from kozik-lap.proceq-device.com (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4BBF20838;
-        Sun, 23 Aug 2020 17:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598203234;
-        bh=CqYRHo/0iH7tLsT9o8PS32qjWWTfkPRR9VIUe5p42aw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=KkI3pSZfqHXauZiRrXkKxXbKzIwc0VBqmxokzBy6o6Qfh8yThB3VmWvUtMkmwxMJW
-         XL1KfC6b8y+y/1cjD9QFyXL5ltFvj5q6PxLhZKStfYpMwxfZtrx6yWILkpMAhDwbSG
-         OfoVAD7/r7oNvFj54Yfbm3+hSlNLEH5Kku5K8YgU=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4/5] arm64: dts: imx8mm-beacon-som: Fix atmel,24c64 EEPROM compatible
-Date:   Sun, 23 Aug 2020 19:20:18 +0200
-Message-Id: <20200823172019.18606-4-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200823172019.18606-1-krzk@kernel.org>
-References: <20200823172019.18606-1-krzk@kernel.org>
+        Sun, 23 Aug 2020 14:00:52 -0400
+Received: from mail.v3.sk ([167.172.186.51]:42328 "EHLO shell.v3.sk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727945AbgHWSAu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 14:00:50 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 3E84CDF106;
+        Sun, 23 Aug 2020 17:59:46 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id uzF78zdjqwmD; Sun, 23 Aug 2020 17:59:45 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 759FDDFA6B;
+        Sun, 23 Aug 2020 17:59:44 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id uf-79zAqGnZt; Sun, 23 Aug 2020 17:59:44 +0000 (UTC)
+Received: from localhost (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id DC182DF106;
+        Sun, 23 Aug 2020 17:59:43 +0000 (UTC)
+Date:   Sun, 23 Aug 2020 20:00:41 +0200
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 5/6] dt-bindings: mfd: ene-kb3930: Document
+ power-supplies and monitored-battery properties
+Message-ID: <20200823180041.GB209852@demiurge.local>
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-6-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823140846.19299-6-digetx@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Correct the EEPROM node compatible to match device tree schema (invalid
-space, unknown ID) to fix dtbs_check warnings:
+Hi,
 
-  arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: eeprom@50:
-    compatible: ['microchip, at24c64d', 'atmel,24c64'] is not valid under any of the given schemas
-  arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: eeprom@50:
-    compatible:0: 'microchip, at24c64d' does not match '^[a-zA-Z][a-zA-Z0-9,+\\-._]+$'
+On Sun, Aug 23, 2020 at 05:08:45PM +0300, Dmitry Osipenko wrote:
+> Battery could be connected to the controller and in this case controller
+> will provide a battery-monitor function.
+> 
+> The power-supplies phandle property is needed in order to describe the
+> power supply which is used for charging of the battery, this allows to
+> determine whither battery is charging or discharging, depending on the
+> supply state.
+> 
+> The monitored-battery phandle provides information about the battery cell
+> characteristics.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I believe it would be better if you created a new binding document
+instead of reusing this one -- the hardware part iseems to be a
+different one and the firmware it runs seems to be behaving totally
+differently than the usual ENE firmware [1].
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-index f627e82ad929..620a124dfb5f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-beacon-som.dtsi
-@@ -184,7 +184,7 @@
- 	status = "okay";
- 
- 	eeprom@50 {
--		compatible = "microchip, at24c64d", "atmel,24c64";
-+		compatible = "microchip,24c64", "atmel,24c64";
- 		pagesize = <32>;
- 		read-only;	/* Manufacturing EEPROM programmed at factory */
- 		reg = <0x50>;
--- 
-2.17.1
+[1] This eneec.c seems to be coming from ENE, so I'm assuming it's a
+    good enough description of how their firmware behaves:
+    https://git.kernel.org/pub/scm/linux/kernel/git/lkundrak/linux-mmp3-dell-ariel.git/tree/drivers/input/serio/eneec.c
 
+Cheers
+Lubo
+
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/ene-kb3930.yaml    | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> index 5a1c4a959d9c..435728054f3a 100644
+> --- a/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/ene-kb3930.yaml
+> @@ -29,6 +29,8 @@ properties:
+>      description: GPIO used with the shutdown protocol on Ariel
+>      maxItems: 2
+>  
+> +  monitored-battery: true
+> +  power-supplies: true
+>    system-power-controller: true
+>  
+>  required:
+> @@ -41,6 +43,19 @@ examples:
+>    - |
+>      #include <dt-bindings/gpio/gpio.h>
+>  
+> +    battery: battery-cell {
+> +            compatible = "simple-battery";
+> +            charge-full-design-microamp-hours = <3260000>;
+> +            energy-full-design-microwatt-hours = <24000000>;
+> +            operating-range-celsius = <0 40>;
+> +    };
+> +
+> +    mains: ac-adapter {
+> +      compatible = "gpio-charger";
+> +      charger-type = "mains";
+> +      gpios = <&gpio 125 GPIO_ACTIVE_LOW>;
+> +    };
+> +
+>      i2c {
+>        #address-cells = <1>;
+>        #size-cells = <0>;
+> @@ -52,6 +67,9 @@ examples:
+>  
+>          off-gpios = <&gpio 126 GPIO_ACTIVE_HIGH>,
+>                      <&gpio 127 GPIO_ACTIVE_HIGH>;
+> +
+> +        monitored-battery = <&battery>;
+> +        power-supplies = <&mains>;
+>        };
+>      };
+>  
+> -- 
+> 2.27.0
+> 
