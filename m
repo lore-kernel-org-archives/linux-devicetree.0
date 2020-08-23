@@ -2,35 +2,37 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7126AC433E3
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 07:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE583C433E3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 07:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50D3D207CD
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 07:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD73920767
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 07:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgHWHSR (ORCPT
+        id S1728002AbgHWHYP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 03:18:17 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:50554 "EHLO honk.sigxcpu.org"
+        Sun, 23 Aug 2020 03:24:15 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:50668 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727772AbgHWHSQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 03:18:16 -0400
+        id S1725981AbgHWHYP (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 03:24:15 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id B53C1FB02;
-        Sun, 23 Aug 2020 09:18:14 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id E92DEFB03;
+        Sun, 23 Aug 2020 09:24:12 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id S-2PK1a2eBTw; Sun, 23 Aug 2020 09:18:11 +0200 (CEST)
+        with ESMTP id g5yiK_vwgfGA; Sun, 23 Aug 2020 09:24:11 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 096654586A; Sun, 23 Aug 2020 09:18:09 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        id 6E50845869; Sun, 23 Aug 2020 09:24:11 +0200 (CEST)
+Date:   Sun, 23 Aug 2020 09:24:11 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
         Fabio Estevam <festevam@gmail.com>,
@@ -39,7 +41,6 @@ To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Will Deacon <will@kernel.org>,
         Martin Kepplinger <martink@posteo.de>,
         "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
         Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
         Dong Aisheng <aisheng.dong@nxp.com>,
         Leonard Crestez <leonard.crestez@nxp.com>,
@@ -53,58 +54,44 @@ To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Michael Walle <michael@walle.cc>,
         Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] arm64: defconfig: Enable imx8mq-librem5-devkit display stack
-Date:   Sun, 23 Aug 2020 09:18:08 +0200
-Message-Id: <075bae3facd8c3af9cd2ab376d361097cbf99631.1598166983.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1598166983.git.agx@sigxcpu.org>
-References: <cover.1598166983.git.agx@sigxcpu.org>
+Subject: Re: [PATCH v2 3/4] arm64: defconfig: re-sync DRM related defconfig
+ bits
+Message-ID: <20200823072411.GA6867@bogon.m.sigxcpu.org>
+References: <cover.1597913263.git.agx@sigxcpu.org>
+ <e13be6f742ecdf06f7000af6e8e5ec5bcb65f7f0.1597913263.git.agx@sigxcpu.org>
+ <20200823025622.GR30094@dragon>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200823025622.GR30094@dragon>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable the panel, NWL DSI host controller and dphy. This
-also needs the reset controller.
+Hi,
+On Sun, Aug 23, 2020 at 10:56:22AM +0800, Shawn Guo wrote:
+> On Thu, Aug 20, 2020 at 10:50:58AM +0200, Guido Günther wrote:
+> > This moves the CONFIG_DRM_SIMPLE_BRIDGE entry around making further
+> > updates simpler.
+> > 
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> 
+> Patch #3 and #4 do not apply to my branch.
 
-Signed-off-by: Guido GÃ¼nther <agx@sigxcpu.org>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm64/configs/defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks for applying the other two already! I've rebased these against
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 43200a86fe10..185904e0c5d5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -640,8 +640,10 @@ CONFIG_DRM_MSM=m
- CONFIG_DRM_TEGRA=m
- CONFIG_DRM_PANEL_LVDS=m
- CONFIG_DRM_PANEL_SIMPLE=m
-+CONFIG_DRM_PANEL_SITRONIX_ST7703=m
- CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
- CONFIG_DRM_DISPLAY_CONNECTOR=m
-+CONFIG_DRM_NWL_MIPI_DSI=m
- CONFIG_DRM_SII902X=m
- CONFIG_DRM_SIMPLE_BRIDGE=m
- CONFIG_DRM_THINE_THC63LVD1024=m
-@@ -949,11 +951,13 @@ CONFIG_PWM_SAMSUNG=y
- CONFIG_PWM_SUN4I=m
- CONFIG_PWM_TEGRA=m
- CONFIG_QCOM_PDC=y
-+CONFIG_RESET_IMX7=y
- CONFIG_RESET_QCOM_AOSS=y
- CONFIG_RESET_QCOM_PDC=m
- CONFIG_RESET_TI_SCI=y
- CONFIG_PHY_XGENE=y
- CONFIG_PHY_SUN4I_USB=y
-+CONFIG_PHY_MIXEL_MIPI_DPHY=m
- CONFIG_PHY_HI6220_USB=y
- CONFIG_PHY_HISTB_COMBPHY=y
- CONFIG_PHY_HISI_INNO_USB2=y
--- 
-2.26.2
+  https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/log/?h=imx/defconfig
 
+in v4:
+
+  https://lore.kernel.org/linux-devicetree/cover.1598166983.git.agx@sigxcpu.org/T/#t  
+
+Cheers,
+ -- Guido
+
+
+> 
+> Shawn
+> 
