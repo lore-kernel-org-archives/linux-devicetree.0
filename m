@@ -2,121 +2,84 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B208FC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB366C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C17A2075B
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:00:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U7GWEbuI"
+	by mail.kernel.org (Postfix) with ESMTP id 8FB9920768
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598173522;
+	bh=EO6G5kF0VLrz8QAHobZGaL6LPKAV21OlmZuFNeANWig=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=0NjIRscyN3WBDylb9GVu2tXoZ3DJFRzrMhwDhuQCxSoCZgB2stjAAFcMMoNgdt0AC
+	 B4PrLsRXIEoJrjuoC7R2zFeO6RIh/CoV+BxWUBjBvsJ8yGKOB7piQ/8NHFDXsBMEqi
+	 qObB9+v/L3je9qCUPi1gfyvUtfFbjAm0/ReFA4UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgHWJAH (ORCPT
+        id S1728453AbgHWJFW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 05:00:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgHWJAF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 05:00:05 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E94C061573;
-        Sun, 23 Aug 2020 02:00:04 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id i14so848260lfl.12;
-        Sun, 23 Aug 2020 02:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3mHHF/cCj93mk9O+OuFBr+f2r8uD6QtsJ9FKZ/VeVys=;
-        b=U7GWEbuIeOO0w0xHHWNMw3+dnz700u7oHf0ht6OuIzKu2f6N1+FNJx1mKR6CjN7QEh
-         K6ec2Gqjf/7eFIoVAdCcVpvzBkxhViv4eHmYoGGv6RwiruWoXl7ixk8cLIZ14Z0D2fTP
-         8ybOgvh+oM3pTdfNzyVA8qmQQUwTlfqqNr4bPb80vX89xRpZPABcMon6RoLW4+qC4suA
-         dpoc4FEW8DhNxzU5AaiMJLu5zde6psMDxeu9mn2/dT5FU9IRMl8L7klE2eocKGAYqgLU
-         C39jNV1Zj63jBl/n1LyKxysBseR8xNgQntbTCsbVpdKR6SI+pC/gqb7XNV+zXY3V/1Ra
-         hIZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3mHHF/cCj93mk9O+OuFBr+f2r8uD6QtsJ9FKZ/VeVys=;
-        b=XDnPd6G8Mx0v3E+kTuHlLaXzoFcixENQKdbT1sHMtOFgWSh01X18TDC2Ye4AVW1ywC
-         XFuIpdQ9MLqiRjy7wOGeJqUG0Uboy5O4zsvs975tST7BxE07+6gkswGpiC6+X2qy2VFH
-         p6hx/LabX9wfOEpLyG0RT5qKcz5lY3iV2TUKr4/mOOseNxEssXeGoONUf5sXWlfnAMbd
-         PL4I8an7Qx27y1FbDCxS/G3+J+SX6jmP7lgLRSji1Bh067yQ5UjBF/UHiQ1LlDjsggQK
-         vEcmNxYC3UiWpHF1LJhDgspswWol/Xn4r4Ld3OExJ4YjxW+GWTeDUwuez4VziJlw/JvJ
-         MmfQ==
-X-Gm-Message-State: AOAM530d0q1l/hMt4er+WjjofRvC0pWZpBFFRkJtl34E4Q9huuE5RW6k
-        DU9CO9ZgmmFnae8nlerjchzDcgVFVgkeg10w
-X-Google-Smtp-Source: ABdhPJzMdOPdz1GhTaMiiqCx7dIoBnM1kFz9bqv0bvdaqscSYZt40TyrCvd1FoT2ZsXF9zNrGbX7MA==
-X-Received: by 2002:a19:843:: with SMTP id 64mr305637lfi.156.1598173203065;
-        Sun, 23 Aug 2020 02:00:03 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:84d:ebc0:4575:2d62:792b:cde7? ([2a00:1fa0:84d:ebc0:4575:2d62:792b:cde7])
-        by smtp.gmail.com with ESMTPSA id o24sm1459226ljg.69.2020.08.23.02.00.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 02:00:02 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
- controller node name
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20200821111127.3771-1-geert+renesas@glider.be>
- <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
- <CAMuHMdVr1FBD+Gto8zf-tAp4_YTP1zs_qKu=yBeS3n2yjVqX0g@mail.gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <b270e095-441c-bef3-f841-4bb24d31c646@gmail.com>
-Date:   Sun, 23 Aug 2020 12:00:01 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVr1FBD+Gto8zf-tAp4_YTP1zs_qKu=yBeS3n2yjVqX0g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 23 Aug 2020 05:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbgHWJFV (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 05:05:21 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D6C32072D;
+        Sun, 23 Aug 2020 09:05:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598173520;
+        bh=EO6G5kF0VLrz8QAHobZGaL6LPKAV21OlmZuFNeANWig=;
+        h=From:To:Cc:Subject:Date:From;
+        b=klvOYVj04gO+2yS9OMaUrIFRnAGCYhbx28vAC8Z8P5gaCf8UPY+Gz86E9XbfjSbNV
+         p8kRSlWByGyFSGWBRyyECJnNSFD+41vTruN2M9qu98IOpTDQsBq0Ana56hfs5sfcZY
+         01rdrGxKA23J9Yo/bxsk615u1GX9F+Fn+zo2GiPI=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/3] arm64: dts: imx8mm-evk: remove orphaned pinctrl-names property
+Date:   Sun, 23 Aug 2020 11:05:03 +0200
+Message-Id: <20200823090505.5579-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 21.08.2020 20:41, Geert Uytterhoeven wrote:
+The "pinctrl-names" property in iomux node does not make sense on its
+own (without "pinctrl-X").
 
->> On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
->>> According to Devicetree Specification v0.2 and later, Section "Generic
->>> Names Recommendation", the node name for a pin controller device node
->>> should be "pinctrl".
->>
->>     Ugh, what a lame name! :-(
->>     And they say DT should be OS agnostic...
->>
->>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->>     I think more DTs have "pin-controler".
-> 
-> I was surprised to discover the opposite, too:
-> 
-> $ git grep "\<pinctrl@" v5.9-rc1 | wc -l
-> 335
-> $ git grep "\<pin-controller@" v5.9-rc1 | wc -l
-> 102
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 --
+ 1 file changed, 2 deletions(-)
 
-    Sorry, I was probably thinking that I was replying to a DT patch, not the 
-bindings patch, hence this comment (it only meant Renesas DTs). It doesn't 
-really surprise me that more DTs overall have "pinctrl", sigh...
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index 0f1d7f8aeac4..19a22d0d0730 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -366,8 +366,6 @@
+ };
+ 
+ &iomuxc {
+-	pinctrl-names = "default";
+-
+ 	pinctrl_fec1: fec1grp {
+ 		fsl,pins = <
+ 			MX8MM_IOMUXC_ENET_MDC_ENET1_MDC			0x3
+-- 
+2.17.1
 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-
-MBR, Sergei
