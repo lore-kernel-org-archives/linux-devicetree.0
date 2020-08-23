@@ -2,257 +2,119 @@ Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C08C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC0BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7965B2072D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0522020767
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598198804;
-	bh=M+qKs4sYHB7a/nNMfZ2lf2B03KJZbRiuAwhGXzJaCF4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ixSWnfh69ZVMuhROPc7fBtEV4KGiCkKmbGySDJXJVB7Bd+M0MB1MA2LqlXgis9yta
-	 SYTtMdjrSJuhVSij/79wkxoTudyRsTUlFja2Nuo+oCs9FrVCRM2LtZJ2auZ6QjqhPU
-	 QsmMYLMAJDJvzgksUmbbY3sZl3N7oYy5O7X6hM48=
+	s=default; t=1598199364;
+	bh=lnBHoUXioLOrOWNKvWtcrwmt13u6QaY0trxOTodHtew=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Sxwrq2OCmQ/ucWcM+ra0FVMujw/aX1+kPs9v15RUwv9t56MrFj7KLDxOD17xT1Nb0
+	 eyZrg9C5GMPER8AlJFy0N2h5fTpVUevPEw+W4p6ktvd3HEQ9398sS7KyktY6q3Pu1y
+	 a1aorJaupEpxkc0OC1YnSw0BN8LXJSyfnZDx6tg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726222AbgHWQGn (ORCPT
+        id S1726056AbgHWQQD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37952 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 12:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbgHWQGm (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:06:42 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725996AbgHWQQC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:16:02 -0400
+Received: from kozik-lap.proceq-device.com (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F43120706;
-        Sun, 23 Aug 2020 16:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 685DC2072D;
+        Sun, 23 Aug 2020 16:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598198802;
-        bh=M+qKs4sYHB7a/nNMfZ2lf2B03KJZbRiuAwhGXzJaCF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aPZlD7r5evfFyQ5spG8BYVTagLvCkBlkLuE4t5MvKza0ygAJV2JGCYXsfQLpoV22q
-         aij4q+ucmdMWRxh4H7MyJnV0SkiXLmygftz/dI+p8xLvyAWp2/pq/LqDTZjHzU35HS
-         371+OEyrYjNlSlI4JJ2tceBt8d84AC4JFP5BUDnA=
-Date:   Sun, 23 Aug 2020 21:36:37 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, kishon@ti.com,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org, p.zabel@pengutronix.de,
-        balbi@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-Subject: Re: [RESEND PATCH v8 2/2] phy: Add USB3 PHY support for Intel LGM SoC
-Message-ID: <20200823160637.GW2639@vkoul-mobl>
-References: <20200817070513.34376-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200817070513.34376-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817070513.34376-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+        s=default; t=1598199361;
+        bh=lnBHoUXioLOrOWNKvWtcrwmt13u6QaY0trxOTodHtew=;
+        h=From:To:Cc:Subject:Date:From;
+        b=M4jcEMVojBCm6n6VI1JLybJ3HkimOMO74lwgXpcMV4RvKKHZeawHTgV8XtBvp9UtQ
+         ULqXZ3K+wsEaxZPwJSqX2sGxr7+iuFaZhY48Xna/0DmrwbZmpnIbv+wrnX/1RoSgBl
+         yb2ljxrWBvbfEbhd6Rk/f+zaCNTZCX+gnvm5j4Ys=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 01/22] dt-bindings: gpio: fsl-imx-gpio: Add i.MX 8 compatibles
+Date:   Sun, 23 Aug 2020 18:15:29 +0200
+Message-Id: <20200823161550.3981-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 17-08-20, 15:05, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add support for USB PHY on Intel LGM SoC.
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  drivers/phy/Kconfig       |  11 ++
->  drivers/phy/Makefile      |   1 +
->  drivers/phy/phy-lgm-usb.c | 278 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 290 insertions(+)
->  create mode 100644 drivers/phy/phy-lgm-usb.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index de9362c25c07..01b53f86004c 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -49,6 +49,17 @@ config PHY_XGENE
->  	help
->  	  This option enables support for APM X-Gene SoC multi-purpose PHY.
->  
-> +config USB_LGM_PHY
-> +	tristate "INTEL Lightning Mountain USB PHY Driver"
-> +	depends on USB_SUPPORT
+DTSes with new i.MX 8 SoCs introduce their own compatibles so add them
+to fix dtbs_check warnings like:
 
-Why is the dependent on USB..? Should that not be other way around?
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+    compatible:0: 'fsl,imx8mm-gpio' is not one of ['fsl,imx1-gpio', 'fsl,imx21-gpio', 'fsl,imx31-gpio', 'fsl,imx35-gpio', 'fsl,imx7d-gpio']
+    From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
 
-> +static int get_flipped(struct tca_apb *ta, bool *flipped)
-> +{
-> +	union extcon_property_value property;
-> +	int ret;
-> +
-> +	ret = extcon_get_property(ta->phy.edev, EXTCON_USB_HOST,
-> +				  EXTCON_PROP_USB_TYPEC_POLARITY, &property);
-> +	if (ret) {
-> +		dev_err(ta->phy.dev, "no polarity property from extcon\n");
-> +		return ret;
-> +	}
-> +
-> +	*flipped = property.intval;
-> +
-> +	return ret;
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+    compatible: ['fsl,imx8mm-gpio', 'fsl,imx35-gpio'] is too long
 
-return 0 here?
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+    compatible: Additional items are not allowed ('fsl,imx35-gpio' was unexpected)
 
-> +static int phy_init(struct usb_phy *phy)
-> +{
-> +	struct tca_apb *ta = container_of(phy, struct tca_apb, phy);
-> +	void __iomem *ctrl1 = phy->io_priv + CTRL1_OFFSET;
-> +	int val, ret, i;
-> +
-> +	if (ta->phy_initialized)
-> +		return 0;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-> +		reset_control_deassert(ta->resets[i]);
-> +
-> +	ret = readl_poll_timeout(ctrl1, val, val & SRAM_INIT_DONE, 10, 10 * 1000);
-> +	if (ret) {
-> +		dev_err(ta->phy.dev, "SRAM init failed, 0x%x\n", val);
-> +		return ret;
-> +	}
-> +
-> +	writel(readl(ctrl1) | SRAM_EXT_LD_DONE, ctrl1);
-> +
-> +	ta->phy_initialized = true;
-> +	if (!ta->phy.edev) {
-> +		writel(TCPC_CONN, ta->phy.io_priv + TCPC_OFFSET);
-> +		return phy->set_vbus(phy, true);
-> +	}
-> +
-> +	schedule_work(&ta->wk);
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../bindings/gpio/fsl-imx-gpio.yaml           | 21 +++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-why work for init?
-
-> +static void tca_work(struct work_struct *work)
-> +{
-> +	struct tca_apb *ta = container_of(work, struct tca_apb, wk);
-> +	bool connected;
-> +	bool flipped = false;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = get_flipped(ta, &flipped);
-
-so every time this work is scheduled you are reading from firmware, why..
-Typically we should read in probe and store it..
-
-> +	connected = extcon_get_state(ta->phy.edev, EXTCON_USB_HOST) && !ret;
-
-lets handle ret and extcon_get_state separately please
-
-> +	if (connected == ta->connected)
-> +		return;
-> +
-> +	ta->connected = connected;
-> +	if (connected) {
-> +		val = TCPC_CONN;
-> +		if (flipped)
-> +			val |= TCPC_FLIPPED;
-> +		dev_info(ta->phy.dev, "connected%s\n", flipped ? " flipped" : "");
-
-debug perhaps
-
-> +	} else {
-> +		val = TCPC_DISCONN;
-> +		dev_info(ta->phy.dev, "disconnected\n");
-
-here too
-
-> +static int vbus_notifier(struct notifier_block *nb, unsigned long evnt, void *ptr)
-> +{
-> +	return NOTIFY_DONE;
-> +}
-
-empty notifier, why bother?
-
-> +static int phy_probe(struct platform_device *pdev)
-> +{
-> +	struct reset_control *resets[ARRAY_SIZE(CTL_RESETS)];
-> +	struct device *dev = &pdev->dev;
-> +	struct usb_phy *phy;
-> +	struct tca_apb *ta;
-> +	int i;
-> +
-> +	ta = devm_kzalloc(dev, sizeof(*ta), GFP_KERNEL);
-> +	if (!ta)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, ta);
-> +	INIT_WORK(&ta->wk, tca_work);
-> +
-> +	phy = &ta->phy;
-> +	phy->dev = dev;
-> +	phy->label = dev_name(dev);
-> +	phy->type = USB_PHY_TYPE_USB3;
-> +	phy->init = phy_init;
-> +	phy->shutdown = phy_shutdown;
-> +	phy->set_vbus = phy_set_vbus;
-> +	phy->id_nb.notifier_call = id_notifier;
-> +	phy->vbus_nb.notifier_call = vbus_notifier;
-> +
-> +	phy->io_priv = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(phy->io_priv))
-> +		return PTR_ERR(phy->io_priv);
-> +
-> +	ta->vbus = devm_regulator_get(dev, "vbus");
-> +	if (IS_ERR(ta->vbus))
-> +		return PTR_ERR(ta->vbus);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++) {
-> +		resets[i] = devm_reset_control_get_exclusive(dev, CTL_RESETS[i]);
-> +		if (IS_ERR(resets[i])) {
-> +			dev_err(dev, "%s reset not found\n", CTL_RESETS[i]);
-> +			return PTR_ERR(resets[i]);
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++) {
-> +		ta->resets[i] = devm_reset_control_get_exclusive(dev, PHY_RESETS[i]);
-> +		if (IS_ERR(ta->resets[i])) {
-> +			dev_err(dev, "%s reset not found\n", PHY_RESETS[i]);
-> +			return PTR_ERR(ta->resets[i]);
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-> +		reset_control_assert(resets[i]);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(PHY_RESETS); i++)
-> +		reset_control_assert(ta->resets[i]);
-
-no time lag b/w assert and dessert below?
-
-> +	/*
-> +	 * Out-of-band reset of the controller after PHY reset will cause
-> +	 * controller malfunctioning, so we should use in-band controller
-> +	 * reset only and leave the controller de-asserted here.
-> +	 */
-> +	for (i = 0; i < ARRAY_SIZE(CTL_RESETS); i++)
-> +		reset_control_deassert(resets[i]);
-> +
-> +	/* Need to wait at least 20us after de-assert the controller */
-> +	usleep_range(20, 100);
-> +
-> +	return usb_add_phy_dev(phy);
-
-aha, this is usb_phy stuff. 
-
-Kishon this is not really a generic phy driver, should it be in
-drivers/phy..?
-
+diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+index 0b223abe8cfb..454db20c2d1a 100644
+--- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+@@ -11,12 +11,21 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - fsl,imx1-gpio
+-      - fsl,imx21-gpio
+-      - fsl,imx31-gpio
+-      - fsl,imx35-gpio
+-      - fsl,imx7d-gpio
++    oneOf:
++      - enum:
++          - fsl,imx1-gpio
++          - fsl,imx21-gpio
++          - fsl,imx31-gpio
++          - fsl,imx35-gpio
++          - fsl,imx7d-gpio
++      - items:
++          - enum:
++              - fsl,imx8mm-gpio
++              - fsl,imx8mn-gpio
++              - fsl,imx8mp-gpio
++              - fsl,imx8mq-gpio
++              - fsl,imx8qxp-gpio
++          - const: fsl,imx35-gpio
+ 
+   reg:
+     maxItems: 1
 -- 
-~Vinod
+2.17.1
+
