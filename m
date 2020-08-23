@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB366C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22717C433DF
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB9920768
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA26207C3
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 09:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598173522;
-	bh=EO6G5kF0VLrz8QAHobZGaL6LPKAV21OlmZuFNeANWig=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0NjIRscyN3WBDylb9GVu2tXoZ3DJFRzrMhwDhuQCxSoCZgB2stjAAFcMMoNgdt0AC
-	 B4PrLsRXIEoJrjuoC7R2zFeO6RIh/CoV+BxWUBjBvsJ8yGKOB7piQ/8NHFDXsBMEqi
-	 qObB9+v/L3je9qCUPi1gfyvUtfFbjAm0/ReFA4UE=
+	s=default; t=1598173528;
+	bh=/hAdfkHYpIvG+bGuLetMOOvdC01F1x0vwIdd3TjtKP8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MNYKdT3iqKD36KNdbd8rYtMryKKmHc/fmnae9SBTA/ipIv+aJ2+Y0ECmAwcNsUO6R
+	 j0EUYnoaLTbiLmYUeKh6rg+26frj0rVJdfkyBtsIICbw0BKHzoFX2hf6wzLx3wZR7j
+	 G8bPn6Xfj7kQ1hzwkt4RQhJxUG+xKNdyHYwRPC+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgHWJFW (ORCPT
+        id S1728680AbgHWJF1 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 05:05:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 05:05:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbgHWJFV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 05:05:21 -0400
+        id S1726964AbgHWJFY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 05:05:24 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D6C32072D;
-        Sun, 23 Aug 2020 09:05:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51F3F20FC3;
+        Sun, 23 Aug 2020 09:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598173520;
-        bh=EO6G5kF0VLrz8QAHobZGaL6LPKAV21OlmZuFNeANWig=;
-        h=From:To:Cc:Subject:Date:From;
-        b=klvOYVj04gO+2yS9OMaUrIFRnAGCYhbx28vAC8Z8P5gaCf8UPY+Gz86E9XbfjSbNV
-         p8kRSlWByGyFSGWBRyyECJnNSFD+41vTruN2M9qu98IOpTDQsBq0Ana56hfs5sfcZY
-         01rdrGxKA23J9Yo/bxsk615u1GX9F+Fn+zo2GiPI=
+        s=default; t=1598173523;
+        bh=/hAdfkHYpIvG+bGuLetMOOvdC01F1x0vwIdd3TjtKP8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WGH5fPnbT6vyzzVlewpDAGMlR7cy/l54O9B/qRSgJG1lj/yU0DEsfYMJTr+5t0OgR
+         0Ch78pQSJkWRBVlyI3px31bTm3WX3jtczTRsrohb3NdbiDKMYnvaRXeSLmpVWOXTvx
+         aQrvQF23KGfv1g2woAwm1y8YZDegzTZiu9sMtA2E=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -50,10 +50,12 @@ To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] arm64: dts: imx8mm-evk: remove orphaned pinctrl-names property
-Date:   Sun, 23 Aug 2020 11:05:03 +0200
-Message-Id: <20200823090505.5579-1-krzk@kernel.org>
+Subject: [PATCH 2/3] arm64: dts: imx8mn-evk: remove orphaned pinctrl-names property
+Date:   Sun, 23 Aug 2020 11:05:04 +0200
+Message-Id: <20200823090505.5579-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200823090505.5579-1-krzk@kernel.org>
+References: <20200823090505.5579-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
@@ -64,14 +66,14 @@ own (without "pinctrl-X").
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 2 --
+ arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-index 0f1d7f8aeac4..19a22d0d0730 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-@@ -366,8 +366,6 @@
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
+index 98f5324b1dbe..48892ed562b4 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi
+@@ -174,8 +174,6 @@
  };
  
  &iomuxc {
@@ -79,7 +81,7 @@ index 0f1d7f8aeac4..19a22d0d0730 100644
 -
  	pinctrl_fec1: fec1grp {
  		fsl,pins = <
- 			MX8MM_IOMUXC_ENET_MDC_ENET1_MDC			0x3
+ 			MX8MN_IOMUXC_ENET_MDC_ENET1_MDC		0x3
 -- 
 2.17.1
 
