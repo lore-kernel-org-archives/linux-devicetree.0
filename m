@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5A1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E2DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE8702080D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FB92080D
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 02:54:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598151268;
-	bh=5bkX5rAYUgmN73+UTffyQPARL0/RISQfwE7jsPG4vok=;
+	s=default; t=1598151293;
+	bh=0YvnrHpvZ7oTHNYO4FXQwUMbhiGeyuQlE7jD2jsQC5g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=raDy9RfXVW6F8x3bKjsiJK+rYeCVHOBZXTjS8rRW5ahowrj3iw7Qt0PUN5/rCt+uB
-	 mA0aUPb7LwKqNsJKpH6NMyYxHbiIGZN001bgiT8i9hwZ6Z6C3+5hoOdr1kmy9+POzt
-	 2qMh8q+u9BMnZgtsz0SCjhT0YAGcdWPIVMmH3InA=
+	b=Zpony1DUT8F5BhpSRZv+KaL50aD6JuIQdqov88BkrHMHf3Ql5nhanDeea5oWdpI1k
+	 70PmJLXjjkXEpeqpUcb/EwNteRzO7q9q6Z7ZOpHnDHmBefrkZFdcT8VjfP1QlWjlmO
+	 mcZhNnec9hvMupUfcnM1JP7pGahvx53GAsFx3U6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHWCy2 (ORCPT
+        id S1725992AbgHWCyx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 22:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45532 "EHLO mail.kernel.org"
+        Sat, 22 Aug 2020 22:54:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726700AbgHWCy1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Aug 2020 22:54:27 -0400
+        id S1725885AbgHWCyv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Aug 2020 22:54:51 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C93E2072D;
-        Sun, 23 Aug 2020 02:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1BD92072D;
+        Sun, 23 Aug 2020 02:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598151267;
-        bh=5bkX5rAYUgmN73+UTffyQPARL0/RISQfwE7jsPG4vok=;
+        s=default; t=1598151291;
+        bh=0YvnrHpvZ7oTHNYO4FXQwUMbhiGeyuQlE7jD2jsQC5g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XH29qLnXy03kukeYdLC/I6/9NlsFy/QCT8wli+GMzODtnVtGThCs2+Ip1qpx9aiiL
-         xzKEuv6uwSBKyOIptvAXVpuW8+5lffO1KMfflX8sLIQCobGUCZrC++ujx/2hnUGJda
-         wHh5kuUFp7bLsV0gtLr/OMUUMuTrHgU2rSJVJaXw=
-Date:   Sun, 23 Aug 2020 10:54:18 +0800
+        b=ujYbuoPY7487JVXcIcpWsN2uwLX96W2XR+mPHJjBV/EwWO8iSufkSa/pbYnRy+UWd
+         7wPp/W9frkJtTB4WJa57oKSBoBXEpkzQx2N5FY+ZyXSYTJvI6LXeR0AqOXx0cHRGeR
+         u+1bqTts7giXtsjLWeHnSApWMWHLD7QMH4xk+IkQ=
+Date:   Sun, 23 Aug 2020 10:54:43 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
 To:     Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
@@ -64,24 +64,25 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Michael Walle <michael@walle.cc>,
         Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] arm64: dts: imx8mq: Add NWL MIPI DSI controller
-Message-ID: <20200823025417.GP30094@dragon>
+Subject: Re: [PATCH v2 2/4] arm64: dts: imx8mq-librem5-devkit: Enable the LCD
+ panel
+Message-ID: <20200823025442.GQ30094@dragon>
 References: <cover.1597913263.git.agx@sigxcpu.org>
- <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
+ <f03b599160804142f738eb53d0fe8686234c4896.1597913263.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
+In-Reply-To: <f03b599160804142f738eb53d0fe8686234c4896.1597913263.git.agx@sigxcpu.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 10:50:56AM +0200, Guido Günther wrote:
-> Add a node for the Northwest Logic MIPI DSI IP core, "disabled" by
-> default. This also adds the necessary port to LCDIF.
+On Thu, Aug 20, 2020 at 10:50:57AM +0200, Guido Günther wrote:
+> Enable LCD panel output by adding nodes for the NWL DSI host controller,
+> the Rocktech panel and the eLCDIF display controller.
 > 
 > Signed-off-by: Guido Günther <agx@sigxcpu.org>
 > Reviewed-by: Fabio Estevam <festevam@gmail.com>
