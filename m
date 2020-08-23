@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612EFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753F0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36DAC2072D
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4964520767
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 16:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598199387;
-	bh=piseENgaR2QSPn9XfpxUjGFJvzdbXTHX56nDAe1ZDaQ=;
+	s=default; t=1598199427;
+	bh=QlwySSBCvmniu5l1kZrfLw5QDFpCJZGwDezndX9H7Zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jeLflwlontk7q104Vq4DTiLq2slxHUaXwY5b5RG7AovPaoP9yx8UTV9QTFeaKB+WV
-	 +yZBOW0trhBgDzMXVGstG5q86v5+KBHWb+k8xBGhoOj6AYw8RHyGznf+eJEbDWLo8N
-	 HCI3bv1QImS+5kB3mrh7WLlKydmwaFnMik4GAiNY=
+	b=fzneql+5spUnXT+/EkhT9eQlOgNjcJKCT/vIJVmhDQ6He52uaNLdBPJ1vIGOTQVdp
+	 kWolq4GLyJhCJy5m1LOxbYq2gXPR55JXzpFD2acGg0+Z2GS+xVP88/Muoykg6qBdYN
+	 jMSAC7ZsFkhXscHWNoC0f4E1PTdZYjnzhmdr7+Hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgHWQQH (ORCPT
+        id S1728115AbgHWQRF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 12:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43946 "EHLO mail.kernel.org"
+        Sun, 23 Aug 2020 12:17:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725996AbgHWQQH (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 12:16:07 -0400
+        id S1727049AbgHWQRC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 12:17:02 -0400
 Received: from kozik-lap.proceq-device.com (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1827E2078A;
-        Sun, 23 Aug 2020 16:16:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEEB02072D;
+        Sun, 23 Aug 2020 16:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598199366;
-        bh=piseENgaR2QSPn9XfpxUjGFJvzdbXTHX56nDAe1ZDaQ=;
+        s=default; t=1598199421;
+        bh=QlwySSBCvmniu5l1kZrfLw5QDFpCJZGwDezndX9H7Zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UGCxuLS1OZqpLzWh1cnW+UvCxjPrHBWtvFVqNnaBVe091iKQl5aMftHrIECPrjE+Y
-         8/twxs9zLuAfF88znM8CwPr2V8vnYa4eRcx+lC+Qu74cJ7o/Tg5L4H74lojKyxVes0
-         Kd/f2ltpiewZpSWZ6+UoRgD3yT5w8DUQqToaBx3k=
+        b=djqIqNfpDmCmAnKttL/Jn8WVYR+hrsPFeZ18Xf1X9f0kSf3uyPd+3W9sIOZ2oGCj9
+         eU/976pAeoTdxJrCRFp4IOXobPGzAwtVOoEP0biGIMBSRLT15GOWf+zLhV+1fu1JBw
+         oYITexJMsa1/UlJ4n4pCKbkCKIwpmRNO4zXg4YbU=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -56,9 +56,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Anson Huang <Anson.Huang@nxp.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 02/22] dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges property
-Date:   Sun, 23 Aug 2020 18:15:30 +0200
-Message-Id: <20200823161550.3981-2-krzk@kernel.org>
+Subject: [PATCH 14/22] dt-bindings: arm: fsl: Fix Toradex Colibri i.MX 8 binding
+Date:   Sun, 23 Aug 2020 18:15:42 +0200
+Message-Id: <20200823161550.3981-14-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200823161550.3981-1-krzk@kernel.org>
 References: <20200823161550.3981-1-krzk@kernel.org>
@@ -67,50 +67,36 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The GPIO controller node can have gpio-ranges property.  This fixes
-dtbs_check warnings like:
+The Toradex Colibri i.MX 8 Evaluation board has two Toradex compatibles
+so it needs separate entry.  This fixes dtbs_check warning:
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000: 'gpio-ranges' does not match any of the regexes: 'pinctrl-[0-9]+'
-    From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+  arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dt.yaml: /:
+    compatible: ['toradex,colibri-imx8x-eval-v3', 'toradex,colibri-imx8x', 'fsl,imx8qxp'] is not valid under any of the given schemas (Possible causes of the failure):
+    arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dt.yaml: /: compatible: ['toradex,colibri-imx8x-eval-v3', 'toradex,colibri-imx8x', 'fsl,imx8qxp'] is too long
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/gpio/fsl-imx-gpio.yaml    | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-index 454db20c2d1a..1fac69573bb9 100644
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -51,6 +51,9 @@ properties:
- 
-   gpio-controller: true
- 
-+  gpio-ranges:
-+    maxItems: 1
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 591fa336d6fa..93a21b10d115 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -385,7 +385,13 @@ properties:
+               - einfochips,imx8qxp-ai_ml  # i.MX8QXP AI_ML Board
+               - fsl,imx8qxp-mek           # i.MX8QXP MEK Board
+               - toradex,colibri-imx8x         # Colibri iMX8X Module
++          - const: fsl,imx8qxp
 +
- required:
-   - compatible
-   - reg
-@@ -62,6 +65,18 @@ required:
++      - description: Toradex Colibri i.MX8 Evaluation Board
++        items:
++          - enum:
+               - toradex,colibri-imx8x-eval-v3 # Colibri iMX8X Module on Colibri Evaluation Board V3
++          - const: toradex,colibri-imx8x
+           - const: fsl,imx8qxp
  
- additionalProperties: false
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: fsl,imx8mp-gpio
-+    then:
-+      properties:
-+        gpio-ranges:
-+          minItems: 1
-+          maxItems: 2
-+
- examples:
-   - |
-     gpio0: gpio@73f84000 {
+       - description:
 -- 
 2.17.1
 
