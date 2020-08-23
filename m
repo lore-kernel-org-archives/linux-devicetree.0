@@ -4,80 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDE3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 00:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C0AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 00:58:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A17D2078A
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 00:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872062078A
+	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 00:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598143937;
-	bh=fHKSK8wdF749P2iqH1it2zMw2LMD18Kh7O1CA/kPKLs=;
+	s=default; t=1598144303;
+	bh=U+MQdzEFTdcUpgxamTssNd3GwPOGygQ1ASFecHr1bsQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MS4MDDF+2RRsYbV0AecIL8ADK6gPzx6DMYkyaDL1DyLvOi1Ysonj2oQ4H0JSHTTxL
-	 uwoJm+V2VA67t+2t+qzWcyA7aSUTvgSwvk0J5B1VUtz9Ce9TqMpWoyFmsR0PDKlED1
-	 nCZNpFXUJ+ve+yByuW8wyfXWHh1oGx5yuErUSTTk=
+	b=dTZ5WL+XS46qWFuKKk78TBr5McUoWbiGC89RORef8B8RQZMLKZk5AcybjLcms9Vr4
+	 jDr8hhzIcspIdSo5LhEVaHAI7St//rvQU2Vjv6dDjw9SPAbID2uKNutMSvYicmlc9H
+	 g+NkYTKEuwvdHoW/GyK/ZUxwfTvRpXO0qK6RH/k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbgHWAwO (ORCPT
+        id S1725821AbgHWA6X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sat, 22 Aug 2020 20:52:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54844 "EHLO mail.kernel.org"
+        Sat, 22 Aug 2020 20:58:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbgHWAwO (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 22 Aug 2020 20:52:14 -0400
+        id S1725767AbgHWA6W (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 22 Aug 2020 20:58:22 -0400
 Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 402412072D;
-        Sun, 23 Aug 2020 00:52:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64BFE2072D;
+        Sun, 23 Aug 2020 00:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598143933;
-        bh=fHKSK8wdF749P2iqH1it2zMw2LMD18Kh7O1CA/kPKLs=;
+        s=default; t=1598144302;
+        bh=U+MQdzEFTdcUpgxamTssNd3GwPOGygQ1ASFecHr1bsQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GX0WngMrj73Isxo8BzajuGY1NeGUDH9y8qqQwbwcTPgDOviruOgCM4LWLXCkdIwMz
-         ygUj0VsFy8mmtC07WgEXEMyXpETytdYKFwRKh/3t7Y+steYARJH2Lvnt16af9IA+ES
-         Z/IpqGR5TLfnpCiI3zzSZImi0PegfYLDSAIzF1mU=
-Date:   Sun, 23 Aug 2020 08:52:07 +0800
+        b=KcMOzc52NiJO5oqznDg3/5G2hXSXIzasxHrSgqWrD6PKyLXPjqArR3M+hjGmwo7AH
+         HsEZVP9zhYhmEBfTWG2C2g5mUayb1P/Xwxr5D0FQyxWlWx7Js05QsZK4l448HLVkm8
+         5NLzuE1u2lSnp/1dT3lG+8oIsRjNol39JxZqb/SE=
+Date:   Sun, 23 Aug 2020 08:58:18 +0800
 From:   Shawn Guo <shawnguo@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh@kernel.org,
-        marek.behun@nic.cz, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v33 5/6] ARM: dts: imx6dl-yapp4: Add reg property to the
- lp5562 channel node
-Message-ID: <20200823005206.GD30094@dragon>
-References: <20200812195020.13568-1-dmurphy@ti.com>
- <20200812195020.13568-6-dmurphy@ti.com>
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: imx25-pinfunc: Fix GPT function names
+Message-ID: <20200823005817.GE30094@dragon>
+References: <20200813202410.5670-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200812195020.13568-6-dmurphy@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200813202410.5670-1-u.kleine-koenig@pengutronix.de>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 02:50:19PM -0500, Dan Murphy wrote:
-> Add the reg property to each channel node.  This update is
-> to accommodate the multicolor framework.  In addition to the
-> accommodation this allows the LEDs to be placed on any channel
-> and allow designs to skip channels as opposed to requiring
-> sequential order.
+On Thu, Aug 13, 2020 at 10:24:10PM +0200, Uwe Kleine-König wrote:
+> According to the reference manual of the i.MX25 the function name for
+> the GPT capture input is called CAPIN1. So fix the names to follow the
+> same naming scheme as used for the other pads and functions. Also add
+> one missing pad function.
 > 
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Shawn Guo <shawnguo@kernel.org>
-> CC: Sascha Hauer <s.hauer@pengutronix.de>
-> CC: Pengutronix Kernel Team <kernel@pengutronix.de>
-> CC: Fabio Estevam <festevam@gmail.com>
-> CC: NXP Linux Team <linux-imx@nxp.com>
+> There are no mainline users that needs adaption.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
 Applied, thanks.
