@@ -2,80 +2,144 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MIME_BASE64_TEXT,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805C1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 02:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F332C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 03:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC7F20768
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 02:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y7K6vJzV"
+	by mail.kernel.org (Postfix) with ESMTP id 78B002074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 03:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgHXCtK (ORCPT
+        id S1727797AbgHXDgo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 22:49:10 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41199 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726635AbgHXCtK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 22:49:10 -0400
-X-UUID: d9b9316a0d9d4d6b8b0c3a0901db0127-20200824
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=MQ+lWRIMzlLcIAlBgmbEN4Xfo27oGH4DXQdB75/Yr0g=;
-        b=Y7K6vJzVgIzjrVzAZBU2NeknkxBwY5bq0dUA1qjHPEoHRMl9v239GpDXy2cHTXpWbt5xzAwcj3L3HDDg/I8Kiinp127Ow55bJ2YrYn4vKQ9rzUS6MrADIMu+iIx6IaEU9AgozcKncn3k7e0OG54kphJCYe+Br6HmV2slyNAq0hY=;
-X-UUID: d9b9316a0d9d4d6b8b0c3a0901db0127-20200824
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <mark-pk.tsai@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1682917385; Mon, 24 Aug 2020 10:49:00 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 24 Aug 2020 10:48:58 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 24 Aug 2020 10:48:54 +0800
-From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-To:     <mark-pk.tsai@mediatek.com>
-CC:     <alix.wu@mediatek.com>, <daniel@0x0f.com>,
-        <devicetree@vger.kernel.org>, <jason@lakedaemon.net>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
-        <maz@kernel.org>, <robh+dt@kernel.org>, <tglx@linutronix.de>,
-        <yj.chiang@mediatek.com>
-Subject: [PATCH] MAINTAINERS: Add maintenance information for MStar Interrupt Controller
-Date:   Mon, 24 Aug 2020 10:48:56 +0800
-Message-ID: <20200824024856.12845-1-mark-pk.tsai@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
-References: <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
+        Sun, 23 Aug 2020 23:36:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5441 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726684AbgHXDgn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 23:36:43 -0400
+IronPort-SDR: pdUjgg4ZTh4z+WweoKdF5mU7yHvfrLr3GTq38VsjBcUFZ+Gx1oyG/rV5f+ETv3vgrQpSIW151c
+ aur9N5hYCBnw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135899568"
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="135899568"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 20:36:43 -0700
+IronPort-SDR: msrS4M8nR96qno0wJZiirWrctNcVFKv/SoOFZCWP8lUj32FBeACjkGiu8+BpQLRop+qMi6V3aG
+ RYGK+1/6MUFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
+   d="scan'208";a="322008258"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Aug 2020 20:36:39 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v10 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Mon, 24 Aug 2020 11:36:35 +0800
+Message-Id: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 5ECEB2847F83711C8D72F1725AB1012FAAD0F315FAF4E860FF3A8DD04AE7A0CA2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-QWRkIGVudHJ5IGZvciBNU3RhciBJbnRlcnJ1cHQgQ29udHJvbGxlci4NCg0KU2lnbmVkLW9mZi1i
-eTogTWFyay1QSyBUc2FpIDxtYXJrLXBrLnRzYWlAbWVkaWF0ZWsuY29tPg0KLS0tDQogTUFJTlRB
-SU5FUlMgfCA3ICsrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspDQoNCmRp
-ZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTDQppbmRleCBkZWFhZmI2MTczNjEu
-LjhhYjA4ZmNjZDkxNSAxMDA2NDQNCi0tLSBhL01BSU5UQUlORVJTDQorKysgYi9NQUlOVEFJTkVS
-Uw0KQEAgLTExNzU0LDYgKzExNzU0LDEzIEBAIFE6CWh0dHA6Ly9wYXRjaHdvcmsubGludXh0di5v
-cmcvcHJvamVjdC9saW51eC1tZWRpYS9saXN0Lw0KIFQ6CWdpdCBnaXQ6Ly9saW51eHR2Lm9yZy9h
-bnR0aXAvbWVkaWFfdHJlZS5naXQNCiBGOglkcml2ZXJzL21lZGlhL3VzYi9tc2kyNTAwLw0KIA0K
-K01TVEFSIElOVEVSUlVQVCBDT05UUk9MTEVSIERSSVZFUg0KK006CU1hcmstUEsgVHNhaSA8bWFy
-ay1way50c2FpQG1lZGlhdGVrLmNvbT4NCitNOglEYW5pZWwgUGFsbWVyIDxkYW5pZWxAdGhpbmd5
-LmpwPg0KK1M6CU1haW50YWluZWQNCitGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbXN0YXIsbXN0LWludGMueWFtbA0KK0Y6CWRyaXZlcnMv
-aXJxY2hpcC9pcnEtbXN0LWludGMuYw0KKw0KIE1TWVNURU1TIERJU0tPTkNISVAgRzMgTVREIERS
-SVZFUg0KIE06CVJvYmVydCBKYXJ6bWlrIDxyb2JlcnQuamFyem1pa0BmcmVlLmZyPg0KIEw6CWxp
-bnV4LW10ZEBsaXN0cy5pbmZyYWRlYWQub3JnDQotLSANCjIuMTguMA0K
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
+
+v10:
+- Removed unused of_device.h and added platform_device.h
+  & mod_devicetable.h
+
+v9:
+- Address code quality related review concerns (Andy Shevchenko)
+- Use devm_add_action_or_reset() instead of explicit unwind calls.
+
+v8:
+- Remove fan related optional properties usage, keep
+  them as default. If needed, change pwm-fan driver
+  separately in future to add them as generic properties.
+
+v7:
+- Address code quality related review concerns.
+- Rename fan related property to pwm-*.
+- Fix one make dt_binding_check reported error.
+
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
+
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  44 ++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 242 +++++++++++++++++++++
+ 4 files changed, 298 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
+
+-- 
+2.11.0
 
