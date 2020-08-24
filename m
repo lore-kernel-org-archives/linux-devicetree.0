@@ -2,92 +2,188 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12DDC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6DFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8C4521775
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17929206F0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QHuXkUnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgHXH4W (ORCPT
+        id S1726037AbgHXH7G (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:56:22 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39186 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbgHXH4U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:56:20 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B34051A11C6;
-        Mon, 24 Aug 2020 09:56:18 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 079B71A0313;
-        Mon, 24 Aug 2020 09:56:15 +0200 (CEST)
-Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 11B59402E2;
-        Mon, 24 Aug 2020 09:56:10 +0200 (CEST)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/3] ARM: dts: imx6sx-sdb: Add headphone detection for sound card
-Date:   Mon, 24 Aug 2020 15:50:37 +0800
-Message-Id: <1598255439-1193-2-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598255439-1193-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1598255439-1193-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 24 Aug 2020 03:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgHXH7D (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 03:59:03 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A0EC061573
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 00:59:02 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id a1so3964366vsp.4
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 00:59:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x5fetNBGlq6IDEbKDStVMl4rk13Z2lttGI7mVbBoANg=;
+        b=QHuXkUnpzno+kWLVS5giRuWiYCUzOhxOpcvPhkZp0VmzUF0E2y1n5YR13ShN+SPEFL
+         JJFQCYCGhqS8sEZpb45cYKnkILyJBPw7RzXpxvpYkPEoL2od3NMw2PQrnsr1vq1tfNCB
+         gWSsRvI6m2engpZqC9iA2xBjM7HH1j2f2jY8iaPNwkl0eMQgdzn49x9/Xk7f7RWWlocQ
+         c4WcvhRoh8vSIdL+U+glIqO7uWLlmEUoX35MgTQxlN4FHfXe6ZaerbYGPUDcHT7ERy7A
+         gfiibhBbuXTQqsVrPj4xGzj6dXRDMZVkyrIS9sUJ9jOPvSrHTHDGhkyT64WIPykCTCQZ
+         BuaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x5fetNBGlq6IDEbKDStVMl4rk13Z2lttGI7mVbBoANg=;
+        b=Luw1HOSFQptfTLtra4kuYBWQ5jEDAO/QtEqkO8TRoVvSx8W91njpRJPOuqCNRyZSYX
+         GevRwp5u4HCL6vj6ei4Sz2YkoiO5PSZSO1pqMGQ7Fe0JqN6K23L35ekTpCg3jULzEG15
+         20/D7/tUmzAfestIH1of53m5+Bc/m9Gj11taIrrx49R7cSK090YrHY49f4BFLCxcgOfW
+         yb23i5loe8DL7RHw/LbJxU89rzqMF3K6LS4SDEQPOVZ/j+oLy2xBfV7H0Hfmdf0eB3th
+         xM2/u9hQhSA1LqgvsI/BeJxkJ6Xr3DzEEiOWyfrT/v90OzkCpHMzSask4wg3HdLp4pQH
+         +QKQ==
+X-Gm-Message-State: AOAM53022rCXdZTWrsLKrAtwPgq5y6pdZ3tkz31b9tQkc/F3rHoKKCqw
+        47D+KT53G5opfouhVgPsGZeXrwCkfJHkZX2ertlyiQ==
+X-Google-Smtp-Source: ABdhPJyTCnrU5j4N+bDMRKTXv/VoAO85MH3Zxse2PUmGY/gwR2eoAN6g9RWT58TPGUc6iYmOooJUjV6vconZcUFv3yY=
+X-Received: by 2002:a67:e9d8:: with SMTP id q24mr1800063vso.165.1598255941860;
+ Mon, 24 Aug 2020 00:59:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <1596673949-1571-1-git-send-email-skomatineni@nvidia.com> <1596673949-1571-7-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1596673949-1571-7-git-send-email-skomatineni@nvidia.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 24 Aug 2020 09:58:25 +0200
+Message-ID: <CAPDyKFpSwcfu3NqM_uqpKfDBeWAvE7XguZntO=ZrnJx8m+vjeg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] sdhci: tegra: Add missing TMCLK for data timeout
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "# 4.0+" <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Headphone detection is triggered by GPIO, then driver can
-switch between speaker and headphone.
+On Thu, 6 Aug 2020 at 02:32, Sowjanya Komatineni <skomatineni@nvidia.com> wrote:
+>
+> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+>
+> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
+> SDMMC hawdware for data timeout to achive better timeout than using
+> SDCLK and using TMCLK is recommended.
+>
+> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
+> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
+> SDCLK for data timeout.
+>
+> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
+> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
+> is not recommended.
+>
+> So, this patch fixes it.
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- arch/arm/boot/dts/imx6sx-sdb.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Just realized that there should be an updated DT binding accordingly,
+stating that the "tmclk" is recommended but optional for some
+variants. Please re-spin.
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dtsi b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-index b8c23eba9dc7..1351d7f70a54 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dtsi
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dtsi
-@@ -153,6 +153,8 @@ reg_can_stby: regulator-can-stby {
- 
- 	sound {
- 		compatible = "fsl,imx6sx-sdb-wm8962", "fsl,imx-audio-wm8962";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_hp>;
- 		model = "wm8962-audio";
- 		ssi-controller = <&ssi2>;
- 		audio-codec = <&codec>;
-@@ -165,6 +167,7 @@ sound {
- 			"IN3R", "AMIC";
- 		mux-int-port = <2>;
- 		mux-ext-port = <6>;
-+		hp-det-gpio = <&gpio1 17 GPIO_ACTIVE_LOW>;
- 	};
- 
- 	panel {
-@@ -468,6 +471,12 @@ MX6SX_PAD_CSI_DATA05__GPIO1_IO_19 0x17059
- 			>;
- 		};
- 
-+		pinctrl_hp: hpgrp {
-+			fsl,pins = <
-+				MX6SX_PAD_CSI_DATA03__GPIO1_IO_17 0x17059
-+			>;
-+		};
-+
- 		pinctrl_i2c1: i2c1grp {
- 			fsl,pins = <
- 				MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1
--- 
-2.27.0
+Kind regards
+Uffe
 
+>
+> Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+> Cc: stable <stable@vger.kernel.org> # 5.4
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 31ed321..c0b9405 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -140,6 +140,7 @@ struct sdhci_tegra_autocal_offsets {
+>  struct sdhci_tegra {
+>         const struct sdhci_tegra_soc_data *soc_data;
+>         struct gpio_desc *power_gpio;
+> +       struct clk *tmclk;
+>         bool ddr_signaling;
+>         bool pad_calib_required;
+>         bool pad_control_available;
+> @@ -1611,6 +1612,44 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>                 goto err_power_req;
+>         }
+>
+> +       /*
+> +        * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
+> +        * timeout clock and SW can choose TMCLK or SDCLK for hardware
+> +        * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
+> +        * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
+> +        *
+> +        * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
+> +        * 12Mhz TMCLK which is advertised in host capability register.
+> +        * With TMCLK of 12Mhz provides maximum data timeout period that can
+> +        * be achieved is 11s better than using SDCLK for data timeout.
+> +        *
+> +        * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
+> +        * supporting SDR104 mode and when not using SDCLK for data timeout.
+> +        */
+> +
+> +       if ((soc_data->nvquirks & NVQUIRK_ENABLE_SDR104) &&
+> +           !(soc_data->pdata->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
+> +               clk = devm_clk_get(&pdev->dev, "tmclk");
+> +               if (IS_ERR(clk)) {
+> +                       rc = PTR_ERR(clk);
+> +                       if (rc == -EPROBE_DEFER)
+> +                               goto err_power_req;
+> +
+> +                       dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
+> +                       clk = NULL;
+> +               }
+> +
+> +               clk_set_rate(clk, 12000000);
+> +               rc = clk_prepare_enable(clk);
+> +               if (rc) {
+> +                       dev_err(&pdev->dev,
+> +                               "failed to enable tmclk: %d\n", rc);
+> +                       goto err_power_req;
+> +               }
+> +
+> +               tegra_host->tmclk = clk;
+> +       }
+> +
+>         clk = devm_clk_get(mmc_dev(host->mmc), NULL);
+>         if (IS_ERR(clk)) {
+>                 rc = PTR_ERR(clk);
+> @@ -1654,6 +1693,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>  err_rst_get:
+>         clk_disable_unprepare(pltfm_host->clk);
+>  err_clk_get:
+> +       clk_disable_unprepare(tegra_host->tmclk);
+>  err_power_req:
+>  err_parse_dt:
+>         sdhci_pltfm_free(pdev);
+> @@ -1671,6 +1711,7 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
+>         reset_control_assert(tegra_host->rst);
+>         usleep_range(2000, 4000);
+>         clk_disable_unprepare(pltfm_host->clk);
+> +       clk_disable_unprepare(tegra_host->tmclk);
+>
+>         sdhci_pltfm_free(pdev);
+>
+> --
+> 2.7.4
+>
