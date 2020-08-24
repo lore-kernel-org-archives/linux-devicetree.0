@@ -2,135 +2,96 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE556C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7733C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCF7204FD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A9D4204FD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ok4MKUfm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiZxRmOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHXNmP (ORCPT
+        id S1727999AbgHXNmN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:42:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54640 "EHLO
+        Mon, 24 Aug 2020 09:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgHXNmF (ORCPT
+        with ESMTP id S1728014AbgHXNmF (ORCPT
         <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 09:42:05 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DBC1C061574
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 06:42:05 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id v2so7259296ilq.4
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 06:42:05 -0700 (PDT)
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CCBC061573;
+        Mon, 24 Aug 2020 06:42:04 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id f26so9666999ljc.8;
+        Mon, 24 Aug 2020 06:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rd33nPgNOMekiT/6KHR+eXtOiA25euKyz0AHeNDMQG0=;
-        b=ok4MKUfmmgU1Zlvif0VPW0enBSZla+x1W0X09IaHfx5AdapmgKkAMSs7nPEinj4JSW
-         I/qgdrUehdjcN2lLiKyIdxNVqGJwlSpG30n8ssqYnK4MtvHiVI9mAh5H+TllqvKVxDbT
-         Lowk1gr7EeqgI4HIon8bmVF4b6FaW0kab3r6wvDbY9urxrzEcdr6A0a2cR8dyK1h/+rk
-         zfwhfqdk2ikL7RgbN2pKiJ3Vq/C6iCwGZCd1l/v/B3cfehfLl/a5O1i9VdTHzXOTPcCi
-         ywLfhLeHqB8cgzSZ/F21KcrLQUT3KS1e6IT9Xy+2/YvZluAyGpAZFAsTSL8rIHQmH7Gs
-         MVWQ==
+        bh=u/tcJcoNjBd65aqyixuPMYO1EjOL24DArTaKRcQSR00=;
+        b=BiZxRmOE+xC12DVhSxL3FViWBFtWVsV9ckYM1zZpmO2F4R4pYhAywA5QdYcVbJG/Ek
+         zy2Sd77F/NlVe767uNCBSSvCNi7PobDSlucyhApkqvpjIVxb6wEexBeARyugignsEuuz
+         MyJUv+RROyabcFliRWNawnSVSQCcXxrWJDpB/I4DAN1Xou/DcS4vwJ/olsUJ/mUGLdVY
+         WaJgcjnmBE4SNUm56xIzeWNT2rZRW3fLwhisypEvwzIMfBMPIX388LJwP+WTUbj+roY1
+         KKoa1PkXj6KtofZAl2OgoomKTu3SBSE9rKaa1VvA7NyMwrrwSqxcxnBq/x5H5OJXV2OY
+         XFkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rd33nPgNOMekiT/6KHR+eXtOiA25euKyz0AHeNDMQG0=;
-        b=P5ODrIvjsLya+FBrI61PwuNWEOyM8/j7c5kgnu2uzzgAjW2mz+IabAqVzPhR1ABA4H
-         8FSspd3xnQiq8Ar55HfYKZxYiWzpAGpQjBQMOiP0BKUcwK4mCQQy8HsvvJofZb0As4/6
-         gG7Zqdj0ygpbuwryfRGpaFLBE54TqkFJSXFVfJRDt2hBpa673yb6HJVkDdYcBx9lmH2M
-         Jh3ZNyMXVrZG4fqpfi10H7PgKPqtR09/8G33J+rK0QL72YXpT2Le8m5mAsghFxEVsyWy
-         pfejXZwSdbJf3A+Pl1dRfV+mX1VUjbKbEe/kDMZBzZChJDIdCneoOdM4lzqMj+nALbu9
-         FpBA==
-X-Gm-Message-State: AOAM5329GXZEg9xUX7Hg/5rfLqi3BshXfBYl7L9IVYHvTSEKvtNt2Yw3
-        1alhuBb8g387NYdruousQDU9uJaYqFWbXjJjPFU=
-X-Google-Smtp-Source: ABdhPJzp+QdqVtQXOIj0u5zSgHku4BKue60oem5BL8xR3PZ8eYMNJfIrz8N/DYp1H6wCX4Fd4/JIAHwgh+TUwps1adc=
-X-Received: by 2002:a92:bb8d:: with SMTP id x13mr4901180ilk.243.1598276524235;
- Mon, 24 Aug 2020 06:42:04 -0700 (PDT)
+        bh=u/tcJcoNjBd65aqyixuPMYO1EjOL24DArTaKRcQSR00=;
+        b=T8BtSo+P7h9EBi/l5SrcgYHxI+Zx59MzAFD8vY/sBOkzXnHEWD0KkH+qsrCq4ZnvBr
+         cLMgw1MEGkvt1ApjVlyXPO/I47faWtxHLvq3OoH9FwLgrUv76WprlfOWBv1R+Dos1iWS
+         xv0E2rj60f1bE2SKXKClj9GyqLytALMcqQBMZYmfmXJG+6/HdFJdEXoMmOl6EMvZ7fZ5
+         POW2GJrvx766lh2oZ558RxE/ywiyKeF5gwSZlIav77O/0P2Y0P8jWFrdC4onjbk6qS+h
+         qG+irloh3uM0FaynDUpCnyYPScs5oVAL4k23a9Ql3rPOL+XCl/tY+EBKImrx29Rkk4bN
+         FrKA==
+X-Gm-Message-State: AOAM530zujV/JfrEFuJUzockq37UFP7MlPixFXbxQrYKG0l0Lb3g636R
+        ttJeouINONiLtezEDjIcEiUH94mdIBqf+lM+u8Y7TGgA
+X-Google-Smtp-Source: ABdhPJy99YCtFNmjhnje+8maJuYGXldM7qWMOvONoQmUneZSH8j64uwO12iXneGBihZRrBZ82TAwjMcXSKVjMwftwfs=
+X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr2690924ljb.452.1598276520241;
+ Mon, 24 Aug 2020 06:42:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200820121323.564-1-linux.amoon@gmail.com> <20200820121323.564-2-linux.amoon@gmail.com>
- <7hlfi9xgch.fsf@baylibre.com> <CANAwSgTZ23jFPAO46vRg1Dx_Bzi=4Bg6KHE0ozLQGky4p_fgKQ@mail.gmail.com>
-In-Reply-To: <CANAwSgTZ23jFPAO46vRg1Dx_Bzi=4Bg6KHE0ozLQGky4p_fgKQ@mail.gmail.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 24 Aug 2020 19:11:52 +0530
-Message-ID: <CANAwSgQLnqDnuQvLv4cvaeTPeBW=H_g5F2aaNue_hb4nKLdovg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: dts: meson-g12b-odroid-n2: Enable RTC
- controller node
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-amlogic@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>
+References: <1598255439-1193-1-git-send-email-shengjiu.wang@nxp.com>
+In-Reply-To: <1598255439-1193-1-git-send-email-shengjiu.wang@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 24 Aug 2020 10:41:48 -0300
+Message-ID: <CAOMZO5B74eiCH0bf-Dr3T8tNVm8wZzPAUaAn858HtVRQ0fUWGg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Add headphone detection for sound card
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-hi All,
+Hi Wang,
 
-On Fri, 21 Aug 2020 at 10:13, Anand Moon <linux.amoon@gmail.com> wrote:
+On Mon, Aug 24, 2020 at 4:56 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
 >
-> Hi Kevin,
+> Add headphone detection for sound card
+> and add audio sound card node for imx6sll.
 >
-> Thanks for your review comments.
+> Shengjiu Wang (3):
+>   ARM: dts: imx6sx-sdb: Add headphone detection for sound card
+>   ARM: dts: imx6sl-evk: Add headphone detection for sound card
+>   ARM: dts: imx6sll-evk: Add audio sound card node
 >
-> On Fri, 21 Aug 2020 at 01:03, Kevin Hilman <khilman@baylibre.com> wrote:
-> >
-> > Anand Moon <linux.amoon@gmail.com> writes:
-> >
-> > > Enable RTC PCF8563 node on Odroid-N2 SBC, In order to
-> > > support the RTC wakealarm feature for suspend and resume.
-> > > Also assign an alias to the pcf8563 to rtc0 and meson-vrtc to rtc1
-> > > timer device to prevent it being assigned to /dev/rtc0
-> > > which disto userspace tools assume is a clock device.
-> > >
-> > > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > > Cc: Kevin Hilman <khilman@baylibre.com>
-> > > Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
-> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > > ---
-> > > Changes V3
-> > > --Drop the INI GPIOAO.BIT7 pinctrl.
-> >
-> > Why did you drop this GPIO?  Isn't this the GPIO that the RTC uses to
-> > wakeup the system?  If so, this should be included as part of this
-> > patch.
-> >
-> > It probably still works because the bootloader configures this GPIO as
-> > input, but the kernel should not rely on the booloader for that, so
-> > please include as part of this patch.
-> >
->
-> Ok I will figure out the correct pinctrl need for this settings.
-> looking into the Odroid N2 schematics.
->
+> changes in v2
+> - add pinctrl_hp, don't add headphone detect GPIO in hog group
 
-I am trying to map the RTC INT pinctrl, ie RTC INT GPIOAO.BIT7.
+Series looks good now:
 
-So from the schematics it is seen below.
-RTC INT  GPIOAO_7 (AV46)   GPIOAO_7 (JTAG_A_TMS // TSIN_A_DIN0 //
-TDMB_FS // TDMB_SLV_FS)
-
-But the S922X datasheet this pin *AV46* shows to following settings,
-AN16    DVSS    AV46      GPIOAO_7    BD19    BOOT_11
-
-From the schematics it BOOT_11 is linked to
-              BOOT_11 (NAND_CE0)      BD19
-
-So can I conclude that BOOT_11 (nand_ce0_pins) pin linked to the RTC INT setting
-Please can somebody help me with correct pinctrl settings.
-
-Best Regards
--Anand Moon
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
