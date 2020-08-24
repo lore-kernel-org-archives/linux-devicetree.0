@@ -2,90 +2,127 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D3EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A3CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B8220706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5420420702
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598310337;
-	bh=5FGriEfyq7GKyERoRZ7OJtQm7B2/soj+r+UkPPJHsGM=;
+	s=default; t=1598310606;
+	bh=JBQQSfuc8r8UB9wsYF3B3FsKcykzN5voEytrZO2RMGw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ivhRFeqdhhm1oSOYjGM6PXR/DIQtC2zK69z9jvnb7I6cvTabdjKAag+DhwslDQvSO
-	 RczIgZn3pXlERMOh3SHtcB80jVJhgM2AucjtdgcB+RNljYa6ocBZTgup29vpdrq9OC
-	 Xk7/Ncfo3bpPbhXCJEnAXv8MscrhtLcNwgZJQedw=
+	b=Ay1lVa1YMvjhN7SijTqoQ80W5BZ2zeQ9m1GIFREUXoVY0MVxCL2txevmAHJleObMt
+	 BciamRPo4gHoGAzuTgsHccUSnEVVZurJ/O1nzagivefziqtGhdqqrCcAdAudBpYwsA
+	 MA42DO9ptNdSTAY9l753gMRXApzB9AI3pX0sro7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgHXXFd (ORCPT
+        id S1728173AbgHXXKB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:05:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44348 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHXXFa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:05:30 -0400
-Received: by mail-io1-f65.google.com with SMTP id v6so10521419iow.11;
-        Mon, 24 Aug 2020 16:05:29 -0700 (PDT)
+        Mon, 24 Aug 2020 19:10:01 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37783 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXXKB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:10:01 -0400
+Received: by mail-il1-f196.google.com with SMTP id v2so8827720ilq.4;
+        Mon, 24 Aug 2020 16:10:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=LnGLggCC6t4eeH6RGHgV+CdMrLeiVTW47t40q2yEbSA=;
-        b=JC0iz9tX0sgRtp88/7Qipt/f8+m74Q/NGi405ucij0kWHk7D0fYijF5R6CCLhcCNZI
-         xv4j104Xzq9+Mxxor9wp2FLNpEGjemMxJz5/RTn6lt0nrXicMoxQgo9LCiWed6v8KPhY
-         gsu4of4eA3mC+s2WKL5tcyc3zf9YqM26e5EZSg+D/Kypx5MlXOYy+OKyzI6Lnb+JfBcr
-         hTKz8exTsf7K+b70GgaBN/gaVlhubZzNV3s/EemlazSAfePbsSqimMQKKnXw+xSZWsJv
-         j8TE+9LRXZPLTM3GpxO3WdprZvyBVK8DizvEJGJ2RG7Yx/QHenOu/x7mDdZW1VHeraIL
-         RoWA==
-X-Gm-Message-State: AOAM532j+u5tfpkyMZRNvprTPxBfeNLOiA7gaMugW4JI+c5K4Js5Vr4h
-        sBUnch/b9RdsgYLqfEmedg==
-X-Google-Smtp-Source: ABdhPJxjW6Z/0DNopQefNMSz2Y33hFI2dXsZobX+uD1VPIebi2iNlXYREKpv0yRibAxo1PsikSR2aA==
-X-Received: by 2002:a02:a04d:: with SMTP id f13mr7825907jah.112.1598310329586;
-        Mon, 24 Aug 2020 16:05:29 -0700 (PDT)
+        bh=pNW+FpExzUZzKAgdzLbbC3mRjgc/ErkF14qzkePzpao=;
+        b=rCGPujwGgeuFwBJk9BqeNd7TFwV8sYSsw3S3vkJzcLzULZnDUnVbwv8pxDYZsRmx3A
+         SrH6Sb0mMVh+ToK/wemOglj+9l0DV6bwazvD1R0XnNeDzuXDL483kkSI6M2EeqEler76
+         kxqQHeD7zlMJXZQPdb9ENbBsxN+vVnVxswK8MBQv5QBHrWlabnwhnNJI3Bbgz3ukD9NY
+         uAwaVBX60vKaB0VoND4UWDxF+AfHKJtVqAfA3jVXyLYcSxhZIfm/Bv+cq6QZwuXKHTR4
+         0QnmnlJXI2k3kBjSYJ8dioD+S679U11Db8WssC6KLBd6FAF4lj2ZsobU6PBcBgxqXi4S
+         qBmg==
+X-Gm-Message-State: AOAM532KPMGGoQldfLTE5F5cJR2QoyvtDwVOE6AdMFRxL0KAEGUQhngV
+        f5j+QycN9A6meVkG9gmOehDYeSX1CA==
+X-Google-Smtp-Source: ABdhPJye+VWIVLJXB8wHyD0hNc5m+JPXvkFWV50q8MkRfj/wsTQkYrcYnZUWZ+rtqsOfgrGDN5f5SA==
+X-Received: by 2002:a05:6e02:13ee:: with SMTP id w14mr7059209ilj.4.1598310599896;
+        Mon, 24 Aug 2020 16:09:59 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id x185sm7579268iof.41.2020.08.24.16.05.27
+        by smtp.gmail.com with ESMTPSA id n7sm7456664iop.45.2020.08.24.16.09.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:05:28 -0700 (PDT)
-Received: (nullmailer pid 3499633 invoked by uid 1000);
-        Mon, 24 Aug 2020 23:05:26 -0000
-Date:   Mon, 24 Aug 2020 17:05:26 -0600
+        Mon, 24 Aug 2020 16:09:58 -0700 (PDT)
+Received: (nullmailer pid 3506628 invoked by uid 1000);
+        Mon, 24 Aug 2020 23:09:56 -0000
+Date:   Mon, 24 Aug 2020 17:09:56 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH 1/2] dt-bindings: PCI: rcar: Add device tree support for
- r8a7742
-Message-ID: <20200824230526.GA3499580@bogus>
-References: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Finley Xiao <finley.xiao@rock-chips.com>
+Cc:     heiko@sntech.de, rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        huangtao@rock-chips.com, tony.xie@rock-chips.com, cl@rock-chips.com
+Subject: Re: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a
+ thermal zone
+Message-ID: <20200824230956.GA3500214@bogus>
+References: <20200811123115.8144-1-finley.xiao@rock-chips.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810174156.30880-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200811123115.8144-1-finley.xiao@rock-chips.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Aug 2020 18:41:55 +0100, Lad Prabhakar wrote:
-> Add support for r8a7742. The Renesas RZ/G1H (R8A7742) PCIe controller
-> is identical to the R-Car Gen2 family.
+On Tue, Aug 11, 2020 at 08:31:15PM +0800, Finley Xiao wrote:
+> The default value for k_pu is:
+>     2 * sustainable_power / (desired_temperature - switch_on_temp)
+> The default value for k_po is:
+>     sustainable_power / (desired_temperature - switch_on_temp)
+> The default value for k_i is 10.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Even though these parameters of the PID controller can be changed
+> by the following sysfs files:
+>     /sys/class/thermal/thermal_zoneX/k_pu
+>     /sys/class/thermal/thermal_zoneX/k_po
+>     /sys/class/thermal/thermal_zoneX/k_i
+> 
+> But it's still more convenient to change the default values by devicetree,
+> so introduce these three optional properties. If provided these properties,
+> they will be parsed and associated with the thermal zone via the thermal
+> zone parameters.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
 > ---
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+>  Documentation/devicetree/bindings/thermal/thermal.txt | 14 ++++++++++++++
 
-Acked-by: Rob Herring <robh@kernel.org>
+Bindings should be a separate file and this one is a DT schema now.
+
+>  drivers/thermal/thermal_of.c                          |  7 +++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+> index f78bec19ca35..ebe936b57ded 100644
+> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+> @@ -165,6 +165,20 @@ Optional property:
+>  			2000mW, while on a 10'' tablet is around
+>  			4500mW.
+>  
+> +- k-po:			Proportional parameter of the PID controller when
+> +			current temperature is above the target.
+> +  Type: signed
+> +  Size: one cell
+> +
+> +- k-pu:			Proportional parameter of the PID controller when
+> +			current temperature is below the target.
+> +  Type: signed
+> +  Size: one cell
+> +
+> +- k-i:			Integral parameter of the PID controller.
+> +  Type: signed
+> +  Size: one cell
+
+What's PID?
+
+I know nothing about the sysfs params, but the binding needs to stand on 
+it's own and needs enough detail to educate me.
+
+Rob
