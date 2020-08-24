@@ -2,67 +2,99 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E3EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F46C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55077206B5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598265652;
-	bh=0dOjMI4AN/7K1L0DukTXsv4PCx+hl7uJkoA2CUu5GNc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ExIVR0de9ZIru1NTlINegBU1MGx0m1rm3IN3bePdtatLmgDL170vrZdiqcZyQ3p8K
-	 402VSrxL8gkXtBBgC/v5wc/RPSI/REfeAW8gL7Q9QDLQAcE4DokmmVlN6JM3a68o2r
-	 1bL5Xs7yNuCUG+IH8jrKlVRVsDdW8cdQ+QqTm5Ys=
+	by mail.kernel.org (Postfix) with ESMTP id BCA3921741
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:41:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQ+VblBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbgHXKkv (ORCPT
+        id S1726912AbgHXKlQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59498 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726257AbgHXKku (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:40:50 -0400
-Received: from dragon (unknown [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B18322067C;
-        Mon, 24 Aug 2020 10:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598265650;
-        bh=0dOjMI4AN/7K1L0DukTXsv4PCx+hl7uJkoA2CUu5GNc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mE2KhVyRbrL5EPy2o3MGbUoLJTOepU8e3+HX98BxXleFvvjJ1KPFyUXkWKYE76Ne9
-         m5P5s9SjSlOCUAfrv2v1tJnhm6czt2AW69bO4hlvMFH1LXr5rJJ+HhkxffeVxhPKR/
-         whYF8iETAqO3bl1HyaTrAW9k1U0OU8POzHQnWnnM=
-Date:   Mon, 24 Aug 2020 18:40:37 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, shengjiu.wang@nxp.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] arm64: dts: imx8mp: Update pinfunc header file
-Message-ID: <20200824104036.GA12776@dragon>
-References: <1597397239-2387-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 24 Aug 2020 06:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbgHXKlB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:41:01 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8623AC061575
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 03:41:01 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id i13so3465795pjv.0
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 03:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XgbO9mR4mVK+VLe98mmxfWqoTjzntsorurnkGUqDaCQ=;
+        b=ZQ+VblBjWGeESG4rusKo+1JZYRqRf6bSGcqBa0n7UR7OlQN91evh6PFcWm7y0cwdAl
+         GoZGJDpLTdUtIPVhtpMg6jPckeHsuPgbiO1OBgN7vhQD6K241KUnVouI9K17/SmA6MZ7
+         +dD9bsFPu01qj6HGGtRvTb5caKNSv/Z0B5egaB4dCbgeyMKmYvaPAyK7U3FTIOG97G/u
+         ANP4lhMCYbhFlVxhdM/OoH45tmA6gmP0vfz4PoiBGXw8z13OtUmds+tSOcfv/3bWFlSn
+         Wcx8GVsAakX8MCe1A8jTmjba7cT9q74/knHOzlGiek+AEA9vZ1v2970dJC3rTZ0Q2sLU
+         xQkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XgbO9mR4mVK+VLe98mmxfWqoTjzntsorurnkGUqDaCQ=;
+        b=TDVBV6rCnE09ruGeDhJaaQBjcJOWq+oklIHenOIeeJ8/iq7zkEgVLX0Tpn3rv1SfpT
+         L5TQ4iCxMWOOX8B302cERaNgvt+6XyqQy9PNbWizh06rw0YdlMvwd/XnG+Q/Ae6JcZPA
+         8GdEPjXHZMzP934Vnb+KjrYlN/mmsHgxljUYdP5zzSiewg0fcagJmym+AjDaoo3lgZb0
+         M00eL2NbJS1+1f99sk7j7hHnXM3DPF+SrphqwMhQTdnfgEilKD+KRp4LvUaVP0FisMVK
+         /hB4ppUBwXb/zrg0gAbr5N3DiNRbdQ1TdulOFqxyzoBVU7KeL2wDeW5TsD9MhrG7XTZe
+         TanA==
+X-Gm-Message-State: AOAM532I8S7d1IQa+8mMqq8/YjQ23O6MvXkRl6bRYrXnFkFEWqMLaE6D
+        SnNlThOwwFQOlgje4cCbY1mMAA==
+X-Google-Smtp-Source: ABdhPJzHp5qGiAawE2z0LljcaMUrf104gCiqxPBac1WAVL6UMn9NdE5K7a2ZqlOVIeg4Fersn7deiw==
+X-Received: by 2002:a17:902:7585:: with SMTP id j5mr3553270pll.168.1598265661050;
+        Mon, 24 Aug 2020 03:41:01 -0700 (PDT)
+Received: from localhost ([122.172.43.13])
+        by smtp.gmail.com with ESMTPSA id na16sm9040302pjb.30.2020.08.24.03.41.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 03:41:00 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 16:10:53 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>, vincent.guittot@linaro.org,
+        saravanak@google.com, sibis@codeaurora.org
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
+Message-ID: <20200824104053.kpjpwzl2iw3lpg2m@vireshk-i7>
+References: <20200821140026.19643-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597397239-2387-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200821140026.19643-1-ansuelsmth@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 05:27:19PM +0800, Anson Huang wrote:
-> Update some pins' name and adjust pin options to i.MX8MP pinfunc
-> header file according to latest reference manual.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
++Vincent/Saravana/Sibi
 
-Applied, thanks.
+On 21-08-20, 16:00, Ansuel Smith wrote:
+> This adds Krait Cache scaling support using the cpufreq notifier.
+> I have some doubt about where this should be actually placed (clk or cpufreq)?
+> Also the original idea was to create a dedicated cpufreq driver (like it's done in
+> the codeaurora qcom repo) by copying the cpufreq-dt driver and adding the cache
+> scaling logic but i still don't know what is better. Have a very similar driver or
+> add a dedicated driver only for the cache using the cpufreq notifier and do the
+> scale on every freq transition.
+> Thanks to everyone who will review or answer these questions.
+
+Saravana was doing something with devfreq to solve such issues if I
+wasn't mistaken.
+
+Sibi ?
+
+-- 
+viresh
