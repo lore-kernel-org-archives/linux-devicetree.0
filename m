@@ -2,87 +2,122 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CDEC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6216EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249482063A
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598275974;
-	bh=RwBqFz941Jt/SoLTcwza2Sjh1YRsxek+wKn59iLih64=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=XE8GU5L0jIFgwbqYeenI3h2AiBaX5/097O4HVkdWelzmzw3UUZEIvBm4gv5d2QnfY
-	 VzPhZOnLVhqIJTf+mRWjkkr2ciAVmweMMBf3grj5drGyOeDVzMuIZJfyaTaCDcWxKp
-	 t7vJ781+3O8AHRbI78AhGtP/dK8qIleni2WSPi3s=
+	by mail.kernel.org (Postfix) with ESMTP id 4A7DA2063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgHXNci (ORCPT
+        id S1726461AbgHXNdr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:32:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbgHXNcW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:32:22 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E297E2063A;
-        Mon, 24 Aug 2020 13:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598275942;
-        bh=RwBqFz941Jt/SoLTcwza2Sjh1YRsxek+wKn59iLih64=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=VDJob3z4g8SfZlGkZJdO47OAJ3aFcr1Pysg+cEPSPqc6ZdbgCzYTclHQKwmkRofP7
-         OR+Swz/nxkb+Iri0+EMFCZfLp5EISySn/gWdK3XMFGzCvpCqks8BEaVth9W/mxJnZ9
-         YMDRc6tqs4At4z4nENzBNfPmEgqf1uU8ud/Mux0I=
-Date:   Mon, 24 Aug 2020 14:31:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20200824102402.4047fa5f@xhacker.debian>
-References: <20200824102402.4047fa5f@xhacker.debian>
-Subject: Re: [PATCH] regulator: mp886x: use "mps,switch-frequency-hz"
-Message-Id: <159827590802.48129.18246424059084988195.b4-ty@kernel.org>
+        Mon, 24 Aug 2020 09:33:47 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56931 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgHXNcj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 09:32:39 -0400
+Received: from [2001:67c:670:201:5054:ff:fe8d:eefb] (helo=[IPv6:::1])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <bst@pengutronix.de>)
+        id 1kACaF-00085w-Uz; Mon, 24 Aug 2020 15:32:24 +0200
+Subject: Re: [PATCH 2/3] dt-bindings: rtc: add chargeable flag for rx8130
+From:   Bastian Krause <bst@pengutronix.de>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
+        Arnaud Ebalard <arno@natisbad.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
+References: <20200415163701.21989-1-bst@pengutronix.de>
+ <20200415163701.21989-2-bst@pengutronix.de>
+ <20200415185609.GP34509@piout.net>
+ <3d1ecd35-fe37-02e7-74d8-3f37c2197173@pengutronix.de>
+Message-ID: <a492b6a0-b41c-a088-3ba1-f1448a074b34@pengutronix.de>
+Date:   Mon, 24 Aug 2020 15:32:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <3d1ecd35-fe37-02e7-74d8-3f37c2197173@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: bst@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Aug 2020 10:32:14 +0800, Jisheng Zhang wrote:
-> As Rob suggested, use the "mps,switch-frequency-hz" instead of the
-> "mps,switch-frequency" for switch frequency. Fortunately, the switch
-> frequency support isn't released, so we can modify it now without
-> any concern.
+On 8/24/20 1:31 PM, Bastian Krause wrote:
+> 
+> On 4/15/20 8:56 PM, Alexandre Belloni wrote:
+>> On 15/04/2020 18:37:00+0200, Bastian Krause wrote:
+>>> Signed-off-by: Bastian Krause <bst@pengutronix.de>
+>>> ---
+>>>  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+>>> index 66f0a31ae9ce..987a0c9e0cd7 100644
+>>> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+>>> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+>>> @@ -34,6 +34,9 @@ Optional properties:
+>>>  - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
+>>>  	Do not use internal trickle charger diode
+>>>  	Should be given if internal trickle charger diode should be disabled
+>>> +- aux-voltage-chargeable: rx8130 only
+>>> +	Epsons's rx8130 supports a backup battery/supercap.
+>>> +	This flag tells	whether the battery/supercap is chargeable or not.
+>>>  
+>>
+>> I think we should make that a generic property and this should supersede
+>> trickle-diode-disable which is a bit wonky as I would prefer the default
+>> to be disabled instead of enabled with the current semantics.
+> 
+> Alright, I think I know how to transform the RTC drivers.
+> 
+> One question about the DTs though:
+> 
+> This means we should remove "trickle-diode-disable" from all upstream
+> DTs and add "aux-voltage-chargeable" to all upstream DTs that use a RTC
+> compatible whose driver care in their probe function for
+> "trickle-diode-disable", right?
 
-Applied to
+Sorry, forget that.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Here's the situation:
 
-Thanks!
+Currently there is a switch to explicitly disable charging, so the
+default is to charge. We cannot introduce another boolean switch to turn
+that the other way around, because that would change the default and
+break backwards compatibility.
 
-[1/1] regulator: mp886x: use "mps,switch-frequency-hz"
-      commit: a5f7949570dc7262d3239739b0cdaa001f935d4b
+The only way I can think of is to introduce "aux-voltage-chargeable" not
+as a boolean switch but as an integer, without any default. If this
+property is not available, the drivers should simply do what they did
+prior to this change (look for the legacy trickle-diode-disable, use the
+default they used before).
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Are you okay with that?
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Some more context:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+I originally tried to add a chargeable flag for rx8130. Prior to this
+patch, there was no need to set "trickle-diode-disable" for this,
+because the driver did not pass the chargeable flag to the RTC. With the
+patch the default would have been to charge as long as
+"trickle-diode-disable" is not there. So there's a change in behavior.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Regards,
+Bastian
 
-Thanks,
-Mark
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
