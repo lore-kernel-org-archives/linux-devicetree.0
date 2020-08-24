@@ -2,146 +2,183 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1297C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F652C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B378D2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="BbgUsbwb"
+	by mail.kernel.org (Postfix) with ESMTP id 4F7BF2074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgHXI2t (ORCPT
+        id S1726391AbgHXIcN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:28:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgHXI2s (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:28:48 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3A4C061573
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:28:47 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id di22so7253085edb.12
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:28:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=VJdZxE/y/ZWFHMLl1jOIxfMQEHtM7AeHNk1ErzUcyxc=;
-        b=BbgUsbwbLVLw2AiTwU/gHmj2IDYL+2kZn5nlxDFnqmrUXbaRroQUVA3s6NGiuwu3qB
-         cQiapZjS/llynrOMoBMxUXtBuWmnbTen8LFK4MJ1bBXeSagQENJwyMVL9fjYrwnZa30y
-         +foEqC0q8iiq3RKjbOWB+OcT7s3IFSyVHXdjTaxjPm8EOYXMalhtl0kL+qHHl2WPAWh9
-         2QP9XXr903CLxVSYQfhe6y/Al2GNQ4U+XCdya6HfnLzUsN3vzw2YZLH5xv6EUBiyp+vh
-         NQw/u5xQgIcjK6lOfqA82knVqvZryx2XxlpjT+hqr0oDyqmaf2sY3PSTfT8cu/MSO8RY
-         BXIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=VJdZxE/y/ZWFHMLl1jOIxfMQEHtM7AeHNk1ErzUcyxc=;
-        b=kuos1RryKEPMEMS1RGYYl0v4Ohvn/GLjb6/z4hbmuOb4e2T9lhokYdP8VrEiFj0VAd
-         P29FA+6mwozj0QOJRzNrCaxj3pr/iSAwBm39dFVQIwC/KQBrs2eocAyBXB2gRRupl7z6
-         37GSB/al/FjM0y8+Q0AarBi5K/Fbq7smSIN0iFYOqyOWpHtRi0rgOxwDFasxJg3+c8PO
-         gWfIDUHhbA5KWz+VwWqXDKJB67Y10ReDBjkSDnCcYAEEWIvlFgdZl4Smm3Q2GoIdiGhp
-         xL9v6OotrQpfEfinwl3X+qLM63euGj14zGYHFUT2XzXyuq7ha6CvM0ZmyJya4kAsqvXs
-         czuw==
-X-Gm-Message-State: AOAM533YOfijAjAYmtDNijU24s2OOrMFnDuShDlDwEN88RILRlKd1BSH
-        TQnj5hSx2FxTx8X19iYr81eNOw==
-X-Google-Smtp-Source: ABdhPJxTJYfNQWScPNlLbLAhMRkcA5iR1YwjMiQo2KcF690VugvDAQQ5/Gz3prKZ4xAUH/ZSKl1xjw==
-X-Received: by 2002:aa7:c596:: with SMTP id g22mr4362781edq.109.1598257726595;
-        Mon, 24 Aug 2020 01:28:46 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id a26sm7418266eje.78.2020.08.24.01.28.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 01:28:46 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Michael Tretter <m.tretter@pengutronix.de>,
-        Nava kishore Manne <nava.manne@xilinx.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] arm64: dts: zynqmp: Remove undocumented u-boot properties
-Date:   Mon, 24 Aug 2020 10:28:45 +0200
-Message-Id: <8ba339425b9c9f319bdedce7741367055a30713c.1598257720.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.28.0
+        Mon, 24 Aug 2020 04:32:13 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:58461 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbgHXIcL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:32:11 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7E4B81BF207;
+        Mon, 24 Aug 2020 08:32:06 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 10:35:52 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH 3/3] dt-bindings: media: ov772x: Document endpoint props
+Message-ID: <20200824083552.v7s5gggqcviigvzu@uno.localdomain>
+References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
+ <20200818122012.37956-4-jacopo+renesas@jmondi.org>
+ <20200819135423.GL6049@pendragon.ideasonboard.com>
+ <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-u-boot, DT properties are not documented anywhere in Linux DT binding
-that's why remove them.
+Hi Laurent, Prabhakar,
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+On Fri, Aug 21, 2020 at 12:37:35PM +0100, Lad, Prabhakar wrote:
+> Hi Laurent and Jacopo
+>
+> On Wed, Aug 19, 2020 at 2:54 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Jacopo,
+> >
+> > Thank you for the patch.
+> >
+> > On Tue, Aug 18, 2020 at 02:20:12PM +0200, Jacopo Mondi wrote:
+> > > Document endpoint properties for the parallel bus type and
+> > > add them to the example.
+> > >
+> > > Specify a few constraints:
+> > > - If the bus type is BT.656 no hsync or vsycn polarities can be
+> > >   specified.
+> > > - If the bus width is 10 bits, not data-shift can be applied.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >  .../devicetree/bindings/media/i2c/ov772x.yaml | 43 +++++++++++++++++++
+> > >  1 file changed, 43 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > index 75dad40f70cc..3fad5dffd19a 100644
+> > > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > @@ -50,9 +50,47 @@ properties:
+> > >            bus-type:
+> > >              enum: [5, 6]
+> > >
+> > > +          bus-width:
+> > > +            enum: [8, 10]
+> > > +            default: 10
+> > > +
+> > > +          data-shift:
+> > > +            enum: [0, 2]
+> > > +            default: 0
+> > > +
+> > > +          hsync-active:
+> > > +            enum: [0, 1]
+> > > +            default: 1
+> > > +
+> > > +          vsync-active:
+> > > +            enum: [0, 1]
+> > > +            default: 1
+> > > +
+> > > +          pclk-sample:
+> > > +            enum: [0, 1]
+> > > +            default: 1
+> > > +
+> > >            remote-endpoint:
+> > >              description: A phandle to the bus receiver's endpoint node.
+> > >
+> > > +        allOf:
+> > > +          - if:
+> > > +              properties:
+> > > +                bus-type:
+> > > +                  const: 6
+> > > +            then:
+> > > +                properties:
+> > > +                  hsync-active: false
+> > > +                  vsync-active: false
+> > > +
+> > > +          - if:
+> > > +              properties:
+> > > +                bus-width:
+> > > +                  const: 10
+> > > +            then:
+> > > +                properties:
+> > > +                  data-shift:
+> > > +                    const: 0
+> >
+> > I'd add a blank line here.
+> >
+> > >          required:
+> > >            - bus-type
+> >
+> > Should some of the properties be required ? Possibly conditioned on
+> > bus-type ?
+> >
 
- arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi | 5 -----
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi         | 1 -
- 2 files changed, 6 deletions(-)
+I am not sure. They all have defaults, as reported here and as
+supported by the driver. There's nothing -strictly- required, as long
+as the here reported defaults are correct.
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-index 9868ca15dfc5..c94c3bb67edc 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
-@@ -10,35 +10,30 @@
- #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
- / {
- 	pss_ref_clk: pss_ref_clk {
--		u-boot,dm-pre-reloc;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <33333333>;
- 	};
- 
- 	video_clk: video_clk {
--		u-boot,dm-pre-reloc;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <27000000>;
- 	};
- 
- 	pss_alt_ref_clk: pss_alt_ref_clk {
--		u-boot,dm-pre-reloc;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <0>;
- 	};
- 
- 	gt_crx_ref_clk: gt_crx_ref_clk {
--		u-boot,dm-pre-reloc;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <108000000>;
- 	};
- 
- 	aux_ref_clk: aux_ref_clk {
--		u-boot,dm-pre-reloc;
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <27000000>;
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index d1e9a5eb4f70..6a8ff4bcc09b 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -131,7 +131,6 @@ zynqmp_power: zynqmp-power {
- 			};
- 
- 			zynqmp_clk: clock-controller {
--				u-boot,dm-pre-reloc;
- 				#clock-cells = <1>;
- 				compatible = "xlnx,zynqmp-clk";
- 				clocks = <&pss_ref_clk>,
--- 
-2.28.0
+> Agreed, would be interesting to know how this can be handled (split
+> out bus-type and add required properties for each) ?
+>
 
+That already happens with
+
++          - if:
++              properties:
++                bus-type:
++                  const: 6
++            then:
++                properties:
++                  hsync-active: false
++                  vsync-active: false
+
+And could be expanded, if we want any of these to be required.
+
+Thanks
+  j
+
+> Cheers,
+> Prabhakar
+>
+> > >
+> > > @@ -82,6 +120,11 @@ examples:
+> > >              port {
+> > >                  ov772x_0: endpoint {
+> > >                      bus-type = <5>;
+> > > +                    vsync-active = <0>;
+> > > +                    hsync-active = <0>;
+> > > +                    pclk-sample = <0>;
+> > > +                    bus-width = <8>;
+> > > +                    data-shift = <0>;
+> > >                      remote-endpoint = <&vcap1_in0>;
+> > >                  };
+> > >              };
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
