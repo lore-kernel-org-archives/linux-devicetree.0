@@ -2,117 +2,108 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35427C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4021C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 142FB20706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlrivj0F"
+	by mail.kernel.org (Postfix) with ESMTP id 8C53B20702
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598310304;
+	bh=nn9JMmY9mD9Y9cUc4cHzJbD3syRe2wi9pbzuT34hKno=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uN2InJNNGqFFo1p7XFaujmEf+6+S236cWdqClTsThYBqF+B5k3HIQz3RKnvnbTTTB
+	 rcq2m9aBNejBeHZkF3yFPiPFvGx/jB+83G6vvJV+MUwhNZRXS6Oem0uxZTJhJNVbCJ
+	 o2TmzCUpCaes6Ynu9E7MhpOJV5kS4zTFKsOhRrJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgHXW5X (ORCPT
+        id S1728110AbgHXXFD (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgHXW5T (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:57:19 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51E7C061755;
-        Mon, 24 Aug 2020 15:57:18 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id oz20so9051045ejb.5;
-        Mon, 24 Aug 2020 15:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ptxh3FMwnetu3bSBY1W6iEPH5vawebKoGdalAVvQO4g=;
-        b=jlrivj0FqnDRBRtx8smru1UJ/xYxEGLFCStoHxYPPWofgLh7ixf2lLZpRYJykcM4Ka
-         3WZnvlP0vwBbthB+suu62H8l9lETkNf/sLugHVHdWyIn/Ftt+jeU08wIV5hRM6/R9IMo
-         9UOYnV2jb5ZCWkVGOPaGW31mn8nW9jK+PAK0bcXy0ykUfa2EqJ6imXdtdLILe63V2xNZ
-         04CrwKzBeavRziztR/5uQalsw/BH4kPPrHqVm2CCNgP//wwtbBR8VuAq64BpzP+aKWpe
-         ISZPKFN4r4h4iucPZn88wCj0WgiwLD1yfkv7moeJb+8G59NY7d9WVjAMMhhp8iDLirnD
-         fbRw==
+        Mon, 24 Aug 2020 19:05:03 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42686 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728107AbgHXXFC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:05:02 -0400
+Received: by mail-io1-f68.google.com with SMTP id g13so10527807ioo.9;
+        Mon, 24 Aug 2020 16:05:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Ptxh3FMwnetu3bSBY1W6iEPH5vawebKoGdalAVvQO4g=;
-        b=cltR8/8m7LUsXO2FuZfwk+vBTAlZL7s5YOCYvMYYTOrkLvwyJ7zmwXijpsEvsW7KaC
-         xGEMm4CLx3FdmuHm4XLGBHjZAg2cxvrIPv35DuRuauhnvfTE1YhPjBNt63aUAmGkgSMw
-         IacFmC20ClDGvL2ZRUXXZO/3JN8FvYiwQXivfLxbMgBw89ne1iFpiZBUC+YBOwdZ9LLB
-         75vC8mSki42Ez+XqN2+uNJuGjWUQIgQCAtEV8mkL8xBYUZ/Mu36AJucaXve+wew8on/J
-         toXfStxM4ufmYAYiCqcLDR78bSBKOB76mrDEmDfpzzM53hPdbswU//KEYSOxETgmtqz9
-         L1cw==
-X-Gm-Message-State: AOAM530zmmNMWDGuOkSoaWzgUIHsDB9DxWPjkGMj81WY1RzHX5ekdHEB
-        cgk0p+sw9eZbXdv4Ude5yEA=
-X-Google-Smtp-Source: ABdhPJzBSXALTGMDNfg6GkduPlCOaQ+L6uEuMrLwxTE0nrugJya5ef22hEjKg1Bw+/N3p/3KEinmmg==
-X-Received: by 2002:a17:906:a116:: with SMTP id t22mr8040589ejy.353.1598309837386;
-        Mon, 24 Aug 2020 15:57:17 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id l7sm10958038edn.45.2020.08.24.15.57.16
+        bh=grnX0VUhlQ7UkI6SwTPw8N7QvRi6xvd/z+SkEjq5s38=;
+        b=kRp1Tc4dzjEqAyGvvK0qxmjauDeq1P4yNaNr9HgVKgMMZkeBeT5Qc2EnuQkuDGyuRa
+         THTCXbJNj2Ee7nnIXLbazrf2aaWKp9xbdVIgU2Yy+H5ITrhevngVrki8+4GtzkTOtS9d
+         WCTPqE2+UhElAeTKbc6iq5oCtmBH8Os9oq+PbQ8ZSZAIae+5wQkTCgbl8y3VplSTb3Qy
+         6PfldEJDW9fbp5jPwQspO+SZ9szE5Oj5w41Xv2pXJ1ahLXD1YFROtuPm98f7IslGWGUJ
+         BICa2yqqoGsCAyUfLVNhMV+jX/fdhVgM7xlR6brHhJLCdDcZZ5hmffg/MG1hTYZisWuH
+         KxaA==
+X-Gm-Message-State: AOAM531Eh307kiuAfzjgccQcA3iG1/vrRa3U1K2iZw7ByDb7LA5pzyYb
+        VDuJdG6ThMCf94lLiF8zZSZsGE2wrQ==
+X-Google-Smtp-Source: ABdhPJytoxNmBvblOQpX2IFcshYzh8s4J78tGM0KQSovKW3qVcPlQofuNB/4DhfHCAVDCI8+ecT0Ag==
+X-Received: by 2002:a02:6983:: with SMTP id e125mr7654790jac.78.1598310301391;
+        Mon, 24 Aug 2020 16:05:01 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id e23sm7410122iot.28.2020.08.24.16.04.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:57:16 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 01:57:14 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, kurt@linutronix.de, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, bigeasy@linutronix.de,
-        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
-        ilias.apalodimas@linaro.org, ivan.khoronzhuk@linaro.org,
-        vinicius.gomes@intel.com, xiaoliang.yang_1@nxp.com, Po.Liu@nxp.com
-Subject: Re: [PATCH v3 0/8] Hirschmann Hellcreek DSA driver
-Message-ID: <20200824225714.ddcsfd2njfm7oc4y@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de>
- <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN>
- <20200824220203.atjmjrydq4qyt33x@skbuf>
- <20200824.153518.700546598086140133.davem@davemloft.net>
+        Mon, 24 Aug 2020 16:05:00 -0700 (PDT)
+Received: (nullmailer pid 3498823 invoked by uid 1000);
+        Mon, 24 Aug 2020 23:04:58 -0000
+Date:   Mon, 24 Aug 2020 17:04:58 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: bridge: lvds-codec:
+ Document vcc-supply property
+Message-ID: <20200824230458.GA3489164@bogus>
+References: <20200810152219.6254-1-biju.das.jz@bp.renesas.com>
+ <20200810152219.6254-2-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824.153518.700546598086140133.davem@davemloft.net>
+In-Reply-To: <20200810152219.6254-2-biju.das.jz@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:35:18PM -0700, David Miller wrote:
-> From: Vladimir Oltean <olteanv@gmail.com>
-> Date: Tue, 25 Aug 2020 01:02:03 +0300
+On Mon, Aug 10, 2020 at 04:22:17PM +0100, Biju Das wrote:
+> Document optional vcc-supply property that may be used as VCC source.
 > 
-> > Just my comment on patch 5/8 about netdev->tc_to_txq. There are 2
-> > distinct things about that:
-> > - accessing struct net_device directly hurts the DSA model a little bit.
-> > - I think there's some confusion regarding the use of netdev->tc_to_txq
-> >   itself. I don't think that's the right place to setup a VLAN PCP to
-> >   traffic class mapping. That's simply "what traffic class does each
-> >   netdev queue have". I would even go as far as say that Linux doesn't
-> >   support a VLAN PCP to TC mapping (similar to the DSCP to TC mapping
-> >   from the DCB ops) at all, except for the ingress-qos-map and
-> >   egress-qos-map of the 8021q driver, which can't be offloaded and don't
-> >   map nicely over existing hardware anyway (what hardware has an
-> >   ingress-qos-map and an egress-qos-map per individual VLAN?!).
-> >   Although I do really see the need for having a mapping between VLAN
-> >   PCP and traffic class, I would suggest Kurt to not expose this through
-> >   taprio/mqprio (hardcode the PCP mapping as 1-to-1 with TC, as other
-> >   drivers do), and let's try to come up separately with an abstraction
-> >   for that.
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+> New patch Ref: Ref:https://patchwork.kernel.org/patch/11705819/
+> ---
+>  .../devicetree/bindings/display/bridge/lvds-codec.yaml         | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> Agreed, Kurt can you repost this series without the TAPRIO support for
-> now since it's controversial and needs more discussion and changes?
-> 
-> Thank you.
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> index 68951d56ebba..3248be31eceb 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
+> @@ -79,6 +79,9 @@ properties:
+>        The GPIO used to control the power down line of this device.
+>      maxItems: 1
+>  
+> +  vcc-supply:
+> +    maxItems: 1
 
-To be clear, the most important part of the taprio qdisc offload
-(setting up the gate control list) does not need to be postponed. It's
-just the VLAN PCP mapping that is a bit controversial.
+Probably should be 'power-supply' to align with the 'simple' panels. 
+That's also to signify there's only 1 supply. Using 'vcc' would 
+encourage adding 'vdd-supply', 'vddio-supply', etc. A second supply I'll 
+NAK because at that point it's not a simple bridge with no configuration 
+(it's arguably already there).
 
-Thanks,
--Vladimir
+Rob
