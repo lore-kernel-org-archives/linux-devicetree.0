@@ -2,126 +2,94 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85D4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 181BBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DD22087D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF97F207DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:44:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QtU30oRE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FmOKuFJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725836AbgHXHdi (ORCPT
+        id S1726599AbgHXHow (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52304 "EHLO
+        Mon, 24 Aug 2020 03:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgHXHdf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 03:33:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB0BC061574
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 00:33:35 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so7619665wrm.6
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 00:33:35 -0700 (PDT)
+        with ESMTP id S1725730AbgHXHow (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 03:44:52 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4EA5C061573;
+        Mon, 24 Aug 2020 00:44:51 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id j25so1436668ejk.9;
+        Mon, 24 Aug 2020 00:44:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9b6JStI+Pc7Gan44H9Zai7qTn63i//epl6t/+SyCbvI=;
-        b=QtU30oREihjyaqVpYIPlh7uBHK/+lhu3kH4oL78qeud837ZI7zpawFKbrvXu6gEeF7
-         lirP1Q5eX5PgM10QHCj806++kYW29bWS1XHPniLoLJmno35vPnyrxiKHV7p3aodMTbfn
-         Y04755PuaOjBiEiyjPx6oxKlWUTs8W/nrEsTE3D3EiVIAnqck+zGCO2Kq8GPGxqS88WV
-         f4gu+gKuQuMYYK3aNi2V+GEfSaNUiYjGZVV3Uw2wOTjSE1MiKI50ALupBV4fO60Qx61C
-         dqwaeZn9bWLrQ8yqRwpZvWKQJqdQJBPxLU4x9pO0dXGyofFd0dRNrP7PqtDNr3k7hB5u
-         E43g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WASiI+LGr+j54QgtHqz/Mb0c0vmWaC6GIOI+FQCQgEU=;
+        b=FmOKuFJxRGkxqHGOeaKpU20R1LskNofQqIBJmR8sT/FOg3eUyRjZLBGxKVhFXmyNtC
+         JMPjru8Om1g07nuLMeqXyPbbyVsQ6y8V79MA586PN6L+QbfAnPZSzrLz9E8H28a4C24j
+         DFYwa+q0+FCYQg30u0hU1Cf6w+0UOidt7K1YRE0Oxkmg6PArZq9phRt0NeSaScdKnz3L
+         Gpv+3Sc/clb3l72Mu+FlOK/Egrp3PWaU73eIfnqSJyF4si9e5Dp31PYS7c6x5I+mlBMG
+         i7mAEdQpCWOrcQ4YNg7o6mj48l+PT3e6Yf0U71prmYmilIRbfyIEqnTCAEc6Z9MkqfKz
+         b/4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9b6JStI+Pc7Gan44H9Zai7qTn63i//epl6t/+SyCbvI=;
-        b=ojUN5vtYQoerRJMVNsWFB/DjomvSk5iEPWy+oQdQ/P/z/gl4ScNJDor4rx2Lgllp/p
-         QeGCmXa0Yqr3qm4liVBZMqPPvltvqqHrQvl7dKj/kViK0rvU9NOdsLHETSn9nrd3uneC
-         veDYNF7K6VvRV+u3CBEIPD6GZMJYS8B2aaKqwM/2gfd0AgdMMDGqYFSYRxK3/VEgyDRQ
-         S99l+T7EwOaTjBa0Mbw83wadE8zqgHgWjk2tamoqn0PAmVFeZEMU756N7hvCmZIB5p1p
-         Dpq8iH9eWaCWNvI3nwHXmqXYZ8U70Ad94Pe7Lefzb8S6fSsTVZp6AOm0XLZvxIjLoZ5+
-         ak0A==
-X-Gm-Message-State: AOAM533Ed4/zghjzDW0uQwSekKtXZWsqO5hwtIDT0i3tbCUMtU/4SsqB
-        FBWPNwaNAsG79pqE9BhfVBHsOQ==
-X-Google-Smtp-Source: ABdhPJyrXOh+fiqV7Y/t9Tokf2adkKintBDcUuhkhcJ9lId4930V3lXNU3Dgrt+bFOeg/VRmD57z0w==
-X-Received: by 2002:adf:9ec1:: with SMTP id b1mr4456180wrf.171.1598254413967;
-        Mon, 24 Aug 2020 00:33:33 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id t14sm21197697wrv.14.2020.08.24.00.33.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 00:33:33 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 08:33:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/6] mfd: Add driver for Embedded Controller found on
- Acer Iconia Tab A500
-Message-ID: <20200824073331.GG3248864@dell>
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-2-digetx@gmail.com>
- <20200823181653.GC209852@demiurge.local>
- <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WASiI+LGr+j54QgtHqz/Mb0c0vmWaC6GIOI+FQCQgEU=;
+        b=F/lxFFLOIEldgbZ92hwZcGSLAKxVOvmg5Hhu+S2YlcZ53zPWyGn/lahE7YCf22926X
+         cVvxo8wis/eXHX3ifD5r5Hx5y265b0cF9k9pFNepEPc7W41lmjBmEzOJX3Wra0UIyKVx
+         wRgFGgGvPNOpzZh/6dGRpyPIEddrOBqA2HoBs+g+8fI8b9b5H88884W/so+DgLWOCz7e
+         MViMBiFAMbgRaw0xtuaiuvJI5Taijvhye58Kz+Z92It6D9p3Mu8d11Uv/q5CzQ0ltwp+
+         RNqbrYG6cNGLSaNIShJbvTbskoCao+ux0Vvsue9oy6kNPbCfVvwquWPbzVmUAqRz+g+9
+         CknQ==
+X-Gm-Message-State: AOAM530lsqnGdaZkPJjrNrTqq5VicmB7UJC4+MOGiyqvPUjLXO8JsJLK
+        ev8GRF9Fyc2IjDDEnrp0C8xcdYIZOmZr0QA5nFs=
+X-Google-Smtp-Source: ABdhPJz3o/rSw7xjX+X7g4OBQlKl6NUWeb3EBCeMkgDFNZbGW7KExWm+ZDQrLuSd5piSgmhenUlhCdM17RM5RyhEMbg=
+X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr4645772ejw.170.1598255090240;
+ Mon, 24 Aug 2020 00:44:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
+References: <cover.1595572867.git.frank@allwinnertech.com> <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+In-Reply-To: <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+From:   Frank Lee <tiny.windzz@gmail.com>
+Date:   Mon, 24 Aug 2020 15:44:39 +0800
+Message-ID: <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 23 Aug 2020, Dmitry Osipenko wrote:
-
-> 23.08.2020 21:16, Lubomir Rintel пишет:
-> > Hello,
-> ...
-> >> +config MFD_ACER_A500_EC
-> >> +	tristate "Embedded Controller driver for Acer Iconia Tab A500"
-> >> +	depends on (I2C_TEGRA && ARCH_TEGRA_2x_SOC) || COMPILE_TEST
-> > 
-> > This seems to also depend on I2C and OF. Perhaps I2C_TEGRA and
-> > ARCH_TEGRA_2x_SOC imply that, but it could lead to build failures with
-> > COMPILE_TEST=y. 
-> 
-> Hello, Lubomir! You're right about the I2C because it could be compiled
-> as a loadable module, good catch! The OF seems should fine as-is.
-> 
-> ...
-> >> +static struct a500_ec *a500_ec_scratch;
-> > 
-> > If this is only used for power_off, please rename it. I've been told to
-> > do so in my driver: https://lore.kernel.org/lkml/20200519104933.GX271301@dell/
-> 
-> I don't mind to rename the variable, but not sure whether it will be a
-> worthwhile change since _scratch is also a common naming scheme among
-> MFD drivers. Please see max77620_scratch for example, which I added
-> about a year ago.
-
-If something is used once, it does not make it 'common'.
-
-Not sure how this slipped my notice before, but I don't like it.
-
-Ensure any global struct used for power_off only includes items
-required for this purpose.  It's unfortunate this API requires a
-global variable at all.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+ping......
