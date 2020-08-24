@@ -2,72 +2,168 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B71BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E86BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401E520656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715692063A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgHXWhl (ORCPT
+        id S1728008AbgHXWo6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbgHXWhl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:37:41 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EABBFC061574;
-        Mon, 24 Aug 2020 15:37:40 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7777312909FB2;
-        Mon, 24 Aug 2020 15:20:53 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 15:37:38 -0700 (PDT)
-Message-Id: <20200824.153738.1423061044322742575.davem@davemloft.net>
-To:     helmut.grohne@intenta.de
-Cc:     nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-        ludovic.desroches@microchip.com, woojung.huh@microchip.com,
-        UNGLinuxDriver@microchip.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [RESEND PATCH] net: dsa: microchip: look for phy-mode in port
- nodes
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200820060331.GA23489@laureti-dev>
-References: <20200716100743.GA3275@laureti-dev>
-        <20200820060331.GA23489@laureti-dev>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Aug 2020 15:20:53 -0700 (PDT)
+        Mon, 24 Aug 2020 18:44:58 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47994 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726531AbgHXWo6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 18:44:58 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kALCs-00BhUu-An; Tue, 25 Aug 2020 00:44:50 +0200
+Date:   Tue, 25 Aug 2020 00:44:50 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v3 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek
+ switches
+Message-ID: <20200824224450.GK2403519@lunn.ch>
+References: <20200820081118.10105-1-kurt@linutronix.de>
+ <20200820081118.10105-3-kurt@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820081118.10105-3-kurt@linutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Helmut Grohne <helmut.grohne@intenta.de>
-Date: Thu, 20 Aug 2020 08:03:33 +0200
-
-> diff --git a/drivers/net/dsa/microchip/ksz_common.c b/drivers/net/dsa/microchip/ksz_common.c
-> index 8d53b12d40a8..d96b7ab6bb15 100644
-> --- a/drivers/net/dsa/microchip/ksz_common.c
-> +++ b/drivers/net/dsa/microchip/ksz_common.c
-> @@ -389,6 +389,8 @@ int ksz_switch_register(struct ksz_device *dev,
->  {
->  	phy_interface_t interface;
->  	int ret;
-> +	struct device_node *port;
-> +	unsigned int port_num;
+On Thu, Aug 20, 2020 at 10:11:12AM +0200, Kurt Kanzenbach wrote:
+> Add a basic DSA driver for Hirschmann Hellcreek switches. Those switches are
+> implementing features needed for Time Sensitive Networking (TSN) such as support
+> for the Time Precision Protocol and various shapers like the Time Aware Shaper.
+> 
+> This driver includes basic support for networking:
+> 
+>  * VLAN handling
+>  * FDB handling
+>  * Port statistics
+>  * STP
+>  * Phylink
+> 
+> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+> ---
+>  drivers/net/dsa/Kconfig                |    2 +
+>  drivers/net/dsa/Makefile               |    1 +
+>  drivers/net/dsa/hirschmann/Kconfig     |    8 +
+>  drivers/net/dsa/hirschmann/Makefile    |    2 +
+>  drivers/net/dsa/hirschmann/hellcreek.c | 1170 ++++++++++++++++++++++++
+>  drivers/net/dsa/hirschmann/hellcreek.h |  244 +++++
+>  6 files changed, 1427 insertions(+)
+>  create mode 100644 drivers/net/dsa/hirschmann/Kconfig
+>  create mode 100644 drivers/net/dsa/hirschmann/Makefile
+>  create mode 100644 drivers/net/dsa/hirschmann/hellcreek.c
+>  create mode 100644 drivers/net/dsa/hirschmann/hellcreek.h
+> 
+> diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
+> index 468b3c4273c5..297dc27b92bc 100644
+> --- a/drivers/net/dsa/Kconfig
+> +++ b/drivers/net/dsa/Kconfig
+> @@ -58,6 +58,8 @@ source "drivers/net/dsa/qca/Kconfig"
 >  
->  	if (dev->pdata)
->  		dev->chip_id = dev->pdata->chip_id;
+>  source "drivers/net/dsa/sja1105/Kconfig"
+>  
+> +source "drivers/net/dsa/hirschmann/Kconfig"
+> +
+>  config NET_DSA_QCA8K
+>  	tristate "Qualcomm Atheros QCA8K Ethernet switch family support"
+>  	depends on NET_DSA
 
-Please preserve the reverse christmas tree ordering of local variables here.
+Hi Kurt
+
+The DSA entries are sorted into alphabetic order based on what you see
+in make menuconfig. As such, "Hirschmann Hellcreek TSN Switch support"
+fits in between "DSA mock-up Ethernet switch chip support" and "Lantiq / Intel GSWIP"
+
+> diff --git a/drivers/net/dsa/Makefile b/drivers/net/dsa/Makefile
+> index 4a943ccc2ca4..a707ccc3a940 100644
+> --- a/drivers/net/dsa/Makefile
+> +++ b/drivers/net/dsa/Makefile
+> @@ -23,3 +23,4 @@ obj-y				+= mv88e6xxx/
+>  obj-y				+= ocelot/
+>  obj-y				+= qca/
+>  obj-y				+= sja1105/
+> +obj-y				+= hirschmann/
+
+This file is also sorted. 
+
+> +static int hellcreek_detect(struct hellcreek *hellcreek)
+> +{
+> +	u16 id, rel_low, rel_high, date_low, date_high, tgd_ver;
+> +	u8 tgd_maj, tgd_min;
+> +	u32 rel, date;
+> +
+> +	id	  = hellcreek_read(hellcreek, HR_MODID_C);
+> +	rel_low	  = hellcreek_read(hellcreek, HR_REL_L_C);
+> +	rel_high  = hellcreek_read(hellcreek, HR_REL_H_C);
+> +	date_low  = hellcreek_read(hellcreek, HR_BLD_L_C);
+> +	date_high = hellcreek_read(hellcreek, HR_BLD_H_C);
+> +	tgd_ver   = hellcreek_read(hellcreek, TR_TGDVER);
+> +
+> +	if (id != HELLCREEK_MODULE_ID)
+> +		return -ENODEV;
+
+Are there other Hellcreek devices? I'm just wondering if we should
+have a specific compatible for 0x4c30 as well as the more generic 
+"hirschmann,hellcreek".
+
+> +static void hellcreek_get_ethtool_stats(struct dsa_switch *ds, int port,
+> +					uint64_t *data)
+> +{
+> +	struct hellcreek *hellcreek = ds->priv;
+> +	struct hellcreek_port *hellcreek_port;
+> +	unsigned long flags;
+> +	int i;
+> +
+> +	hellcreek_port = &hellcreek->ports[port];
+> +
+> +	spin_lock_irqsave(&hellcreek->reg_lock, flags);
+> +	for (i = 0; i < ARRAY_SIZE(hellcreek_counter); ++i) {
+> +		const struct hellcreek_counter *counter = &hellcreek_counter[i];
+> +		u8 offset = counter->offset + port * 64;
+> +		u16 high, low;
+> +		u64 value = 0;
+> +
+> +		hellcreek_select_counter(hellcreek, offset);
+> +
+> +		/* The registers are locked internally by selecting the
+> +		 * counter. So low and high can be read without reading high
+> +		 * again.
+> +		 */
+
+Is there any locking/snapshot of all the counters at once? Most
+devices have support for that, so you can compare counters against
+each other.
+
+> +		high  = hellcreek_read(hellcreek, HR_CRDH);
+> +		low   = hellcreek_read(hellcreek, HR_CRDL);
+> +		value = (high << 16) | low;
+> +
+> +		hellcreek_port->counter_values[i] += value;
+> +		data[i] = hellcreek_port->counter_values[i];
+> +	}
+> +	spin_unlock_irqrestore(&hellcreek->reg_lock, flags);
+> +}
+> +
+
+  Andrew
