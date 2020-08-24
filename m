@@ -2,536 +2,186 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152D9C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3574DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF3120706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:56:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W/CIgk6L"
+	by mail.kernel.org (Postfix) with ESMTP id 1549920738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598309828;
+	bh=22BcqTI+EFX6g2/L1n2dshueIvUnN7Cn3gYOcnM7xzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WmXcNhlMVfbgL1E4yCE7sTNqHhxYbnS8q1+908SmgbYcaKGFQgzgOeI/r/XPn944h
+	 xPY7+rO8m9BujW5DpFxVZO/eCjnvOoJywfi6mpAch0z2QEO1X0KU4dgyye3hAMF0kY
+	 30agMorCddezBUjemi8RCEnQfz3uEkzd2wp/yoKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHXW4W (ORCPT
+        id S1726617AbgHXW5H (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56536 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHXW4U (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:56:20 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B92C061574;
-        Mon, 24 Aug 2020 15:56:20 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l63so6505521edl.9;
-        Mon, 24 Aug 2020 15:56:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=XZ2DOgpP9mD3XLt5jCH5/95E1sljieId7f2qRFNNZkM=;
-        b=W/CIgk6L0TFpguaQ97RmBT3AFBFiYI0LI40cGF85wCwoCxgHUN5c+jttOZYsybccXV
-         elBilFADc1+k/6/8IveYhx0scNF6IPXlvvZTou5EXucocUmAhoLTmYySwEW3I6+sMSJv
-         +i3QLbmgtjbUNC/SVNKB1DrmKiIOd1c6BucTD599HzEIiOoCwavBv2rm0TBsJmvxVKl+
-         gUBiK58MWoJUTvT6h2seTxbwezc0A9nRJKfwx3pp4IFxTCJwLsgcJdNanTlq9H3hEZpP
-         s/M+Lb8JD0848RpDr3cQ1Ogtjys8pzZtrhTDNrylenmtJehjr7lhakPIauVx2ylo79wb
-         4R1A==
+        Mon, 24 Aug 2020 18:57:07 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37367 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgHXW5G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:57:06 -0400
+Received: by mail-io1-f65.google.com with SMTP id b16so10533646ioj.4;
+        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XZ2DOgpP9mD3XLt5jCH5/95E1sljieId7f2qRFNNZkM=;
-        b=tqLJdCt9jxePfki8TJQzSTkRTc2YS4/modWGjPHO+T/j/AzudMKsKbJVqx/fNduV7/
-         vva2/HV31rW1Q3CT22GysKdxePiJkAodUIPgqVdV7rTBPG79sa9F5S4rLx8qN63T84Vp
-         kQpaEgIL4xS7WkVW6Jzrl9XxmJ3ftNzku5GPaIg0bT3BJZfbansa60cbVveUKJoF7B+T
-         ghIWNRkazYbuZzpd7CMyhHOZE2THTgojq20nv4Fy+3mem3u7pG3gp63dw/VxXPqj+liU
-         kS1spym0EMCSRRU0CwDvmKzQzaEm2dZlfGTULtO8s+ovrjjLa6OfSBzueA1XCRG+67mE
-         2O9Q==
-X-Gm-Message-State: AOAM530iOFBI7EW4+ygt/dENrgPteoifkj/TgqGadSjJYzUOBHDG9/6j
-        3uZeifAY+wtYi+1CzAbUTdQ=
-X-Google-Smtp-Source: ABdhPJy2CfDOn4xZnSLCHXqf0MHg9zsdOkYC6dcHrR/ZIZcXKoX+MU70MyvHSof/g710w9XyO8g3zA==
-X-Received: by 2002:aa7:ce90:: with SMTP id y16mr7765364edv.325.1598309778504;
-        Mon, 24 Aug 2020 15:56:18 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id p13sm10926098edq.81.2020.08.24.15.56.17
+        bh=xVGE6rEY1RUDdQNh7SGiTq/hwvuBPw98UGPGdGtkR3s=;
+        b=lQvqzcs3mkwd5VVG3w+U7rs2eFkOK8Vle0sjfYsOfa9VwJckgtOE5XMv2oIifCyMKv
+         w/fOZJgu18iUo8waE5X+tQGOld9pzegHgDXl4jo3OJsFBU6VxVbcLG8Iwd1WraJjXf++
+         NYovcS0CtYqL+FKVLHutecS31xk/L/gdg1DksZYp0su5OjWTVDHn68+IQ/a37CMyzzWU
+         mZ9dc8nWon+1H228Ovx1ttCpa3crUNH8vg4uYseiXYG9w0+igXYZvfh27/3msRXmgAg1
+         jq40fvQIx9awLG5f+YraZuOR8QWxj1sd+PduNKhuExdWWe8ICeDhrYQfnUnknLEyp+I6
+         vbJA==
+X-Gm-Message-State: AOAM530QWX/gXK+vILJxcypfRQzrJv+DY4NsJCX+0trptgbqjlSs6PTo
+        PE/Y2v+xyMezCAHnV9uuWQ==
+X-Google-Smtp-Source: ABdhPJxZzTqlGIuc2GQiyiK402zSrSHAuiMtS1zh+LVYBDoR7GLuyYLF4mBV82z4DWNQVeHgr2UhYQ==
+X-Received: by 2002:a6b:6204:: with SMTP id f4mr6678058iog.56.1598309824569;
+        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id i11sm7909593ilr.47.2020.08.24.15.57.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:56:18 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 01:56:15 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-Message-ID: <20200824225615.jtikfwyrxa7vxiq2@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de>
- <20200820081118.10105-6-kurt@linutronix.de>
+        Mon, 24 Aug 2020 15:57:03 -0700 (PDT)
+Received: (nullmailer pid 3486301 invoked by uid 1000);
+        Mon, 24 Aug 2020 22:57:02 -0000
+Date:   Mon, 24 Aug 2020 16:57:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krishna Manikandan <mkrishn@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [PATCH 1/2] dt-bindings: msm: disp: add yaml schemas for DPU and
+ DSI bindings
+Message-ID: <20200824225702.GA3460018@bogus>
+References: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820081118.10105-6-kurt@linutronix.de>
+In-Reply-To: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 10:11:15AM +0200, Kurt Kanzenbach wrote:
-> The switch has support for the 802.1Qbv Time Aware Shaper (TAS). Traffic
-> schedules may be configured individually on each front port. Each port has eight
-> egress queues. The traffic is mapped to a traffic class respectively via the PCP
-> field of a VLAN tagged frame.
+On Mon, Aug 10, 2020 at 07:08:02PM +0530, Krishna Manikandan wrote:
+> MSM Mobile Display Subsytem (MDSS) encapsulates sub-blocks
+> like DPU display controller, DSI etc. Add YAML schema
+> for the device tree bindings for the same.
 > 
-> The TAPRIO Qdisc already implements that. Therefore, this interface can simply
-> be reused. Add .port_setup_tc() accordingly.
+> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
 > 
-> The activation of a schedule on a port is split into two parts:
+> Changes in v2:
+>     - Changed dpu to DPU (Sam Ravnborg)
+>     - Fixed indentation issues (Sam Ravnborg)
+>     - Added empty line between different properties (Sam Ravnborg)
+>     - Replaced reference txt files with  their corresponding
+>       yaml files (Sam Ravnborg)
+>     - Modified the file to use "|" only when it is
+>       necessary (Sam Ravnborg)
 > 
->  * Programming the necessary gate control list (GCL)
->  * Setup hrtimer for starting the schedule
+> Changes in v3:
+>     - Corrected the license used (Rob Herring)
+>     - Added maxItems for properties (Rob Herring)
+>     - Dropped generic descriptions (Rob Herring)
+>     - Added ranges property (Rob Herring)
+>     - Corrected the indendation (Rob Herring)
+>     - Added additionalProperties (Rob Herring)
+>     - Split dsi file into two, one for dsi controller
+>       and another one for dsi phy per target (Rob Herring)
+>     - Corrected description for pinctrl-names (Rob Herring)
+>     - Corrected the examples used in yaml file (Rob Herring)
+>     - Delete dsi.txt and dpu.txt (Rob Herring)
 > 
-> The hardware supports starting a schedule up to eight seconds in the future. The
-> TAPRIO interface provides an absolute base time. Therefore, hrtimers are
-> leveraged.
+> Changes in v4:
+>     - Move schema up by one level (Rob Herring)
+>     - Add patternProperties for mdp node (Rob Herring)
+>     - Corrected description of some properties (Rob Herring)
 > 
-> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+> Changes in v5:
+>     - Correct the indentation (Rob Herring)
+>     - Remove unnecessary description from properties (Rob Herring)
+>     - Correct the number of interconnect entries (Rob Herring)
+>     - Add interconnect names for sc7180 (Rob Herring)
+>     - Add description for ports (Rob Herring)
+>     - Remove common properties (Rob Herring)
+>     - Add unevalutatedProperties (Rob Herring)
+>     - Reference existing dsi controller yaml in the common
+>       dsi controller file (Rob Herring)
+>     - Correct the description of clock names to include only the
+>       clocks that are required (Rob Herring)
+>     - Remove properties which are already covered under the common
+>       binding (Rob Herring)
+>     - Add dsi phy supply nodes which are required for sc7180 and
+>       sdm845 targets (Rob Herring)
+>     - Add type ref for syscon-sfpb (Rob Herring)
+> 
+> Changes in v6:
+>     - Fixed errors during dt_binding_check (Rob Herring)
+>     - Add maxItems for phys and phys-names (Rob Herring)
+>     - Use unevaluatedProperties wherever required (Rob Herring)
+>     - Removed interrupt controller from required properties for
+>       dsi controller (Rob Herring)
+>     - Add constraints for dsi-phy reg-names based on the compatible
+>       phy version (Rob Herring)
+>     - Add constraints for dsi-phy supply nodes based on the
+>       compatible phy version (Rob Herring)
+> 
+> Changes in v7:
+>     - Add default value for qcom,mdss-mdp-transfer-time-us (Rob Herring)
+>     - Modify the schema for data-lanes (Rob Herring)
+>     - Split the phy schema into separate schemas based on
+>       the phy version (Rob Herring)
+> 
+> Changes in v8:
+>     - Resolve merge conflicts with latest dsi.txt file
+>     - Include dp yaml change also in the same series
+
+I'm done reviewing this because I'm tired of repeating myself and you're 
+just throwing crap at the wall and seeing what sticks. Get someone else 
+working on QCom stuff to review because I'm done until someone I know 
+and trust reviews it.
+
 > ---
->  drivers/net/dsa/hirschmann/hellcreek.c | 294 +++++++++++++++++++++++++
->  drivers/net/dsa/hirschmann/hellcreek.h |  21 ++
->  2 files changed, 315 insertions(+)
-> 
-> diff --git a/drivers/net/dsa/hirschmann/hellcreek.c b/drivers/net/dsa/hirschmann/hellcreek.c
-> index 745ca60342b4..e5b54f42c635 100644
-> --- a/drivers/net/dsa/hirschmann/hellcreek.c
-> +++ b/drivers/net/dsa/hirschmann/hellcreek.c
-> @@ -22,7 +22,9 @@
->  #include <linux/spinlock.h>
->  #include <linux/delay.h>
->  #include <linux/ktime.h>
-> +#include <linux/time.h>
->  #include <net/dsa.h>
-> +#include <net/pkt_sched.h>
->  
->  #include "hellcreek.h"
->  #include "hellcreek_ptp.h"
-> @@ -153,6 +155,15 @@ static void hellcreek_select_vlan(struct hellcreek *hellcreek, int vid,
->  	hellcreek_write(hellcreek, val, HR_VIDCFG);
->  }
->  
-> +static void hellcreek_select_tgd(struct hellcreek *hellcreek, int port)
-> +{
-> +	u16 val = 0;
-> +
-> +	val |= port << TR_TGDSEL_TDGSEL_SHIFT;
-> +
-> +	hellcreek_write(hellcreek, val, TR_TGDSEL);
-> +}
-> +
->  static int hellcreek_wait_until_ready(struct hellcreek *hellcreek)
->  {
->  	u16 val;
-> @@ -958,6 +969,24 @@ static void __hellcreek_setup_tc_identity_mapping(struct hellcreek *hellcreek)
->  	}
->  }
->  
-> +static void hellcreek_setup_tc_mapping(struct hellcreek *hellcreek,
-> +				       struct net_device *netdev)
-> +{
-> +	int i, j;
-> +
-> +	/* Setup mapping between traffic classes and port queues. */
-> +	for (i = 0; i < netdev_get_num_tc(netdev); ++i) {
-> +		for (j = 0; j < netdev->tc_to_txq[i].count; ++j) {
-> +			const int queue = j + netdev->tc_to_txq[i].offset;
-> +
-> +			hellcreek_select_prio(hellcreek, i);
-> +			hellcreek_write(hellcreek,
-> +					queue << HR_PRTCCFG_PCP_TC_MAP_SHIFT,
-> +					HR_PRTCCFG);
-> +		}
-> +	}
-> +}
-> +
->  static void hellcreek_setup_tc_identity_mapping(struct hellcreek *hellcreek)
->  {
->  	unsigned long flags;
-> @@ -1081,6 +1110,267 @@ static void hellcreek_phylink_validate(struct dsa_switch *ds, int port,
->  		   __ETHTOOL_LINK_MODE_MASK_NBITS);
->  }
->  
-> +static void hellcreek_setup_gcl(struct hellcreek *hellcreek, int port,
-> +				const struct hellcreek_schedule *schedule)
-> +{
-> +	size_t i;
-> +
-> +	for (i = 1; i <= schedule->num_entries; ++i) {
-> +		const struct hellcreek_gcl_entry *cur, *initial, *next;
-> +		u16 data;
-> +		u8 gates;
-> +
-> +		cur	= &schedule->entries[i - 1];
-> +		initial = &schedule->entries[0];
-> +		next	= &schedule->entries[i];
-> +
-> +		if (i == schedule->num_entries)
-> +			gates = initial->gate_states ^
-> +				cur->gate_states;
-> +		else
-> +			gates = next->gate_states ^
-> +				cur->gate_states;
-> +
-> +		data = gates;
-> +		if (cur->overrun_ignore)
-> +			data |= TR_GCLDAT_GCLOVRI;
-> +
-> +		if (i == schedule->num_entries)
-> +			data |= TR_GCLDAT_GCLWRLAST;
-> +
-> +		/* Gates states */
-> +		hellcreek_write(hellcreek, data, TR_GCLDAT);
-> +
-> +		/* Time intervall */
-> +		hellcreek_write(hellcreek,
-> +				cur->interval & 0x0000ffff,
-> +				TR_GCLTIL);
-> +		hellcreek_write(hellcreek,
-> +				(cur->interval & 0xffff0000) >> 16,
-> +				TR_GCLTIH);
-> +
-> +		/* Commit entry */
-> +		data = ((i - 1) << TR_GCLCMD_GCLWRADR_SHIFT) |
-> +			(initial->gate_states <<
-> +			 TR_GCLCMD_INIT_GATE_STATES_SHIFT);
-> +		hellcreek_write(hellcreek, data, TR_GCLCMD);
-> +	}
-> +}
-> +
-> +static void hellcreek_set_cycle_time(struct hellcreek *hellcreek,
-> +				     const struct hellcreek_schedule *schedule)
-> +{
-> +	u32 cycle_time = schedule->cycle_time;
-> +
-> +	hellcreek_write(hellcreek, cycle_time & 0x0000ffff, TR_CTWRL);
-> +	hellcreek_write(hellcreek, (cycle_time & 0xffff0000) >> 16, TR_CTWRH);
-> +}
-> +
-> +static void hellcreek_start_schedule(struct hellcreek *hellcreek,
-> +				     ktime_t start_time)
-> +{
-> +	struct timespec64 ts = ktime_to_timespec64(start_time);
-> +
-> +	/* Start can be only 8 seconds in the future */
-> +	ts.tv_sec %= 8;
-> +
-> +	/* Start schedule at this point of time */
-> +	hellcreek_write(hellcreek, ts.tv_nsec & 0x0000ffff, TR_ESTWRL);
-> +	hellcreek_write(hellcreek, (ts.tv_nsec & 0xffff0000) >> 16, TR_ESTWRH);
-> +
-> +	/* Arm timer, set seconds and switch schedule */
-> +	hellcreek_write(hellcreek, TR_ESTCMD_ESTARM | TR_ESTCMD_ESTSWCFG |
-> +		     ((ts.tv_sec & TR_ESTCMD_ESTSEC_MASK) <<
-> +		      TR_ESTCMD_ESTSEC_SHIFT), TR_ESTCMD);
-> +}
-> +
-> +static struct hellcreek_schedule *hellcreek_taprio_to_schedule(
-> +	const struct tc_taprio_qopt_offload *taprio)
+>  .../bindings/display/msm/dpu-sc7180.yaml           | 236 +++++++++++++++++++
+>  .../bindings/display/msm/dpu-sdm845.yaml           | 216 ++++++++++++++++++
+>  .../devicetree/bindings/display/msm/dpu.txt        | 141 ------------
+>  .../display/msm/dsi-common-controller.yaml         | 249 +++++++++++++++++++++
+>  .../display/msm/dsi-controller-sc7180.yaml         | 120 ++++++++++
+>  .../display/msm/dsi-controller-sdm845.yaml         | 120 ++++++++++
 
-Personal indentation preference:
+Once again, what's the difference between dsi-controller-sc7180.yaml and 
+dsi-controller-sdm845.yaml? I don't see one. If there's not a 
+difference, why do we have msm/dsi-common-controller.yaml? If there is a 
+difference dsi-controller-sc7180.yaml and dsi-controller-sdm845.yaml 
+should *only* have what's different because 
+msm/dsi-common-controller.yaml should have everything that is the same.
 
-static struct hellcreek_schedule
-*hellcreek_taprio_to_schedule(const struct tc_taprio_qopt_offload *taprio)
-
-> +{
-> +	struct hellcreek_schedule *schedule;
-> +	size_t i;
-> +
-> +	/* Allocate some memory first */
-> +	schedule = kzalloc(sizeof(*schedule), GFP_KERNEL);
-> +	if (!schedule)
-> +		return ERR_PTR(-ENOMEM);
-> +	schedule->entries = kcalloc(taprio->num_entries,
-> +				    sizeof(*schedule->entries),
-> +				    GFP_KERNEL);
-> +	if (!schedule->entries) {
-> +		kfree(schedule);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	/* Construct hellcreek schedule */
-> +	schedule->num_entries = taprio->num_entries;
-> +	schedule->base_time   = taprio->base_time;
-> +
-> +	for (i = 0; i < taprio->num_entries; ++i) {
-> +		const struct tc_taprio_sched_entry *t = &taprio->entries[i];
-> +		struct hellcreek_gcl_entry *k = &schedule->entries[i];
-> +
-> +		k->interval	  = t->interval;
-> +		k->gate_states	  = t->gate_mask;
-> +		k->overrun_ignore = 0;
-
-Tab to align with gate_states and interval?
-What does overrun_ignore do, anyway?
-
-> +
-> +		/* Update complete cycle time */
-> +		schedule->cycle_time += t->interval;
-> +	}
-> +
-> +	return schedule;
-> +}
-> +
-> +static enum hrtimer_restart hellcreek_set_schedule(struct hrtimer *timer)
-> +{
-> +	struct hellcreek_port *hellcreek_port =
-> +		hrtimer_to_hellcreek_port(timer);
-
-That moment when not even the helper macro fits in 80 characters..
-I think you should let this line have 81 characters.
-
-> +	struct hellcreek *hellcreek = hellcreek_port->hellcreek;
-> +	struct hellcreek_schedule *schedule;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&hellcreek->reg_lock, flags);
-> +
-> +	/* First select port */
-> +	hellcreek_select_tgd(hellcreek, hellcreek_port->port);
-> +
-> +	/* Set admin base time and switch schedule */
-> +	hellcreek_start_schedule(hellcreek,
-> +				 hellcreek_port->current_schedule->base_time);
-> +
-> +	schedule = hellcreek_port->current_schedule;
-> +	hellcreek_port->current_schedule = NULL;
-> +
-> +	spin_unlock_irqrestore(&hellcreek->reg_lock, flags);
-> +
-> +	dev_dbg(hellcreek->dev, "ARMed EST timer for port %d\n",
-> +		hellcreek_port->port);
-> +
-> +	/* Free resources */
-> +	kfree(schedule->entries);
-> +	kfree(schedule);
-> +
-> +	return HRTIMER_NORESTART;
-> +}
-> +
-> +static int hellcreek_port_set_schedule(struct dsa_switch *ds, int port,
-> +				       const struct tc_taprio_qopt_offload *taprio)
-> +{
-> +	struct net_device *netdev = dsa_to_port(ds, port)->slave;
-> +	struct hellcreek *hellcreek = ds->priv;
-> +	struct hellcreek_port *hellcreek_port;
-> +	struct hellcreek_schedule *schedule;
-> +	unsigned long flags;
-> +	ktime_t start;
-> +	u16 ctrl;
-> +
-> +	hellcreek_port = &hellcreek->ports[port];
-> +
-> +	/* Convert taprio data to hellcreek schedule */
-> +	schedule = hellcreek_taprio_to_schedule(taprio);
-> +	if (IS_ERR(schedule))
-> +		return PTR_ERR(schedule);
-> +
-> +	dev_dbg(hellcreek->dev, "Configure traffic schedule on port %d\n",
-> +		port);
-> +
-> +	/* Cancel an in flight timer */
-> +	hrtimer_cancel(&hellcreek_port->cycle_start_timer);
-> +
-> +	spin_lock_irqsave(&hellcreek->reg_lock, flags);
-> +
-> +	if (hellcreek_port->current_schedule) {
-> +		kfree(hellcreek_port->current_schedule->entries);
-> +		kfree(hellcreek_port->current_schedule);
-> +	}
-> +
-> +	hellcreek_port->current_schedule = schedule;
-> +
-> +	/* First select port */
-> +	hellcreek_select_tgd(hellcreek, port);
-> +
-> +	/* Setup traffic class <-> queue mapping */
-> +	hellcreek_setup_tc_mapping(hellcreek, netdev);
-> +
-> +	/* Enable gating and set the admin state to forward everything in the
-> +	 * mean time
-> +	 */
-> +	ctrl = (0xff << TR_TGDCTRL_ADMINGATESTATES_SHIFT) | TR_TGDCTRL_GATE_EN;
-> +	hellcreek_write(hellcreek, ctrl, TR_TGDCTRL);
-> +
-> +	/* Cancel pending schedule */
-> +	hellcreek_write(hellcreek, 0x00, TR_ESTCMD);
-> +
-> +	/* Setup a new schedule */
-> +	hellcreek_setup_gcl(hellcreek, port, schedule);
-> +
-> +	/* Configure cycle time */
-> +	hellcreek_set_cycle_time(hellcreek, schedule);
-> +
-> +	/* Setup timer for schedule switch: The IP core only allows to set a
-> +	 * cycle start timer 8 seconds in the future. This is why we setup the
-> +	 * hritmer to base_time - 5 seconds. Then, we have enough time to
-> +	 * activate IP core's EST timer.
-> +	 */
-> +	start = ktime_sub_ns(schedule->base_time, (u64)5 * NSEC_PER_SEC);
-> +	hrtimer_start_range_ns(&hellcreek_port->cycle_start_timer, start,
-> +			       NSEC_PER_SEC, HRTIMER_MODE_ABS);
-
-Explain again how this works, please? The hrtimer measures the CLOCK_TAI
-of the CPU, but you are offloading the CLOCK_TAI domain of the NIC? So
-you are assuming that the CPU and the NIC PHC are synchronized? What if
-they aren't?
-
-And what if the base-time is in the past, do you deal with that (how
-does the hardware deal with a base-time in the past)?
-A base-time in the past (example: 0) should work: you should advance the
-base-time into the nearest future multiple of the cycle-time, to at
-least preserve phase correctness of the schedule.
-
-Just trying to understand if this whole hrtimer thing is worth it. It
-complicates the driver by quite a significant amount.
-
-> +
-> +	spin_unlock_irqrestore(&hellcreek->reg_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hellcreek_port_del_schedule(struct dsa_switch *ds, int port)
-> +{
-> +	struct hellcreek *hellcreek = ds->priv;
-> +	struct hellcreek_port *hellcreek_port;
-> +	unsigned long flags;
-> +
-> +	hellcreek_port = &hellcreek->ports[port];
-> +
-> +	dev_dbg(hellcreek->dev, "Remove traffic schedule on port %d\n", port);
-> +
-> +	/* First cancel timer */
-> +	hrtimer_cancel(&hellcreek_port->cycle_start_timer);
-> +
-> +	spin_lock_irqsave(&hellcreek->reg_lock, flags);
-> +
-> +	if (hellcreek_port->current_schedule) {
-> +		kfree(hellcreek_port->current_schedule->entries);
-> +		kfree(hellcreek_port->current_schedule);
-> +		hellcreek_port->current_schedule = NULL;
-> +	}
-> +
-> +	/* Then select port */
-> +	hellcreek_select_tgd(hellcreek, port);
-> +
-> +	/* Revert tc mapping */
-> +	__hellcreek_setup_tc_identity_mapping(hellcreek);
-> +
-> +	/* Disable gating and return to regular switching flow */
-> +	hellcreek_write(hellcreek, 0xff << TR_TGDCTRL_ADMINGATESTATES_SHIFT,
-> +			TR_TGDCTRL);
-> +
-> +	spin_unlock_irqrestore(&hellcreek->reg_lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hellcreek_port_setup_tc(struct dsa_switch *ds, int port,
-> +				   enum tc_setup_type type, void *type_data)
-> +{
-> +	const struct tc_taprio_qopt_offload *taprio = type_data;
-> +
-> +	if (type != TC_SETUP_QDISC_TAPRIO)
-> +		return -EOPNOTSUPP;
-> +
-> +	if (taprio->enable)
-> +		return hellcreek_port_set_schedule(ds, port, taprio);
-> +
-> +	return hellcreek_port_del_schedule(ds, port);
-> +}
-> +
->  static const struct dsa_switch_ops hellcreek_ds_ops = {
->  	.get_tag_protocol    = hellcreek_get_tag_protocol,
->  	.setup		     = hellcreek_setup,
-> @@ -1104,6 +1394,7 @@ static const struct dsa_switch_ops hellcreek_ds_ops = {
->  	.port_hwtstamp_get   = hellcreek_port_hwtstamp_get,
->  	.port_txtstamp	     = hellcreek_port_txtstamp,
->  	.port_rxtstamp	     = hellcreek_port_rxtstamp,
-> +	.port_setup_tc	     = hellcreek_port_setup_tc,
->  	.get_ts_info	     = hellcreek_get_ts_info,
->  };
->  
-> @@ -1135,6 +1426,9 @@ static int hellcreek_probe(struct platform_device *pdev)
->  		if (!port->counter_values)
->  			return -ENOMEM;
->  
-> +		hrtimer_init(&port->cycle_start_timer, CLOCK_TAI,
-> +			     HRTIMER_MODE_ABS);
-> +		port->cycle_start_timer.function = hellcreek_set_schedule;
->  		port->hellcreek = hellcreek;
->  		port->port	= i;
->  	}
-> diff --git a/drivers/net/dsa/hirschmann/hellcreek.h b/drivers/net/dsa/hirschmann/hellcreek.h
-> index 1d3de72a48a5..d3d1a1144857 100644
-> --- a/drivers/net/dsa/hirschmann/hellcreek.h
-> +++ b/drivers/net/dsa/hirschmann/hellcreek.h
-> @@ -16,6 +16,7 @@
->  #include <linux/ptp_clock_kernel.h>
->  #include <linux/timecounter.h>
->  #include <linux/spinlock.h>
-> +#include <linux/hrtimer.h>
->  #include <net/dsa.h>
->  
->  /* Ports:
-> @@ -210,6 +211,20 @@ struct hellcreek_counter {
->  	const char *name;
->  };
->  
-> +struct hellcreek_gcl_entry {
-> +	u32 interval;
-> +	u8 gate_states;
-> +	bool overrun_ignore;
-> +};
-> +
-> +struct hellcreek_schedule {
-> +	struct hellcreek_gcl_entry *entries;
-> +	size_t num_entries;
-> +	ktime_t base_time;
-> +	u32 cycle_time;
-> +	int port;
-> +};
-> +
->  struct hellcreek;
->  
->  /* State flags for hellcreek_port_hwtstamp::state */
-> @@ -236,6 +251,8 @@ struct hellcreek_port_hwtstamp {
->  
->  struct hellcreek_port {
->  	struct hellcreek *hellcreek;
-> +	struct hellcreek_schedule *current_schedule;
-> +	struct hrtimer cycle_start_timer;
->  	int port;
->  	u16 ptcfg;		/* ptcfg shadow */
->  	u64 *counter_values;
-> @@ -273,4 +290,8 @@ struct hellcreek {
->  	size_t fdb_entries;
->  };
->  
-> +#define hrtimer_to_hellcreek_port(timer)		\
-> +	container_of(timer, struct hellcreek_port,	\
-> +		     cycle_start_timer)
-> +
->  #endif /* _HELLCREEK_H_ */
-> -- 
-> 2.20.1
-> 
-
-Thanks,
--Vladimir
+>  .../bindings/display/msm/dsi-phy-10nm.yaml         |  62 +++++
+>  .../bindings/display/msm/dsi-phy-14nm.yaml         |  62 +++++
+>  .../bindings/display/msm/dsi-phy-20nm.yaml         |  66 ++++++
+>  .../bindings/display/msm/dsi-phy-28nm.yaml         |  62 +++++
+>  .../bindings/display/msm/dsi-phy-sc7180.yaml       |  80 +++++++
+>  .../bindings/display/msm/dsi-phy-sdm845.yaml       |  82 +++++++
+>  .../devicetree/bindings/display/msm/dsi.txt        | 247 --------------------
+>  13 files changed, 1355 insertions(+), 388 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/dpu.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-common-controller.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-10nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-14nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-20nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-28nm.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.yaml
+>  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/display/msm/dsi.txt
