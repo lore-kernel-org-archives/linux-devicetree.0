@@ -2,55 +2,68 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6851CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 18:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217C0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1DA20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 18:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598295440;
-	bh=VIxsi6pKlUk6jLXdG3ngDMsGUa+mr1eJxnhVIzUwRdg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rrYM/KIbSA07HXKVQQ1PzPfSULlTy8o6vYNQs2tJBHwqpGvyn1JXsLBdH91vI1Q5b
-	 5GzYYcCKCqRzVJ6JKwLwULA1OFMTVEgaOVqVX8/EUg+kLvjVh5m1VGeUXpbl8hXuNb
-	 O9/gX/Lqq7eE4da+cqHlyYQ8Co0x3GVH7r+7pKcU=
+	by mail.kernel.org (Postfix) with ESMTP id DC16D2074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzAfXB96"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbgHXS5T (ORCPT
+        id S1726542AbgHXTEH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:57:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33743 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgHXS5S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 14:57:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id o4so5979601wrn.0;
-        Mon, 24 Aug 2020 11:57:17 -0700 (PDT)
+        Mon, 24 Aug 2020 15:04:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgHXTEG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 15:04:06 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DBD7C061573;
+        Mon, 24 Aug 2020 12:04:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so10916919ljg.13;
+        Mon, 24 Aug 2020 12:04:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=USWdSH85MLPCvRv3jIctUSCKGBhD/KP3Vil/oo0Sdlo=;
+        b=dzAfXB96+Fj8h140QgfMjRnhKd5SULprrzZjn/ElG10SRsaNP6UF3yncDmw75rqGK0
+         3evZq0txNSdfXl2ZDqtrITg9KbNyXUEnZJEIXcUg09S95tjK+JXVlqjXeD8/FMXvVYG9
+         TEe4sjaHHnKmPzoZD6BmmT72TVFxVZjLxS09Qexbv3pwEDCj8b19rCFVKvtrQbUPiFLD
+         o6kgOXcZz1Yl2znZfW0McFtfjiA3+pl8LfiMHDm6vIbv4ztq6VCrJq7xQ18idk5wo/Is
+         01IMqHexmpWp3zrlUw1RcUgp0mNUhGNdl64cpmt0dTO1E1ZG0eTpDqkXcqv6JiTS7VMP
+         gRwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xQhiydvyZvtI4AkndXV4Ei79Fq7h8nBWuDS5mk8A+F0=;
-        b=rIfwo9rhRRh0g5TN0OIVYNVVOttzUd7Jq90/ISM444eZs5fza10r8PczEXRgs37lL6
-         NLZXai9JeVYeuuqNWk181SEbnPdEi+07aytCQUQ8seYf0EeyvhMODvb8y3YRB/eM5Im0
-         50Nh8bEVdEdSN/DGcO566VGeDpagcJ4ti2SuQMoZ8u4eHFvlnZg9tIhYGsvtIhsjr2IT
-         Eo0TPchi3f46rswZiT2gF92cEh0WjhCD+aMKUUUnLwDmKVAEO2BIvxicbQchTbE2zZ0m
-         ADmUAJFlkHFloi8962o56UMtH/I92DOHB2OB4dZgBcb89U9S1PMenBgQ7S4wKQlDaJWb
-         9n+g==
-X-Gm-Message-State: AOAM530FCdIFJBZANIwZs1wqg57yUTowHGVbKAyY4pjbqFLYagc74d9o
-        EQvGyHatV7W+nrFvdeEEmN0=
-X-Google-Smtp-Source: ABdhPJzfd8aU7PxeJTRxSoLO5DZQkOjQHVGDoK1JE/cVAtjHK+Y5r0t7NKDaj92geT9C2ktgFrgvjg==
-X-Received: by 2002:adf:fecc:: with SMTP id q12mr7302692wrs.374.1598295436385;
-        Mon, 24 Aug 2020 11:57:16 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id t14sm29090484wrg.38.2020.08.24.11.57.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 11:57:15 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 20:57:13 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=USWdSH85MLPCvRv3jIctUSCKGBhD/KP3Vil/oo0Sdlo=;
+        b=eJ7uDqi8gxfvIzUmgw1SltNtW3/Co75LWBFGYwWuJe85B8wFNTD/YpD3UebpXT8I3B
+         Lh0NUIkLz9uww1W4f1dPs3YFCvnNomO9Tx79OoZY8fW1q0OwwJi1voEGBddNbwViG7N2
+         Tj3To6srkrELdRbHmnh/Q5iM3c6uKrtqZi6+LyX/D9SziavlmnrxxWRQnxcBczz3n4wd
+         xKfdcK+vsyc7UTsOTNL6I3aTIP85a/dMwRoJl12ZkvNb0KrZNYS9pebfpEmfH3/1Nhqh
+         4pyoHOjVBo7ZGyYQNfCT/hZvqFQ6TSc5HmHjeaT4XR6VplIADOPNkAI0alVc3AMYBxA7
+         FMbg==
+X-Gm-Message-State: AOAM530Bouoxi0WkAsRwMIKmaEPyOM5UrZTSsN0imeSLAK6r+lS1H2BG
+        WD2b4aVGHX5aDBSaJEqtLC41VV+hnG2h2+P2br2MNccgYzE=
+X-Google-Smtp-Source: ABdhPJx5LoVa80DFxxsFAsqtTu9yB7rSnKi9LAMKmcVHEEEScaLV3pqtzL2kf2xsjzm64BZcniPy73W9Ucj/aU74FbA=
+X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr3262548ljb.452.1598295844638;
+ Mon, 24 Aug 2020 12:04:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200824160247.19032-1-krzk@kernel.org> <20200824160247.19032-3-krzk@kernel.org>
+ <CAOMZO5DquPR9BmQP0kZfTqNJmRabPe1Vtc801M9CVCPFCd1usQ@mail.gmail.com> <20200824185713.GA5343@kozik-lap>
+In-Reply-To: <20200824185713.GA5343@kozik-lap>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 24 Aug 2020 16:03:53 -0300
+Message-ID: <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] arm64: dts: imx8mm-var-som: Add Variscite
+ VAR-SOM-MX8MM System on Module
+To:     Krzysztof Kozlowski <krzk@kernel.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -60,39 +73,19 @@ Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/4] arm64: dts: imx8mm-var-som: Add Variscite
- VAR-SOM-MX8MM System on Module
-Message-ID: <20200824185713.GA5343@kozik-lap>
-References: <20200824160247.19032-1-krzk@kernel.org>
- <20200824160247.19032-3-krzk@kernel.org>
- <CAOMZO5DquPR9BmQP0kZfTqNJmRabPe1Vtc801M9CVCPFCd1usQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5DquPR9BmQP0kZfTqNJmRabPe1Vtc801M9CVCPFCd1usQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:33:50PM -0300, Fabio Estevam wrote:
-> Hi Krzysztof,
-> 
-> On Mon, Aug 24, 2020 at 1:03 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> 
-> > +&ecspi1 {
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_ecspi1>;
-> > +       cs-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>,
-> > +                  <&gpio1  0 GPIO_ACTIVE_HIGH>;
-> 
-> These should be active low as 'spi-cs-high' is not passed.
+On Mon, Aug 24, 2020 at 3:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-True, I'll fix it up, thanks.
+> True, I'll fix it up, thanks.
+>
+> Any comments for the Symphony DTS before v4?
 
-Any comments for the Symphony DTS before v4?
+It looks good.
 
-Best regards,
-Krzysztof
-
+One suggestion is to remove pinctrl_pcie0 for now and add it when PCI
+support is in place.
