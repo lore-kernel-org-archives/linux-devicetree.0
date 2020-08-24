@@ -3,96 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F33C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58CAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D949A2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880E720656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598308130;
-	bh=gcW+yfbhgX4NS9XnVJYQ9I7cW3LxR8VEV7fmGz4Hal4=;
+	s=default; t=1598308333;
+	bh=4Yr/wi3AkENLWFJAQSa32KjuiVmHIp5vs3AyvjLxqs0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DzoEr+F8gyWrnn5NtCTNlup73d4xgQ/iiI7yxrN3l3tJClxS5w3sTMymKPgXGvZt7
-	 m52dd0wtk6oEtdDUM/FdUkCoEp/52WUylUFZ8QPAHnjlYANyQfu6ByZz/srEkax1Cb
-	 X0cIUEtJ3SngAu9e0mol2gpdh+trDuCaB0C5Oj4g=
+	b=G4XESvKHGUiY209AfjZ+nreryDCTzkyPms+NL5a5bTsTd4JqiRgE8AoWduI9poMWj
+	 K3FBWZx2QEn/cRFEtNgXEMxBkjRmO5hj3811wucMRjggWQBank5O1nUJCiRR4SdvYw
+	 eaHcQVqtwb9i6NszZzW5kBTPTie9ix9U6PgryB1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgHXW2u (ORCPT
+        id S1726531AbgHXWcN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:28:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46109 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHXW2u (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:28:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id d18so1133583iop.13;
-        Mon, 24 Aug 2020 15:28:49 -0700 (PDT)
+        Mon, 24 Aug 2020 18:32:13 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46416 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXWcM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:32:12 -0400
+Received: by mail-io1-f66.google.com with SMTP id d18so1141250iop.13;
+        Mon, 24 Aug 2020 15:32:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=pPxV5Cdh+vs/BDetb3c1wYzRLunbynyApl0aftF7yTk=;
-        b=aBTvafkrvUtup4FPY5T21hSf1RjfDlUnqYTO5bIkAJpiKfvD8ybnwOs+1Gg+ytAgx9
-         kWJykqyFJ7RsJ7Y9Ld4hg9gK5PrPjVTEdIiUoxnqie1xW3m+8kDCHYmkmoTluoIeMwuY
-         H2pOGcnVn5LvDCDGxi3PhD2sNCYTSrJtKMDsv8J1YnVkrTB64xm1HOuFYv3Cigf970Z5
-         yCgkYrbWs1pEZh2luZYhoWclaZ2Bex4igZHeOOl8vLKsCf29BmDlcWLd0cn3GdKZEy7x
-         4mSGiYsVMOOGOXGAEZNL+hadlfGEgB52uwHqxB8gD6t20l2CHFKJrM+KA1434qE8UcDH
-         I6qw==
-X-Gm-Message-State: AOAM532rxOmzdtY6XwqIVLVvbNH+FQCJBc9I9VE0j1Z9WfjctGJcO/Sb
-        t0QdayeoMj0mkFa5BJzAnQ==
-X-Google-Smtp-Source: ABdhPJymXDmIiE0KeFE1pYhiN37UtMRKvGl8wKiFSycay7/S1rGGpnJMml5yA214piCa5OfrkmhSMQ==
-X-Received: by 2002:a6b:681a:: with SMTP id d26mr6640267ioc.70.1598308129193;
-        Mon, 24 Aug 2020 15:28:49 -0700 (PDT)
+        bh=7GOlv4yP4CAwOVfNjNFni4AU3fJZ+QQ+53L/TEB0AXc=;
+        b=XVT7Pj3kvgCp4W5RgKLAk/Nss1llE/TVIdJwAKWh36sXJ2WxsKmBPNqzgq0Z5mjnsp
+         L7daoaSM9uiM1S0H8xzzy3s+W9McwAuhNv5oInLMKwyl4FCcge1V94cq4DZt4AIEsQmi
+         kXg4q6Yxex0rz/7gVTVrufoM4wn+qvb3Eg+Caj8izdiuCnxl5f7u6zOvk63hsWkIrFU6
+         gq88hfYlPqE8y1u9NTCIw1Y+vOqq0jImnWxf2RZOVuBk5ha2bjIAc8qD6kOYGYzjDAjt
+         n9pcbzMDo92DNbyygfla7L6nFMchFojV19dZRKZK8EQlVmrORhZwaGHtG7HTANVtX1IU
+         n3Yg==
+X-Gm-Message-State: AOAM5321RS8MlVyayzsJ9sO/ihf0vpqtA9Xl65OdMaeBLottbuvPeRJP
+        s/lT+Fp06ypxj++TCWXZbw==
+X-Google-Smtp-Source: ABdhPJxzhnRw08Jdre0AL6bo7DaBmWE+/fpQBJIESCpHF83NqG/EcpDmuVtkbdbNlf83c5aoBf1LWQ==
+X-Received: by 2002:a6b:6515:: with SMTP id z21mr6629569iob.71.1598308331437;
+        Mon, 24 Aug 2020 15:32:11 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id n5sm8009267ilj.43.2020.08.24.15.28.46
+        by smtp.gmail.com with ESMTPSA id a9sm7452434iol.9.2020.08.24.15.32.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:28:48 -0700 (PDT)
-Received: (nullmailer pid 3434133 invoked by uid 1000);
-        Mon, 24 Aug 2020 22:28:45 -0000
-Date:   Mon, 24 Aug 2020 16:28:45 -0600
+        Mon, 24 Aug 2020 15:32:10 -0700 (PDT)
+Received: (nullmailer pid 3439585 invoked by uid 1000);
+        Mon, 24 Aug 2020 22:32:07 -0000
+Date:   Mon, 24 Aug 2020 16:32:07 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-Message-ID: <20200824222845.GA3434080@bogus>
-References: <20200810033806.15503-1-chris.ruehl@gtsys.com.hk>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Hermes Wu <Hermes.Wu@ite.com.tw>,
+        Kenneth Hung <Kenneth.Hung@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] ite-it6505 change trigger conditions
+Message-ID: <20200824223126.GA3434984@bogus>
+References: <1597054312-25538-1-git-send-email-allen.chen@ite.com.tw>
+ <1597054312-25538-2-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200810033806.15503-1-chris.ruehl@gtsys.com.hk>
+In-Reply-To: <1597054312-25538-2-git-send-email-allen.chen@ite.com.tw>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 10 Aug 2020 11:37:52 +0800, Chris Ruehl wrote:
-> Conversion of the ltc2632 to yaml format and name the file to
-> 'lltc,ltc2632.yaml'.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
-> v6:
-> Remove tab and drop unused label
-> Related patches already in linux-next.
-> [PATCH v5 1/3] iio: documentation ltc2632_chip_info add num_channels
-> linux-next commit: 6f1c9e0da9aae51177457731357ae8a2c8af27cd
-> PATCH v5 2/3] iio: DAC extension for ltc2634-12/10/8
-> linux-next commit: aefa5bc87c808dd08db2fc79ebdbf19ed4af7be2
-> 
->  .../bindings/iio/dac/lltc,ltc2632.yaml        | 77 +++++++++++++++++++
->  .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
->  2 files changed, 77 insertions(+), 49 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> 
+On Mon, Aug 10, 2020 at 06:11:15PM +0800, allen wrote:
+> it6505 changes trigger conditions.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Patches must have a Signed-off-by with a full name.
+
+
+> ---
+>  Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> index 2c50016..bf0e889 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
+> @@ -73,7 +73,7 @@ examples:
+>  
+>          dp-bridge@5c {
+>              compatible = "ite,it6505";
+> -            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
+> +            interrupts = <152 IRQ_TYPE_LEVEL_LOW 152 0>;
+
+How does this have 2 interrupts which are the same irq number, but 
+different flags?
+
+>              reg = <0x5c>;
+>              pinctrl-names = "default";
+>              pinctrl-0 = <&it6505_pins>;
+> -- 
+> 1.9.1
+> 
