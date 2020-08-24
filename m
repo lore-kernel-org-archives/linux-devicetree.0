@@ -2,98 +2,172 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A912EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AB5C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7182078D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598296165;
-	bh=WM1mj9GPK7MyD6GlnY/K1UotRAuqdew7qiTlVR6AOSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hh4zBnSzelWdrJljw3z5WMKRBI0l+UUEaOMHynbWx+ebbapbWA2x9TDz+70Y5vhg2
-	 PwlYazjz1PCT5fKzpeDLLfCVkufOx8y4y+GpRezbMUkEloO/V9JGnduqFH4Pdm5mLJ
-	 jixnoUHJ0dqNbFAwLmNs4CavIpgESva1Ma0oNGrs=
+	by mail.kernel.org (Postfix) with ESMTP id 8640F2087D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:16:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZYFCBXY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHXTJZ (ORCPT
+        id S1726993AbgHXTQM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:09:25 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53280 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgHXTJW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 15:09:22 -0400
-Received: by mail-wm1-f68.google.com with SMTP id u18so9781804wmc.3;
-        Mon, 24 Aug 2020 12:09:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lkYuZ+AU/xmAHBPjtK9v9v+eSex3YmMEccb9nQ0uFOg=;
-        b=YDbdWh6Sf+rnXJK525OJXzbExo+KGCvF7M9T2/tnRY0ZGHjg6y0KgtDqvGHWPRLdS1
-         YxP5bD0RVtWohGGfP0KQQxmVOl9vspQbZE3et/y5aod64ap6UpkwBeuVdyn5s/zo6g+p
-         yIvzw0RkG3cOU1u29tc6i/AI0v++d02mdee9ThYC6k7j+GdvA58sD95zEBNO6MGKuh9Q
-         Hmni0aauuziq03Cpt1M6qP68GjPQbd4URfARf/H5g5pItJJNeGoKgvGOp0dDbAe5zcKj
-         IN1H1MLz8k2KNuljUi6CoKvNWEJMBl8QwLtPp8qzq8ObhMmSdSDbDLbdsgayNPetGIfG
-         VyEg==
-X-Gm-Message-State: AOAM5319HyF/l7dLtPmAhB7xqUYrzNzh4pICffzDvpzEYANqw8voa4s4
-        r7bU0FyXBYJaLjv8wooULFI=
-X-Google-Smtp-Source: ABdhPJyqfbE+cdOfZ4IGBp4XY991J2Mg2zGm1lFpUETzbAozdFqX/22fzbavZUIVBbh0wo3qFzcasA==
-X-Received: by 2002:a1c:4b0e:: with SMTP id y14mr672535wma.60.1598296160696;
-        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id o66sm954229wmb.27.2020.08.24.12.09.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 21:09:17 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 3/4] arm64: dts: imx8mm-var-som: Add Variscite
- VAR-SOM-MX8MM System on Module
-Message-ID: <20200824190917.GA8631@kozik-lap>
-References: <20200824160247.19032-1-krzk@kernel.org>
- <20200824160247.19032-3-krzk@kernel.org>
- <CAOMZO5DquPR9BmQP0kZfTqNJmRabPe1Vtc801M9CVCPFCd1usQ@mail.gmail.com>
- <20200824185713.GA5343@kozik-lap>
- <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
+        Mon, 24 Aug 2020 15:16:12 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12920 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgHXTQJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 15:16:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4411810003>; Mon, 24 Aug 2020 12:14:09 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Aug 2020 12:16:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 12:16:08 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
+ 2020 19:16:05 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Aug 2020 19:16:05 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.186]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4411f40005>; Mon, 24 Aug 2020 12:16:05 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <robh+dt@kernel.org>
+CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: [PATCH v4 7/7] sdhci: tegra: Add missing TMCLK for data timeout
+Date:   Mon, 24 Aug 2020 12:15:57 -0700
+Message-ID: <1598296557-32020-8-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598296557-32020-1-git-send-email-skomatineni@nvidia.com>
+References: <1598296557-32020-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598296449; bh=s+HUfvol0LR+VRyFYqywkKBemDoDIgHNPZImzcVPsUI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=ZYFCBXY6YUm/QZB36f+gHagv3LAEdokb1slRlS1n2rXhi6rDPXmO/YHT7dTf780hK
+         QJ1VuZx0GEpHioCGlaZl/6ocR7IVsO0F06bGFBm4OkFLwk7RVrSKK8d7Q2nivZPZSi
+         GCNVUutDBAuU9gjwwdx6652Ymgwo9Hr+6YBzZDXEAm2C1Kw0NgQPIbso0FpBLY34+F
+         lCWos06Tdutv5YAOl3enINXhi0J2KpXmOI61lCCyaJKD36KY1EzSpZQ3gQMr/pbLFd
+         utqQb7hMIHx27W4N9R1YonHnBDvksGuuqv1EEX/M5r64YxTo1CHv5IiajfRNVCkWH7
+         wDR4YP7RMVdoA==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 04:03:53PM -0300, Fabio Estevam wrote:
-> On Mon, Aug 24, 2020 at 3:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> 
-> > True, I'll fix it up, thanks.
-> >
-> > Any comments for the Symphony DTS before v4?
-> 
-> It looks good.
-> 
-> One suggestion is to remove pinctrl_pcie0 for now and add it when PCI
-> support is in place.
+commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
 
-Indeed, a left over from a removed PCIe node.
+Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
+SDMMC hawdware for data timeout to achive better timeout than using
+SDCLK and using TMCLK is recommended.
 
-Thanks for review.
+USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
+SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
+SDCLK for data timeout.
 
-Best regards,
-Krzysztof
+Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
+for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
+is not recommended.
+
+So, this patch fixes it.
+
+Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+Cc: stable <stable@vger.kernel.org> # 5.4
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 31ed321..c0b9405 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -140,6 +140,7 @@ struct sdhci_tegra_autocal_offsets {
+ struct sdhci_tegra {
+ 	const struct sdhci_tegra_soc_data *soc_data;
+ 	struct gpio_desc *power_gpio;
++	struct clk *tmclk;
+ 	bool ddr_signaling;
+ 	bool pad_calib_required;
+ 	bool pad_control_available;
+@@ -1611,6 +1612,44 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+ 		goto err_power_req;
+ 	}
+ 
++	/*
++	 * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
++	 * timeout clock and SW can choose TMCLK or SDCLK for hardware
++	 * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
++	 * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
++	 *
++	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
++	 * 12Mhz TMCLK which is advertised in host capability register.
++	 * With TMCLK of 12Mhz provides maximum data timeout period that can
++	 * be achieved is 11s better than using SDCLK for data timeout.
++	 *
++	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
++	 * supporting SDR104 mode and when not using SDCLK for data timeout.
++	 */
++
++	if ((soc_data->nvquirks & NVQUIRK_ENABLE_SDR104) &&
++	    !(soc_data->pdata->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
++		clk = devm_clk_get(&pdev->dev, "tmclk");
++		if (IS_ERR(clk)) {
++			rc = PTR_ERR(clk);
++			if (rc == -EPROBE_DEFER)
++				goto err_power_req;
++
++			dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
++			clk = NULL;
++		}
++
++		clk_set_rate(clk, 12000000);
++		rc = clk_prepare_enable(clk);
++		if (rc) {
++			dev_err(&pdev->dev,
++				"failed to enable tmclk: %d\n", rc);
++			goto err_power_req;
++		}
++
++		tegra_host->tmclk = clk;
++	}
++
+ 	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
+ 	if (IS_ERR(clk)) {
+ 		rc = PTR_ERR(clk);
+@@ -1654,6 +1693,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+ err_rst_get:
+ 	clk_disable_unprepare(pltfm_host->clk);
+ err_clk_get:
++	clk_disable_unprepare(tegra_host->tmclk);
+ err_power_req:
+ err_parse_dt:
+ 	sdhci_pltfm_free(pdev);
+@@ -1671,6 +1711,7 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
+ 	reset_control_assert(tegra_host->rst);
+ 	usleep_range(2000, 4000);
+ 	clk_disable_unprepare(pltfm_host->clk);
++	clk_disable_unprepare(tegra_host->tmclk);
+ 
+ 	sdhci_pltfm_free(pdev);
+ 
+-- 
+2.7.4
 
