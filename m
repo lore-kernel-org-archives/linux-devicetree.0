@@ -2,107 +2,89 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9466C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2728C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3A9D20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:23:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="divqktAM"
+	by mail.kernel.org (Postfix) with ESMTP id C7D8F20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598264807;
+	bh=izhT6w/6gFnCOWt3uhqQ+XhSRF/eMxkDJOzb0HsrjCo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o7OvfwIaISVVD55E+0bDmg2WPXJmU8MsJJwq1xTsQMg2valToAk1nFStm4OdJSVID
+	 kHO3lyl4x6wMmdvO4avGoSaDHTrkjs7tUs0ZhrxauKT+yZ2dy3bPmWmGGxB2hykPQN
+	 153P4BuTAzlRAS9IVBlva8HK3neojvZBMjVD6GT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgHXKXe (ORCPT
+        id S1726051AbgHXK0q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHXKXc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:23:32 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED14EC061573;
-        Mon, 24 Aug 2020 03:23:31 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id t4so6777286iln.1;
-        Mon, 24 Aug 2020 03:23:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eppDuuHLOI5VOLJzJCYhod9oPaidx9gSqKiUktHmrVk=;
-        b=divqktAMZuFes1GiD35GYGhb7swEwaEccNiOc16b+dfhMMtZk7qRb38um1oHlkUk6k
-         hEnYJUqQAomg3alD+ahSw12f7Mt8GwJFsBkbdRi0cUO4OqWe69Sl4VroXvy326Dez5d4
-         I+gtIuakWu5UqP5K/czMywaWPccRkG3or7Y08cIDE3+3gNnVEC9bnPYA2n5hd3A1APg8
-         X5S97/uPTQwwllp5uQtkKwPyyHGnhRCQd3VUCDaGEPuRyngxmAwwVbsmEWhnjRBkVCT6
-         8qoitN/CE3xF45hXm3Bi/hCiK9XZTFaCqQfTxGkuCtFbt1voD1bkIwARiqQAA72Osw3D
-         bhCg==
+        Mon, 24 Aug 2020 06:26:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36714 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725968AbgHXK0q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:26:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x7so2046976wro.3;
+        Mon, 24 Aug 2020 03:26:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eppDuuHLOI5VOLJzJCYhod9oPaidx9gSqKiUktHmrVk=;
-        b=UQrF/v08KlIs95gN0SsqA8qx1QPbVB+mctjg4Ev4xWBG/gU0cx+mgRzYaCSvhxgqTX
-         kwIhziA3yBKzAOd5hbnTKG/PmCs/xdsnNTW2eb4k0isQ7SEu/96q6r4C7RWyheuOPL3g
-         XaQQdjpUj3KDhK4F8qZD4BiQZeOmRB+DPMhmC4jGwfAErQplyLs2g2c6DwHs+YMwSjhq
-         c/hwo8IxAbuJd5MjKUVU69hGQgTNzF7frAeYJk+TPndNE9UgB+O/cffeSs9672CFw1Io
-         Hxbr5xpJ1q8jIlBB+faLJLi0TCA9bwY1iQPS87cVx9BxHd8+sjShk4WIi1jBLkQiCYLl
-         OWww==
-X-Gm-Message-State: AOAM530993Hl/IahVbvcLZvNfZrlwIpys8ekfX7LWAhmkeOEzjSc8wsD
-        sTuFNZdzPQqpk8peqeWJsrWpE+LcJJLcwbMMAQ8=
-X-Google-Smtp-Source: ABdhPJzL/ijd0HW2Tt67za2CHZb0C24HeAy7TSZp5sLVUDfU1OLJSD+689YumyA/furfpuHuExsiBEngYTystKWMXFM=
-X-Received: by 2002:a92:5f06:: with SMTP id t6mr4125876ilb.212.1598264611324;
- Mon, 24 Aug 2020 03:23:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8R34Al7fvJPaWN8S2QHL74CN5asy6YEq8ScLgm8T2TA=;
+        b=jX61YJ4ZQr9+mox1r4Bkyt7jn5bAHaXBhn9Px/x5/ATX5Ma2Xbx/Q4+i6gzWlYFUwx
+         tBAvFTfLNbedCI4UgXDOmuTPbmlBQELMiAzRGepZXWvg4ACU4b28XY1IuEwi/gGQ1J2P
+         dG0fuAGWr7cnXIM99pE4ETxOWDxSVdSbMDxlq9/ZIISIRibbjDmJb8mVV8IV687l18YB
+         wNVzhNzktXUv5x8XO/r+wHgD2MFVF0TJStLGQkaFvEhGqiRlZkv+7lObQ3qWrp+kZ6uh
+         /hD7Q76uQky7Ks9cozp9c1ac1dEcXA0Z9hrxUNrR04ZMWGED6kIS9uUi2O0zQwZJ+ePb
+         Pkug==
+X-Gm-Message-State: AOAM530W5yUo8pbrnA0QWXbk7b7byycnGLIIE4GOuDmGzTimUwK0xw8r
+        9YYGYcOOibeBf0qmvoNldlU=
+X-Google-Smtp-Source: ABdhPJz83ri0NMa5qVnMOEgtU++aRNMCS0JubGDKvIbjf3992TdsdYRLXjTgcbOWYWJrWMcvf+QH4g==
+X-Received: by 2002:adf:dd01:: with SMTP id a1mr5542354wrm.301.1598264803981;
+        Mon, 24 Aug 2020 03:26:43 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id x8sm19586652wrq.42.2020.08.24.03.26.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 03:26:43 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 12:26:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Nava kishore Manne <nava.manne@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: zynqmp: Remove undocumented u-boot properties
+Message-ID: <20200824102641.GA25860@kozik-lap>
+References: <8ba339425b9c9f319bdedce7741367055a30713c.1598257720.git.michal.simek@xilinx.com>
 MIME-Version: 1.0
-References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com> <20200820114524.GC5854@sirena.org.uk>
-In-Reply-To: <20200820114524.GC5854@sirena.org.uk>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Mon, 24 Aug 2020 18:23:19 +0800
-Message-ID: <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360 regulator
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Gene Chen <gene_chen@richtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8ba339425b9c9f319bdedce7741367055a30713c.1598257720.git.michal.simek@xilinx.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=97=
-=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Thu, Aug 20, 2020 at 03:53:41PM +0800, Gene Chen wrote:
->
-> > +     mrd->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> > +     if (!mrd->regmap) {
-> > +             dev_err(&pdev->dev, "Failed to get parent regmap\n");
-> > +             return -ENODEV;
-> > +     }
->
-> > +static const struct of_device_id __maybe_unused mt6360_regulator_of_id=
-[] =3D {
-> > +     { .compatible =3D "mediatek,mt6360-regulator", },
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mt6360_regulator_of_id);
->
-> This device only exists in the context of a single parent device, there
-> should be no need for a compatible string here - this is just a detail
-> of how Linux does things.  The MFD should just instntiate the platform
-> device.
+On Mon, Aug 24, 2020 at 10:28:45AM +0200, Michal Simek wrote:
+> u-boot, DT properties are not documented anywhere in Linux DT binding
+> that's why remove them.
+> 
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+>  arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi | 5 -----
+>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi         | 1 -
+>  2 files changed, 6 deletions(-)
 
-Trying to autoload module without of_id_table will cause run-time error:
-ueventd: LoadWithAliases was unable to load
-of:NregulatorT(null)Cmediatek,mt6360-regulator
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-https://lore.kernel.org/patchwork/patch/726691/
-According to this patch, autoload can't load module which doesn't
-include add id_table or of_id_table in module.alias
-So I need keep of_if_table for auto load success
+Best regards,
+Krzysztof
