@@ -2,121 +2,190 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD84C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 05:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222B9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 06:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 752F12074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 05:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F312D2067C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 06:10:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TITEt5oe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kVJ6XsCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbgHXFqK (ORCPT
+        id S1725998AbgHXGKw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 01:46:10 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:33927 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgHXFqK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 01:46:10 -0400
-Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kA5Iw-0004fN-D3; Mon, 24 Aug 2020 07:46:02 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kA5Iv-0001Wd-F9; Mon, 24 Aug 2020 07:46:01 +0200
-Date:   Mon, 24 Aug 2020 07:46:01 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>
-Subject: Re: [PATCH 07/22] dt-bindings: serial: fsl-imx-uart: imx-pwm: Add
- i.MX 8M compatibles
-Message-ID: <20200824054601.GF13023@pengutronix.de>
-References: <20200823161550.3981-1-krzk@kernel.org>
- <20200823161550.3981-7-krzk@kernel.org>
+        Mon, 24 Aug 2020 02:10:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40522 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgHXGKw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 02:10:52 -0400
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598249449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ir6fINy3N3sxAruK420IofSpHlFqJK8LbAjfvaW+DJE=;
+        b=TITEt5oeLfJhtYPd1SL6CaEABWKyHHkzqz02ODqV2+dV/QYkoX4miaa+A2wD5YlMQxwDds
+        DnMRWh+wmk09Nz7vhKhrotQhRqvVCYP1GAeYuO9gJzFVVsvZAAozYVAj5fNgy7G0GWwfAl
+        9ZRq1sZBJWEzW6Bzex+2iXdpToOOTwnfy/Onk69CoC8uirbxjvlw9F7F4qRulipK/Sgoyh
+        sfcYembALM1yBlq+X1uE1fH6Iln57O2HEacapY5npfw42BWZtkV1RBJmMTv654GpVwX4cT
+        OpXK5Uko0ZuEatXATiMBmHMmKYnx4BmFWPO3/ZUYjBYHYI94eslJhXYVLLQdLw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598249449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ir6fINy3N3sxAruK420IofSpHlFqJK8LbAjfvaW+DJE=;
+        b=kVJ6XsCBeZexi4YM0vCM7OM35ynpbRCUSnkZRVqk+jGDsnbRdNuBeHy7kU9N5ldZUahvGq
+        wqf0vTZSNG4JDpDg==
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
+In-Reply-To: <20200822143922.frjtog4mcyaegtyg@skbuf>
+References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200822143922.frjtog4mcyaegtyg@skbuf>
+Date:   Mon, 24 Aug 2020 08:10:36 +0200
+Message-ID: <87imd8zi8z.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200823161550.3981-7-krzk@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:44:43 up 186 days, 13:15, 151 users,  load average: 0.94, 0.53,
- 0.26
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-The subject contains a "imx-pwm", presumably from the last patch.
+On Sat Aug 22 2020, Vladimir Oltean wrote:
+> Hi Kurt,
+>
+> On Thu, Aug 20, 2020 at 10:11:15AM +0200, Kurt Kanzenbach wrote:
+>> The switch has support for the 802.1Qbv Time Aware Shaper (TAS). Traffic
+>> schedules may be configured individually on each front port. Each port h=
+as eight
+>> egress queues. The traffic is mapped to a traffic class respectively via=
+ the PCP
+>> field of a VLAN tagged frame.
+>>=20
+>> The TAPRIO Qdisc already implements that. Therefore, this interface can =
+simply
+>> be reused. Add .port_setup_tc() accordingly.
+>>=20
+>> The activation of a schedule on a port is split into two parts:
+>>=20
+>>  * Programming the necessary gate control list (GCL)
+>>  * Setup hrtimer for starting the schedule
+>>=20
+>> The hardware supports starting a schedule up to eight seconds in the fut=
+ure. The
+>> TAPRIO interface provides an absolute base time. Therefore, hrtimers are
+>> leveraged.
+>>=20
+>> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+>> ---
+>>  drivers/net/dsa/hirschmann/hellcreek.c | 294 +++++++++++++++++++++++++
+>>  drivers/net/dsa/hirschmann/hellcreek.h |  21 ++
+>>  2 files changed, 315 insertions(+)
+>>=20
+>> diff --git a/drivers/net/dsa/hirschmann/hellcreek.c b/drivers/net/dsa/hi=
+rschmann/hellcreek.c
+>> index 745ca60342b4..e5b54f42c635 100644
+>> --- a/drivers/net/dsa/hirschmann/hellcreek.c
+>> +++ b/drivers/net/dsa/hirschmann/hellcreek.c
+>> @@ -22,7 +22,9 @@
+>>  #include <linux/spinlock.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/ktime.h>
+>> +#include <linux/time.h>
+>>  #include <net/dsa.h>
+>> +#include <net/pkt_sched.h>
+>>=20=20
+>>  #include "hellcreek.h"
+>>  #include "hellcreek_ptp.h"
+>> @@ -153,6 +155,15 @@ static void hellcreek_select_vlan(struct hellcreek =
+*hellcreek, int vid,
+>>  	hellcreek_write(hellcreek, val, HR_VIDCFG);
+>>  }
+>>=20=20
+>> +static void hellcreek_select_tgd(struct hellcreek *hellcreek, int port)
+>> +{
+>> +	u16 val =3D 0;
+>> +
+>> +	val |=3D port << TR_TGDSEL_TDGSEL_SHIFT;
+>> +
+>> +	hellcreek_write(hellcreek, val, TR_TGDSEL);
+>> +}
+>> +
+>>  static int hellcreek_wait_until_ready(struct hellcreek *hellcreek)
+>>  {
+>>  	u16 val;
+>> @@ -958,6 +969,24 @@ static void __hellcreek_setup_tc_identity_mapping(s=
+truct hellcreek *hellcreek)
+>>  	}
+>>  }
+>>=20=20
+>> +static void hellcreek_setup_tc_mapping(struct hellcreek *hellcreek,
+>> +				       struct net_device *netdev)
+>> +{
+>> +	int i, j;
+>> +
+>> +	/* Setup mapping between traffic classes and port queues. */
+>> +	for (i =3D 0; i < netdev_get_num_tc(netdev); ++i) {
+>> +		for (j =3D 0; j < netdev->tc_to_txq[i].count; ++j) {
+>> +			const int queue =3D j + netdev->tc_to_txq[i].offset;
+>> +
+>> +			hellcreek_select_prio(hellcreek, i);
+>> +			hellcreek_write(hellcreek,
+>> +					queue << HR_PRTCCFG_PCP_TC_MAP_SHIFT,
+>> +					HR_PRTCCFG);
+>> +		}
+>> +	}
+>> +}
+>
+> What other driver have you seen that does this?
+>
 
-Sascha
+Probably none.
 
-On Sun, Aug 23, 2020 at 06:15:35PM +0200, Krzysztof Kozlowski wrote:
-> DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-> to fix dtbs_check warnings like:
-> 
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible:0: 'fsl,imx8mm-pwm' is not one of ['fsl,imx1-pwm', 'fsl,imx27-pwm']
->     From schema: Documentation/devicetree/bindings/pwm/imx-pwm.yaml
-> 
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible: ['fsl,imx8mm-pwm', 'fsl,imx27-pwm'] is too long
-> 
->   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: pwm@30660000:
->     compatible: Additional items are not allowed ('fsl,imx27-pwm' was unexpected)
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-> index cba3f83ccd5f..3d896173b3b0 100644
-> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.yaml
-> @@ -36,6 +36,10 @@ properties:
->              - fsl,imx6sx-uart
->              - fsl,imx6ul-uart
->              - fsl,imx7d-uart
-> +            - fsl,imx8mm-uart
-> +            - fsl,imx8mn-uart
-> +            - fsl,imx8mp-uart
-> +            - fsl,imx8mq-uart
->            - const: fsl,imx6q-uart
->  
->    reg:
-> -- 
-> 2.17.1
-> 
-> 
+With TAPRIO traffic classes and the mapping to queues can be
+configured. The switch can also map traffic classes. That sounded like a
+good match to me.
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9DWdwACgkQeSpbgcuY
+8KaY6hAAjzRy8J2bN+84vK3lOAWesijRbxOy8c34j78vsszIYb3i4U9kxBBZkNE3
+cDDEF5MDfm8CTBvQkbJAX1NG1fSsR8vez64AGO4OwN+F4oPttAlwEPuGJrN2kKGS
+j/dHTlt0jCggnjZiNjyXqpxqEyMxGOhAO0hJdiLc/c9acrkuaYGQjvsJ8wU3/m3T
+6NfAVClZNsbHr9JBVzc2G7DBCZtgoAjYmjmr5KTh2Bj15UFFDfifnPlrqGBAB0Fw
+orTpvRtLKinvnXCtQW7OR217gyR7o9p5bR9vpQkltHi6ziscZCUVCiv5ME0dEpwK
+c/VRnsg6oc3JbWTZnjPyFn5bzuET9rEZpStnB1TquLcwXQSVj5A0o4N7GD8nSfcZ
+dOzZwx1NCwQjEbix7tZPdtk2v4K52+ctWusAI2AxbcNVcxW05st8mTcQFKiF+2Y/
+fCzHgYKZJ+9CFKcxzBctEc/O3Se/BcjY8sz5Jdo42NA7tLQQ1J4u/NlnhZajpmnK
+b+24WF/pUKmB98xRG6wDuE+4OSMzyGs4hx91xeSgrwDQBwhD1Gw2c5o2YupZzHUj
+tbfaxN/VYyenBtfJBp2vEqTYVa3pYPtX0c+C99Vf3MqVtoPOd22K4nTFteJr3BS6
+5+N0v0nF49kPLAcmJr/GDE4PvcgqgbykB9Ga8YoIqIdq7iUn0tM=
+=yOid
+-----END PGP SIGNATURE-----
+--=-=-=--
