@@ -2,428 +2,480 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2A1C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 14:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C0EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A2A20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 14:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E55C2177B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 15:10:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="jJ4EF+jn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgHXOlS (ORCPT
+        id S1727030AbgHXPKB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHXOlR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 10:41:17 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D29C061573;
-        Mon, 24 Aug 2020 07:41:17 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 0FA85298E89
-Received: by earth.universe (Postfix, from userid 1000)
-        id F15073C0C82; Mon, 24 Aug 2020 16:41:13 +0200 (CEST)
-Date:   Mon, 24 Aug 2020 16:41:13 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 4/6] power: reset: Add poweroff driver for ATC260x
- PMICs
-Message-ID: <20200824144113.zsze5ezrwih7d37i@earth.universe>
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
- <1c83a46ac8c39edceee1d98da2cd9e7c6eae35e8.1598043782.git.cristian.ciocaltea@gmail.com>
+        Mon, 24 Aug 2020 11:10:01 -0400
+Received: from mail-eopbgr1410133.outbound.protection.outlook.com ([40.107.141.133]:58342
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727123AbgHXPJ5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:09:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dDq5oENWFqu1PNDPILNW9ksUsQchTeq4KVelZlA4VorK/Y7Bec8QMvqF/McAiJtbzYg5Ow+TBSzK3XS97tG50URth0IjJhuhwlG0lMf7qUPKopjVIsgLFLMEinvdCRvGedI39cwon/tYHqg+FL8kfmF4HoB3muUdz5WHhl5XMquDSaCgO0vy7mmnXIBNLK7LHE6WVokIHsQ6Errk77OBSLGJ4ScxR+tvJHvWGWcE8i8chq0zKLpm0K7Ib77BGEMxiiQVKe+MnKAJjbIlDCglgkPqDh1+GhMnzvXw5OPp03fHF6FFEt6oqAZs4r37Vp/GI2WvbhjPdukv8q82xPBZNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wto57/icWehXuCEwPMHlJTGZ71ilmGYtmVBIss4sN8M=;
+ b=hKufXsDoxYJtMGs805WOyNQBkyb9INuAsJetMsGQhGcLwMZPLEkbenTOD8H3t+hWrWpK6eTzs1QvicYUw4s8n7j+DpNjj4joHoIuDMqNgj+y8m0Gu4Wgl9YoJ/3OQV2VPhLATs+eNYx19qYlI5rnmoBdtyhjK7eSYMdozxsusNw5+25vtuyb/JwLWAgJONxX91KR0U69zMSAuk/SrXUf9paFqbTe0FKY5Mc3N/bBlDbwNczqc0z+/cAC39Y4p6oa3el1g7HiN9dSUz9QlXV6c/dXL8ELgZBqnkWAakBf4AHGHVKh6McjSgJWLTvnVI2y6grAyzGXEPyMSYgwZJjiMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wto57/icWehXuCEwPMHlJTGZ71ilmGYtmVBIss4sN8M=;
+ b=jJ4EF+jnmBXhkxP60l+rQwMd8RUek1GZUXmObzFFabBxNzvS8pLVUgMJtBE4j/umynVwFr+K0/s3Vwu1W+NF9BmlHjbTk2W/ub2qB7dj8ES4FDtJQnsT+16Wrx9PQffSdRWbIaKadyMlNBU/Zbk1+Wh5DwZxTjYuLz59dmDoKcI=
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (2603:1096:404:73::17)
+ by TYAPR01MB4384.jpnprd01.prod.outlook.com (2603:1096:404:120::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Mon, 24 Aug
+ 2020 15:09:47 +0000
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::e1a0:8e97:f2b7:c9d9]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::e1a0:8e97:f2b7:c9d9%2]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
+ 15:09:47 +0000
+From:   Gareth Williams <gareth.williams.jx@renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH] dt-bindings: pinctrl: rzn1: Convert to json-schema
+Thread-Topic: [PATCH] dt-bindings: pinctrl: rzn1: Convert to json-schema
+Thread-Index: AQHWd60potnxulZi0USUP8M4OLJxHalCfc1w
+Date:   Mon, 24 Aug 2020 15:09:47 +0000
+Message-ID: <TY2PR01MB2924258A9762FD083630B628DF560@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+References: <20200821112059.5133-1-geert+renesas@glider.be>
+In-Reply-To: <20200821112059.5133-1-geert+renesas@glider.be>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: glider.be; dkim=none (message not signed)
+ header.d=none;glider.be; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 639cbc1b-c9b5-4781-3662-08d8483fbdad
+x-ms-traffictypediagnostic: TYAPR01MB4384:
+x-microsoft-antispam-prvs: <TYAPR01MB4384B413F0039E75FCAB7450DF560@TYAPR01MB4384.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eUlHHkSRjULCBW+2ut3WxV2NLUoIVrwQZ9FvpL7izDU0qZ3vs6D8Qt1apj2oMWK+bSY94IipUpCOokKoUn0Vt0FBjn85Kl/yHeXI+TmK/qBvwJzJqPSCQUN34YcC576C/pKPVnaKGplVsECRlddVxxB7uYmayRUefIHgljOcXED6VbjGvUFYCzc+1CdbGlvAK5gN5uC1dnNdOAUWA+wwHlU/ras97k4hxKfwiO3SueTUIKOpURJlKr5sU6jYnqLkOwsgdasYAe6whIGnJfnUFD+KiX3rAonvyFjnCoS6XD+wanErdqZ8IqcJk9FvvmtnWY7DDAXJh9a8K2tbyBE8WH2wY+89HVDEADVvcKUZsmgebMXgvKaMmqdrLIEsOnfJNNMDbdlVITl/GXnhyJGi9w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(366004)(346002)(136003)(39860400002)(76116006)(2906002)(9686003)(66946007)(71200400001)(52536014)(316002)(86362001)(478600001)(83380400001)(33656002)(966005)(54906003)(110136005)(66446008)(64756008)(66556008)(66476007)(55016002)(5660300002)(8676002)(26005)(7696005)(53546011)(186003)(8936002)(6506007)(4326008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 8POr9wPz+1rBJf39k+UhCVoifqCJvCER8Wc5xkeDscrwgkgWOumEbnoFdfGpk62aMfqMlOP5fkyCFf+UKz01q0HRGEP1xuvoz15mZGTfgIf4vnYgSUxhWX+P2B9BLXNkJaxYil5t+YofCkGqwroO1BmpGJ6tP+JkAtHyIYxACDqEqblLm6sSh/tTfui1jUkKt8QF6raI33oUf5iS6fEl3pq6ocZUppcqz4y7bO5y8phpSVWAZjlXwejmDnPd1fzafrnKieXPj+w4bYiE2+3NdlF6Elz7PLfp7WaYNSu+YFGwqp1ZArI8B+wmgFzbZcwsl+hg7nBP2K0s/F9MprCtF8m7KeKXeCUVgLEkJAsOZ46V1IjbYk1h24vLMd27U7dW/HqPwS+yLhBhMQIRrrsW1SwzOZ9oa2HMuHmfpwasA4Pcuzhhv1hpwlQU/kxjUUZeFEMeMhrcZUxc/2wVYh79pglrPi8o/KVe7JWWF9o0zswkgeox9NhnE6px29eyRejTFz0zCNANwC96Zr1D54uEl19ssIWDwQOckbgut72kx1HCOLSrRpLffFvGdubuxYOIWRHhtdoY42wQtsE2NwmNMKHigd7gpWC/7Rac40GCuYEzM8oX9N1Ni1Uu7qC/MmOk6qmBH+2/qa0qvjGS4YYYbw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aprizzmkxe5m5e75"
-Content-Disposition: inline
-In-Reply-To: <1c83a46ac8c39edceee1d98da2cd9e7c6eae35e8.1598043782.git.cristian.ciocaltea@gmail.com>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB2924.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 639cbc1b-c9b5-4781-3662-08d8483fbdad
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2020 15:09:47.3791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /B8ocpXTZn1qSZbrX/JyziY46KMa81sfkUjqGFRH+nMDwWUV3XubaFlOOTZkpEYv9YMWX0E69u6ep6ozJ46WJIc+99+Vb5/K6F1FRGH6FwE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4384
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Geert,
 
---aprizzmkxe5m5e75
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the patch.=20
 
-Hi,
 
-On Sat, Aug 22, 2020 at 01:19:50AM +0300, Cristian Ciocaltea wrote:
-> This driver provides poweroff and reboot support for a system through
-> the ATC2603C and ATC2609A chip variants of the Actions Semi ATC260x
-> family of PMICs.
+On Fri, Aug 21, 2020 at 12:12 PM Geert Uytterhoeven <geert+renesas@glider.b=
+e> wrote:
 >=20
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> Convert the Renesas RZ/N1 Pin controller Device Tree binding
+> documentation to json-schema.
+>=20
+> Use "pinctrl" generic node name.
+> Drop generic and consumer examples, as they do not belong here.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+This is a clean and suitable conversion to me.=20
+For completion I ran this against my dts files for the rzn1 for testing
+purposes on next-20200824 without issues.
+
+Reviewed-by: Gareth Williams <gareth.williams.jx@renesas.com>
+Tested-by: Gareth Williams <gareth.williams.jx@renesas.com>
+
 > ---
->  drivers/power/reset/Kconfig            |   8 +-
->  drivers/power/reset/Makefile           |   1 +
->  drivers/power/reset/atc260x-poweroff.c | 274 +++++++++++++++++++++++++
->  3 files changed, 282 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/power/reset/atc260x-poweroff.c
+> Note: "phandle: true" is needed because dt-schema does not add it
+>       automatically to subnodes.
 >=20
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index 0a1fb5c74f83..df6c3676b892 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -39,6 +39,13 @@ config POWER_RESET_AT91_SAMA5D2_SHDWC
->  	  This driver supports the alternate shutdown controller for some Atmel
->  	  SAMA5 SoCs. It is present for example on SAMA5D2 SoC.
-> =20
-> +config POWER_RESET_ATC260X
-> +	tristate "Actions Semi ATC260x PMIC power-off driver"
-> +	depends on MFD_ATC260X
-> +	help
-> +	  This driver provides power-off and restart support for a system
-> +	  through Actions Semi ATC260x series PMICs.
-> +
->  config POWER_RESET_AXXIA
->  	bool "LSI Axxia reset driver"
->  	depends on ARCH_AXXIA
-> @@ -285,4 +292,3 @@ config NVMEM_REBOOT_MODE
->  	  action according to the mode.
-> =20
->  endif
+> To be queued in sh-pfc for v5.10.
+> ---
+>  .../bindings/pinctrl/renesas,rzn1-pinctrl.txt | 153 ------------------
+>  .../pinctrl/renesas,rzn1-pinctrl.yaml         | 129 +++++++++++++++
+>  2 files changed, 129 insertions(+), 153 deletions(-)  delete mode 100644
+> Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.txt
+>  create mode 100644
+> Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-
+> pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-
+> pinctrl.txt
+> deleted file mode 100644
+> index 25e53acd523e2bea..0000000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.txt
+> +++ /dev/null
+> @@ -1,153 +0,0 @@
+> -Renesas RZ/N1 SoC Pinctrl node description.
 > -
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index c51eceba9ea3..829df1157540 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_POWER_RESET_AS3722) +=3D as3722-poweroff.o
->  obj-$(CONFIG_POWER_RESET_AT91_POWEROFF) +=3D at91-poweroff.o
->  obj-$(CONFIG_POWER_RESET_AT91_RESET) +=3D at91-reset.o
->  obj-$(CONFIG_POWER_RESET_AT91_SAMA5D2_SHDWC) +=3D at91-sama5d2_shdwc.o
-> +obj-$(CONFIG_POWER_RESET_ATC260X) +=3D atc260x-poweroff.o
->  obj-$(CONFIG_POWER_RESET_AXXIA) +=3D axxia-reset.o
->  obj-$(CONFIG_POWER_RESET_BRCMKONA) +=3D brcm-kona-reset.o
->  obj-$(CONFIG_POWER_RESET_BRCMSTB) +=3D brcmstb-reboot.o
-> diff --git a/drivers/power/reset/atc260x-poweroff.c b/drivers/power/reset=
-/atc260x-poweroff.c
+> -Pin controller node
+> --------------------
+> -Required properties:
+> -- compatible: SoC-specific compatible string "renesas,<soc-specific>-pin=
+ctrl"
+> -  followed by "renesas,rzn1-pinctrl" as fallback. The SoC-specific compa=
+tible
+> -  strings must be one of:
+> -	"renesas,r9a06g032-pinctrl" for RZ/N1D
+> -	"renesas,r9a06g033-pinctrl" for RZ/N1S
+> -- reg: Address base and length of the memory area where the pin controll=
+er
+> -  hardware is mapped to.
+> -- clocks: phandle for the clock, see the description of clock-names belo=
+w.
+> -- clock-names: Contains the name of the clock:
+> -    "bus", the bus clock, sometimes described as pclk, for register acce=
+sses.
+> -
+> -Example:
+> -	pinctrl: pin-controller@40067000 {
+> -	    compatible =3D "renesas,r9a06g032-pinctrl", "renesas,rzn1-pinctrl";
+> -	    reg =3D <0x40067000 0x1000>, <0x51000000 0x480>;
+> -	    clocks =3D <&sysctrl R9A06G032_HCLK_PINCONFIG>;
+> -	    clock-names =3D "bus";
+> -	};
+> -
+> -Sub-nodes
+> ----------
+> -
+> -The child nodes of the pin controller node describe a pin multiplexing -
+> function.
+> -
+> -- Pin multiplexing sub-nodes:
+> -  A pin multiplexing sub-node describes how to configure a set of
+> -  (or a single) pin in some desired alternate function mode.
+> -  A single sub-node may define several pin configurations.
+> -  Please refer to pinctrl-bindings.txt to get to know more on generic
+> -  pin properties usage.
+> -
+> -  The allowed generic formats for a pin multiplexing sub-node are the
+> -  following ones:
+> -
+> -  node-1 {
+> -      pinmux =3D <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
+> -      GENERIC_PINCONFIG;
+> -  };
+> -
+> -  node-2 {
+> -      sub-node-1 {
+> -          pinmux =3D <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
+> -          GENERIC_PINCONFIG;
+> -      };
+> -
+> -      sub-node-2 {
+> -          pinmux =3D <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
+> -          GENERIC_PINCONFIG;
+> -      };
+> -
+> -      ...
+> -
+> -      sub-node-n {
+> -          pinmux =3D <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
+> -          GENERIC_PINCONFIG;
+> -      };
+> -  };
+> -
+> -  node-3 {
+> -      pinmux =3D <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
+> -      GENERIC_PINCONFIG;
+> -
+> -      sub-node-1 {
+> -          pinmux =3D <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
+> -          GENERIC_PINCONFIG;
+> -      };
+> -
+> -      ...
+> -
+> -      sub-node-n {
+> -          pinmux =3D <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
+> -          GENERIC_PINCONFIG;
+> -      };
+> -  };
+> -
+> -  Use the latter two formats when pins part of the same logical group ne=
+ed
+> to
+> -  have different generic pin configuration flags applied. Note that the =
+generic
+> -  pinconfig in node-3 does not apply to the sub-nodes.
+> -
+> -  Client sub-nodes shall refer to pin multiplexing sub-nodes using the
+> phandle
+> -  of the most external one.
+> -
+> -  Eg.
+> -
+> -  client-1 {
+> -      ...
+> -      pinctrl-0 =3D <&node-1>;
+> -      ...
+> -  };
+> -
+> -  client-2 {
+> -      ...
+> -      pinctrl-0 =3D <&node-2>;
+> -      ...
+> -  };
+> -
+> -  Required properties:
+> -    - pinmux:
+> -      integer array representing pin number and pin multiplexing
+> configuration.
+> -      When a pin has to be configured in alternate function mode, use th=
+is
+> -      property to identify the pin by its global index, and provide its
+> -      alternate function configuration number along with it.
+> -      When multiple pins are required to be configured as part of the sa=
+me
+> -      alternate function they shall be specified as members of the same
+> -      argument list of a single "pinmux" property.
+> -      Integers values in the "pinmux" argument list are assembled as:
+> -      (PIN | MUX_FUNC << 8)
+> -      where PIN directly corresponds to the pl_gpio pin number and
+> MUX_FUNC is
+> -      one of the alternate function identifiers defined in:
+> -      <include/dt-bindings/pinctrl/rzn1-pinctrl.h>
+> -      These identifiers collapse the IO Multiplex Configuration Level 1 =
+and
+> -      Level 2 numbers that are detailed in the hardware reference manual=
+ into
+> a
+> -      single number. The identifiers for Level 2 are simply offset by 10=
+.
+> -      Additional identifiers are provided to specify the MDIO source per=
+ipheral.
+> -
+> -  Optional generic pinconf properties:
+> -    - bias-disable		- disable any pin bias
+> -    - bias-pull-up		- pull up the pin with 50 KOhm
+> -    - bias-pull-down		- pull down the pin with 50 KOhm
+> -    - bias-high-impedance	- high impedance mode
+> -    - drive-strength		- sink or source at most 4, 6, 8 or 12 mA
+> -
+> -  Example:
+> -  A serial communication interface with a TX output pin and an RX input =
+pin.
+> -
+> -  &pinctrl {
+> -	pins_uart0: pins_uart0 {
+> -		pinmux =3D <
+> -			RZN1_PINMUX(103, RZN1_FUNC_UART0_I)	/*
+> UART0_TXD */
+> -			RZN1_PINMUX(104, RZN1_FUNC_UART0_I)	/*
+> UART0_RXD */
+> -		>;
+> -	};
+> -  };
+> -
+> -  Example 2:
+> -  Here we set the pull up on the RXD pin of the UART.
+> -
+> -  &pinctrl {
+> -	pins_uart0: pins_uart0 {
+> -		pinmux =3D <RZN1_PINMUX(103, RZN1_FUNC_UART0_I)>;
+> 	/* TXD */
+> -
+> -		pins_uart6_rx {
+> -			pinmux =3D <RZN1_PINMUX(104,
+> RZN1_FUNC_UART0_I)>; /* RXD */
+> -			bias-pull-up;
+> -		};
+> -	};
+> -  };
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-
+> pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-
+> pinctrl.yaml
 > new file mode 100644
-> index 000000000000..81a99e7e4a91
+> index 0000000000000000..4a43af0d6e02a68b
 > --- /dev/null
-> +++ b/drivers/power/reset/atc260x-poweroff.c
-> @@ -0,0 +1,274 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Poweroff & reset driver for Actions Semi ATC260x PMICs
-> + *
-> + * Copyright (c) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> + */
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.yam
+> +++ l
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/renesas,rzn1-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#include <linux/delay.h>
-> +#include <linux/mfd/atc260x/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/reboot.h>
-> +#include <linux/regmap.h>
+> +title: Renesas RZ/N1 Pin Controller
 > +
-> +struct atc260x_pwrc {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	struct notifier_block restart_nb;
-> +	int (*do_poweroff)(const struct atc260x_pwrc *pwrc, bool restart);
-> +};
+> +maintainers:
+> +  - Gareth Williams <gareth.williams.jx@renesas.com>
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
 > +
-> +/* Global variable needed only for pm_power_off */
-> +static struct atc260x_pwrc *atc260x_pwrc_data;
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - renesas,r9a06g032-pinctrl # RZ/N1D
+> +          - renesas,r9a06g033-pinctrl # RZ/N1S
+> +      - const: renesas,rzn1-pinctrl   # Generic RZ/N1
 > +
-> +static int atc2603c_do_poweroff(const struct atc260x_pwrc *pwrc, bool re=
-start)
-> +{
-> +	int ret, deep_sleep =3D 0;
-> +	uint reg_mask, reg_val;
+> +  reg:
+> +    items:
+> +      - description: GPIO Multiplexing Level1 Register Block
+> +      - description: GPIO Multiplexing Level2 Register Block
 > +
-> +	/* S4-Deep Sleep Mode is NOT available for WALL/USB power */
-> +	if (!restart && !power_supply_is_system_supplied()) {
-> +		deep_sleep =3D 1;
-> +		dev_info(pwrc->dev, "Enabling S4-Deep Sleep Mode");
-> +	}
+> +  clocks:
+> +    maxItems: 1
 > +
-> +	/* Update wakeup sources */
-> +	reg_val =3D ATC2603C_PMU_SYS_CTL0_ONOFF_LONG_WK_EN |
-> +		  (restart ? ATC2603C_PMU_SYS_CTL0_RESET_WK_EN
-> +			   : ATC2603C_PMU_SYS_CTL0_ONOFF_SHORT_WK_EN);
+> +  clock-names:
+> +    const: bus
+> +    description:
+> +      The bus clock, sometimes described as pclk, for register accesses.
 > +
-> +	ret =3D regmap_update_bits(pwrc->regmap, ATC2603C_PMU_SYS_CTL0,
-> +				 ATC2603C_PMU_SYS_CTL0_WK_ALL, reg_val);
-> +	if (ret)
-> +		dev_warn(pwrc->dev, "failed to write SYS_CTL0: %d\n", ret);
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
 > +
-> +	/* Update power mode */
-> +	reg_mask =3D ATC2603C_PMU_SYS_CTL3_EN_S2 | ATC2603C_PMU_SYS_CTL3_EN_S3;
+> +additionalProperties:
+> +  anyOf:
+> +    - type: object
+> +      allOf:
+> +        - $ref: pincfg-node.yaml#
+> +        - $ref: pinmux-node.yaml#
 > +
-> +	ret =3D regmap_update_bits(pwrc->regmap, ATC2603C_PMU_SYS_CTL3, reg_mas=
-k,
-> +				 deep_sleep ? 0 : ATC2603C_PMU_SYS_CTL3_EN_S3);
-> +	if (ret) {
-> +		dev_err(pwrc->dev, "failed to write SYS_CTL3: %d\n", ret);
-> +		return ret;
-> +	}
+> +      description:
+> +        A pin multiplexing sub-node describes how to configure a set of =
+(or a
+> +        single) pin in some desired alternate function mode.
+> +        A single sub-node may define several pin configurations.
 > +
-> +	/* Trigger poweroff / restart sequence */
-> +	reg_mask =3D restart ? ATC2603C_PMU_SYS_CTL0_RESTART_EN
-> +			   : ATC2603C_PMU_SYS_CTL1_EN_S1;
-> +	reg_val =3D restart ? ATC2603C_PMU_SYS_CTL0_RESTART_EN : 0;
+> +      properties:
+> +        pinmux:
+> +          description: |
+> +            Integer array representing pin number and pin multiplexing
+> +            configuration.
+> +            When a pin has to be configured in alternate function mode, =
+use
+> +            this property to identify the pin by its global index, and p=
+rovide
+> +            its alternate function configuration number along with it.
+> +            When multiple pins are required to be configured as part of =
+the
+> +            same alternate function they shall be specified as members o=
+f the
+> +            same argument list of a single "pinmux" property.
+> +            Integers values in the "pinmux" argument list are assembled =
+as:
+> +            (PIN | MUX_FUNC << 8)
+> +            where PIN directly corresponds to the pl_gpio pin number and
+> +            MUX_FUNC is one of the alternate function identifiers define=
+d in:
+> +            <include/dt-bindings/pinctrl/rzn1-pinctrl.h>
+> +            These identifiers collapse the IO Multiplex Configuration Le=
+vel 1
+> +            and Level 2 numbers that are detailed in the hardware refere=
+nce
+> +            manual into a single number. The identifiers for Level 2 are=
+ simply
+> +            offset by 10.  Additional identifiers are provided to specif=
+y the
+> +            MDIO source peripheral.
 > +
-> +	ret =3D regmap_update_bits(pwrc->regmap,
-> +				 restart ? ATC2603C_PMU_SYS_CTL0 : ATC2603C_PMU_SYS_CTL1,
-> +				 reg_mask, reg_val);
-> +	if (ret) {
-> +		dev_err(pwrc->dev, "failed to write SYS_CTL%d: %d\n",
-> +			restart ? 0 : 1, ret);
-> +		return ret;
-> +	}
+> +        phandle: true
+> +        bias-disable: true
+> +        bias-pull-up:
+> +          description: Pull up the pin with 50 kOhm
+> +        bias-pull-down:
+> +          description: Pull down the pin with 50 kOhm
+> +        bias-high-impedance: true
+> +        drive-strength:
+> +          enum: [ 4, 6, 8, 12 ]
 > +
-> +	/* Wait for trigger completion */
-> +	mdelay(200);
+> +      required:
+> +        - pinmux
 > +
-> +	return 0;
-> +}
+> +      additionalProperties:
+> +        $ref: "#/additionalProperties/anyOf/0"
 > +
-> +static int atc2609a_do_poweroff(const struct atc260x_pwrc *pwrc, bool re=
-start)
-> +{
-> +	int ret, deep_sleep =3D 0;
-> +	uint reg_mask, reg_val;
+> +    - type: object
+> +      properties:
+> +        phandle: true
 > +
-> +	/* S4-Deep Sleep Mode is NOT available for WALL/USB power */
-> +	if (!restart && !power_supply_is_system_supplied()) {
-> +		deep_sleep =3D 1;
-> +		dev_info(pwrc->dev, "Enabling S4-Deep Sleep Mode");
-> +	}
+> +      additionalProperties:
+> +        $ref: "#/additionalProperties/anyOf/0"
 > +
-> +	/* Update wakeup sources */
-> +	reg_val =3D ATC2609A_PMU_SYS_CTL0_ONOFF_LONG_WK_EN |
-> +		  (restart ? ATC2609A_PMU_SYS_CTL0_RESET_WK_EN
-> +			   : ATC2609A_PMU_SYS_CTL0_ONOFF_SHORT_WK_EN);
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r9a06g032-sysctrl.h>
+> +    #include <dt-bindings/pinctrl/rzn1-pinctrl.h>
+> +    pinctrl: pinctrl@40067000 {
+> +            compatible =3D "renesas,r9a06g032-pinctrl", "renesas,rzn1-pi=
+nctrl";
+> +            reg =3D <0x40067000 0x1000>, <0x51000000 0x480>;
+> +            clocks =3D <&sysctrl R9A06G032_HCLK_PINCONFIG>;
+> +            clock-names =3D "bus";
 > +
-> +	ret =3D regmap_update_bits(pwrc->regmap, ATC2609A_PMU_SYS_CTL0,
-> +				 ATC2609A_PMU_SYS_CTL0_WK_ALL, reg_val);
-> +	if (ret)
-> +		dev_warn(pwrc->dev, "failed to write SYS_CTL0: %d\n", ret);
+> +            /*
+> +             * A serial communication interface with a TX output pin and=
+ an RX
+> +             * input pin.
+> +             */
+> +            pins_uart0: pins_uart0 {
+> +                    pinmux =3D <
+> +                            RZN1_PINMUX(103, RZN1_FUNC_UART0_I) /* UART0=
+_TXD */
+> +                            RZN1_PINMUX(104, RZN1_FUNC_UART0_I) /* UART0=
+_RXD */
+> +                    >;
+> +            };
 > +
-> +	/* Update power mode */
-> +	reg_mask =3D ATC2609A_PMU_SYS_CTL3_EN_S2 | ATC2609A_PMU_SYS_CTL3_EN_S3;
+> +            /*
+> +             * Set the pull-up on the RXD pin of the UART.
+> +             */
+> +            pins_uart0_alt: pins_uart0_alt {
+> +                    pinmux =3D <RZN1_PINMUX(103, RZN1_FUNC_UART0_I)>;
 > +
-> +	ret =3D regmap_update_bits(pwrc->regmap, ATC2609A_PMU_SYS_CTL3, reg_mas=
-k,
-> +				 deep_sleep ? 0 : ATC2609A_PMU_SYS_CTL3_EN_S3);
-> +	if (ret) {
-> +		dev_err(pwrc->dev, "failed to write SYS_CTL3: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Trigger poweroff / restart sequence */
-> +	reg_mask =3D restart ? ATC2609A_PMU_SYS_CTL0_RESTART_EN
-> +			   : ATC2609A_PMU_SYS_CTL1_EN_S1;
-> +	reg_val =3D restart ? ATC2609A_PMU_SYS_CTL0_RESTART_EN : 0;
-> +
-> +	ret =3D regmap_update_bits(pwrc->regmap,
-> +				 restart ? ATC2609A_PMU_SYS_CTL0 : ATC2609A_PMU_SYS_CTL1,
-> +				 reg_mask, reg_val);
-> +	if (ret) {
-> +		dev_err(pwrc->dev, "failed to write SYS_CTL%d: %d\n",
-> +			restart ? 0 : 1, ret);
-> +		return ret;
-> +	}
-> +
-> +	/* Wait for trigger completion */
-> +	mdelay(200);
-> +
-> +	return 0;
-> +}
-> +
-> +static int atc2603c_init(const struct atc260x_pwrc *pwrc)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * Delay transition from S2/S3 to S1 in order to avoid
-> +	 * DDR init failure in Bootloader.
-> +	 */
-> +	ret =3D regmap_update_bits(pwrc->regmap, ATC2603C_PMU_SYS_CTL3,
-> +				 ATC2603C_PMU_SYS_CTL3_S2S3TOS1_TIMER_EN,
-> +				 ATC2603C_PMU_SYS_CTL3_S2S3TOS1_TIMER_EN);
-> +	if (ret)
-> +		dev_warn(pwrc->dev, "failed to write SYS_CTL3: %d\n", ret);
-> +
-> +	/* Set wakeup sources */
-> +	ret =3D regmap_update_bits(pwrc->regmap, ATC2603C_PMU_SYS_CTL0,
-> +				 ATC2603C_PMU_SYS_CTL0_WK_ALL,
-> +				 ATC2603C_PMU_SYS_CTL0_HDSW_WK_EN |
-> +				 ATC2603C_PMU_SYS_CTL0_ONOFF_LONG_WK_EN);
-> +	if (ret)
-> +		dev_warn(pwrc->dev, "failed to write SYS_CTL0: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int atc2609a_init(const struct atc260x_pwrc *pwrc)
-> +{
-> +	int ret;
-> +
-> +	/* Set wakeup sources */
-> +	ret =3D regmap_update_bits(pwrc->regmap, ATC2609A_PMU_SYS_CTL0,
-> +				 ATC2609A_PMU_SYS_CTL0_WK_ALL,
-> +				 ATC2609A_PMU_SYS_CTL0_HDSW_WK_EN |
-> +				 ATC2609A_PMU_SYS_CTL0_ONOFF_LONG_WK_EN);
-> +	if (ret)
-> +		dev_warn(pwrc->dev, "failed to write SYS_CTL0: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static void atc260x_pwrc_pm_handler(void)
-> +{
-> +	atc260x_pwrc_data->do_poweroff(atc260x_pwrc_data, false);
-> +
-> +	WARN_ONCE(1, "Unable to power off system\n");
-> +}
-> +
-> +static int atc260x_pwrc_restart_handler(struct notifier_block *nb,
-> +					unsigned long mode, void *cmd)
-> +{
-> +	struct atc260x_pwrc *pwrc =3D container_of(nb, struct atc260x_pwrc,
-> +						 restart_nb);
-> +	pwrc->do_poweroff(pwrc, true);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int atc260x_pwrc_probe(struct platform_device *pdev)
-> +{
-> +	struct atc260x *atc260x =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct atc260x_pwrc *priv;
-> +	int ret;
-> +
-> +	if (!pdev->dev.of_node)
-> +		return -ENXIO;
-> +
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev =3D &pdev->dev;
-> +	priv->regmap =3D atc260x->regmap;
-> +	priv->restart_nb.notifier_call =3D atc260x_pwrc_restart_handler;
-> +	priv->restart_nb.priority =3D 192;
-> +
-> +	switch (atc260x->ic_type) {
-> +	case ATC2603C:
-> +		priv->do_poweroff =3D atc2603c_do_poweroff;
-> +		ret =3D atc2603c_init(priv);
-> +		break;
-> +	case ATC2609A:
-> +		priv->do_poweroff =3D atc2609a_do_poweroff;
-> +		ret =3D atc2609a_init(priv);
-> +		break;
-> +	default:
-> +		dev_err(priv->dev,
-> +			"Poweroff not supported for ATC260x PMIC type: %u\n",
-> +			atc260x->ic_type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	if (!pm_power_off) {
-> +		atc260x_pwrc_data =3D priv;
-> +		pm_power_off =3D atc260x_pwrc_pm_handler;
-> +	} else {
-> +		dev_warn(priv->dev, "Poweroff callback already assigned\n");
-> +	}
-> +
-> +	ret =3D register_restart_handler(&priv->restart_nb);
-> +	if (ret)
-> +		dev_err(priv->dev, "failed to register restart handler: %d\n",
-> +			ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int atc260x_pwrc_remove(struct platform_device *pdev)
-> +{
-> +	struct atc260x_pwrc *priv =3D platform_get_drvdata(pdev);
-> +
-> +	if (atc260x_pwrc_data =3D=3D priv) {
-> +		pm_power_off =3D NULL;
-> +		atc260x_pwrc_data =3D NULL;
-> +	}
-> +
-> +	unregister_restart_handler(&priv->restart_nb);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id atc260x_pwrc_of_match[] =3D {
-> +	{ .compatible =3D "actions,atc2603c-pwrc" },
-> +	{ .compatible =3D "actions,atc2609a-pwrc" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, atc260x_pwrc_of_match);
-> +
-> +static struct platform_driver atc260x_pwrc_driver =3D {
-> +	.probe =3D atc260x_pwrc_probe,
-> +	.remove =3D atc260x_pwrc_remove,
-> +	.driver =3D {
-> +		.name =3D "atc260x-pwrc",
-> +		.of_match_table =3D of_match_ptr(atc260x_pwrc_of_match),
+> +                    pins_uart6_rx {
+> +                            pinmux =3D <RZN1_PINMUX(104, RZN1_FUNC_UART0=
+_I)>;
+> +                            bias-pull-up;
+> +                    };
+> +            };
+> +    };
+> --
+> 2.17.1
 
-drop of_match_ptr() and directly use atc260x_pwrc_of_match. Current
-code would throw unused warning for atc260x_pwrc_of_match when OF is
-disabled.
+Thanks for the work,
 
-> +	},
-> +};
-> +
-> +module_platform_driver(atc260x_pwrc_driver);
-> +
-> +MODULE_DESCRIPTION("Poweroff & reset driver for ATC260x PMICs");
-> +MODULE_AUTHOR("Cristian Ciocaltea <cristian.ciocaltea@gmail.com>");
-> +MODULE_LICENSE("GPL");
-
-Otherwise LGTM,
-
--- Sebastian
-
---aprizzmkxe5m5e75
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9D0X4ACgkQ2O7X88g7
-+ppuXhAAlHSH+8r78qlJ0Xn/oJ2KaykUSfjr9iJbNhzdZuTA4VGcghRdOBWdW/oY
-ZDBCdzDKq5ylxqifjKxEdFGChGy3wZ6sSQ+oDzb9zC5qtuVsXWAHdokuTlxV4s/Z
-MKy/x+CB7END79P+/SdsJk/tL0QrhEsEAW3/Sct87Iay8hkj7poDZSySF6F1O7c+
-/a8amqH35BHhiKZTeYYLUg8QpNwKan+i6KpSybRk1h63SP/bJMIbe3IcBRk5WpJ+
-/RNaVYIFF7glKGmK82dNTNvu3rSaxhVDF9M1Z+t48jhzT2Ms/53CIiCNuab6nU4F
-A9qQpINzoSIMXdqj+8zU/vU5fQ2ZLWY53a1zH8Re0fDdUGT23B/u3cu8hFK1Bf07
-vQXbOy+gs9rUsmLh6kGFrfMXOg58jAVodcUmpJZ9IgpppGmDhtJpRt0Dc5W5Uykf
-sB6nuJsL4IDT1C4ArmrwyHIYj2NFvsJUR2qXB1fMae6RPzz9MpBBLhxoXKIMp72Y
-IcVRXikIlENJnlx+MCs7fVhaAuVv5JXwq9oEsLsZuvOBpVbJyB1/HkSQiXOdQqqK
-GJd1n62E0tMUZ0DZrEnCNsF2OsAUjIcKQcVuYYZtR0naSBMofxhnadVaukuo0M6V
-TFchT6+DnDqTERLTMwfvd6NRpzw7Acw54DiM/5WO0e7Bo3MTIuw=
-=1M1s
------END PGP SIGNATURE-----
-
---aprizzmkxe5m5e75--
+Gareth
