@@ -2,128 +2,170 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F53C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F97C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4A5E2071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:11:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZtbAURe"
+	by mail.kernel.org (Postfix) with ESMTP id 8AECD20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHXKLJ (ORCPT
+        id S1726225AbgHXKPC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgHXKLI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:11:08 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F806C061573;
-        Mon, 24 Aug 2020 03:11:07 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c8so4152847lfh.9;
-        Mon, 24 Aug 2020 03:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eCM1MY9fL6XG/g9S5/R519/+dhVf/rR5iiVNVW9wNCM=;
-        b=iZtbAURe/TcGpxgHsdxjWk+OBcVapW76EJhdem0MYolKHHUTpp7lpODnmH7+Vbf34w
-         1OiD6R7tRTqvOZiScHDAcYR2tKiLLBO2KJ9ykXgEresO+HNuDPGDBhxwao7N//UWo1cV
-         7nelPhDcGThb5Lh0+z6m1BFSPFrFCFPFJk0a45oCQoiTHZw5JTpih6g+K/Yp2zLwFVjh
-         SZkf04JtwtIYCBa27oO3lZXiDWLLFjruvNIIN+6ov/w2gWAbfTL7Tv4nINtax5mo+N7L
-         045CsgP4gdbbr/fCE2mQvngCsiAolJo9DmJZyhPtBBAFB9n2h2nlk3bZuDhV7d29r/G9
-         8WfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eCM1MY9fL6XG/g9S5/R519/+dhVf/rR5iiVNVW9wNCM=;
-        b=oixOVDFp+YXA7WIV9XHFoXWiZOJV6Fq/Q+LjpaSRyRAqG9u92k9ZkHCGFpeRrvHaa1
-         XdIgK4VIYB+TyKdx7UWXyqmm2TuDDcYH8f/mBfHFlyFw29OIGLqcgxTPvjKgtiFqFVg5
-         EQ4W20V4w1Gu8OjOa0Xc8VUxawjCDQyj4ZfQ3ac5AInHV/Qa7LCcJttG/vhJkkwXjEIu
-         9jU+WFGfyKoYUvas5etDH7qJ+ptXgk8fYQcFb4OenOcBUKIZbKiR1PdBjwPJ5EmIW2kj
-         +Wx0Q2b7doZoEr8Q4TtPnBv0tUqBsb7ri6LBHYGm4Gee/onBvA0IGs1scx1+WFsbZGF0
-         IDYg==
-X-Gm-Message-State: AOAM5316GIGXCizt76gYA8TqV+31hqb4+IH2b1ClEa1MmIINVpjwy2xs
-        q1oatYQgPUxlZDGxnMZNMdOc2Bsjkew=
-X-Google-Smtp-Source: ABdhPJxvtbBhDZM+Ig1AWobTyAP+bnsWRaGngsk0KGvGCf5SE5DqpM2UiJhgMN4XuNz5SFNsE1yirg==
-X-Received: by 2002:a19:2202:: with SMTP id i2mr2316168lfi.35.1598263865536;
-        Mon, 24 Aug 2020 03:11:05 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t19sm2079121ljc.137.2020.08.24.03.11.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 03:11:05 -0700 (PDT)
-Subject: Re: [PATCH v1 3/6] leds: Add driver for Acer Iconia Tab A500
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-4-digetx@gmail.com>
- <20200823223037.5fkeg5ai6hry3axj@duo.ucw.cz>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <eb2da40a-9dbb-0a18-4dbc-3eb93bd2968c@gmail.com>
-Date:   Mon, 24 Aug 2020 13:11:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 06:15:02 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18743 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbgHXKPB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:15:01 -0400
+IronPort-SDR: qBbXJuqGL2q7Plg2GnUr+UxzniZWmEDEdwMX8mE8DDdCzwF2En7mZ/4RTwhAyXXo3j49LUMbi7
+ TFMTTsxHtSiA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135416480"
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="135416480"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 03:15:00 -0700
+IronPort-SDR: +1K6+IOcnplflhLmEToWJpcdL/LSAqLYEAscJLX0cLn3OT3K7Ns4k7HWcjTDAUPpuxkru8/RBc
+ jUzt+G+CNW5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="328440827"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2020 03:14:56 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1kA9V8-00B1PV-Oz; Mon, 24 Aug 2020 13:14:54 +0300
+Date:   Mon, 24 Aug 2020 13:14:54 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH v10 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200824101454.GK1891694@smile.fi.intel.com>
+References: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
+ <05b664b961e37c1c35fa7d5d1cfc9ae244bc86bc.1598240097.git.rahul.tanwar@linux.intel.com>
+ <20200824081715.GA1891694@smile.fi.intel.com>
+ <ed7affbb-b95d-cf42-b9bc-71addf908ffc@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200823223037.5fkeg5ai6hry3axj@duo.ucw.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed7affbb-b95d-cf42-b9bc-71addf908ffc@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-24.08.2020 01:30, Pavel Machek пишет:
-> Hi!
+On Mon, Aug 24, 2020 at 05:36:47PM +0800, Tanwar, Rahul wrote:
+> On 24/8/2020 4:17 pm, Andy Shevchenko wrote:
+> > On Mon, Aug 24, 2020 at 11:36:37AM +0800, Rahul Tanwar wrote:
 
-Hello, Pavel! Thank you very much for the review! I'll take into account
-yours comments in the v2!
+...
 
->> Acer Iconia Tab A500 is an Android tablet device which has two LEDs
->> embedded into the Power Button. Orange LED indicates "battery charging"
->> status and white LED indicates "wake-up/charge-done" status. The new LED
->> driver provides control over both LEDs to userspace.
+> >> +	ret = reset_control_deassert(pc->rst);
+> >> +	if (ret) {
+> >> +		if (ret != -EPROBE_DEFER)
+> >> +			dev_err_probe(dev, ret, "cannot deassert reset control\n");
+> >> +		return ret;
+> >> +	}
+> > Please, spend a bit of time to understand the changes you are doing. There are
+> > already few examples how to use dev_err_probe() properly.
 > 
->> @@ -0,0 +1,121 @@
->> +// SPDX-License-Identifier: GPL-2.0+
-> 
-> Nice.
-> 
->> + * Copyright 2020 GRATE-driver project.
-> 
-> Probably untrue.
-> 
-> 
->> +	white_led->cdev.name = "power-button-white";
-> 
-> "white:power"
-> 
->> +	white_led->cdev.max_brightness = LED_ON;
-> 
-> = 1. (And you'll need other adjustments over the code).
-> 
->> +	orange_led->cdev.name = "power-button-orange";
-> 
-> "orange:power" -- or what is this LED usually used for?
-> 
->> +MODULE_LICENSE("GPL v2");
-> 
-> Should be "GPL"?
+> I guess your point is that the check of (ret !- -EPROBE_DEFER) is not needed
+> when using dev_err_probe() as it encapsulates it.
 
-Yes, apparently it should be "GPL". I'll try to double-check it for the v2.
+It does even more. Look at the existing examples.
 
-Thanks!
+> Sorry, i missed it. Will
+> fix it. I am not able to find any other missing point after referring to
+> two driver examples which uses dev_err_probe() ?
+
+There are three drivers that are using it in Linux Next. All of them utilizing
+it correctly, look at them.
+
+> >> +	ret = clk_prepare_enable(pc->clk);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "failed to enable clock\n");
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	ret = devm_add_action_or_reset(dev, lgm_pwm_action, pc);
+> >> +	if (ret)
+> >> +		return ret;
+> > You have also ordering issues here.
+> >
+> > So, what I can see about implementation is that
+> >
+> >
+> > 	static void ..._clk_disable(void *data)
+> > 	{
+> > 		clk_disable_unprepare(data);
+> > 	}
+> >
+> > 	static int ..._clk_enable(...)
+> > 	{
+> > 		int ret;
+> >
+> > 		ret = clk_preare_enable(...);
+> > 		if (ret)
+> > 			return ret;
+> > 		return devm_add_action_or_reset(..., ..._clk_disable);
+> > 	}
+> >
+> >
+> > Similar for reset control.
+> >
+> > Then in the ->probe() something like this:
+> >
+> > 	ret = devm_reset_control_get...;
+> > 	if (ret)
+> > 		return ret;
+> >
+> > 	ret = ..._reset_deassert(...);
+> > 	if (ret)
+> > 		return ret;
+> >
+> > followed by similar section for the clock.
+> >
+> 
+> Regarding ordering: In early rounds of review, feedback about ordering was that
+> it is recommended to be reverse of the sequence in probe i.e.
+> if in probe:
+> 1. reset_control_deassert()
+> 2. clk_prepare_enable()
+> then in remove:
+> 1. clk_disable_uprepare()
+> 2. reset_control_assert()
+> 
+> That's the reason i added a generic action() which reverses order.
+
+Yes, and my suggestion follows this.
+
+> I understand your suggested way as explained above but not sure if that would
+> ensure reverse ordering during unwind.
+
+You have:
+ devm r1
+ devm r2
+ enable r1
+ enable r2 (and here you have broken error path)
+
+My suggestion has it like this (and no broken error path):
+ devm r1
+ enable r1
+ devm r2
+ enable r2
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
