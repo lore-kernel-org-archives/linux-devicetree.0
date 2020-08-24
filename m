@@ -2,84 +2,89 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1BAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCEBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0BE2075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198762067C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:38:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598265532;
+	bh=wEZ/STIvx0ePP3b1UvJPmBBzqazbgGCJcQegLaFuLsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=D7ReVJ/hdtXEyAGd6ajZ4yvQ7TX7rRgnl2c6RjywLe7o9HU7UJ7/W8Ml9aGbEmUSa
+	 //MlBIqMTVB2iDsnM5DQgtLLr/20tWUxJzqK46mPODPJR61X6kplQPOQ8v3Q0vcXmS
+	 r+NzeFR4/MfVBFdmxNFum33iftIlk1a0QqznnM3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgHXKgW (ORCPT
+        id S1726845AbgHXKit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:36:22 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16332 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgHXKgJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:36:09 -0400
-IronPort-SDR: XJDUzDJFnIlLLFCVFikzgo9lIyvN/4Ewst2p/epp9WTj7OFcrnTZ8+ZwcTMmwKHGuijBOl2chT
- JijkPNgpMKBg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="217408727"
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="217408727"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 03:36:08 -0700
-IronPort-SDR: osPngUDB3K/p+N6QSIx9oQkxtBxKiK17qxip9wQLUxEhfbD9F7NUITjA95AHvGSomG6cd7PlGl
- RA+MQ7hIQkQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="298659142"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 24 Aug 2020 03:36:08 -0700
-Received: from [10.255.145.126] (vramuthx-MOBL1.gar.corp.intel.com [10.255.145.126])
-        by linux.intel.com (Postfix) with ESMTP id 4F27D5805EB;
-        Mon, 24 Aug 2020 03:36:06 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Mon, 24 Aug 2020 06:38:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50819 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726113AbgHXKip (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:38:45 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t2so7593695wma.0;
+        Mon, 24 Aug 2020 03:38:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7u58c0keG+Yz2ZMucv/08ubtmOiqVrLF+ILIBtxzQko=;
+        b=PFP8XxuTiWsxSiy25V1VxQQ90PYzj5Ly4Rt5xZOi5QRAaXrxqHT/WXon1q/ujXJjQb
+         whvhHDciHoPWYNEZVFxCUvYwU+2yxvVYWFcBCnyqpQ0Uefo8gcfiV1dAnkfz3RBHetPl
+         t0SzIzzizvIvC9iBtj5NHASV5cgg7sG1GM3rczt9qqIbZG4J4KVpmIJ49vJCdWp2H6Lx
+         P57OdoHjTa/IBsSQiexB4IgWNEwzexc19ooTiq69FUVWE+2Ahvp3oXfyQPBFFrwdaHsP
+         cLCgT8zAXx0wW5DZN8Iq7q2J+yobnibR/c3EJdt+UdCduSJ+2A2KD5Emlswi1dFgaTQe
+         XcqA==
+X-Gm-Message-State: AOAM5327OWMX9tHHyCDGUgOHvDesUjNVvtVWCUq7866J+MPE/nh5rhDX
+        UPbX6m8h44FostYOb+yEDZ0=
+X-Google-Smtp-Source: ABdhPJxdgoBANLff8G8lGhg7HIgBV9mVxGbGUh18QBqP12CztPagvk8fjE+U3wpmdCGh7zOFSIwBNw==
+X-Received: by 2002:a1c:286:: with SMTP id 128mr4839844wmc.37.1598265524149;
+        Mon, 24 Aug 2020 03:38:44 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id g14sm23168771wmk.37.2020.08.24.03.38.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 03:38:43 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 12:38:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
         Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+Message-ID: <20200824103841.GA26466@kozik-lap>
 References: <20200817070009.4631-1-krzk@kernel.org>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
-Date:   Mon, 24 Aug 2020 18:36:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
-
-  Thank you for the patches and optimized the code as well.
-  I have applied your patches and tested, it's working fine
-  with few minor changes as per Intel's LGM board.
-
-  can I send the patches along with patches or we need to wait until
-  your patch get merge?
-
-  Please suggest to me go further, Thanks!
-
-On 17/8/2020 2:59 pm, Krzysztof Kozlowski wrote:
+On Mon, Aug 24, 2020 at 06:36:04PM +0800, Ramuthevar, Vadivel MuruganX wrote:
 > Hi,
 > 
-> Changes since v1:
-> 1. Mutex unlock fix in patch 8/13.
+>  Thank you for the patches and optimized the code as well.
+>  I have applied your patches and tested, it's working fine
+>  with few minor changes as per Intel's LGM board.
 > 
-> Best regards,
-> Krzysztof
-> 
+>  can I send the patches along with patches or we need to wait until
+>  your patch get merge?
+
+You can just base your patches on top of mine, send them and mention in
+cover letter that they are based on these series (with link to
+discussion).
+
+Best regards,
+Krzysztof
+
