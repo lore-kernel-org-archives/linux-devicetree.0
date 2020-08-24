@@ -2,159 +2,84 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE43C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1BAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544D12074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598265166;
-	bh=s/W4PKXgWUkkGboyqaRnGg6EErq3S4D75Ndhx0xS3SA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PbbCf4uASmXwstqwXZHFumgCqjZY+vFuYZu1hchJ16JbQ9dWorbCqHYfvvHNQTpMq
-	 ae4p8bBlZYicW/q4TvcCokv4K9VbJlsWfth8AhD6F66HaEe1TIP6mm9rCeGo3WV6OH
-	 MI54Ce4Q47zq1wM+MPcUtim8vBltWPrKUMhKOwdw=
+	by mail.kernel.org (Postfix) with ESMTP id 5A0BE2075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:36:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgHXKcp convert rfc822-to-8bit (ORCPT
+        id S1726532AbgHXKgW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:32:45 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44609 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHXKco (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:32:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c15so8105705wrs.11;
-        Mon, 24 Aug 2020 03:32:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3kC1j2VGz3irmMnTu7OSvcIF5sgB8GN7svCyG6bNmQc=;
-        b=GwtRoBAqEhZXPoO6GRQC0NFLkAKbwreCd8CzvDJlOnNI+CyR7tVsp5c2wAr7Y6At26
-         ZiDKoD2iOmyNbkaqpnH/sm8Z6uV9OrKiMLUWcyjLic0r5Vn2L8MsEaPSIojq8ALuW3eT
-         Nj3oiME+eEnLIP0S8MPayC4j2o7dGagtLdLVI/uk5IZsLNA+z9qLfKjyQyZYIcp82I87
-         UEo37ielR9G8fZL5XypFRzEk4+Re6HEj7qdIJB58lNaP7cup8PVsGfbNKuLuOuNRL281
-         bh/rkTv4VvGQTZIccPWtfAzhhfnVgwJ8jE2kk7gsSM43qQ9L3CW7Uvdykb83LunqpvvU
-         E0sg==
-X-Gm-Message-State: AOAM530AdW6lg5HRHJaFr+Lz8okp38HGiJNxNx8GMDrLq+KFLP+HZsdL
-        SpGtqE3B5EZW3h1c7/gImEE=
-X-Google-Smtp-Source: ABdhPJweVUT7a41DfLWZjKJnJ7ppNGMhfph8/pfsheA41o3Lgtr9MDX7LDVdL1I0kuB6ivdiZ0Q/PQ==
-X-Received: by 2002:adf:e68f:: with SMTP id r15mr5135544wrm.196.1598265161023;
-        Mon, 24 Aug 2020 03:32:41 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id b1sm614772wmj.8.2020.08.24.03.32.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 03:32:40 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 12:32:37 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Bough Chen <haibo.chen@nxp.com>
-Cc:     Dong Aisheng <dongas86@gmail.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mon, 24 Aug 2020 06:36:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16332 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727037AbgHXKgJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:36:09 -0400
+IronPort-SDR: XJDUzDJFnIlLLFCVFikzgo9lIyvN/4Ewst2p/epp9WTj7OFcrnTZ8+ZwcTMmwKHGuijBOl2chT
+ JijkPNgpMKBg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="217408727"
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="217408727"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 03:36:08 -0700
+IronPort-SDR: osPngUDB3K/p+N6QSIx9oQkxtBxKiK17qxip9wQLUxEhfbD9F7NUITjA95AHvGSomG6cd7PlGl
+ RA+MQ7hIQkQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="298659142"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 24 Aug 2020 03:36:08 -0700
+Received: from [10.255.145.126] (vramuthx-MOBL1.gar.corp.intel.com [10.255.145.126])
+        by linux.intel.com (Postfix) with ESMTP id 4F27D5805EB;
+        Mon, 24 Aug 2020 03:36:06 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-Subject: Re: [PATCH 21/22] arm64: dts: imx8qxp: Remove i.MX7 compatible from
- USDHC
-Message-ID: <20200824103237.GA26120@kozik-lap>
-References: <20200823161550.3981-1-krzk@kernel.org>
- <20200823161550.3981-21-krzk@kernel.org>
- <AM6PR04MB49668B0F67B02B2A33603B4880560@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <20200824091102.GA20819@kozik-lap>
- <CAA+hA=S=2SoF8egOq8h-eB9wZGDqrAw66VtW-bU9oBmzFSj9Bw@mail.gmail.com>
- <VI1PR04MB52949085DFA5D29C2858094290560@VI1PR04MB5294.eurprd04.prod.outlook.com>
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20200817070009.4631-1-krzk@kernel.org>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
+Date:   Mon, 24 Aug 2020 18:36:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <VI1PR04MB52949085DFA5D29C2858094290560@VI1PR04MB5294.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:31:31AM +0000, Bough Chen wrote:
-> > -----Original Message-----
-> > From: Dong Aisheng [mailto:dongas86@gmail.com]
-> > Sent: 2020年8月24日 17:45
-> > To: Krzysztof Kozlowski <krzk@kernel.org>
-> > Cc: Aisheng Dong <aisheng.dong@nxp.com>; devicetree@vger.kernel.org;
-> > linux-serial@vger.kernel.org; Anson Huang <anson.huang@nxp.com>;
-> > linux-gpio@vger.kernel.org; Fabio Estevam <festevam@gmail.com>; Linus
-> > Walleij <linus.walleij@linaro.org>; linux-pm@vger.kernel.org;
-> > linux-mmc@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-pwm@vger.kernel.org; Bartosz Golaszewski
-> > <bgolaszewski@baylibre.com>; Rob Herring <robh+dt@kernel.org>;
-> > linux-mtd@lists.infradead.org; dl-linux-imx <linux-imx@nxp.com>; Pengutronix
-> > Kernel Team <kernel@pengutronix.de>; Thierry Reding
-> > <thierry.reding@gmail.com>; Shawn Guo <shawnguo@kernel.org>; Sascha
-> > Hauer <s.hauer@pengutronix.de>; linux-arm-kernel@lists.infradead.org;
-> > linux-watchdog@vger.kernel.org; Bough Chen <haibo.chen@nxp.com>
-> > Subject: Re: [PATCH 21/22] arm64: dts: imx8qxp: Remove i.MX7 compatible
-> > from USDHC
-> > 
-> > On Mon, Aug 24, 2020 at 5:15 PM Krzysztof Kozlowski <krzk@kernel.org>
-> > wrote:
-> > >
-> > > On Mon, Aug 24, 2020 at 09:00:19AM +0000, Aisheng Dong wrote:
-> > > > > From: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > > Sent: Monday, August 24, 2020 12:16 AM
-> > > > >
-> > > > > The USDHC on i.MX 8QXP has its own compatible described in
-> > > > > bindings and used in the driver (with its own quirks).  Remove
-> > > > > additional fsl,imx7d-usdhc compatible to fix dtbs_check warnings like:
-> > > > >
-> > > > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml:
-> > mmc@5b010000:
-> > > > >     compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
-> > > > >     From schema:
-> > > > > /ocumentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-> > > > >
-> > > > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml:
-> > mmc@5b010000:
-> > > > >     compatible: Additional items are not allowed
-> > > > > ('fsl,imx7d-usdhc' was
-> > > > > unexpected)
-> > > > >
-> > > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > >
-> > > > For Patch 19-22, I think we should fix dt binding doc.
-> > >
-> > > Are you sure that these USDHC controllers are compatible with i.MX 7D?
-> > > Could they really run with fsl,imx7d-usdhc compatible?
-> > 
-> > AFAIK uSDHC on QXP is derived from the former platforms with adding a few
-> > more new features. e.g. HS400ES/CMDQ.
-> > Let me loop in uSDHC driver owner Haibo Chen to double confirm.
+Hi,
+
+  Thank you for the patches and optimized the code as well.
+  I have applied your patches and tested, it's working fine
+  with few minor changes as per Intel's LGM board.
+
+  can I send the patches along with patches or we need to wait until
+  your patch get merge?
+
+  Please suggest to me go further, Thanks!
+
+On 17/8/2020 2:59 pm, Krzysztof Kozlowski wrote:
+> Hi,
 > 
-> Yes, usdhc of imx8qxp can work by using the compatible "fsl, imx7d-usdhc", but will not support HS400ES/Command Queue any more. Also imx8qxp support Auto CMD23, but imx7d not.
-> And imx8qxp need to re-config the clock rate after system PM, imx7d do not need to do this.
-
-Then we can leave the compatible in DTS and I will correct the device
-tree schema.
-
-Best regards,
-Krzysztof
+> Changes since v1:
+> 1. Mutex unlock fix in patch 8/13.
+> 
+> Best regards,
+> Krzysztof
+> 
