@@ -2,157 +2,86 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011D5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 12:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C758C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 12:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA9320706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 12:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151392078D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 12:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598273119;
+	bh=/KfMRm6jGsTf1RXT4ToFJFZgTqfUXupjTq8C8PBvOaI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rU9F75LUt0K9fxSfiM9Mn9CqR2/zSAFBVCz6rfix9+riFo+2QnWsv2i6OqRO94nfq
+	 IyJwIzVJUjUuI9s9wL3QOe5QNFg58nMwEwBo6EdlE+MJ+Bbs0TwI62k1IZfbd4reEE
+	 nZwPTIbmUb7uvlb2WV3fFzohydVEFf0MTCvdAY4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgHXMcM (ORCPT
+        id S1725976AbgHXMpS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:32:12 -0400
-Received: from mo-csw1516.securemx.jp ([210.130.202.155]:48302 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbgHXMbK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 08:31:10 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 07OCUFCW008407; Mon, 24 Aug 2020 21:30:15 +0900
-X-Iguazu-Qid: 34tKqQuZ1Z6XOyg01R
-X-Iguazu-QSIG: v=2; s=0; t=1598272214; q=34tKqQuZ1Z6XOyg01R; m=0DGIeiVNDYKEpxos3ryeH+4Y90hiRq1zOgB8MCzSYtU=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1511) id 07OCUDTf019981;
-        Mon, 24 Aug 2020 21:30:13 +0900
-Received: from enc03.toshiba.co.jp ([106.186.93.13])
-        by imx2.toshiba.co.jp  with ESMTP id 07OCUCOT027301;
-        Mon, 24 Aug 2020 21:30:12 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc03.toshiba.co.jp  with ESMTP id 07OCUCbA016568;
-        Mon, 24 Aug 2020 21:30:12 +0900
-From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     punit1.agrawal@toshiba.co.jp, yuji2.ishikawa@toshiba.co.jp,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Marc Zyngier <maz@misterjones.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH v2 0/8] Add Toshiba Visconti ARM64 Platform support
-Date:   Mon, 24 Aug 2020 21:29:49 +0900
-X-TSB-HOP: ON
-Message-Id: <20200824122957.1392870-1-nobuhiro1.iwamatsu@toshiba.co.jp>
-X-Mailer: git-send-email 2.27.0
+        Mon, 24 Aug 2020 08:45:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgHXMpS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 08:45:18 -0400
+Received: from dragon (unknown [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FB1420706;
+        Mon, 24 Aug 2020 12:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598273117;
+        bh=/KfMRm6jGsTf1RXT4ToFJFZgTqfUXupjTq8C8PBvOaI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vfyZKvSoF/+lCrsp8s9fIzJCpYrfCZdKdIMD/qts1wAqUJeb1WlvPzfKFlOAfYgRp
+         kM/SWn5SsOwes33/65BCivVoVz4zLSDk8PXWRHHhNph4xWPOMg4sKJ0/KJjDt/nXaw
+         3Vmk7Wi741ER8bfK5d/DeMDg1WkZakJV6PIbz6Lk=
+Date:   Mon, 24 Aug 2020 20:45:05 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, andrew@lunn.ch,
+        philippe.schenker@toradex.com, linux@rempel-privat.de,
+        davem@davemloft.net, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        davidjoshuasim@gmail.com
+Subject: Re: [PATCH v2] ARM: dts: imx7d-zii-rmu2: fix rgmii phy-mode for
+ ksz9031 phy
+Message-ID: <20200824124505.GD12776@dragon>
+References: <20200823022505.196825-1-cphealy@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823022505.196825-1-cphealy@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Sat, Aug 22, 2020 at 07:25:05PM -0700, Chris Healy wrote:
+> From: Chris Healy <cphealy@gmail.com>
+> 
+> Since commit bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the
+> KSZ9031 PHY") the networking is broken on the imx7d-zii-rmu2 board.
+> 
+> The end result is that network receive behaviour is marginal with lots of
+> RX CRC errors experienced and NFS frequently failing.
+> 
+> Quoting the explanation from Andrew Lunn in commit 0672d22a19244 
+> ("ARM: dts: imx: Fix the AR803X phy-mode"):
+>    
+> "The problem here is, all the DTs were broken since day 0. However,
+> because the PHY driver was also broken, nobody noticed and it
+> worked. Now that the PHY driver has been fixed, all the bugs in the
+> DTs now become an issue"
+> 
+> Fix it by switching to phy-mode = "rgmii-id".
+> 
+> Fixes: bcf3440c6dd7 ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-Visconti is a series of Toshiba's SoCs targeting image processing
-applications[0]. These set of patches adds support for Visconti5 a Arm
-v8 based SoC.
-
-The series add minimal support for the Visconti5 SoC and the TMPV7708 RM
-main board. Peripherals such as UART, SPI, I2c and timer use Arm's
-IP and work with the existing kernel drivers in the tree. The series
-includes a pinctrl driver to select appropriate functions on the pins.
-
-NOTE: Because Visconti5 does not have PSCI, it uses spin-table with enable-method.
-      And this patch series does not include a clock framework, so it is a
-      device-tree file that uses clocks with fixed-clock. This will be replaced by
-      the clock driver in the future.
-
-[0]: https://toshiba.semicon-storage.com/ap-en/semiconductor/product/image-recognition-processors-visconti.html
-
-dt-bindings: pinctrl: Add bindings for Toshiba Visconti TMPV7700 SoC
-  v1 -> v2:
-    - Fix warning by make dt_binding_check.
-    - Use '-pins$' instead of ''^.*$':''.
-    - Remove if/then.
-    - Add $ref to the common pinctrl schemas.
-
-pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support
-  v1 -> v2:
-    - No update
-
-dt-bindings: arm: toshiba: add Toshiba Visconti ARM SoCs
-  v1 -> v2:
-    - No update
-
-dt-bindings: arm: toshiba: Add the TMPV7708 RM main board
-  v1 -> v2:
-    - No update
-
-arm64: visconti: Add initial support for Toshiba Visconti platform
-  v1 -> v2:
-    - No update
-
-arm64: dts: visconti: Add device tree for TMPV7708 RM main board
-  v1 -> v2:
-    - Remove always-on property from timer.
-    - Add interrputs for GIC.
-    - Remove bootargs from chosen.
-      stdout-path is not deleted because the boot loader cannot handle it.
-      It will be removed in the future.
-    - Update dtsi for using new binding of pinctrl.
-
-MAINTAINERS: Add information for Toshiba Visconti ARM SoCs
-  v1 -> v2:
-    - No update
-
-arm64: defconfig: Enable configs for Toshiba Visconti    
-  v1 -> v2:
-    - No update
-
---
-
-Nobuhiro Iwamatsu (8):
-  dt-bindings: pinctrl: Add bindings for Toshiba Visconti TMPV7700 SoC
-  pinctrl: visconti: Add Toshiba Visconti SoCs pinctrl support
-  dt-bindings: arm: toshiba: add Toshiba Visconti ARM SoCs
-  dt-bindings: arm: toshiba: Add the TMPV7708 RM main board
-  arm64: visconti: Add initial support for Toshiba Visconti platform
-  arm64: dts: visconti: Add device tree for TMPV7708 RM main board
-  MAINTAINERS: Add information for Toshiba Visconti ARM SoCs
-  arm64: defconfig: Enable configs for Toshiba Visconti
-
- .../devicetree/bindings/arm/toshiba.yaml      |  22 +
- .../pinctrl/toshiba,visconti-pinctrl.yaml     |  92 +++++
- MAINTAINERS                                   |  11 +
- arch/arm64/Kconfig.platforms                  |   7 +
- arch/arm64/boot/dts/Makefile                  |   1 +
- arch/arm64/boot/dts/toshiba/Makefile          |   2 +
- .../boot/dts/toshiba/tmpv7708-rm-mbrc.dts     |  43 ++
- arch/arm64/boot/dts/toshiba/tmpv7708.dtsi     | 390 ++++++++++++++++++
- .../arm64/boot/dts/toshiba/tmpv7708_pins.dtsi |  93 +++++
- arch/arm64/configs/defconfig                  |   1 +
- drivers/pinctrl/Kconfig                       |   1 +
- drivers/pinctrl/Makefile                      |   1 +
- drivers/pinctrl/visconti/Kconfig              |  14 +
- drivers/pinctrl/visconti/Makefile             |   3 +
- drivers/pinctrl/visconti/pinctrl-common.c     | 320 ++++++++++++++
- drivers/pinctrl/visconti/pinctrl-common.h     |  96 +++++
- drivers/pinctrl/visconti/pinctrl-tmpv7700.c   | 355 ++++++++++++++++
- 17 files changed, 1452 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/toshiba.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/toshiba,visconti-pinctrl.yaml
- create mode 100644 arch/arm64/boot/dts/toshiba/Makefile
- create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708-rm-mbrc.dts
- create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708.dtsi
- create mode 100644 arch/arm64/boot/dts/toshiba/tmpv7708_pins.dtsi
- create mode 100644 drivers/pinctrl/visconti/Kconfig
- create mode 100644 drivers/pinctrl/visconti/Makefile
- create mode 100644 drivers/pinctrl/visconti/pinctrl-common.c
- create mode 100644 drivers/pinctrl/visconti/pinctrl-common.h
- create mode 100644 drivers/pinctrl/visconti/pinctrl-tmpv7700.c
-
--- 
-2.27.0
-
+Applied, thanks.
