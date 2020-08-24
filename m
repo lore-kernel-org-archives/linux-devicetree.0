@@ -2,186 +2,117 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3574DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35427C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1549920738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598309828;
-	bh=22BcqTI+EFX6g2/L1n2dshueIvUnN7Cn3gYOcnM7xzE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WmXcNhlMVfbgL1E4yCE7sTNqHhxYbnS8q1+908SmgbYcaKGFQgzgOeI/r/XPn944h
-	 xPY7+rO8m9BujW5DpFxVZO/eCjnvOoJywfi6mpAch0z2QEO1X0KU4dgyye3hAMF0kY
-	 30agMorCddezBUjemi8RCEnQfz3uEkzd2wp/yoKg=
+	by mail.kernel.org (Postfix) with ESMTP id 142FB20706
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlrivj0F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHXW5H (ORCPT
+        id S1728094AbgHXW5X (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:57:07 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37367 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHXW5G (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:57:06 -0400
-Received: by mail-io1-f65.google.com with SMTP id b16so10533646ioj.4;
-        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
+        Mon, 24 Aug 2020 18:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728085AbgHXW5T (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:57:19 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B51E7C061755;
+        Mon, 24 Aug 2020 15:57:18 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id oz20so9051045ejb.5;
+        Mon, 24 Aug 2020 15:57:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ptxh3FMwnetu3bSBY1W6iEPH5vawebKoGdalAVvQO4g=;
+        b=jlrivj0FqnDRBRtx8smru1UJ/xYxEGLFCStoHxYPPWofgLh7ixf2lLZpRYJykcM4Ka
+         3WZnvlP0vwBbthB+suu62H8l9lETkNf/sLugHVHdWyIn/Ftt+jeU08wIV5hRM6/R9IMo
+         9UOYnV2jb5ZCWkVGOPaGW31mn8nW9jK+PAK0bcXy0ykUfa2EqJ6imXdtdLILe63V2xNZ
+         04CrwKzBeavRziztR/5uQalsw/BH4kPPrHqVm2CCNgP//wwtbBR8VuAq64BpzP+aKWpe
+         ISZPKFN4r4h4iucPZn88wCj0WgiwLD1yfkv7moeJb+8G59NY7d9WVjAMMhhp8iDLirnD
+         fbRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=xVGE6rEY1RUDdQNh7SGiTq/hwvuBPw98UGPGdGtkR3s=;
-        b=lQvqzcs3mkwd5VVG3w+U7rs2eFkOK8Vle0sjfYsOfa9VwJckgtOE5XMv2oIifCyMKv
-         w/fOZJgu18iUo8waE5X+tQGOld9pzegHgDXl4jo3OJsFBU6VxVbcLG8Iwd1WraJjXf++
-         NYovcS0CtYqL+FKVLHutecS31xk/L/gdg1DksZYp0su5OjWTVDHn68+IQ/a37CMyzzWU
-         mZ9dc8nWon+1H228Ovx1ttCpa3crUNH8vg4uYseiXYG9w0+igXYZvfh27/3msRXmgAg1
-         jq40fvQIx9awLG5f+YraZuOR8QWxj1sd+PduNKhuExdWWe8ICeDhrYQfnUnknLEyp+I6
-         vbJA==
-X-Gm-Message-State: AOAM530QWX/gXK+vILJxcypfRQzrJv+DY4NsJCX+0trptgbqjlSs6PTo
-        PE/Y2v+xyMezCAHnV9uuWQ==
-X-Google-Smtp-Source: ABdhPJxZzTqlGIuc2GQiyiK402zSrSHAuiMtS1zh+LVYBDoR7GLuyYLF4mBV82z4DWNQVeHgr2UhYQ==
-X-Received: by 2002:a6b:6204:: with SMTP id f4mr6678058iog.56.1598309824569;
-        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id i11sm7909593ilr.47.2020.08.24.15.57.02
+        bh=Ptxh3FMwnetu3bSBY1W6iEPH5vawebKoGdalAVvQO4g=;
+        b=cltR8/8m7LUsXO2FuZfwk+vBTAlZL7s5YOCYvMYYTOrkLvwyJ7zmwXijpsEvsW7KaC
+         xGEMm4CLx3FdmuHm4XLGBHjZAg2cxvrIPv35DuRuauhnvfTE1YhPjBNt63aUAmGkgSMw
+         IacFmC20ClDGvL2ZRUXXZO/3JN8FvYiwQXivfLxbMgBw89ne1iFpiZBUC+YBOwdZ9LLB
+         75vC8mSki42Ez+XqN2+uNJuGjWUQIgQCAtEV8mkL8xBYUZ/Mu36AJucaXve+wew8on/J
+         toXfStxM4ufmYAYiCqcLDR78bSBKOB76mrDEmDfpzzM53hPdbswU//KEYSOxETgmtqz9
+         L1cw==
+X-Gm-Message-State: AOAM530zmmNMWDGuOkSoaWzgUIHsDB9DxWPjkGMj81WY1RzHX5ekdHEB
+        cgk0p+sw9eZbXdv4Ude5yEA=
+X-Google-Smtp-Source: ABdhPJzBSXALTGMDNfg6GkduPlCOaQ+L6uEuMrLwxTE0nrugJya5ef22hEjKg1Bw+/N3p/3KEinmmg==
+X-Received: by 2002:a17:906:a116:: with SMTP id t22mr8040589ejy.353.1598309837386;
+        Mon, 24 Aug 2020 15:57:17 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id l7sm10958038edn.45.2020.08.24.15.57.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:57:03 -0700 (PDT)
-Received: (nullmailer pid 3486301 invoked by uid 1000);
-        Mon, 24 Aug 2020 22:57:02 -0000
-Date:   Mon, 24 Aug 2020 16:57:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: msm: disp: add yaml schemas for DPU and
- DSI bindings
-Message-ID: <20200824225702.GA3460018@bogus>
-References: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
+        Mon, 24 Aug 2020 15:57:16 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 01:57:14 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, kurt@linutronix.de, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, bigeasy@linutronix.de,
+        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
+        ilias.apalodimas@linaro.org, ivan.khoronzhuk@linaro.org,
+        vinicius.gomes@intel.com, xiaoliang.yang_1@nxp.com, Po.Liu@nxp.com
+Subject: Re: [PATCH v3 0/8] Hirschmann Hellcreek DSA driver
+Message-ID: <20200824225714.ddcsfd2njfm7oc4y@skbuf>
+References: <20200820081118.10105-1-kurt@linutronix.de>
+ <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN>
+ <20200824220203.atjmjrydq4qyt33x@skbuf>
+ <20200824.153518.700546598086140133.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
+In-Reply-To: <20200824.153518.700546598086140133.davem@davemloft.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 07:08:02PM +0530, Krishna Manikandan wrote:
-> MSM Mobile Display Subsytem (MDSS) encapsulates sub-blocks
-> like DPU display controller, DSI etc. Add YAML schema
-> for the device tree bindings for the same.
+On Mon, Aug 24, 2020 at 03:35:18PM -0700, David Miller wrote:
+> From: Vladimir Oltean <olteanv@gmail.com>
+> Date: Tue, 25 Aug 2020 01:02:03 +0300
 > 
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+> > Just my comment on patch 5/8 about netdev->tc_to_txq. There are 2
+> > distinct things about that:
+> > - accessing struct net_device directly hurts the DSA model a little bit.
+> > - I think there's some confusion regarding the use of netdev->tc_to_txq
+> >   itself. I don't think that's the right place to setup a VLAN PCP to
+> >   traffic class mapping. That's simply "what traffic class does each
+> >   netdev queue have". I would even go as far as say that Linux doesn't
+> >   support a VLAN PCP to TC mapping (similar to the DSCP to TC mapping
+> >   from the DCB ops) at all, except for the ingress-qos-map and
+> >   egress-qos-map of the 8021q driver, which can't be offloaded and don't
+> >   map nicely over existing hardware anyway (what hardware has an
+> >   ingress-qos-map and an egress-qos-map per individual VLAN?!).
+> >   Although I do really see the need for having a mapping between VLAN
+> >   PCP and traffic class, I would suggest Kurt to not expose this through
+> >   taprio/mqprio (hardcode the PCP mapping as 1-to-1 with TC, as other
+> >   drivers do), and let's try to come up separately with an abstraction
+> >   for that.
 > 
-> Changes in v2:
->     - Changed dpu to DPU (Sam Ravnborg)
->     - Fixed indentation issues (Sam Ravnborg)
->     - Added empty line between different properties (Sam Ravnborg)
->     - Replaced reference txt files with  their corresponding
->       yaml files (Sam Ravnborg)
->     - Modified the file to use "|" only when it is
->       necessary (Sam Ravnborg)
+> Agreed, Kurt can you repost this series without the TAPRIO support for
+> now since it's controversial and needs more discussion and changes?
 > 
-> Changes in v3:
->     - Corrected the license used (Rob Herring)
->     - Added maxItems for properties (Rob Herring)
->     - Dropped generic descriptions (Rob Herring)
->     - Added ranges property (Rob Herring)
->     - Corrected the indendation (Rob Herring)
->     - Added additionalProperties (Rob Herring)
->     - Split dsi file into two, one for dsi controller
->       and another one for dsi phy per target (Rob Herring)
->     - Corrected description for pinctrl-names (Rob Herring)
->     - Corrected the examples used in yaml file (Rob Herring)
->     - Delete dsi.txt and dpu.txt (Rob Herring)
-> 
-> Changes in v4:
->     - Move schema up by one level (Rob Herring)
->     - Add patternProperties for mdp node (Rob Herring)
->     - Corrected description of some properties (Rob Herring)
-> 
-> Changes in v5:
->     - Correct the indentation (Rob Herring)
->     - Remove unnecessary description from properties (Rob Herring)
->     - Correct the number of interconnect entries (Rob Herring)
->     - Add interconnect names for sc7180 (Rob Herring)
->     - Add description for ports (Rob Herring)
->     - Remove common properties (Rob Herring)
->     - Add unevalutatedProperties (Rob Herring)
->     - Reference existing dsi controller yaml in the common
->       dsi controller file (Rob Herring)
->     - Correct the description of clock names to include only the
->       clocks that are required (Rob Herring)
->     - Remove properties which are already covered under the common
->       binding (Rob Herring)
->     - Add dsi phy supply nodes which are required for sc7180 and
->       sdm845 targets (Rob Herring)
->     - Add type ref for syscon-sfpb (Rob Herring)
-> 
-> Changes in v6:
->     - Fixed errors during dt_binding_check (Rob Herring)
->     - Add maxItems for phys and phys-names (Rob Herring)
->     - Use unevaluatedProperties wherever required (Rob Herring)
->     - Removed interrupt controller from required properties for
->       dsi controller (Rob Herring)
->     - Add constraints for dsi-phy reg-names based on the compatible
->       phy version (Rob Herring)
->     - Add constraints for dsi-phy supply nodes based on the
->       compatible phy version (Rob Herring)
-> 
-> Changes in v7:
->     - Add default value for qcom,mdss-mdp-transfer-time-us (Rob Herring)
->     - Modify the schema for data-lanes (Rob Herring)
->     - Split the phy schema into separate schemas based on
->       the phy version (Rob Herring)
-> 
-> Changes in v8:
->     - Resolve merge conflicts with latest dsi.txt file
->     - Include dp yaml change also in the same series
+> Thank you.
 
-I'm done reviewing this because I'm tired of repeating myself and you're 
-just throwing crap at the wall and seeing what sticks. Get someone else 
-working on QCom stuff to review because I'm done until someone I know 
-and trust reviews it.
+To be clear, the most important part of the taprio qdisc offload
+(setting up the gate control list) does not need to be postponed. It's
+just the VLAN PCP mapping that is a bit controversial.
 
-> ---
->  .../bindings/display/msm/dpu-sc7180.yaml           | 236 +++++++++++++++++++
->  .../bindings/display/msm/dpu-sdm845.yaml           | 216 ++++++++++++++++++
->  .../devicetree/bindings/display/msm/dpu.txt        | 141 ------------
->  .../display/msm/dsi-common-controller.yaml         | 249 +++++++++++++++++++++
->  .../display/msm/dsi-controller-sc7180.yaml         | 120 ++++++++++
->  .../display/msm/dsi-controller-sdm845.yaml         | 120 ++++++++++
-
-Once again, what's the difference between dsi-controller-sc7180.yaml and 
-dsi-controller-sdm845.yaml? I don't see one. If there's not a 
-difference, why do we have msm/dsi-common-controller.yaml? If there is a 
-difference dsi-controller-sc7180.yaml and dsi-controller-sdm845.yaml 
-should *only* have what's different because 
-msm/dsi-common-controller.yaml should have everything that is the same.
-
->  .../bindings/display/msm/dsi-phy-10nm.yaml         |  62 +++++
->  .../bindings/display/msm/dsi-phy-14nm.yaml         |  62 +++++
->  .../bindings/display/msm/dsi-phy-20nm.yaml         |  66 ++++++
->  .../bindings/display/msm/dsi-phy-28nm.yaml         |  62 +++++
->  .../bindings/display/msm/dsi-phy-sc7180.yaml       |  80 +++++++
->  .../bindings/display/msm/dsi-phy-sdm845.yaml       |  82 +++++++
->  .../devicetree/bindings/display/msm/dsi.txt        | 247 --------------------
->  13 files changed, 1355 insertions(+), 388 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/msm/dpu.txt
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-common-controller.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-10nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-14nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-20nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-28nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/msm/dsi.txt
+Thanks,
+-Vladimir
