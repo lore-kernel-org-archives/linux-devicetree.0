@@ -2,183 +2,132 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F652C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5687DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7BF2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E05204FD
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="WEmp+VkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHXIcN (ORCPT
+        id S1730726AbgHXI7T (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:13 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:58461 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgHXIcL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:32:11 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7E4B81BF207;
-        Mon, 24 Aug 2020 08:32:06 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 10:35:52 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Mon, 24 Aug 2020 04:59:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730278AbgHXI7S (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:59:18 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7518FC061573
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:59:17 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id d11so10665958ejt.13
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h6Nyla3H0wUGAKmzWwi+k8dbGIe1ZX5kzFV4/Pz+xJc=;
+        b=WEmp+VkCtcJ2WeYsttZRViQlwO9dCg57Qfm6bvcDqfm0CV17zAJa7ZFBpY1ZsPMakB
+         3tEOAsNwISWRBs4FESrd7zxUBzXUET0SNtX8ClxCex+zCeiOp/+BimZ6cUDWQByQW1h3
+         PUmRjWafkMvUXjtBgPeYqiXygW/kqReXvwzg/ApU16wWAco3NZU4+Xyzw70SQ5cQrwGg
+         b9tWNZKiMHFhT2DGsNWI5aU116gu8hyBKcca/SVKpOXC2JWJfnvI7272B4Crbwux6UFT
+         MMXcg+FHgq5wESb3VEykHk0OZycg7Fr12L6L/UvuTj1DBqu3ltK4jZQPZWxncgKPkAov
+         hetQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=h6Nyla3H0wUGAKmzWwi+k8dbGIe1ZX5kzFV4/Pz+xJc=;
+        b=WLcuVGnVrxX2fKwEwXfDEs6yu9Od5QqWKeYLXSwx7SuTkradLNYknJKBauURFuzjuI
+         7OSErtc5rwtt/zxz6QtQ26qh5Rv74a1mVqmdyNzPIt6fMhtm9vQDgSURzsRanLqa1hE0
+         Pu6PIqWUEENkRK5va5K9Am+6BzKe1cimE3ZyE4K9kiHwWV2H1m1TMMJapKw83G12h49b
+         HCIvGmbrvTov1kjg//lwlwJJufLONwObHNO6pTR4RrV3ZXONi2QsNZcSd0t507tCkRLF
+         pb5RNwY9jI+yT7sRT4RM9o6KSV3utGmYfAS72Tyfv4HMze2FX0fSEYkQcp46tpZmJlvP
+         EK0g==
+X-Gm-Message-State: AOAM532mYT7PeeG7fUcNPxeNZRE8la1Fu88KcTeN7mxpoRrzKvFD9sO0
+        yimv3Iyb3oLjb6ytNK/e2MFqUA==
+X-Google-Smtp-Source: ABdhPJxaZAUd1oAJnAMhDl7Cr1pP6hTC52Sd5CTKaQVBf5nJsWM04lQna+QTamTT6lBMyxnX5PpPOQ==
+X-Received: by 2002:a17:907:2078:: with SMTP id qp24mr4500987ejb.286.1598259556116;
+        Mon, 24 Aug 2020 01:59:16 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id p1sm8339639edu.11.2020.08.24.01.59.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 01:59:15 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Moritz Fischer <mdf@kernel.org>,
+        Nava kishore Manne <nava.manne@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
         Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: media: ov772x: Document endpoint props
-Message-ID: <20200824083552.v7s5gggqcviigvzu@uno.localdomain>
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
- <20200818122012.37956-4-jacopo+renesas@jmondi.org>
- <20200819135423.GL6049@pendragon.ideasonboard.com>
- <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
+        =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] arm64: dts: zynqmp: Remove additional compatible string for i2c IPs
+Date:   Mon, 24 Aug 2020 10:59:14 +0200
+Message-Id: <cc294ae1a79ef845af6809ddb4049f0c0f5bb87a.1598259551.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8sxDJXrGM-MYEwNS=D-eyA6oTRvDU3YT7Uu5Ph5kFh15w@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent, Prabhakar,
+DT binding permits only one compatible string which was decribed in past by
+commit 63cab195bf49 ("i2c: removed work arounds in i2c driver for Zynq
+Ultrascale+ MPSoC").
+The commit aea37006e183 ("dt-bindings: i2c: cadence: Migrate i2c-cadence
+documentation to YAML") has converted binding to yaml and the following
+issues is reported:
+...: i2c@ff030000: compatible: Additional items are not allowed
+('cdns,i2c-r1p10' was unexpected)
+	From schema:
+.../Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml fds
+...: i2c@ff030000: compatible: ['cdns,i2c-r1p14', 'cdns,i2c-r1p10'] is too
+long
 
-On Fri, Aug 21, 2020 at 12:37:35PM +0100, Lad, Prabhakar wrote:
-> Hi Laurent and Jacopo
->
-> On Wed, Aug 19, 2020 at 2:54 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Jacopo,
-> >
-> > Thank you for the patch.
-> >
-> > On Tue, Aug 18, 2020 at 02:20:12PM +0200, Jacopo Mondi wrote:
-> > > Document endpoint properties for the parallel bus type and
-> > > add them to the example.
-> > >
-> > > Specify a few constraints:
-> > > - If the bus type is BT.656 no hsync or vsycn polarities can be
-> > >   specified.
-> > > - If the bus width is 10 bits, not data-shift can be applied.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  .../devicetree/bindings/media/i2c/ov772x.yaml | 43 +++++++++++++++++++
-> > >  1 file changed, 43 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > index 75dad40f70cc..3fad5dffd19a 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > @@ -50,9 +50,47 @@ properties:
-> > >            bus-type:
-> > >              enum: [5, 6]
-> > >
-> > > +          bus-width:
-> > > +            enum: [8, 10]
-> > > +            default: 10
-> > > +
-> > > +          data-shift:
-> > > +            enum: [0, 2]
-> > > +            default: 0
-> > > +
-> > > +          hsync-active:
-> > > +            enum: [0, 1]
-> > > +            default: 1
-> > > +
-> > > +          vsync-active:
-> > > +            enum: [0, 1]
-> > > +            default: 1
-> > > +
-> > > +          pclk-sample:
-> > > +            enum: [0, 1]
-> > > +            default: 1
-> > > +
-> > >            remote-endpoint:
-> > >              description: A phandle to the bus receiver's endpoint node.
-> > >
-> > > +        allOf:
-> > > +          - if:
-> > > +              properties:
-> > > +                bus-type:
-> > > +                  const: 6
-> > > +            then:
-> > > +                properties:
-> > > +                  hsync-active: false
-> > > +                  vsync-active: false
-> > > +
-> > > +          - if:
-> > > +              properties:
-> > > +                bus-width:
-> > > +                  const: 10
-> > > +            then:
-> > > +                properties:
-> > > +                  data-shift:
-> > > +                    const: 0
-> >
-> > I'd add a blank line here.
-> >
-> > >          required:
-> > >            - bus-type
-> >
-> > Should some of the properties be required ? Possibly conditioned on
-> > bus-type ?
-> >
+The commit c415f9e8304a ("ARM64: zynqmp: Fix i2c node's compatible string")
+has added the second compatible string but without removing origin one.
+The patch is only keeping one compatible string "cdns,i2c-r1p14".
 
-I am not sure. They all have defaults, as reported here and as
-supported by the driver. There's nothing -strictly- required, as long
-as the here reported defaults are correct.
+Fixes: c415f9e8304a ("ARM64: zynqmp: Fix i2c node's compatible string")
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-> Agreed, would be interesting to know how this can be handled (split
-> out bus-type and add required properties for each) ?
->
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-That already happens with
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 6a8ff4bcc09b..165a95a106c8 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -500,7 +500,7 @@ gpio: gpio@ff0a0000 {
+ 		};
+ 
+ 		i2c0: i2c@ff020000 {
+-			compatible = "cdns,i2c-r1p14", "cdns,i2c-r1p10";
++			compatible = "cdns,i2c-r1p14";
+ 			status = "disabled";
+ 			interrupt-parent = <&gic>;
+ 			interrupts = <0 17 4>;
+@@ -511,7 +511,7 @@ i2c0: i2c@ff020000 {
+ 		};
+ 
+ 		i2c1: i2c@ff030000 {
+-			compatible = "cdns,i2c-r1p14", "cdns,i2c-r1p10";
++			compatible = "cdns,i2c-r1p14";
+ 			status = "disabled";
+ 			interrupt-parent = <&gic>;
+ 			interrupts = <0 18 4>;
+-- 
+2.28.0
 
-+          - if:
-+              properties:
-+                bus-type:
-+                  const: 6
-+            then:
-+                properties:
-+                  hsync-active: false
-+                  vsync-active: false
-
-And could be expanded, if we want any of these to be required.
-
-Thanks
-  j
-
-> Cheers,
-> Prabhakar
->
-> > >
-> > > @@ -82,6 +120,11 @@ examples:
-> > >              port {
-> > >                  ov772x_0: endpoint {
-> > >                      bus-type = <5>;
-> > > +                    vsync-active = <0>;
-> > > +                    hsync-active = <0>;
-> > > +                    pclk-sample = <0>;
-> > > +                    bus-width = <8>;
-> > > +                    data-shift = <0>;
-> > >                      remote-endpoint = <&vcap1_in0>;
-> > >                  };
-> > >              };
-> >
-> > --
-> > Regards,
-> >
-> > Laurent Pinchart
