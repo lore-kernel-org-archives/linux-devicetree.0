@@ -2,123 +2,98 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A289FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A912EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68CAE2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7182078D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598296116;
-	bh=4XlFYSUqyUgXNY2lTOdDnWrKsSE6d2W+mwPpeXHRPfc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jl97BZHj8W3qJlCPxaY7UvErxrwE3rMqCG+yFl6z1SR7Sy8ORrU7JLO6VId9+Wvrm
-	 xURvhFy/P4Djx1Y1uL9tcwjwzE9YPfqEEV5pDhDswbQorKx5lUANnMyIP+UNFfxOvV
-	 4HOXf2D7IBJl8ml6BYbnGCfX/GSfa7ZCN1BjYUss=
+	s=default; t=1598296165;
+	bh=WM1mj9GPK7MyD6GlnY/K1UotRAuqdew7qiTlVR6AOSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hh4zBnSzelWdrJljw3z5WMKRBI0l+UUEaOMHynbWx+ebbapbWA2x9TDz+70Y5vhg2
+	 PwlYazjz1PCT5fKzpeDLLfCVkufOx8y4y+GpRezbMUkEloO/V9JGnduqFH4Pdm5mLJ
+	 jixnoUHJ0dqNbFAwLmNs4CavIpgESva1Ma0oNGrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgHXTIf (ORCPT
+        id S1726845AbgHXTJZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725976AbgHXTIe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:08:34 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 603E42078D;
-        Mon, 24 Aug 2020 19:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598296113;
-        bh=4XlFYSUqyUgXNY2lTOdDnWrKsSE6d2W+mwPpeXHRPfc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8eHeZOSUcPCqIoTwTChDRzo72mauPsRTVirMpdsidVS1EiDVcWAw09JK8g/hTzxB
-         1vl9pNxLoNBZX3/EhxMF63qGppLaBt7wl6RWuwmvqxOs1eEvsN5QF7rJd4w2fVso9m
-         0ziKTO+o2t2dmy4lTVxLIVQY9M6GL0SRfcurKBFU=
+        Mon, 24 Aug 2020 15:09:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53280 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgHXTJW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 15:09:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u18so9781804wmc.3;
+        Mon, 24 Aug 2020 12:09:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lkYuZ+AU/xmAHBPjtK9v9v+eSex3YmMEccb9nQ0uFOg=;
+        b=YDbdWh6Sf+rnXJK525OJXzbExo+KGCvF7M9T2/tnRY0ZGHjg6y0KgtDqvGHWPRLdS1
+         YxP5bD0RVtWohGGfP0KQQxmVOl9vspQbZE3et/y5aod64ap6UpkwBeuVdyn5s/zo6g+p
+         yIvzw0RkG3cOU1u29tc6i/AI0v++d02mdee9ThYC6k7j+GdvA58sD95zEBNO6MGKuh9Q
+         Hmni0aauuziq03Cpt1M6qP68GjPQbd4URfARf/H5g5pItJJNeGoKgvGOp0dDbAe5zcKj
+         IN1H1MLz8k2KNuljUi6CoKvNWEJMBl8QwLtPp8qzq8ObhMmSdSDbDLbdsgayNPetGIfG
+         VyEg==
+X-Gm-Message-State: AOAM5319HyF/l7dLtPmAhB7xqUYrzNzh4pICffzDvpzEYANqw8voa4s4
+        r7bU0FyXBYJaLjv8wooULFI=
+X-Google-Smtp-Source: ABdhPJyqfbE+cdOfZ4IGBp4XY991J2Mg2zGm1lFpUETzbAozdFqX/22fzbavZUIVBbh0wo3qFzcasA==
+X-Received: by 2002:a1c:4b0e:: with SMTP id y14mr672535wma.60.1598296160696;
+        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id o66sm954229wmb.27.2020.08.24.12.09.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 21:09:17 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        Adam Ford <aford173@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>, Li Jun <jun.li@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 16/16] arm64: dts: imx8qxp-colibri: Align pin configuration group names with schema
-Date:   Mon, 24 Aug 2020 21:07:01 +0200
-Message-Id: <20200824190701.8447-16-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200824190701.8447-1-krzk@kernel.org>
-References: <20200824190701.8447-1-krzk@kernel.org>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/4] arm64: dts: imx8mm-var-som: Add Variscite
+ VAR-SOM-MX8MM System on Module
+Message-ID: <20200824190917.GA8631@kozik-lap>
+References: <20200824160247.19032-1-krzk@kernel.org>
+ <20200824160247.19032-3-krzk@kernel.org>
+ <CAOMZO5DquPR9BmQP0kZfTqNJmRabPe1Vtc801M9CVCPFCd1usQ@mail.gmail.com>
+ <20200824185713.GA5343@kozik-lap>
+ <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Device tree schema expects pin configuration groups to end with 'grp'
-suffix, otherwise dtbs_check complain with a warning like:
+On Mon, Aug 24, 2020 at 04:03:53PM -0300, Fabio Estevam wrote:
+> On Mon, Aug 24, 2020 at 3:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> 
+> > True, I'll fix it up, thanks.
+> >
+> > Any comments for the Symphony DTS before v4?
+> 
+> It looks good.
+> 
+> One suggestion is to remove pinctrl_pcie0 for now and add it when PCI
+> support is in place.
 
-    ... do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
+Indeed, a left over from a removed PCIe node.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks for review.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
-index 75f17a29f81e..f38acff0d25c 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-colibri.dtsi
-@@ -494,7 +494,7 @@
- 		>;
- 	};
- 
--	pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+	pinctrl_usdhc1_100mhz: usdhc1-100mhzgrp {
- 		fsl,pins = <
- 			IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
- 			IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD		0x21
-@@ -511,7 +511,7 @@
- 		>;
- 	};
- 
--	pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+	pinctrl_usdhc1_200mhz: usdhc1-200mhzgrp {
- 		fsl,pins = <
- 			IMX8QXP_EMMC0_CLK_CONN_EMMC0_CLK		0x06000041
- 			IMX8QXP_EMMC0_CMD_CONN_EMMC0_CMD		0x21
-@@ -554,7 +554,7 @@
- 		>;
- 	};
- 
--	pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
- 		fsl,pins = <
- 			IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041	/* SODIMM  47 */
- 			IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x21		/* SODIMM 190 */
-@@ -566,7 +566,7 @@
- 		>;
- 	};
- 
--	pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
- 		fsl,pins = <
- 			IMX8QXP_USDHC1_CLK_CONN_USDHC1_CLK		0x06000041	/* SODIMM  47 */
- 			IMX8QXP_USDHC1_CMD_CONN_USDHC1_CMD		0x21		/* SODIMM 190 */
--- 
-2.17.1
+Best regards,
+Krzysztof
 
