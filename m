@@ -2,109 +2,102 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5D3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D20C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 306352078D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5759A20702
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:50:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eKUrinQ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgHXXpv (ORCPT
+        id S1726713AbgHXXuw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:45:51 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25938 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgHXXpv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:45:51 -0400
-IronPort-SDR: MnPFUZ9zphnoD5OzHv77TpwYAtjedI2cJeSjSBv7xwSjnePdIzvdI2BAREveA6WMcUcGEie10P
- uXCTVTAC3w1w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="174049287"
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="174049287"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 16:45:51 -0700
-IronPort-SDR: NmAvFCg1vOBHJONklwmSRgHRYXt9YkPchvshhxW0Xm1pvwF9TH6gUmOnOIjLHwf9OWm/gzK1Qw
- +NyMvvY2c/PA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="499099888"
-Received: from unknown (HELO ellie) ([10.254.31.141])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Aug 2020 16:45:50 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Kurt Kanzenbach <kurt@linutronix.de>,
-        Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <87imd8zi8z.fsf@kurt>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200822143922.frjtog4mcyaegtyg@skbuf> <87imd8zi8z.fsf@kurt>
-Date:   Mon, 24 Aug 2020 16:45:50 -0700
-Message-ID: <87y2m3txox.fsf@intel.com>
+        Mon, 24 Aug 2020 19:50:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbgHXXus (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:50:48 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17884C061755
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 16:50:48 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id n12so2413834vkk.11
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 16:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RpNbOLmyVly5rQt5gm+Vds/mrJ6L/yJijI7cBZKl+DY=;
+        b=eKUrinQ6cqWF1TJCKRqfwUJ7Kh9JtC7c/z89jyLKI8FY/tvbQK05Fby0sd+WY1xnP8
+         urnHhPjl7uVTBy0TGxtzjX/WGFD14mYONx2CyrPYDkaSEn69+CYfXCqZ3tFM2QgVkBC2
+         X0QqIA4UpKkNqJM6JnCVfmRdvNcVjI+GNmr7s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RpNbOLmyVly5rQt5gm+Vds/mrJ6L/yJijI7cBZKl+DY=;
+        b=tkfg/IQOdZKkT4pzAhVg/TEmUVuVQtynd+vNtYsXSWoJp8iTVX+Ox+4DR/X82gEGLH
+         dEHGWx9qLISSFNgqo2tHOOu/j4+7u7WuVZh99wYRDlM8QDuDDT7hYpsrI5CtPDI3QJPO
+         fXbuAna3lek+eZSWclmWwDq3IMLPkj3090B98Hdce2/UjtqPODSSQ9BS9xRbYkpLvs6e
+         DKwEbGL8/OUKdEl/iguGEkqYSBSQRDuXhdkwyFGcgu9s7pqV+SUYkq+Rb1dQAxvWkYNj
+         eEX2QO8Xt2eWjvPHJGWIFEH4mSU6q9BUGC+aJHFY+JabPv5Zp749mIPn3QflJE2mcZVp
+         f0bA==
+X-Gm-Message-State: AOAM531ER8GDB3TLMRI7qR/c94PdxswrIgoilnkTUBJbNrAzBaE/U3b8
+        zPIyASDKzxyPySPW0ouftsLzN6euD0LDqQ==
+X-Google-Smtp-Source: ABdhPJwflwLiHB4pLlMHUfOwfad6J+py10DgZqRsq4pxxzdgf4Ef2nzbbXGGpULn1WkH6CS1QYSxbQ==
+X-Received: by 2002:a1f:f848:: with SMTP id w69mr4312052vkh.86.1598313046973;
+        Mon, 24 Aug 2020 16:50:46 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id a26sm1883451uaq.19.2020.08.24.16.50.45
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 16:50:45 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id b26so5400493vsa.13
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 16:50:45 -0700 (PDT)
+X-Received: by 2002:a05:6102:213a:: with SMTP id f26mr3942441vsg.6.1598313045280;
+ Mon, 24 Aug 2020 16:50:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org>
+In-Reply-To: <1593194502-13164-1-git-send-email-pillair@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 24 Aug 2020 16:50:33 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WTnULQs5skJiXfp+srsx5e8DeqW3uu2SEDVGoEmP2O1g@mail.gmail.com>
+Message-ID: <CAD=FV=WTnULQs5skJiXfp+srsx5e8DeqW3uu2SEDVGoEmP2O1g@mail.gmail.com>
+Subject: Re: [PATCH 0/2] ath10k: Add chain-1 voltage regulator voting
+To:     Rakesh Pillai <pillair@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     ath10k <ath10k@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kurt,
+Hi,
 
-Kurt Kanzenbach <kurt@linutronix.de> writes:
-
->>> +static void hellcreek_setup_tc_mapping(struct hellcreek *hellcreek,
->>> +				       struct net_device *netdev)
->>> +{
->>> +	int i, j;
->>> +
->>> +	/* Setup mapping between traffic classes and port queues. */
->>> +	for (i = 0; i < netdev_get_num_tc(netdev); ++i) {
->>> +		for (j = 0; j < netdev->tc_to_txq[i].count; ++j) {
->>> +			const int queue = j + netdev->tc_to_txq[i].offset;
->>> +
->>> +			hellcreek_select_prio(hellcreek, i);
->>> +			hellcreek_write(hellcreek,
->>> +					queue << HR_PRTCCFG_PCP_TC_MAP_SHIFT,
->>> +					HR_PRTCCFG);
->>> +		}
->>> +	}
->>> +}
->>
->> What other driver have you seen that does this?
->>
+On Fri, Jun 26, 2020 at 11:02 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
 >
-> Probably none.
+> Add the support to vote for the chain-1
+> voltage regulator for WCN3990. This is
+> added as an optional property.
 >
-> With TAPRIO traffic classes and the mapping to queues can be
-> configured. The switch can also map traffic classes. That sounded like a
-> good match to me.
-
-The only reason I could think that you would need this that *right now*
-taprio has pretty glaring oversight: that in the offload parameters each entry
-'gate_mask' reference the "Traffic Class" (i.e. bit 0 is Traffic Class
-0), and it really should be the HW queue.
-
-I have a patch that does the conversion on taprio before talking to the
-driver. Do you think it would help you avoid doing this on the driver
-side?
-
+> Rakesh Pillai (2):
+>   dt: bindings: Add new regulator as optional property for WCN3990
+>   ath10k: Add support for chain1 regulator supply voting
 >
-> Thanks,
-> Kurt
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 4 +++-
+>  drivers/net/wireless/ath/ath10k/snoc.c                         | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 
+This series is marked as "Awaiting Upstream" in patchwork.  I don't
+see anything blocking it landing now.
 
-Cheers,
--- 
-Vinicius
+-Doug
