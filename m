@@ -2,170 +2,118 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F97C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CBCC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AECD20738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413792075B
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:17:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVxFQX8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726225AbgHXKPC (ORCPT
+        id S1726730AbgHXKRL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:15:02 -0400
-Received: from mga12.intel.com ([192.55.52.136]:18743 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgHXKPB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:15:01 -0400
-IronPort-SDR: qBbXJuqGL2q7Plg2GnUr+UxzniZWmEDEdwMX8mE8DDdCzwF2En7mZ/4RTwhAyXXo3j49LUMbi7
- TFMTTsxHtSiA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135416480"
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="135416480"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 03:15:00 -0700
-IronPort-SDR: +1K6+IOcnplflhLmEToWJpcdL/LSAqLYEAscJLX0cLn3OT3K7Ns4k7HWcjTDAUPpuxkru8/RBc
- jUzt+G+CNW5A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="328440827"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2020 03:14:56 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1kA9V8-00B1PV-Oz; Mon, 24 Aug 2020 13:14:54 +0300
-Date:   Mon, 24 Aug 2020 13:14:54 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-Subject: Re: [PATCH v10 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200824101454.GK1891694@smile.fi.intel.com>
-References: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
- <05b664b961e37c1c35fa7d5d1cfc9ae244bc86bc.1598240097.git.rahul.tanwar@linux.intel.com>
- <20200824081715.GA1891694@smile.fi.intel.com>
- <ed7affbb-b95d-cf42-b9bc-71addf908ffc@linux.intel.com>
+        Mon, 24 Aug 2020 06:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgHXKRE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:17:04 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766D3C061573;
+        Mon, 24 Aug 2020 03:17:03 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y2so8986403ljc.1;
+        Mon, 24 Aug 2020 03:17:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EO6NpAg0w4GDPViUfV2sBM0Yy3icsdCv6CnK4KTImqc=;
+        b=NVxFQX8hvxJpgbMYgWDP8ljVHy+fJWPMXrej1XIN0mQJrxqZqZ7rZ7q5Jr3ijgyGlf
+         T3OdrM5cuz0hbZsZDGoiDq6Qac6igGMQUNV8ExM7LTC0YIBGX9lNSqiEeB8rxnqeUu2W
+         /m2pfPwGkZ/XhhspBiEDuDE82+a5usjw734uegAh6VfTqoirraDGyDeuPQRyHEI8vdqs
+         Gq/wyUmgCK6/o0p8Z+REYA4rkSupFZ8tMdvOe5iyVLRkONnmKN11ajMV3MQLSiewiWwt
+         7Rx4vkTe3vIO/BL5NR7FylxG9n/shFmmXbMS19pVax/PyPZHWUY5v1v57bfQIZBn2+M5
+         EjEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EO6NpAg0w4GDPViUfV2sBM0Yy3icsdCv6CnK4KTImqc=;
+        b=Ptnh0JCIMkprXszF2tofnoE7WrYg//iRatLCSPwaMgPHv9nAftKbcKjAn5MGwGggxc
+         J1BIKzXOGBHT1/EEjqE2sOPwTLu0reEjZNTzHHR0HAcwscEikmtvDMfLEmlYFhGtUZWt
+         m2dGHxYvbJUVQ1aMOYO3p4LEYYYeA6N2u+NJsyn6M/D+JKD12QRIpj7KsaoHMzSPbhCr
+         cRd3IJsMsbNpgmGaVLLQQfOCCFHXNUIuS5f/76XPh29bL5ZlHz25s3NdDUvMMyAlXR9s
+         37ug/CZYQEerG7u09gGM+q085p2e8Wy86NwL4sPBFAq+ZJs3w3lw+bMxRZ7NF+xQQMQq
+         w9BQ==
+X-Gm-Message-State: AOAM533RpymZKFV7KXN2SF17hMf8AI23Noqj7+GDiqUcxnvONOaf3goI
+        a65dU8vxx0BpphHL2ak6NX7BrNcpAjA=
+X-Google-Smtp-Source: ABdhPJy/u/4LLu9r4mhcxwDPpCC7JjeLfk00HvQSpyKtVoG0ldd1sVtB6GCZfVC6S4L1b5e/fmkjSg==
+X-Received: by 2002:a2e:b708:: with SMTP id j8mr2411912ljo.375.1598264217513;
+        Mon, 24 Aug 2020 03:16:57 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id t18sm2111855ljc.126.2020.08.24.03.16.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 03:16:56 -0700 (PDT)
+Subject: Re: [PATCH v1 3/6] leds: Add driver for Acer Iconia Tab A500
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-4-digetx@gmail.com>
+ <20200823223434.cjxo762ehxgo4caz@duo.ucw.cz>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c7d37174-1dcd-206d-01ac-eb95aa0b5dc8@gmail.com>
+Date:   Mon, 24 Aug 2020 13:16:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed7affbb-b95d-cf42-b9bc-71addf908ffc@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200823223434.cjxo762ehxgo4caz@duo.ucw.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 05:36:47PM +0800, Tanwar, Rahul wrote:
-> On 24/8/2020 4:17 pm, Andy Shevchenko wrote:
-> > On Mon, Aug 24, 2020 at 11:36:37AM +0800, Rahul Tanwar wrote:
-
-...
-
-> >> +	ret = reset_control_deassert(pc->rst);
-> >> +	if (ret) {
-> >> +		if (ret != -EPROBE_DEFER)
-> >> +			dev_err_probe(dev, ret, "cannot deassert reset control\n");
-> >> +		return ret;
-> >> +	}
-> > Please, spend a bit of time to understand the changes you are doing. There are
-> > already few examples how to use dev_err_probe() properly.
+24.08.2020 01:34, Pavel Machek пишет:
+> On Sun 2020-08-23 17:08:43, Dmitry Osipenko wrote:
+>> Acer Iconia Tab A500 is an Android tablet device which has two LEDs
+>> embedded into the Power Button. Orange LED indicates "battery charging"
+>> status and white LED indicates "wake-up/charge-done" status. The new LED
+>> driver provides control over both LEDs to userspace.
 > 
-> I guess your point is that the check of (ret !- -EPROBE_DEFER) is not needed
-> when using dev_err_probe() as it encapsulates it.
-
-It does even more. Look at the existing examples.
-
-> Sorry, i missed it. Will
-> fix it. I am not able to find any other missing point after referring to
-> two driver examples which uses dev_err_probe() ?
-
-There are three drivers that are using it in Linux Next. All of them utilizing
-it correctly, look at them.
-
-> >> +	ret = clk_prepare_enable(pc->clk);
-> >> +	if (ret) {
-> >> +		dev_err(dev, "failed to enable clock\n");
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	ret = devm_add_action_or_reset(dev, lgm_pwm_action, pc);
-> >> +	if (ret)
-> >> +		return ret;
-> > You have also ordering issues here.
-> >
-> > So, what I can see about implementation is that
-> >
-> >
-> > 	static void ..._clk_disable(void *data)
-> > 	{
-> > 		clk_disable_unprepare(data);
-> > 	}
-> >
-> > 	static int ..._clk_enable(...)
-> > 	{
-> > 		int ret;
-> >
-> > 		ret = clk_preare_enable(...);
-> > 		if (ret)
-> > 			return ret;
-> > 		return devm_add_action_or_reset(..., ..._clk_disable);
-> > 	}
-> >
-> >
-> > Similar for reset control.
-> >
-> > Then in the ->probe() something like this:
-> >
-> > 	ret = devm_reset_control_get...;
-> > 	if (ret)
-> > 		return ret;
-> >
-> > 	ret = ..._reset_deassert(...);
-> > 	if (ret)
-> > 		return ret;
-> >
-> > followed by similar section for the clock.
-> >
+> Hmm. If the ENE controller is similar to other devices, should it also
+> share LED driver?
 > 
-> Regarding ordering: In early rounds of review, feedback about ordering was that
-> it is recommended to be reverse of the sequence in probe i.e.
-> if in probe:
-> 1. reset_control_deassert()
-> 2. clk_prepare_enable()
-> then in remove:
-> 1. clk_disable_uprepare()
-> 2. reset_control_assert()
-> 
-> That's the reason i added a generic action() which reverses order.
+> And I guess the cdev names should be different based on info above (I
+> gave you wrong suggestions before)... and they probably should be
+> parsed from the device tree.
 
-Yes, and my suggestion follows this.
+The ENE controller hardware is the same on all devices that use it, but
+firmware isn't the same and apparently every vendor invents its own
+thing in regards to the firmware because firmware features and interface
+varies vastly from device to device. Hence, unfortunately, usually there
+is very little compatibility even if devices come form the same vendor
 
-> I understand your suggested way as explained above but not sure if that would
-> ensure reverse ordering during unwind.
+AFAIK, the ENE controller provides some compatibility on x86 machines
+via ACPI EC standard, but this doesn't apply to the ARM devices.
 
-You have:
- devm r1
- devm r2
- enable r1
- enable r2 (and here you have broken error path)
+I know that Acer A200 should be able to re-use the A500 EC driver as-is,
+but A200 is pretty much the same device as A500, so it's not surprising.
+IIRC, A200 model only misses back camera in comparison to A500. Hence
+there shouldn't be a need to parse the names from a device-tree, but
+I'll try to double-check it to be sure.
 
-My suggestion has it like this (and no broken error path):
- devm r1
- enable r1
- devm r2
- enable r2
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks!
