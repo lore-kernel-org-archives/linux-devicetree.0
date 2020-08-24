@@ -7,375 +7,102 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA1BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 17:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9166C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2A8B2067C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 17:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C10B32074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 17:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598290559;
-	bh=jajdHKpA/OzDTtEh8dKNeYgjCDO10elq+9ueBldgEE4=;
+	s=default; t=1598290817;
+	bh=oXolKDkrqEteaOxR9Z85JmSKQysQ3vFhv+zsNP4FTXs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T/OMfEufOq8Aqu0CKUSooewDEscBfk8DMMw6+zv1vib6BwGRyYFoK/VqLrQ2h5OZN
-	 z9mkKk/B/chugfAZptuVBMM4bnrg3IvMzMTNQi+JVuG5EEdgfObdW/EivknSAVDgFr
-	 wAdjXjj1puQ/OdgXq2zxkYSkqgard9iP5uVM9Mdg=
+	b=DDfBZFO8C4IqLKFJHD2TlnW+TjoyYndHQ4HgKBk6U+VVY9+YMhvmFyYCMH+XUMOAR
+	 uKoYuPnYr9+U2zbcayNcWmrkNI5/pOmuMuqDMiVQrdSJwjVs+AJd01CEFq+EMXP4qf
+	 nb/qFOq6nT6+WkSY2OG5v+ysnaMb3cJBqVk4UNZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHXRfz (ORCPT
+        id S1726444AbgHXRkR (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:35:55 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:32937 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728528AbgHXRfo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 13:35:44 -0400
-Received: by mail-il1-f196.google.com with SMTP id r13so8006273iln.0;
-        Mon, 24 Aug 2020 10:35:43 -0700 (PDT)
+        Mon, 24 Aug 2020 13:40:17 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42202 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725601AbgHXRkP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 13:40:15 -0400
+Received: by mail-io1-f66.google.com with SMTP id g13so9550772ioo.9;
+        Mon, 24 Aug 2020 10:40:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RvtZJRVLDDkAIrUgbsaYYYpc0rnswzQQW7bcfytrw2k=;
-        b=gkVyKCnPdyA2t1+ahPgIG8t+LTh+f4lVsB57t7vbiZXAmbefP7uAuVJkPkyQWxhlTV
-         rwGcsP/yy5pEdKYlyIamBfO+M3fT+j3ZPjt4Vp4FRejlZpCQ2Ho1r0bWCTWOld4+bBMO
-         2fgeWzmXbRt0wWRysqndmIcmqrhSxYm3VahYr05bcSz6nMed3Qi/yvEE4tCWczbRer9C
-         Qviw11nV4HRYhYAYu0bJN8on4XTUSE/zKKRe8vLwPBs9e1Fhk+esRrM2ksijWB40A2QF
-         vDxG0Hje3S2u1llSz4TNtNxXkiYmhZGEVaNKgucXZ/dhDO8M+prT2QtSWa5gLJfJM32r
-         cyCA==
-X-Gm-Message-State: AOAM532cBgsJNlagDfVnn6ZqlSpoTwilF/gEnsq5wXpANDB7mesZkNKT
-        GaviGMVNNZu8c0J1bLStQw==
-X-Google-Smtp-Source: ABdhPJx3PuEeH9ZUnf9J9dEAAzUONc8w1DwyS3NKEIgjuNlhebcqOFLr3iHJXgxxkvBQXG3pOmyM1g==
-X-Received: by 2002:a92:7b10:: with SMTP id w16mr5453892ilc.92.1598290542423;
-        Mon, 24 Aug 2020 10:35:42 -0700 (PDT)
+        bh=UVtrljt/EWWhhPr0mdtIWZRHw/y3jFOkqpDqOIKXMy8=;
+        b=rootcDx+L8DT1N+2GVRb6rnnhi4pdvbLDRDMPLE7b64UAMIljpre62+DMmnryf0nnc
+         JRiI4NBGH6KG6Sn9BBBL7ei2x6PyrTkcwL6e4k0EtSQvNWx0RzYFc1JBS3OoXS9Og0Wo
+         EjRGYZYg849Sli3qeGd+gqGnH7SalnemNVcVjqmLNYnYcs3XU7gEoL1QYdRHkjDoye7z
+         LPPEJjjVy8IrlralaUufDy+8VctXQDAOHo/WEaHqoT9u2uIOGSI5fJELjSyVc+CSNC7C
+         cQdi9K2ghD6gjGl6+puj3nZyvcDSFsiqWIdiRKKotA4zctQWpcvdEMZatOK83Y6dYn97
+         vGDA==
+X-Gm-Message-State: AOAM532Ql5EeQeEl2RK6ONQHey/u5QW6FoGAK6Xq9FXqG2Mc6lcpr4ji
+        7YwAd6ArXl8uglVWN7ARLQ==
+X-Google-Smtp-Source: ABdhPJyjYzUkBxJsb/wKRoH4c89oJ3tsNy0bXy++WXqLOyjfTb7kelHoON54dkX40b2Pf0HM6/psTg==
+X-Received: by 2002:a5d:995a:: with SMTP id v26mr5699626ios.176.1598290814026;
+        Mon, 24 Aug 2020 10:40:14 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id p21sm7100806ioj.10.2020.08.24.10.35.41
+        by smtp.gmail.com with ESMTPSA id h13sm6714876iob.33.2020.08.24.10.40.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 10:35:41 -0700 (PDT)
-Received: (nullmailer pid 2943902 invoked by uid 1000);
-        Mon, 24 Aug 2020 17:35:39 -0000
-Date:   Mon, 24 Aug 2020 11:35:39 -0600
+        Mon, 24 Aug 2020 10:40:13 -0700 (PDT)
+Received: (nullmailer pid 2950296 invoked by uid 1000);
+        Mon, 24 Aug 2020 17:40:09 -0000
+Date:   Mon, 24 Aug 2020 11:40:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sagar Kadam <sagar.kadam@sifive.com>
-Cc:     aou@eecs.berkeley.edu, devicetree@vger.kernel.org,
-        paul.walmsley@sifive.com, robh+dt@kernel.org, yash.shah@sifive.com,
-        palmer@dabbelt.com, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/1] dt-bindings: riscv: sifive-l2-cache: convert
- bindings to json-schema
-Message-ID: <20200824173539.GA2939042@bogus>
-References: <1598255421-8274-1-git-send-email-sagar.kadam@sifive.com>
- <1598255421-8274-2-git-send-email-sagar.kadam@sifive.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+Message-ID: <20200824174009.GA2948650@bogus>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-2-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1598255421-8274-2-git-send-email-sagar.kadam@sifive.com>
+In-Reply-To: <20200824084712.2526079-2-vkoul@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Aug 2020 13:20:21 +0530, Sagar Kadam wrote:
-> Convert the device tree bindings for the SiFive's FU540-C000 SoC's L2 Cache
-> controller to YAML format.
+On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
+> Add devicetree binding documentation for GPI DMA controller
+> implemented on Qualcomm SoCs
 > 
-> Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 51 ------------
->  .../devicetree/bindings/riscv/sifive-l2-cache.yaml | 93 ++++++++++++++++++++++
->  2 files changed, 93 insertions(+), 51 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
->  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
+>  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
 > 
 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: $nodename:0: 'l2-cache' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: compatible:0: 'cache' is not one of ['sifive,fu540-c000-ccache']
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: compatible: ['cache'] is too short
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'l3-cache' does not match any of the regexes: 'pinctrl-[0-9]+'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'cache-block-size' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'cache-level' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'cache-sets' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'cache-size' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'cache-unified' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'reg' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: {'compatible': ['cache'], 'next-level-cache': [[2]], 'phandle': [[1]], 'l3-cache': {'compatible': ['cache'], 'phandle': [[2]]}, '$nodename': ['l2-cache']} is not valid under any of the given schemas
-{'$filename': '/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml',
- '$id': 'http://devicetree.org/schemas/riscv/sifive-l2-cache.yaml#',
- '$schema': 'http://devicetree.org/meta-schemas/core.yaml#',
- '$select_validator': <jsonschema.validators.create.<locals>.Validator object at 0x7efcd84bc850>,
- 'additionalProperties': False,
- 'allOf': [{'$ref': '/schemas/cache-controller.yaml#'}],
- 'oneOf': [{'required': ['interrupts']},
-           {'required': ['interrupts-extended']}],
- 'patternProperties': {'pinctrl-[0-9]+': True},
- 'properties': {'$nodename': True,
-                'cache-block-size': {'additionalItems': False,
-                                     'items': [{'additionalItems': False,
-                                                'items': [{'const': 64}],
-                                                'maxItems': 1,
-                                                'minItems': 1,
-                                                'type': 'array'}],
-                                     'maxItems': 1,
-                                     'minItems': 1,
-                                     'type': 'array'},
-                'cache-level': {'additionalItems': False,
-                                'items': [{'additionalItems': False,
-                                           'items': [{'const': 2}],
-                                           'maxItems': 1,
-                                           'minItems': 1,
-                                           'type': 'array'}],
-                                'maxItems': 1,
-                                'minItems': 1,
-                                'type': 'array'},
-                'cache-sets': {'additionalItems': False,
-                               'items': [{'additionalItems': False,
-                                          'items': [{'const': 1024}],
-                                          'maxItems': 1,
-                                          'minItems': 1,
-                                          'type': 'array'}],
-                               'maxItems': 1,
-                               'minItems': 1,
-                               'type': 'array'},
-                'cache-size': {'additionalItems': False,
-                               'items': [{'additionalItems': False,
-                                          'items': [{'const': 2097152}],
-                                          'maxItems': 1,
-                                          'minItems': 1,
-                                          'type': 'array'}],
-                               'maxItems': 1,
-                               'minItems': 1,
-                               'type': 'array'},
-                'cache-unified': True,
-                'compatible': {'additionalItems': False,
-                               'items': [{'enum': ['sifive,fu540-c000-ccache']},
-                                         {'const': 'cache'}],
-                               'maxItems': 2,
-                               'minItems': 2,
-                               'type': 'array'},
-                'interrupt-parent': True,
-                'interrupts': {'maxItems': 3, 'minItems': 1},
-                'interrupts-extended': {'maxItems': 3, 'minItems': 1},
-                'memory-region': {},
-                'next-level-cache': {},
-                'phandle': True,
-                'pinctrl-names': True,
-                'reg': {'maxItems': 1, 'minItems': 1},
-                'status': True},
- 'required': ['compatible',
-              'cache-block-size',
-              'cache-level',
-              'cache-sets',
-              'cache-size',
-              'cache-unified',
-              'reg'],
- 'select': {'properties': {'compatible': {'contains': {'enum': ['cache',
-                                                                'sifive,fu540-c000-ccache']}}},
-            'required': ['compatible']},
- 'title': 'SiFive L2 Cache Controller'} (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l2-cache: 'interrupts' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
 
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: $nodename:0: 'l3-cache' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: compatible:0: 'cache' is not one of ['sifive,fu540-c000-ccache']
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: compatible: ['cache'] is too short
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: 'cache-block-size' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: 'cache-level' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: 'cache-sets' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: 'cache-size' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: 'cache-unified' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: 'reg' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: {'compatible': ['cache'], 'phandle': [[2]], '$nodename': ['l3-cache']} is not valid under any of the given schemas
-{'$filename': '/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml',
- '$id': 'http://devicetree.org/schemas/riscv/sifive-l2-cache.yaml#',
- '$schema': 'http://devicetree.org/meta-schemas/core.yaml#',
- '$select_validator': <jsonschema.validators.create.<locals>.Validator object at 0x7efcd84bc850>,
- 'additionalProperties': False,
- 'allOf': [{'$ref': '/schemas/cache-controller.yaml#'}],
- 'oneOf': [{'required': ['interrupts']},
-           {'required': ['interrupts-extended']}],
- 'patternProperties': {'pinctrl-[0-9]+': True},
- 'properties': {'$nodename': True,
-                'cache-block-size': {'additionalItems': False,
-                                     'items': [{'additionalItems': False,
-                                                'items': [{'const': 64}],
-                                                'maxItems': 1,
-                                                'minItems': 1,
-                                                'type': 'array'}],
-                                     'maxItems': 1,
-                                     'minItems': 1,
-                                     'type': 'array'},
-                'cache-level': {'additionalItems': False,
-                                'items': [{'additionalItems': False,
-                                           'items': [{'const': 2}],
-                                           'maxItems': 1,
-                                           'minItems': 1,
-                                           'type': 'array'}],
-                                'maxItems': 1,
-                                'minItems': 1,
-                                'type': 'array'},
-                'cache-sets': {'additionalItems': False,
-                               'items': [{'additionalItems': False,
-                                          'items': [{'const': 1024}],
-                                          'maxItems': 1,
-                                          'minItems': 1,
-                                          'type': 'array'}],
-                               'maxItems': 1,
-                               'minItems': 1,
-                               'type': 'array'},
-                'cache-size': {'additionalItems': False,
-                               'items': [{'additionalItems': False,
-                                          'items': [{'const': 2097152}],
-                                          'maxItems': 1,
-                                          'minItems': 1,
-                                          'type': 'array'}],
-                               'maxItems': 1,
-                               'minItems': 1,
-                               'type': 'array'},
-                'cache-unified': True,
-                'compatible': {'additionalItems': False,
-                               'items': [{'enum': ['sifive,fu540-c000-ccache']},
-                                         {'const': 'cache'}],
-                               'maxItems': 2,
-                               'minItems': 2,
-                               'type': 'array'},
-                'interrupt-parent': True,
-                'interrupts': {'maxItems': 3, 'minItems': 1},
-                'interrupts-extended': {'maxItems': 3, 'minItems': 1},
-                'memory-region': {},
-                'next-level-cache': {},
-                'phandle': True,
-                'pinctrl-names': True,
-                'reg': {'maxItems': 1, 'minItems': 1},
-                'status': True},
- 'required': ['compatible',
-              'cache-block-size',
-              'cache-level',
-              'cache-sets',
-              'cache-size',
-              'cache-unified',
-              'reg'],
- 'select': {'properties': {'compatible': {'contains': {'enum': ['cache',
-                                                                'sifive,fu540-c000-ccache']}}},
-            'required': ['compatible']},
- 'title': 'SiFive L2 Cache Controller'} (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.example.dt.yaml: l3-cache: 'interrupts' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: {'description': 'Bitmap of supported GPII instances for OS', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: 'not' is a required property
 
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: $nodename:0: 'cache-controller-0' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: compatible:0: 'cache' is not one of ['sifive,fu540-c000-ccache']
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: compatible: ['cache'] is too short
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: 'cache-block-size' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: 'cache-sets' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: 'cache-size' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: 'reg' is a required property
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: {'compatible': ['cache'], 'power-domains': [[1, 12]], 'cache-unified': True, 'cache-level': [[2]], '$nodename': ['cache-controller-0']} is not valid under any of the given schemas
-{'$filename': '/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml',
- '$id': 'http://devicetree.org/schemas/riscv/sifive-l2-cache.yaml#',
- '$schema': 'http://devicetree.org/meta-schemas/core.yaml#',
- '$select_validator': <jsonschema.validators.create.<locals>.Validator object at 0x7f26dd3928b0>,
- 'additionalProperties': False,
- 'allOf': [{'$ref': '/schemas/cache-controller.yaml#'}],
- 'oneOf': [{'required': ['interrupts']},
-           {'required': ['interrupts-extended']}],
- 'patternProperties': {'pinctrl-[0-9]+': True},
- 'properties': {'$nodename': True,
-                'cache-block-size': {'additionalItems': False,
-                                     'items': [{'additionalItems': False,
-                                                'items': [{'const': 64}],
-                                                'maxItems': 1,
-                                                'minItems': 1,
-                                                'type': 'array'}],
-                                     'maxItems': 1,
-                                     'minItems': 1,
-                                     'type': 'array'},
-                'cache-level': {'additionalItems': False,
-                                'items': [{'additionalItems': False,
-                                           'items': [{'const': 2}],
-                                           'maxItems': 1,
-                                           'minItems': 1,
-                                           'type': 'array'}],
-                                'maxItems': 1,
-                                'minItems': 1,
-                                'type': 'array'},
-                'cache-sets': {'additionalItems': False,
-                               'items': [{'additionalItems': False,
-                                          'items': [{'const': 1024}],
-                                          'maxItems': 1,
-                                          'minItems': 1,
-                                          'type': 'array'}],
-                               'maxItems': 1,
-                               'minItems': 1,
-                               'type': 'array'},
-                'cache-size': {'additionalItems': False,
-                               'items': [{'additionalItems': False,
-                                          'items': [{'const': 2097152}],
-                                          'maxItems': 1,
-                                          'minItems': 1,
-                                          'type': 'array'}],
-                               'maxItems': 1,
-                               'minItems': 1,
-                               'type': 'array'},
-                'cache-unified': True,
-                'compatible': {'additionalItems': False,
-                               'items': [{'enum': ['sifive,fu540-c000-ccache']},
-                                         {'const': 'cache'}],
-                               'maxItems': 2,
-                               'minItems': 2,
-                               'type': 'array'},
-                'interrupt-parent': True,
-                'interrupts': {'maxItems': 3, 'minItems': 1},
-                'interrupts-extended': {'maxItems': 3, 'minItems': 1},
-                'memory-region': {},
-                'next-level-cache': {},
-                'phandle': True,
-                'pinctrl-names': True,
-                'reg': {'maxItems': 1, 'minItems': 1},
-                'status': True},
- 'required': ['compatible',
-              'cache-block-size',
-              'cache-level',
-              'cache-sets',
-              'cache-size',
-              'cache-unified',
-              'reg'],
- 'select': {'properties': {'compatible': {'contains': {'enum': ['cache',
-                                                                'sifive,fu540-c000-ccache']}}},
-            'required': ['compatible']},
- 'title': 'SiFive L2 Cache Controller'} (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/renesas,rcar-sysc.example.dt.yaml: cache-controller-0: 'interrupts' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: {'description': 'Maximum number of GPII instances available', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: 'not' is a required property
 
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
+./Documentation/devicetree/bindings/dma/qcom-gpi.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/dma/qcom-gpi.yaml#
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: ignoring, error in schema: properties: qcom,max-num-gpii
+warning: no schema found in file: ./Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.example.dt.yaml: example-0: dma@800000:reg:0: [0, 8388608, 0, 393216] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
 
 
-See https://patchwork.ozlabs.org/patch/1350111
+See https://patchwork.ozlabs.org/patch/1350170
 
 If you already ran 'make dt_binding_check' and didn't see the above
 error(s), then make sure dt-schema is up to date:
