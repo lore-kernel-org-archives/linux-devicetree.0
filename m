@@ -2,108 +2,80 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58CAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4274C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880E720656
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:32:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598308333;
-	bh=4Yr/wi3AkENLWFJAQSa32KjuiVmHIp5vs3AyvjLxqs0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G4XESvKHGUiY209AfjZ+nreryDCTzkyPms+NL5a5bTsTd4JqiRgE8AoWduI9poMWj
-	 K3FBWZx2QEn/cRFEtNgXEMxBkjRmO5hj3811wucMRjggWQBank5O1nUJCiRR4SdvYw
-	 eaHcQVqtwb9i6NszZzW5kBTPTie9ix9U6PgryB1c=
+	by mail.kernel.org (Postfix) with ESMTP id 9FCC420656
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:35:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHXWcN (ORCPT
+        id S1726531AbgHXWfY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:32:13 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46416 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXWcM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:32:12 -0400
-Received: by mail-io1-f66.google.com with SMTP id d18so1141250iop.13;
-        Mon, 24 Aug 2020 15:32:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7GOlv4yP4CAwOVfNjNFni4AU3fJZ+QQ+53L/TEB0AXc=;
-        b=XVT7Pj3kvgCp4W5RgKLAk/Nss1llE/TVIdJwAKWh36sXJ2WxsKmBPNqzgq0Z5mjnsp
-         L7daoaSM9uiM1S0H8xzzy3s+W9McwAuhNv5oInLMKwyl4FCcge1V94cq4DZt4AIEsQmi
-         kXg4q6Yxex0rz/7gVTVrufoM4wn+qvb3Eg+Caj8izdiuCnxl5f7u6zOvk63hsWkIrFU6
-         gq88hfYlPqE8y1u9NTCIw1Y+vOqq0jImnWxf2RZOVuBk5ha2bjIAc8qD6kOYGYzjDAjt
-         n9pcbzMDo92DNbyygfla7L6nFMchFojV19dZRKZK8EQlVmrORhZwaGHtG7HTANVtX1IU
-         n3Yg==
-X-Gm-Message-State: AOAM5321RS8MlVyayzsJ9sO/ihf0vpqtA9Xl65OdMaeBLottbuvPeRJP
-        s/lT+Fp06ypxj++TCWXZbw==
-X-Google-Smtp-Source: ABdhPJxzhnRw08Jdre0AL6bo7DaBmWE+/fpQBJIESCpHF83NqG/EcpDmuVtkbdbNlf83c5aoBf1LWQ==
-X-Received: by 2002:a6b:6515:: with SMTP id z21mr6629569iob.71.1598308331437;
-        Mon, 24 Aug 2020 15:32:11 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a9sm7452434iol.9.2020.08.24.15.32.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:32:10 -0700 (PDT)
-Received: (nullmailer pid 3439585 invoked by uid 1000);
-        Mon, 24 Aug 2020 22:32:07 -0000
-Date:   Mon, 24 Aug 2020 16:32:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     allen <allen.chen@ite.com.tw>
-Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
-        Hermes Wu <Hermes.Wu@ite.com.tw>,
-        Kenneth Hung <Kenneth.Hung@ite.com.tw>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/2] ite-it6505 change trigger conditions
-Message-ID: <20200824223126.GA3434984@bogus>
-References: <1597054312-25538-1-git-send-email-allen.chen@ite.com.tw>
- <1597054312-25538-2-git-send-email-allen.chen@ite.com.tw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597054312-25538-2-git-send-email-allen.chen@ite.com.tw>
+        Mon, 24 Aug 2020 18:35:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726519AbgHXWfY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:35:24 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B97C061574;
+        Mon, 24 Aug 2020 15:35:24 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id CC75D12905C11;
+        Mon, 24 Aug 2020 15:18:34 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 15:35:18 -0700 (PDT)
+Message-Id: <20200824.153518.700546598086140133.davem@davemloft.net>
+To:     olteanv@gmail.com
+Cc:     kuba@kernel.org, kurt@linutronix.de, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, bigeasy@linutronix.de,
+        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
+        ilias.apalodimas@linaro.org, ivan.khoronzhuk@linaro.org,
+        vinicius.gomes@intel.com, xiaoliang.yang_1@nxp.com, Po.Liu@nxp.com
+Subject: Re: [PATCH v3 0/8] Hirschmann Hellcreek DSA driver
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200824220203.atjmjrydq4qyt33x@skbuf>
+References: <20200820081118.10105-1-kurt@linutronix.de>
+        <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN>
+        <20200824220203.atjmjrydq4qyt33x@skbuf>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Aug 2020 15:18:35 -0700 (PDT)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 06:11:15PM +0800, allen wrote:
-> it6505 changes trigger conditions.
+From: Vladimir Oltean <olteanv@gmail.com>
+Date: Tue, 25 Aug 2020 01:02:03 +0300
 
-Patches must have a Signed-off-by with a full name.
+> Just my comment on patch 5/8 about netdev->tc_to_txq. There are 2
+> distinct things about that:
+> - accessing struct net_device directly hurts the DSA model a little bit.
+> - I think there's some confusion regarding the use of netdev->tc_to_txq
+>   itself. I don't think that's the right place to setup a VLAN PCP to
+>   traffic class mapping. That's simply "what traffic class does each
+>   netdev queue have". I would even go as far as say that Linux doesn't
+>   support a VLAN PCP to TC mapping (similar to the DSCP to TC mapping
+>   from the DCB ops) at all, except for the ingress-qos-map and
+>   egress-qos-map of the 8021q driver, which can't be offloaded and don't
+>   map nicely over existing hardware anyway (what hardware has an
+>   ingress-qos-map and an egress-qos-map per individual VLAN?!).
+>   Although I do really see the need for having a mapping between VLAN
+>   PCP and traffic class, I would suggest Kurt to not expose this through
+>   taprio/mqprio (hardcode the PCP mapping as 1-to-1 with TC, as other
+>   drivers do), and let's try to come up separately with an abstraction
+>   for that.
 
+Agreed, Kurt can you repost this series without the TAPRIO support for
+now since it's controversial and needs more discussion and changes?
 
-> ---
->  Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> index 2c50016..bf0e889 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> @@ -73,7 +73,7 @@ examples:
->  
->          dp-bridge@5c {
->              compatible = "ite,it6505";
-> -            interrupts = <152 IRQ_TYPE_EDGE_FALLING 152 0>;
-> +            interrupts = <152 IRQ_TYPE_LEVEL_LOW 152 0>;
-
-How does this have 2 interrupts which are the same irq number, but 
-different flags?
-
->              reg = <0x5c>;
->              pinctrl-names = "default";
->              pinctrl-0 = <&it6505_pins>;
-> -- 
-> 1.9.1
-> 
+Thank you.
