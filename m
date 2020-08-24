@@ -2,251 +2,431 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89587C433E5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 00:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D81C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 01:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 677012067C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 00:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02EF4206C0
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 01:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UIys7+tZ"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QmHxPwMq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgHXAsm (ORCPT
+        id S1726983AbgHXBA4 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 20:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46882 "EHLO
+        Sun, 23 Aug 2020 21:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgHXAsm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 20:48:42 -0400
+        with ESMTP id S1726851AbgHXBAz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 21:00:55 -0400
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D3AC061573;
-        Sun, 23 Aug 2020 17:48:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16EEEC061573;
+        Sun, 23 Aug 2020 18:00:55 -0700 (PDT)
 Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CB42A574;
-        Mon, 24 Aug 2020 02:48:34 +0200 (CEST)
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 03A39574;
+        Mon, 24 Aug 2020 03:00:40 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598230115;
-        bh=ryNzcXvNsJKYK/OQb++1UxH4IT6WEkYbalwybh0p+gE=;
+        s=mail; t=1598230841;
+        bh=5NefTFXB8RnodVHf6/zeY8kdpzDfkc9ue4ovmqls2os=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UIys7+tZMa/i/2BGw+7Bqfa9MDCJUNdU9Y6zjFKg5+enEVMLEO686OANUZrs6cluq
-         GSBSH0LWBq3eWNE53eBoCefFf9xJk37PYwDZ5RmyBeodCuV9LUpNzdPB9oa22OMUWH
-         x2wrZAQN+QYT9OFhr+PY9Sd9YkY/knX66S1hMLyE=
-Date:   Mon, 24 Aug 2020 03:48:16 +0300
+        b=QmHxPwMqdnNQEnMgduYhguSvnV9pkfgbWH37uYyptPiMSkSSFZLIjLelMv8Vy9Dtc
+         XFe0CsXJX7tXXLfUnhn6hJoHXdxHuMwosbg3ze2/xlw/gzs/AVzquVI3u6hBJyrNM+
+         VibEnmrJ3BBlbsudDNaoJCBJemFZ2ErHWrnrm/2E=
+Date:   Mon, 24 Aug 2020 04:00:22 +0300
 From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
-Message-ID: <20200824004816.GS6002@pendragon.ideasonboard.com>
-References: <20200813140041.5082-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Vishal Sagar <vsagar@xilinx.com>
+Cc:     Rob Herring <robh@kernel.org>, Hyun Kwon <hyunk@xilinx.com>,
+        "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joe@perches.com" <joe@perches.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Dinesh Kumar <dineshk@xilinx.com>
+Subject: Re: [PATCH v3 2/3] media: dt-bindings: media: xilinx: Add Xilinx
+ UHD-SDI Receiver Subsystem
+Message-ID: <20200824010022.GT6002@pendragon.ideasonboard.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+ <20200618053304.14551-3-vishal.sagar@xilinx.com>
+ <20200713185447.GA531731@bogus>
+ <20200715162901.GE6144@pendragon.ideasonboard.com>
+ <BY5PR02MB686765691549EF38B8F842E1A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
+ <20200819164016.GR6049@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200813140041.5082-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200819164016.GR6049@pendragon.ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+Hi Vishal,
 
-Thank you for the patch.
-
-On Thu, Aug 13, 2020 at 03:00:41PM +0100, Lad Prabhakar wrote:
-> The iwg21d comes with a 7" capacitive touch screen, therefore
-> add support for it.
+On Wed, Aug 19, 2020 at 07:40:16PM +0300, Laurent Pinchart wrote:
+> On Wed, Aug 19, 2020 at 01:45:34PM +0000, Vishal Sagar wrote:
+> > On Wednesday, July 15, 2020 9:59 PM, Laurent Pinchart wrote:
+> >> On Mon, Jul 13, 2020 at 12:54:47PM -0600, Rob Herring wrote:
+> >>> On Thu, Jun 18, 2020 at 11:03:03AM +0530, Vishal Sagar wrote:
+> >>>> Add bindings documentation for Xilinx UHD-SDI Receiver Subsystem.
+> >>>>
+> >>>> The Xilinx UHD-SDI Receiver Subsystem consists of SMPTE UHD-SDI (RX) IP
+> >>>> core, an SDI RX to Video Bridge IP core to convert SDI video to native
+> >>>> video and a Video In to AXI4-Stream IP core to convert native video to
+> >>>> AXI4-Stream.
+> >>>>
+> >>>> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> >>>> ---
+> >>>> v3
+> >>>> - bpc instead of bpp
+> >>>> - removed bpc as required property (default to 10 bpc)
+> >>>> - add dt-bindings/media/xilinx-sdi.h
+> >>>> - made line-rate as u32 instead of string
+> >>>> - fixed reg
+> >>>> - fixed s/upto/up to/
+> >>>>
+> >>>> v2
+> >>>> - Removed references to xlnx,video*
+> >>>> - Fixed as per Sakari Ailus and Rob Herring's comments
+> >>>> - Converted to yaml format
+> >>>>
+> >>>>  .../bindings/media/xilinx/xlnx,sdirxss.yaml   | 132 ++++++++++++++++++
+> >>>>  include/dt-bindings/media/xilinx-sdi.h        |  20 +++
+> >>>>  2 files changed, 152 insertions(+)
+> >>>>  create mode 100644
+> >> Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> >>>>  create mode 100644 include/dt-bindings/media/xilinx-sdi.h
+> >>>>
+> >>>> diff --git
+> >> a/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> >> b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..6cfc18ca435f
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,sdirxss.yaml
+> >>>> @@ -0,0 +1,132 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id: http://devicetree.org/schemas/media/xilinx/xlnx,sdirxss.yaml#
+> >>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +
+> >> 
+> >> I think a single blank line is enough.
+> > 
+> > Ok I will remove extra empty line in next version.
+> > 
+> >>>> +title: Xilinx SMPTE UHD-SDI Receiver Subsystem
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Vishal Sagar <vishal.sagar@xilinx.com>
+> >>>> +
+> >>>> +description: |
+> >>>> +  The SMPTE UHD-SDI Receiver (RX) Subsystem allows you to quickly create systems
+> >>>> +  based on SMPTE SDI protocols. It receives unaligned native SDI streams from
+> >>>> +  the SDI GT PHY and outputs an AXI4-Stream video stream, native video, or
+> >>>> +  native SDI using Xilinx transceivers as the physical layer.
+> >>>> +
+> >>>> +  The subsystem consists of
+> >>>> +  1 - SMPTE UHD-SDI Rx
+> >>>> +  2 - SDI Rx to Native Video Bridge
+> >>>> +  3 - Video In to AXI4-Stream Bridge
+> >>>> +
+> >>>> +  The subsystem can capture SDI streams in up to 12G mode 8 data streams and output
+> >>>> +  a dual pixel per clock RGB/YUV444,422/420 10/12 bits per component AXI4-Stream.
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    items:
+> >>>> +      - enum:
+> >>>> +        - xlnx,v-smpte-uhdsdi-rx-ss-2.0
+> >>>
+> >>> Should be indented 2 more spaces.
+> >> 
+> >> Or you could simply use
+> >> 
+> >> properties:
+> >>   compatible:
+> >>     const: xlnx,v-smpte-uhdsdi-rx-ss-2.0
+> > 
+> > Ok I will fix this in the next version.
+> > 
+> >>>> +
+> >>>> +  reg:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  interrupts:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clocks:
+> >>>> +    description: List of clock specifiers
+> >>>
+> >>> Drop. That's every 'clocks' property.
+> > 
+> > Ok I will drop the description in next version.
+> > 
+> >>>> +    items:
+> >>>> +      - description: AXI4-Lite clock
+> >>>> +      - description: SMPTE UHD-SDI Rx core clock
+> >>>> +      - description: Video clock
+> >>>> +
+> >>>> +  clock-names:
+> >>>> +    items:
+> >>>> +      - const: s_axi_aclk
+> >>>> +      - const: sdi_rx_clk
+> >>>> +      - const: video_out_clk
+> >>>> +
+> >>>> +  xlnx,bpc:
+> >>>> +    description: Bits per component supported. Can be 10 or 12 bits per component only.
+> >>>> +    allOf:
+> >>>
+> >>> You can drop the 'allOf' now.
+> > 
+> > Ok will update this in next version.
+> > 
+> >>>> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> >>>> +      - enum: [10, 12]
+> >>>
+> >>> Seems like this should be a standard property?
+> >> 
+> >> Rob, if my understanding is correct, this tells for how many bits per
+> >> component the IP core has been synthesized. I think it qualifies as a
+> >> vendor property, as how to express constraints on supported formats (for
+> >> IP cores that can be synthesized with different options) is highly
+> >> vendor-specific.
+> > 
+> > Right Laurent. This is specific to Xilinx Video IP cores.
+> > 
+> >> Vishal, I think the question I asked in the review of v2 fell through
+> >> the cracks. Is the documentation for the new IP core version available ?
+> >> Should this property only be allowed for the new version, given that in
+> >> v2.0 the BPC is fixed to 10 ?
+> > 
+> > The new IP core is released with Vivado 2020.1 but the documentation isn't yet
+> > publicly updated.
+> > 
+> > This property is optional and the driver defaults to 10bpc in case this property is not specified.
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-
-Everything seems to match the schematics :-)
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
-> v1->v2
-> * This patch is part of series [1] (rest of the patches have be accepted
->   by Geert [2]).
-> * Added regulator for lvds
-> * Added reset pin for touchpanel
-> * This patch is based on series [3]
+> So how about the following ?
 > 
-> [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/
->     ?series=330277
-> [2] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
->     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
-> [3] https://patchwork.kernel.org/project/linux-renesas-soc/list/
->     ?series=330957
-> ---
->  arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 99 +++++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
+> properties:
+>   compatible:
+>     enum:
+>       - xlnx,v-smpte-uhdsdi-rx-ss-1.0
+>       - xlnx,v-smpte-uhdsdi-rx-ss-2.0
 > 
-> diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> index b3461a61a4bf..9bf4fbd9c736 100644
-> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> @@ -30,6 +30,7 @@
->  
->  /dts-v1/;
->  #include "r8a7742-iwg21m.dtsi"
-> +#include <dt-bindings/pwm/pwm.h>
->  
->  / {
->  	model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
-> @@ -52,6 +53,51 @@
->  		clock-frequency = <26000000>;
->  	};
->  
-> +	lcd_backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&tpu 2 5000000 0>;
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		pinctrl-0 = <&backlight_pins>;
-> +		pinctrl-names = "default";
-> +		default-brightness-level = <7>;
-> +		enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	lvds-receiver {
-> +		compatible = "ti,ds90cf384a", "lvds-decoder";
-> +		vcc-supply = <&vcc_3v3_tft1>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds_receiver_in: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				lvds_receiver_out: endpoint {
-> +					remote-endpoint = <&panel_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	panel {
-> +		compatible = "edt,etm0700g0dh6";
-> +		backlight = <&lcd_backlight>;
-> +		power-supply = <&vcc_3v3_tft1>;
-> +
-> +		port {
-> +			panel_in: endpoint {
-> +				remote-endpoint = <&lvds_receiver_out>;
-> +			};
-> +		};
-> +	};
-> +
->  	reg_1p5v: 1p5v {
->  		compatible = "regulator-fixed";
->  		regulator-name = "1P5V";
-> @@ -75,6 +121,17 @@
->  		};
->  	};
->  
-> +	vcc_3v3_tft1: regulator-panel {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "vcc-3v3-tft1";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		enable-active-high;
-> +		startup-delay-us = <500>;
-> +		gpio = <&gpio5 28 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
->  	vcc_sdhi2: regulator-vcc-sdhi2 {
->  		compatible = "regulator-fixed";
->  
-> @@ -129,12 +186,34 @@
->  		VDDIO-supply = <&reg_3p3v>;
->  		VDDD-supply = <&reg_1p5v>;
->  	};
-> +
-> +	touch: touchpanel@38 {
-> +		compatible = "edt,edt-ft5406";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&gpio0>;
-> +		interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
-> +		/* GP1_29 is also shared with audio codec reset pin */
-> +		reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
-> +		vcc-supply = <&vcc_3v3_tft1>;
-> +	};
->  };
->  
->  &cmt0 {
->  	status = "okay";
->  };
->  
-> +&du {
-> +	status = "okay";
-> +};
-> +
-> +&gpio0 {
-> +	touch-interrupt {
-> +		gpio-hog;
-> +		gpios = <24 GPIO_ACTIVE_LOW>;
-> +		input;
-> +	};
-> +};
-> +
->  &hsusb {
->  	pinctrl-0 = <&usb0_pins>;
->  	pinctrl-names = "default";
-> @@ -165,6 +244,11 @@
->  		function = "avb";
->  	};
->  
-> +	backlight_pins: backlight {
-> +		groups = "tpu0_to2";
-> +		function = "tpu0";
-> +	};
-> +
->  	i2c2_pins: i2c2 {
->  		groups = "i2c2_b";
->  		function = "i2c2";
-> @@ -208,6 +292,17 @@
->  	};
->  };
->  
-> +&lvds0 {
-> +	status = "okay";
-> +	ports {
-> +		port@1 {
-> +			lvds0_out: endpoint {
-> +				remote-endpoint = <&lvds_receiver_in>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
->  &rcar_sound {
->  	pinctrl-0 = <&sound_pins>;
->  	pinctrl-names = "default";
-> @@ -261,6 +356,10 @@
->  	shared-pin;
->  };
->  
-> +&tpu {
-> +	status = "okay";
-> +};
-> +
->  &usbphy {
->  	status = "okay";
->  };
+>   ...
+> 
+>   xlnx,bpc:
+>     description: ...
+>     $ref: "/schemas/types.yaml#/definitions/uint32"
+>     enum: [10, 12]
+>     default: 10
+> 
+>   ...
+> 
+> allOf:
+>   - if:
+>       not:
+>         properties:
+>           compatible:
+>             contains:
+>               xlnx,v-smpte-uhdsdi-rx-ss-2.0
+>     then:
+>       properties:
+>         xlnx,bpc: false
+> 
+> This indicates that the xlnx,bpc property isn't allowed for v1.0.
+> Another option would be
+> 
+>     then:
+>       properties:
+>         xlnx,bpc:
+> 	  const: 10
+> 
+> to indicate it must be equal to 10 on v1.0.
+
+Following our offline discussion, I've revisited this review. It turns
+out I have confused IP core versions. The version that only supports 10
+bpc is v2.0, while I assume that the version that will support both 10
+and 12 bpc will be v3.
+
+Would the following make sense ?
+
+properties:
+  compatible:
+    enum:
+      - xlnx,v-smpte-uhdsdi-rx-ss-2.0
+      - xlnx,v-smpte-uhdsdi-rx-ss-3.0
+
+  ...
+
+  xlnx,bpc:
+    description: ...
+    $ref: "/schemas/types.yaml#/definitions/uint32"
+    enum: [10, 12]
+    default: 10
+
+  ...
+
+allOf:
+  - if:
+      not:
+        properties:
+          compatible:
+            contains:
+              xlnx,v-smpte-uhdsdi-rx-ss-3.0
+    then:
+      properties:
+        xlnx,bpc: false
+
+Or, as proposed above,
+
+     then:
+       properties:
+         xlnx,bpc:
+           const: 10
+
+> >>>> +
+> >>>> +  xlnx,line-rate:
+> >>>> +    description: |
+> >>>> +      The maximum mode supported by the design. Possible values are as below
+> >>>> +      0 - XSDI_STD_3G      -  3G mode
+> >>>> +      1 - XSDI_STD_6G      -  6G mode
+> >>>> +      2 - XSDI_STD_12G_8DS - 12G mode with 8 data streams
+> >>>> +    allOf:
+> >>>> +      - $ref: "/schemas/types.yaml#/definitions/uint32"
+> >>>> +      - enum: [0, 1, 2]
+> >>>
+> >>> Standard?
+> >> 
+> >> For this one, I'm not sure. There's little support for SDI in the
+> >> kernel, and I'm sure we'll get this wrong the first time. I'd rather try
+> >> not to over-standardize properties before we have more examples.
+> > 
+> > Right. These are specific to Xilinx SDI Rx IP configuration.
+> 
+> I'm not sure it's Xilinx-specific, but I think we don't have enough
+> examples of other SDI receivers to know if the propery could be made
+> generic or not.
+> 
+> >>>> +
+> >>>> +  xlnx,include-edh:
+> >>>> +    type: boolean
+> >>>> +    description: |
+> >>>> +      This is present when the Error Detection and Handling processor is
+> >>>> +      enabled in design.
+> >>>> +
+> >>>> +  ports:
+> >>>> +    type: object
+> >>>> +    description: |
+> >>>> +      Generally the SDI port is connected to a device like SDI Broadcast camera
+> >>>> +      which is independently controlled. Hence port@0 is a source port which can be
+> >>>> +      connected to downstream IP which can work with AXI4 Stream data.
+> >>>> +    properties:
+> >>>> +      port@0:
+> >>>> +        type: object
+> >>>> +        description: Source port
+> >>>> +        properties:
+> >>>> +          reg:
+> >>>> +            const: 0
+> >>>> +          endpoint:
+> >>>> +            type: object
+> >>>> +            properties:
+> >>>> +              remote-endpoint: true
+> >>>> +            required:
+> >>>> +              - remote-endpoint
+> >>>> +            additionalProperties: false
+> >>>> +        additionalProperties: false
+> >> 
+> >> Same here, I explained in the review of v2 that we should have an input
+> >> port.
+> > 
+> > I will add the input / sink port to this device tree node.
+> > 
+> >>>> +
+> >>>> +required:
+> >>>> +  - compatible
+> >>>> +  - reg
+> >>>> +  - interrupts
+> >>>> +  - clocks
+> >>>> +  - clock-names
+> >>>> +  - xlnx,line-rate
+> >>>> +  - ports
+> >>>> +
+> >>>> +additionalProperties: false
+> >>>> +
+> >>>> +examples:
+> >>>> +  - |
+> >>>> +    #include <dt-bindings/media/xilinx-sdi.h>
+> >>>> +    uhdsdirxss: v-smpte-uhdsdi-rxss@80000000 {
+> >> 
+> >> The label is not used, you can drop it.
+> > 
+> > Ok. I will remove this in the next version.
+> > 
+> >>>> +      compatible = "xlnx,v-smpte-uhdsdi-rx-ss-2.0";
+> >>>> +      interrupt-parent = <&gic>;
+> >>>> +      interrupts = <0 89 4>;
+> >>>> +      reg = <0x80000000 0x10000>;
+> >>>> +      xlnx,include-edh;
+> >>>> +      xlnx,line-rate = <XSDI_STD_12G_8DS>;
+> >>>> +      clocks = <&clk_1>, <&si570_1>, <&clk_2>;
+> >>>> +      clock-names = "s_axi_aclk", "sdi_rx_clk", "video_out_clk";
+> >>>> +      xlnx,bpc = <10>;
+> >> 
+> >> I would group the xlnx,* properties after the standard properties.
+> > 
+> > Noted. Will update in next version.
+> > 
+> >>>> +
+> >>>> +      ports {
+> >>>> +        #address-cells = <1>;
+> >>>> +        #size-cells = <0>;
+> >>>> +        port@0 {
+> >>>> +          reg = <0>;
+> >>>> +          sdirx_out: endpoint {
+> >>>> +            remote-endpoint = <&vcap_sdirx_in>;
+> >>>> +          };
+> >>>> +        };
+> >>>> +      };
+> >>>> +    };
+> >>>> +...
+> >>>> diff --git a/include/dt-bindings/media/xilinx-sdi.h b/include/dt-bindings/media/xilinx-sdi.h
+> >>>> new file mode 100644
+> >>>> index 000000000000..11938fade041
+> >>>> --- /dev/null
+> >>>> +++ b/include/dt-bindings/media/xilinx-sdi.h
+> >>>> @@ -0,0 +1,20 @@
+> >>>> +/* SPDX-License-Identifier: GPL-2.0 */
+> >>>> +/*
+> >>>> + * Xilinx SDI device tree bindings
+> >>>> + *
+> >>>> + * Copyright (C) 2020 Xilinx, Inc.
+> >>>> + *
+> >>>> + * Contacts: Vishal Sagar <vishal.sagar@xilinx.com>
+> >>>> + */
+> >>>> +
+> >>>> +#ifndef __DT_BINDINGS_MEDIA_XILINX_SDI_H__
+> >>>> +#define __DT_BINDINGS_MEDIA_XILINX_SDI_H__
+> >>>> +
+> >>>> +/*
+> >>>> + * SDI Configurations
+> >>>> + */
+> >>>> +#define XSDI_STD_3G		0
+> >>>> +#define XSDI_STD_6G		1
+> >>>> +#define XSDI_STD_12G_8DS	2
+> >>>> +
+> >>>> +#endif /* __DT_BINDINGS_MEDIA_XILINX_SDI_H__ */
 
 -- 
 Regards,
