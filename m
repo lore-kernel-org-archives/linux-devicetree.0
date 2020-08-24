@@ -2,160 +2,94 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CA0C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F99EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6392072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:20:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0eJ4Bth"
+	by mail.kernel.org (Postfix) with ESMTP id 309F120706
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:23:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598304228;
+	bh=LO1EEB144C2vD5cYYmOu1dLJPWOThQQ/laiuqMTmvWE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=a6mv56tEVSwu4tKMFrKpgzeJI0aya6t9MqBfOpNrpdwmpdKU2Z4hK2jpxrPHnUmY8
+	 BgYEZrvopWM8dq1Bco7SjFGnGAmfd+CjgMrjqKASqr42VrckC7WBW23g45T/fUCbBp
+	 8dAE/muhs2Kd59OxDQDyCdIZ5PHcvvk1hGIv8klw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHXVU0 (ORCPT
+        id S1726617AbgHXVXr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727919AbgHXVUB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 17:20:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA63C061755;
-        Mon, 24 Aug 2020 14:20:01 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n3so239218pjq.1;
-        Mon, 24 Aug 2020 14:20:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=g7VV/krJKjpl3fVXGlaNY9/0wsMNumXkPGYdDy0NLaw=;
-        b=D0eJ4BthOJUjXlvokWibZqWoBGnjmf0N34bXsEzLNsxiDNvnx22WiQpvgVHLvrVg2U
-         YtMPLVrC65sSNGnhPK8hhLrx2TmbixqTyYkl+hDWMJS03TR0g/F4wrt6vK77DrSFsbYS
-         PaJ5e97HLwPuuhgK1fkMjLLmsJwzRm0ciHF/9yVqKVaRBUzKR39gdq1TsmsIqcg8koiG
-         xqs+F9BBXUai+sDSwGOXIgRyxJneWpqfbckjXvKiWnU7z4h+6Jkw6U6pBbfFBnpFBkzN
-         2UWWXngLvD7gZ/arZEHqxolP9I9/LMmrfPDpbUK9uObH7kcXWCOsh0vMK7/6RpBrWfrc
-         BsIQ==
+        Mon, 24 Aug 2020 17:23:47 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42414 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726504AbgHXVXp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 17:23:45 -0400
+Received: by mail-io1-f66.google.com with SMTP id g13so10281083ioo.9;
+        Mon, 24 Aug 2020 14:23:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=g7VV/krJKjpl3fVXGlaNY9/0wsMNumXkPGYdDy0NLaw=;
-        b=tUCIFQTf32Y+6CeNDXaIpIxi7kwyGfvLQcOVz7qacGBb8EWjoImW2xkOnVBsrGmMrh
-         I27XlYbA9dt5OFcWQT0OaFlwQYNBE4TC6UB6M+PjC9Gz1bu5UvJEVbcGDan+dVTlquSf
-         BM6XTQi+OxVCGt3moxcGD0wI6fUM4TCTbTf2BoRQdoyTJTmpj3P5SCjXHgkq9ZtbYglY
-         yDDXarHCaD5gHVzq93cxF00RpO7sgUHZ66NUiLSUVzDa7/ze7lUwmx04Co77C29jYUqk
-         JBPjLjQnx2J1xLxKWAxAvT18YJMXvvT8SyC58DPdYCWOoRz4DxnhcUyBXWl35qs72PEO
-         qs/g==
-X-Gm-Message-State: AOAM530lrmi33zp3ZRZ2Mq6PPc3b2n/VK3oc31+I12bvwvsldO59E6u1
-        Q3gHe8Zi5MwwHIYSlBSXEk8=
-X-Google-Smtp-Source: ABdhPJyugdNrli9G6rRXQAqw0VEFn+pFbiLqtwFesKfsieewyGLJXfjSPVXdmt7qTmHtDJGOqkDPfg==
-X-Received: by 2002:a17:90a:cb92:: with SMTP id a18mr883425pju.80.1598304000683;
-        Mon, 24 Aug 2020 14:20:00 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id t10sm97788pfq.77.2020.08.24.14.19.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DYG0ILvFxNKM05Xe+HSbAjxQcLfwP0Jr68vg3DfN5q8=;
+        b=A/6tmk+7J4pMP145E6+LNdmxl476Jen+t8gxykBYqYuiS9CzSya4jBdcW+rEfQfZq6
+         Xdan25fPSQ26bW1GKuM/xPhg4ObzgOWta/w4MLgT+mB2FQyScYccGWKj3L6/i1Pf30ca
+         pdogkMfC6Dcj4JREvNpmN0gF6tJnJjRup0rlFQCmyVMZJwKgYY8aU8sEPOg71bRcBPZI
+         nuCibXGcdWN11tiUC1ne1z3+Dw6oWQCQojcj5xyvV0wgebP5LdjIZbffbIzyBwFtXfJt
+         11w26IiBgpPOJMCR2SIig5L0LKKyQIgxjJrKiJUvpi++PwmC2B4Bp1E6R+Bd5FCUOKEz
+         fUYw==
+X-Gm-Message-State: AOAM533JixQrYCUQ0HJM9Xa+czNogFbT/1vx5hiHfR3wH2Y8P9N8snHY
+        HMIaIK+jPTDifIOFvYkeew==
+X-Google-Smtp-Source: ABdhPJzXtING/zXpOypB5KNMcRp+7WblWNsKV+7ju4aN3WqY6cvZhBEIox0+vNTYZRCJOwij5qml4A==
+X-Received: by 2002:a5d:9344:: with SMTP id i4mr6449153ioo.106.1598304224852;
+        Mon, 24 Aug 2020 14:23:44 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id f186sm3347485ioa.42.2020.08.24.14.23.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 14:20:00 -0700 (PDT)
-From:   rentao.bupt@gmail.com
-To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH 4/5] ARM: dts: aspeed: minipack: Update 64MB FMC flash layout
-Date:   Mon, 24 Aug 2020 14:19:47 -0700
-Message-Id: <20200824211948.12852-5-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200824211948.12852-1-rentao.bupt@gmail.com>
-References: <20200824211948.12852-1-rentao.bupt@gmail.com>
+        Mon, 24 Aug 2020 14:23:44 -0700 (PDT)
+Received: (nullmailer pid 3323541 invoked by uid 1000);
+        Mon, 24 Aug 2020 21:23:41 -0000
+Date:   Mon, 24 Aug 2020 15:23:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, cy_huang <u0084500@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        cy_huang@richtek.com, gene_chen@richtek.com
+Subject: Re: [PATCH 1/3] regulator: rt4801: Add support for RT4801 Display
+ Bias regulator driver
+Message-ID: <20200824212341.GA3321545@bogus>
+References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+ <159776976828.56451.5593321071237177212.b4-ty@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159776976828.56451.5593321071237177212.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
+On Tue, Aug 18, 2020 at 05:56:08PM +0100, Mark Brown wrote:
+> On Sat, 15 Aug 2020 11:14:20 +0800, cy_huang wrote:
+> > Adds support for the RT4801 DSV. It has two regulators (DSVP/DSVN) with
+> > an I2C interface. DSVP/DSVN can provide the display panel module for the
+> > positive/negative voltage range from (+/-)4V to (+/-)6V.
+> 
+> Applied to
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+> 
+> Thanks!
+> 
+> [1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator driver
+>       commit: 5bbbfc7f7f0a44b7a85ab3872dd2ccce7019f7b1
+> [2/3] regulator: rt4801: Add DT binding documentation
+>       commit: fd6b928db8a05fcd8629320c52eae214a8615aae
+> [3/3] regulator: rt4801: Fix the dt-binding document for dtc check.
+>       commit: 6f4ac2844b61d43c0c48b7c67a974d9f6e4ddd9c
 
-Set 64Mb FMC flash layout in Minipack device tree explicitly because the
-flash layout was removed from "ast2500-facebook-netbmc-common.dtsi".
+Really? Despite my comments patch 3 should both be squashed and is still 
+just wrong.
 
-Please note "data0" partition' size is updated to 4MB to be consistent
-with other Facebook OpenBMC platforms.
-
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- .../boot/dts/aspeed-bmc-facebook-minipack.dts | 47 ++++++++++++++++++-
- 1 file changed, 45 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-index 88ce4ff9f47e..c34741dbd268 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-@@ -88,17 +88,60 @@
-  */
- &fmc_flash0 {
- 	partitions {
--		data0@1c00000 {
--			reg = <0x1c00000 0x2400000>;
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/*
-+		 * u-boot partition: 384KB.
-+		 */
-+		u-boot@0 {
-+			reg = <0x0 0x60000>;
-+			label = "u-boot";
- 		};
-+
-+		/*
-+		 * u-boot environment variables: 128KB.
-+		 */
-+		u-boot-env@60000 {
-+			reg = <0x60000 0x20000>;
-+			label = "env";
-+		};
-+
-+		/*
-+		 * FIT image: 59.5 MB.
-+		 */
-+		fit@80000 {
-+			reg = <0x80000 0x3b80000>;
-+			label = "fit";
-+		};
-+
-+		/*
-+		 * "data0" partition (4MB) is reserved for persistent
-+		 * data store.
-+		 */
-+		data0@3800000 {
-+			reg = <0x3c00000 0x400000>;
-+			label = "data0";
-+		};
-+
-+		/*
-+		 * "flash0" partition (covering the entire flash) is
-+		 * explicitly created to avoid breaking legacy applications.
-+		 */
- 		flash0@0 {
- 			reg = <0x0 0x4000000>;
-+			label = "flash0";
- 		};
- 	};
- };
- 
- &fmc_flash1 {
- 	partitions {
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
- 		flash1@0 {
- 			reg = <0x0 0x4000000>;
- 		};
--- 
-2.17.1
-
+Rob
