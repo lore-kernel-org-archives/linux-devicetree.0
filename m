@@ -2,121 +2,91 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23C7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2219C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FDE820866
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA7C2067C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 21:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgHXVCR convert rfc822-to-8bit (ORCPT
+        id S1726995AbgHXVKb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:02:17 -0400
-Received: from mailoutvs45.siol.net ([185.57.226.236]:55130 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726541AbgHXVCO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 17:02:14 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id DAF8D5255E6;
-        Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 8smrMg2Df_S6; Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 836F5525654;
-        Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-Received: from jernej-laptop.localnet (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id 31CFF5255E6;
-        Mon, 24 Aug 2020 23:02:10 +0200 (CEST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org,
-        Pablo =?ISO-8859-1?Q?Sebasti=E1n?= Greco 
-        <pgreco@centosproject.org>
-Cc:     robh+dt@kernel.org, icenowy@aosc.io, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [linux-sunxi] [PATCH] ARM: dts: sun8i: r40: bananapi-m2-ultra: Fix dcdc1 regulator
-Date:   Mon, 24 Aug 2020 23:02:09 +0200
-Message-ID: <2982591.9ztLHtxLPI@jernej-laptop>
-In-Reply-To: <a25ee214-5316-f6c8-53ce-676aa3c8a8ca@centosproject.org>
-References: <20200824193649.978197-1-jernej.skrabec@siol.net> <a25ee214-5316-f6c8-53ce-676aa3c8a8ca@centosproject.org>
+        Mon, 24 Aug 2020 17:10:31 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:54670 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgHXVK3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 17:10:29 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 74F5C2004C;
+        Mon, 24 Aug 2020 23:10:22 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 23:10:21 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200824211021.GA106986@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <20200819152120.GA106437@ravnborg.org>
+ <20200819174027.70b39ee9@coco.lan>
+ <20200819173558.GA3733@ravnborg.org>
+ <20200821155801.0b820fc6@coco.lan>
+ <20200821155505.GA300361@ravnborg.org>
+ <20200824180225.1a515b6a@coco.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824180225.1a515b6a@coco.lan>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=lX9GyBD3xfA9ErMBXk8A:9 a=CjuIK1q_8ugA:10
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Dne ponedeljek, 24. avgust 2020 ob 22:54:01 CEST je Pablo Sebastián Greco 
-napisal(a):
-> On 24/8/20 16:36, Jernej Skrabec wrote:
-> > DCDC1 regulator powers many different subsystems. While some of them can
-> > work at 3.0 V, some of them can not. For example, VCC-HDMI can only work
-> > between 3.24 V and 3.36 V. According to OS images provided by the board
-> > manufacturer this regulator should be set to 3.3 V.
-> > 
-> > Set DCDC1 and DCDC1SW to 3.3 V in order to fix this.
-> > 
-> > Fixes: da7ac948fa93 ("ARM: dts: sun8i: Add board dts file for Banana Pi M2
-> > 
-> > 		      Ultra")
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > ---
-> > 
-> >   arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 10 +++++-----
-> >   1 file changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts index
-> > 42d62d1ba1dc..ea15073f0c79 100644
-> > --- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
-> > @@ -223,16 +223,16 @@ &reg_aldo3 {
-> > 
-> >   };
-> >   
-> >   &reg_dc1sw {
-> > 
-> > -	regulator-min-microvolt = <3000000>;
-> > -	regulator-max-microvolt = <3000000>;
-> > +	regulator-min-microvolt = <3300000>;
-> > +	regulator-max-microvolt = <3300000>;
-> > 
-> >   	regulator-name = "vcc-gmac-phy";
-> >   
-> >   };
-> >   
-> >   &reg_dcdc1 {
-> >   
-> >   	regulator-always-on;
-> > 
-> > -	regulator-min-microvolt = <3000000>;
-> > -	regulator-max-microvolt = <3000000>;
-> > -	regulator-name = "vcc-3v0";
-> > +	regulator-min-microvolt = <3300000>;
-> > +	regulator-max-microvolt = <3300000>;
-> > +	regulator-name = "vcc-3v3";
-> > 
-> >   };
-> >   
-> >   &reg_dcdc2 {
-> 
-> Should this be done also for the bananapi-m2-berry?, it is basically the
-> same device
-> sun8i-v40-bananapi-m2-berry.dts
-
-I think so but I would rather not do that without testing and I don't have 
-that board.
-
-Best regards,
-Jernej
+Hi Mauro
 
 
 
+> kirin9xx_fb_panel.h b/drivers/staging/hikey9xx/gpu/kirin9xx_fb_panel.h
+> new file mode 100644
+> index 000000000000..a69c20470f1d
+> --- /dev/null
+> +++ b/drivers/staging/hikey9xx/gpu/kirin9xx_fb_panel.h
+
+This file is not referenced and should be deleted.
+
+	Sam
