@@ -2,170 +2,212 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB2BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B04B7C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 279512071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:53:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598266396;
-	bh=cTeo0zWq2ywPS3zyZESGXSQGBCrunzsym3wsfcZXJmU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sIQgel4dwV70RsOWxDdK40HSvPrNSuPUNQdvD8img9tRbMka9ddcByX0NRBX5VHpS
-	 Du6P5guCvTIDmg7tuptHfFCyjzsSRi2MlbiJSG/PFiDi2TiF103iEMmnhMYNKLBQWm
-	 63Vax7kLORRCdNFEFxXSF/Pd+nOVnGCOCXHes2+M=
+	by mail.kernel.org (Postfix) with ESMTP id 978102071E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbgHXKxO (ORCPT
+        id S1727104AbgHXKzr (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:53:14 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36687 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgHXKxI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:53:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id b66so5443230wmb.1;
-        Mon, 24 Aug 2020 03:53:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8tUXtK9Uo1WfECoGzPEeRZ8dUOgvco4xZiJV1j3yK2Y=;
-        b=KJfa5XMoviMpfpxHxveMMsX1Z/NCgcZ0qRXS8U1RX+CqqsC49enqGycEGlBzHFiLD6
-         bCsTi5y8k7H/EWkL0W+YQ2wMYKSijA5FOwZdJ3CHGGdQx7gSo4DHciN4dWkn+o7qdSzR
-         1KDDZivwgkKxYUeO+Z1hB2NY8BrR8KwidZYZTLOD8sPMkrx+35feHNHt79eavZCax4Zi
-         KF1NpV2XyppC7+bKcbDDcorzi0nm65/3l0XAdrWEnq3dEvgxeRYLgMZGZarnBRwUiwDU
-         i751KbwWbhirN32eyTDt7lmljmlJMkExX1iD3CXM7zALw4dYFfzjLQDtug214viVT+Xw
-         n8CQ==
-X-Gm-Message-State: AOAM531kS1MoxmDEDZfOIFtXsa8o+mdtNKfLg5cvbmKzse0C4FFpDQ6I
-        mCOKDjUIF67Wu+zsRzKGLXs=
-X-Google-Smtp-Source: ABdhPJxWWIX9hAxIRnMQN/xNYUKKY4EpLDyOC668+DgpUXg2I6pfWXrVb3ipIlX9lnWcCo3YPXiVDQ==
-X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr5187679wmj.137.1598266386477;
-        Mon, 24 Aug 2020 03:53:06 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id m1sm22881072wmc.28.2020.08.24.03.53.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 03:53:05 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 12:53:03 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm64: dts: imx8mm-var-som-symphony: Add
- Variscite Symphony board with VAR-SOM-MX8MM
-Message-ID: <20200824105303.GA32211@kozik-lap>
-References: <20200817070120.4937-1-krzk@kernel.org>
- <20200817070120.4937-4-krzk@kernel.org>
- <20200823020051.GJ30094@dragon>
- <20200823085847.GC2886@kozik-lap>
- <20200824104718.GC12776@dragon>
+        Mon, 24 Aug 2020 06:55:47 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:59575 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbgHXKzn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:55:43 -0400
+Received: from uno.lan (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4A705100009;
+        Mon, 24 Aug 2020 10:55:38 +0000 (UTC)
+From:   Jacopo Mondi <jacopo+renesas@jmondi.org>
+To:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+        laurent.pinchart@ideasonboard.com,
+        linux-renesas-soc@vger.kernel.org
+Subject: [PATCH v3] dt-bindings: media: mt9v111: Convert to json-schema
+Date:   Mon, 24 Aug 2020 12:59:19 +0200
+Message-Id: <20200824105919.28123-1-jacopo+renesas@jmondi.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824104718.GC12776@dragon>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:47:19PM +0800, Shawn Guo wrote:
-> On Sun, Aug 23, 2020 at 10:58:47AM +0200, Krzysztof Kozlowski wrote:
-> > On Sun, Aug 23, 2020 at 10:00:51AM +0800, Shawn Guo wrote:
-> > > On Mon, Aug 17, 2020 at 09:01:20AM +0200, Krzysztof Kozlowski wrote:
-> > > > Add a DTS for Variscite Symphony evaluation kit with VAR-SOM-MX8MM
-> > > > System on Module.
-> > > > 
-> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > > > 
-> > > > ---
-> > > > 
-> > > > Changes since v1:
-> > > > 1. Remove duplicated "leds" node,
-> > > > 2. Fix heartbeat to active low,
-> > > > 3. Add nxp,ptn5150 extcon.
-> > > > ---
-> > > >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> > > >  .../dts/freescale/imx8mm-var-som-symphony.dts | 248 ++++++++++++++++++
-> > > >  2 files changed, 249 insertions(+)
-> > > >  create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > > 
-> > > > diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> > > > index a39f0a1723e0..dcfb8750cd78 100644
-> > > > --- a/arch/arm64/boot/dts/freescale/Makefile
-> > > > +++ b/arch/arm64/boot/dts/freescale/Makefile
-> > > > @@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
-> > > >  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
-> > > >  
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
-> > > > +dtb-$(CONFIG_ARCH_MXC) += imx8mm-var-som-symphony.dtb
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
-> > > >  dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
-> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > > new file mode 100644
-> > > > index 000000000000..2d3c30ac5e04
-> > > > --- /dev/null
-> > > > +++ b/arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dts
-> > > > @@ -0,0 +1,248 @@
-> > > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > > > +/*
-> > > > + * Copyright (C) 2020 Krzysztof Kozlowski <krzk@kernel.org>
-> > > > + */
-> > > > +
-> > > > +/dts-v1/;
-> > > > +
-> > > > +#include "imx8mm-var-som.dtsi"
-> > > > +
-> > > > +/ {
-> > > > +	model = "Variscite VAR-SOM-MX8MM Symphony evaluation board";
-> > > > +	compatible = "variscite,var-som-mx8mm-symphony", "variscite,var-som-mx8mm", "fsl,imx8mm";
-> > > > +
-> > > > +	reg_usdhc2_vmmc: regulator-1 {
-> > > 
-> > > regulator-usdhc2-vmmc
-> > 
-> > You mean the node name? If so, it's not correct with device tree
-> > specification:
-> > "The node-name (...) should describe the general class of device.:
-> > If appropriate, the name should be one of the following choices:
-> > (...)
-> >  - regulator"
-> > 
-> > Adding specific function/type/usage to the name of the node is a
-> > opposite choice to "general class".
-> 
-> Well, the node is named in general class, i.e. regulator-xxx, and we
-> would like the suffix to be a bit more specific.  We have been using
-> this name schema for fixed-regulator on i.MX platforms for long time.
+Convert the mt9v111 bindings document to json-schema and update
+the MAINTAINERS file accordingly.
 
-Name "regulator-usdhc2-vmmc" is not general, it is specific. The DT
-specification gives the example of generic name and it is "regulator".
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ .../bindings/media/i2c/aptina,mt9v111.txt     | 46 -----------
+ .../bindings/media/i2c/aptina,mt9v111.yaml    | 82 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 83 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
 
-It is the same with CPU nodes having names "cpu@0", not "cpu-a53@0" or
-whatever other suffix. It is the same reason why I2C is "i2c@12345678",
-not "i2c_1@" or "i2c_for_abcd".
+diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
+deleted file mode 100644
+index bd896e9f67d1..000000000000
+--- a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
++++ /dev/null
+@@ -1,46 +0,0 @@
+-* Aptina MT9V111 CMOS sensor
+-----------------------------
+-
+-The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
+-based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
+-
+-The sensor has an active pixel array of 640x480 pixels and can output a number
+-of image resolution and formats controllable through a simple two-wires
+-interface.
+-
+-Required properties:
+---------------------
+-
+-- compatible: shall be "aptina,mt9v111".
+-- clocks: reference to the system clock input provider.
+-
+-Optional properties:
+---------------------
+-
+-- enable-gpios: output enable signal, pin name "OE#". Active low.
+-- standby-gpios: low power state control signal, pin name "STANDBY".
+-  Active high.
+-- reset-gpios: chip reset signal, pin name "RESET#". Active low.
+-
+-The device node must contain one 'port' child node with one 'endpoint' child
+-sub-node for its digital output video port, in accordance with the video
+-interface bindings defined in:
+-Documentation/devicetree/bindings/media/video-interfaces.txt
+-
+-Example:
+---------
+-
+-        &i2c1 {
+-                camera@48 {
+-                        compatible = "aptina,mt9v111";
+-                        reg = <0x48>;
+-
+-                        clocks = <&camera_clk>;
+-
+-                        port {
+-                                mt9v111_out: endpoint {
+-                                        remote-endpoint = <&ceu_in>;
+-                                };
+-                        };
+-                };
+-        };
+diff --git a/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
+new file mode 100644
+index 000000000000..ccc6fd58a39a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/aptina,mt9v111.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Aptina MT9V111 CMOS sensor
++
++maintainers:
++  - Jacopo Mondi <jacopo@jmondi.org>
++
++description: -|
++  The Aptina MT9V111 is a 1/4-Inch VGA-format digital image sensor with a core
++  based on Aptina MT9V011 sensor and an integrated Image Flow Processor (IFP).
++
++  The sensor has an active pixel array of 640x480 pixels and can output a number
++  of image resolutions and formats controllable through a simple two-wires
++  interface.
++
++properties:
++  compatible:
++    const: aptina,mt9v111
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  enable-gpios:
++    description: Enable signal, pin name "OE#". Active low.
++    maxItems: 1
++
++  standby-gpios:
++    description: -|
++      Low power state control signal, pin name "STANDBY". Active high.
++    maxItems: 1
++
++  reset-gpios:
++    description: Chip reset signal, pin name "RESET#". Active low.
++    maxItems: 1
++
++  port:
++    type: object
++    description: |
++      Output video port. See ../video-interfaces.txt.
++
++    properties:
++      endpoint:
++        type: object
++        properties:
++          remote-endpoint:
++            description: A phandle to the bus receiver's endpoint node.
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - port
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        camera@48 {
++            compatible = "aptina,mt9v111";
++            reg = <0x48>;
++            clocks = <&camera_clk>;
++
++            port {
++                mt9v111_out: endpoint {
++                    remote-endpoint = <&ceu_in>;
++                };
++            };
++        };
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index deaafb617361..9503ea17aa28 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11806,7 +11806,7 @@ M:	Jacopo Mondi <jacopo@jmondi.org>
+ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ T:	git git://linuxtv.org/media_tree.git
+-F:	Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.txt
++F:	Documentation/devicetree/bindings/media/i2c/aptina,mt9v111.yaml
+ F:	drivers/media/i2c/mt9v111.c
 
-The suffix is not needed as Linux does not use it (instead uses
-regulator-name which is specific). Humans on the other hand can
-understand the specifics from the label and from the regulator name.
-Therefore they also do not need the suffix.
-
-I know that other i.MX DTSes follow this pattern but it is still not the
-recommended one. It's a pattern which should be replaced.
-
-Anyway, if the names of regulators stop this patch from being applied, I
-will change them to expected.
-
-Best regards,
-Krzysztof
+ MULTIFUNCTION DEVICES (MFD)
+--
+2.27.0
 
