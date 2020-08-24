@@ -2,126 +2,93 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D184AC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7567EC433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF332074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346F520866
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598310925;
-	bh=LTsMw4RZHo2hmb+5m1s9lfr4T+sF+iX0ufWBuE3KLyA=;
+	s=default; t=1598311210;
+	bh=B8OxfGJ+ZmltOdsBLDHxO1YDO9lqZOLRpja1ekMLJgs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w6uOJwhKbZQ64Hskl0Fv/R4vN/uhWddI59OMe9IokW19qUvk9STK4C+IF2RTtGWyy
-	 SPwhX9tX0zwMMwRC1i5uDDvdvl5K73LC5UnX8ZyI0Ba/FtOgoSHwMF4MhhsTKY3r7r
-	 lvJrbRV0GHk9sX96TVVxaqlyumKW08X8ER7zqtWQ=
+	b=dlQEntRRZdSrmPRxpAlOpBnMIHQWsyoupEdreoa3pCM5AUa3Ru5PVa12Rxl6BVpns
+	 7nal67pQj4Kt1TPPj1KoisPvGcuIWhYaQGlklxgMTvTvfkPE0uVokC5+vWhkkRcZlD
+	 Tj+kMwGCvNV9aGRZILWq6+Dy3oTtf24GvSLTMfJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHXXPY (ORCPT
+        id S1728148AbgHXXUJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:15:24 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40622 "EHLO
+        Mon, 24 Aug 2020 19:20:09 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34195 "EHLO
         mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXPX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:15:23 -0400
-Received: by mail-io1-f66.google.com with SMTP id q132so107838iod.7;
-        Mon, 24 Aug 2020 16:15:22 -0700 (PDT)
+        with ESMTP id S1726090AbgHXXUI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:20:08 -0400
+Received: by mail-io1-f66.google.com with SMTP id w20so7236693iom.1;
+        Mon, 24 Aug 2020 16:20:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=glE9MJLwvJksS6Kq8WSkXlWHv26cBEY9xO46r0OVXSU=;
-        b=Snifu9Q4V00yZgnz+O+oBIwsk8zNp/jBywO1B5XMHY4Lamv9KfIZ+7WCQBPCf72TYj
-         bkj7eDmhPR4fVgPuYvonWbbPu9rCsr+srkOhvIGqSwoU7Spz3N+27juQCF24blaJwNz8
-         jH0MrymzkJ6COKS4mNdHl1BFFhrI7JzfVaaRsoeylIAhZPB7JMP1Vu7vy2fvIwDsPrJR
-         gUakRkmzN/7eWjz3sEfMpSEEQ42hbOxtXJKItzcDQCCfQdxd0vXwppvkv4Vjz+y/LnoI
-         yIlg8R6MPSVKZ8zXgj3UPRKoEHh3vFiovoXllqHuEvKGDkpNa/J0Sdy0SJ+K7/Jzj32D
-         F0Pg==
-X-Gm-Message-State: AOAM532+Mjf2SRjKEcyYWXHrr9GW5yA39QcnOcgzoibHu2TDP11gjVEa
-        89r1ZN5F+xUXgjTow6cfGw==
-X-Google-Smtp-Source: ABdhPJyi8756H2KScziyvfj8N3dhCo662Valtwe3X4z9g1X/I/OGyZyNv2EQX/btFiKGf0FNeNSZVg==
-X-Received: by 2002:a6b:bfc1:: with SMTP id p184mr6858446iof.193.1598310922357;
-        Mon, 24 Aug 2020 16:15:22 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=gK1GTkCC8Zew+U1kaN27vLD8RJiFflkvDjKcjyT1Kno=;
+        b=aNVr7e1XvoOlNoKxyXVgB7pKUyDCqSn/cEFgcXWkuWp62eK4XRTvxi8iAWyxtbSxf3
+         seC1PuBOpv9utopjmbXjKI1mzgIEd21U8MeBsnZgDoBOROHWSjMx2ugirn8PmVzauaZh
+         qrUymskM14pfthQRJW994RNVkFI3jKjX5nw78GvnzZGd8uVmwWaa6yOh81B/kyutDKfk
+         E8/E9Cr9RdsA6Qx6w2DC8PsPK4JPj1MpxbH7pHwdviQ59eEN44uQK8b5BwtxkkGH2pAR
+         nsngqVOY6wZNLBfdFAAXW3cv3rdzFoAB7801NInELCju3n/xyyiSdcK6lhcsZdOBHv+D
+         5VKQ==
+X-Gm-Message-State: AOAM532VOwDUTd4srkSQy45RT+ZmRYqhI8rH7ky+kanqn+BtLiOawJyc
+        B3OcUgn5XQRaQeoy/bJpMg==
+X-Google-Smtp-Source: ABdhPJxBYS4/DghsKLFxaoIr2jx3kUrfxLwg3FjAD4LLPIstojRTz703uiXN219DtKHssoSq7utgPQ==
+X-Received: by 2002:a05:6638:1a7:: with SMTP id b7mr7739743jaq.1.1598311207296;
+        Mon, 24 Aug 2020 16:20:07 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a71sm8392575ill.19.2020.08.24.16.15.20
+        by smtp.gmail.com with ESMTPSA id d19sm543169iop.14.2020.08.24.16.20.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:15:21 -0700 (PDT)
-Received: (nullmailer pid 3515104 invoked by uid 1000);
-        Mon, 24 Aug 2020 23:15:19 -0000
-Date:   Mon, 24 Aug 2020 17:15:19 -0600
+        Mon, 24 Aug 2020 16:20:06 -0700 (PDT)
+Received: (nullmailer pid 3523179 invoked by uid 1000);
+        Mon, 24 Aug 2020 23:20:03 -0000
+Date:   Mon, 24 Aug 2020 17:20:03 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
-Cc:     f.fainelli@gmail.com, tsbogend@alpha.franken.de,
-        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/14] mips: bmips: include dt-bindings headers
-Message-ID: <20200824231519.GA3507085@bogus>
-References: <20200812063129.361862-1-noltari@gmail.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Marian-Cristian Rotariu 
+        <marian-cristian.rotariu.rb@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 4/9] dt-bindings: display: renesas, lvds: Document
+ r8a774e1 bindings
+Message-ID: <20200824232003.GA3523119@bogus>
+References: <20200812140217.24251-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200812140217.24251-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
+In-Reply-To: <20200812140217.24251-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 08:31:15AM +0200, Álvaro Fernández Rojas wrote:
-> Allow including dt-bindings header files and use them for bcm63xx.
+On Wed, 12 Aug 2020 15:02:12 +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
-> Álvaro Fernández Rojas (14):
->   mips: dts: brcm: allow including header files
->   mips: bmips: add BCM3368 irq definitions
->   mips: bmips: add BCM6318 irq definitions
->   mips: bmips: add BCM6328 irq definitions
->   mips: bmips: add BCM6358 irq definitions
->   mips: bmips: add BCM6362 irq definitions
->   mips: bmips: add BCM6368 irq definitions
->   mips: bmips: add BCM63268 irq definitions
->   mips: bmips: bcm3368: include and use dt-bindings
->   mips: bmips: bcm6328: include and use dt-bindings
->   mips: bmips: bcm6358: include and use dt-bindings
->   mips: bmips: bcm6362: include and use dt-bindings
->   mips: bmips: bcm6368: include and use dt-bindings
->   mips: bmips: bcm63268: include and use dt-bindings
+> Document the RZ/G2H (R8A774E1) LVDS bindings.
 > 
->  .../boot/dts/brcm/bcm3368-netgear-cvg834g.dts |  2 +-
->  arch/mips/boot/dts/brcm/bcm3368.dtsi          |  8 +-
->  .../dts/brcm/bcm63268-comtrend-vr-3032u.dts   |  2 +-
->  arch/mips/boot/dts/brcm/bcm63268.dtsi         | 12 ++-
->  arch/mips/boot/dts/brcm/bcm6328.dtsi          | 12 ++-
->  .../dts/brcm/bcm6358-neufbox4-sercomm.dts     |  2 +-
->  arch/mips/boot/dts/brcm/bcm6358.dtsi          | 12 ++-
->  .../dts/brcm/bcm6362-neufbox6-sercomm.dts     |  2 +-
->  arch/mips/boot/dts/brcm/bcm6362.dtsi          | 12 ++-
->  arch/mips/boot/dts/brcm/bcm6368.dtsi          | 12 ++-
->  arch/mips/boot/dts/brcm/bcm93384wvg.dts       |  2 +-
->  arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts |  2 +-
->  arch/mips/boot/dts/brcm/bcm96368mvwg.dts      |  2 +-
->  arch/mips/boot/dts/brcm/bcm97125cbmb.dts      |  2 +-
->  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts     |  4 +-
->  arch/mips/boot/dts/brcm/bcm97358svmb.dts      |  4 +-
->  arch/mips/boot/dts/brcm/bcm97360svmb.dts      |  2 +-
->  arch/mips/boot/dts/brcm/bcm97362svmb.dts      |  4 +-
->  arch/mips/boot/dts/brcm/bcm97420c.dts         |  2 +-
->  arch/mips/boot/dts/brcm/bcm97425svmb.dts      |  4 +-
->  arch/mips/boot/dts/brcm/bcm97435svmb.dts      |  4 +-
->  arch/mips/boot/dts/brcm/bcm9ejtagprb.dts      |  2 +-
->  .../bcm3368-interrupt-controller.h            | 19 ++++
->  .../bcm6318-interrupt-controller.h            | 84 ++++++++++++++++++
->  .../bcm63268-interrupt-controller.h           | 86 +++++++++++++++++++
->  .../bcm6328-interrupt-controller.h            | 68 +++++++++++++++
->  .../bcm6358-interrupt-controller.h            | 38 ++++++++
->  .../bcm6362-interrupt-controller.h            | 71 +++++++++++++++
->  .../bcm6368-interrupt-controller.h            | 71 +++++++++++++++
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/display/bridge/renesas,lvds.txt          | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-You'll notice that there are essentially no other headers with 
-SoC interrupt numbers. That's because we don't do defines for them. It's 
-pointless obfuscation.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
