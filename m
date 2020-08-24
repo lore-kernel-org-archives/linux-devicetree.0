@@ -2,104 +2,142 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA99C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249F3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD14F206B5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598267139;
-	bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LrpVzpVaylG4eTiilOJIkqpvkv6KOLV3fNUmu2RwW3zsXSDIqx6Ix9KEmxi+vM4Hg
-	 iiOSry8ZRyY9CxSZSNitg0AZrkCW8Uy1nvVYlzxokB70tacKWrE+4NsclsqGMHSYq7
-	 d3oYRndRsfw2Z8w2L65xsXqs9MfRixvYryBSbcoA=
+	by mail.kernel.org (Postfix) with ESMTP id F23AA207D3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:15:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LcfH3zh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHXLFf (ORCPT
+        id S1725883AbgHXLO7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgHXLFd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:05:33 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0443206B5;
-        Mon, 24 Aug 2020 11:05:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598267133;
-        bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uI7LWHi3gy3FVvYd39Lj7Q3nWy2hq5jsyryJzwcxW8RTZqgwfjWbctyzU/z8DKTwN
-         hEGSqZctJAo3maBX3X/U31Vy/iO8Kc6l+uyjeNlDBFRcy9QqzfncV+KgQ//CNQHSX7
-         YpwbJwTP39TX8nppWsgCeYU3GGpGn9siQaUw/yoo=
-Date:   Mon, 24 Aug 2020 12:04:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Gene Chen <gene_chen@richtek.com>
-Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360
- regulator
-Message-ID: <20200824110458.GB4676@sirena.org.uk>
-References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com>
- <20200820114524.GC5854@sirena.org.uk>
- <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
+        Mon, 24 Aug 2020 07:14:59 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:22375 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbgHXLOz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 07:14:55 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200824111447epoutp04dcaf07e59ef15385619204a785f075fe~uL-52bcyw3058030580epoutp04j
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 11:14:47 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200824111447epoutp04dcaf07e59ef15385619204a785f075fe~uL-52bcyw3058030580epoutp04j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598267687;
+        bh=8WDpye9ll5Rw3/XZ5sZwXTyq5y6EIcg6tb3iQpuN7nQ=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=LcfH3zh1rVVHhyJ1biTKfoMiSbJf0dd7GKnFBApXDT5E/g2F9a2DkXYJttlL/8e1M
+         dWqKi/Flh6E6gFaDAAF9ONIfiB/F0RcjgHuAmvt4jeA/zRAwTQrmtiWl7F3Lj7h9tp
+         0EL5I69Gbv8QkC49aLccXfzAGqAdc6pUreFSbMBE=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200824111446epcas1p26f0d23ab5f2ed77e5d10ceeb84d978c7~uL-41-DtW1227812278epcas1p2d;
+        Mon, 24 Aug 2020 11:14:46 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.155]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4BZqJz2vKczMqYkf; Mon, 24 Aug
+        2020 11:14:43 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E4.A5.29173.321A34F5; Mon, 24 Aug 2020 20:14:43 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200824111442epcas1p44030022c3b9f5efba6e4613b45d6b1aa~uL-1HRWfa0548505485epcas1p4E;
+        Mon, 24 Aug 2020 11:14:42 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200824111442epsmtrp2db6ed69b9c84d0021aa06bc8da1ddfdc~uL-1GnnZi2446424464epsmtrp28;
+        Mon, 24 Aug 2020 11:14:42 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-0e-5f43a12387e8
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.00.08382.221A34F5; Mon, 24 Aug 2020 20:14:42 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200824111442epsmtip2035faacd7f7c3884733c992f84b486e1~uL-08yOxs2184021840epsmtip2M;
+        Mon, 24 Aug 2020 11:14:42 +0000 (GMT)
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <028fb879-dc74-b822-c399-7f3c9628ec47@samsung.com>
+Date:   Mon, 24 Aug 2020 20:27:10 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
-Content-Disposition: inline
-In-Reply-To: <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
-X-Cookie: Weekend, where are you?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200817070009.4631-1-krzk@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnk+LIzCtJLcpLzFFi42LZdlhTV1d5oXO8waefAhbzj5xjtTh/fgO7
+        xeVdc9gsbjeuYLNo3XuE3eLl/umsDmweO2fdZffYtKqTzaNvyypGj8+b5AJYorJtMlITU1KL
+        FFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CWKymUJeaUAoUCEouL
+        lfTtbIryS0tSFTLyi0tslVILUnIKLAv0ihNzi0vz0vWS83OtDA0MjEyBChOyM05PXsVa0MxU
+        sWP3AZYGxn2MXYycHBICJhKLVs5lA7GFBHYwSpyaU93FyAVkf2KUeD7jPSuE841R4vKrZeww
+        He17nrBDJPYySsx8d44RwnnPKLGw5QkrSJWwgKvEsW//wKpEBJ4xSjTfvsIMkmAT0JLY/+IG
+        2EJ+AUWJqz8egx3CK2An8evhQyYQm0VAVeLJsVlg60QFwiRObmuBqhGUODnzCQuIzQl0xvzH
+        F8BqmAXEJW49mc8EYctLbH87hxlksYRAI4fElbebWSDudpE4u/Yt1A/CEq+Ob4GypSQ+v9vL
+        BmFXS6w8eYQNormDUWLL/gusEAljif1LJwNt4ADaoCmxfpc+RFhRYufvuYwQi/kk3n3tYQUp
+        kRDglehoE4IoUZa4/OAuE4QtKbG4vRNqlYfE5+8XmCYwKs5C8tosJO/MQvLOLITFCxhZVjGK
+        pRYU56anFhsWGCNH9yZGcMrUMt/BOO3tB71DjEwcjIcYJTiYlUR4b2+yjxfiTUmsrEotyo8v
+        Ks1JLT7EaAoM7InMUqLJ+cCknVcSb2hqZGxsbGFiaGZqaKgkzvvwlkK8kEB6YklqdmpqQWoR
+        TB8TB6dUA9O17rVbrL4sfVjmlLL1UPCdiObz12ftbFD9/NwgKIl1wu5r1af3r0gs/2tbm23B
+        I5SzLF7pUPXb84p+wmbuQibLJmfzrM+P3tRinVI06y/jBFd1fUbh5in8j3+8nzWHxXtpf+/5
+        iAWz1647eF9uTv5JK+bo2qbV5d5TJMOSj8x4szlvs1kuh+Edx4bvTucCuF7ukkoJcf8/QfHj
+        g9dflx7Vc+NK3dZs8PrWv8r65MRgvfQHeSn/GV4/7slg2jX9SSWzd0t3jeNFuchszsCEGSsa
+        t376ITBZzTExnWedutuU1kkF8Y9NXqtufPeNQ1IiougK3/4ZdmFuF3085CJLOKZurZSVd6ix
+        TZASabjlq8RSnJFoqMVcVJwIAK0BwX0iBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHLMWRmVeSWpSXmKPExsWy7bCSvK7SQud4g3WtShbzj5xjtTh/fgO7
+        xeVdc9gsbjeuYLNo3XuE3eLl/umsDmweO2fdZffYtKqTzaNvyypGj8+b5AJYorhsUlJzMstS
+        i/TtErgyTk9exVrQzFSxY/cBlgbGfYxdjJwcEgImEu17nrB3MXJxCAnsZpQ48+giE0RCUmLa
+        xaPMXYwcQLawxOHDxRA1bxklrrX+YAWpERZwlTj27R9Ys4jAM0aJ01NuQU1qZ5T4umk3M0gV
+        m4CWxP4XN9hAbH4BRYmrPx6DreYVsJP49fAh2DYWAVWJJ8dmsYPYogJhEjuXPGaCqBGUODnz
+        CQuIzQl06vzHF8BqmAXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRGoVlI2mchaZmFpGUWkpYF
+        jCyrGCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGCo0RLcwfj9lUf9A4xMnEwHmKU4GBW
+        EuG9vck+Xog3JbGyKrUoP76oNCe1+BCjNAeLkjjvjcKFcUIC6YklqdmpqQWpRTBZJg5OqQam
+        Etun2Ut+K74XVRKLqRaYVv/sTuT5M7E1CZtmrTl1fYb1hKO1L6+YnGLs+xX68eNmhZdeDp1x
+        bjvc27yzF5xR5DrYcNaXQ2/5vMtNCrlN624pesycUbXjxdXusoDVC9PyNjoKM5eddbZeK1X9
+        tzC6gu399usvQzU/ighz3TPk3N/x7pbgglNqAS+/n36beWV/9q2ZJx+3Kdw4820ao90qLdYD
+        paoLX/BpJrNPX2q7NUvqrvDjLHf7pjl/0sK4pjxX7vfPbG38u2TWxs/T0+ezXCpi1XJ328m6
+        2FZeq389D2vN7XMXb1WJzvp7cb9S9yX9lsLzOs80GnYuWRihOP+q9xrlMM9Osx2rP1oGLZvG
+        p8RSnJFoqMVcVJwIAO7Mx8kBAwAA
+X-CMS-MailID: 20200824111442epcas1p44030022c3b9f5efba6e4613b45d6b1aa
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200817070046epcas1p4c047a86ccef2e5604f31e674782c9c6c
+References: <CGME20200817070046epcas1p4c047a86ccef2e5604f31e674782c9c6c@epcas1p4.samsung.com>
+        <20200817070009.4631-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
---s/l3CgOIzMHHjg/5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 8/17/20 3:59 PM, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Changes since v1:
+> 1. Mutex unlock fix in patch 8/13.
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
 
-On Mon, Aug 24, 2020 at 06:23:19PM +0800, Gene Chen wrote:
-> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=97=
-=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
+Applied them. Thanks.
 
-> > This device only exists in the context of a single parent device, there
-> > should be no need for a compatible string here - this is just a detail
-> > of how Linux does things.  The MFD should just instntiate the platform
-> > device.
-
-> Trying to autoload module without of_id_table will cause run-time error:
-> ueventd: LoadWithAliases was unable to load
-> of:NregulatorT(null)Cmediatek,mt6360-regulator
-
-You shouldn't have this described in the device tree at all, like I say
-the MFD should just instantiate the platform device.
-
---s/l3CgOIzMHHjg/5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9DntoACgkQJNaLcl1U
-h9AI7Qf/aKJwrqZi6N40mt5MpwiV+hZ9suHb3xMS5nDmfB/Wbs5e2QhLRELVG8Di
-V/J+aX+cSq7xN9elG/yRpB6Rv3jEZ+HuzNgWnZT6EEwTO6BFa8JdiDS9Ya9JzOf4
-I9mT76nHMMxb0io4hTy0YjxbZIh0BtHU9NK97n3LsG7btQLsQD2eZfdVQHU6RUFy
-A55EqlQAvNBZ/fRrl0uJmE7iuuOz9KISKypEcBi96+ztklTRTsoet/9XqoqghOkO
-ch9U8SL21g3Y5/GNW1eyHCA+ZVTeTQQ/mxO7ptJoeMU1FF9/gc7gzd0n/O17MbXH
-SSApfApl1vKX5VfDD8xKLFEM+9khCw==
-=rBbb
------END PGP SIGNATURE-----
-
---s/l3CgOIzMHHjg/5--
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
