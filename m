@@ -2,117 +2,117 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731E8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86509C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52F2D2074D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="QkOD4DH+"
+	by mail.kernel.org (Postfix) with ESMTP id 6FE9E214F1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbgHXIZe (ORCPT
+        id S1726581AbgHXI0Z (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgHXIZb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:25:31 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D37C061573
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:25:30 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id l2so4733738eji.3
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z9oTVILcEoKhcccMH8Kmzts+hEsa+rrjmDS9KdukcGo=;
-        b=QkOD4DH+C9AvSJExM71LMV3f244OyhiicXeduasp62I8qmFlrSclVkwx0QwJsQGHL2
-         NGG2RrO18R+b5uXDL22fmvCAPYHavaR3egODQD1s6QaqNmP3YjycrVzZAc6FsHtc2mEx
-         NJHUVF6/Rs/UfneP286oOLUvkFY8+++cVH6WwLdEJwdtVxkKZQmGr6sY6tytXjjMcpGv
-         FgtoKg9GOKrWuLfMPP6f3Jhu3DjlauKIbKjzWnCK/IaPUmzIdN4caVYrFrMYoZljIH2N
-         Corlf1y90A+lUgLdyiWex/Me+GPs97dMj4/B/ChAVpuxF445QiZLRk9OYlV2RF5tRXoL
-         mY1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=z9oTVILcEoKhcccMH8Kmzts+hEsa+rrjmDS9KdukcGo=;
-        b=CXq8QAuQW8GQf2/Zjdi7T/OL4KTcTndw0OIQlmm0vXS5pk4U3x6jM5ldvKptVdaOTZ
-         P1YPMOSKzAfDEgqrAwEIw9MXysGX9VwU1+7eo8uoA/mheceIufOjdTXUxw/AeY9d7ghl
-         yYiXKAaInB9raBAvFZGRXT0bX2QhoLpW9YJ6hVcZA4vlWD/vNVjLuv0kZx4C1NHJPWKc
-         4VxPZlVb3HXLnbm0SCvLMig1+TqHu2tPe6Agz8lUOwtE5WGjmQ1Iff17N68bks1aGBDq
-         SEeFS+hl0pVI5fPv1v40msGQpDY7OweFdBagig+TJEw2Uq+9jgOBQZ7kt1qsezBErwaQ
-         Fnkw==
-X-Gm-Message-State: AOAM531bhnilqjQPBQG2hfXQL1RPZYw25IaQOKE4muGLWSuBDiiEQ9F+
-        ve+kUhM1L/XHGR8QHV21ib3ifeGjBRflrw==
-X-Google-Smtp-Source: ABdhPJx/gRQO+lspQ0C4EzCH2fjjj+XXJGCT3s18ptH3clpVXsV8/k/VYVvJrLU9MzryHM8VVndp6w==
-X-Received: by 2002:a17:906:840c:: with SMTP id n12mr4288944ejx.246.1598257529645;
-        Mon, 24 Aug 2020 01:25:29 -0700 (PDT)
-Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id ar2sm9248075ejc.61.2020.08.24.01.25.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 01:25:28 -0700 (PDT)
-From:   Michal Simek <michal.simek@xilinx.com>
-To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
-        michal.simek@xilinx.com, git@xilinx.com, manish.narani@xilinx.com
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: [PATCH] dt-bindings: mmc: Add missing description for clk_in/out_sd1
-Date:   Mon, 24 Aug 2020 10:25:23 +0200
-Message-Id: <aef586778921c93377ec2f31c86e151b6e93f6c7.1598257520.git.michal.simek@xilinx.com>
-X-Mailer: git-send-email 2.28.0
+        Mon, 24 Aug 2020 04:26:25 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:55365 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbgHXI0Z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:26:25 -0400
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B6B9A200007;
+        Mon, 24 Aug 2020 08:26:21 +0000 (UTC)
+Date:   Mon, 24 Aug 2020 10:30:07 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: rza1: Switch to using "output-enable"
+Message-ID: <20200824083007.x3l6ujn3mi5xhrsy@uno.localdomain>
+References: <20200821111401.4021-1-geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200821111401.4021-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The commit a8fdb80f4d47 ("arm64: zynqmp: Add ZynqMP SDHCI compatible
-string") added clock-output-names for both SDHCIs before DT binding yaml
-conversion. But only clk_in/out_sd0 clock names have been covered by
-DT binding which ends up with dt yaml checking warnings as:
-From schema: .../Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-... mmc@ff170000: clock-output-names:0: 'clk_out_sd0' was expected
-... mmc@ff170000: clock-output-names:1: 'clk_in_sd0' was expected
+Hi Geert,
 
-Fixes: 16ecd8f33c6e ("dt-bindings: mmc: convert arasan sdhci bindings to yaml")
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+On Fri, Aug 21, 2020 at 01:14:01PM +0200, Geert Uytterhoeven wrote:
+> For pins requiring software driven IO output operations, the RZ/A1 Pin
+> Controller uses either the "output-high" or "output-low" DT property to
+> enable the corresponding output buffer.  The actual line value doesn't
+> matter, as it is ignored.
+>
+> Commit 425562429d4f3b13 ("pinctrl: generic: Add output-enable property")
+> introduced a new DT property for this specific use case.
+>
+> Update the RZ/A1 Pin Controller DT bindings and driver to use this new
+> property instead.  Preserve backwards compatibility with old DTBs in the
+> driver, as this comes at a very small cost.
+>
+> Notes:
+>   - The DT binding examples already used the new property,
+>   - There are no upstream users of the old properties.
+>
 
- .../devicetree/bindings/mmc/arasan,sdhci.yaml          | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Did we introduce output-enable after the rza1 pinctrl and forgot to
+update ? Good catch anyway
 
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-index 5887c917d480..58fe9d02a781 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-@@ -30,9 +30,13 @@ allOf:
-     then:
-       properties:
-         clock-output-names:
--          items:
--            - const: clk_out_sd0
--            - const: clk_in_sd0
-+          oneOf:
-+            - items:
-+              - const: clk_out_sd0
-+              - const: clk_in_sd0
-+            - items:
-+              - const: clk_out_sd1
-+              - const: clk_in_sd1
- 
- properties:
-   compatible:
--- 
-2.28.0
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> To be queued in sh-pfc for v5.10.
+>
+>  .../devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt     | 5 ++---
+>  drivers/pinctrl/pinctrl-rza1.c                               | 3 ++-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> index fd3696eb36bf307e..38cdd23d3498e74a 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> @@ -117,10 +117,9 @@ function or a GPIO controller alternatively.
+>      - input-enable:
+>        enable input bufer for pins requiring software driven IO input
+>        operations.
+> -    - output-high:
+> +    - output-enable:
+>        enable output buffer for pins requiring software driven IO output
+> -      operations. output-low can be used alternatively, as line value is
+> -      ignored by the driver.
+> +      operations.
+>
 
+Seems like no upstream DTS uses any output-* property for the pinctrl.
+
+>    The hardware reference manual specifies when a pin has to be configured to
+>    work in bi-directional mode and when the IO direction has to be specified
+> diff --git a/drivers/pinctrl/pinctrl-rza1.c b/drivers/pinctrl/pinctrl-rza1.c
+> index 511f232ab7bc290c..944466ef34d33f51 100644
+> --- a/drivers/pinctrl/pinctrl-rza1.c
+> +++ b/drivers/pinctrl/pinctrl-rza1.c
+> @@ -928,7 +928,8 @@ static int rza1_parse_pinmux_node(struct rza1_pinctrl *rza1_pctl,
+>  		case PIN_CONFIG_INPUT_ENABLE:
+>  			pinmux_flags |= MUX_FLAGS_SWIO_INPUT;
+>  			break;
+> -		case PIN_CONFIG_OUTPUT:
+> +		case PIN_CONFIG_OUTPUT:	/* for DT backwards compatibility */
+> +		case PIN_CONFIG_OUTPUT_ENABLE:
+>  			pinmux_flags |= MUX_FLAGS_SWIO_OUTPUT;
+>  		default:
+>  			break;
+
+Great! For both parts:
+Acked-by: Jacopo Mondi <jacopo@jmondi.org>
+
+Thanks
+  j
+> --
+> 2.17.1
+>
