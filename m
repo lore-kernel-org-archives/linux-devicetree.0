@@ -2,89 +2,115 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCEBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7FEC433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198762067C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:38:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598265532;
-	bh=wEZ/STIvx0ePP3b1UvJPmBBzqazbgGCJcQegLaFuLsQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D7ReVJ/hdtXEyAGd6ajZ4yvQ7TX7rRgnl2c6RjywLe7o9HU7UJ7/W8Ml9aGbEmUSa
-	 //MlBIqMTVB2iDsnM5DQgtLLr/20tWUxJzqK46mPODPJR61X6kplQPOQ8v3Q0vcXmS
-	 r+NzeFR4/MfVBFdmxNFum33iftIlk1a0QqznnM3w=
+	by mail.kernel.org (Postfix) with ESMTP id 4C5B42067C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="OKOZVfLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHXKit (ORCPT
+        id S1726867AbgHXKjh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:38:49 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50819 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgHXKip (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:38:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t2so7593695wma.0;
-        Mon, 24 Aug 2020 03:38:44 -0700 (PDT)
+        Mon, 24 Aug 2020 06:39:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54072 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbgHXKjc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:39:32 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF91CC061574
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 03:39:30 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id o18so11230286eje.7
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 03:39:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ukMwQbFzoefCOQGMwd5tNOLCJom6+rFwugwx1XLvVhQ=;
+        b=OKOZVfLtBPUQaSY8S/kiqZI1LtxJpC5QwAGngsZI9ptvoV1fUCg73/s4JvMTEgeKtP
+         C4ngkApYwyHlXbdLUjyChv/qIiKaPTq5u933l8w65YEy3ssLtOBourQLAa5pEwvvuwhy
+         M7tXLISkTI5Nq0klHvO/IJFzGKLWFncnSO7b7ZZJQGaMMrKLefnC0BBH04TLdJg4hmSS
+         7panJBcTFZ+6TgIQzGIaY0ZY+t62EEaSVeVmvNNHx7Mmk1J84F8FN3NBiS6Yrb2jDvjo
+         LX88e4Jr1EcUhLwaVjGlDq7ooHJ2PgWgnlDQgO/Y+qItrZ8Jb6+pmULe3D1Po+X7P9Q6
+         VGRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7u58c0keG+Yz2ZMucv/08ubtmOiqVrLF+ILIBtxzQko=;
-        b=PFP8XxuTiWsxSiy25V1VxQQ90PYzj5Ly4Rt5xZOi5QRAaXrxqHT/WXon1q/ujXJjQb
-         whvhHDciHoPWYNEZVFxCUvYwU+2yxvVYWFcBCnyqpQ0Uefo8gcfiV1dAnkfz3RBHetPl
-         t0SzIzzizvIvC9iBtj5NHASV5cgg7sG1GM3rczt9qqIbZG4J4KVpmIJ49vJCdWp2H6Lx
-         P57OdoHjTa/IBsSQiexB4IgWNEwzexc19ooTiq69FUVWE+2Ahvp3oXfyQPBFFrwdaHsP
-         cLCgT8zAXx0wW5DZN8Iq7q2J+yobnibR/c3EJdt+UdCduSJ+2A2KD5Emlswi1dFgaTQe
-         XcqA==
-X-Gm-Message-State: AOAM5327OWMX9tHHyCDGUgOHvDesUjNVvtVWCUq7866J+MPE/nh5rhDX
-        UPbX6m8h44FostYOb+yEDZ0=
-X-Google-Smtp-Source: ABdhPJxdgoBANLff8G8lGhg7HIgBV9mVxGbGUh18QBqP12CztPagvk8fjE+U3wpmdCGh7zOFSIwBNw==
-X-Received: by 2002:a1c:286:: with SMTP id 128mr4839844wmc.37.1598265524149;
-        Mon, 24 Aug 2020 03:38:44 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id g14sm23168771wmk.37.2020.08.24.03.38.43
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ukMwQbFzoefCOQGMwd5tNOLCJom6+rFwugwx1XLvVhQ=;
+        b=nkW2kJmEki2svL0OS4DnZCi0HP8an7XkFpahwZKc6fRXteY5Ppmpc9Z5n4QVyAeVoc
+         oBTCPJXF7hCj3l8avkjyN1GqOaFcUXD0H89osGfDty3juoSj/uJxEq79iIXj+3H1S80t
+         v9qY2FSBn0yNkbiqhG0P8NHhNMzUK/3S1uvMmaxhfnDuPbO34tNuZKJcxls4E3JHhQQ5
+         ZaH5jbQ0clX+AZTNgSNaXzlOEo/w43SNhbIxWEczi2hgBurXrvd/ArrC46oZNloMXquR
+         wJCSIxnI5EnWyUGP4KOutKjr3Jp3VFC/b+7UcAVt1zjJNtZG3FuQTgalDozxsYERx4WE
+         8uPA==
+X-Gm-Message-State: AOAM530xiywfbMUustqWGxmvPi18cmFw6p+bMjQjl9e4YLAsBdJQ2Qvt
+        TDGGZ+aveR/4wuFPiNoiIKpPAA==
+X-Google-Smtp-Source: ABdhPJx2QX66kk/ftCuLrvWMzSkGHZJhYNF2AjMArcrqP3X/wkz3LaZ2ICBbOMFaC0m5rzYzh04a3g==
+X-Received: by 2002:a17:906:4b0d:: with SMTP id y13mr4865906eju.39.1598265569390;
+        Mon, 24 Aug 2020 03:39:29 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id e4sm8870919edv.73.2020.08.24.03.39.28
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 03:38:43 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 12:38:41 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
-Message-ID: <20200824103841.GA26466@kozik-lap>
-References: <20200817070009.4631-1-krzk@kernel.org>
- <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
+        Mon, 24 Aug 2020 03:39:28 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Dan Murphy <dmurphy@ti.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-leds@vger.kernel.org
+Subject: [PATCH] dt-bindings: leds: common: Add missing triggers
+Date:   Mon, 24 Aug 2020 12:39:27 +0200
+Message-Id: <f24b081ad7f4695c039cfb9256aae8a522797fcf.1598265564.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:36:04PM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> Hi,
-> 
->  Thank you for the patches and optimized the code as well.
->  I have applied your patches and tested, it's working fine
->  with few minor changes as per Intel's LGM board.
-> 
->  can I send the patches along with patches or we need to wait until
->  your patch get merge?
+Xilinx ZynqMP zcu100/ultra96 v1 defines additional triggers which are not
+covered by common.yaml. The patch adds missing triggers for this platform.
 
-You can just base your patches on top of mine, send them and mention in
-cover letter that they are based on these series (with link to
-discussion).
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-Best regards,
-Krzysztof
+There are a lot of other triggers which are missing but the patch focus on
+fixing my platform
+---
+ Documentation/devicetree/bindings/leds/common.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+index a2a541bca73c..c3d728a06782 100644
+--- a/Documentation/devicetree/bindings/leds/common.yaml
++++ b/Documentation/devicetree/bindings/leds/common.yaml
+@@ -82,6 +82,8 @@ properties:
+     enum:
+         # LED will act as a back-light, controlled by the framebuffer system
+       - backlight
++        # LED indicates enabling power for bluetooth device
++      - bluetooth-power
+         # LED will turn on (but for leds-gpio see "default-state" property in
+         # Documentation/devicetree/bindings/leds/leds-gpio.yaml)
+       - default-on
+@@ -97,6 +99,9 @@ properties:
+         # LED alters the brightness for the specified duration with one software
+         # timer (requires "led-pattern" property)
+       - pattern
++        # LED flashes based on networking activity on tx and rx channels
++      - phy0tx
++      - phy0rx
+ 
+   led-pattern:
+     description: |
+-- 
+2.28.0
 
