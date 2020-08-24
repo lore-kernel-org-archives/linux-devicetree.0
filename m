@@ -2,247 +2,146 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7720C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1297C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8704920738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B378D2074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="BbgUsbwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgHXI2c (ORCPT
+        id S1726218AbgHXI2t (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:28:32 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:34427 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbgHXI2b (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:28:31 -0400
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 74CE324000D;
-        Mon, 24 Aug 2020 08:28:25 +0000 (UTC)
-Date:   Mon, 24 Aug 2020 10:32:11 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: media: ov772x: Convert to json-schema
-Message-ID: <20200824083211.u2zm4o6f4wrxlu6k@uno.localdomain>
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
- <20200818122012.37956-2-jacopo+renesas@jmondi.org>
- <20200819135204.GJ6049@pendragon.ideasonboard.com>
+        Mon, 24 Aug 2020 04:28:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgHXI2s (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 04:28:48 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3A4C061573
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:28:47 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id di22so7253085edb.12
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 01:28:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VJdZxE/y/ZWFHMLl1jOIxfMQEHtM7AeHNk1ErzUcyxc=;
+        b=BbgUsbwbLVLw2AiTwU/gHmj2IDYL+2kZn5nlxDFnqmrUXbaRroQUVA3s6NGiuwu3qB
+         cQiapZjS/llynrOMoBMxUXtBuWmnbTen8LFK4MJ1bBXeSagQENJwyMVL9fjYrwnZa30y
+         +foEqC0q8iiq3RKjbOWB+OcT7s3IFSyVHXdjTaxjPm8EOYXMalhtl0kL+qHHl2WPAWh9
+         2QP9XXr903CLxVSYQfhe6y/Al2GNQ4U+XCdya6HfnLzUsN3vzw2YZLH5xv6EUBiyp+vh
+         NQw/u5xQgIcjK6lOfqA82knVqvZryx2XxlpjT+hqr0oDyqmaf2sY3PSTfT8cu/MSO8RY
+         BXIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=VJdZxE/y/ZWFHMLl1jOIxfMQEHtM7AeHNk1ErzUcyxc=;
+        b=kuos1RryKEPMEMS1RGYYl0v4Ohvn/GLjb6/z4hbmuOb4e2T9lhokYdP8VrEiFj0VAd
+         P29FA+6mwozj0QOJRzNrCaxj3pr/iSAwBm39dFVQIwC/KQBrs2eocAyBXB2gRRupl7z6
+         37GSB/al/FjM0y8+Q0AarBi5K/Fbq7smSIN0iFYOqyOWpHtRi0rgOxwDFasxJg3+c8PO
+         gWfIDUHhbA5KWz+VwWqXDKJB67Y10ReDBjkSDnCcYAEEWIvlFgdZl4Smm3Q2GoIdiGhp
+         xL9v6OotrQpfEfinwl3X+qLM63euGj14zGYHFUT2XzXyuq7ha6CvM0ZmyJya4kAsqvXs
+         czuw==
+X-Gm-Message-State: AOAM533YOfijAjAYmtDNijU24s2OOrMFnDuShDlDwEN88RILRlKd1BSH
+        TQnj5hSx2FxTx8X19iYr81eNOw==
+X-Google-Smtp-Source: ABdhPJxTJYfNQWScPNlLbLAhMRkcA5iR1YwjMiQo2KcF690VugvDAQQ5/Gz3prKZ4xAUH/ZSKl1xjw==
+X-Received: by 2002:aa7:c596:: with SMTP id g22mr4362781edq.109.1598257726595;
+        Mon, 24 Aug 2020 01:28:46 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id a26sm7418266eje.78.2020.08.24.01.28.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 01:28:46 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Nava kishore Manne <nava.manne@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] arm64: dts: zynqmp: Remove undocumented u-boot properties
+Date:   Mon, 24 Aug 2020 10:28:45 +0200
+Message-Id: <8ba339425b9c9f319bdedce7741367055a30713c.1598257720.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200819135204.GJ6049@pendragon.ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Laurent,
+u-boot, DT properties are not documented anywhere in Linux DT binding
+that's why remove them.
 
-On Wed, Aug 19, 2020 at 04:52:04PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Tue, Aug 18, 2020 at 02:20:10PM +0200, Jacopo Mondi wrote:
-> > Convert the ov772x binding document to json-schema and update
-> > the MAINTAINERS file accordingly.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  .../devicetree/bindings/media/i2c/ov772x.txt  | 40 ---------
-> >  .../devicetree/bindings/media/i2c/ov772x.yaml | 84 +++++++++++++++++++
->
-> Could yuo rename this to ovti,ov772x.yaml ?
->
-> >  MAINTAINERS                                   |  2 +-
-> >  3 files changed, 85 insertions(+), 41 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> > deleted file mode 100644
-> > index 0b3ede5b8e6a..000000000000
-> > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> > +++ /dev/null
-> > @@ -1,40 +0,0 @@
-> > -* Omnivision OV7720/OV7725 CMOS sensor
-> > -
-> > -The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
-> > -such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
-> > -support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
-> > -
-> > -Required Properties:
-> > -- compatible: shall be one of
-> > -	"ovti,ov7720"
-> > -	"ovti,ov7725"
-> > -- clocks: reference to the xclk input clock.
-> > -
-> > -Optional Properties:
-> > -- reset-gpios: reference to the GPIO connected to the RSTB pin which is
-> > -  active low, if any.
-> > -- powerdown-gpios: reference to the GPIO connected to the PWDN pin which is
-> > -  active high, if any.
-> > -
-> > -The device node shall contain one 'port' child node with one child 'endpoint'
-> > -subnode for its digital output video port, in accordance with the video
-> > -interface bindings defined in Documentation/devicetree/bindings/media/
-> > -video-interfaces.txt.
-> > -
-> > -Example:
-> > -
-> > -&i2c0 {
-> > -	ov772x: camera@21 {
-> > -		compatible = "ovti,ov7725";
-> > -		reg = <0x21>;
-> > -		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
-> > -		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
-> > -		clocks = <&xclk>;
-> > -
-> > -		port {
-> > -			ov772x_0: endpoint {
-> > -				remote-endpoint = <&vcap1_in0>;
-> > -			};
-> > -		};
-> > -	};
-> > -};
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > new file mode 100644
-> > index 000000000000..2b84fefeb4aa
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > @@ -0,0 +1,84 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/ov772x.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title:  Omnivision OV7720/OV7725 CMOS sensor
-> > +
-> > +maintainers:
-> > +  - Jacopo Mondi <jacopo@jmondi.org>
-> > +
-> > +description: -|
-> > +  The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
-> > +  such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
-> > +  support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - ovti,ov7720
-> > +      - ovti,ov7725
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  reset-gpios:
-> > +    description: -|
-> > +      Reference to the GPIO connected to the RSTB pin which is active low.
-> > +    maxItems: 1
-> > +
-> > +  powerdown-gpios:
-> > +    description: -|
-> > +      Reference to the GPIO connected to the PWDN pin which is active high.
-> > +    maxItems: 1
-> > +
-> > +  port:
-> > +    type: object
-> > +    description: |
-> > +      The device node must contain one 'port' child node for its digital output
-> > +      video port, in accordance with the video interface bindings defined in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt.
->
-> You can simply write
->
->       Digital input video port. See ../video-interfaces.txt.
->
-> > +
-> > +    properties:
-> > +      endpoint:
-> > +        type: object
-> > +        properties:
-> > +          remote-endpoint:
-> > +            description: A phandle to the bus receiver's endpoint node.
->
->            required:
-> 	     - remote-endpoint
->
->            additionalProperties: false
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-I receveied a reply to you on previous json-schema conversion attempt
-where you suggested to not set remote-endpoint as required, as we
-allow empty ones to be later filled in in, maybe with an overlay.
+ arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi | 5 -----
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi         | 1 -
+ 2 files changed, 6 deletions(-)
 
-Which Laurent should I listen to ? I tend to agree with the one that
-said to drop remote-endpoint from the required properties list.
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
+index 9868ca15dfc5..c94c3bb67edc 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
+@@ -10,35 +10,30 @@
+ #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+ / {
+ 	pss_ref_clk: pss_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <33333333>;
+ 	};
+ 
+ 	video_clk: video_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <27000000>;
+ 	};
+ 
+ 	pss_alt_ref_clk: pss_alt_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <0>;
+ 	};
+ 
+ 	gt_crx_ref_clk: gt_crx_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <108000000>;
+ 	};
+ 
+ 	aux_ref_clk: aux_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <27000000>;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index d1e9a5eb4f70..6a8ff4bcc09b 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -131,7 +131,6 @@ zynqmp_power: zynqmp-power {
+ 			};
+ 
+ 			zynqmp_clk: clock-controller {
+-				u-boot,dm-pre-reloc;
+ 				#clock-cells = <1>;
+ 				compatible = "xlnx,zynqmp-clk";
+ 				clocks = <&pss_ref_clk>,
+-- 
+2.28.0
 
-Thanks
-  j
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> > +
-> > +    additionalProperties: false
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - reset-gpios
-> > +  - powerdown-gpios
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    i2c0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        ov772x: camera@21 {
-> > +            compatible = "ovti,ov7725";
-> > +            reg = <0x21>;
-> > +            reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
-> > +            powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
-> > +            clocks = <&xclk>;
-> > +
-> > +            port {
-> > +                ov772x_0: endpoint {
-> > +                    remote-endpoint = <&vcap1_in0>;
-> > +                };
-> > +            };
-> > +        };
-> > +    };
-> > +
-> > +...
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index d1a6173d3b64..d0a20214eaaf 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -12666,7 +12666,7 @@ M:	Jacopo Mondi <jacopo@jmondi.org>
-> >  L:	linux-media@vger.kernel.org
-> >  S:	Odd fixes
-> >  T:	git git://linuxtv.org/media_tree.git
-> > -F:	Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> > +F:	Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> >  F:	drivers/media/i2c/ov772x.c
-> >  F:	include/media/i2c/ov772x.h
-> >
->
-> --
-> Regards,
->
-> Laurent Pinchart
