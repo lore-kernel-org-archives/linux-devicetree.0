@@ -2,96 +2,87 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7733C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C99C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9D4204FD
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiZxRmOE"
+	by mail.kernel.org (Postfix) with ESMTP id EAB432065F
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 13:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598276567;
+	bh=kQqPOp5ZCYfc0mhvDYZD0wZbCw7iw9QkX4jllZTFUSI=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=Z5VgEP6+OmaXG3lBS2cAAO8ZOscwd0RWy2AZzDLCrezn2A1uyosAW8I0BsI7ZYwj+
+	 A4FAEkh0tEjjWF2H6CilXXOccnie8u28chqlte9hWyiORB83u8ufB5GlD0rZNOJZKB
+	 a66ajIhk3IW3R1+iQn2CS+20zvNptTWihjcr3ipA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgHXNmN (ORCPT
+        id S1727873AbgHXNm2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbgHXNmF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 09:42:05 -0400
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85CCBC061573;
-        Mon, 24 Aug 2020 06:42:04 -0700 (PDT)
-Received: by mail-lj1-x232.google.com with SMTP id f26so9666999ljc.8;
-        Mon, 24 Aug 2020 06:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u/tcJcoNjBd65aqyixuPMYO1EjOL24DArTaKRcQSR00=;
-        b=BiZxRmOE+xC12DVhSxL3FViWBFtWVsV9ckYM1zZpmO2F4R4pYhAywA5QdYcVbJG/Ek
-         zy2Sd77F/NlVe767uNCBSSvCNi7PobDSlucyhApkqvpjIVxb6wEexBeARyugignsEuuz
-         MyJUv+RROyabcFliRWNawnSVSQCcXxrWJDpB/I4DAN1Xou/DcS4vwJ/olsUJ/mUGLdVY
-         WaJgcjnmBE4SNUm56xIzeWNT2rZRW3fLwhisypEvwzIMfBMPIX388LJwP+WTUbj+roY1
-         KKoa1PkXj6KtofZAl2OgoomKTu3SBSE9rKaa1VvA7NyMwrrwSqxcxnBq/x5H5OJXV2OY
-         XFkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u/tcJcoNjBd65aqyixuPMYO1EjOL24DArTaKRcQSR00=;
-        b=T8BtSo+P7h9EBi/l5SrcgYHxI+Zx59MzAFD8vY/sBOkzXnHEWD0KkH+qsrCq4ZnvBr
-         cLMgw1MEGkvt1ApjVlyXPO/I47faWtxHLvq3OoH9FwLgrUv76WprlfOWBv1R+Dos1iWS
-         xv0E2rj60f1bE2SKXKClj9GyqLytALMcqQBMZYmfmXJG+6/HdFJdEXoMmOl6EMvZ7fZ5
-         POW2GJrvx766lh2oZ558RxE/ywiyKeF5gwSZlIav77O/0P2Y0P8jWFrdC4onjbk6qS+h
-         qG+irloh3uM0FaynDUpCnyYPScs5oVAL4k23a9Ql3rPOL+XCl/tY+EBKImrx29Rkk4bN
-         FrKA==
-X-Gm-Message-State: AOAM530zujV/JfrEFuJUzockq37UFP7MlPixFXbxQrYKG0l0Lb3g636R
-        ttJeouINONiLtezEDjIcEiUH94mdIBqf+lM+u8Y7TGgA
-X-Google-Smtp-Source: ABdhPJy99YCtFNmjhnje+8maJuYGXldM7qWMOvONoQmUneZSH8j64uwO12iXneGBihZRrBZ82TAwjMcXSKVjMwftwfs=
-X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr2690924ljb.452.1598276520241;
- Mon, 24 Aug 2020 06:42:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598255439-1193-1-git-send-email-shengjiu.wang@nxp.com>
-In-Reply-To: <1598255439-1193-1-git-send-email-shengjiu.wang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 24 Aug 2020 10:41:48 -0300
-Message-ID: <CAOMZO5B74eiCH0bf-Dr3T8tNVm8wZzPAUaAn858HtVRQ0fUWGg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Add headphone detection for sound card
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 24 Aug 2020 09:42:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727080AbgHXNcL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:32:11 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D4F721775;
+        Mon, 24 Aug 2020 13:32:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598275931;
+        bh=kQqPOp5ZCYfc0mhvDYZD0wZbCw7iw9QkX4jllZTFUSI=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=eCklyBpBial1yRqp01SYpxNYkhwfj/NIYL96JuW77mjEGx35i2/NZPCwfnryUfF1D
+         fbmxsdpz8xFmdyUTemS9FlsbzZel+3JWmtqVjpKOWN+rOD/tilQ/2/lPtxuUT1wDgz
+         Y+9T6EyLbOgrJdWqXdJfR04934FWBFLCDkeOXFII=
+Date:   Mon, 24 Aug 2020 14:31:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     tiwai@suse.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        lgirdwood@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, perex@perex.cz
+In-Reply-To: <1598190877-9213-1-git-send-email-shengjiu.wang@nxp.com>
+References: <1598190877-9213-1-git-send-email-shengjiu.wang@nxp.com>
+Subject: Re: [PATCH 1/2] ASoC: dt-bindings: ak5558: Add power supply property
+Message-Id: <159827589162.47809.9128717521868705111.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Wang,
+On Sun, 23 Aug 2020 21:54:36 +0800, Shengjiu Wang wrote:
+> AVDD-supply is for Analog power supply
+> DVDD-supply is for Digital power supply
 
-On Mon, Aug 24, 2020 at 4:56 AM Shengjiu Wang <shengjiu.wang@nxp.com> wrote:
->
-> Add headphone detection for sound card
-> and add audio sound card node for imx6sll.
->
-> Shengjiu Wang (3):
->   ARM: dts: imx6sx-sdb: Add headphone detection for sound card
->   ARM: dts: imx6sl-evk: Add headphone detection for sound card
->   ARM: dts: imx6sll-evk: Add audio sound card node
->
-> changes in v2
-> - add pinctrl_hp, don't add headphone detect GPIO in hog group
+Applied to
 
-Series looks good now:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Thanks!
+
+[1/2] ASoC: dt-bindings: ak5558: Add power supply property
+      commit: 5edc8c4fe019b920ae9bd1e3413d66f6e8adf29b
+[2/2] ASoC: ak5558: Add regulator support
+      commit: 2ff6d5a108c6b7c07d1093c38e0def015edd325d
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
