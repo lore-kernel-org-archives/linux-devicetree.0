@@ -2,113 +2,123 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2542C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A99EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCD752071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C8120706
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uCBpkaiP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k89mJ60C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgHXWAz (ORCPT
+        id S1727931AbgHXWCJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:00:55 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38884 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXWAy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:00:54 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07OM0qU0056306;
-        Mon, 24 Aug 2020 17:00:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598306452;
-        bh=EJV8b059uRnf89mOkjpelozeKroe9MLHdFqFFHqEJTk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uCBpkaiPhclWwEWmgH/PBXObzMk88gjFIepIcQO+8/pnjziKqWc/7uJXJ9Nko9D3a
-         LEJ5MxSWx/eN/khxUfFDMQQt/llSHZF2wSuvGvDACBr/JlaK72dz1G86ru+5KUJOjV
-         KBPNKGn6kelX/9J5zXl8XDtIErilW8l0dVa14bIU=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07OM0qi8076967
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 24 Aug 2020 17:00:52 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 24
- Aug 2020 17:00:51 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 24 Aug 2020 17:00:51 -0500
-Received: from [10.250.32.171] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07OM0pGN015456;
-        Mon, 24 Aug 2020 17:00:51 -0500
-Subject: Re: [PATCH 2/7] arm64: dts: ti: k3-j721e-common-proc-board: Add
- mailboxes to C66x DSPs
-To:     Nishanth Menon <nm@ti.com>
-CC:     Tero Kristo <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200820010331.2911-1-s-anna@ti.com>
- <20200820010331.2911-3-s-anna@ti.com> <20200820114238.7ovvxq5n3fogzowi@akan>
- <8491a1bf-3665-8f23-6b75-34890566fcae@ti.com>
- <20200820190333.4ga5uob5tgsgwego@akan>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <b8f8f034-16fa-82c4-579f-a3432bf207e6@ti.com>
-Date:   Mon, 24 Aug 2020 17:00:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 18:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXWCI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:02:08 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13A4C061574;
+        Mon, 24 Aug 2020 15:02:07 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id dp2so8574026ejc.4;
+        Mon, 24 Aug 2020 15:02:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eDrs1DwbC5+8TONYybtdQH1gGPGhspdsL18iTrVhGW8=;
+        b=k89mJ60CjyOjtzdPYjexfQLXH07LhjNYMlld62dH/8NbkwVGIu9U7moqLtrX2W4SqP
+         wqGh2MgPs+2ZhEDU32Jqw5EIURp3BOEnhIu+EauBr92YQ38wesDInxImpQPiIJVoGg9x
+         5+cOkMPxoMta9hN/RcCY29BCeca9IfAynGJVstSPMLekv/oVAw/06AzIM5U5YRESJLYo
+         AVfTYqAKfJNoRRYIsCb8ivYFkuRyYC/ICIksYWp6u0M82vKFANp/gG0Bna2OB7rPebJz
+         h1EvOhZACnzxeyKodkVuBpc+cUwZ/Hny8PeNWk+Be0IE05FlT0ATdUmYln1b2VDx5Lzk
+         hFDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eDrs1DwbC5+8TONYybtdQH1gGPGhspdsL18iTrVhGW8=;
+        b=btm4yOIpZUmbcvrt6kPA6o884+rivIBpEX86hWHva/lmv3bNCQGOF9/Z36ids/+2rF
+         fnS79K/HUUQEkWjzTPMowDmyV7vV1x1bmmVHaERDRnzvEQkRHq198DzWt0/4nWmWgCYA
+         C8b4FlWqIP4xNga7FXFZH7ItI+NVEoYeo6reYJkd6g0hvCcssyekg9hVOTzdLItNYGnH
+         IhSHTArGZKuhZc0eBEtCzFQVTA972g1/Eio6dwhPyf6uzpR2ysIo1WbW9/SyS+iSJym9
+         tD4QoJT13EuEjBcdGrrTe/i0FgU0sbH+gYxnhPNjpXoaaYNDVvcK5HgRcR8gxgm0oKjS
+         XbfA==
+X-Gm-Message-State: AOAM530AoF72s2YaIZVE7AylGfjAzJW/ktaHIuE7/LnEsCKi/+XqZgP8
+        eqJ46oUhr8Jh322S/Qeb1y8=
+X-Google-Smtp-Source: ABdhPJxaKTXwY/jsO6Hr/Rbx2mOzeZXhjAoW8l1Mn3bCLDieQej4NComAgrLqz5ZGXR+vMoGC8Gk2A==
+X-Received: by 2002:a17:906:4a0d:: with SMTP id w13mr6797613eju.156.1598306526569;
+        Mon, 24 Aug 2020 15:02:06 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id a19sm10755504edv.49.2020.08.24.15.02.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 15:02:06 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 01:02:03 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
+        Po Liu <Po.Liu@nxp.com>
+Subject: Re: [PATCH v3 0/8] Hirschmann Hellcreek DSA driver
+Message-ID: <20200824220203.atjmjrydq4qyt33x@skbuf>
+References: <20200820081118.10105-1-kurt@linutronix.de>
+ <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN>
 MIME-Version: 1.0
-In-Reply-To: <20200820190333.4ga5uob5tgsgwego@akan>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Nishanth,
-
-On 8/20/20 2:03 PM, Nishanth Menon wrote:
-> On 08:25-20200820, Suman Anna wrote:
-> [...]
->>> I am just wondering if the carveouts and mbox linkage should be in the
->>> common processor board? if that makes sense at all? I know we already
->>> have other definitions.. Trying to see if we are making it harder to
->>> understand the definition than that is necessary..
->>
->> In general, I consider these as stuff that needs to be added to the board dts
->> files. You will see that this is what I have followed on all the TI
->> AM57xx/DRA7xx boards. For J721E, we have a weird organization as the memory
->> node, typically a board property, is defined in the som dtsi file, so the
->> reserved memory nodes are also added in the som dtsi file. The convention I
->> followed in general is to have the reserved-memory and memory nodes together.
->>
->> If you think the mailbox nodes should be moved into the SoM dts file, I could do
+On Mon, Aug 24, 2020 at 02:31:10PM -0700, Jakub Kicinski wrote:
+> On Thu, 20 Aug 2020 10:11:10 +0200 Kurt Kanzenbach wrote:
+> > this series adds a DSA driver for the Hirschmann Hellcreek TSN switch
+> > IP. Characteristics of that IP:
+> > 
+> >  * Full duplex Ethernet interface at 100/1000 Mbps on three ports
+> >  * IEEE 802.1Q-compliant Ethernet Switch
+> >  * IEEE 802.1Qbv Time-Aware scheduling support
+> >  * IEEE 1588 and IEEE 802.1AS support
 > 
-> I think that might make more sense and less confusing. I'd rather
-> leave the processor board dts for more signal and interface hookup
-> related topics as it is done right now. if we do endup with too many
-> SoM duplication, then we should consider it's own dtsi
+> I don't see anything worth complaining about here, but this is not my
+> area of expertise.. 
 > 
->> it as a follow-on cleanup series, but would wait for the ABI 3.0 changes to be
->> merged first.
-> 
-> Of course. We are expecting this to be part of rc2, please rebase and
-> post once the tag is out. next-20200820 has it already, if you want a
-> pre-look.
-> 
+> DSA and TAPRIO folks - does this look good to you?
 
-So, the ABI 3.0 changes are not part of -rc2, so, I cannot move the unrelated
-mailbox nodes/cleanup without conflicting with that series. Are you ok if I just
-move these nodes into the SoM dtsi file?
+Just my comment on patch 5/8 about netdev->tc_to_txq. There are 2
+distinct things about that:
+- accessing struct net_device directly hurts the DSA model a little bit.
+- I think there's some confusion regarding the use of netdev->tc_to_txq
+  itself. I don't think that's the right place to setup a VLAN PCP to
+  traffic class mapping. That's simply "what traffic class does each
+  netdev queue have". I would even go as far as say that Linux doesn't
+  support a VLAN PCP to TC mapping (similar to the DSCP to TC mapping
+  from the DCB ops) at all, except for the ingress-qos-map and
+  egress-qos-map of the 8021q driver, which can't be offloaded and don't
+  map nicely over existing hardware anyway (what hardware has an
+  ingress-qos-map and an egress-qos-map per individual VLAN?!).
+  Although I do really see the need for having a mapping between VLAN
+  PCP and traffic class, I would suggest Kurt to not expose this through
+  taprio/mqprio (hardcode the PCP mapping as 1-to-1 with TC, as other
+  drivers do), and let's try to come up separately with an abstraction
+  for that.
 
-regards
-Suman
-
-
+Thanks,
+-Vladimir
