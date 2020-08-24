@@ -1,87 +1,254 @@
-Return-Path: <SRS0=sXX/=CB=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47CAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 23:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89587C433E5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 00:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B86F3206F0
-	for <linux-devicetree@archiver.kernel.org>; Sun, 23 Aug 2020 23:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598227058;
-	bh=ALznl+8TeWwxyWqI/+tIQ9lHHR6/tQSUvQ35rSPWQvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v6QiTeo9ioHJHWlYW6afovc8JCWyhm95nS5nGycrwbgSU2IfK/cj3SlQZimowTBMB
-	 g70briFPT/tPjGlLw7OI4DtBx8QF9GQQxaFaMsqYyizq7f7ygPZxlLYHEvXQ0M4h3p
-	 QR2T6Y9ZOMaCSenpFe3FBse13vlSaM2YA6G4KlVQ=
+	by mail.kernel.org (Postfix) with ESMTP id 677012067C
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 00:48:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UIys7+tZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgHWX5i (ORCPT
+        id S1727797AbgHXAsm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 19:57:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgHWX5h (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 23 Aug 2020 19:57:37 -0400
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5770206C1;
-        Sun, 23 Aug 2020 23:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598227057;
-        bh=ALznl+8TeWwxyWqI/+tIQ9lHHR6/tQSUvQ35rSPWQvM=;
+        Sun, 23 Aug 2020 20:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgHXAsm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 20:48:42 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1D3AC061573;
+        Sun, 23 Aug 2020 17:48:41 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CB42A574;
+        Mon, 24 Aug 2020 02:48:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1598230115;
+        bh=ryNzcXvNsJKYK/OQb++1UxH4IT6WEkYbalwybh0p+gE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OgrOdr3ekGyeqdfAOAvU4cJZkbNnuOBBn5qwu5lNXFbeKVRNmO3paFuWta0JXTs3F
-         eXaWm09I+h+UDJZX0JkqiIGDln3rjcXX48xzlZSxajAuazfRCxvzT5PYnIkWW24pP1
-         yLitB1qHHwWeIHnR0eSpAJ6UV83pK8VoE9Ulen7Q=
-Date:   Mon, 24 Aug 2020 07:57:32 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     "S.j. Wang" <shengjiu.wang@nxp.com>,
+        b=UIys7+tZMa/i/2BGw+7Bqfa9MDCJUNdU9Y6zjFKg5+enEVMLEO686OANUZrs6cluq
+         GSBSH0LWBq3eWNE53eBoCefFf9xJk37PYwDZ5RmyBeodCuV9LUpNzdPB9oa22OMUWH
+         x2wrZAQN+QYT9OFhr+PY9Sd9YkY/knX66S1hMLyE=
+Date:   Mon, 24 Aug 2020 03:48:16 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: dts: imx6sx-sdb: Add headphone detection for sound
- card
-Message-ID: <20200823235731.GV30094@dragon>
-References: <VI1PR0402MB33427CE688DB9D28DDFC000EE3590@VI1PR0402MB3342.eurprd04.prod.outlook.com>
- <CAOMZO5AQdOONXgYFYGV+=0u8KqXUfJm-J53YoKdJDPXJmLtW0Q@mail.gmail.com>
+        dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: r8a7742-iwg21d-q7: Add LCD support
+Message-ID: <20200824004816.GS6002@pendragon.ideasonboard.com>
+References: <20200813140041.5082-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5AQdOONXgYFYGV+=0u8KqXUfJm-J53YoKdJDPXJmLtW0Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200813140041.5082-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 11:12:08AM -0300, Fabio Estevam wrote:
-> Hi Wang Shengjiu and Shawn,
-> 
-> On Sun, Aug 23, 2020 at 9:31 AM S.j. Wang <shengjiu.wang@nxp.com> wrote:
-> 
-> > I would like to know your opinion, should I move headphone detect GPIO
-> > To audmux group?
-> 
-> What about adding a dedicated pinctrl_hp for the headphone detect pin
-> like it is done at:
-> https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/tree/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi?h=for-next&id=8f0216b006e5f553d28c4c1a991b5234693a49cb#n130
-> 
-> My point is that we should avoid adding a hog group when possible.
+Hi Prabhakar,
 
-I agree.  Hog group should be used as the last sort, when there is no
-clear client device owning the pins.
+Thank you for the patch.
 
-Shawn
+On Thu, Aug 13, 2020 at 03:00:41PM +0100, Lad Prabhakar wrote:
+> The iwg21d comes with a 7" capacitive touch screen, therefore
+> add support for it.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+
+Everything seems to match the schematics :-)
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+> v1->v2
+> * This patch is part of series [1] (rest of the patches have be accepted
+>   by Geert [2]).
+> * Added regulator for lvds
+> * Added reset pin for touchpanel
+> * This patch is based on series [3]
+> 
+> [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/
+>     ?series=330277
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
+>     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
+> [3] https://patchwork.kernel.org/project/linux-renesas-soc/list/
+>     ?series=330957
+> ---
+>  arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 99 +++++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> index b3461a61a4bf..9bf4fbd9c736 100644
+> --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> @@ -30,6 +30,7 @@
+>  
+>  /dts-v1/;
+>  #include "r8a7742-iwg21m.dtsi"
+> +#include <dt-bindings/pwm/pwm.h>
+>  
+>  / {
+>  	model = "iWave Systems RainboW-G21D-Qseven board based on RZ/G1H";
+> @@ -52,6 +53,51 @@
+>  		clock-frequency = <26000000>;
+>  	};
+>  
+> +	lcd_backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&tpu 2 5000000 0>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		pinctrl-0 = <&backlight_pins>;
+> +		pinctrl-names = "default";
+> +		default-brightness-level = <7>;
+> +		enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	lvds-receiver {
+> +		compatible = "ti,ds90cf384a", "lvds-decoder";
+> +		vcc-supply = <&vcc_3v3_tft1>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				lvds_receiver_in: endpoint {
+> +					remote-endpoint = <&lvds0_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				lvds_receiver_out: endpoint {
+> +					remote-endpoint = <&panel_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	panel {
+> +		compatible = "edt,etm0700g0dh6";
+> +		backlight = <&lcd_backlight>;
+> +		power-supply = <&vcc_3v3_tft1>;
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&lvds_receiver_out>;
+> +			};
+> +		};
+> +	};
+> +
+>  	reg_1p5v: 1p5v {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "1P5V";
+> @@ -75,6 +121,17 @@
+>  		};
+>  	};
+>  
+> +	vcc_3v3_tft1: regulator-panel {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "vcc-3v3-tft1";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		enable-active-high;
+> +		startup-delay-us = <500>;
+> +		gpio = <&gpio5 28 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+>  	vcc_sdhi2: regulator-vcc-sdhi2 {
+>  		compatible = "regulator-fixed";
+>  
+> @@ -129,12 +186,34 @@
+>  		VDDIO-supply = <&reg_3p3v>;
+>  		VDDD-supply = <&reg_1p5v>;
+>  	};
+> +
+> +	touch: touchpanel@38 {
+> +		compatible = "edt,edt-ft5406";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <24 IRQ_TYPE_EDGE_FALLING>;
+> +		/* GP1_29 is also shared with audio codec reset pin */
+> +		reset-gpios = <&gpio1 29 GPIO_ACTIVE_LOW>;
+> +		vcc-supply = <&vcc_3v3_tft1>;
+> +	};
+>  };
+>  
+>  &cmt0 {
+>  	status = "okay";
+>  };
+>  
+> +&du {
+> +	status = "okay";
+> +};
+> +
+> +&gpio0 {
+> +	touch-interrupt {
+> +		gpio-hog;
+> +		gpios = <24 GPIO_ACTIVE_LOW>;
+> +		input;
+> +	};
+> +};
+> +
+>  &hsusb {
+>  	pinctrl-0 = <&usb0_pins>;
+>  	pinctrl-names = "default";
+> @@ -165,6 +244,11 @@
+>  		function = "avb";
+>  	};
+>  
+> +	backlight_pins: backlight {
+> +		groups = "tpu0_to2";
+> +		function = "tpu0";
+> +	};
+> +
+>  	i2c2_pins: i2c2 {
+>  		groups = "i2c2_b";
+>  		function = "i2c2";
+> @@ -208,6 +292,17 @@
+>  	};
+>  };
+>  
+> +&lvds0 {
+> +	status = "okay";
+> +	ports {
+> +		port@1 {
+> +			lvds0_out: endpoint {
+> +				remote-endpoint = <&lvds_receiver_in>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  &rcar_sound {
+>  	pinctrl-0 = <&sound_pins>;
+>  	pinctrl-names = "default";
+> @@ -261,6 +356,10 @@
+>  	shared-pin;
+>  };
+>  
+> +&tpu {
+> +	status = "okay";
+> +};
+> +
+>  &usbphy {
+>  	status = "okay";
+>  };
+
+-- 
+Regards,
+
+Laurent Pinchart
