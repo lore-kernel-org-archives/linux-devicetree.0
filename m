@@ -6,59 +6,58 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBB6C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA99C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 228CA206B5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD14F206B5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598266893;
-	bh=6SZzRMN5GGlyh79co29gSLTZO76H+8JYL5VE28sGF20=;
+	s=default; t=1598267139;
+	bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l6QD4OlnYCpTQbhrfqdjSp/m9cHQ4R4L8GXJk0iHhA9rHYfjFw4hEWCJmEd39ksp7
-	 0666lairpyvLP6Oxp43b4v9sVu/Ss3Jjz3YZ2HUNLe1o6WbA/1HZiTpDZqiIIyhdn8
-	 FlHPa+0AbDMxagDdL6q7TsMewwRuC9a5U8zDg0E8=
+	b=LrpVzpVaylG4eTiilOJIkqpvkv6KOLV3fNUmu2RwW3zsXSDIqx6Ix9KEmxi+vM4Hg
+	 iiOSry8ZRyY9CxSZSNitg0AZrkCW8Uy1nvVYlzxokB70tacKWrE+4NsclsqGMHSYq7
+	 d3oYRndRsfw2Z8w2L65xsXqs9MfRixvYryBSbcoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgHXLB2 (ORCPT
+        id S1726187AbgHXLFf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:01:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50674 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 07:05:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgHXLBU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:01:20 -0400
+        id S1725906AbgHXLFd (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:05:33 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 560C2206B5;
-        Mon, 24 Aug 2020 11:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0443206B5;
+        Mon, 24 Aug 2020 11:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598266879;
-        bh=6SZzRMN5GGlyh79co29gSLTZO76H+8JYL5VE28sGF20=;
+        s=default; t=1598267133;
+        bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e23Bob6o6Xo0hBCl442jnXgXQlakT98GnZpvR/3dAMkOWhgYz0m51RsIAvILsTzlg
-         1qScDMQv4rSd6Go0kH9xUQkOIomoMoFi6WN0w2dPPPhCgmOPc0yvIWeU2vNQ8w2qfJ
-         vRNQJmC6J0WQWl1hlDoM4WBydqnrrehLjrrRhP2Y=
-Date:   Mon, 24 Aug 2020 12:00:45 +0100
+        b=uI7LWHi3gy3FVvYd39Lj7Q3nWy2hq5jsyryJzwcxW8RTZqgwfjWbctyzU/z8DKTwN
+         hEGSqZctJAo3maBX3X/U31Vy/iO8Kc6l+uyjeNlDBFRcy9QqzfncV+KgQ//CNQHSX7
+         YpwbJwTP39TX8nppWsgCeYU3GGpGn9siQaUw/yoo=
+Date:   Mon, 24 Aug 2020 12:04:58 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] regulator: Add regulator driver for ATC260x PMICs
-Message-ID: <20200824110045.GA4676@sirena.org.uk>
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
- <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360
+ regulator
+Message-ID: <20200824110458.GB4676@sirena.org.uk>
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com>
+ <20200820114524.GC5854@sirena.org.uk>
+ <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+        protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
 Content-Disposition: inline
-In-Reply-To: <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
+In-Reply-To: <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
 X-Cookie: Weekend, where are you?
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
@@ -67,53 +66,40 @@ List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Aug 22, 2020 at 01:19:49AM +0300, Cristian Ciocaltea wrote:
+On Mon, Aug 24, 2020 at 06:23:19PM +0800, Gene Chen wrote:
+> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
 
-> +static int atc260x_set_voltage_time_sel(struct regulator_dev *rdev,
-> +					unsigned int old_selector,
-> +					unsigned int new_selector)
-> +{
-> +	struct atc260x_regulator_data *data = rdev_get_drvdata(rdev);
-> +	int id = rdev_get_id(rdev);
-> +
-> +	if (new_selector > old_selector)
-> +		return id > data->last_dcdc_reg_id ? data->voltage_time_ldo
-> +						   : data->voltage_time_dcdc;
+> > This device only exists in the context of a single parent device, there
+> > should be no need for a compatible string here - this is just a detail
+> > of how Linux does things.  The MFD should just instntiate the platform
+> > device.
 
-Please write normal conditional statements to make things easier to
-read.  It also looks like this would be more robustly written by just
-having separate ops for DCDCs and LDOs, this could easily break if
-another device is supported in the driver.
+> Trying to autoload module without of_id_table will cause run-time error:
+> ueventd: LoadWithAliases was unable to load
+> of:NregulatorT(null)Cmediatek,mt6360-regulator
 
-> +static const struct of_device_id atc260x_regulator_of_match[] = {
-> +	{ .compatible = "actions,atc2603c-regulator" },
-> +	{ .compatible = "actions,atc2609a-regulator" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, atc260x_regulator_of_match);
+You shouldn't have this described in the device tree at all, like I say
+the MFD should just instantiate the platform device.
 
-We don't need compatibles here, this is just reflecting the current
-Linux device model into the OS neutral DT bindings.  Another OS may
-choose to split regulators up differently.  We should just instantiate
-the regulator device from the MFD based on identifying the chip overall.
-
---2fHTh5uZTiUOsy+g
+--s/l3CgOIzMHHjg/5
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9DndwACgkQJNaLcl1U
-h9CXoAf6AzUFwxgd0S5ClrLwTuv/z8XNl93mNAnQI+Lgte0VWytWqrO+qCtOPcAq
-sQgGC4jUOMfZR2vcx+UGMuCCoYjDO75ApLLyN4Z79wUeNApY/VVVoSpMCy1/yvtf
-wneUL9d6TNL0S/Po6/RBm0kII2vbhPcRXdJxGo1JAefjao0cc6OC7ep6OtxsnQF9
-sr9aCXfvloI95sl6bc/QVaWqd5/dP7WuPINxzY6Xd20TJ4bL9gVmwv87uBdZXLZZ
-8jjoAg+/7ma13fxdt7CuaGJLuXZNW+WusMKy/Bx5CqFwqpDkEPuRpA5zXXPI8/5c
-axFmXEOlJ7MAB8WZg4fNbeBHCsbekg==
-=H2HJ
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9DntoACgkQJNaLcl1U
+h9AI7Qf/aKJwrqZi6N40mt5MpwiV+hZ9suHb3xMS5nDmfB/Wbs5e2QhLRELVG8Di
+V/J+aX+cSq7xN9elG/yRpB6Rv3jEZ+HuzNgWnZT6EEwTO6BFa8JdiDS9Ya9JzOf4
+I9mT76nHMMxb0io4hTy0YjxbZIh0BtHU9NK97n3LsG7btQLsQD2eZfdVQHU6RUFy
+A55EqlQAvNBZ/fRrl0uJmE7iuuOz9KISKypEcBi96+ztklTRTsoet/9XqoqghOkO
+ch9U8SL21g3Y5/GNW1eyHCA+ZVTeTQQ/mxO7ptJoeMU1FF9/gc7gzd0n/O17MbXH
+SSApfApl1vKX5VfDD8xKLFEM+9khCw==
+=rBbb
 -----END PGP SIGNATURE-----
 
---2fHTh5uZTiUOsy+g--
+--s/l3CgOIzMHHjg/5--
