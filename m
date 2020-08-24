@@ -2,92 +2,135 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26522C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B64C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA89420702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598311272;
-	bh=/5N86twYxI4EOqGjvFSLOCPWrz5bWFFe3dXOW1QKBBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AursgDmnm2xjRvb//HxBtbQqk/LJSzRUqaDygXJXGqC/BrW66hgGSuUsURTPjzxoO
-	 pNhKhoQQIMHLCEUp6VrTUdnwkpBpAkt41XR7eHRUxc1cATY00NXCHWh0nFg1M2Nztq
-	 wBsHHgfunLm5pMNmSihYiA2QBCHIvLWiqw2r68c8=
+	by mail.kernel.org (Postfix) with ESMTP id 0AA8F20738
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:23:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rD8Vonqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726531AbgHXXVM (ORCPT
+        id S1728177AbgHXXXQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:21:12 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34318 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXVL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:21:11 -0400
-Received: by mail-il1-f196.google.com with SMTP id t4so8858384iln.1;
-        Mon, 24 Aug 2020 16:21:11 -0700 (PDT)
+        Mon, 24 Aug 2020 19:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXXXP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:23:15 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FA8C061574;
+        Mon, 24 Aug 2020 16:23:15 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id l63so6548263edl.9;
+        Mon, 24 Aug 2020 16:23:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IMKGdqUT+Wm0EM2slFZGgokEf7SVcwurGsjspfBC4Vw=;
+        b=rD8Vonqj5fif4pBYbR9r7Vi70mcoVG/5u1oM018c4xJ2uhNW3MvdLEerdf0N/naDEZ
+         E1j/y+v02nbdqyN2pY5wd1o6wcGWzIeH7pgJ70Rbdc6P4LBXrzv5iT00Pf7bBkmTN4RC
+         qe/bZzHGf/UATzFlwIpqJpcKCHUKKobTQoLT5s4jWqw4I5S4s51HXn0EY/oBaMsVjl5n
+         VgBKf9y1b86K4TlY/K3cGAqsEy+Yx1ZETfLYtASnEEqMf9xmm9hR0cHIqi5tHlbujfll
+         ISZicku4izGO/b/Sii+ttgpCCXKkj7wQ9uDQ/QydAk8qPN9dMcVcFMqTY5Ql8zrMsxlX
+         LGQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=dHT21K2ThCYKCWY29jE8gV7M7hztSi8jrOrYJdoMcr0=;
-        b=rtNgqi0PWAYDY8+XfLOTCTxyJgLrHgU+uMJtEXvUKMZL9qMVNHvKaHSt+w0J1r+46N
-         7r4LInvO1gYo79LQjS5kOdfHnDKakU6RjD8bAV5lnPA8xSrJkqJeL4jt8utPAc78MqN9
-         oyixe3T+UigdY1eRHSwUmSe3/eTppclWa2aeRHadxWFOVB9iSLDZ6mPY4tYE96SKa1SZ
-         nNg6FTi+UrXJ1T7D12OOjTvwDrI0Q+Ss8/cYIxhSclxRHg1Raf37oqC0LeirLAiasINY
-         OIs48ogv7WDUxk4GPiggpgQEih3hGFmWsTQHonBpEHpVN7G+fuwq6/2x4qh4J/lRD5Ar
-         yQbQ==
-X-Gm-Message-State: AOAM530lkhn1EqD3PZrueOlJwPUpM7yZOAW+PHVAtW9ixewJBW+A5nko
-        9QuBhaLCtOY4asaZ351EsA==
-X-Google-Smtp-Source: ABdhPJwiumbOUZIb5eWkoPu21UOZDeJrET/huZ74qaDExYc53dFYCFj1qMLSr538p/WawFhjmM5vhg==
-X-Received: by 2002:a05:6e02:134e:: with SMTP id k14mr6989994ilr.271.1598311270740;
-        Mon, 24 Aug 2020 16:21:10 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a11sm7966826ilh.74.2020.08.24.16.21.08
+        bh=IMKGdqUT+Wm0EM2slFZGgokEf7SVcwurGsjspfBC4Vw=;
+        b=pH71E5I4OtGVRSAR3dmRnsT4T2s5l9UAvL7KCVbG+ENInnxhoXS2kjXcC7B6XdnxGM
+         zcdkEGwoc7nZzItqgOjZhIP5PSn0HujvPZPtgm0lYhSnIkZMOJ1ndBYOHdUbumihCSe3
+         PMYabwK8rruLE/jH8ZC2xzR/0qYAb/RDIcmdyZggdptyWqqCB7s2oJb37K4wexeyNs8u
+         xYUhOOpTuGsEEfQtD8amHXiNXfDTffJkW7Oyyb57qoGfPQKXVSz7oN+CAZXtgVf3MqB4
+         +w0HYDSGGT9RvxjPDpKMKBpq7P4CA/Tfc1M3+OpBBPvbhOcijvBjNYY1MgEEOt2A5GYz
+         EuiQ==
+X-Gm-Message-State: AOAM530bdXoswRb8/oa87pHcKWKxxiory/1fyb1vmmzWGim0fyLD7WVi
+        H0EittbjEeFZg3uMvHtxDMw=
+X-Google-Smtp-Source: ABdhPJwZKBlW9Oh2kcLlQDcMGwt1oIpnizxaEklu1dZLnaBBinI4xPTlwpC98tK8BDEzK9upr3L73A==
+X-Received: by 2002:a50:c38b:: with SMTP id h11mr7783148edf.308.1598311393688;
+        Mon, 24 Aug 2020 16:23:13 -0700 (PDT)
+Received: from BV030612LT ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id j3sm11691701eje.75.2020.08.24.16.23.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:21:10 -0700 (PDT)
-Received: (nullmailer pid 3525044 invoked by uid 1000);
-        Mon, 24 Aug 2020 23:21:07 -0000
-Date:   Mon, 24 Aug 2020 17:21:07 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-i3c@lists.infradead.org,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Conor Culhane <conor.culhane@silvaco.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: Add vendor prefix for Silvaco
-Message-ID: <20200824232107.GA3525014@bogus>
-References: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+        Mon, 24 Aug 2020 16:23:13 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 02:23:10 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] regulator: Add regulator driver for ATC260x PMICs
+Message-ID: <20200824232310.GA2301286@BV030612LT>
+References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
+ <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
+ <20200824110045.GA4676@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20200824110045.GA4676@sirena.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 12 Aug 2020 16:13:09 +0200, Miquel Raynal wrote:
-> Silvaco, Inc. is an EDA provider of software tools used for process
-> and device development and for analog/mixed-signal, power IC and
-> memory design [1].
-> 
-> [1] https://www.silvaco.com/company/profile/profile.html
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
-> 
-> Changes in v2:
-> * Change the prefix 'svc,' -> 'silvaco,'.
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Hi Mark,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks for reviewing!
+
+On Mon, Aug 24, 2020 at 12:00:45PM +0100, Mark Brown wrote:
+> On Sat, Aug 22, 2020 at 01:19:49AM +0300, Cristian Ciocaltea wrote:
+> 
+> > +static int atc260x_set_voltage_time_sel(struct regulator_dev *rdev,
+> > +					unsigned int old_selector,
+> > +					unsigned int new_selector)
+> > +{
+> > +	struct atc260x_regulator_data *data = rdev_get_drvdata(rdev);
+> > +	int id = rdev_get_id(rdev);
+> > +
+> > +	if (new_selector > old_selector)
+> > +		return id > data->last_dcdc_reg_id ? data->voltage_time_ldo
+> > +						   : data->voltage_time_dcdc;
+> 
+> Please write normal conditional statements to make things easier to
+> read.  It also looks like this would be more robustly written by just
+> having separate ops for DCDCs and LDOs, this could easily break if
+> another device is supported in the driver.
+
+Sure, I can provide separate ops, but in this case we duplicate almost
+all of them. If this is not acceptable, then I will just rewrite the
+conditional statement.
+
+> > +static const struct of_device_id atc260x_regulator_of_match[] = {
+> > +	{ .compatible = "actions,atc2603c-regulator" },
+> > +	{ .compatible = "actions,atc2609a-regulator" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, atc260x_regulator_of_match);
+> 
+> We don't need compatibles here, this is just reflecting the current
+> Linux device model into the OS neutral DT bindings.  Another OS may
+> choose to split regulators up differently.  We should just instantiate
+> the regulator device from the MFD based on identifying the chip overall.
+
+I have actually seen this in some MFD drivers I had been studying before
+starting this work. I wasn't sure what is the rationale behind, I
+assumed they have just an informative purpose.
+
+So, if I understand correctly, this approach is deprecated now and I
+should remove the compatibles from both the function driver and the
+corresponding mfd_cell in the core implementation. And not only for
+regulators, but for all the other functions of the MFD device.
+
+Regards,
+Cristi
