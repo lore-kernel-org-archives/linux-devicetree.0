@@ -2,185 +2,126 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65715C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85D4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F01C2072D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DD22087D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 07:33:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fMAIN9Xy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QtU30oRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726056AbgHXH0W (ORCPT
+        id S1725836AbgHXHdi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:26:22 -0400
-Received: from mail-eopbgr60074.outbound.protection.outlook.com ([40.107.6.74]:32333
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726119AbgHXH0U (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:26:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JkbyUo5X84avJM2t6s/ZblqJHRqoPaxGJ2Ryueu7FTLkwprYrQzZ9Eds/Ii7syzz6E4U7hC5pKnzr/XfghQurOJ4UVYTP/LuNsNF+6Mnj4GXk/IiZASZNFk99RWHPKbqmH3G+6WsATHYfHeEe167Wlkt3qiFTcXoLxSU4BtgxeeKeLDkQ1w7zDkfJRnGBfQY1w2XVFqbJieFq9cx3ykm01nWtt1xWAoK1mA91HRIrKepzfNZFSjQPhaYQRFWihQ0MdsA95BhTK0iKQBHRXhPBXpCbr3WGaPuLQ9Jsbsb+jxuJV4mSeUWaBtBR2P3rId9BJRX3oDUr1jO2EuvLtJb2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j1I15P3KUM55/zH2tDj8f4XU6c+Gixf0yoMwcgxiOLk=;
- b=it157ffTVv0ux1akNO44m++MOs+VJa0E6OwOLfJz95bppByRF6IKFpH+gj+8KLg7RhQcnW+CsM8imstNaZMae0XEB3FaSYvNuTachvE/kPzwID2KbdIZ7tjTb7kK/XkD7d8U+LdUlga2apH53uWuUr+SAy/KgOz7t3vVEdsx0Jn91iJDEujNKQVSKrNeY8Lt8dV6UNe7FCXE/1T6Re0uvJCPng0dR2i0/AHzjb+FIuAN8rShByRsUj2jCUqKiGy6IfBBbrRt0Oq396EOBZEgt+6vU4e2h5x1FPYI09gcNosFeovA9FZADZyRe4VMIEKl9AURb8icPyExwstpSjTKLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j1I15P3KUM55/zH2tDj8f4XU6c+Gixf0yoMwcgxiOLk=;
- b=fMAIN9XyGAsGAimq39URcxie/iEjPndfDCG0hst2qtK0u+0OeIfk1b9bE9O793QvkP6AvEgre01xbJMWT7AYkqG9VqTv9aOL5bSWqxoodjXXDCNR7Ni8qLZnp8Mb6I+N9sEO17/fOfCybpdcyTNCp4SwNUyanNZOs0P1jL+J2p8=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB4915.eurprd04.prod.outlook.com (2603:10a6:208:c5::20)
- by AM8PR04MB7409.eurprd04.prod.outlook.com (2603:10a6:20b:1c5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Mon, 24 Aug
- 2020 07:26:16 +0000
-Received: from AM0PR04MB4915.eurprd04.prod.outlook.com
- ([fe80::8de5:80f:f11a:5fa3]) by AM0PR04MB4915.eurprd04.prod.outlook.com
- ([fe80::8de5:80f:f11a:5fa3%7]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
- 07:26:16 +0000
-From:   Jacky Bai <ping.bai@nxp.com>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc:     festevam@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2 3/3] arm64: dts: imx8mm: Add imx8mm ddr4 evk board support
-Date:   Mon, 24 Aug 2020 15:20:27 +0800
-Message-Id: <1598253627-25797-3-git-send-email-ping.bai@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598253627-25797-1-git-send-email-ping.bai@nxp.com>
-References: <1598253627-25797-1-git-send-email-ping.bai@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2P153CA0018.APCP153.PROD.OUTLOOK.COM (2603:1096::28) To
- AM0PR04MB4915.eurprd04.prod.outlook.com (2603:10a6:208:c5::20)
+        Mon, 24 Aug 2020 03:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52304 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgHXHdf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 03:33:35 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB0BC061574
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 00:33:35 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a5so7619665wrm.6
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 00:33:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=9b6JStI+Pc7Gan44H9Zai7qTn63i//epl6t/+SyCbvI=;
+        b=QtU30oREihjyaqVpYIPlh7uBHK/+lhu3kH4oL78qeud837ZI7zpawFKbrvXu6gEeF7
+         lirP1Q5eX5PgM10QHCj806++kYW29bWS1XHPniLoLJmno35vPnyrxiKHV7p3aodMTbfn
+         Y04755PuaOjBiEiyjPx6oxKlWUTs8W/nrEsTE3D3EiVIAnqck+zGCO2Kq8GPGxqS88WV
+         f4gu+gKuQuMYYK3aNi2V+GEfSaNUiYjGZVV3Uw2wOTjSE1MiKI50ALupBV4fO60Qx61C
+         dqwaeZn9bWLrQ8yqRwpZvWKQJqdQJBPxLU4x9pO0dXGyofFd0dRNrP7PqtDNr3k7hB5u
+         E43g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9b6JStI+Pc7Gan44H9Zai7qTn63i//epl6t/+SyCbvI=;
+        b=ojUN5vtYQoerRJMVNsWFB/DjomvSk5iEPWy+oQdQ/P/z/gl4ScNJDor4rx2Lgllp/p
+         QeGCmXa0Yqr3qm4liVBZMqPPvltvqqHrQvl7dKj/kViK0rvU9NOdsLHETSn9nrd3uneC
+         veDYNF7K6VvRV+u3CBEIPD6GZMJYS8B2aaKqwM/2gfd0AgdMMDGqYFSYRxK3/VEgyDRQ
+         S99l+T7EwOaTjBa0Mbw83wadE8zqgHgWjk2tamoqn0PAmVFeZEMU756N7hvCmZIB5p1p
+         Dpq8iH9eWaCWNvI3nwHXmqXYZ8U70Ad94Pe7Lefzb8S6fSsTVZp6AOm0XLZvxIjLoZ5+
+         ak0A==
+X-Gm-Message-State: AOAM533Ed4/zghjzDW0uQwSekKtXZWsqO5hwtIDT0i3tbCUMtU/4SsqB
+        FBWPNwaNAsG79pqE9BhfVBHsOQ==
+X-Google-Smtp-Source: ABdhPJyrXOh+fiqV7Y/t9Tokf2adkKintBDcUuhkhcJ9lId4930V3lXNU3Dgrt+bFOeg/VRmD57z0w==
+X-Received: by 2002:adf:9ec1:: with SMTP id b1mr4456180wrf.171.1598254413967;
+        Mon, 24 Aug 2020 00:33:33 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id t14sm21197697wrv.14.2020.08.24.00.33.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 00:33:33 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 08:33:31 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] mfd: Add driver for Embedded Controller found on
+ Acer Iconia Tab A500
+Message-ID: <20200824073331.GG3248864@dell>
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-2-digetx@gmail.com>
+ <20200823181653.GC209852@demiurge.local>
+ <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 10.192.242.69 (119.31.174.67) by SG2P153CA0018.APCP153.PROD.OUTLOOK.COM (2603:1096::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3348.3 via Frontend Transport; Mon, 24 Aug 2020 07:26:14 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3f091102-e863-4d9d-47a6-08d847fefcc6
-X-MS-TrafficTypeDiagnostic: AM8PR04MB7409:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM8PR04MB74091CBE808294C66E7037A487560@AM8PR04MB7409.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2803;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9aQbBStnU4035+XcbkyAxYf90IPXw4eMk93nqP+6Qe/GF7Qp6BsIKeKrbj3BklpCnlVm6EeZARUz0rYeRewWI3SPoIe+NUOyWTgsAMkqAoXOPmRMp3ws8lzfUyHuZsGWfhVHpRhBZZYj2hY2wtpuXiJxWkQmZpvHI+jD3yxDFgqv6dutWdVHVnKOsydqKTv93LWtkOnBMmf68PXAy59Pm+/16UetvHoRpdJ4bUwAP5YYYUNwUv8yS+hfNLvSTPrJKOpSJJ5XHcEIp2yFM5HIAvnWGJ5GL7PnxiaPUeJCNb6eJVRpSYz3m3JQbgAlOqjh7eLndU8QUV2IukbR7/vL1vC+3MOTgnyXs1CKAizrKtB08fP8xzKDbYIozHGwxiWj
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB4915.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(8676002)(4326008)(6486002)(6666004)(66476007)(8936002)(2616005)(66556008)(956004)(36756003)(316002)(66946007)(16576012)(5660300002)(186003)(478600001)(26005)(52116002)(86362001)(16526019)(2906002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: yv/6xvcMl/i2ZOKq4Yyf70WBb+NuNd/QNZgEc8UHDvAvipnAoVTJsFMzwYb3r3lWeHQ1wPqKI5Ws/hOekhSjNQIwqoJblX0Uh/QQcN/UqNYqChaLZFIgHx5L3j3zb6eh17dxvsjXz+Un/h+R3Dh9QCHOqms6KPMpi8qTCfcYUYidUZfVHExsBGyHj9F3X9etlRmGIXzAOsodGNZw7w3CnSF2l3Q9pFsDYYEO/YqXgTFH9aY89s4QMFyIl3xowWEXW6wenke4bnBj2uAkMu+VCSSWn4guerMiZvrHfqZ3ikoG/T045mNyMR1yMZkT2Ty8MjAyZVWZVxQcsV4L7J4a+TFcteGsaqqYRM2vzhhOZbjvsYVlKotlpiXC7+pur25ee3V45S7aJz9wAGYJk89qlYSxojBOJz0vrXyi6Fa4Q/Ri/lv0Zi5mY23Tmw3UM8yE3BXZptwhXQCGi0q4Klu6qajvHtjqSx9Q57XQpN9NnSHQERATn9pYlChUYE0beZSFlzyX46JlvwwKPkCjOmnXIYHux1g07Oyvv05RvJIUnnQetNypn+fQv/LLHqTgRA1kt0uQRbe8cvPUtjS7jXpBvyWznYfdOVe+aCa23nTVfVbl69TEf+ls8D/iU+rh8wtmLGrdg91csZ1ZKf1EagVKKA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f091102-e863-4d9d-47a6-08d847fefcc6
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB4915.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 07:26:16.2822
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KpmcnBinlKupYxcxgmesl0dYztq2iW1tot54LkR1trmlip8QQ9byKSdUQCCU8boyOCXAI05X48HOQ2WpNkz2hQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7409
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add the board dts support for i.MX8MM DDR4 EVK board.
+On Sun, 23 Aug 2020, Dmitry Osipenko wrote:
 
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
----
-Changes for v2: remove the ddrc opp table for now; remove the unnecessary
-suffix for gpmi pinctrl node.
----
- arch/arm64/boot/dts/freescale/Makefile        |  1 +
- .../boot/dts/freescale/imx8mm-ddr4-evk.dts    | 57 +++++++++++++++++++
- 2 files changed, 58 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts
+> 23.08.2020 21:16, Lubomir Rintel пишет:
+> > Hello,
+> ...
+> >> +config MFD_ACER_A500_EC
+> >> +	tristate "Embedded Controller driver for Acer Iconia Tab A500"
+> >> +	depends on (I2C_TEGRA && ARCH_TEGRA_2x_SOC) || COMPILE_TEST
+> > 
+> > This seems to also depend on I2C and OF. Perhaps I2C_TEGRA and
+> > ARCH_TEGRA_2x_SOC imply that, but it could lead to build failures with
+> > COMPILE_TEST=y. 
+> 
+> Hello, Lubomir! You're right about the I2C because it could be compiled
+> as a loadable module, good catch! The OF seems should fine as-is.
+> 
+> ...
+> >> +static struct a500_ec *a500_ec_scratch;
+> > 
+> > If this is only used for power_off, please rename it. I've been told to
+> > do so in my driver: https://lore.kernel.org/lkml/20200519104933.GX271301@dell/
+> 
+> I don't mind to rename the variable, but not sure whether it will be a
+> worthwhile change since _scratch is also a common naming scheme among
+> MFD drivers. Please see max77620_scratch for example, which I added
+> about a year ago.
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index a39f0a1723e0..417c552480f2 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -29,6 +29,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
- 
- dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8mm-ddr4-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts
-new file mode 100644
-index 000000000000..6c079c0a3a48
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-ddr4-evk.dts
-@@ -0,0 +1,57 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2020 NXP
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8mm-evk.dtsi"
-+
-+/ {
-+	model = "FSL i.MX8MM DDR4 EVK with CYW43455 WIFI/BT board";
-+	compatible = "fsl,imx8mm-ddr4-evk", "fsl,imx8mm";
-+
-+	leds {
-+		pinctrl-0 = <&pinctrl_gpio_led_2>;
-+
-+		status {
-+			gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	nand-on-flash-bbt;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_gpmi_nand: gpmi-nand {
-+		fsl,pins = <
-+			MX8MM_IOMUXC_NAND_ALE_RAWNAND_ALE		0x00000096
-+			MX8MM_IOMUXC_NAND_CE0_B_RAWNAND_CE0_B		0x00000096
-+			MX8MM_IOMUXC_NAND_CE1_B_RAWNAND_CE1_B		0x00000096
-+			MX8MM_IOMUXC_NAND_CLE_RAWNAND_CLE		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA00_RAWNAND_DATA00		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA01_RAWNAND_DATA01		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA02_RAWNAND_DATA02		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA03_RAWNAND_DATA03		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA04_RAWNAND_DATA04		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA05_RAWNAND_DATA05		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA06_RAWNAND_DATA06		0x00000096
-+			MX8MM_IOMUXC_NAND_DATA07_RAWNAND_DATA07		0x00000096
-+			MX8MM_IOMUXC_NAND_RE_B_RAWNAND_RE_B		0x00000096
-+			MX8MM_IOMUXC_NAND_READY_B_RAWNAND_READY_B	0x00000056
-+			MX8MM_IOMUXC_NAND_WE_B_RAWNAND_WE_B		0x00000096
-+			MX8MM_IOMUXC_NAND_WP_B_RAWNAND_WP_B		0x00000096
-+		>;
-+	};
-+
-+	pinctrl_gpio_led_2: gpioled2grp {
-+		fsl,pins = <
-+			MX8MM_IOMUXC_NAND_CE3_B_GPIO3_IO4	0x19
-+		>;
-+	};
-+};
+If something is used once, it does not make it 'common'.
+
+Not sure how this slipped my notice before, but I don't like it.
+
+Ensure any global struct used for power_off only includes items
+required for this purpose.  It's unfortunate this API requires a
+global variable at all.
+
 -- 
-2.26.2
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
