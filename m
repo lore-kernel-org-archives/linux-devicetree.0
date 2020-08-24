@@ -2,190 +2,136 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222B9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 06:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5874C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 06:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F312D2067C
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 06:10:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TITEt5oe";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kVJ6XsCB"
+	by mail.kernel.org (Postfix) with ESMTP id 83C74206BE
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 06:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598251094;
+	bh=keAguINI/csruyAscyM+5i2wQNbIwEcn3ut6kvSww3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vs1ShzFx3gSvDVCvpB4Zd0hL6yi6GjKGWfcO7I4KN1UQA1Q92l+gN4bKSfjia0MOW
+	 md0onE5ijjrqjHXzfHDeEoC119V2AVPwUlJ1vVu2rfUkZZsCy6z1/jtBsz9TV9U8Y1
+	 rsFfTze8I4adGsUMyun/hDVGUFr25h7gCwyn8Jl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725998AbgHXGKw (ORCPT
+        id S1725999AbgHXGiN (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 02:10:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40522 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725836AbgHXGKw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 02:10:52 -0400
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598249449;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ir6fINy3N3sxAruK420IofSpHlFqJK8LbAjfvaW+DJE=;
-        b=TITEt5oeLfJhtYPd1SL6CaEABWKyHHkzqz02ODqV2+dV/QYkoX4miaa+A2wD5YlMQxwDds
-        DnMRWh+wmk09Nz7vhKhrotQhRqvVCYP1GAeYuO9gJzFVVsvZAAozYVAj5fNgy7G0GWwfAl
-        9ZRq1sZBJWEzW6Bzex+2iXdpToOOTwnfy/Onk69CoC8uirbxjvlw9F7F4qRulipK/Sgoyh
-        sfcYembALM1yBlq+X1uE1fH6Iln57O2HEacapY5npfw42BWZtkV1RBJmMTv654GpVwX4cT
-        OpXK5Uko0ZuEatXATiMBmHMmKYnx4BmFWPO3/ZUYjBYHYI94eslJhXYVLLQdLw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598249449;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ir6fINy3N3sxAruK420IofSpHlFqJK8LbAjfvaW+DJE=;
-        b=kVJ6XsCBeZexi4YM0vCM7OM35ynpbRCUSnkZRVqk+jGDsnbRdNuBeHy7kU9N5ldZUahvGq
-        wqf0vTZSNG4JDpDg==
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <20200822143922.frjtog4mcyaegtyg@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200822143922.frjtog4mcyaegtyg@skbuf>
-Date:   Mon, 24 Aug 2020 08:10:36 +0200
-Message-ID: <87imd8zi8z.fsf@kurt>
+        Mon, 24 Aug 2020 02:38:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34269 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgHXGiN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 02:38:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f7so7497024wrw.1;
+        Sun, 23 Aug 2020 23:38:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VYlUOue9weg8rDgB4bx9HK1Y20q59ca+iyWSSQFRXYI=;
+        b=VxyCZz/ldN3JRupiVAt+a0AG/oMnR57uzAkH3KBz5mnf9e8urLJES3Etd6R1rX8RW7
+         tmP6iXBRKqGNxhPIw1RObPmrlQf65QLvMzBgzhc1w4sMK5pdS0iEutu8Og99uqW5gvvN
+         nA0yTh3jwPa2KuaxhT3+JLPCDjBp2pQXJpDwfYEhFfYqPug9tqfO4KRzFmqO1hP1xssf
+         B29dOgAmXtZ6w7XnZQJQTchstYtpcZt21ZOQpu1XKnWZurPKtc+jz5hhYyqDzfggMsYd
+         SQqRa09FyjVyrRIdj7+A2kH+XCVXzm8HWlZbXibfeP8gUVa13eOpn/thTFOA9ye2ROHi
+         aQHw==
+X-Gm-Message-State: AOAM533gxNAIRoRz09oAoouHF/JsHnCGTtXeWOyIuwcqeEN8jEQrEEX1
+        df6Xoy2gTDEjWhHmqZqCmBc=
+X-Google-Smtp-Source: ABdhPJzG3N510Tf3V6Srikm+MUxu5X19cpEEmIR9h3dkveK++/7ys8cBoVMBBR1Rfun7Ww4TZ4WnsQ==
+X-Received: by 2002:adf:ef08:: with SMTP id e8mr4571409wro.164.1598251090024;
+        Sun, 23 Aug 2020 23:38:10 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id 126sm22956165wme.42.2020.08.23.23.38.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Aug 2020 23:38:09 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 08:38:06 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>
+Subject: Re: [PATCH 02/22] dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges
+ property
+Message-ID: <20200824063806.GA2497@kozik-lap>
+References: <20200823161550.3981-1-krzk@kernel.org>
+ <20200823161550.3981-2-krzk@kernel.org>
+ <20200824052446.GE13023@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200824052446.GE13023@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 24, 2020 at 07:24:46AM +0200, Sascha Hauer wrote:
+> On Sun, Aug 23, 2020 at 06:15:30PM +0200, Krzysztof Kozlowski wrote:
+> > The GPIO controller node can have gpio-ranges property.  This fixes
+> > dtbs_check warnings like:
+> > 
+> >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000: 'gpio-ranges' does not match any of the regexes: 'pinctrl-[0-9]+'
+> >     From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/gpio/fsl-imx-gpio.yaml    | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > index 454db20c2d1a..1fac69573bb9 100644
+> > --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > @@ -51,6 +51,9 @@ properties:
+> >  
+> >    gpio-controller: true
+> >  
+> > +  gpio-ranges:
+> > +    maxItems: 1
+> > +
+> >  required:
+> >    - compatible
+> >    - reg
+> > @@ -62,6 +65,18 @@ required:
+> >  
+> >  additionalProperties: false
+> >  
+> > +allOf:
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            const: fsl,imx8mp-gpio
+> > +    then:
+> > +      properties:
+> > +        gpio-ranges:
+> > +          minItems: 1
+> > +          maxItems: 2
+> 
+> Why do you limit this to fsl,imx8mp-gpio? The i.MX5,6,7 dtsi files use
+> gpio-ranges as well and other i.MX dtsi files could also use it.
 
-On Sat Aug 22 2020, Vladimir Oltean wrote:
-> Hi Kurt,
->
-> On Thu, Aug 20, 2020 at 10:11:15AM +0200, Kurt Kanzenbach wrote:
->> The switch has support for the 802.1Qbv Time Aware Shaper (TAS). Traffic
->> schedules may be configured individually on each front port. Each port h=
-as eight
->> egress queues. The traffic is mapped to a traffic class respectively via=
- the PCP
->> field of a VLAN tagged frame.
->>=20
->> The TAPRIO Qdisc already implements that. Therefore, this interface can =
-simply
->> be reused. Add .port_setup_tc() accordingly.
->>=20
->> The activation of a schedule on a port is split into two parts:
->>=20
->>  * Programming the necessary gate control list (GCL)
->>  * Setup hrtimer for starting the schedule
->>=20
->> The hardware supports starting a schedule up to eight seconds in the fut=
-ure. The
->> TAPRIO interface provides an absolute base time. Therefore, hrtimers are
->> leveraged.
->>=20
->> Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
->> ---
->>  drivers/net/dsa/hirschmann/hellcreek.c | 294 +++++++++++++++++++++++++
->>  drivers/net/dsa/hirschmann/hellcreek.h |  21 ++
->>  2 files changed, 315 insertions(+)
->>=20
->> diff --git a/drivers/net/dsa/hirschmann/hellcreek.c b/drivers/net/dsa/hi=
-rschmann/hellcreek.c
->> index 745ca60342b4..e5b54f42c635 100644
->> --- a/drivers/net/dsa/hirschmann/hellcreek.c
->> +++ b/drivers/net/dsa/hirschmann/hellcreek.c
->> @@ -22,7 +22,9 @@
->>  #include <linux/spinlock.h>
->>  #include <linux/delay.h>
->>  #include <linux/ktime.h>
->> +#include <linux/time.h>
->>  #include <net/dsa.h>
->> +#include <net/pkt_sched.h>
->>=20=20
->>  #include "hellcreek.h"
->>  #include "hellcreek_ptp.h"
->> @@ -153,6 +155,15 @@ static void hellcreek_select_vlan(struct hellcreek =
-*hellcreek, int vid,
->>  	hellcreek_write(hellcreek, val, HR_VIDCFG);
->>  }
->>=20=20
->> +static void hellcreek_select_tgd(struct hellcreek *hellcreek, int port)
->> +{
->> +	u16 val =3D 0;
->> +
->> +	val |=3D port << TR_TGDSEL_TDGSEL_SHIFT;
->> +
->> +	hellcreek_write(hellcreek, val, TR_TGDSEL);
->> +}
->> +
->>  static int hellcreek_wait_until_ready(struct hellcreek *hellcreek)
->>  {
->>  	u16 val;
->> @@ -958,6 +969,24 @@ static void __hellcreek_setup_tc_identity_mapping(s=
-truct hellcreek *hellcreek)
->>  	}
->>  }
->>=20=20
->> +static void hellcreek_setup_tc_mapping(struct hellcreek *hellcreek,
->> +				       struct net_device *netdev)
->> +{
->> +	int i, j;
->> +
->> +	/* Setup mapping between traffic classes and port queues. */
->> +	for (i =3D 0; i < netdev_get_num_tc(netdev); ++i) {
->> +		for (j =3D 0; j < netdev->tc_to_txq[i].count; ++j) {
->> +			const int queue =3D j + netdev->tc_to_txq[i].offset;
->> +
->> +			hellcreek_select_prio(hellcreek, i);
->> +			hellcreek_write(hellcreek,
->> +					queue << HR_PRTCCFG_PCP_TC_MAP_SHIFT,
->> +					HR_PRTCCFG);
->> +		}
->> +	}
->> +}
->
-> What other driver have you seen that does this?
->
+All other cases use maximum one element in gpio-ranges, so they are
+covered so I assumed they are continuous. But if it not the case, I can
+make all them maximum 2.
 
-Probably none.
+Best regards,
+Krzysztof
 
-With TAPRIO traffic classes and the mapping to queues can be
-configured. The switch can also map traffic classes. That sounded like a
-good match to me.
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9DWdwACgkQeSpbgcuY
-8KaY6hAAjzRy8J2bN+84vK3lOAWesijRbxOy8c34j78vsszIYb3i4U9kxBBZkNE3
-cDDEF5MDfm8CTBvQkbJAX1NG1fSsR8vez64AGO4OwN+F4oPttAlwEPuGJrN2kKGS
-j/dHTlt0jCggnjZiNjyXqpxqEyMxGOhAO0hJdiLc/c9acrkuaYGQjvsJ8wU3/m3T
-6NfAVClZNsbHr9JBVzc2G7DBCZtgoAjYmjmr5KTh2Bj15UFFDfifnPlrqGBAB0Fw
-orTpvRtLKinvnXCtQW7OR217gyR7o9p5bR9vpQkltHi6ziscZCUVCiv5ME0dEpwK
-c/VRnsg6oc3JbWTZnjPyFn5bzuET9rEZpStnB1TquLcwXQSVj5A0o4N7GD8nSfcZ
-dOzZwx1NCwQjEbix7tZPdtk2v4K52+ctWusAI2AxbcNVcxW05st8mTcQFKiF+2Y/
-fCzHgYKZJ+9CFKcxzBctEc/O3Se/BcjY8sz5Jdo42NA7tLQQ1J4u/NlnhZajpmnK
-b+24WF/pUKmB98xRG6wDuE+4OSMzyGs4hx91xeSgrwDQBwhD1Gw2c5o2YupZzHUj
-tbfaxN/VYyenBtfJBp2vEqTYVa3pYPtX0c+C99Vf3MqVtoPOd22K4nTFteJr3BS6
-5+N0v0nF49kPLAcmJr/GDE4PvcgqgbykB9Ga8YoIqIdq7iUn0tM=
-=yOid
------END PGP SIGNATURE-----
---=-=-=--
