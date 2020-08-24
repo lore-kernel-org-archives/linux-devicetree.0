@@ -2,123 +2,84 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A99EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F87C433E4
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61C8120706
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k89mJ60C"
+	by mail.kernel.org (Postfix) with ESMTP id 384662078D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598306708;
+	bh=kj3kGz6BUdppP34j2wcNL4NLP3wVgcKhzup4kMsl0Hk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VeW0/cMF5QTyJqYP14avnUeiLRSxZRZXg5pHqzlx2Tn1Qpj+3rXcTxGsoAvRfPaG9
+	 QKJXjMfmtyfNMlLIgfqdsPMztpi6H32px/1Ui8qofHn5mAzFzcIxuHcnWIZqmr4vQJ
+	 E4JssX2Qvq25gHySfJypsdW3nbG2Z3TEFCAcB1Dg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgHXWCJ (ORCPT
+        id S1726303AbgHXWFH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXWCI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:02:08 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F13A4C061574;
-        Mon, 24 Aug 2020 15:02:07 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dp2so8574026ejc.4;
-        Mon, 24 Aug 2020 15:02:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eDrs1DwbC5+8TONYybtdQH1gGPGhspdsL18iTrVhGW8=;
-        b=k89mJ60CjyOjtzdPYjexfQLXH07LhjNYMlld62dH/8NbkwVGIu9U7moqLtrX2W4SqP
-         wqGh2MgPs+2ZhEDU32Jqw5EIURp3BOEnhIu+EauBr92YQ38wesDInxImpQPiIJVoGg9x
-         5+cOkMPxoMta9hN/RcCY29BCeca9IfAynGJVstSPMLekv/oVAw/06AzIM5U5YRESJLYo
-         AVfTYqAKfJNoRRYIsCb8ivYFkuRyYC/ICIksYWp6u0M82vKFANp/gG0Bna2OB7rPebJz
-         h1EvOhZACnzxeyKodkVuBpc+cUwZ/Hny8PeNWk+Be0IE05FlT0ATdUmYln1b2VDx5Lzk
-         hFDw==
+        Mon, 24 Aug 2020 18:05:07 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41740 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXWFH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:05:07 -0400
+Received: by mail-il1-f194.google.com with SMTP id q14so8705667ilj.8;
+        Mon, 24 Aug 2020 15:05:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=eDrs1DwbC5+8TONYybtdQH1gGPGhspdsL18iTrVhGW8=;
-        b=btm4yOIpZUmbcvrt6kPA6o884+rivIBpEX86hWHva/lmv3bNCQGOF9/Z36ids/+2rF
-         fnS79K/HUUQEkWjzTPMowDmyV7vV1x1bmmVHaERDRnzvEQkRHq198DzWt0/4nWmWgCYA
-         C8b4FlWqIP4xNga7FXFZH7ItI+NVEoYeo6reYJkd6g0hvCcssyekg9hVOTzdLItNYGnH
-         IhSHTArGZKuhZc0eBEtCzFQVTA972g1/Eio6dwhPyf6uzpR2ysIo1WbW9/SyS+iSJym9
-         tD4QoJT13EuEjBcdGrrTe/i0FgU0sbH+gYxnhPNjpXoaaYNDVvcK5HgRcR8gxgm0oKjS
-         XbfA==
-X-Gm-Message-State: AOAM530AoF72s2YaIZVE7AylGfjAzJW/ktaHIuE7/LnEsCKi/+XqZgP8
-        eqJ46oUhr8Jh322S/Qeb1y8=
-X-Google-Smtp-Source: ABdhPJxaKTXwY/jsO6Hr/Rbx2mOzeZXhjAoW8l1Mn3bCLDieQej4NComAgrLqz5ZGXR+vMoGC8Gk2A==
-X-Received: by 2002:a17:906:4a0d:: with SMTP id w13mr6797613eju.156.1598306526569;
-        Mon, 24 Aug 2020 15:02:06 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id a19sm10755504edv.49.2020.08.24.15.02.05
+        bh=sFe5hS4R8bzVnSFiZ1b3x8cFglxnF6BgXKj0AUobzKk=;
+        b=pmj78AGjrb0lsO+Z1oSfN09n0Df0DDyWs/0Y9c44oT8WYS/T0P+u/6tG6WWKdCkya9
+         HH8twDwAWJ4XeksZBqpfHZKYoaLfcpzBULgMdraG9BZ1KKc3bwYadyPSEUahLmjOJNuj
+         CPb6PQXUlC1DEieTlH20y71nta0bNPSZdr24r/au6kRBSRzDkKTkun1MwAzI9MNtMjKc
+         UDK0ylL2U2UZ18/HOFx8JAzLC+7nBT7Nh1cmmfw7QD2o9j0wp7j90pMUswCGgu9H1YfH
+         90lEFGXi7MVPD/vbv76kMFSZRdfCu4xs2pRZPmcOCip8RTNjrKTpLn+KwCyldCFZqNOl
+         NMAQ==
+X-Gm-Message-State: AOAM531I4KgqKqGDqEhgQI12JvpxExKnt+3V0J1K7mgStgijTsEr+l2z
+        KkQG/HMLA1E5lfrcML92Fun5C20rHQ==
+X-Google-Smtp-Source: ABdhPJwB/Zp/LseOVmt6zKgBt2vF28u1bV7H82s0vjbj5nSKgQSpKWhHMiGBaQ1KGQQIirQp+BMNxg==
+X-Received: by 2002:a05:6e02:82:: with SMTP id l2mr6497112ilm.130.1598306706106;
+        Mon, 24 Aug 2020 15:05:06 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id c16sm8195649ila.29.2020.08.24.15.05.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:02:06 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 01:02:03 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Po Liu <Po.Liu@nxp.com>
-Subject: Re: [PATCH v3 0/8] Hirschmann Hellcreek DSA driver
-Message-ID: <20200824220203.atjmjrydq4qyt33x@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de>
- <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN>
+        Mon, 24 Aug 2020 15:05:05 -0700 (PDT)
+Received: (nullmailer pid 3393256 invoked by uid 1000);
+        Mon, 24 Aug 2020 22:05:04 -0000
+Date:   Mon, 24 Aug 2020 16:05:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     treding@nvidia.com, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/3 resend] dt-bindings: Bindings for reserved memory for
+ BPMP mail
+Message-ID: <20200824220504.GA3335062@bogus>
+References: <20200807162006.17333-1-pdeschrijver@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN>
+In-Reply-To: <20200807162006.17333-1-pdeschrijver@nvidia.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 02:31:10PM -0700, Jakub Kicinski wrote:
-> On Thu, 20 Aug 2020 10:11:10 +0200 Kurt Kanzenbach wrote:
-> > this series adds a DSA driver for the Hirschmann Hellcreek TSN switch
-> > IP. Characteristics of that IP:
-> > 
-> >  * Full duplex Ethernet interface at 100/1000 Mbps on three ports
-> >  * IEEE 802.1Q-compliant Ethernet Switch
-> >  * IEEE 802.1Qbv Time-Aware scheduling support
-> >  * IEEE 1588 and IEEE 802.1AS support
+On Fri, Aug 07, 2020 at 07:20:06PM +0300, Peter De Schrijver wrote:
+> Tegra234 will use DRAM to store the messages exchanged between Linux and
+> BPMP firmware rather than sysram as used in Tegra186 and Tegra194. The
+> kernel will be informed about the size and location of the DRAM area to
+> be used using the DT reserved memory bindings.
 > 
-> I don't see anything worth complaining about here, but this is not my
-> area of expertise.. 
-> 
-> DSA and TAPRIO folks - does this look good to you?
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> ---
+>  .../firmware/nvidia,tegra186-bpmp.txt         | 38 ++++++++++++++++++-
+>  .../reserved-memory/tegra234-bpmp-shmem.txt   | 33 ++++++++++++++++
 
-Just my comment on patch 5/8 about netdev->tc_to_txq. There are 2
-distinct things about that:
-- accessing struct net_device directly hurts the DSA model a little bit.
-- I think there's some confusion regarding the use of netdev->tc_to_txq
-  itself. I don't think that's the right place to setup a VLAN PCP to
-  traffic class mapping. That's simply "what traffic class does each
-  netdev queue have". I would even go as far as say that Linux doesn't
-  support a VLAN PCP to TC mapping (similar to the DSCP to TC mapping
-  from the DCB ops) at all, except for the ingress-qos-map and
-  egress-qos-map of the 8021q driver, which can't be offloaded and don't
-  map nicely over existing hardware anyway (what hardware has an
-  ingress-qos-map and an egress-qos-map per individual VLAN?!).
-  Although I do really see the need for having a mapping between VLAN
-  PCP and traffic class, I would suggest Kurt to not expose this through
-  taprio/mqprio (hardcode the PCP mapping as 1-to-1 with TC, as other
-  drivers do), and let's try to come up separately with an abstraction
-  for that.
+New bindings need to be DT schema now.
 
-Thanks,
--Vladimir
+>  2 files changed, 69 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
