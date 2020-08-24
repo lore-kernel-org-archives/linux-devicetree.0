@@ -6,80 +6,84 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F87C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1685FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 384662078D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA202078A
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 22:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598306708;
-	bh=kj3kGz6BUdppP34j2wcNL4NLP3wVgcKhzup4kMsl0Hk=;
+	s=default; t=1598307627;
+	bh=TspMQruQND82zkmLrx37GWo9wSohTYrMU30iWv32dVE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VeW0/cMF5QTyJqYP14avnUeiLRSxZRZXg5pHqzlx2Tn1Qpj+3rXcTxGsoAvRfPaG9
-	 QKJXjMfmtyfNMlLIgfqdsPMztpi6H32px/1Ui8qofHn5mAzFzcIxuHcnWIZqmr4vQJ
-	 E4JssX2Qvq25gHySfJypsdW3nbG2Z3TEFCAcB1Dg=
+	b=GMJKt2sXb+UfmtjrJskK3yv8ZUz27KQeA1Fi5JCTOyIl8eX8COiBy52OMlY/KSrLt
+	 Zp8biPLM9m5pKPrWNtDmTt/XSJbF3nXUtz5sOQwuvhxFy9T/RdT7RJ2M7zVsoaAwhH
+	 Tq9J8SttTnWGkFnhm3JUj+W0Tdrjl7EkWTkl8HDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHXWFH (ORCPT
+        id S1727961AbgHXWU0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:05:07 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41740 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXWFH (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:05:07 -0400
-Received: by mail-il1-f194.google.com with SMTP id q14so8705667ilj.8;
-        Mon, 24 Aug 2020 15:05:06 -0700 (PDT)
+        Mon, 24 Aug 2020 18:20:26 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44906 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgHXWUZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 18:20:25 -0400
+Received: by mail-il1-f196.google.com with SMTP id j9so8705136ilc.11;
+        Mon, 24 Aug 2020 15:20:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=sFe5hS4R8bzVnSFiZ1b3x8cFglxnF6BgXKj0AUobzKk=;
-        b=pmj78AGjrb0lsO+Z1oSfN09n0Df0DDyWs/0Y9c44oT8WYS/T0P+u/6tG6WWKdCkya9
-         HH8twDwAWJ4XeksZBqpfHZKYoaLfcpzBULgMdraG9BZ1KKc3bwYadyPSEUahLmjOJNuj
-         CPb6PQXUlC1DEieTlH20y71nta0bNPSZdr24r/au6kRBSRzDkKTkun1MwAzI9MNtMjKc
-         UDK0ylL2U2UZ18/HOFx8JAzLC+7nBT7Nh1cmmfw7QD2o9j0wp7j90pMUswCGgu9H1YfH
-         90lEFGXi7MVPD/vbv76kMFSZRdfCu4xs2pRZPmcOCip8RTNjrKTpLn+KwCyldCFZqNOl
-         NMAQ==
-X-Gm-Message-State: AOAM531I4KgqKqGDqEhgQI12JvpxExKnt+3V0J1K7mgStgijTsEr+l2z
-        KkQG/HMLA1E5lfrcML92Fun5C20rHQ==
-X-Google-Smtp-Source: ABdhPJwB/Zp/LseOVmt6zKgBt2vF28u1bV7H82s0vjbj5nSKgQSpKWhHMiGBaQ1KGQQIirQp+BMNxg==
-X-Received: by 2002:a05:6e02:82:: with SMTP id l2mr6497112ilm.130.1598306706106;
-        Mon, 24 Aug 2020 15:05:06 -0700 (PDT)
+        bh=0w69xLXRX2cuqy8PwcvPK4rswz8AxstRYcdWsnyCdmA=;
+        b=dzve84Ej/WOJP8NRX7wjKEoLh5yWdESIApoNj/cB6JkmrebDVx3mYM53Z+qQALxH7R
+         Ja/GRfPpX0X+UrdIOMPZEpAjw7riIBKqusJzQSISFaxxtZriCZw2xrvi1dzqSZ5NZzO2
+         +sPUO63wEbEWOuH7mS+VyxxpR2V8DCHi6JYZFYmNR2N6jlyUPgYApJH9RwHkBB453oMt
+         tT4L5yerfBLXaQOtKHVMuu0k5Hb+hV/k2Rqq5ErE/aCv0qMbfLchJJ6it3I+jfAkQ4bf
+         yrgR20r/dZ62NGH5EJ86o8Zoh2PqRJNa3skOA+qJKGM9Fp80Zh4Wm4YfiZQxcbYUSfgq
+         vSGA==
+X-Gm-Message-State: AOAM531EEEI3lf0YB3B5e3Fh1MV3hlsJVWRPHh1avR1qXgTY+gbZhXMU
+        Vx2SedShDNXy3cwnyOynBc8Ik214Ag==
+X-Google-Smtp-Source: ABdhPJxzMDMMF6nPOlKvaw2WTcX5LkAjXE1Yqq4HUP/4S6BqQ3nLU632NSDshEZNOcpbstiGcm3pIg==
+X-Received: by 2002:a92:b503:: with SMTP id f3mr6137211ile.222.1598307624686;
+        Mon, 24 Aug 2020 15:20:24 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id c16sm8195649ila.29.2020.08.24.15.05.05
+        by smtp.gmail.com with ESMTPSA id y8sm7204300iom.26.2020.08.24.15.20.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:05:05 -0700 (PDT)
-Received: (nullmailer pid 3393256 invoked by uid 1000);
-        Mon, 24 Aug 2020 22:05:04 -0000
-Date:   Mon, 24 Aug 2020 16:05:04 -0600
+        Mon, 24 Aug 2020 15:20:23 -0700 (PDT)
+Received: (nullmailer pid 3420535 invoked by uid 1000);
+        Mon, 24 Aug 2020 22:20:20 -0000
+Date:   Mon, 24 Aug 2020 16:20:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     treding@nvidia.com, linux-tegra@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3 resend] dt-bindings: Bindings for reserved memory for
- BPMP mail
-Message-ID: <20200824220504.GA3335062@bogus>
-References: <20200807162006.17333-1-pdeschrijver@nvidia.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-renesas-soc@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH 1/7] dt-bindings: display: renesas, du: Document the
+ r8a7742 bindings
+Message-ID: <20200824222020.GA3420392@bogus>
+References: <20200807174954.14448-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200807174954.14448-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200807162006.17333-1-pdeschrijver@nvidia.com>
+In-Reply-To: <20200807174954.14448-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 07:20:06PM +0300, Peter De Schrijver wrote:
-> Tegra234 will use DRAM to store the messages exchanged between Linux and
-> BPMP firmware rather than sysram as used in Tegra186 and Tegra194. The
-> kernel will be informed about the size and location of the DRAM area to
-> be used using the DT reserved memory bindings.
+On Fri, 07 Aug 2020 18:49:48 +0100, Lad Prabhakar wrote:
+> Document the RZ/G1H (R8A7742) SoC in the R-Car DU bindings.
 > 
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > ---
->  .../firmware/nvidia,tegra186-bpmp.txt         | 38 ++++++++++++++++++-
->  .../reserved-memory/tegra234-bpmp-shmem.txt   | 33 ++++++++++++++++
+>  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-New bindings need to be DT schema now.
-
->  2 files changed, 69 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
+Acked-by: Rob Herring <robh@kernel.org>
