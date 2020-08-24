@@ -2,200 +2,185 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE70C433E4
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E0CC433E8
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53C5920578
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F1F20706
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 19:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbLjbs+k"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Xe79gf8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgHXT3o (ORCPT
+        id S1727797AbgHXTbM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:29:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXT3n (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 15:29:43 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE81C061573;
-        Mon, 24 Aug 2020 12:29:43 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id i26so9127537edv.4;
-        Mon, 24 Aug 2020 12:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tkyjDeEozETacXNRr3uxxFjEe+DOSkNiETr7ujJ7mA4=;
-        b=gbLjbs+kaoh4rZOxABupqrCM4Qcd3bYtkfeVC/nRU8Z2Wz1U+JbkAQkArH4gmcAbQg
-         +me959Drpnd4CjLnwv1i7I+n39T70i1k9MgfXmM4TdqSH5CHPeQQ704WlNRzvMmsCNE3
-         mHOMfsb2nqxSIfJ5iG/uxSzInfGvZgulDJl2jhM0ZTUq12X/DcNPeCcreRhIEGU5c473
-         tplXuWIWR80tZi94jsXsW9LbmVH0mU1xGrXQJgLidd+oqlPUkRSlZgZ3kJ1zt0Zs4Z/h
-         iVwiFqFsoqXrzRsD/80e0iJI+ElqXVWr+zeUX5i662Lr58YYWQFbC+XEQHqwTrZ52/i7
-         S1hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tkyjDeEozETacXNRr3uxxFjEe+DOSkNiETr7ujJ7mA4=;
-        b=rEgwT0ZbXNTE+tR82bQrOlKADOrPeQE9BzXIQ40wkQ3nALEqkuNPYO5uXNK6fTvf5L
-         xkslt5ZEM1cN0pNvVQPDQD8+3SVVfNqhkbIrwYhKzrv6ymwVBkz+JLJh6fR8IKOIx6G6
-         v0OddlOcBiWD+jA0M9w+I7dr2fPn7TFoubyzfGJ0cThELC+JFWgPe7XXRBOAWCxoTlKW
-         LLUcA6kpZphz5aUDbASrhefDMDDFxgpC/LiNlN/gydahM9tcSNS1hnH4AcUGt42N1j01
-         g4ViN6/jHTfacWAr4Z9VoUI1ms3XfQs5+3VwLsC1knpMg3lGoifpbyKKJhgkA33HPQk4
-         H/lw==
-X-Gm-Message-State: AOAM531nbeZ+mAt5m9q7abkJtViyJvbkbMUhO89+u+YS8rU7GQPh9Fag
-        a81hGNWqixhUjVpouA5gmztu6EnCidt2h6ECb1c=
-X-Google-Smtp-Source: ABdhPJy8zXxqgoqnCG7czfw4GIuDC9/xFzn6G7zIEQJby4+MpOb+8f/28WY9QeyW1U8+CILxKbHrHp2ZOuZ7tua7MN0=
-X-Received: by 2002:aa7:c983:: with SMTP id c3mr6737425edt.383.1598297381878;
- Mon, 24 Aug 2020 12:29:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org> <20200819153045.GA18469@pendragon.ideasonboard.com>
- <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
- <20200820090326.3f400a15@coco.lan> <20200820100205.GA5962@pendragon.ideasonboard.com>
-In-Reply-To: <20200820100205.GA5962@pendragon.ideasonboard.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Tue, 25 Aug 2020 05:29:29 +1000
-Message-ID: <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liuyao An <anliuyao@huawei.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 24 Aug 2020 15:31:12 -0400
+Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43106 "EHLO
+        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727120AbgHXTbA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 15:31:00 -0400
+Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
+        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id 8E1A930C378;
+        Mon, 24 Aug 2020 12:28:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com 8E1A930C378
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+        s=dkimrelay; t=1598297289;
+        bh=GSqFzmHeOiSek+62bFpDJcfrtOQWQUrThlJG71lclKo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xe79gf8vXGM0Co8IfeTP7AVemOvVBZY/oxpeerIA4+pc2V0PRacCRn3nwGB4zk6Ww
+         Wybbja8SO18uTBMYF74SamoN4ROtNHdjqeXHCSCJBlILv4SkblPJcVSO55PTbNRZaz
+         1sGi26Gcc0BLGoZouaC/Nr1tqWmbsC4MCjSTriEE=
+Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
+        by mail-irv-17.broadcom.com (Postfix) with ESMTP id C780514008D;
+        Mon, 24 Aug 2020 12:30:42 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v11 02/11] dt-bindings: PCI: Add bindings for more Brcmstb chips
+Date:   Mon, 24 Aug 2020 15:30:15 -0400
+Message-Id: <20200824193036.6033-3-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200824193036.6033-1-james.quinlan@broadcom.com>
+References: <20200824193036.6033-1-james.quinlan@broadcom.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Mauro,
->
-> On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote:
-> > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu:
-> > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote:
-> > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:
-> > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:
-> > > > > > This patch series port the out-of-tree driver for Hikey 970 (which
-> > > > > > should also support Hikey 960) from the official 96boards tree:
-> > > > > >
-> > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > > > > >
-> > > > > > Based on his history, this driver seems to be originally written
-> > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The original
-> > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
-> > > > > > implementation for FB dev API.
-> > > > > >
-> > > > > > As I need to preserve the original history (with has patches from
-> > > > > > both HiSilicon and from Linaro),  I'm starting from the original
-> > > > > > patch applied there. The remaining patches are incremental,
-> > > > > > and port this driver to work with upstream Kernel.
-> > > > > >
-> > > ...
-> > > > > > - Due to legal reasons, I need to preserve the authorship of
-> > > > > >   each one responsbile for each patch. So, I need to start from
-> > > > > >   the original patch from Kernel 4.4;
-> > > ...
-> > > > > I do acknowledge you need to preserve history and all -
-> > > > > but this patchset is not easy to review.
-> > > >
-> > > > Why do we need to preserve history ? Adding relevant Signed-off-by and
-> > > > Co-developed-by should be enough, shouldn't it ? Having a public branch
-> > > > that contains the history is useful if anyone is interested, but I don't
-> > > > think it's required in mainline.
-> > >
-> > > Yea. I concur with Laurent here. I'm not sure what legal reasoning you
-> > > have on this but preserving the "absolute" history here is actively
-> > > detrimental for review and understanding of the patch set.
-> > >
-> > > Preserving Authorship, Signed-off-by lines and adding Co-developed-by
-> > > lines should be sufficient to provide both atribution credit and DCO
-> > > history.
-> >
-> > I'm not convinced that, from legal standpoint, folding things would
-> > be enough. See, there are at least 3 legal systems involved here
-> > among the different patch authors:
-> >
-> >       - civil law;
-> >       - common law;
-> >       - customary law + common law.
-> >
-> > Merging stuff altogether from different law systems can be problematic,
-> > and trying to discuss this with experienced IP property lawyers will
-> > for sure take a lot of time and efforts. I also bet that different
-> > lawyers will have different opinions, because laws are subject to
-> > interpretation. With that matter I'm not aware of any court rules
-> > with regards to folded patches. So, it sounds to me that folding
-> > patches is something that has yet to be proofed in courts around
-> > the globe.
-> >
-> > At least for US legal system, it sounds that the Country of
-> > origin of a patch is relevant, as they have a concept of
-> > "national technology" that can be subject to export regulations.
-> >
-> > From my side, I really prefer to play safe and stay out of any such
-> > legal discussions.
->
-> Let's be serious for a moment. If you think there are legal issues in
-> taking GPL-v2.0-only patches and squashing them while retaining
-> authorship information through tags, the Linux kernel if *full* of that.
-> You also routinely modify patches that you commit to the media subsystem
-> to fix "small issues".
->
-> The country of origin argument makes no sense either, the kernel code
-> base if full of code coming from pretty much all country on the planet.
->
-> Keeping the patches separate make this hard to review. Please squash
-> them.
+From: Jim Quinlan <jquinlan@broadcom.com>
 
-I'm inclined to agree with Laurent here.
+- Add compatible strings for three more Broadcom STB chips: 7278, 7216,
+  7211 (STB version of RPi4).
+- Add new property 'brcm,scb-sizes'.
+- Add new property 'resets'.
+- Add new property 'reset-names' for 7216 only.
+- Allow 'ranges' and 'dma-ranges' to have more than one item and update
+  the example to show this.
 
-Patches submitted as GPL-v2 with DCO lines and author names/companies
-should be fine to be squashed and rearranged,
-as long as the DCO and Authorship is kept somewhere in the new patch
-that is applied.
+Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/pci/brcm,stb-pcie.yaml           | 56 ++++++++++++++++---
+ 1 file changed, 49 insertions(+), 7 deletions(-)
 
-Review is more important here.
+diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+index 8680a0f86c5a..807694b4f41f 100644
+--- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+@@ -9,12 +9,15 @@ title: Brcmstb PCIe Host Controller Device Tree Bindings
+ maintainers:
+   - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+ 
+-allOf:
+-  - $ref: /schemas/pci/pci-bus.yaml#
+-
+ properties:
+   compatible:
+-    const: brcm,bcm2711-pcie # The Raspberry Pi 4
++    items:
++      - enum:
++          - brcm,bcm2711-pcie # The Raspberry Pi 4
++          - brcm,bcm7211-pcie # Broadcom STB version of RPi4
++          - brcm,bcm7278-pcie # Broadcom 7278 Arm
++          - brcm,bcm7216-pcie # Broadcom 7216 Arm
++          - brcm,bcm7445-pcie # Broadcom 7445 Arm
+ 
+   reg:
+     maxItems: 1
+@@ -34,10 +37,12 @@ properties:
+       - const: msi
+ 
+   ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 4
+ 
+   dma-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 6
+ 
+   clocks:
+     maxItems: 1
+@@ -58,8 +63,31 @@ properties:
+ 
+   aspm-no-l0s: true
+ 
++  resets:
++    description: for "brcm,bcm7216-pcie", must be a valid reset
++      phandle pointing to the RESCAL reset controller provider node.
++    $ref: "/schemas/types.yaml#/definitions/phandle"
++
++  reset-names:
++    items:
++      - const: rescal
++
++  brcm,scb-sizes:
++    description: u64 giving the 64bit PCIe memory
++      viewport size of a memory controller.  There may be up to
++      three controllers, and each size must be a power of two
++      with a size greater or equal to the amount of memory the
++      controller supports.  Note that each memory controller
++      may have two component regions -- base and extended -- so
++      this information cannot be deduced from the dma-ranges.
++    $ref: /schemas/types.yaml#/definitions/uint64-array
++    items:
++      minItems: 1
++      maxItems: 3
++
+ required:
+   - reg
++  - ranges
+   - dma-ranges
+   - "#interrupt-cells"
+   - interrupts
+@@ -68,6 +96,18 @@ required:
+   - interrupt-map
+   - msi-controller
+ 
++allOf:
++  - $ref: /schemas/pci/pci-bus.yaml#
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: brcm,bcm7216-pcie
++    then:
++      required:
++        - resets
++        - reset-names
++
+ unevaluatedProperties: false
+ 
+ examples:
+@@ -93,7 +133,9 @@ examples:
+                     msi-parent = <&pcie0>;
+                     msi-controller;
+                     ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+-                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
++                    dma-ranges = <0x42000000 0x1 0x00000000 0x0 0x40000000 0x0 0x80000000>,
++                                 <0x42000000 0x1 0x80000000 0x3 0x00000000 0x0 0x80000000>;
+                     brcm,enable-ssc;
++                    brcm,scb-sizes =  <0x0000000080000000 0x0000000080000000>;
+             };
+     };
+-- 
+2.17.1
 
-Dave.
