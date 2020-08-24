@@ -2,91 +2,157 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDC9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 14:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCCEC433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 14:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D659920738
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 14:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23A1206B5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 14:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgHXOLK (ORCPT
+        id S1726661AbgHXOLa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:11:10 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:2505 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbgHXOLC (ORCPT
+        Mon, 24 Aug 2020 10:11:30 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:21502 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726473AbgHXOLM (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:11:02 -0400
+        Mon, 24 Aug 2020 10:11:12 -0400
 X-IronPort-AV: E=Sophos;i="5.76,348,1592838000"; 
-   d="scan'208";a="55383431"
+   d="scan'208";a="55166780"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 24 Aug 2020 23:10:58 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 24 Aug 2020 23:11:11 +0900
 Received: from localhost.localdomain (unknown [172.29.53.152])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 1A0FE40031C8;
-        Mon, 24 Aug 2020 23:10:55 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 3C35240031C8;
+        Mon, 24 Aug 2020 23:11:08 +0900 (JST)
 From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v3 0/5] Remodel HD3SS3220 device nodes
-Date:   Mon, 24 Aug 2020 15:10:48 +0100
-Message-Id: <20200824141053.5062-1-biju.das.jz@bp.renesas.com>
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 4/5] arm64: dts: renesas: cat874: Move connector node out of hd3ss3220 device
+Date:   Mon, 24 Aug 2020 15:10:52 +0100
+Message-Id: <20200824141053.5062-5-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200824141053.5062-1-biju.das.jz@bp.renesas.com>
+References: <20200824141053.5062-1-biju.das.jz@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some platforms have only super speed data bus connected to HD3SS3220 device
-and high speed data bus directly connected to the SoC. In such platforms
-modelling connector as a child of this device is making it non compliant
-with usb connector bindings. By modelling connector node as standalone
-device node along with HD3SS3220 device and the SoC data bus will make it
-compliant with usb connector bindings.
+Move connector node out of hd3ss3220 device in order to comply with usb
+connector bindings.
 
-It is based on the below discussion threads
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+v2->v3: No change
+v1->v2: No change
+---
+ .../boot/dts/renesas/r8a774c0-cat874.dts      | 67 ++++++++++++++-----
+ 1 file changed, 50 insertions(+), 17 deletions(-)
 
-1) https://patchwork.kernel.org/patch/11669423/
-2) https://patchwork.kernel.org/patch/11129567/
-
-v2->v3
-  * Added Heikkei's reviewed by tag
-  * Incorporated Shimoda-san's review comments for binding patch.
-    (https://patchwork.kernel.org/patch/11708831/)
-
-
-Biju Das (4):
-  dt-bindings: usb: renesas,usb3-peri: Document HS and SS data bus
-  usb: typec: hd3ss3220: Use OF graph API to get the connector fwnode
-  arm64: dts: renesas: cat874: Move connector node out of hd3ss3220
-    device
-  arm64: dts: renesas: beacon-renesom-baseboard: Move connector node out
-    of hd3ss3220 device
-
-Lad Prabhakar (1):
-  dt-bindings: usb: convert ti,hd3ss3220 bindings to json-schema
-
- .../bindings/usb/renesas,usb3-peri.yaml       | 34 ++++++--
- .../devicetree/bindings/usb/ti,hd3ss3220.txt  | 38 ---------
- .../devicetree/bindings/usb/ti,hd3ss3220.yaml | 81 +++++++++++++++++++
- .../dts/renesas/beacon-renesom-baseboard.dtsi | 67 +++++++++++----
- .../boot/dts/renesas/r8a774c0-cat874.dts      | 67 +++++++++++----
- drivers/usb/typec/hd3ss3220.c                 | 18 ++++-
- 6 files changed, 224 insertions(+), 81 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
- create mode 100644 Documentation/devicetree/bindings/usb/ti,hd3ss3220.yaml
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+index 26aee004a44e..ea87cb5a459c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
++++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+@@ -129,6 +129,29 @@
+ 		#clock-cells = <0>;
+ 		clock-frequency = <74250000>;
+ 	};
++
++	connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		data-role = "dual";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				hs_ep: endpoint {
++					remote-endpoint = <&usb3_hs_ep>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				ss_ep: endpoint {
++					remote-endpoint = <&hd3ss3220_in_ep>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &audio_clk_a {
+@@ -186,20 +209,19 @@
+ 		interrupt-parent = <&gpio6>;
+ 		interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+ 
+-		connector {
+-			compatible = "usb-c-connector";
+-			label = "USB-C";
+-			data-role = "dual";
+-
+-			ports {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+-				port@1 {
+-					reg = <1>;
+-					hd3ss3220_ep: endpoint {
+-						remote-endpoint = <&usb3_role_switch>;
+-					};
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++				hd3ss3220_in_ep: endpoint {
++					remote-endpoint = <&ss_ep>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				hd3ss3220_out_ep: endpoint {
++					remote-endpoint = <&usb3_role_switch>;
+ 				};
+ 			};
+ 		};
+@@ -405,9 +427,20 @@
+ 	status = "okay";
+ 	usb-role-switch;
+ 
+-	port {
+-		usb3_role_switch: endpoint {
+-			remote-endpoint = <&hd3ss3220_ep>;
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			usb3_hs_ep: endpoint {
++				remote-endpoint = <&hs_ep>;
++			};
++		};
++		port@1 {
++			reg = <1>;
++			usb3_role_switch: endpoint {
++				remote-endpoint = <&hd3ss3220_out_ep>;
++			};
+ 		};
+ 	};
+ };
 -- 
 2.17.1
 
