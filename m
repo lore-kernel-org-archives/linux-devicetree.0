@@ -2,122 +2,134 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C53C433E3
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 02:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA26C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 02:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06702078D
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 02:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6642078D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 02:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LSBTXbot"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="UkN0oSOS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgHXCSw (ORCPT
+        id S1727114AbgHXCct (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Sun, 23 Aug 2020 22:18:52 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49156 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727124AbgHXCSv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 23 Aug 2020 22:18:51 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26B72279;
-        Mon, 24 Aug 2020 04:18:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598235529;
-        bh=RoKm8ixOBiN9I2lstV2sr8M8mjB5HkR5dbHfe1S+R6s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LSBTXbotaqk4zEATQtqy3tif3cy2aX0VWWOHz4zL6NpNtJd98yHd5wvzGsfROtNcO
-         xWUb9l40Cx422WfaSjzi75UhfCiwWklums84WckO3yPJz34oyF9GqcBv7+7WHU8mXw
-         VAhu3HBjGc3mgv2PFNofwHKtX10v8KdKByjginOg=
-Date:   Mon, 24 Aug 2020 05:18:30 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     Swapnil Jakhade <sjakhade@cadence.com>, airlied@linux.ie,
-        daniel@ffwll.ch, robh+dt@kernel.org, a.hajda@samsung.com,
-        narmstrong@baylibre.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mparab@cadence.com,
-        yamonkar@cadence.com, jsarha@ti.com, nsekhar@ti.com,
-        praneeth@ti.com
-Subject: Re: [PATCH v8 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
- bridge
-Message-ID: <20200824021830.GZ6002@pendragon.ideasonboard.com>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
- <1596713672-8146-3-git-send-email-sjakhade@cadence.com>
- <20200811023622.GC13513@pendragon.ideasonboard.com>
- <49c2a4c8-6d84-6164-d350-6a985fc9a3e9@ti.com>
+        Sun, 23 Aug 2020 22:32:49 -0400
+Received: from mail-eopbgr760059.outbound.protection.outlook.com ([40.107.76.59]:4287
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727021AbgHXCcs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sun, 23 Aug 2020 22:32:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jWpOnndSW2GA32nw3pzi9kCf402jPUlKhUzXc8K1eMuUemi3i8Ck0ObMrHt1qaDRtQ1FZUEwnBLEZpmvo9HlAJdAJJ3YHUhUjIXKbPlOZVPVGCHjD0N8p5+7vF7UStPc261MMc1odyqQ/HuVEnsUWYJnf6CvlXo0JJ1o0082wMoKXrwJfUpMt2zSiOvf62QWFXnYoWtN/hta+eCWBSjzodixxcafcIGOhYOtzRy9Q1Xj4H+40iDsXY0WVtjgdSRXBpULOUyrNIhhkRvcl7gP8hpwzu/0p9a4GFk4jzpg5okYGYvUrL/ncJvq8FoVjv5+ZP8HyibEbZaU6rLAFs6z3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HLqXLmepUxH8lJ/T1aYWR5QEo481OuYSaLRGxZY5cQw=;
+ b=GAwgsTWMvkfDb42nJWbO1yvY/kJkrPZeeZU7T+50ei1/87Rb0M3d/MgTz6lBUCaqxJ/3dHvVDeuKvrlRTtYA192nEKWSNYpH0+g+XRHl4QeXASzueAj3mx6XxBxlHntMEwBGgo8xPT9qefkZYuWcAOhWX0a1Fej2KRXbxt1tGtUgv2l+OQkIlNtIcactqBh2o574sCoZSUcI9u6eoow1GOuZ455nSW8ID0LkyE7yhUP26VIrBR4RsJNv3byMcS2hsC7UAMq2HjIG6ZWmzoG0xSrH15NI4253O9t2Bm13WXNmUZXrc5sLca+Yphnp0FnojG5OigpeJOJNdTy/Fv9Nzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HLqXLmepUxH8lJ/T1aYWR5QEo481OuYSaLRGxZY5cQw=;
+ b=UkN0oSOSTJ9V9VLZPWrPno3nRkgEjxw2aCEYrS1ZLUhzhsBhSVNWi5OGxwnxRWOFvYsxPSGqzxa9OqBY70bu08UPrtxq37jbEvKaLHBf2LafSfX5lO5IfHRC9Fh2UR8pwwjrF5+EG8YUj0mAOp46QegvVOK/3Uh4sRwTQlHxM8w=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com (20.178.24.145) by
+ DS7PR03MB5544.namprd03.prod.outlook.com (10.141.123.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.26; Mon, 24 Aug 2020 02:32:46 +0000
+Received: from DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38]) by DM6PR03MB4555.namprd03.prod.outlook.com
+ ([fe80::e494:740f:155:4a38%7]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
+ 02:32:46 +0000
+Date:   Mon, 24 Aug 2020 10:32:14 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] regulator: mp886x: use "mps,switch-frequency-hz"
+Message-ID: <20200824102402.4047fa5f@xhacker.debian>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYXPR01CA0047.jpnprd01.prod.outlook.com
+ (2603:1096:403:a::17) To DM6PR03MB4555.namprd03.prod.outlook.com
+ (2603:10b6:5:102::17)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <49c2a4c8-6d84-6164-d350-6a985fc9a3e9@ti.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by TYXPR01CA0047.jpnprd01.prod.outlook.com (2603:1096:403:a::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Mon, 24 Aug 2020 02:32:43 +0000
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 20622826-c3c7-43aa-5b35-08d847d5fc08
+X-MS-TrafficTypeDiagnostic: DS7PR03MB5544:
+X-Microsoft-Antispam-PRVS: <DS7PR03MB55443502AD77EE443645D24BED560@DS7PR03MB5544.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zykgtRs2pRlJYMqIGu0bXwQ8ci1C5pssyIe9wR4o5i11LHKtbjPWPXbLV3LetAv01jmEA2iKeGU/zFseZx2BIZbarTlvCSTCV9+0CQiwVhbW9N3svDQXJ/YkVUm/aPeiy0nVD3BvHefdSxSu9xsKIJc9AaJTkzDu1RPP2IQmwuW7q4oUFdU+hLpRZoliB7WJRL4qYNweFXmSaqOliHDg6EaGzy0gYfphZ0X3mh6XavPXFFOQXQRO/OZI0ntT0ovb3NPxRw+7fXBj7SvTsK40em0X13kLhFNUY0EilAsXyzVD/aQKO0lglmgUeu5ftw6ERH0wiJ9vG+ycrtoMOseH+RaDxv7j2AVaCPvSnTjvK1+ZvdqQjMfv4330c2vHHkze
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR03MB4555.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(396003)(376002)(39850400004)(366004)(956004)(6666004)(16576012)(478600001)(316002)(186003)(83380400001)(6486002)(26005)(9686003)(86362001)(1076003)(66946007)(4326008)(5660300002)(8936002)(2906002)(8676002)(52116002)(66556008)(110136005)(66476007)(142933001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: hHkcponacak1XrPbEK6meIkIH5v2bV8zNaGlRrcBvJQ5YRFB10DGqzImcXbCVaTYnk6RI10KnGnoZELkMM8z69hjV20VwQJGRMOvGhv0AGrdkQSnQMfYE7KMkVqI14POCo157nCc9gf6XFs/ds5UjJXJFhziUOZexgcR0DzwJ7Z+N3DrznbwvNulcVTO12NMiJX4lnDmJ8rX2FH87CyyIbwEW5eeFKFpChrb/g1HGtAUuE+Ud8tH9wKHpHXk4iJsh8ZvKgm9XNAZdIyRo9dZi2Uy5QIveTX8Aek1etF+XD2Uh5RlzKYn49Zer6Ev9CXlEUzwiAAQdGMAuek1e6mSumYBxXXBfRyObjQOKHbQdMeKFIUiaeUzya8BiOp8R7Yi7rI3OeBvLI3ljQWdQEU2TF3Sl0frPLDwPGk21LtwzgOEoWJ0qNb+jpxDd3N95DUtuMTvjtwSu526QbIdguckMRxZX3LJgwGKDqpYzdmF3KfF2OvOc1gR6SX2e5DKQhoUiENMtJQTSWODrni6atw9xgt54IxAsOAwYhXnG5N8ssEptqR8pFqfmaEC8LvDnFUEFI5Fu6aEQ56H3LJsAGlnZVeVXyVDHxtUYWD5dPDEcvM5sSxOuaX8FBflQ5YTVKZ5E4PMKHqHkZvrTQe9bHnblw==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20622826-c3c7-43aa-5b35-08d847d5fc08
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR03MB4555.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 02:32:45.8585
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4LIYrKQoKAQP5IEB0J3PnXZ1r72KH2MXcUGTs6yR2h8bTSXs+Bl4cBPLUTkWVx2PKsKea7mfyec8Kfnp/wvjeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR03MB5544
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Tomi,
+As Rob suggested, use the "mps,switch-frequency-hz" instead of the
+"mps,switch-frequency" for switch frequency. Fortunately, the switch
+frequency support isn't released, so we can modify it now without
+any concern.
 
-On Fri, Aug 14, 2020 at 12:29:35PM +0300, Tomi Valkeinen wrote:
-> On 11/08/2020 05:36, Laurent Pinchart wrote:
-> 
-> >> +static int cdns_mhdp_mailbox_write(struct cdns_mhdp_device *mhdp, u8 val)
-> >> +{
-> >> +	int ret, full;
-> >> +
-> >> +	WARN_ON(!mutex_is_locked(&mhdp->mbox_mutex));
-> >> +
-> >> +	ret = readx_poll_timeout(readl, mhdp->regs + CDNS_MAILBOX_FULL,
-> >> +				 full, !full, MAILBOX_RETRY_US,
-> >> +				 MAILBOX_TIMEOUT_US);
-> >> +	if (ret < 0)
-> >> +		return ret;
-> >> +
-> >> +	writel(val, mhdp->regs + CDNS_MAILBOX_TX_DATA);
-> >> +
-> >> +	return 0;
-> >> +}
-> > 
-> > As commented previously, I think there's room for optimization here. Two
-> > options that I think should be investigated are using the mailbox
-> > interrupts, and only polling for the first byte of the message
-> > (depending on whether the firmware implementation can guarantee that
-> > when the first byte is available, the rest of the message will be
-> > immediately available too). This can be done on top of this patch
-> > though.
-> 
-> I made some tests on this.
-> 
-> I cannot see mailbox_write ever looping, mailbox is never full. So in this case the
-> readx_poll_timeout() call is there just for safety to catch the cases where something has gone
-> totally wrong or perhaps once in a while the mbox can be full for a tiny moment. But we always do
-> need to check CDNS_MAILBOX_FULL before each write to CDNS_MAILBOX_TX_DATA, so we can as well use
-> readx_poll_timeout for that to catch the odd cases (afaics, there's no real overhead if the exit
-> condition is true immediately).
-> 
-> mailbox_read polls sometimes. Most often it does not poll, as the data is ready in the mbox, and in
-> these cases the situation is the same as for mailbox_write.
-> 
-> The cases where it does poll are related to things where the fw has to wait for something. The
-> longest poll waits seemed to be EDID read (16 ms wait) and adjusting LT (1.7 ms wait). And afaics,
-> when the first byte of the received message is there, the rest of the bytes will be available
-> without wait.
-> 
-> For mailbox_write and for most mailbox_reads I think using interrupts makes no sense, as the
-> overhead would be big.
-> 
-> For those few long read operations, interrupts would make sense. I guess a simple way to handle this
-> would be to add a new function, wait_for_mbox_data() or such, which would use the interrupts to wait
-> for mbox not empty. This function could be used in selected functions (edid, LT) after
-> cdns_mhdp_mailbox_send().
-> 
-> Although I think it's not that bad currently, MAILBOX_RETRY_US is 1ms, so it's quite lazy polling,
-> so perhaps this can be considered TODO optimization.
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+---
+ Documentation/devicetree/bindings/regulator/mp886x.txt | 2 +-
+ drivers/regulator/mp886x.c                             | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I'm fine with TODO optimization.
-
+diff --git a/Documentation/devicetree/bindings/regulator/mp886x.txt b/Documentation/devicetree/bindings/regulator/mp886x.txt
+index e747000cebba..b05307bbb0d9 100644
+--- a/Documentation/devicetree/bindings/regulator/mp886x.txt
++++ b/Documentation/devicetree/bindings/regulator/mp886x.txt
+@@ -10,7 +10,7 @@ Required properties:
+   values R1 and R2 of the feedback voltage divider in kilo ohms.
+ 
+ Optional properties:
+-- mps,switch-frequency: The valid switch frequency in Hertz. Available values
++- mps,switch-frequency-hz: The valid switch frequency in Hertz. Available values
+   are: 500000, 750000, 1000000, 1250000, 1500000
+ 
+ Any property defined as part of the core regulator binding, defined in
+diff --git a/drivers/regulator/mp886x.c b/drivers/regulator/mp886x.c
+index 97dc44c0d663..a84fd74081de 100644
+--- a/drivers/regulator/mp886x.c
++++ b/drivers/regulator/mp886x.c
+@@ -349,7 +349,7 @@ static int mp886x_i2c_probe(struct i2c_client *client)
+ 	config.driver_data = di;
+ 	config.of_node = np;
+ 
+-	if (!of_property_read_u32(np, "mps,switch-frequency", &freq))
++	if (!of_property_read_u32(np, "mps,switch-frequency-hz", &freq))
+ 		mp886x_set_switch_freq(di, regmap, freq);
+ 
+ 	ret = mp886x_regulator_register(di, &config);
 -- 
-Regards,
+2.28.0
 
-Laurent Pinchart
