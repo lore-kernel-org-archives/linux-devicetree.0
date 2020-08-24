@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA81EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E092071E
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E60A22071E
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 09:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261876;
-	bh=0ASM38NtqHvLkfihwuFhfZDcSaxHNeAcxdPp58Kpa4o=;
+	s=default; t=1598261903;
+	bh=FrBso4fIdHgK+2J7oFtYR56l7zEdAlo1N90r7YDQ9WI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mdzrZHv7+b/TQlz+GybiDimu2l+NkB3fK7Y7f/viFmb8c74zTG/lpwjok8LXxk4iq
-	 n09EAmVix3boFidqFPk97ZoalluCgP2BcT8dVzIoobaCDZixXadG7P5h7Jxerq2gUi
-	 cqrz98gzhFYTLyt1DFg452jkO+gLc+dGApAh95T4=
+	b=ZVB13sJ1hwYF2YGr+Jk2HktF2HBmG8aa45BcrcbAWGjB/Mx8+Y85BhS95sBh1frzv
+	 OHAt8v94p49T0q+fEOI9CQwrDt2IqldklAk9e0JlAlKmeM0OH9iMLCbszD3SLsQ8aG
+	 6uD18fjL8fXdYYcP+OVz/m8h9kWNXMwlg6CJOMNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgHXJhy (ORCPT
+        id S1728290AbgHXJiH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:38:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727111AbgHXIr3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:47:29 -0400
+        id S1729460AbgHXIr0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:47:26 -0400
 Received: from localhost.localdomain (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28FD22072D;
-        Mon, 24 Aug 2020 08:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5324204FD;
+        Mon, 24 Aug 2020 08:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258848;
-        bh=0ASM38NtqHvLkfihwuFhfZDcSaxHNeAcxdPp58Kpa4o=;
+        s=default; t=1598258845;
+        bh=FrBso4fIdHgK+2J7oFtYR56l7zEdAlo1N90r7YDQ9WI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0gzmVpTI2iar2LvRnsjGkjkzApTW6XVndHLQEY3qt0D8XTS42IHBGP0dgVmubv0aZ
-         FqcCNSMULXxLDNsju8mdgsXxYtQ/rm66bzd0zRfxqenI5czhowATCehVbQeJf5Q2vi
-         WMJX1C7ea6zTVH2tEWBSvjvlt851G0WzmqythizQ=
+        b=mxkNnl6RQL4MJs0VwWJz9u5g+UxyDb3kb1U7CqQb2TQi+dAvW29VIywXJmzdgrcmi
+         f55874SPMco08TgiGledUdy4nNV8OW4/7PJPxlUzY9MNibPJxG76JuPOpaKJ8DZB1P
+         ZVgHM67WAaNPD8jYCtLL9bHjCO5hW1ji8XYqfryg=
 From:   Vinod Koul <vkoul@kernel.org>
-To:     dmaengine@vger.kernel.org
-Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+To:     dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 2/3] dmaengine: add peripheral configuration
-Date:   Mon, 24 Aug 2020 14:17:11 +0530
-Message-Id: <20200824084712.2526079-3-vkoul@kernel.org>
+Subject: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+Date:   Mon, 24 Aug 2020 14:17:10 +0530
+Message-Id: <20200824084712.2526079-2-vkoul@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200824084712.2526079-1-vkoul@kernel.org>
 References: <20200824084712.2526079-1-vkoul@kernel.org>
@@ -58,115 +58,108 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Some complex dmaengine controllers have capability to program the
-peripheral device, so pass on the peripheral configuration as part of
-dma_slave_config
+Add devicetree binding documentation for GPI DMA controller
+implemented on Qualcomm SoCs
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
 
-diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-index 6fbd5c99e30c..264643ca9209 100644
---- a/include/linux/dmaengine.h
-+++ b/include/linux/dmaengine.h
-@@ -380,6 +380,73 @@ enum dma_slave_buswidth {
- 	DMA_SLAVE_BUSWIDTH_64_BYTES = 64,
- };
- 
-+/**
-+ * enum spi_transfer_cmd - spi transfer commands
-+ */
-+enum spi_transfer_cmd {
-+	SPI_TX = 1,
-+	SPI_RX,
-+	SPI_DUPLEX,
-+};
+diff --git a/Documentation/devicetree/bindings/dma/qcom-gpi.yaml b/Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+new file mode 100644
+index 000000000000..c56d601ad2d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/gpi-dma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+/**
-+ * struct dmaengine_spi_config - spi config for peripheral
-+ *
-+ * @loopback_en: spi loopback enable when set
-+ * @clock_pol: clock polarity
-+ * @data_pol: data polarity
-+ * @pack_en: process tx/rx buffers as packed
-+ * @word_len: spi word length
-+ * @clk_div: source clock divider
-+ * @clk_src: serial clock
-+ * @cmd: spi cmd
-+ * @cs: chip select toggle
-+ * @rx_len: receive length for spi buffer
-+ */
-+struct dmaengine_spi_config {
-+	u8 loopback_en;
-+	u8 clock_pol;
-+	u8 data_pol;
-+	u8 pack_en;
-+	u8 word_len;
-+	u32 clk_div;
-+	u32 clk_src;
-+	u8 fragmentation;
-+	enum spi_transfer_cmd cmd;
-+	u8 cs;
-+	u32 rx_len;
-+};
++title: Qualcomm Technologies Inc GPI DMA controller
 +
-+/**
-+ * struct dmaengine_i2c_config - i2c config for peripheral
-+ *
-+ * @pack_enable: process tx/rx buffers as packed
-+ * @cycle_count: clock cycles to be sent
-+ * @high_count: high period of clock
-+ * @low_count: low period of clock
-+ * @clk_div: source clock divider
-+ * @addr: i2c bus address
-+ * @strech: strech the clock at eot
-+ * @op: i2c cmd
-+ */
-+struct dmaengine_i2c_config {
-+	u8 pack_enable;
-+	u8 cycle_count;
-+	u8 high_count;
-+	u8 low_count;
-+	u16 clk_div;
-+	u8 addr;
-+	u8 strech;
-+	u8 op;
-+};
++description: |
++  QCOM GPI DMA controller provides DMA capabilities for
++  peripheral buses such as I2C, UART, and SPI.
 +
-+enum dmaengine_peripheral {
-+	DMAENGINE_PERIPHERAL_SPI,
-+	DMAENGINE_PERIPHERAL_I2C,
-+	DMAENGINE_PERIPHERAL_UART,
-+	DMAENGINE_PERIPHERAL_LAST = DMAENGINE_PERIPHERAL_UART,
-+};
++maintainers:
++  - Vinod Koul <vkoul@kernel.org>
 +
- /**
-  * struct dma_slave_config - dma slave channel runtime config
-  * @direction: whether the data shall go in or out on this slave
-@@ -418,6 +485,10 @@ enum dma_slave_buswidth {
-  * @slave_id: Slave requester id. Only valid for slave channels. The dma
-  * slave peripheral will have unique id as dma requester which need to be
-  * pass as slave config.
-+ * @peripheral: type of peripheral to DMA to/from
-+ * @set_config: set peripheral config
-+ * @spi: peripheral config for spi
-+ * @:i2c peripheral config for i2c
-  *
-  * This struct is passed in as configuration data to a DMA engine
-  * in order to set up a certain channel for DMA transport at runtime.
-@@ -443,6 +514,10 @@ struct dma_slave_config {
- 	u32 dst_port_window_size;
- 	bool device_fc;
- 	unsigned int slave_id;
-+	enum dmaengine_peripheral peripheral;
-+	u8 set_config;
-+	struct dmaengine_spi_config spi;
-+	struct dmaengine_i2c_config i2c;
- };
- 
- /**
++allOf:
++  - $ref: "dma-controller.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - qcom,gpi-dma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt lines for each GPII instance
++    maxItems: 14
++
++  qcom,max-num-gpii:
++    description:
++      Maximum number of GPII instances available
++    maxItems: 1
++
++  "#dma-cells":
++    const: 1
++
++  qcom,gpii-mask:
++    description:
++      Bitmap of supported GPII instances for OS
++    maxItems: 1
++
++  qcom,ev-factor:
++    description:
++      Event ring transfer size compare to channel transfer ring. Event
++        ring length = ev-factor * transfer ring size
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - qcom,max-num-gpii
++  - qcom,gpii-mask
++  - qcom,ev-factor
++  - "#dma-cells"
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    gpi_dma0: dma@800000 {
++        #dma-cells = <5>;
++        compatible = "qcom,gpi-dma";
++        reg = <0 0x00800000 0 0x60000>;
++        qcom,max-num-gpii = <13>;
++        qcom,gpii-mask = <0xfa>;
++        qcom,ev-factor = <2>;
++        interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
++    };
++
++...
 -- 
 2.26.2
 
