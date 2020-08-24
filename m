@@ -2,131 +2,181 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EB2C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50E0C433E3
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C06922075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 09:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9495E2074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qn81eyst"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YGImFIW/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgHXJwM (ORCPT
+        id S1725968AbgHXKAl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:52:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
+        Mon, 24 Aug 2020 06:00:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729554AbgHXJvQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 05:51:16 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A8AC0613ED
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 02:51:16 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id q68so2419688uaq.0
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 02:51:16 -0700 (PDT)
+        with ESMTP id S1726673AbgHXKAg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:00:36 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63204C061573;
+        Mon, 24 Aug 2020 03:00:35 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id oz20so6136734ejb.5;
+        Mon, 24 Aug 2020 03:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lAijYwEhVki3ASVGSGr03ujQoKI91GWpC9DTd+zqR0A=;
-        b=qn81eystRutEQfbCLxokhFYJd8I+U2gytbLbne7CogTPMGmSh08XyhDIgI/v2QToR+
-         kT+/d/FTJMHoVzz3GQRU0+WI6B5tzZ+g5lv9LH5R/ufdfMDth07OXvmKPldXy8R+wH7Z
-         Aq5SkhxScTBiedB2/9jzUCfIpT/3HR3xNLXxDc8IhpGWJrhCkQwS1D8zEMM3mIUSJxFw
-         0URvOSFzKErG49kZ5jM9Tiv5+m03GAQWPQAfPQgRvgOFExOanVct6VSB0hB39pWPLrgl
-         EJzFdUbXrjRm6hTYef8Xl2JLpe+7wSmFt0+AIvnNwINNSPhjO0CbUMGnZBxP5rfshhka
-         ChRQ==
+        bh=Wq5i4qHfu7yzPAz7g/0D7Mody4FjfdyYHDZ2FJMtb1k=;
+        b=YGImFIW/QqX0VtY2y4IDgqNs/BJmalIZ2Dd4Q8hxUYJX9TionAEYCxGa69uT6kkf48
+         TtSTxS+qTYcJ/LFw/HZ86cykFD5QUfQsfYqd4zh4PKnt+E3aE2PcFbZgWUVpoKhPwMc1
+         rG7997c0kwrNKfBs+Bw+mvkEyMBknFfy/N4Mt0vM6oDYstNNzD5sEbDnV0zWkwUmnnT5
+         tgDtCJ/n9a9KX9S7zoDtBD/LC08UM1do9LpviaCIHMt12QByNBcReKmph2KZGE0R7Yk9
+         oMOV3MwC0P9DvjXablSGFfZGU5zr4NqQDNevFgTvgUlapw32d9ImZKwG6QzusIpNptjv
+         vgpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lAijYwEhVki3ASVGSGr03ujQoKI91GWpC9DTd+zqR0A=;
-        b=JJiCr+pwT7wFW2fzojm+lZ3WARBzSt6mUomgl2WhXTzQj85x2/VNsbaLDDTqBrveCz
-         ElWpOzsWINKo5dQF4E12/XUGJ9xHwy+J28zHhTCAqnV25AJjPb44OW1ZPvHNLR5XeLMt
-         dd7rc6PPA9qk7mlz2YwFKE3v56gWE704W6HTWsSmT1hEXQHFLjAUKf7NUP95lRHxMK6+
-         cUF1CzGmc3fKsGXTT0uaST83ss3+JRrzp1BJZzPESIS29WlaYZd1f7B5tykOpsShyuiQ
-         vs8GVbdDmXGUfo1MWiXHJuv9i9O1POViichl3G+RAk4eX7jN2OfSmjvltmV7AjV172DE
-         qPFw==
-X-Gm-Message-State: AOAM531d0vf55o4Xs1z1k0aefOAAsfSfE/AT31rPWay3UsQ42iDRZJRG
-        4tTI2fUePZfeBU+NX7mzDWlZqX/nf2dd6G2MN/gMtw==
-X-Google-Smtp-Source: ABdhPJzjncwbZlj5jNnq9VPppz4EGIptpW5meuYQu1QoZeXcpK4+nWbBg2mnjp49m9YA3c/5bJZ6ncdZPbElHbfd3mA=
-X-Received: by 2002:ab0:3114:: with SMTP id e20mr1857025ual.104.1598262675798;
- Mon, 24 Aug 2020 02:51:15 -0700 (PDT)
+        bh=Wq5i4qHfu7yzPAz7g/0D7Mody4FjfdyYHDZ2FJMtb1k=;
+        b=oVWZIPHyUqS5XRXmSX96Rv7E9Ql5OPvfg/bkDBeVKgYYKLglv+9MV973tcoa2uA5uc
+         YQkG19N0XeGeOOniVESNBsojjHYijct3+3Gb1ZhFYegw1EVQKhUroDIsDM+zJnVhhH5F
+         P8n1PIegYzLUtW92SmfgNPlRXgsmxaXNpj3GSNTFDl+3PPgt+9VvbGfT+sSp8W/779sT
+         +jjAkjLDE/2iIEw4I52ADPaZ+ida4divnCUEC1gck2rlvzQKlg8+FuYfqY2cC9ZtuuY0
+         5ranyKxTA/XHqLYZYA01t/m1s+iaAb0wHuV9hXgVQKhERyF9fnctYB6UgmFb+7diw9bE
+         +WfA==
+X-Gm-Message-State: AOAM530fSJeKyIZnwKF4vzACzj1f0eUlV44KCS6QkiX1Ah9esqgcOT1l
+        53nxUbXj4WpZN+yZlRxpkK9bXN/PAmKjwaupbFw=
+X-Google-Smtp-Source: ABdhPJy4bHtBJhH+rU55qeWIWBpWq4c03JJngRVDXW3+ekGgoPQyxrRrrRmtsXz+xOF8t2CfIYckZu3WLWEfMjEgf5s=
+X-Received: by 2002:a17:906:4dd4:: with SMTP id f20mr5077416ejw.170.1598263234026;
+ Mon, 24 Aug 2020 03:00:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200814014346.6496-1-wenbin.mei@mediatek.com> <20200814014346.6496-4-wenbin.mei@mediatek.com>
-In-Reply-To: <20200814014346.6496-4-wenbin.mei@mediatek.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 24 Aug 2020 11:50:38 +0200
-Message-ID: <CAPDyKFqrjuHFr0b1xvHFXquELxwMG40wV8_XQF8Sp-HmRNHgmw@mail.gmail.com>
-Subject: Re: [v5,3/3] mmc: mediatek: add optional module reset property
-To:     Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+References: <20200823161550.3981-1-krzk@kernel.org> <20200823161550.3981-21-krzk@kernel.org>
+ <AM6PR04MB49668B0F67B02B2A33603B4880560@AM6PR04MB4966.eurprd04.prod.outlook.com>
+ <20200824091102.GA20819@kozik-lap>
+In-Reply-To: <20200824091102.GA20819@kozik-lap>
+From:   Dong Aisheng <dongas86@gmail.com>
+Date:   Mon, 24 Aug 2020 17:45:19 +0800
+Message-ID: <CAA+hA=S=2SoF8egOq8h-eB9wZGDqrAw66VtW-bU9oBmzFSj9Bw@mail.gmail.com>
+Subject: Re: [PATCH 21/22] arm64: dts: imx8qxp: Remove i.MX7 compatible from USDHC
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "# 4.0+" <stable@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Haibo Chen <haibo.chen@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 14 Aug 2020 at 03:44, Wenbin Mei <wenbin.mei@mediatek.com> wrote:
+On Mon, Aug 24, 2020 at 5:15 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> This patch fixs eMMC-Access on mt7622/Bpi-64.
-> Before we got these Errors on mounting eMMC ion R64:
-> [   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
-> flags 0x800 phys_seg 1 prio class 0
-> [   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
+> On Mon, Aug 24, 2020 at 09:00:19AM +0000, Aisheng Dong wrote:
+> > > From: Krzysztof Kozlowski <krzk@kernel.org>
+> > > Sent: Monday, August 24, 2020 12:16 AM
+> > >
+> > > The USDHC on i.MX 8QXP has its own compatible described in bindings and
+> > > used in the driver (with its own quirks).  Remove additional fsl,imx7d-usdhc
+> > > compatible to fix dtbs_check warnings like:
+> > >
+> > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: mmc@5b010000:
+> > >     compatible: ['fsl,imx8qxp-usdhc', 'fsl,imx7d-usdhc'] is too long
+> > >     From schema:
+> > > /ocumentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> > >
+> > >   arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: mmc@5b010000:
+> > >     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was
+> > > unexpected)
+> > >
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > For Patch 19-22, I think we should fix dt binding doc.
 >
-> This patch adds a optional reset management for msdc.
-> Sometimes the bootloader does not bring msdc register
-> to default state, so need reset the msdc controller.
+> Are you sure that these USDHC controllers are compatible with i.MX 7D?
+> Could they really run with fsl,imx7d-usdhc compatible?
+
+AFAIK uSDHC on QXP is derived from the former platforms with adding a few
+more new features. e.g. HS400ES/CMDQ.
+Let me loop in uSDHC driver owner Haibo Chen to double confirm.
+
+Regards
+Aisheng
+
+> The implementation (Linux kernel driver) is different, I guess on
+> purpose...
 >
-> Cc: <stable@vger.kernel.org> # v5.4+
-> Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Tested-by: Frank Wunderlich <frank-w@public-files.de>
-
-Applied for fixes, but needed to resolve a conflict when applying, thanks!
-
-
-> ---
->  drivers/mmc/host/mtk-sd.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> Best regards,
+> Krzysztof
 >
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 39e7fc54c438..fc97d5bf3a20 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -22,6 +22,7 @@
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/interrupt.h>
-> +#include <linux/reset.h>
+> >
+> > Regards
+> > Aisheng
+> >
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > > b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > > index 61bccb69f09e..26c4fcdfe290 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+> > > @@ -362,7 +362,7 @@
+> > >             };
+> > >
+> > >             usdhc1: mmc@5b010000 {
+> > > -                   compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> > > +                   compatible = "fsl,imx8qxp-usdhc";
+> > >                     interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+> > >                     reg = <0x5b010000 0x10000>;
+> > >                     clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>, @@
+> > > -374,7 +374,7 @@
+> > >             };
+> > >
+> > >             usdhc2: mmc@5b020000 {
+> > > -                   compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> > > +                   compatible = "fsl,imx8qxp-usdhc";
+> > >                     interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+> > >                     reg = <0x5b020000 0x10000>;
+> > >                     clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>, @@
+> > > -388,7 +388,7 @@
+> > >             };
+> > >
+> > >             usdhc3: mmc@5b030000 {
+> > > -                   compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+> > > +                   compatible = "fsl,imx8qxp-usdhc";
+> > >                     interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+> > >                     reg = <0x5b030000 0x10000>;
+> > >                     clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
+> > > --
+> > > 2.17.1
+> >
 >
->  #include <linux/mmc/card.h>
->  #include <linux/mmc/core.h>
-> @@ -434,6 +435,7 @@ struct msdc_host {
->         struct msdc_save_para save_para; /* used when gate HCLK */
->         struct msdc_tune_para def_tune_para; /* default tune setting */
->         struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-> +       struct reset_control *reset;
-
-I moved this a couple of lines above, since this conflicts with later
-changes for mtk-sd.
-
-[...]
-
-Kind regards
-Uffe
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
