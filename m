@@ -2,146 +2,112 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AE5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386E4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 899EC2075B
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055F62072D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 08:10:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="hdycCPFF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgHXIDx (ORCPT
+        id S1726000AbgHXIJn (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:03:53 -0400
-Received: from mga12.intel.com ([192.55.52.136]:9876 "EHLO mga12.intel.com"
+        Mon, 24 Aug 2020 04:09:43 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:30868 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726225AbgHXIDp (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:03:45 -0400
-IronPort-SDR: P/TR/vsPzETOh+Idt4yNcCRe1t/94fUDzlzQNDP7MP6gOSPBSnGChU0MTQAxeRkIIwSi0DDjRg
- k1KxLufosl7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135399630"
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="135399630"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 01:03:45 -0700
-IronPort-SDR: nsuW3aUHJ28vqbV5G1i/JloVAVpwBrPSIpnluXRnHUS9A9AnCrkF/0gXwmUrvxpCkC/+vG8buR
- HEGF2M3fcbIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="328410026"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 24 Aug 2020 01:03:42 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kA7Ha-00AzUx-S4; Mon, 24 Aug 2020 10:52:46 +0300
-Date:   Mon, 24 Aug 2020 10:52:46 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     vineetha.g.jaya.kumaran@intel.com
-Cc:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, wan.ahmad.zainie.wan.mohamad@intel.com,
-        lakshmi.bai.raja.subramanian@intel.com
-Subject: Re: [PATCH v4 1/2] pwm: Add PWM driver for Intel Keem Bay
-Message-ID: <20200824075246.GZ1891694@smile.fi.intel.com>
-References: <1598106646-16595-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1598106646-16595-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598106646-16595-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        id S1725730AbgHXIJk (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:09:40 -0400
+IronPort-SDR: jyHNpcABxvrMT3iwX09PHAQANO6jgWDXgf1nqbIq7hPfoQOxk8HpOEddhGGgfFbuThywjZicGQ
+ XNmd2b6M+vA5kfSzkAYtnV+Nr1a3GvcyBHSM5hqZm3am5gz0alga5XFQQ7j5aoOeme6ugL/kY7
+ H+sQvpxd/bCHRhUeS8t5bjOAfv8wgiNAM6F8+cS0VVkro9eZW8m0BksICfn4HNWQ4jB37ppnbk
+ iFdK07u6TIx3NHs+HEiNRAXcaNbZWGRf3BvVcEtQAZCiFJHatj1T2dR2/534CUwQQ93L3+y/nH
+ j5k=
+X-IronPort-AV: E=Sophos;i="5.76,347,1592863200"; 
+   d="scan'208";a="13568269"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 24 Aug 2020 10:09:35 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 24 Aug 2020 10:09:35 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 24 Aug 2020 10:09:35 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598256575; x=1629792575;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Ud79nQ2nap6MBgkz3zH+Wze9pGT+3q3moHjPa+SicZE=;
+  b=hdycCPFFmhpfIYHdH+AKDmiCdF33RQbJkq4Sa37Ni6GnciNwT9mJtlg6
+   skz8Ntzpxlo7JcQzlbVDsPQoDBsdrII9M1ElycNgobW6LAoVZkreA7uIK
+   feogt6FUyEV1HbbabmVG2SmWXnUH4fMngPZeKT5XVdCiudNDDiCiPkMBl
+   t3mRValjpWZc1YJ6ZTmyHOIhFXYTOWHd6PezhsaoLz8zDI0RA/q3HPvrG
+   sWwj5zvwQtrJryHuphzLaqkwtwqGPR0geDZAliNkcffBNphp91ZLcBQB9
+   ZvP39YJdM9D1+Dh1zzFJMmUaO/E43IRIQW6SbXWbKw3nhFIC/z5tS/5T9
+   w==;
+IronPort-SDR: 8QcPYtC7vpm/OOpW8PpYCkxoltjwIDTJbeqLsyUuQFgi4S9AgxT2ZvG+A84fhDGSVVCu7hZ++H
+ vbiMiv61pSi1d9zzyRtp2nwVC3b50C6z5J91IDHu+lBw5tHuB3wloRW10OC+Uvd2FgXflJhJuu
+ v8mjeYU0ILdlW8x1guBoT1jBxz0fVDV8OAtfmTgG8l81Uy9aqgmfKmtEEossLrHke7rfNUIOzt
+ VBiV11syIVXr58BU+23xn1sKUL0KQVJ6zeGbiKDA1yvYzY/OcLjb2wcob3dJgza9lCs8J+Ldxt
+ eFk=
+X-IronPort-AV: E=Sophos;i="5.76,347,1592863200"; 
+   d="scan'208";a="13568268"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 24 Aug 2020 10:09:35 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 68D89280065;
+        Mon, 24 Aug 2020 10:09:35 +0200 (CEST)
+Message-ID: <d7e3dc09f8308d413a14760a231eecd6a972fa27.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: [PATCH net-next 2/2] net: phy: dp83867: apply ti,
+ led-function and ti, led-ctrl to registers
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Dan Murphy <dmurphy@ti.com>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 24 Aug 2020 10:09:33 +0200
+In-Reply-To: <20200822160842.GE2347062@lunn.ch>
+References: <20200821072146.8117-1-matthias.schiffer@ew.tq-group.com>
+         <20200821072146.8117-2-matthias.schiffer@ew.tq-group.com>
+         <20200822160842.GE2347062@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 10:30:45PM +0800, vineetha.g.jaya.kumaran@intel.com wrote:
-> From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
+On Sat, 2020-08-22 at 18:08 +0200, Andrew Lunn wrote:
+> On Fri, Aug 21, 2020 at 09:21:46AM +0200, Matthias Schiffer wrote:
+> > These DT bindings are already in use by the imx7-mba7 DTS, but they
+> > were
+> > not supported by the PHY driver so far.
+> > 
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+> > >
 > 
+> Sorry, but NACK.
+> 
+> Please look at the work Marek Behún is doing
+> 
+> https://lkml.org/lkml/2020/7/28/765
+> 
+> 	Andrew
+> 	
 
-Side note, please use my @linux.intel.com address in the Cc list.
+Thanks, this is looking quite nice. I hope Marek's patches are
+finalized soon.
 
-> Enable PWM support for the Intel Keem Bay SoC.
-
-...
-
-> + * Authors: Lai Poey Seng <poey.seng.lai@intel.com>
-> + *          Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-
-Seems you missed Co-developed-by in the tag block of commit message.
-
-...
-
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-
-> +#include <linux/of.h>
-
-There is no user of this header. But mod_devicetable.h is missing.
-
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-
-...
-
-> +	/*
-> +	 * The upper 16 bits of the KMB_PWM_HIGHLOW_OFFSET register contain
-> +	 * the high time of the waveform, while the last 16 bits contain
-> +	 * the low time of the waveform, in terms of clock cycles.
-> +	 *
-> +	 * high time = clock rate * duty cycle / NSEC_PER_SEC
-> +	 * low time =  clock rate * (period - duty cycle) / NSEC_PER_SEC
-> +	 *
-> +	 * e.g. For period 50us, duty cycle 30us, and clock rate 500MHz:
-
-> +	 * high time = (500MHz * 30us) / 1000000000 = 0x3A98
-
-10^9 divisor now is redundant. It's school physics about units.
-
-> +	 * low time = (500MHz * 20us) / 1000000000 = 0x2710
-
-Ditto.
-
-> +	 * Value written to KMB_PWM_HIGHLOW_OFFSET = 0x3A982710
-> +	 */
-
-Note, in the code you are operating different units.
-
-...
-
-> +	div = clk_rate * state->duty_cycle;
-> +	div = DIV_ROUND_CLOSEST_ULL(div, NSEC_PER_SEC);
-
-For example, here you have clock rate in Hz, duty cycle in ns, that's why you
-need to use NSEC_PER_SEC divisor here.
-
-...
-
-> +	div = clk_rate * (state->period - state->duty_cycle);
-> +	div = DIV_ROUND_CLOSEST_ULL(div, NSEC_PER_SEC);
-
-Same here.
-
-(Just to be clear, code is okay!)
-
-...
-
-> +	priv->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(priv->clk))
-> +		dev_err_probe(dev, PTR_ERR(priv->clk),
-> +			     "Failed to get clock\n");
-
-First of all, it can be one line, second, it misses something...
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Matthias
 
