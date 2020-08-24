@@ -2,127 +2,126 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A3CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D184AC433E1
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5420420702
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF332074D
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 23:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598310606;
-	bh=JBQQSfuc8r8UB9wsYF3B3FsKcykzN5voEytrZO2RMGw=;
+	s=default; t=1598310925;
+	bh=LTsMw4RZHo2hmb+5m1s9lfr4T+sF+iX0ufWBuE3KLyA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ay1lVa1YMvjhN7SijTqoQ80W5BZ2zeQ9m1GIFREUXoVY0MVxCL2txevmAHJleObMt
-	 BciamRPo4gHoGAzuTgsHccUSnEVVZurJ/O1nzagivefziqtGhdqqrCcAdAudBpYwsA
-	 MA42DO9ptNdSTAY9l753gMRXApzB9AI3pX0sro7s=
+	b=w6uOJwhKbZQ64Hskl0Fv/R4vN/uhWddI59OMe9IokW19qUvk9STK4C+IF2RTtGWyy
+	 SPwhX9tX0zwMMwRC1i5uDDvdvl5K73LC5UnX8ZyI0Ba/FtOgoSHwMF4MhhsTKY3r7r
+	 lvJrbRV0GHk9sX96TVVxaqlyumKW08X8ER7zqtWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbgHXXKB (ORCPT
+        id S1726531AbgHXXPY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:10:01 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37783 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXKB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:10:01 -0400
-Received: by mail-il1-f196.google.com with SMTP id v2so8827720ilq.4;
-        Mon, 24 Aug 2020 16:10:00 -0700 (PDT)
+        Mon, 24 Aug 2020 19:15:24 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40622 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXXPX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 19:15:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id q132so107838iod.7;
+        Mon, 24 Aug 2020 16:15:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pNW+FpExzUZzKAgdzLbbC3mRjgc/ErkF14qzkePzpao=;
-        b=rCGPujwGgeuFwBJk9BqeNd7TFwV8sYSsw3S3vkJzcLzULZnDUnVbwv8pxDYZsRmx3A
-         SrH6Sb0mMVh+ToK/wemOglj+9l0DV6bwazvD1R0XnNeDzuXDL483kkSI6M2EeqEler76
-         kxqQHeD7zlMJXZQPdb9ENbBsxN+vVnVxswK8MBQv5QBHrWlabnwhnNJI3Bbgz3ukD9NY
-         uAwaVBX60vKaB0VoND4UWDxF+AfHKJtVqAfA3jVXyLYcSxhZIfm/Bv+cq6QZwuXKHTR4
-         0QnmnlJXI2k3kBjSYJ8dioD+S679U11Db8WssC6KLBd6FAF4lj2ZsobU6PBcBgxqXi4S
-         qBmg==
-X-Gm-Message-State: AOAM532KPMGGoQldfLTE5F5cJR2QoyvtDwVOE6AdMFRxL0KAEGUQhngV
-        f5j+QycN9A6meVkG9gmOehDYeSX1CA==
-X-Google-Smtp-Source: ABdhPJye+VWIVLJXB8wHyD0hNc5m+JPXvkFWV50q8MkRfj/wsTQkYrcYnZUWZ+rtqsOfgrGDN5f5SA==
-X-Received: by 2002:a05:6e02:13ee:: with SMTP id w14mr7059209ilj.4.1598310599896;
-        Mon, 24 Aug 2020 16:09:59 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=glE9MJLwvJksS6Kq8WSkXlWHv26cBEY9xO46r0OVXSU=;
+        b=Snifu9Q4V00yZgnz+O+oBIwsk8zNp/jBywO1B5XMHY4Lamv9KfIZ+7WCQBPCf72TYj
+         bkj7eDmhPR4fVgPuYvonWbbPu9rCsr+srkOhvIGqSwoU7Spz3N+27juQCF24blaJwNz8
+         jH0MrymzkJ6COKS4mNdHl1BFFhrI7JzfVaaRsoeylIAhZPB7JMP1Vu7vy2fvIwDsPrJR
+         gUakRkmzN/7eWjz3sEfMpSEEQ42hbOxtXJKItzcDQCCfQdxd0vXwppvkv4Vjz+y/LnoI
+         yIlg8R6MPSVKZ8zXgj3UPRKoEHh3vFiovoXllqHuEvKGDkpNa/J0Sdy0SJ+K7/Jzj32D
+         F0Pg==
+X-Gm-Message-State: AOAM532+Mjf2SRjKEcyYWXHrr9GW5yA39QcnOcgzoibHu2TDP11gjVEa
+        89r1ZN5F+xUXgjTow6cfGw==
+X-Google-Smtp-Source: ABdhPJyi8756H2KScziyvfj8N3dhCo662Valtwe3X4z9g1X/I/OGyZyNv2EQX/btFiKGf0FNeNSZVg==
+X-Received: by 2002:a6b:bfc1:: with SMTP id p184mr6858446iof.193.1598310922357;
+        Mon, 24 Aug 2020 16:15:22 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id n7sm7456664iop.45.2020.08.24.16.09.57
+        by smtp.gmail.com with ESMTPSA id a71sm8392575ill.19.2020.08.24.16.15.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:09:58 -0700 (PDT)
-Received: (nullmailer pid 3506628 invoked by uid 1000);
-        Mon, 24 Aug 2020 23:09:56 -0000
-Date:   Mon, 24 Aug 2020 17:09:56 -0600
+        Mon, 24 Aug 2020 16:15:21 -0700 (PDT)
+Received: (nullmailer pid 3515104 invoked by uid 1000);
+        Mon, 24 Aug 2020 23:15:19 -0000
+Date:   Mon, 24 Aug 2020 17:15:19 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Finley Xiao <finley.xiao@rock-chips.com>
-Cc:     heiko@sntech.de, rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        huangtao@rock-chips.com, tony.xie@rock-chips.com, cl@rock-chips.com
-Subject: Re: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a
- thermal zone
-Message-ID: <20200824230956.GA3500214@bogus>
-References: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     f.fainelli@gmail.com, tsbogend@alpha.franken.de,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] mips: bmips: include dt-bindings headers
+Message-ID: <20200824231519.GA3507085@bogus>
+References: <20200812063129.361862-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 08:31:15PM +0800, Finley Xiao wrote:
-> The default value for k_pu is:
->     2 * sustainable_power / (desired_temperature - switch_on_temp)
-> The default value for k_po is:
->     sustainable_power / (desired_temperature - switch_on_temp)
-> The default value for k_i is 10.
+On Wed, Aug 12, 2020 at 08:31:15AM +0200, Álvaro Fernández Rojas wrote:
+> Allow including dt-bindings header files and use them for bcm63xx.
 > 
-> Even though these parameters of the PID controller can be changed
-> by the following sysfs files:
->     /sys/class/thermal/thermal_zoneX/k_pu
->     /sys/class/thermal/thermal_zoneX/k_po
->     /sys/class/thermal/thermal_zoneX/k_i
+> Álvaro Fernández Rojas (14):
+>   mips: dts: brcm: allow including header files
+>   mips: bmips: add BCM3368 irq definitions
+>   mips: bmips: add BCM6318 irq definitions
+>   mips: bmips: add BCM6328 irq definitions
+>   mips: bmips: add BCM6358 irq definitions
+>   mips: bmips: add BCM6362 irq definitions
+>   mips: bmips: add BCM6368 irq definitions
+>   mips: bmips: add BCM63268 irq definitions
+>   mips: bmips: bcm3368: include and use dt-bindings
+>   mips: bmips: bcm6328: include and use dt-bindings
+>   mips: bmips: bcm6358: include and use dt-bindings
+>   mips: bmips: bcm6362: include and use dt-bindings
+>   mips: bmips: bcm6368: include and use dt-bindings
+>   mips: bmips: bcm63268: include and use dt-bindings
 > 
-> But it's still more convenient to change the default values by devicetree,
-> so introduce these three optional properties. If provided these properties,
-> they will be parsed and associated with the thermal zone via the thermal
-> zone parameters.
-> 
-> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
-> ---
->  Documentation/devicetree/bindings/thermal/thermal.txt | 14 ++++++++++++++
+>  .../boot/dts/brcm/bcm3368-netgear-cvg834g.dts |  2 +-
+>  arch/mips/boot/dts/brcm/bcm3368.dtsi          |  8 +-
+>  .../dts/brcm/bcm63268-comtrend-vr-3032u.dts   |  2 +-
+>  arch/mips/boot/dts/brcm/bcm63268.dtsi         | 12 ++-
+>  arch/mips/boot/dts/brcm/bcm6328.dtsi          | 12 ++-
+>  .../dts/brcm/bcm6358-neufbox4-sercomm.dts     |  2 +-
+>  arch/mips/boot/dts/brcm/bcm6358.dtsi          | 12 ++-
+>  .../dts/brcm/bcm6362-neufbox6-sercomm.dts     |  2 +-
+>  arch/mips/boot/dts/brcm/bcm6362.dtsi          | 12 ++-
+>  arch/mips/boot/dts/brcm/bcm6368.dtsi          | 12 ++-
+>  arch/mips/boot/dts/brcm/bcm93384wvg.dts       |  2 +-
+>  arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts |  2 +-
+>  arch/mips/boot/dts/brcm/bcm96368mvwg.dts      |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97125cbmb.dts      |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts     |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97358svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97360svmb.dts      |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97362svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97420c.dts         |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97425svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97435svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm9ejtagprb.dts      |  2 +-
+>  .../bcm3368-interrupt-controller.h            | 19 ++++
+>  .../bcm6318-interrupt-controller.h            | 84 ++++++++++++++++++
+>  .../bcm63268-interrupt-controller.h           | 86 +++++++++++++++++++
+>  .../bcm6328-interrupt-controller.h            | 68 +++++++++++++++
+>  .../bcm6358-interrupt-controller.h            | 38 ++++++++
+>  .../bcm6362-interrupt-controller.h            | 71 +++++++++++++++
+>  .../bcm6368-interrupt-controller.h            | 71 +++++++++++++++
 
-Bindings should be a separate file and this one is a DT schema now.
-
->  drivers/thermal/thermal_of.c                          |  7 +++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-> index f78bec19ca35..ebe936b57ded 100644
-> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-> @@ -165,6 +165,20 @@ Optional property:
->  			2000mW, while on a 10'' tablet is around
->  			4500mW.
->  
-> +- k-po:			Proportional parameter of the PID controller when
-> +			current temperature is above the target.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- k-pu:			Proportional parameter of the PID controller when
-> +			current temperature is below the target.
-> +  Type: signed
-> +  Size: one cell
-> +
-> +- k-i:			Integral parameter of the PID controller.
-> +  Type: signed
-> +  Size: one cell
-
-What's PID?
-
-I know nothing about the sysfs params, but the binding needs to stand on 
-it's own and needs enough detail to educate me.
+You'll notice that there are essentially no other headers with 
+SoC interrupt numbers. That's because we don't do defines for them. It's 
+pointless obfuscation.
 
 Rob
