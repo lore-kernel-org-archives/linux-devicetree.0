@@ -2,352 +2,124 @@ Return-Path: <SRS0=8UcW=CC=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71DBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E712C433DF
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4618206B5
-	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:41:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF512206B5
+	for <linux-devicetree@archiver.kernel.org>; Mon, 24 Aug 2020 10:43:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nbJ6KJoX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zYrP/1bz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgHXKlR (ORCPT
+        id S1726704AbgHXKns (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
+        Mon, 24 Aug 2020 06:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgHXKlL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:41:11 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0974C061573;
-        Mon, 24 Aug 2020 03:41:10 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 762A6279;
-        Mon, 24 Aug 2020 12:40:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598265659;
-        bh=gkLQoVeNpe/DVh62+pzI2aPOfVSsC4kdKg0g8ahxSXE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nbJ6KJoX3nKpXegGdxPFEG9b9qopfKfdwS76r7yACCYUlbnt17eVlz4IS3utj8NEf
-         0lJRpds5vU3YF4d6GEtiz95V3melguqO1sh0KDijLv2xCx7ljfOLl45fACfiKEIE4T
-         A2yWB+v3iiiLq+Rn3u+XIHtKgND62Qz+GOH520Sc=
-Date:   Mon, 24 Aug 2020 13:40:40 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        Ricardo Ribalda <ribalda@kernel.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: imx214: Convert to json-schema
-Message-ID: <20200824104040.GA6002@pendragon.ideasonboard.com>
-References: <20200818121755.37706-1-jacopo+renesas@jmondi.org>
- <20200819132823.GH6049@pendragon.ideasonboard.com>
- <20200824081810.7xwheje64ps4nbvf@uno.localdomain>
+        with ESMTP id S1726638AbgHXKnl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 06:43:41 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A498BC061755
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 03:43:40 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id x9so3791915wmi.2
+        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 03:43:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=vfeJpdo+reXlUp8I9Xltf/bKT4P5/2EZI29RPHRcGTo=;
+        b=zYrP/1bzSHAaUnEcj4HL//n+vYvLSDc9feOiIUJl31IuKVau98RwHMSK/ozNps5bTR
+         oYKfl5nukEcPBR6oPloC6dUWnJMYinAJ5ZTA0uCMCnjENm12q3qNJLyM9fX7fpZsWKwf
+         sAjPWWliJ59AzuScUI1swcfCyVp7j0p8T+bs9qKTAtSAIjqsg799vQKGdoz1rKObLU80
+         SnesywaeXAUN22biSQs84mCq1cEZwFAayZBmrDkSk+3c1GHDVa2eLVFKtTdmZE4yO4bU
+         pDA3wJDt5ycrQrRl1889ScC1ZC/OoaxJjElqCH337TWJtCl4rjt6zn/82C+A0UGm+nIp
+         4SzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vfeJpdo+reXlUp8I9Xltf/bKT4P5/2EZI29RPHRcGTo=;
+        b=GSUBENTPthHXENCbafHm+qhF0tsRxf07vNouNg3DxZvZ1iyD9rNsz2C5ZnTBhSsXQt
+         P33nufCQ5eZTCzu6JGWB2Carr84UDgShDiwD9p7aWlkj7oMSFUhDl1Elq6mHJzFXBy8g
+         1KZutZiAEftzIuhgsF8cqwG+NAcmWT53WR+HWnlvXVKtbyDxTvoEOumLvT+ZPRnzQWkR
+         vOt+e8qICSmCXQw5hYPuK9pzE/MvqfECQdtGlIEowz7yeoFls88+cT5hTmBQKMPdh2/H
+         QunZPmSaCgVyu9Qjw8qipK05KClhOumJN7myrcjyYUJIaN/6aPeb6bRIHe7CS0UshBH1
+         wqNw==
+X-Gm-Message-State: AOAM53146ZHO2e0UGcfw0GYBYN6KHhOEa1JaktVO0NCQeiXKERneL9iY
+        OA8snOlzkBtwwaUPu3UhZvmrmg==
+X-Google-Smtp-Source: ABdhPJyv9b5avO7XGdhprlSuqd/FKoiXA07sKRZlFBmahtp9hFgwnfD9BWbBCvoEh+hvSuNaA8PC7w==
+X-Received: by 2002:a1c:68c3:: with SMTP id d186mr5179539wmc.68.1598265818867;
+        Mon, 24 Aug 2020 03:43:38 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id f9sm1783125wrm.5.2020.08.24.03.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 03:43:38 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 11:43:36 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] mfd: Add driver for Embedded Controller found on
+ Acer Iconia Tab A500
+Message-ID: <20200824104336.GK3248864@dell>
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-2-digetx@gmail.com>
+ <20200823181653.GC209852@demiurge.local>
+ <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
+ <20200824073331.GG3248864@dell>
+ <f12d287a-f088-4c43-479d-5c044e554b30@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200824081810.7xwheje64ps4nbvf@uno.localdomain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f12d287a-f088-4c43-479d-5c044e554b30@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Mon, 24 Aug 2020, Dmitry Osipenko wrote:
 
-On Mon, Aug 24, 2020 at 10:18:10AM +0200, Jacopo Mondi wrote:
-> On Wed, Aug 19, 2020 at 04:28:23PM +0300, Laurent Pinchart wrote:
-> > On Tue, Aug 18, 2020 at 02:17:55PM +0200, Jacopo Mondi wrote:
-> >> Convert the imx214 bindings document to json-schema and update
-> >> the MAINTAINERS file accordingly.
+> 24.08.2020 10:33, Lee Jones пишет:
+> >> ...
+> >>>> +static struct a500_ec *a500_ec_scratch;
+> >>>
+> >>> If this is only used for power_off, please rename it. I've been told to
+> >>> do so in my driver: https://lore.kernel.org/lkml/20200519104933.GX271301@dell/
 > >>
-> >> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >> ---
-> >>  .../bindings/media/i2c/sony,imx214.txt        |  53 --------
-> >>  .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
-> >>  MAINTAINERS                                   |   2 +-
-> >>  3 files changed, 125 insertions(+), 54 deletions(-)
-> >>  delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> >> deleted file mode 100644
-> >> index f11f28a5fda4..000000000000
-> >> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> >> +++ /dev/null
-> >> @@ -1,53 +0,0 @@
-> >> -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> >> -
-> >> -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-> >> -an active array size of 4224H x 3200V. It is programmable through an I2C
-> >> -interface.
-> >> -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-> >> -throughput of 1.2Gbps/lane.
-> >> -
-> >> -
-> >> -Required Properties:
-> >> -- compatible: Shall be "sony,imx214".
-> >> -- reg: I2C bus address of the device. Depending on how the sensor is wired,
-> >> -       it shall be <0x10> or <0x1a>;
-> >> -- enable-gpios: GPIO descriptor for the enable pin.
-> >> -- vdddo-supply: Chip digital IO regulator (1.8V).
-> >> -- vdda-supply: Chip analog regulator (2.7V).
-> >> -- vddd-supply: Chip digital core regulator (1.12V).
-> >> -- clocks: Reference to the xclk clock.
-> >> -- clock-frequency: Frequency of the xclk clock.
-> >> -
-> >> -Optional Properties:
-> >> -- flash-leds: See ../video-interfaces.txt
-> >> -- lens-focus: See ../video-interfaces.txt
-> >> -
-> >> -The imx214 device node shall contain one 'port' child node with
-> >> -an 'endpoint' subnode. For further reading on port node refer to
-> >> -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >> -
-> >> -Required Properties on endpoint:
-> >> -- data-lanes: check ../video-interfaces.txt
-> >> -- link-frequencies: check ../video-interfaces.txt
-> >> -- remote-endpoint: check ../video-interfaces.txt
-> >> -
-> >> -Example:
-> >> -
-> >> -	camera-sensor@1a {
-> >> -		compatible = "sony,imx214";
-> >> -		reg = <0x1a>;
-> >> -		vdddo-supply = <&pm8994_lvs1>;
-> >> -		vddd-supply = <&camera_vddd_1v12>;
-> >> -		vdda-supply = <&pm8994_l17>;
-> >> -		lens-focus = <&ad5820>;
-> >> -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> >> -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
-> >> -		clock-frequency = <24000000>;
-> >> -		port {
-> >> -			imx214_ep: endpoint {
-> >> -				data-lanes = <1 2 3 4>;
-> >> -				link-frequencies = /bits/ 64 <480000000>;
-> >> -				remote-endpoint = <&csiphy0_ep>;
-> >> -			};
-> >> -		};
-> >> -	};
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> >> new file mode 100644
-> >> index 000000000000..ddd4627214b1
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> >> @@ -0,0 +1,124 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> >
-> > s/Mp/MP/
-> >
-> >> +
-> >> +maintainers:
-> >> +  - Ricardo Ribalda <ribalda@kernel.org>
-> >> +
-> >> +description: -|
-> >> +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-> >
-> > s/imx214/IMX214/
-> >
-> >> +  an active array size of 4224H x 3200V. It is programmable through an I2C
-> >> +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
-> >
-> > s/  Image/ Image/
-> >
-> >> +  maximum throughput of 1.2Gbps/lane.
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    const: sony,imx214
-> >> +
-> >> +  reg:
-> >> +    description: -|
-> >> +      I2C device address. Depends on how the sensor is wired.
-> >
-> > I'd drop the description, it's fairly evident as it's an I2C device,
-> > isn't it ?
-> >
-> >> +    enum:
-> >> +      - 0x10
-> >> +      - 0x1a
-> >> +
-> >> +  clocks:
-> >> +    description: Reference to the xclk clock.
-> >> +    maxItems: 1
-> >> +
-> >> +  clock-frequency:
-> >> +    description: Frequency of the xclk clock in Hz.
-> >> +
-> >> +  enable-gpios:
-> >> +    description: GPIO descriptor for the enable pin.
-> >> +    maxItems: 1
-> >> +
-> >> +  vdddo-supply:
-> >> +    description: Chip digital IO regulator (1.8V).
-> >> +    maxItems: 1
-> >> +
-> >> +  vdda-supply:
-> >> +    description: Chip analog regulator (2.7V).
-> >> +    maxItems: 1
-> >> +
-> >> +  vddd-supply:
-> >> +    description: Chip digital core regulator (1.12V).
-> >> +    maxItems: 1
-> >> +
-> >> +  flash-leds:
-> >> +    description: See ../video-interfaces.txt
-> >> +
-> >> +  lens-focus:
-> >> +    description: See ../video-interfaces.txt
-> >> +
-> >> +  port:
-> >> +    type: object
-> >> +    description: |
-> >> +      The device node must contain one 'port' child node for its digital output
-> >> +      video port, in accordance with the video interface bindings defined in
-> >> +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >
-> > I'd drop this, the port node is already described as required below.
-> >
-> >> +
-> >> +    properties:
-> >> +      endpoint:
-> >> +        type: object
-> >> +        properties:
-> >> +          remote-endpoint:
-> >> +            description: See ../video-interfaces.txt
-> >> +
-> >> +          data-lanes:
-> >> +            description: See ../video-interfaces.txt
-> >
-> > Shouldn't this also express that only 2 or 4 data lanes are allowed ?
+> >> I don't mind to rename the variable, but not sure whether it will be a
+> >> worthwhile change since _scratch is also a common naming scheme among
+> >> MFD drivers. Please see max77620_scratch for example, which I added
+> >> about a year ago.
+> > 
+> > If something is used once, it does not make it 'common'.
+> > 
+> > Not sure how this slipped my notice before, but I don't like it.
+> > 
+> > Ensure any global struct used for power_off only includes items
+> > required for this purpose.  It's unfortunate this API requires a
+> > global variable at all.
+> > 
 > 
-> I can't tell. I don't have the device manual, nor I'm the maintainer
-> of the driver, so I barely translated the existing bindings into yaml.
-> Spelling improvements apart, I won't modify the existing in this
-> patch, but possibly on top.
+> Okay! I'll change it in the v2, thanks!
 > 
-> That' said, in this case the device description reports "supports 2 or
-> 4 lanes" so that's probably the case and this could be done already ?
+> Thierry Reding was working on the shutdown API which should replace the
+> global variables, unfortunately he doesn't have enough time to finish
+> that work yet.
 
-That's where I got the 2-or-4-lanes from :-)
-
-> >
-> >             $ref: /schemas/types.yaml#/definitions/uint32-array
-> >             description: See ../video-interfaces.txt
-> >             anyOf:
-> >               - items:
-> >                   - const: 1
-> >                   - const: 2
-> >               - items:
-> >                   - const: 1
-> >                   - const: 2
-> >                   - const: 3
-> >                   - const: 4
-> >
-> > Maybe someone more experienced with YAML schemas could propose a better
-> > way to express this ? I initially tried to express it with enum instead
-> > of anyOf but couldn't get it to work.
-> 
-> FWIW I can trick the validator to work with
-> 
->           data-lanes:
->             description: See ../video-interfaces.txt
->             enum:
->               - [[1, 2]]
->               - [[1, 2, 3, 4]]
-> 
-> If I drop the ugly double [[ ]] I get a complaint for:
-> camera-sensor@1a: port:endpoint:data-lanes: [[1, 2, 3, 4]] is not one of [[1, 2], [1, 2, 3, 4]]
-> 
-> which makes me think the way we express the property makes the
-> validator parse it as an array of arrays of uint32_t.
-> 
-> If no better suggestions, I'll take your in as a separate patch on
-> top.
-> 
-> >> +
-> >> +          link-frequencies:
-> >
-> >             $ref: /schemas/types.yaml#/definitions/uint64-array
-> 
-> Right!
-> 
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> >> +            description: See ../video-interfaces.txt
-> >> +
-> >> +        required:
-> >> +          - data-lanes
-> >> +          - link-frequencies
-> >> +
-> >> +    additionalProperties: false
-> >> +
-> >> +required:
-> >> +  - compatible
-> >> +  - reg
-> >> +  - clocks
-> >> +  - clock-frequency
-> >> +  - enable-gpios
-> >> +  - vdddo-supply
-> >> +  - vdda-supply
-> >> +  - vddd-supply
-> >> +  - port
-> >> +
-> >> +examples:
-> >> +  - |
-> >> +    #include <dt-bindings/gpio/gpio.h>
-> >> +
-> >> +    i2c0 {
-> >> +        #address-cells = <1>;
-> >> +        #size-cells = <0>;
-> >> +
-> >> +        camera-sensor@1a {
-> >> +            compatible = "sony,imx214";
-> >> +            reg = <0x1a>;
-> >> +            vdddo-supply = <&pm8994_lvs1>;
-> >> +            vddd-supply = <&camera_vddd_1v12>;
-> >> +            vdda-supply = <&pm8994_l17>;
-> >> +            lens-focus = <&ad5820>;
-> >> +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> >> +            clocks = <&camera_clk>;
-> >> +            clock-frequency = <24000000>;
-> >> +
-> >> +            port {
-> >> +                imx214_ep: endpoint {
-> >> +                    data-lanes = <1 2 3 4>;
-> >> +                    link-frequencies = /bits/ 64 <480000000>;
-> >> +                    remote-endpoint = <&csiphy0_ep>;
-> >> +                };
-> >> +            };
-> >> +        };
-> >> +    };
-> >> +
-> >> +...
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 6c8e98238a7b..d1a6173d3b64 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -15918,7 +15918,7 @@ M:	Ricardo Ribalda <ribalda@kernel.org>
-> >>  L:	linux-media@vger.kernel.org
-> >>  S:	Maintained
-> >>  T:	git git://linuxtv.org/media_tree.git
-> >> -F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> >> +F:	Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> >>  F:	drivers/media/i2c/imx214.c
-> >>
-> >>  SONY IMX219 SENSOR DRIVER
+That would be really good. :)
 
 -- 
-Regards,
-
-Laurent Pinchart
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
