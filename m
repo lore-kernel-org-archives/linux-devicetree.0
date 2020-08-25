@@ -4,207 +4,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8A6C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654EDC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0122E2076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375BD2072D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598370400;
-	bh=2igqG3uEPzuUzdqIXSzponq3YT5GudO3Gm4HYkcRAIM=;
+	s=default; t=1598370627;
+	bh=kkJkXhmioIJQwsukGCwJD/oWEwK9HwwT7ICNctF3euE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C7XySB1lbVM/blcwJ4qih3xJo9qI5VyJzoFD/TrhJqsRwfRwY+sHajLN4Gj8UjKnz
-	 cMd7QOFoCqtCoTnmV6dp+HeEDbIAUhYPGBNKieoSGpt0++bVB2cnqYecdMe6k0LxHk
-	 6Cn8odz5d0+rp70DQD3d9HFeHOZctUDYMXHi2RoU=
+	b=xe0DeYZKyoF3vrImNXaqG0js9VRAe8AsEXLFjFPdZSDSQdof4GlMRJwx7OnvEUJ8/
+	 BdWFJoWYKL0jsMXKiiq0GKvnFdiIb16KeylgsFdLz0HqZCSdiD6GoEGTYPb8DAQNeU
+	 qVDte2Pbf3RMxpbTlEq8apryAGfJA9InRt48CFCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgHYPqZ (ORCPT
+        id S1726673AbgHYPu0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:46:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 11:50:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgHYPqV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:46:21 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        id S1726610AbgHYPuZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:50:25 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 925F92076C;
-        Tue, 25 Aug 2020 15:46:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0274D207BC;
+        Tue, 25 Aug 2020 15:50:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598370380;
-        bh=2igqG3uEPzuUzdqIXSzponq3YT5GudO3Gm4HYkcRAIM=;
+        s=default; t=1598370625;
+        bh=kkJkXhmioIJQwsukGCwJD/oWEwK9HwwT7ICNctF3euE=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m3lGya4cWZj7kD5PKWQK7urXVreNHeORDEhN7lv7Geec1Kv/7wlFgq/SCoT086bXM
-         fx29PdOnOXfRVPH0QWFqjiIe76/4Z9Cka4rCUQ1nW15ORTHT5yGWPc3E54EPu6NSS+
-         2yKnOjF0EpCcJDaJHVG18RlyrZEYzoPGtZ4n5oL0=
-Received: by mail-oi1-f178.google.com with SMTP id v13so11991529oiv.13;
-        Tue, 25 Aug 2020 08:46:20 -0700 (PDT)
-X-Gm-Message-State: AOAM531g7X+Q1evM2iQM4Mo1DeKuXW1WhMQRxRUxeMvJEmqfW63wtFkF
-        DlDDIPzNZjaiLDv62TOE8VtphP5IoVkST/IHLQ==
-X-Google-Smtp-Source: ABdhPJzZUSVbY/c/oz2V3IJntQFHRss+WSxDpGuds7ZpZ7vy9EXlYkoPxM8dJAFy6Rn+JihsN1yHkr5GmU1Rae9WK+0=
-X-Received: by 2002:aca:90a:: with SMTP id 10mr1406037oij.106.1598370379890;
- Tue, 25 Aug 2020 08:46:19 -0700 (PDT)
+        b=iepPZMUxPPfNV4NgNQvKYw0bKlAp+7ff2+icC5HJDfMTos6esrkPTtqMOCHQw+xKh
+         J+a0izz+d2S5jk2Ch/ERGJZd8ZXaRCpkI5mT16bZHcFof/vxMgzKyvSp2C0LN6ToU5
+         Ze9SAt6kOgakUjZJJOcd2OI8hQRX8747inBg5RoA=
+Received: by mail-ot1-f45.google.com with SMTP id n23so997868otq.11;
+        Tue, 25 Aug 2020 08:50:24 -0700 (PDT)
+X-Gm-Message-State: AOAM530P/8tJNuKGnB+K7A33DwtwLfw5iz+tFIXtrswUXLMTL+0Q0Y/U
+        +WOBrHJUHr3w1UGByBBLjC33Xsm+yx9cwoafiA==
+X-Google-Smtp-Source: ABdhPJzwQ9ZH34bliWvfQGeu3USdo0K8TRmckV2s4StillhPTdBNCd1F3rQthdZKBSrONLJMcgBLlGMcftceTr+YEvg=
+X-Received: by 2002:a9d:32e5:: with SMTP id u92mr6653653otb.107.1598370624203;
+ Tue, 25 Aug 2020 08:50:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200812202018.49046-1-alcooperx@gmail.com> <20200812202018.49046-2-alcooperx@gmail.com>
- <20200824233040.GA3532378@bogus> <CAOGqxeXWXkRD=agGL45D0sGe64TUBBq=OtibkX8AkiC5g0sWww@mail.gmail.com>
-In-Reply-To: <CAOGqxeXWXkRD=agGL45D0sGe64TUBBq=OtibkX8AkiC5g0sWww@mail.gmail.com>
+References: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+ <20200824230956.GA3500214@bogus> <c3f54e18-8683-8bd9-90fa-e3465cddf8e8@arm.com>
+ <13b84e7e-adfe-5939-e78d-0a20fce0a92e@linaro.org>
+In-Reply-To: <13b84e7e-adfe-5939-e78d-0a20fce0a92e@linaro.org>
 From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 25 Aug 2020 09:46:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLvDq1L1BZKfgobfhe7UEqbkGtXXfHzUwfo36m4MCARhw@mail.gmail.com>
-Message-ID: <CAL_JsqLvDq1L1BZKfgobfhe7UEqbkGtXXfHzUwfo36m4MCARhw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add support for Broadcom USB pin map driver
-To:     Alan Cooper <alcooperx@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        USB list <linux-usb@vger.kernel.org>
+Date:   Tue, 25 Aug 2020 09:50:12 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJO7PFYMpO-eDaCOzz5MxyjkfOScw9Q_ZzF=bEswCweGA@mail.gmail.com>
+Message-ID: <CAL_JsqJO7PFYMpO-eDaCOzz5MxyjkfOScw9Q_ZzF=bEswCweGA@mail.gmail.com>
+Subject: Re: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a thermal zone
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>,
+        Finley Xiao <finley.xiao@rock-chips.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org, Tao Huang <huangtao@rock-chips.com>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Liang Chen <cl@rock-chips.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-+Linus W
+On Tue, Aug 25, 2020 at 3:44 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> On 25/08/2020 10:25, Lukasz Luba wrote:
+> > Hi Rob,
+> >
+> > On 8/25/20 12:09 AM, Rob Herring wrote:
+> >> On Tue, Aug 11, 2020 at 08:31:15PM +0800, Finley Xiao wrote:
+> >>> The default value for k_pu is:
+> >>>      2 * sustainable_power / (desired_temperature - switch_on_temp)
+> >>> The default value for k_po is:
+> >>>      sustainable_power / (desired_temperature - switch_on_temp)
+> >>> The default value for k_i is 10.
+> >>>
+> >>> Even though these parameters of the PID controller can be changed
+> >>> by the following sysfs files:
+> >>>      /sys/class/thermal/thermal_zoneX/k_pu
+> >>>      /sys/class/thermal/thermal_zoneX/k_po
+> >>>      /sys/class/thermal/thermal_zoneX/k_i
+> >>>
+> >>> But it's still more convenient to change the default values by
+> >>> devicetree,
+> >>> so introduce these three optional properties. If provided these
+> >>> properties,
+> >>> they will be parsed and associated with the thermal zone via the thermal
+> >>> zone parameters.
+> >>>
+> >>> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+> >>> ---
+> >>>   Documentation/devicetree/bindings/thermal/thermal.txt | 14
+> >>> ++++++++++++++
+> >>
+> >> Bindings should be a separate file and this one is a DT schema now.
+> >>
+> >>>   drivers/thermal/thermal_of.c                          |  7 +++++++
+> >>>   2 files changed, 21 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
+> >>> b/Documentation/devicetree/bindings/thermal/thermal.txt
+> >>> index f78bec19ca35..ebe936b57ded 100644
+> >>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+> >>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+> >>> @@ -165,6 +165,20 @@ Optional property:
+> >>>               2000mW, while on a 10'' tablet is around
+> >>>               4500mW.
+> >>>   +- k-po:            Proportional parameter of the PID controller when
+> >>> +            current temperature is above the target.
+> >>> +  Type: signed
+> >>> +  Size: one cell
+> >>> +
+> >>> +- k-pu:            Proportional parameter of the PID controller when
+> >>> +            current temperature is below the target.
+> >>> +  Type: signed
+> >>> +  Size: one cell
+> >>> +
+> >>> +- k-i:            Integral parameter of the PID controller.
+> >>> +  Type: signed
+> >>> +  Size: one cell
+> >>
+> >> What's PID?
+> >>
+> >> I know nothing about the sysfs params, but the binding needs to stand on
+> >> it's own and needs enough detail to educate me.
+> > Sorry for the delay, I missed that patch.
+> > These parameters are the coefficients for the
+> > Proportional-Integral-Derivative (PID) controller [1], which is the
+> > core of the Intelligent Power Allocation (IPA) thermal governor.
+>
+> Just a few words to elaborate a bit for Rob who may not have time to
+> digest the whole concept from Wikipedia :)
+>
+> The PID is an regulation loop where the input is compared to the output.
+>
+> For example when driving a car and you aim a speed cruise of 90km/h. You
+> press the accelerator and watch the current speed. The smaller the
+> current speed is, the stronger you will push the accelerator. And the
+> closer to the cruise speed the car is, the lesser you push the
+> accelerator until the car stabilize to the cruise to speed.
+>
+> The k-* describes how strong you push the accelerator and release it.
+>
+> In the thermal framework, that has an impact on how brutal the
+> mitigation acts and depending on them it results in a flat temperature
+> curve or a sawtooth aspect.
+>
+> These coefficient depends on the ambient temperature (casing, room
+> temperature), the heat sink and the load. Depending on the use cases,
+> you may want to change their values at runtime.
+>
+> From my POV, setting these values in the DT does not really make sense.
 
-On Tue, Aug 25, 2020 at 6:26 AM Alan Cooper <alcooperx@gmail.com> wrote:
->
-> On Mon, Aug 24, 2020 at 7:30 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Aug 12, 2020 at 04:20:16PM -0400, Al Cooper wrote:
-> > > Add DT bindings for the Broadcom USB pin map driver. This driver allows
-> > > some USB input and output signals to be mapped to any GPIO instead
-> > > of the normal dedicated pins to/from the XHCI controller.
-> >
-> > Is this a driver or h/w block because bindings are for h/w blocks?
->
-> This is a hardware block. I'll remove "driver" from the description.
+I pretty much always agree with not putting things in DT. :)
 
-Another question, this kind of looks like a pin mux controller. Is
-that not a fit for this? If not, why?
-
-> > > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> > > ---
-> > >  .../bindings/usb/brcm,usb-pinmap.yaml         | 63 +++++++++++++++++++
-> > >  1 file changed, 63 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml b/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > > new file mode 100644
-> > > index 000000000000..19cf6ad36373
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > > @@ -0,0 +1,63 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/usb/brcm,usb-pinmap.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Broadcom USB pin map Controller Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Al Cooper <alcooperx@gmail.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +      items:
-> > > +          - const: brcm,usb-pinmap
-> >
-> > 2 space indentation please.
->
-> Fixed.
->
-> >
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +    description: Must be defined if any out-gpios are specified.
-> >
-> > 'dependencies' can express this in schema.
->
-> Okay.
->
-> >
-> > > +
-> > > +  in-gpios:
-> > > +    description: Array of one or more GPIO pins used for input signals.
-> >
-> > You need to define how many GPIOs are valid.
->
-> I tried to avoid doing this because there is a possibility that future
-> chips will have a few more signals added and the driver was written so
-> new signals can be added entirely in device tree without any changes
-> to the driver. If this is unacceptable, I can add the current max in
-> and out valid gpios.
-
-A 'should be enough for a while' value is fine. The driver doesn't
-have to have a max. I'd expect the binding to be updated for new SoCs
-anyways.
-
-> >
-> > > +
-> > > +  in-names:
-> > > +    description: Array of input signal names, one per gpio in in-gpios.
-> >
-> > No, this isn't how we name GPIOs. The part before '-gpios' is how.
->
-> This is the meant to be a description of how each gpio is being used
-> to help with error messages in the driver.
-> What if I use "brcmstb,in-functions" instead?
-
-'brcmstb' is not a vendor. But brcm,in-functions is fine.
-
-> > > +
-> > > +  in-masks:
-> > > +    description: Array of enable and mask pairs, one per gpio in-gpios.
-> >
-> > Needs a vendor prefix.
->
-> I'll change it to "brcmstb,in-masks"
->
-> >
-> > > +
-> > > +  out-gpios:
-> > > +    description: Array of one or more GPIO pins used for output signals.
-> > > +
-> > > +  out-names:
-> > > +    description: Array of output signal names, one per gpio in out-gpios.
-> > > +
-> > > +  out-masks:
-> > > +    description: Array of enable, value, changed and clear masks, one
-> > > +      per gpio in out-gpios.
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    usb_pinmap: usb-pinmap@22000d0 {
-> > > +        compatible = "brcm,usb-pinmap";
-> > > +        reg = <0x22000d0 0x4>;
-> > > +        in-gpios = <&gpio 18 0>, <&gpio 19 0>;
-> > > +        in-names = "VBUS", "PWRFLT";
-> > > +        in-masks = <0x8000 0x40000 0x10000 0x80000>;
-> > > +        out-gpios = <&gpio 20 0>;
-> > > +        out-names = "PWRON";
-> > > +        out-masks = <0x20000 0x800000 0x400000 0x200000>;
-> > > +        interrupts = <0x0 0xb2 0x4>;
-> > > +    };
-> > > +
-> > > +...
-> > > --
-> > > 2.17.1
-> > >
+Rob
