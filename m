@@ -2,509 +2,255 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7001BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968B1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC62206EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711D5206EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:41:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nio365.onmicrosoft.com header.i=@nio365.onmicrosoft.com header.b="C6LlAcX1"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DqOkuMuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHYVjx (ORCPT
+        id S1726356AbgHYVlz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:39:53 -0400
-Received: from mx0b-00010702.pphosted.com ([148.163.158.57]:57856 "EHLO
-        mx0b-00010702.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgHYVjw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 17:39:52 -0400
-X-Greylist: delayed 1806 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Aug 2020 17:39:50 EDT
-Received: from pps.filterd (m0098779.ppops.net [127.0.0.1])
-        by mx0b-00010702.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PL79kh006685;
-        Tue, 25 Aug 2020 16:09:39 -0500
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2171.outbound.protection.outlook.com [104.47.55.171])
-        by mx0b-00010702.pphosted.com with ESMTP id 333166yhp2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 16:09:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EFhLNyS9Tg7hv9BBiQVpukr+XaKDJaquZBy7t6Z8ukyYr88Xa29U3hroJoZpCytPiSB1v9cXJOJTqkx9CEyTkcGxHghPmZTi0ZnVaClBc/POyUXEbzZAw8vRZwyvUhFLztlqcAIBQEw2tJlWuSBOQB8hi7AswEzOQOuBKKWuHbrvOlKnl6jvYpkGKmJnLDKpu6TbDzvouFb4cGjEShWzBim+aapWqJ+dCONVo9jWPFd9F5GG9BXvH9l3MO8gkqJOtXyF3ioEpC0DcQsQ2w9orE9B9EAhW0BSrCxu5vd01fuJShe3mo5mjAYc/jU+KXksR+d1jpKLKvcR75UmxS6hMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nmZAccUctEqugXqsGGU2T5DJnaPHLO/zg1n2FSM2054=;
- b=PJDwwGWYlzBA4Q8xPWJ2f+BkHB2xhtIeeeIPgaMac66L7qJd4yFKifcOf4w9PLyP17L8LMyd2NPcS6gLGUBpB1dPuaCPOSw9xsI9U8dI7LV7jkOE2QXX176oex8ZCE11Xi10Db7M2BFzkA9DUq0qX/3QaZ/yLJYK8Q8nPpaSmThKZflztbb2+IGwtFTifQBrB1oQL0ZLJ53js5r4TIyka9PI9fWxi80y6YBj4jNZ+DNipm1l2gnE8J/ymD8TMnUnUOWkkrzTPw0bVNyvAD2oSTi3kKEiO5DmvMjTejPxCcg9ykQN0fZC189ZVWqwx2nzWr7e+gN59T6gj6T7jaIsxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=ni.com; dmarc=pass action=none header.from=ni.com; dkim=pass
- header.d=ni.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nio365.onmicrosoft.com; s=selector2-nio365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nmZAccUctEqugXqsGGU2T5DJnaPHLO/zg1n2FSM2054=;
- b=C6LlAcX1f9V1Blwra/uLH6D5m9VZkTiT9RLacNL2wxX/rwkESRhSSHcUksa5Jjsnjj8sMUbyp2ZREI35XF3tqhyCNlCNQGMBKEGeRgaIt4XM3JBhj3M+whXxCQm3ioXawJDY3VJ5rGu2R++jekygMvgYe+h5FDq+x2aLX3pp8DA=
-Authentication-Results: xilinx.com; dkim=none (message not signed)
- header.d=none;xilinx.com; dmarc=none action=none header.from=ni.com;
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29) by SN4PR0401MB3565.namprd04.prod.outlook.com
- (2603:10b6:803:47::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Tue, 25 Aug
- 2020 21:09:32 +0000
-Received: from SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::30f8:af2b:efff:2750]) by SN4PR0401MB3646.namprd04.prod.outlook.com
- ([fe80::30f8:af2b:efff:2750%3]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
- 21:09:32 +0000
-Date:   Tue, 25 Aug 2020 16:09:31 -0500
-From:   Michael Auchter <michael.auchter@ni.com>
-To:     Ben Levinsky <ben.levinsky@xilinx.com>
-Cc:     stefanos@xilinx.com, michals@xilinx.com,
-        devicetree@vger.kernel.org, mathieu.poirier@linaro.org,
-        ed.mooring@xilinx.com, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, wendy.liang@xilinx.com,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        Jason Wu <j.wu@xilinx.com>
-Message-ID: <20200825210931.GB12885@xaphan>
-References: <20200811033213.20088-1-ben.levinsky@xilinx.com>
- <20200811033213.20088-6-ben.levinsky@xilinx.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200811033213.20088-6-ben.levinsky@xilinx.com>
-X-ClientProxiedBy: DM5PR08CA0033.namprd08.prod.outlook.com
- (2603:10b6:4:60::22) To SN4PR0401MB3646.namprd04.prod.outlook.com
- (2603:10b6:803:4b::29)
+        Tue, 25 Aug 2020 17:41:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgHYVlz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:41:55 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A93FC061574;
+        Tue, 25 Aug 2020 14:41:54 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 015C6B96;
+        Tue, 25 Aug 2020 23:41:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1598391710;
+        bh=oIW/o+o09IZFTbk6H12Vwpg7pFr3ZcWqBKwfERJIvCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DqOkuMuDlfpmV+tRjFvR5gpS+rS5SELMmrrhyLXJxX6osCuuoVBEMki8O9G1Yiz42
+         cj1ikG6fVknpY0Nbk8v2Im2PcrrR432637dJoTJnNLFNMBy59GHXqltkPIvrzbBrny
+         d/npNXhKPk5QQvkDPXgZBePbVmZwLNIQwgSLD2Js=
+Date:   Wed, 26 Aug 2020 00:41:30 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, mchehab@kernel.org,
+        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: media: ov772x: Convert to json-schema
+Message-ID: <20200825214130.GN6767@pendragon.ideasonboard.com>
+References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
+ <20200818122012.37956-2-jacopo+renesas@jmondi.org>
+ <20200819135204.GJ6049@pendragon.ideasonboard.com>
+ <20200824083211.u2zm4o6f4wrxlu6k@uno.localdomain>
+ <20200824113440.GC6002@pendragon.ideasonboard.com>
+ <20200824121513.gvsr5sdodgpyv4w5@uno.localdomain>
+ <20200824121457.GD6002@pendragon.ideasonboard.com>
+ <20200825205531.GA1298396@bogus>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by DM5PR08CA0033.namprd08.prod.outlook.com (2603:10b6:4:60::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Tue, 25 Aug 2020 21:09:32 +0000
-X-Originating-IP: [2605:a601:ab6f:2000:2739:a39e:9b12:ab20]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2752d5e4-a561-4543-b09f-08d8493b29aa
-X-MS-TrafficTypeDiagnostic: SN4PR0401MB3565:
-X-Microsoft-Antispam-PRVS: <SN4PR0401MB35659CB7D50F26DCAF07304E87570@SN4PR0401MB3565.namprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:138;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2EjlVK747XgdkMGrXP0DTHSfET4fr/v6Rq7CZ2NNSb3bGlC5JhbeOH8QnfGd7dgRgnDWDQEA1FwCdxq0shBneWZ7mf+hvIeT36N+HX6BhzLNAsgEdASkDJ9EYGQkjyMxprsOAPq+qDtcNblHkUKt/voHeNFt6KTu9o9uMXwyP6wP//cC7Aelj/xSuDYDA4yRZkG/hUu/LukTPvWB2WuJPkcN/dJpIsEVpWjnXELCHFRIt+LxaAvXp3H/X0x5KbAvth47OpHRfL/9k78zpuiePTlDp5dCQXYQ1YtcngJQzzEnB9VI4GmsSg7ubZ7Tbi1Y1LvjX7uivoLZ+3/2olEb+g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3646.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(136003)(396003)(39840400004)(366004)(346002)(376002)(956004)(33656002)(33716001)(316002)(2906002)(6916009)(1076003)(66946007)(66556008)(8936002)(66476007)(44832011)(5660300002)(478600001)(4326008)(7416002)(16576012)(6486002)(83380400001)(86362001)(54906003)(52116002)(186003)(30864003)(8676002)(9686003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: A1OaFoOWUuOdpl9Qt5eq77sNWIM0KpYGfvVZx5xdg23flgkz/GTZP/pZPe50y6qf8iNg4RSrBEnRzN5W1QWn8Dtv6JSisETYFkKY3Sge+khHEbi/fHVUycWMw12wtJ0Mi40HFPWgIxKXWaaMUv1k0zWBTPeItYXsPTISNpViO9QVtBIQ3VhXxxMllerGXirJxQtcaZh+sA8f58HX0lMZcHwqFsdqfnztZz/NnMI64vWW1cQcs4MS7/31Tig9gcGxzqOpyURnILeCw9UoUABESl6xMub7nK20KWZicmGnMxG/+wt8tT/ZxqcJvG/FstQVwRAStERCArpGVORUN3ARb9sSu166TatC4OgMlZfbfL6UjZ/8W6ySYnl69xLX3ojyw0yfRMqOriSdu2PELx4xw/d2PZF/ykIpRK+jYyHeLm+BAqBNWInRUo0axq9BR3L+5tfxjd/AlzJeg5LpvBhCk7YfoIrvmvZ1Xwz52Q8r9tfmSsewmOZT/EhRXjUYv8jUL60IkrQTzhe2HkNzNbSlAQL5SNZAI/rhF8tfZrKLdTYpxs1CZSe7WF1robpsjrbW3SU6lWv5U9WqD05q6yIPdUtEaUGhV/jRSCgS/wtocOMwgQu5BVlfCw/wylVHLx2dWxd2do6wToAsJwcY/R8FZ7n6YeywzO33sH2EYtaPdsPn0khzAI3lzT+oUW8Eq/AELnXKJhVKxGA8wTc7SDH8UQ==
-X-OriginatorOrg: ni.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2752d5e4-a561-4543-b09f-08d8493b29aa
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3646.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 21:09:32.6364
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 87ba1f9a-44cd-43a6-b008-6fdb45a5204e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CFuy3dUlgVAg8f+7CrWbCYJHM0B+Sye8AUjOeYuJNjsz/Uj3GpQQsj9AtJAb27RZxVvTlsS9QiH5FM8rXy5gTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3565
-Subject: Re: [PATCH v8 5/5] remoteproc: Add initial zynqmp R5 remoteproc driver
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-25_09:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_policy_notspam policy=outbound_policy score=30 mlxscore=0
- malwarescore=0 lowpriorityscore=0 adultscore=0 phishscore=0 suspectscore=5
- priorityscore=1501 clxscore=1011 bulkscore=0 impostorscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=30 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250160
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200825205531.GA1298396@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Ben,
+Hi Rob,
 
-On Mon, Aug 10, 2020 at 08:32:13PM -0700, Ben Levinsky wrote:
-> +/**
-> + * zynqmp_r5_release() - ZynqMP R5 device release function
-> + * @dev: pointer to the device struct of ZynqMP R5
-> + *
-> + * Function to release ZynqMP R5 device.
-> + */
-> +static void zynqmp_r5_release(struct device *dev)
-> +{
-> +	struct zynqmp_r5_pdata *pdata;
-> +	struct rproc *rproc;
-> +	struct sk_buff *skb;
-> +
-> +	pdata = dev_get_drvdata(dev);
-> +	rproc = pdata->rproc;
-> +	if (rproc) {
-> +		rproc_del(rproc);
-> +		rproc_free(rproc);
-> +	}
-> +	if (pdata->tx_chan)
-> +		mbox_free_channel(pdata->tx_chan);
-> +	if (pdata->rx_chan)
-> +		mbox_free_channel(pdata->rx_chan);
-> +	/* Discard all SKBs */
-> +	while (!skb_queue_empty(&pdata->tx_mc_skbs)) {
-> +		skb = skb_dequeue(&pdata->tx_mc_skbs);
-> +		kfree_skb(skb);
-
-In the event that zynqmp_r5_probe() fails before zynqmp_r5_setup_mbox()
-has run, this will be called on an uninitialized skb_queue. (Also
-obviously an issue once mailboxes are made optional again).
-
-> +	}
-> +
-> +	put_device(dev->parent);
-> +}
-> +
-> +/**
-> + * event_notified_idr_cb() - event notified idr callback
-> + * @id: idr id
-> + * @ptr: pointer to idr private data
-> + * @data: data passed to idr_for_each callback
-> + *
-> + * Pass notification to remoteproc virtio
-> + *
-> + * Return: 0. having return is to satisfy the idr_for_each() function
-> + *          pointer input argument requirement.
-> + **/
-> +static int event_notified_idr_cb(int id, void *ptr, void *data)
-> +{
-> +	struct rproc *rproc = data;
-> +
-> +	(void)rproc_vq_interrupt(rproc, id);
-> +	return 0;
-> +}
-> +
-> +/**
-> + * handle_event_notified() - remoteproc notification work funciton
-> + * @work: pointer to the work structure
-> + *
-> + * It checks each registered remoteproc notify IDs.
-> + */
-> +static void handle_event_notified(struct work_struct *work)
-> +{
-> +	struct rproc *rproc;
-> +	struct zynqmp_r5_pdata *pdata;
-> +
-> +	pdata = container_of(work, struct zynqmp_r5_pdata, mbox_work);
-> +
-> +	(void)mbox_send_message(pdata->rx_chan, NULL);
-> +	rproc = pdata->rproc;
-> +	/*
-> +	 * We only use IPI for interrupt. The firmware side may or may
-> +	 * not write the notifyid when it trigger IPI.
-> +	 * And thus, we scan through all the registered notifyids.
-> +	 */
-> +	idr_for_each(&rproc->notifyids, event_notified_idr_cb, rproc);
-> +}
-> +
-> +/**
-> + * zynqmp_r5_mb_rx_cb() - Receive channel mailbox callback
-> + * @cl: mailbox client
-> + * @mssg: message pointer
-> + *
-> + * It will schedule the R5 notification work.
-> + */
-> +static void zynqmp_r5_mb_rx_cb(struct mbox_client *cl, void *mssg)
-> +{
-> +	struct zynqmp_r5_pdata *pdata;
-> +
-> +	pdata = container_of(cl, struct zynqmp_r5_pdata, rx_mc);
-> +	if (mssg) {
-> +		struct zynqmp_ipi_message *ipi_msg, *buf_msg;
-> +		size_t len;
-> +
-> +		ipi_msg = (struct zynqmp_ipi_message *)mssg;
-> +		buf_msg = (struct zynqmp_ipi_message *)pdata->rx_mc_buf;
-> +		len = (ipi_msg->len >= IPI_BUF_LEN_MAX) ?
-> +		      IPI_BUF_LEN_MAX : ipi_msg->len;
-> +		buf_msg->len = len;
-> +		memcpy(buf_msg->data, ipi_msg->data, len);
-> +	}
-> +	schedule_work(&pdata->mbox_work);
-> +}
-> +
-> +/**
-> + * zynqmp_r5_mb_tx_done() - Request has been sent to the remote
-> + * @cl: mailbox client
-> + * @mssg: pointer to the message which has been sent
-> + * @r: status of last TX - OK or error
-> + *
-> + * It will be called by the mailbox framework when the last TX has done.
-> + */
-> +static void zynqmp_r5_mb_tx_done(struct mbox_client *cl, void *mssg, int r)
-> +{
-> +	struct zynqmp_r5_pdata *pdata;
-> +	struct sk_buff *skb;
-> +
-> +	if (!mssg)
-> +		return;
-> +	pdata = container_of(cl, struct zynqmp_r5_pdata, tx_mc);
-> +	skb = skb_dequeue(&pdata->tx_mc_skbs);
-> +	kfree_skb(skb);
-> +}
-> +
-> +/**
-> + * zynqmp_r5_setup_mbox() - Setup mailboxes
-> + *
-> + * @pdata: pointer to the ZynqMP R5 processor platform data
-> + * @node: pointer of the device node
-> + *
-> + * Function to setup mailboxes to talk to RPU.
-> + *
-> + * Return: 0 for success, negative value for failure.
-> + */
-> +static int zynqmp_r5_setup_mbox(struct zynqmp_r5_pdata *pdata,
-> +				struct device_node *node)
-> +{
-> +	struct device *dev = &pdata->dev;
-> +	struct mbox_client *mclient;
-> +
-> +	/* Setup TX mailbox channel client */
-> +	mclient = &pdata->tx_mc;
-> +	mclient->dev = dev;
-> +	mclient->rx_callback = NULL;
-> +	mclient->tx_block = false;
-> +	mclient->knows_txdone = false;
-> +	mclient->tx_done = zynqmp_r5_mb_tx_done;
-> +
-> +	/* Setup TX mailbox channel client */
-> +	mclient = &pdata->rx_mc;
-> +	mclient->dev = dev;
-> +	mclient->rx_callback = zynqmp_r5_mb_rx_cb;
-> +	mclient->tx_block = false;
-> +	mclient->knows_txdone = false;
-> +
-> +	INIT_WORK(&pdata->mbox_work, handle_event_notified);
-> +
-> +	/* Request TX and RX channels */
-> +	pdata->tx_chan = mbox_request_channel_byname(&pdata->tx_mc, "tx");
-> +	if (IS_ERR(pdata->tx_chan)) {
-> +		dev_err(dev, "failed to request mbox tx channel.\n");
-> +		pdata->tx_chan = NULL;
-> +		return -EINVAL;
-> +	}
-> +	pdata->rx_chan = mbox_request_channel_byname(&pdata->rx_mc, "rx");
-> +	if (IS_ERR(pdata->rx_chan)) {
-> +		dev_err(dev, "failed to request mbox rx channel.\n");
-> +		pdata->rx_chan = NULL;
-> +		return -EINVAL;
-> +	}
-> +	skb_queue_head_init(&pdata->tx_mc_skbs);
-> +	return 0;
-> +}
-> +
-> +/**
-> + * zynqmp_r5_probe() - Probes ZynqMP R5 processor device node
-> + * @pdata: pointer to the ZynqMP R5 processor platform data
-> + * @pdev: parent RPU domain platform device
-> + * @node: pointer of the device node
-> + *
-> + * Function to retrieve the information of the ZynqMP R5 device node.
-> + *
-> + * Return: 0 for success, negative value for failure.
-> + */
-> +static int zynqmp_r5_probe(struct zynqmp_r5_pdata *pdata,
-> +			   struct platform_device *pdev,
-> +			   struct device_node *node)
-> +{
-> +	struct device *dev = &pdata->dev;
-> +	struct rproc *rproc;
-> +	struct device_node *nc;
-> +	int ret;
-> +
-> +	/* Create device for ZynqMP R5 device */
-> +	dev->parent = &pdev->dev;
-> +	dev->release = zynqmp_r5_release;
-> +	dev->of_node = node;
-> +	dev_set_name(dev, "%s", of_node_full_name(node));
-> +	dev_set_drvdata(dev, pdata);
-> +	ret = device_register(dev);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register device.\n");
-> +		return ret;
-> +	}
-> +	get_device(&pdev->dev);
-> +
-> +	/* Allocate remoteproc instance */
-> +	rproc = rproc_alloc(dev, dev_name(dev), &zynqmp_r5_rproc_ops, NULL, 0);
-> +	if (!rproc) {
-> +		dev_err(dev, "rproc allocation failed.\n");
-> +		ret = -ENOMEM;
-> +		goto error;
-> +	}
-> +	rproc->auto_boot = autoboot;
-> +	pdata->rproc = rproc;
-> +	rproc->priv = pdata;
-> +
-> +	/*
-> +	 * The device has not been spawned from a device tree, so
-> +	 * arch_setup_dma_ops has not been called, thus leaving
-> +	 * the device with dummy DMA ops.
-> +	 * Fix this by inheriting the parent's DMA ops and mask.
-> +	 */
-> +	rproc->dev.dma_mask = pdev->dev.dma_mask;
-> +	set_dma_ops(&rproc->dev, get_dma_ops(&pdev->dev));
-> +
-> +	/* Probe R5 memory devices */
-> +	INIT_LIST_HEAD(&pdata->mems);
-> +	for_each_available_child_of_node(node, nc) {
-> +		ret = zynqmp_r5_mem_probe(pdata, nc);
-> +		if (ret) {
-> +			dev_err(dev, "failed to probe memory %s.\n",
-> +				of_node_full_name(nc));
-> +			goto error;
-> +		}
-> +	}
-> +
-> +	/* Set up DMA mask */
-> +	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
-> +	if (ret) {
-> +		dev_warn(dev, "dma_set_coherent_mask failed: %d\n", ret);
-> +		/* If DMA is not configured yet, try to configure it. */
-> +		ret = of_dma_configure(dev, node, true);
-> +		if (ret) {
-> +			dev_err(dev, "failed to configure DMA.\n");
-> +			goto error;
-> +		}
-> +	}
-> +
-> +	/* Get R5 power domain node */
-> +	ret = of_property_read_u32(node, "pnode-id", &pdata->pnode_id);
-> +	if (ret) {
-> +		dev_err(dev, "failed to get power node id.\n");
-> +		goto error;
-> +	}
-> +
-> +	/* TODO Check if R5 is running */
-> +
-> +	/* Set up R5 if not already setup */
-> +	ret = pdata->is_r5_mode_set ? 0 : r5_set_mode(pdata);
-> +	if (ret) {
-> +		dev_err(dev, "failed to set R5 operation mode.\n");
-> +		return ret;
-> +	}
-> +
-> +	if (!of_get_property(dev->of_node, "mboxes", NULL)) {
-> +		dev_dbg(dev, "no mailboxes.\n");
-> +		goto error;
-> +	} else {
-> +		ret = zynqmp_r5_setup_mbox(pdata, node);
-> +		if (ret < 0)
-> +			goto error;
-> +	}
-> +
-> +	/* Add R5 remoteproc */
-> +	ret = rproc_add(rproc);
-> +	if (ret) {
-> +		dev_err(dev, "rproc registration failed\n");
-> +		goto error;
-> +	}
-> +	return 0;
-> +error:
-> +	if (pdata->rproc)
-> +		rproc_free(pdata->rproc);
-> +	pdata->rproc = NULL;
-> +	device_unregister(dev);
-> +	put_device(&pdev->dev);
-> +	return ret;
-> +}
-> +
-> +static int zynqmp_r5_remoteproc_probe(struct platform_device *pdev)
-> +{
-> +	int ret, i = 0;
-> +	u32 *lockstep_mode;
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *nc;
-> +	struct zynqmp_r5_pdata *pdata;
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	lockstep_mode = devm_kzalloc(dev, sizeof(u32 *), GFP_KERNEL);
-> +	if (!pdata || !lockstep_mode)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, pdata);
-> +
-> +	of_property_read_u32(dev->of_node, "lockstep-mode", lockstep_mode);
-> +
-> +	if (!(*lockstep_mode)) {
-> +		rpu_mode = PM_RPU_MODE_SPLIT;
-> +	} else if (*lockstep_mode == 1) {
-> +		rpu_mode = PM_RPU_MODE_LOCKSTEP;
-> +	} else {
-> +		dev_err(dev,
-> +			"Invalid lockstep-mode mode provided - %x %d\n",
-> +			*lockstep_mode, rpu_mode);
-> +		return -EINVAL;
-> +	}
-> +	dev_dbg(dev, "RPU configuration: %s\r\n",
-> +		(*lockstep_mode) ? "lockstep" : "split");
-> +
-> +	for_each_available_child_of_node(dev->of_node, nc) {
-> +		ret = zynqmp_r5_probe(&rpus[i], pdev, nc);
-> +		if (ret) {
-> +			dev_err(dev, "failed to probe rpu %s.\n",
-> +				of_node_full_name(nc));
-> +			return ret;
-> +		}
-> +		i++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int zynqmp_r5_remoteproc_remove(struct platform_device *pdev)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < MAX_RPROCS; i++) {
-> +		struct zynqmp_r5_pdata *pdata = &rpus[i];
-> +		struct rproc *rproc;
-> +
-> +		rproc = pdata->rproc;
-> +		if (rproc) {
-> +			rproc_del(rproc);
-> +			rproc_free(rproc);
-> +			pdata->rproc = NULL;
-> +		}
-> +		if (pdata->tx_chan) {
-> +			mbox_free_channel(pdata->tx_chan);
-> +			pdata->tx_chan = NULL;
-> +		}
-> +		if (pdata->rx_chan) {
-> +			mbox_free_channel(pdata->rx_chan);
-> +			pdata->rx_chan = NULL;
-> +		}
-> +
-> +		device_unregister(&pdata->dev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/* Match table for OF platform binding */
-> +static const struct of_device_id zynqmp_r5_remoteproc_match[] = {
-> +	{ .compatible = "xlnx,zynqmp-r5-remoteproc-1.0", },
-> +	{ /* end of list */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, zynqmp_r5_remoteproc_match);
-> +
-> +static struct platform_driver zynqmp_r5_remoteproc_driver = {
-> +	.probe = zynqmp_r5_remoteproc_probe,
-> +	.remove = zynqmp_r5_remoteproc_remove,
-> +	.driver = {
-> +		.name = "zynqmp_r5_remoteproc",
-> +		.of_match_table = zynqmp_r5_remoteproc_match,
-> +	},
-> +};
-> +module_platform_driver(zynqmp_r5_remoteproc_driver);
-> +
-> +module_param_named(autoboot,  autoboot, bool, 0444);
-> +MODULE_PARM_DESC(autoboot,
-> +		 "enable | disable autoboot. (default: false)");
-> +
-> +MODULE_AUTHOR("Ben Levinsky <ben.levinsky@xilinx.com>");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.17.1
+On Tue, Aug 25, 2020 at 02:55:31PM -0600, Rob Herring wrote:
+> On Mon, Aug 24, 2020 at 03:14:57PM +0300, Laurent Pinchart wrote:
+> > On Mon, Aug 24, 2020 at 02:15:13PM +0200, Jacopo Mondi wrote:
+> > > On Mon, Aug 24, 2020 at 02:34:40PM +0300, Laurent Pinchart wrote:
+> > > > On Mon, Aug 24, 2020 at 10:32:11AM +0200, Jacopo Mondi wrote:
+> > > > > On Wed, Aug 19, 2020 at 04:52:04PM +0300, Laurent Pinchart wrote:
+> > > > > > On Tue, Aug 18, 2020 at 02:20:10PM +0200, Jacopo Mondi wrote:
+> > > > > > > Convert the ov772x binding document to json-schema and update
+> > > > > > > the MAINTAINERS file accordingly.
+> > > > > > >
+> > > > > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > > > > > ---
+> > > > > > >  .../devicetree/bindings/media/i2c/ov772x.txt  | 40 ---------
+> > > > > > >  .../devicetree/bindings/media/i2c/ov772x.yaml | 84 +++++++++++++++++++
+> > > > > >
+> > > > > > Could yuo rename this to ovti,ov772x.yaml ?
+> > > > > >
+> > > > > > >  MAINTAINERS                                   |  2 +-
+> > > > > > >  3 files changed, 85 insertions(+), 41 deletions(-)
+> > > > > > >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> > > > > > > deleted file mode 100644
+> > > > > > > index 0b3ede5b8e6a..000000000000
+> > > > > > > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
+> > > > > > > +++ /dev/null
+> > > > > > > @@ -1,40 +0,0 @@
+> > > > > > > -* Omnivision OV7720/OV7725 CMOS sensor
+> > > > > > > -
+> > > > > > > -The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
+> > > > > > > -such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
+> > > > > > > -support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
+> > > > > > > -
+> > > > > > > -Required Properties:
+> > > > > > > -- compatible: shall be one of
+> > > > > > > -	"ovti,ov7720"
+> > > > > > > -	"ovti,ov7725"
+> > > > > > > -- clocks: reference to the xclk input clock.
+> > > > > > > -
+> > > > > > > -Optional Properties:
+> > > > > > > -- reset-gpios: reference to the GPIO connected to the RSTB pin which is
+> > > > > > > -  active low, if any.
+> > > > > > > -- powerdown-gpios: reference to the GPIO connected to the PWDN pin which is
+> > > > > > > -  active high, if any.
+> > > > > > > -
+> > > > > > > -The device node shall contain one 'port' child node with one child 'endpoint'
+> > > > > > > -subnode for its digital output video port, in accordance with the video
+> > > > > > > -interface bindings defined in Documentation/devicetree/bindings/media/
+> > > > > > > -video-interfaces.txt.
+> > > > > > > -
+> > > > > > > -Example:
+> > > > > > > -
+> > > > > > > -&i2c0 {
+> > > > > > > -	ov772x: camera@21 {
+> > > > > > > -		compatible = "ovti,ov7725";
+> > > > > > > -		reg = <0x21>;
+> > > > > > > -		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
+> > > > > > > -		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
+> > > > > > > -		clocks = <&xclk>;
+> > > > > > > -
+> > > > > > > -		port {
+> > > > > > > -			ov772x_0: endpoint {
+> > > > > > > -				remote-endpoint = <&vcap1_in0>;
+> > > > > > > -			};
+> > > > > > > -		};
+> > > > > > > -	};
+> > > > > > > -};
+> > > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..2b84fefeb4aa
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
+> > > > > > > @@ -0,0 +1,84 @@
+> > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > > > > +%YAML 1.2
+> > > > > > > +---
+> > > > > > > +$id: http://devicetree.org/schemas/media/i2c/ov772x.yaml#
+> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > > > > +
+> > > > > > > +title:  Omnivision OV7720/OV7725 CMOS sensor
+> > > > > > > +
+> > > > > > > +maintainers:
+> > > > > > > +  - Jacopo Mondi <jacopo@jmondi.org>
+> > > > > > > +
+> > > > > > > +description: -|
+> > > > > > > +  The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
+> > > > > > > +  such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
+> > > > > > > +  support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
+> > > > > > > +
+> > > > > > > +properties:
+> > > > > > > +  compatible:
+> > > > > > > +    enum:
+> > > > > > > +      - ovti,ov7720
+> > > > > > > +      - ovti,ov7725
+> > > > > > > +
+> > > > > > > +  reg:
+> > > > > > > +    maxItems: 1
+> > > > > > > +
+> > > > > > > +  clocks:
+> > > > > > > +    maxItems: 1
+> > > > > > > +
+> > > > > > > +  reset-gpios:
+> > > > > > > +    description: -|
+> > > > > > > +      Reference to the GPIO connected to the RSTB pin which is active low.
+> > > > > > > +    maxItems: 1
+> > > > > > > +
+> > > > > > > +  powerdown-gpios:
+> > > > > > > +    description: -|
+> > > > > > > +      Reference to the GPIO connected to the PWDN pin which is active high.
+> > > > > > > +    maxItems: 1
+> > > > > > > +
+> > > > > > > +  port:
+> > > > > > > +    type: object
+> > > > > > > +    description: |
+> > > > > > > +      The device node must contain one 'port' child node for its digital output
+> > > > > > > +      video port, in accordance with the video interface bindings defined in
+> > > > > > > +      Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > > > >
+> > > > > > You can simply write
+> > > > > >
+> > > > > >       Digital input video port. See ../video-interfaces.txt.
+> > > > > >
+> > > > > > > +
+> > > > > > > +    properties:
+> > > > > > > +      endpoint:
+> > > > > > > +        type: object
+> > > > > > > +        properties:
+> > > > > > > +          remote-endpoint:
+> > > > > > > +            description: A phandle to the bus receiver's endpoint node.
+> > > > > >
+> > > > > >            required:
+> > > > > > 	     - remote-endpoint
+> > > > > >
+> > > > > >            additionalProperties: false
+> > > > >
+> > > > > I receveied a reply to you on previous json-schema conversion attempt
+> > > > > where you suggested to not set remote-endpoint as required, as we
+> > > > > allow empty ones to be later filled in in, maybe with an overlay.
+> > > > >
+> > > > > Which Laurent should I listen to ? I tend to agree with the one that
+> > > > > said to drop remote-endpoint from the required properties list.
+> > > >
+> > > > Maybe I recall incorrectly, didn't I say that endpoint shouldn't be
+> > > > mandatory ? Ports should be mandatory as they describe the hardware,
+> > > > endpoints describe a connection, and within a connection, I'm not sure
+> > > > to see a use-case for not setting remote-endpoint. Maybe I need to look
+> > > > better ? :-)
+> > > >
+> > > 
+> > > I might be confused as well, but to me port and endpoint should be
+> > > there as they represent the available endpoints of the devices connections.
+> > > Connections to external devices that can be established (or overwritten)
+> > > by applying an overlay, and such are not mandatory.
+> > > 
+> > > As I see it:
+> > > - port/endpoints: establish the available device connection endpoitns
+> > >   and shall be mandatory (also to give a known place where to 'plug'
+> > >   the connections)
+> > > 
+> > > - remote-endpoints: data connections to external devices, which might
+> > >   depend on the board assembly or installed 'capes' and expansions. As
+> > >   such, they can be modeled as an overlay fragment to be applied on the
+> > >   (known layout of the) device.
+> > 
+> > Only the port represents a connection point. The endpoint node is part
+> > of the representation of the link, it doesn't map to a particular
+> > hardware resource on the port side.
 > 
+> I think all of 'endpoint' should be dropped if you only have 
+> 'remote-endpoint' (and no other properties) and you don't have multiple 
+> endpoints (typically only if the h/w has some sort of built-in mux or 
+> connection selector). 
 
-Thanks,
- Michael
+Makes sense to me, I'll keep this in mind during review.
+
+> Once we have a generic graph schema, it can enforce that 'port' has 
+> 'endpoint' and 'endpoint' has 'remote-endpoint'.
+
+I think 'endpoint' should be optional though, as a port can exist but
+not be connected. 'remote-endpoint' should be mandatory.
+
+> Doing this hasn't been 
+> too high on my list simply because dtc already does all or most of that.
+
+-- 
+Regards,
+
+Laurent Pinchart
