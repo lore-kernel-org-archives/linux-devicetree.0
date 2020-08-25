@@ -2,115 +2,129 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ED1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AE7C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A04892075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tB7mY0ZO"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4F2207FB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHYPLH (ORCPT
+        id S1726739AbgHYPRw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgHYPLE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 11:11:04 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0CAC061755;
-        Tue, 25 Aug 2020 08:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=LPG5Lc7nCg6NrS7ax+6DMhtaCUehIHNu6awjAcV2BcE=; b=tB7mY0ZOpnz4kAH3i8HK3Mu2Dr
-        KdjEI6mp7kDoq4wQGigAPa4qc5Uzr0yGhCJqcti2O8wuhkO6l6Y5mOSL5jBo8HryngLeovoPGDjvT
-        6NodraZ/TUTwHK4CD7ro8a1FOfHYzy0YSFWm5tmdL574Q81rla/G/tPLAgmKQmu9ZnQluf4rmyxgf
-        36SM1gZq65OUuvNaW1W4PtfWlUuVHkOZzx9ekjEmCBgdQC/lzKDU5CnupngOBr3GGGxzUhWMQ1ePt
-        szktTlwydy0dQUcdxA0P35WDPeRCbcYF+OC7Fbzc4p7owylhuQMtnZlwQAd780JWGROiokTNr5vxl
-        WvTtxoaA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAab6-0005G5-QJ; Tue, 25 Aug 2020 15:10:53 +0000
-Subject: Re: [PATCH v5 5/6] can: ctucanfd: CTU CAN FD open-source IP core -
- platform and next steps and mainlining chances
-To:     Pavel Pisa <pisa@cmp.felk.cvut.cz>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Drew Fustini <pdp7pdp7@gmail.com>
-Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        David Miller <davem@davemloft.net>, mark.rutland@arm.com,
-        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marin Jerabek <martin.jerabek01@gmail.com>,
-        Ondrej Ille <ondrej.ille@gmail.com>,
-        Jiri Novak <jnovak@fel.cvut.cz>,
-        Jaroslav Beran <jara.beran@gmail.com>,
-        Petr Porazil <porazil@pikron.com>, Pavel Machek <pavel@ucw.cz>
-References: <cover.1597518433.git.ppisa@pikron.com>
- <4ceda3a9d68263b4e0dfe66521a46f40b2e502f7.1597518433.git.ppisa@pikron.com>
- <73e3dad8-9ab7-2f8f-312c-1957b4572b08@infradead.org>
- <202008251125.41514.pisa@cmp.felk.cvut.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6f26127d-5403-3ea2-9b6d-11dc35b0d5c2@infradead.org>
-Date:   Tue, 25 Aug 2020 08:10:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 11:17:52 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51857 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgHYPRf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 11:17:35 -0400
+X-Originating-IP: 90.89.180.255
+Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E216C20003;
+        Tue, 25 Aug 2020 15:17:01 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 17:17:01 +0200
+From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 2/7] dt-bindings: media: i2c: Add documentation for
+ ov8865
+Message-ID: <20200825171701.158c77c6@lhopital-XPS-13-9360>
+In-Reply-To: <20200824165910.tnsalyxfuimfx5rd@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        <20200821145935.20346-3-kevin.lhopital@bootlin.com>
+        <20200824165910.tnsalyxfuimfx5rd@gilmour.lan>
+Organization: bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <202008251125.41514.pisa@cmp.felk.cvut.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 8/25/20 2:25 AM, Pavel Pisa wrote:
-> Hello Randy and Rob,
+Hello,
+
+Le Mon, 24 Aug 2020 18:59:10 +0200,
+Maxime Ripard <maxime@cerno.tech> a écrit :
+
+> Hi,
 > 
-> thanks much for review, I have corrected FPGA spelling
-> and binding YAML license.
+> On Fri, Aug 21, 2020 at 04:59:30PM +0200, Kévin L'hôpital wrote:
+> > Add a documentation for the sensor ov8865 from Omnivision.
+> > 
+> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
 > 
-> On Sunday 16 of August 2020 01:28:13 Randy Dunlap wrote:
->> On 8/15/20 12:43 PM, Pavel Pisa wrote:
->>> diff --git a/drivers/net/can/ctucanfd/Kconfig
->>> b/drivers/net/can/ctucanfd/Kconfig index e1636373628a..a8c9cc38f216
->>> 100644
->>> --- a/drivers/net/can/ctucanfd/Kconfig
->>> +++ b/drivers/net/can/ctucanfd/Kconfig
->>> @@ -21,4 +21,15 @@ config CAN_CTUCANFD_PCI
->>>  	  PCIe board with PiKRON.com designed transceiver riser shield is
->>> available at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
->>>
->>> +config CAN_CTUCANFD_PLATFORM
->>> +	tristate "CTU CAN-FD IP core platform (FPGA, SoC) driver"
->>> +	depends on OF
->>
->> Can this be
->> 	depends on OF || COMPILE_TEST
->> ?
-> 
-> I am not sure for this change. Is it ensured/documented somewhere that
-> header files provide dummy definition such way, that OF drivers builds
-> even if OF support is disabled? If I remember well, CTU CAN FD OF
-> module build fails if attempted in the frame of native x86_64
-> build where OF has been disabled. Does COMPILE_TEST ensure that
-> such build succeeds.
+> In order to ease the submission of both drivers, you should probably
+> split this series into two, one with the MIPI-CSI driver, and one with
+> the ov8865 driver.
 > 
 
-COMPILE_TEST won't ensure anything.
-OTOH, <linux/of.h> has lots of stubs for handling the case of
-CONFIG_OF not being enabled.
+Yes, you are right. I will do this.
+
+> > ---
+> >  .../devicetree/bindings/media/i2c/ov8865.txt  | 51
+> > +++++++++++++++++++ 1 file changed, 51 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/media/i2c/ov8865.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8865.txt
+> > b/Documentation/devicetree/bindings/media/i2c/ov8865.txt new file
+> > mode 100644 index 000000000000..ac5a662288de
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/ov8865.txt
+> > @@ -0,0 +1,51 @@
+> > +* Omnivision OV8865 MIPI CSI-2
+> > +
+> > +Required Properties:
+> > +- compatible: should be "ovti,ov8865"
+> > +- clocks: reference to the xclk input clock.
+> > +- clock-names: should be "xclk".
+> > +- DOVDD-supply: Digital I/O voltage supply, 2.8 volts
+> > +- AVDD-supply: Analog voltage supply, 2.8 volts
+> > +- AFVDD-supply: Analog voltage supply, 2.8 volts
+> > +- DVDD-supply: Digital core voltage supply, 1.2 volts
+> > +- reset-gpios: reference to the GPIO connected to the reset pin.
+> > +	       This is an active low signal to the OV8865.
+> > +- powerdown-gpios: reference to the GPIO connected to the
+> > powerdown pin.
+> > +		   This is an active low signal to the OV8865.
+> > +- rotation: as defined in
+> > +
+> > Documentation/devicetree/bindings/media/video-interfaces.txt,
+> > +	    valid values are 0 (sensor mounted upright) and 180
+> > (sensor
+> > +	    mounted upside down).
+> > +- remote-endpoint: a phandle to the bus receiver's endpoint node.
+> > +- clock-lanes: should be set to <0> (clock lane on hardware lane
+> > 0). +- data-lanes: should be set to <4> (four CSI-2 lanes
+> > supported). +
+> > +The device node must contain one 'port' child node for its digital
+> > output video +port, in accordance with the video interface bindings
+> > defined in
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt.  
+> 
+> Free form DT documentation is deprecated nowadays, you should be
+> doing a YAML schema instead (like the ov8856 driver).
+> 
+
+All right, I will do a YAML schema.
+
+> Maxime
+
+Thank you very much for the review.
+Kévin
+
 
 -- 
-~Randy
-
+Kevin L'Hopital, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
