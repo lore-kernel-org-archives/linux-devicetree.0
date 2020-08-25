@@ -2,139 +2,105 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 745B4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAE5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 519742071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="az6XmRx0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p0+MO18m"
+	by mail.kernel.org (Postfix) with ESMTP id 1ADB62067C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:57:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598349471;
+	bh=DDyn7T6pv3pFn55/jArUvWOixIWyxxy7KV85+SC9Ols=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1T2UjSt7tFIRaCN4Pu3z6gSceLBnvHMHpsv9zgkLyfV9Xi3csiDB0NZex2i6devZi
+	 Wrgof95WLxd37acldOhAKDgawcIY2fHHvi5Nr8TN8/g9LJKsOcJcJB/CxcZVTDV0bp
+	 lY4K+8ybX72FJDzk3Z0KhXVlQpAMjq9/FyppCZTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbgHYJzm (ORCPT
+        id S1729601AbgHYJ5u (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46248 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729456AbgHYJzk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:55:40 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87148C061574;
-        Tue, 25 Aug 2020 02:55:40 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598349339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5bdT5tTM+hEnX3GHDG3SgFYwTwZMX1yMI7aVVjqitqY=;
-        b=az6XmRx0k5oLN1bIaAHyCdIuH590fxM3/uYM0egcx2w+6s56vftoivh4/DDL0y8tZaXGgB
-        Xd/dMTYP4htDmj77ZYPKmtuulUTGZiW6ctR83KWrcYJVaEdwSun+H2/FFnQa+vUbFYjyiO
-        3Cs6fxHY+4V3XDEUic1hESs9SRP8bkbUzGnMP1Fh2XCzeSUmfh7zbZX5wg04Bowsz2/unh
-        FEizV4bgRM2CunF+cLppghCcpx9DmSprFsZZcFIAccCKIC8CnzMQmc2XbxV3bNxAHYbi8e
-        Wb51G0XpY5WPkK+74sRRJlVPc96CK/PxFSH9s4N+IsDr4XGf7/UOdqHsDycnGQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598349339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=5bdT5tTM+hEnX3GHDG3SgFYwTwZMX1yMI7aVVjqitqY=;
-        b=p0+MO18mFNv6nUcGw/fOpqWL3EmCv1vx5i0JWx2mxD5NVODpZfbqICiy0wx/6EIRg2VsKJ
-        sQOT40Z3aCsfvoCQ==
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <20200825093830.r2zlpowtmhgwm6rz@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200824225615.jtikfwyrxa7vxiq2@skbuf> <878se3133y.fsf@kurt> <20200825093830.r2zlpowtmhgwm6rz@skbuf>
-Date:   Tue, 25 Aug 2020 11:55:37 +0200
-Message-ID: <871rjv123q.fsf@kurt>
+        Tue, 25 Aug 2020 05:57:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729627AbgHYJ5t (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:57:49 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94F492067C;
+        Tue, 25 Aug 2020 09:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598349468;
+        bh=DDyn7T6pv3pFn55/jArUvWOixIWyxxy7KV85+SC9Ols=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BOVNpwPtqLO7lhzYv4NKFyetmPAwodqOF0c3l1RhvCGTvlxjz7LPsznPv8iQ6kTnM
+         nexi5J1zh7App8pz5p+WXV5rLhFRAFPGte+DcJIlFhNFZTHSUIdD7zotCF4XDy7NtE
+         tCc7v8SALe9PEtWgUEKgchy0SbN1/72KXdFM7qkY=
+Date:   Tue, 25 Aug 2020 10:57:12 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     lgirdwood@gmail.com, cy_huang <u0084500@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        cy_huang@richtek.com, gene_chen@richtek.com
+Subject: Re: [PATCH 1/3] regulator: rt4801: Add support for RT4801 Display
+ Bias regulator driver
+Message-ID: <20200825095712.GC5379@sirena.org.uk>
+References: <1597461262-25878-1-git-send-email-u0084500@gmail.com>
+ <159776976828.56451.5593321071237177212.b4-ty@kernel.org>
+ <20200824212341.GA3321545@bogus>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
+Content-Disposition: inline
+In-Reply-To: <20200824212341.GA3321545@bogus>
+X-Cookie: Don't get to bragging.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+
+--7qSK/uQB79J36Y4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue Aug 25 2020, Vladimir Oltean wrote:
-> On Tue, Aug 25, 2020 at 11:33:53AM +0200, Kurt Kanzenbach wrote:
->> On Tue Aug 25 2020, Vladimir Oltean wrote:
->> > On Thu, Aug 20, 2020 at 10:11:15AM +0200, Kurt Kanzenbach wrote:
->> >
->> > Explain again how this works, please? The hrtimer measures the CLOCK_T=
-AI
->> > of the CPU, but you are offloading the CLOCK_TAI domain of the NIC? So
->> > you are assuming that the CPU and the NIC PHC are synchronized? What if
->> > they aren't?
->>=20
->> Yes, I assume that's synchronized with e.g. phc2sys.
->>=20
->
-> My intuition tells me that this isn't the user's expectation, and that
-> it should do the right thing even if it's not synchronized to the system
-> clock.
+On Mon, Aug 24, 2020 at 03:23:41PM -0600, Rob Herring wrote:
+> On Tue, Aug 18, 2020 at 05:56:08PM +0100, Mark Brown wrote:
 
-I get your point. But how to do it? We would need a timer based on the
-PTP clock in the switch.
+> > [1/3] regulator: rt4801: Add support for RT4801 Display Bias regulator =
+driver
+> >       commit: 5bbbfc7f7f0a44b7a85ab3872dd2ccce7019f7b1
+> > [2/3] regulator: rt4801: Add DT binding documentation
+> >       commit: fd6b928db8a05fcd8629320c52eae214a8615aae
+> > [3/3] regulator: rt4801: Fix the dt-binding document for dtc check.
+> >       commit: 6f4ac2844b61d43c0c48b7c67a974d9f6e4ddd9c
 
->
->> >
->> > And what if the base-time is in the past, do you deal with that (how
->> > does the hardware deal with a base-time in the past)?
->> > A base-time in the past (example: 0) should work: you should advance t=
-he
->> > base-time into the nearest future multiple of the cycle-time, to at
->> > least preserve phase correctness of the schedule.
->>=20
->> If the hrtimer is programmed with a value in the past, it fires
->> instantly.
->
-> Yes, it does.
->
->> The callback is executed and the start time is programmed.
->>=20
->
-> With a valid value from the hardware's perspective?
+> Really? Despite my comments patch 3 should both be squashed and is still=
+=20
+> just wrong.
 
-Yes. That's no problem.
+Sorry, IIRC this raced with the patch being applied (the mails are
+generated after things are pushed, and the scripts take a while to run)
+and TBH I missed the bit with additionalProperties: false, it looked
+like a mail with no context deleted.
 
-Thanks,
-Kurt
-
---=-=-=
+--7qSK/uQB79J36Y4o
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E4BkACgkQeSpbgcuY
-8KYTLA//czMWI4/CjiYlrGZSJO5Yo+04S6/y8xANPp50A8kGblNt3YuN5etwykHx
-7xPPR6FdlU/U1FNTbi6FMgi5ryJjE6aktcpnCjkHPL63epMnx2pbt4JMRMNInaYv
-u91chzZcsyMJRb3FTu5SMZVC06aPh7zPgxSIey9+D/Yn7xjtvXKu511mPooPCPC3
-vR5+++wa3sOassjabinJRr2Vjsg+6nzGULd0GCQ3L8gnURN3bB/a4McV0xBWpUpi
-IM256G0NWkRs0NXNX8R9B/Tn7ykeacgErRuLtuL/qXOktI+awR9PStS0O5JI8xnC
-0FodtVyKhPhdTxTiaeNf8tHlyWsxUy812G5uJXWxCSdZrSoRjzCq5oVOmjvxaP5Z
-s/ws+WWOufaDb4eN8QbqHvmTfqMDi7uhUFpEHnuHoBTOaXY0hzLHNKx1n6S/fHMK
-x7kWkgoJ4Xu0xvuOGgVRuZcq5VpG5XaF7Hxzyn4tgT1XXXAyyIbIzvaLZSGOslBc
-yOUmoYPeru2J91Ssh5GLy8nuPadYaQjsynOy+/i7RDDS+yhOuSgt8jBBcHMX3RBX
-YrCGJZY5blnm5YT4Kk+f68p5njinzU9wbCoOuFQe+KX8rDhQJ05GQeVHGSAZOlpV
-nQ+sH4raun37QhMM+s5pe1W8glnBdOFV5M62VMFuHdLRart4DAA=
-=G86F
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E4HcACgkQJNaLcl1U
+h9A6YQf+PSS4fWNofcu6+DESWsRtOwgQym/Bme4A8feEn+CCJh0U1TV7NUFrpv/n
+QLYFbFwjQvDIrquZKze/+7NFTqi1zu0lun5Sw0gUqrffV9Z1LdXGmHVY5mDOo/MG
+Sm/UHUDlt17A66jQBhbrRm4XK3SBTvoG5gyLGnFIougYUq1ucKypurqETDzat8ho
+IXzMyvFy9AwQaHIQg35V2+eqF6QbBBA2AGZ3ZgZMuqPwkaulcBH8mLEuE+iRexFR
+X+y++NrAa5IinuePbkUNaX5SNBXJXYWYvHU4mrPvR4Q6T9SMhrnrofyMJQO11ZRs
+9bduCU7+3aDvdILkEYFQRBiFXvPFcQ==
+=bgmB
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--7qSK/uQB79J36Y4o--
