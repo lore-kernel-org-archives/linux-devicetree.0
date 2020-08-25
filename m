@@ -2,208 +2,105 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC304C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A760C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B71620715
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 382DD2068E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598352951;
+	bh=sG5sWRvSzPP9GgzIjue9lvipcy0Ffb/6EEMGfIMIqX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EU1l0TG9L1MnE48zNLeoj4JC40hsjsF2oc2eTrZXup3/VQJO9MGKvCaCobe1qfJBB
+	 Ac4jS0C/dHI0NdDAzk2r/BG9rddR+d90kzwHaY4GcV+xBrmT/OmwyuZ7o4lkrCzyeI
+	 mM7uxm76RsNQ7hyM8my1799DU5YNCMOiJxEJGQ7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgHYKtH convert rfc822-to-8bit (ORCPT
+        id S1729873AbgHYKzu (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbgHYKtG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 06:49:06 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EBDC061574
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 03:49:06 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAWVO-0000U2-F8; Tue, 25 Aug 2020 12:48:42 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAWVN-0006J5-K9; Tue, 25 Aug 2020 12:48:41 +0200
-Message-ID: <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
-Subject: Re: [PATCH v2 11/17] clk: imx: Add blk_ctrl combo driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Abel Vesa <abel.vesa@nxp.com>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>, devicetree@vger.kernel.org
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org
-Date:   Tue, 25 Aug 2020 12:48:41 +0200
-In-Reply-To: <1597406966-13740-12-git-send-email-abel.vesa@nxp.com>
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
-         <1597406966-13740-12-git-send-email-abel.vesa@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 25 Aug 2020 06:55:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728117AbgHYKzu (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 06:55:50 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F25FC2068E;
+        Tue, 25 Aug 2020 10:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598352949;
+        bh=sG5sWRvSzPP9GgzIjue9lvipcy0Ffb/6EEMGfIMIqX4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=H+2d6Bz0nXKJEoMURRW/D9yY4cAw4E5liHVuWIok6ae6LlFvqCwamFk+XOnGZc1Eb
+         fQyA+rdOd7ivu99Y98A6pxrI+7+RO8V8xQZ4H6DclFp2cTZJzv0E2EmwvUyQXWQaAd
+         WAl0JrY4s8JyiL4+qhz27TsGJNjmBEXxAMEvaOyw=
+Date:   Tue, 25 Aug 2020 11:55:13 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] regulator: Add regulator driver for ATC260x PMICs
+Message-ID: <20200825105513.GE5379@sirena.org.uk>
+References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
+ <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
+ <20200824110045.GA4676@sirena.org.uk>
+ <20200824232310.GA2301286@BV030612LT>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
+Content-Disposition: inline
+In-Reply-To: <20200824232310.GA2301286@BV030612LT>
+X-Cookie: Don't get to bragging.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, 2020-08-14 at 15:09 +0300, Abel Vesa wrote:
-> On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
-> RM and usually is comprised of some GPRs that are considered too
-> generic to be part of any dedicated IP from that specific subsystem.
-> 
-> In general, some of the GPRs have some clock bits, some have reset bits,
-> so in order to be able to use the imx clock API, this needs to be
-> in a clock driver. From there it can use the reset controller API and
-> leave the rest to the syscon.
-> 
-> This driver is intended to work with the following BLK_CTRL IPs found in
-> i.MX8MP (but it might be reused by the future i.MX platforms that
-> have this kind of IP in their design):
->  - Audio
->  - Media
->  - HDMI
-> 
-> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> ---
->  drivers/clk/imx/Makefile       |   2 +-
->  drivers/clk/imx/clk-blk-ctrl.c | 327 +++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/imx/clk-blk-ctrl.h |  81 ++++++++++
->  3 files changed, 409 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/imx/clk-blk-ctrl.c
->  create mode 100644 drivers/clk/imx/clk-blk-ctrl.h
-> 
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index 928f874c..7afe1df 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -27,7 +27,7 @@ obj-$(CONFIG_MXC_CLK_SCU) += \
->  
->  obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
->  obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
-> -obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
-> +obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o clk-blk-ctrl.o
->  obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
->  obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
->  
-> diff --git a/drivers/clk/imx/clk-blk-ctrl.c b/drivers/clk/imx/clk-blk-ctrl.c
-> new file mode 100644
-> index 00000000..1672646
-> --- /dev/null
-> +++ b/drivers/clk/imx/clk-blk-ctrl.c
-> @@ -0,0 +1,327 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2020 NXP.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/slab.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
-> +
-> +#include "clk.h"
-> +#include "clk-blk-ctrl.h"
-> +
-> +struct reset_hw {
-> +	u32 offset;
-> +	u32 shift;
-> +	u32 mask;
-> +	bool asserted;
-> +};
-> +
-> +struct pm_safekeep_info {
-> +	uint32_t *regs_values;
-> +	uint32_t *regs_offsets;
-> +	uint32_t regs_num;
-> +};
-> +
-> +struct imx_blk_ctrl_drvdata {
-> +	void __iomem *base;
-> +	struct reset_controller_dev rcdev;
-> +	struct reset_hw *rst_hws;
-> +	struct pm_safekeep_info pm_info;
-> +
-> +	spinlock_t lock;
-> +};
-> +
-> +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
-> +				  unsigned long id, bool assert)
-> +{
-> +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
-> +			struct imx_blk_ctrl_drvdata, rcdev);
-> +	unsigned int offset = drvdata->rst_hws[id].offset;
-> +	unsigned int shift = drvdata->rst_hws[id].shift;
-> +	unsigned int mask = drvdata->rst_hws[id].mask;
-> +	void __iomem *reg_addr = drvdata->base + offset;
-> +	unsigned long flags;
-> +	unsigned int asserted_before = 0, asserted_after = 0;
-> +	u32 reg;
-> +	int i;
-> +
-> +	spin_lock_irqsave(&drvdata->lock, flags);
-> +
-> +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
-> +		if (drvdata->rst_hws[i].asserted)
-> +			asserted_before++;
-> +
-> +	if (asserted_before == 0 && assert)
-> +		pm_runtime_get(rcdev->dev);
 
-Shouldn't that be pm_runtime_get_sync() ?
+--J4XPiPrVK1ev6Sgr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I would do that unconditionally before locking drvdata->lock and then
-drop unnecessary refcounts afterwards.
+On Tue, Aug 25, 2020 at 02:23:10AM +0300, Cristian Ciocaltea wrote:
+> On Mon, Aug 24, 2020 at 12:00:45PM +0100, Mark Brown wrote:
 
-> +
-> +	if (assert) {
-> +		reg = readl(reg_addr);
-> +		writel(reg & ~(mask << shift), reg_addr);
-> +		drvdata->rst_hws[id].asserted = true;
-> +	} else {
-> +		reg = readl(reg_addr);
-> +		writel(reg | (mask << shift), reg_addr);
-> +		drvdata->rst_hws[id].asserted = false;
-> +	}
-> +
-> +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
-> +		if (drvdata->rst_hws[i].asserted)
-> +			asserted_after++;
-> +
-> +	if (asserted_before == 1 && asserted_after == 0)
-> +		pm_runtime_put(rcdev->dev);
-> +
-> +	spin_unlock_irqrestore(&drvdata->lock, flags);
-> +
-> +	return 0;
-> +}
+> > Please write normal conditional statements to make things easier to
+> > read.  It also looks like this would be more robustly written by just
+> > having separate ops for DCDCs and LDOs, this could easily break if
+> > another device is supported in the driver.
 
-regards
-Philipp
+> Sure, I can provide separate ops, but in this case we duplicate almost
+> all of them. If this is not acceptable, then I will just rewrite the
+> conditional statement.
+
+That's fine, it's just a fairly small struct that's being duplicated not
+code.
+
+--J4XPiPrVK1ev6Sgr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E7hEACgkQJNaLcl1U
+h9Df2wgAhaKs443tKsiDZZ8WadCi+JBgtmmpe6/05aaejbq3Nn4RXhrEDvX/T65I
+SNnwAjQuMoWveIJyW/e/Cw5/M9E+0pE55HJ6XG8yXvSs6nnd8XNgNwqQNIz7EC5s
+qRMoneTdQLpF1ehrgf8zzuvEtwTK9nQ0EfGam7Hy0kLjJgTU+cRziiXnj8sWN8Hm
+t6DbJYJwoS5fP1dBZ6OHeaPVW4ke8ioc5KFXkJasHPdyuMuwzsOHQ79zA4DqT9tz
+tBlPp+S74k8jiPPO88gr88Zyfy2THWdJgzzaJtgM4Qxne8XKlFrADDzLOohfsi7i
+7MQ6Z6DdX9PLBC3CA7miaoTjus/FFQ==
+=ZIz+
+-----END PGP SIGNATURE-----
+
+--J4XPiPrVK1ev6Sgr--
