@@ -2,89 +2,153 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 965C5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C535FC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3C72076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="dUzGSIj7"
+	by mail.kernel.org (Postfix) with ESMTP id 8F0412076C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgHYQVh (ORCPT
+        id S1727106AbgHYQXz (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:21:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgHYQVL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 12:21:11 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A5BC061756
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 09:21:10 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id k15so1268375pfc.12
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 09:21:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L2oKOEupV27qICvhHWyDiF7Etr6coIqCr/1x6dmqhP8=;
-        b=dUzGSIj7hwNgocfGDBX79TyuBWGD/fOm2Tg3Linokc59X0xu1MFMlmTbNgfGTy728H
-         BdFE9PK3BVmeSzVuTlgnN53gSvnKvh9fS3mj7jGA2iZOsU1hhN4pIXHGs/JHtEk9cTmE
-         FlEgt5s48sUOt/2X/olt0GRPSUg6ygVgvAiTmbiOEBpSP/a8sEbBASJ7otw07bfGV7gS
-         MVA4xqoviXvU7lGMR6R587gy4jgLUBV9M8QV3Lj14ZGlZURKsqJtP0qdU88/Q4teVjUi
-         Ie6nU3Zeq3C9ErwtB8wgQ5MxzDJQrcXiDyYuRHX76mNcCg+b2+icUn3keM2LOhjNxtQx
-         yLSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=L2oKOEupV27qICvhHWyDiF7Etr6coIqCr/1x6dmqhP8=;
-        b=eWtJJyWMY2Bqzgjr+NwGIo4ni+hXiJ/u59hwVIEA5pg9tW+ykdrgp/a87SLvDra7Ux
-         8aVsq72euTB9lo1J8NgoEzREzW5rfpUrfxpb2gd9V/zjQPLTnGiS5xI/B92GbM76phxb
-         yO4D4+zaRoQM1+ma5YVcsp1hgfOeBDOIzoqVsIWtikkn7Z4Z0VRsQahcBjxKL4In/jtl
-         09S2Qi14E6rA9x57uAHoZcllZsxCFxgC8Jp7TszP3C7eCO3JIPVx8cQP6elAHQZQhhPC
-         i7GaVlZPzeIDsVOPSoh/C6DvCdWJO/tQSO+bGKrLWLNNep+4hpx4AmqaFhtDhZZsFJ1S
-         hqvg==
-X-Gm-Message-State: AOAM533IGX+yQ56hl7w7BkOHtdn6KHUlEufrdHfMDmbL4K5z8jGm/7gx
-        0okylRRRdu0F78ZPMNR/bU7g7g==
-X-Google-Smtp-Source: ABdhPJwebpb1N/6mwKYVqcIkEX1j6oogLtgxeUyZeXL3dpd734Qx9PxxGJc0uVXs+W09T/PfruA5eg==
-X-Received: by 2002:a17:902:16b:: with SMTP id 98mr8256384plb.23.1598372469704;
-        Tue, 25 Aug 2020 09:21:09 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id d128sm15020864pfa.24.2020.08.25.09.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 09:21:09 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:21:09 -0700 (PDT)
-X-Google-Original-Date: Tue, 25 Aug 2020 09:21:08 PDT (-0700)
-Subject:     Re: [PATCH 0/3] SiFive DDR controller and EDAC support
-In-Reply-To: <20200825161958.GE12107@zn.tnic>
-CC:     yash.shah@sifive.com, robh+dt@kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>, mchehab@kernel.org,
-        tony.luck@intel.com, aou@eecs.berkeley.edu, james.morse@arm.com,
-        rrichter@marvell.com, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-edac@vger.kernel.org, sachin.ghadi@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     bp@alien8.de
-Message-ID: <mhng-a19106aa-1a18-4fe0-b8c1-9c765f03f73d@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Aug 2020 12:23:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60526 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726356AbgHYQXj (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 12:23:39 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id A99E72929C6
+Received: by earth.universe (Postfix, from userid 1000)
+        id B04B43C0C82; Tue, 25 Aug 2020 18:23:35 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 18:23:35 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Elliot Berman <eberman@codeaurora.org>
+Cc:     Andy Yan <andy.yan@rock-chips.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>
+Subject: Re: [RESEND PATCH v1 2/4] dt-bindings: power: reset: Add alternate
+ reboot mode format
+Message-ID: <20200825162335.ctyc3trvraiwihhg@earth.universe>
+References: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
+ <1597776856-12014-3-git-send-email-eberman@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hylhkgvtyey2ignd"
+Content-Disposition: inline
+In-Reply-To: <1597776856-12014-3-git-send-email-eberman@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Aug 2020 09:19:58 PDT (-0700), bp@alien8.de wrote:
-> On Tue, Aug 25, 2020 at 09:02:54AM -0700, Palmer Dabbelt wrote:
->> Thanks.  These look good to me and I'm happy to take them through the RISC-V
->> tree, but I'm going to wait for a bit to see if there are any comments from the
->> maintainers of the various subsystems before doing so.
->
-> I'll have a look at the EDAC bits these days and give you an ACK if
-> they're ok.
 
-Thanks!
+--hylhkgvtyey2ignd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Aug 18, 2020 at 11:54:14AM -0700, Elliot Berman wrote:
+> Current reboot-mode device tree schema does not support reboot commands
+> with spaces in them [1]. Add an optional new node "reboot-mode-names"
+> and "reboot-mode-magic" which add an array of strings and u32s,
+> respectively which would permit any string in this framework.
+>=20
+> [1]:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
+rivers/md/dm-verity-target.c?h=3Dv5.5#n255
+>=20
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+> ---
+
+I'm waiting for an Ack from Rob for this one.
+
+-- Sebastian
+
+>  .../devicetree/bindings/power/reset/reboot-mode.yaml    | 17 +++++++++++=
+++++++
+>  1 file changed, 17 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.ya=
+ml b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+> index a6c9102..4ea6b33 100644
+> --- a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+> @@ -19,6 +19,9 @@ description: |
+>    the bootloader what to do when the system reboots, and should be named
+>    as mode-xxx =3D <magic> (xxx is mode name, magic should be a non-zero =
+value).
+> =20
+> +  reboot-mode-magic and reboot-mode-names may be used in addition/instea=
+d of
+> +  mode-xxx style.
+> +
+>    For example, modes common Android platform are:
+>      - normal: Normal reboot mode, system reboot with command "reboot".
+>      - recovery: Android Recovery mode, it is a mode to format the device=
+ or update a new image.
+> @@ -32,6 +35,14 @@ properties:
+>        description: |
+>          Default value to set on a reboot if no command was provided.
+> =20
+> +  reboot-mode-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description: List of reboot commands, paired with reboot-mode-magic =
+by index
+> +
+> +  reboot-mode-magic:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    description: List of reboot magic, paired with reboot-mode-names by =
+index
+> +
+>  patternProperties:
+>    "^mode-.*$":
+>      $ref: /schemas/types.yaml#/definitions/uint32
+> @@ -44,4 +55,10 @@ examples:
+>        mode-bootloader =3D <2>;
+>        mode-loader =3D <3>;
+>      };
+> +
+> +  - |
+> +    reboot-mode {
+> +      reboot-mode-names =3D "normal", "bootloader", "dm-verity device co=
+rrupted";
+> +      reboot-mode-magic =3D <0x0>, <0x1>, <0xf>;
+> +    };
+>  ...
+> --=20
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>=20
+
+--hylhkgvtyey2ignd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9FOwcACgkQ2O7X88g7
++poO+g//br2c8K72ObA/SO3efTGrTSV5mBor3AwZW2VvoeT0tJN8RBQhqME+5wzS
+zZkGOC6fd23loTaGdh85ZWQz/2K2TUUjWd2+PdExAOChjzUa1CeF1y9wSjQJ5cli
+VOnUE68D3Mn7DaFWz64IAcJr/YKGf4+SXuJ1LhtYrtEPtugdq6kFkNbM3eDUlL2b
+c0HF+dD4mi+r4p24ZceTHsN5Y1lA+D9IH883e0wOW5wwNXB46aNWP6QteNWWsgeS
+3y1n8WPRMJ1Ru92OJ/4eIpEyJC5TfZLwnXEveeLLSgDb4MqoDAk1GoCM8JvfLyAa
+hTK18eJzphJ2Fn0IjtpqytzKzuq82gq3d9NtqVhxeXn6JvOEY36nz8Op4GRjjtQi
+84B7wU6nhGYpGbHIpWRKU3cICYI8HrV+idHLJrZY+NXMjq2q71NHHJfQoZ4K1at1
+R/qU66qGnXdKFLaE2NM15RljhdpJUqA/GhsqcAPm5vPjU9yyp120QKr4cnIckhhJ
+iwPJA8HuWunLlSmTuem9P1ICpli+gqzsBVAfQeCrOnGxSHfQC5wFQN/vbbeF/tWa
+QwTXqro2kM8aDmBtwCag6Coyy7Vt75SeuQL9zcIO7ZBHTTK/OazqSNpxC7FJCW5U
+hj2RY9NdlZlPwUx46+GBnP3mNIEJhaTFlpsCdPwV5Q7QxL/fizo=
+=cqmB
+-----END PGP SIGNATURE-----
+
+--hylhkgvtyey2ignd--
