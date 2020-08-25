@@ -2,87 +2,130 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A22C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C6EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCCB20738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:31:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598394713;
-	bh=q1KnKYd+h0iIlUTZwNPw/TcjJfX/dqPPg4xEMG/p/MU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wtHEVbhJjduH2x+hP/iW87z5zO42+ODFSM64mXB0JdaE43PbLzuCZRbZARWeYpbD/
-	 WcZknQutGozgt7swfRSE63ty2AGcQU1uhiFYY9birtGOOMUmvgolON9cGEPfittK8t
-	 Q2kTSxfHIrC5V6zq/Qu/MgaITpL6k/uUUrMXVx9g=
+	by mail.kernel.org (Postfix) with ESMTP id 0BEAE206EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:44:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bdetoobb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbgHYWbw (ORCPT
+        id S1726580AbgHYWom (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:31:52 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:40114 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbgHYWbv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:31:51 -0400
-Received: by mail-il1-f195.google.com with SMTP id p18so137383ilm.7;
-        Tue, 25 Aug 2020 15:31:51 -0700 (PDT)
+        Tue, 25 Aug 2020 18:44:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbgHYWol (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:44:41 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDB3C061755
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 15:44:41 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id b16so270628vsl.6
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 15:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wE4qfQuHmyZr4CJ8Qd1cx0KvW/fobP/YPU8fmNWlhK4=;
+        b=bdetoobbnOd6TkMarYz51VCPb8xWTIqO8d53YkrowES32p+QtbiwhVD0DmdTd9ixp8
+         QHEbnFC0mXxPw2rHU/EAFxpgyb9gU6tspXMLlKO4Y3gmr6Iq3yRUdpFCzlOMaj6QoOtz
+         XBZX8G8lMVfJ9Sv3u9wNp+vauZothyhcduFHE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z76vAXbQc6SQMGZuDrl6BPLV3aZwglI6Z7tRuBobsXg=;
-        b=KPV9lJKfeXoW/gbhezLAKv3/pePNPuZ7sjLn4wXoahsqb5KXRIOmG0OW/D9L86Zv91
-         V0IY65eYJSGDRiFXERpDVrDeMMDdz1n0/DA80CtAFKlDuyOaEYfBGkn4oHZpBy/Mjp5U
-         3dNTxC83uz+9it7PBBjEcaIkrqlqN++Lg3FkhxRdYnVuMmbJOkAszBpcRz+js6VgZctx
-         jN9WMyCWDNE1Ln/oU2UaQ2O5X1GLlHFdTxpGiNkleP94Yd9k0jN9S1vNYoR4TPi2Wyss
-         5yDvNw9CIY7YKmgyritT+B+Tk07ibGTVcKzaKoyYkVy5PW1p9RPS3V4ghiuW86XnipgQ
-         CUhg==
-X-Gm-Message-State: AOAM532rof61gaywS/kQ6n0kMEFyMH9D7KFMwvMZ0Skc7l1qQwUg36qJ
-        qwxnHJ0h8peoP3xe/7QvedjRvOACrsehBME=
-X-Google-Smtp-Source: ABdhPJzBT0frZFOJQ+HzZsP06jO7+Y9mywlOa6x5j9kOJq6tGbmP+8DCdWWEGaxDuuCzqd2erNowsg==
-X-Received: by 2002:a05:6e02:134e:: with SMTP id k14mr11015304ilr.271.1598394710892;
-        Tue, 25 Aug 2020 15:31:50 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id f9sm233581ilk.32.2020.08.25.15.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 15:31:50 -0700 (PDT)
-Received: (nullmailer pid 1465667 invoked by uid 1000);
-        Tue, 25 Aug 2020 22:31:48 -0000
-Date:   Tue, 25 Aug 2020 16:31:48 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Atte Tommiska <atte.tommiska@xiphera.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: rng: add bindings for Xiphera
- XIP8001B hwnrg
-Message-ID: <20200825223148.GA1464468@bogus>
-References: <cover.1597914503.git.atte.tommiska@xiphera.com>
- <d385a6e0f8edaaf7c8a26eb45fa0a4608d029b13.1597914503.git.atte.tommiska@xiphera.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wE4qfQuHmyZr4CJ8Qd1cx0KvW/fobP/YPU8fmNWlhK4=;
+        b=meh1gCISEouhE1pnUb4trbHqfKecZ5aiTJyTqVRd9UkvDpeugM3p3nQYwWHlJuz2T/
+         qTT/EUGlzmI1UmsV9faLy2XVQ6wRcSomeaBX4DMRs1xWahdDCJo+TzH/Q/eLqzScefJe
+         qlMNYHUkVyCQKoGXIH3nw5Wn9n2+B8Jij6F/il4CYqBK/dsWQMskftHM6JYIKBGlnY9G
+         EoXtTCImswm0anUFdsOD981Zun1RL5TmKHHvshqibkHngfecRWMOqaH/POeD9X5354B0
+         bEyrqXe1r8rTyArNUO+j2v4/rZliN1t5TP1IFG0AY819okHyAi0NbjGoQ2Fc2TfCvNrj
+         TItg==
+X-Gm-Message-State: AOAM532hFZFIeAqrnx88CDLEH4HYj6BhPhtPlrH5DYCdsyiTcchwn7Wj
+        UFLmASvWWTAI59naPcQklm2oXy+CpQcejg==
+X-Google-Smtp-Source: ABdhPJxFYJBBgaJkxpOv2I0qxncQ3XB8bVhmvRmBzbcnrkLkDIRB9xF+BHtH57MYmFBXNlNdA0cPKg==
+X-Received: by 2002:a67:803:: with SMTP id 3mr5622307vsi.79.1598395480363;
+        Tue, 25 Aug 2020 15:44:40 -0700 (PDT)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id w201sm59146vsw.29.2020.08.25.15.44.39
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 15:44:39 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id v24so138131uaj.7
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 15:44:39 -0700 (PDT)
+X-Received: by 2002:ab0:37d3:: with SMTP id e19mr6815164uav.64.1598395478681;
+ Tue, 25 Aug 2020 15:44:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d385a6e0f8edaaf7c8a26eb45fa0a4608d029b13.1597914503.git.atte.tommiska@xiphera.com>
+References: <20200825222748.1878927-1-robdclark@gmail.com>
+In-Reply-To: <20200825222748.1878927-1-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 25 Aug 2020 15:44:27 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WVP8-vQc9T8WAa7ExC4o081oYWhEoPTfKUQNhFXHE8wg@mail.gmail.com>
+Message-ID: <CAD=FV=WVP8-vQc9T8WAa7ExC4o081oYWhEoPTfKUQNhFXHE8wg@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sc7180-trogdor: add initial trogdor
+ and lazor dt
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Atul Dhudase <adhudase@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Ajit Pandey <ajitp@codeaurora.org>,
+        Alexandru Stan <amstan@chromium.org>,
+        Sujit Kautkar <sujitka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 01:51:21PM +0300, Atte Tommiska wrote:
-> Document the device tree bindings of Xiphera's XIP8001B-trng IP.
+Hi,
 
-typo in the subject. Otherwise,
+On Tue, Aug 25, 2020 at 3:27 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> +       max98357a: audio-codec-0 {
+> +               compatible = "maxim,max98357a";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&amp_en>;
+> +               sdmode-gpios = <&tlmm 23 GPIO_ACTIVE_HIGH>;
+> +               #sound-dai-cells = <0>;
+> +       };
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Even though Device Tree spec says "audio-codec", I agree that
+"audio-codec-0" should be fine.  Since this is at the top level that
+could be important to disambiguate if there was more than one audio
+codec.
 
-> 
-> Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
-> ---
->  .../bindings/rng/xiphera,xip8001b-trng.yaml   | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml
+
+> +&wifi {
+> +       status = "okay";
+> +       vdd-0.8-cx-mx-supply = <&vdd_cx_wlan>;
+> +       vdd-1.8-xo-supply = <&pp1800_l1c>;
+> +       vdd-1.3-rfa-supply = <&pp1300_l2c>;
+
+Sorry, I should have been clearer.  Here you should add:
+
+vdd-3.3-ch0-supply = <&pp3300_l10c>;
+vdd-3.3-ch1-supply = <&pp3300_l11c>;
+
+...the hack that was downstream was to stick the "ch1" regulator in
+the "ch0" slot since Bluetooth was already holding the "ch0" regulator
+open and the "ch1" wasn't part of the bindings yet.
+
+Once the supplies are added for WiFi feel free to add my Reviewed-by tag.
+
+-Doug
