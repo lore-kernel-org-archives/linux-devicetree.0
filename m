@@ -7,115 +7,116 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E63BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA76C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D88C2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D4D2071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="I7qgSfhP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gxCb/zTL"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="FY+BZBxM";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D1ieySps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHYNf7 (ORCPT
+        id S1726598AbgHYNgI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:35:59 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:55561 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725468AbgHYNf6 (ORCPT
+        Tue, 25 Aug 2020 09:36:08 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:49681 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726580AbgHYNgD (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:35:58 -0400
+        Tue, 25 Aug 2020 09:36:03 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 12DFCC18;
-        Tue, 25 Aug 2020 09:35:55 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:55 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id DF382C53;
+        Tue, 25 Aug 2020 09:36:01 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=oG9g42t4c+YiGB3NS+r0GEHvP3C
-        e/x2yFnpF8fYIC84=; b=I7qgSfhP9YSyUkRWE4lzt6RS97OSMjFIuRNU0fd9OeZ
-        iZ/o0UHhTwaOHyLh3Gh+/HEXe3YPu+JZeBuu9/vOHnp7uU6QyIJx5JGX8mkeAI+s
-        wdIC8htWA/QOmHNa8DfTAqjoebZ1WPcubL/vTsa3D+3Lo9Lg9KZGbhqUx0jL43rL
-        njtr0vWmhy8TB6M6GFKzOw6HWYgZZiqS3ffut2Ff2ACGDIKJGpRCGGeVn5tLGMHf
-        0dQ+GEbZGndRku6SZdFjxnGhk7EW4Lyfy+MpcPN+ywnJDdAwmbkgm1ruPSk9ZgsD
-        RL5Zxc1RO9xH/c/tG4xflxvOV9axKo42S00IJgwvRxQ==
+        :content-type:in-reply-to; s=fm3; bh=ypPIgBZlj0QkzTKDgIZnXB33E2I
+        dNRV4QSnBi+COnQA=; b=FY+BZBxM/ANQECCXkC7udwol6SQYhnzjgPVgEJvWmYk
+        WF/sQHvlu4zQbTE5F3hgXdzPLrmesCWy63bAkUOsLQCxP8TIqMsoIclMPwOaJdX5
+        3rc0CUf1F+2NlIm9vkLoDPKqq2RZ/Jx7DLEIwzUxGffnGEqU4dtcXGrONC1J8A+z
+        U6MWaRxN7AOv5FBncsi3kriGukuH04NQaVlAUV80Gi8i+t86O0APITKWvyb32cg6
+        tv4VSKBd+jG6DIzs7UKCTLPQQmiru8aNqd8g0EXoYwRPcsRNL3mHm4Ul1RxiH24s
+        nZ1H/pQ+0SCkcJD7HQr8I1jp/a0D5rO8qrIi3OEOa6w==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=oG9g42
-        t4c+YiGB3NS+r0GEHvP3Ce/x2yFnpF8fYIC84=; b=gxCb/zTLx0aAeFh+cg/P0K
-        9s5LNcftkpsk0RrzAKqHu8DylQTnpXRk6ZSTEos7GCcigJQ6ZYYxQ72IVN5z2TiR
-        RF6dJA3dDwAoY7agFlCfOshjun/oEaGCrALs12p4/3OgWNI4ARvnnHGOoNpJGq+w
-        C2Vkj5ZvAkqYTWRE0Z/eeaVNvVeFkbLVjM4AWhZ2cwJGAe0wbKgFkJkyILufGCks
-        NkHNQxjOrNrDSjQcT+hXDrWVXXYQ+C2IKCzxMzOM4f7yzOIMoZ79C4UMVImiZtk+
-        xj/0IZfFWVP9MHVPtswhkiRyWz6HJy5P0dnwhFJXeudod12izvCXYphFK/AHILCg
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ypPIgB
+        Zlj0QkzTKDgIZnXB33E2IdNRV4QSnBi+COnQA=; b=D1ieySpsg2WkooCMaqirJB
+        c+0bD5GKSFzdWU+Wk7VM3KUI7RgTDwchMr1EpSy/1u7BwCbzj036PFoEE8uHiGxG
+        ujR+ascEB1fQUgozHMwI+Ad0LTaHjCKODLovvP/uJnMTq22js1y5WkR6UcMyEAPa
+        /VFzY3NTK1QxyJy54PvF4iiilTsyMQV/hHWU//iL7Ziz/8s6w4bexbaUE37pI4RR
+        rH4k2Kuggwz7u9uZU4DG7avXS8YytADwI+20PTmnkQ9I70xSn9DYGWbn5cwo83TN
+        plbdEc39ZkSqLkjt5hCO2bWyj/5B7WRWp27Oohke8iMNLhXmAsXfhxa0gSDJ9ZOg
         ==
-X-ME-Sender: <xms:uhNFX0F6ihM3z2gecCOi6y6IqmRxvpdT2fbma08PAdawnhTd38MccQ>
+X-ME-Sender: <xms:wRNFXzUBXODmYvlbqEuxJYgww5qquOYjGRzNXMXq79rrmIXiRYWweA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepjeenuc
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepleenuc
     frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:uhNFX9WPrhUhInSQ8edGm1LlH9_ScmSNvyXl4qPI_Kox7fLNkGgg2A>
-    <xmx:uhNFX-LzSFaKFkmoUsxx9hGEbha6ZKBHm_LGpvzFfGtm2_SfwTvhzA>
-    <xmx:uhNFX2FPaF2axPZk9cTKeEOikP-IrN8_dbzjwPWrYNXAp4HUyrKjJA>
-    <xmx:uhNFX4y9kGsjaVxLBRhlI4G-9s8VyL0cfhRUw5JTdfJ1WJe3KLKQiw>
+X-ME-Proxy: <xmx:wRNFX7k9FIvyXPQKRPVmtlwBrwHIR9VYWwWmV-n7iutQXeNe5sbcnA>
+    <xmx:wRNFX_bV_rKmMyHQ0POSPAoWq1oThWNTATiqfiJxln71LxD5rlNrYw>
+    <xmx:wRNFX-WJZwJKmD9xo7gu5C5PNKqnNBw6St7s_6820ZYsXlABhdzI7g>
+    <xmx:wRNFX_4nh9us8QGBjybN6UYXlVzDuUMIGI1SJOVpWT69NHtSbfPHurMqDUU>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0F2AC3280059;
-        Tue, 25 Aug 2020 09:35:53 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:38:02 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 238EA30600B1;
+        Tue, 25 Aug 2020 09:36:01 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 10:44:51 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, icenowy@aosc.io,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] ARM: dts: sun8i: r40: bananapi-m2-ultra: Fix dcdc1
- regulator
-Message-ID: <20200825083802.cvbnsdqg7yp7rcu2@gilmour.lan>
-References: <20200824193649.978197-1-jernej.skrabec@siol.net>
+To:     Frank Lee <frank@allwinnertech.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, wens@csie.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 04/16] dt-bindings: pinctrl: sunxi: Add A100 pinctrl
+ bindings
+Message-ID: <20200825084451.w5xfgqwszk7brv4c@gilmour.lan>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+ <a5773d677bcc89af3810cdd187fae54eced82f27.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dngkqn3e4bkmqagi"
+        protocol="application/pgp-signature"; boundary="ezfe6ijrj5w62qid"
 Content-Disposition: inline
-In-Reply-To: <20200824193649.978197-1-jernej.skrabec@siol.net>
+In-Reply-To: <a5773d677bcc89af3810cdd187fae54eced82f27.1595572867.git.frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---dngkqn3e4bkmqagi
+--ezfe6ijrj5w62qid
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 24, 2020 at 09:36:49PM +0200, Jernej Skrabec wrote:
-> DCDC1 regulator powers many different subsystems. While some of them can
-> work at 3.0 V, some of them can not. For example, VCC-HDMI can only work
-> between 3.24 V and 3.36 V. According to OS images provided by the board
-> manufacturer this regulator should be set to 3.3 V.
+On Fri, Jul 24, 2020 at 03:02:42PM +0800, Frank Lee wrote:
+> From: Yangtao Li <frank@allwinnertech.com>
 >=20
-> Set DCDC1 and DCDC1SW to 3.3 V in order to fix this.
+> Add device tree binding Documentation details for A100 pinctrl driver,
+> which has a r pin controller and a pin controller with more irq lines.
 >=20
-> Fixes: da7ac948fa93 ("ARM: dts: sun8i: Add board dts file for Banana Pi M2
-> 		      Ultra")
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Applied, thanks
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
+Thanks!
 Maxime
 
---dngkqn3e4bkmqagi
+--ezfe6ijrj5w62qid
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TN6QAKCRDj7w1vZxhR
-xd5kAP9I7pPi4g79u4rqf7w3IPhQiis0EpQAO3x9V9FqnYSIaQD/XBQiV8WTPVJM
-79nNvBj2yerWGBEwGe+NfCkeYubn+A4=
-=/Iyd
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TPgwAKCRDj7w1vZxhR
+xd0WAP0VlEEuyAwTMWD+dZDnp9yz/vWvxTFhioJZ2/bd+AXDbgD+LzaGkBwR7pn4
+Dy3kMc74IBgMbiWfwLaDJBa/ViRSUA8=
+=nw65
 -----END PGP SIGNATURE-----
 
---dngkqn3e4bkmqagi--
+--ezfe6ijrj5w62qid--
