@@ -2,86 +2,150 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA369C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F5EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0AA7206EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:31:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598394663;
-	bh=z+dW/Dk2HuqyH9YG2emBzVCYZUcjJjon+WxJrm8OBeQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rabWCCbgdnkffJrJu3Z1KgLuWMIuJUZaqnNJBWUODzwrEALqulQ5UftiuFn3Hed7T
-	 Z61SOSl+zLNkVmpd0UpJhUh9BbAgJuWhDq16lxHLBofn7Dxm5SSL1de3r00AbBdoRc
-	 xdNLbsrmrjZSJbv9BZ/mZT0ysg1YnAnqe/1wL3dU=
+	by mail.kernel.org (Postfix) with ESMTP id A179F20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:31:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QU0Hse14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgHYWbD (ORCPT
+        id S1726646AbgHYWbo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:31:03 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42109 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgHYWbD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:31:03 -0400
-Received: by mail-il1-f193.google.com with SMTP id t13so129765ile.9;
-        Tue, 25 Aug 2020 15:31:02 -0700 (PDT)
+        Tue, 25 Aug 2020 18:31:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbgHYWbn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:31:43 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94F5C061574
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 15:31:43 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id k1so111511vkb.7
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 15:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FLQFPf8fLS7CXO0sqeBay+2q4cQ6HR+2AcELPhdgy+g=;
+        b=QU0Hse14Sklyyz5kU3HeafZqqmeR/p+06VxkowHnJejpgNSHFeKynmOmd+F3l2P+ag
+         R+GXXBJK1b66xpFAWH7b2a8zD9ShRCjKuhUAM1h2GiN6scO/py9dPVSjEBitpu5lrrvR
+         X3TbtAK76P08sTuaeA+WnGrb1oPPfGaCSTgK4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=h4tUZsr/X9gXdVhjxFy0H5zbHwJI3zcI8QcQyVbx9I0=;
-        b=BYeU26WnEyFyiEUpa1ObGVU8Cieng4GsC0PE3Edo4Nd2gxEsty8cCPUR0H6gSZeBPD
-         amQ90NYep4ca/QnCdEn9uPX7t4yh9hGR4r+xzQKVHo385fWPzaNEwcfUJJ8jpY8WGYk1
-         YXPRTYXML3yynA8/H/x3iAlTjvJGUlCz7+E1KYBjp8yYjovuRjWKTyHARFQ1smZg2JA4
-         PcOH6nbCdllOCVuK32GSZh6k8no2CK/LrphD1lEB46W4XiMVo9fSvua4KojbaqYrEGz9
-         qAH8hQmVbq+boqaWqST7GP7W0R/Rk+o/Wul1zjoOFQl0pdL+sL50woyFXIr/w31Jdd80
-         sieQ==
-X-Gm-Message-State: AOAM532jcl5534yUybbepobD5rD/EfkrIFnfHpFVeGqYlwAPun4OxSed
-        vZ3NO0KPHIku+p2fVk6gAQ==
-X-Google-Smtp-Source: ABdhPJyazsdm1gv2zMikw/TSnPVcGsz9EOATW/XvykrPwtm7YbAyy6DyuYhm/XRYFuQtuAc863QAUw==
-X-Received: by 2002:a92:d2c1:: with SMTP id w1mr9794907ilg.273.1598394662161;
-        Tue, 25 Aug 2020 15:31:02 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id d12sm234579ilq.34.2020.08.25.15.31.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 15:31:01 -0700 (PDT)
-Received: (nullmailer pid 1464307 invoked by uid 1000);
-        Tue, 25 Aug 2020 22:31:00 -0000
-Date:   Tue, 25 Aug 2020 16:31:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Atte Tommiska <atte.tommiska@xiphera.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Xiphera vendor
- prefix
-Message-ID: <20200825223100.GA1464277@bogus>
-References: <cover.1597914503.git.atte.tommiska@xiphera.com>
- <70cc429f5e7e8f3213b86e4b97999580953db877.1597914503.git.atte.tommiska@xiphera.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FLQFPf8fLS7CXO0sqeBay+2q4cQ6HR+2AcELPhdgy+g=;
+        b=pihP9SBcXkgzdDOzGmCOj/moSFCzDFVvM/9K60pFz61MEIZvV45Fn86SaRo91qRx6F
+         VG1WcZ6VcxDeSX947Hk/xxlSw1LxNIpOIF4dvnb8CaoxE3cQJaSbznRIX+GmRJA49dpC
+         /pyq+y7Z5Qzl+1vKk4niszCqubrNAerW7qvM5ZICjynGJEcpBLZHtnvsVya8IvApEs/b
+         9GFL7jtSL4Ox7+6PZeb4sI7qqlLtaIDqOMcgGiXF7uDl3FHhNE0Wg9l5neWC6nOArnCA
+         bE1CpjmqlyqqalTH4aXKv1h5kLSCTFw8Lule6F/vnfhbDBnRJdj6NHvR5sO+bOWKacnc
+         BQnw==
+X-Gm-Message-State: AOAM531JzbrvqK8m92xuGmR/NxQ2VKpCTvb1LzHbts3/vRfvp9dHUaq9
+        2cuS7Tp2bhQOvOwxRI+LOa39s7eQ04iDcQ==
+X-Google-Smtp-Source: ABdhPJz3P1tqy1ddvwrJSjKydb/zqs/yYc8lbLx3UPiuLEF/EdXeRDMRzqsSu98E1dEFUY63WI8W5Q==
+X-Received: by 2002:a1f:1c3:: with SMTP id 186mr7715943vkb.71.1598394702550;
+        Tue, 25 Aug 2020 15:31:42 -0700 (PDT)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id l84sm81183vkl.36.2020.08.25.15.31.41
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 15:31:41 -0700 (PDT)
+Received: by mail-vk1-f179.google.com with SMTP id m12so114869vko.5
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 15:31:41 -0700 (PDT)
+X-Received: by 2002:a1f:fc02:: with SMTP id a2mr7476528vki.65.1598394700796;
+ Tue, 25 Aug 2020 15:31:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <70cc429f5e7e8f3213b86e4b97999580953db877.1597914503.git.atte.tommiska@xiphera.com>
+References: <20200825003341.1797322-1-robdclark@gmail.com> <159834727050.334488.84544239322533805@swboyd.mtv.corp.google.com>
+ <CAF6AEGvNKhFMtMkqS8STaUTcw7z6-NsHROeydWnx-=2=UG357A@mail.gmail.com>
+In-Reply-To: <CAF6AEGvNKhFMtMkqS8STaUTcw7z6-NsHROeydWnx-=2=UG357A@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 25 Aug 2020 15:31:29 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VLeHN8AH8FFkx2jiPQy6q5n=N=mLOGw0ujpk6rdBRVFw@mail.gmail.com>
+Message-ID: <CAD=FV=VLeHN8AH8FFkx2jiPQy6q5n=N=mLOGw0ujpk6rdBRVFw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180-trogdor: add initial trogdor and
+ lazor dt
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Atul Dhudase <adhudase@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Ajit Pandey <ajitp@codeaurora.org>,
+        Alexandru Stan <amstan@chromium.org>,
+        Sujit Kautkar <sujitka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Aug 2020 13:51:20 +0300, Atte Tommiska wrote:
-> Xiphera is an FPGA-based cryptographic solutions provider based in
-> Finland.
-> Website of the company: https://xiphera.com/
-> 
-> Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Hi,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Tue, Aug 25, 2020 at 3:22 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 2:21 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Rob Clark (2020-08-24 17:33:39)
+> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+> > > new file mode 100644
+> > > index 000000000000..b04987ab6c22
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+> > > @@ -0,0 +1,1364 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > > +/*
+> > [...]
+> > > +
+> > > +       gpio_keys: gpio-keys {
+> > > +               compatible = "gpio-keys";
+> > > +               status = "disabled";
+> > > +               pinctrl-names = "default";
+> > > +               pinctrl-0 = <&pen_pdct_l>;
+> > > +
+> > > +               pen-insert {
+> > > +                       label = "Pen Insert";
+> > > +
+> > > +                       /* Insert = low, eject = high */
+> > > +                       gpios = <&tlmm 52 GPIO_ACTIVE_LOW>;
+> > > +                       linux,code = <SW_PEN_INSERTED>;
+> > > +                       linux,input-type = <EV_SW>;
+> > > +                       wakeup-source;
+> > > +               };
+> > > +       };
+> > > +
+> > > +       max98357a: max98357a {
+> >
+> > Maybe node name should be 'audio-codec' or 'dac' or 'amp' or 'speaker'
+> > or 'codec'?
+>
+> looking at other boards, it looks like 2 votes for "audio-codec-0",
+> one vote for "codec0", and 2 votes for "max98357a"..  so seems to be a
+> codec rather than amp/speaker.. and "audio-codec" seems to be the
+> popular choice..
+
+I'd look at recently landed yaml files under
+"Documentation/devicetree/bindings/sound/".  Those have the best
+change of having been reviewed by Rob Herring.
+
+Oh, or you could look at the Devicetree Spec [1]
+
+2.2.2 Generic Names Recommendation
+...
+* audio-codec
+
+[1] https://github.com/devicetree-org/devicetree-specification/releases/tag/v0.3
