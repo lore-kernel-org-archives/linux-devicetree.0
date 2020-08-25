@@ -2,155 +2,106 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46074C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E47EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2220120706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598354483;
-	bh=gKhV2+vHVml11hPxpE6g99RzbP9Ikk/XDV6czeRZWJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qQxeHGwnR7AOaahRkQLiQseBz/VrtrkPbJ7+XwADj+BAGtDP9h9SBE/kvYb9wmdzJ
-	 ug5Qnr9XE5ZkBz537JMVeSQLFqagRmBOMy0k7gR6d1DO4EViA1CsS7m5atLN2XABuF
-	 tqd6Z8+aXijtx7Zu2ViPuMyWK3fdgejvMySM2wOU=
+	by mail.kernel.org (Postfix) with ESMTP id 6A7182075B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NQINZ5Rf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4+WhodGi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729953AbgHYLVO (ORCPT
+        id S1729939AbgHYLVs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgHYLVM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:21:12 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7453620706;
-        Tue, 25 Aug 2020 11:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598354471;
-        bh=gKhV2+vHVml11hPxpE6g99RzbP9Ikk/XDV6czeRZWJo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OCD70bXXXE8HaVxTxmOEEB9JAODla8x0GLBHcc8xWxwI02RUalAKVJxwLxBmmWh7m
-         1TQ+h6jpA0MJf+IRcq0coHh5oZEzJ0NONB4pAWqvf91AXH11SBjufk2+h3yqHJco24
-         4Ccq49oBxjrZz7zFX9DMvhGMIVfjXb5fVadAZrYk=
-Date:   Tue, 25 Aug 2020 16:51:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-Message-ID: <20200825112107.GN2639@vkoul-mobl>
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
- <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
+        Tue, 25 Aug 2020 07:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729979AbgHYLVg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 07:21:36 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF452C061574;
+        Tue, 25 Aug 2020 04:21:35 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598354492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nGrucTK6525pBpaxiLtxZM8yZYWGEHd+0H3dBZO4qJg=;
+        b=NQINZ5RfH7FO65a1aHSHSh75mSRPV8RsQ7Zl62YhPiTL4My9tMBqYklKV9oodMjNeufuOW
+        MfcL1jlC9T/FTDuQMXrUBUWhxR0w2/uFg0FY+TqBPcSfIDrhprPVgktXWznz/ihqs5aZxp
+        A8TkZ+zcJSx3ghyPRfp86ORLf7ggTgZQ35MKPdJrB/rnVJ9H2b21HeP5t4Kvfh8F0hlUpf
+        V46VIm95qBpdVYxYuScQgg4k67jOF076AjgYJ8nGFl7g9xrPSo9IHWrqRsebjHus/CGm7d
+        IV2YXs3qn11JvbNJk27/Sujt5YGIdkA0JFIJS/ZspRkDBZsFU2o+5GbI+Bwx5g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598354492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nGrucTK6525pBpaxiLtxZM8yZYWGEHd+0H3dBZO4qJg=;
+        b=4+WhodGiRzkVRO0VTFVT7qkWpsmJMan999hb01hJ84lHjYIbFD6oW0Co7BQ5aqmcPpDk11
+        dNzyjReygXxdzsDA==
+To:     David Miller <davem@davemloft.net>, olteanv@gmail.com
+Cc:     kuba@kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, bigeasy@linutronix.de,
+        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
+        ilias.apalodimas@linaro.org, ivan.khoronzhuk@linaro.org,
+        vinicius.gomes@intel.com, xiaoliang.yang_1@nxp.com, Po.Liu@nxp.com
+Subject: Re: [PATCH v3 0/8] Hirschmann Hellcreek DSA driver
+In-Reply-To: <20200824.153518.700546598086140133.davem@davemloft.net>
+References: <20200820081118.10105-1-kurt@linutronix.de> <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN> <20200824220203.atjmjrydq4qyt33x@skbuf> <20200824.153518.700546598086140133.davem@davemloft.net>
+Date:   Tue, 25 Aug 2020 13:21:30 +0200
+Message-ID: <87sgcbynr9.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
+--=-=-=
+Content-Type: text/plain
 
-> > > +
-> > > +            intel,chans:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +              description:
-> > > +                 The channels included on this port. Format is channel start
-> > > +                 number and how many channels on this port.
-> > Why does this need to be in DT? This all seems like it can be in the dma
-> > cells for each client.
-> (*ABC)
-> Yes. We need this.
-> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
-> channels. and the logical channel mapping for the peripherals also differ
-> b/w old and new SOCs.
-> 
-> Because of this hardware limitation we are trying to configure the total
-> channels and port-channel mapping dynamically from device tree.
-> 
-> based on port name we are trying to configure the default values for
-> different peripherals(ports).
-> Example: burst length is not same for all ports, so using port name to do
-> default configurations.
+On Mon Aug 24 2020, David Miller wrote:
+> Agreed, Kurt can you repost this series without the TAPRIO support for
+> now since it's controversial and needs more discussion and changes?
 
-Sorry that does not make sense to me, why not specify the values to be
-used here instead of defining your own name scheme!
+OK. It seems like the TAPRIO implementation has to be discussed more and
+it might be good to do that separately.
 
-Only older soc it should create 16 channels and new 22 (hint this is hw
-description so perfectly okay to specify in DT or in using driver_data
-and compatible for each version
+I'll replace the spinlocks (which were only introduced for the hrtimers)
+with mutexes and post a sane version of the driver without the TAPRIO
+support.
 
-> > 
-> > > +
-> > > +          required:
-> > > +            - reg
-> > > +            - intel,name
-> > > +            - intel,chans
-> > > +
-> > > +
-> > > + ldma-channels:
-> > > +    type: object
-> > > +    description:
-> > > +       This sub-node must contain a sub-node for each DMA channel.
-> > > +    properties:
-> > > +      '#address-cells':
-> > > +        const: 1
-> > > +      '#size-cells':
-> > > +        const: 0
-> > > +
-> > > +    patternProperties:
-> > > +      "^ldma-channels@[0-15]+$":
-> > > +          type: object
-> > > +
-> > > +          properties:
-> > > +            reg:
-> > > +              items:
-> > > +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-> > > +              description:
-> > > +                 Which channel this node refers to.
-> > > +
-> > > +            intel,desc_num:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32
-> > > +              description:
-> > > +                 Per channel maximum descriptor number. The max value is 255.
-> > > +
-> > > +            intel,hdr-mode:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +              description:
-> > > +                 The first parameter is header mode size, the second
-> > > +                 parameter is checksum enable or disable. If enabled,
-> > > +                 header mode size is ignored. If disabled, header mode
-> > > +                 size must be provided.
-> > > +
-> > > +            intel,hw-desc:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +              description:
-> > > +                 Per channel dma hardware descriptor configuration.
-> > > +                 The first parameter is descriptor physical address and the
-> > > +                 second parameter hardware descriptor number.
-> > Again, this all seems like per client information for dma cells.
->  Ok, if we move all these attributes to 'dmas' then 'dma-channels' child
-> node is not needed in dtsi.
-> #dma-cells number i am already using 7. If we move all these attributes to
-> 'dmas' then integer cells will increase.
-> 
-> Is there any limitation in using a number of integer cells & as determined
-> by the #dma-cells property?
+>
+> Thank you.
 
-No I dont think there is but it needs to make sense :-)
+Thanks,
+Kurt
 
--- 
-~Vinod
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E9DoACgkQeSpbgcuY
+8KbFjhAAga1JgZ6IRftUgmWMjZCHAq7TMBpRzGySx2owt5cV6CephpKsjs3jccmW
+wM2kubrqvX5nSgRNET5F6oqoU3WkTqxdIXJ/M+/mTdCMXgH2aN0ColKn/1Nj+xPP
+JUxZVVF0oJGjUcpT9jMf01/ZN/XV8BbhRV6ZI+c1r+tyI5X0cTPSUkk6/PV8Nz8T
+FsJIlxpQmM1b1oYrayVVI1Yy0uXhV65m5W39cuci0snp5/8F8exAKzn3t7dApGXU
+DFSzaiDA8QYiEhSBcgFjDJ06o3Ioq6xwdelfhjmxic2az7KDXNgiGc/Ik4W2e2cW
+cIuCY0MTX+d4J5OxN/eAGTQaub4Ggu0qyZbiOR7QBQWHqOIxGKaiLobL0KALehzr
+ReUDSYHdKJL2QAAkk27Jm2Ee5zHCQjTcxC88PbIRkeG28ufeZNqLPjekDFTlAfY7
+F4KIyeA1iqvZQ64qrKec1i1ldVYLO3GGfpMqbIhi8euor9OK1NuCdF9JvsGi6v+W
+5zDy8sis0EKx+eGQUR3GZu2dbbo+c89RD/DE35CBRSsF5VAUu28EV3qI/XBqM5Hh
+s5Su8CL1ZhF9mb2gwfNDa+POxOnyNHyd+P8Qnj4N5JOBofWpAX4HZIU7nQDmY8TA
+GXXt8K8DxIuNQYf4RYUJWITtsD/0ekoE6XUGhXaIoYlQ0msrhBM=
+=iSfE
+-----END PGP SIGNATURE-----
+--=-=-=--
