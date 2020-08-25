@@ -2,287 +2,2045 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994A8C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 00:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7003EC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 00:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A21A206EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 00:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E142206EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 00:33:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="OsQBSo3o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KjaOR30S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgHYAbh (ORCPT
+        id S1728338AbgHYAdA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:31:37 -0400
-Received: from mail-bn8nam11on2077.outbound.protection.outlook.com ([40.107.236.77]:60546
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728236AbgHYAbS (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:31:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lzewL6lVaKpFx7OJwt7JFJaWlrDhw1e6IHgJz0mmDIYRjx9qNTaTjbCrV01V9+ymJxd3hQL5C3zm1T+ognJXn3xBLrdq7Ef3q3gc+aAY8gTo/UC6VBB6/Hg978jjHfcMORLayGUoPCO9RzmkbgapHt2ReQQNVqd51XPWQcbUrIkhXFVHkt+FdqOPo+SiOdRErgM+vzB4oncdA/nQJhTF5CkqfZEWFYoMIqjDYkAYvxa1AnMhSAaUPCLrCfP5QgW6DW/lw5xeLU9YSw5hu5qAEpVbH7njOPhYvS0Me24Mh8CS5RMwFGZbqrr1arpZfZej6bW9/S3zwTb264YYnSKS+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GrZjh4y/sjipYl33K53Wvp5oQdjy9UjSlXUhr6Y7qM4=;
- b=NGnte5gkSH5KZdRJetNrF+Kd+k0aHrFr7LikabhzqBknUWx29Sb+CoqWrz5wFMa5H41oXEX102bcYRQ42K3FjusnY/pnj4C8uzjUxU46w4/WgD8HpKkj+3Vh3WzksJLK5Fb5bO7ABYzFah0W/qUHtQPTEBARC5UmfG9Z7QNpMdVKii6c5Nj4ilDNU9C2dj2ulYw4Qn38Yd2Y6Ll5mnhhmrIgpDQyUJGZGhOo6luirCQ5g+gR6unmzfme9LYP/vsYvlMFCykAAHSWcjx4fg6dw9PaKs+H9pAQKOOy1ZJ/70MJlOaN8AIIPpCfmuZIDQag0wbabvLK9XIMFDhQCS5h4A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
- smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
- header.from=xilinx.com; dkim=none (message not signed); arc=none
+        Mon, 24 Aug 2020 20:33:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbgHYAc4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 20:32:56 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 210F6C061574;
+        Mon, 24 Aug 2020 17:32:56 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m71so5945386pfd.1;
+        Mon, 24 Aug 2020 17:32:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GrZjh4y/sjipYl33K53Wvp5oQdjy9UjSlXUhr6Y7qM4=;
- b=OsQBSo3o2/rdDy5RjX8YFwLkF6pzKSWy5IyGkCq82zm0FTOHt19KiZyJKMY5Fc6HWi1Ogu6C5xXRXFnJjxvyS/8WYp9XFgnTtyPgVt8tFOGgBB1ZjA0YSeblrlagTHkI6EoAsUaVIhUHVgZTd2dM4lPW8W8cfADpY9/BQD1YrSE=
-Received: from DM5PR11CA0022.namprd11.prod.outlook.com (2603:10b6:3:115::32)
- by BY5PR02MB6321.namprd02.prod.outlook.com (2603:10b6:a03:1f9::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Tue, 25 Aug
- 2020 00:31:10 +0000
-Received: from CY1NAM02FT057.eop-nam02.prod.protection.outlook.com
- (2603:10b6:3:115:cafe::72) by DM5PR11CA0022.outlook.office365.com
- (2603:10b6:3:115::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend
- Transport; Tue, 25 Aug 2020 00:31:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
- header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT057.mail.protection.outlook.com (10.152.75.110) with Microsoft SMTP
- Server id 15.20.3305.24 via Frontend Transport; Tue, 25 Aug 2020 00:31:10
- +0000
-Received: from [149.199.38.66] (port=59108 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <stefano.stabellini@xilinx.com>)
-        id 1kAMrJ-0003Ug-Sf; Mon, 24 Aug 2020 17:30:41 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <stefano.stabellini@xilinx.com>)
-        id 1kAMrm-0002Po-5E; Mon, 24 Aug 2020 17:31:10 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07P0UxTN005458;
-        Mon, 24 Aug 2020 17:30:59 -0700
-Received: from [10.23.123.104] (helo=localhost)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <stefanos@xilinx.com>)
-        id 1kAMrb-0002Kz-4p; Mon, 24 Aug 2020 17:30:59 -0700
-Date:   Mon, 24 Aug 2020 17:30:58 -0700 (PDT)
-From:   Stefano Stabellini <stefano.stabellini@xilinx.com>
-X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
-To:     Ben Levinsky <BLEVINSK@xilinx.com>
-cc:     Stefano Stabellini <stefanos@xilinx.com>,
-        Michal Simek <michals@xilinx.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
-        "Ed T. Mooring" <emooring@xilinx.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Jiaying Liang <jliang@xilinx.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH v8 2/5] firmware: xilinx: Add shutdown/wakeup APIs
-In-Reply-To: <BYAPR02MB44074C112F383606E2292F4AB5560@BYAPR02MB4407.namprd02.prod.outlook.com>
-Message-ID: <alpine.DEB.2.21.2008241730450.24407@sstabellini-ThinkPad-T480s>
-References: <20200811033213.20088-1-ben.levinsky@xilinx.com> <20200811033213.20088-3-ben.levinsky@xilinx.com> <alpine.DEB.2.21.2008131103230.15669@sstabellini-ThinkPad-T480s> <BYAPR02MB44076F48364A94C05F636870B55C0@BYAPR02MB4407.namprd02.prod.outlook.com>
- <BYAPR02MB44074C112F383606E2292F4AB5560@BYAPR02MB4407.namprd02.prod.outlook.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VdYdYQvkAL0ofEmS2eTMFHm/CYTaIcuf5ZR+azvZOwc=;
+        b=KjaOR30SSzriqfydJVjUR4rQCi7xIBvtJqX88L9CycT49g+feHcvXVwObb1IM++3bd
+         1iZ9s1uBzphqaMvLH1QE44pkSVB7Y6ODhYgWRx0XScE7xUZ6GFzdc+VfmL7XlHRJWIDn
+         aN5UFTzJudX2J3uR2fd0KSbiMwW6SXiaKcJBDHxauLhErCut+N6B7cvgLuPVUUO94dcd
+         iaj1RQZMKl0siXOa4JWNIJ/K7HY2NHmSh4oiX8gfLT57M01+8yoPjt8qmt3KRqtkXPHv
+         DiAbZ0XjgUw42mXneNrtXL0+bbEeNEsEgkbSBRKYTYJ6LbGOUPg10yAZvgtiprwKbFDF
+         K1tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VdYdYQvkAL0ofEmS2eTMFHm/CYTaIcuf5ZR+azvZOwc=;
+        b=nzO9PKu4DrlkFVTQ4VAmV4CBYXJC5KvlaPXIWAcraMdWR4LhNj7BpjKHawkdxQ3AyQ
+         zr4vepxMBetZ1MRhqSM+7E2dnmZKYlXGoWDlZmzzV0xdA5Y+keB9xBNUWctxGzB0KTi0
+         esUw7xnAC4P3+AGEHsnfjpGMVtVc/FdfCxj+95h4W1YcsKQ9ou0BoacD6UOWT9rAG/aY
+         aGuJGOl1vuGDRFN4fGLt3AMKas8ebwyaswcbY7jcrjOYlsWQ9Z0hpfD1qXGiRSQTcCCx
+         yQ7RGNLNR77KWyzycb5mFp6yuz/KJi0ARyifwYx83queatxHn27zGCElnMXfdJPM/FmY
+         0+Pg==
+X-Gm-Message-State: AOAM532ky04RbdWA8SM+unS0N49V/5Yg69VVSp6dclzHxS6mRPKwSJSq
+        HfMFzmeutQhpbmxV6s8Q0y2kYk89Tk4Is/2E
+X-Google-Smtp-Source: ABdhPJyavnX+IILZNoDYIQ9NsxJniO3zJ5N+oYG16IWf1pX9N7A3jxW2c9D7UZq0Mu77sISRd13pJg==
+X-Received: by 2002:a17:902:8a85:: with SMTP id p5mr5684729plo.193.1598315574572;
+        Mon, 24 Aug 2020 17:32:54 -0700 (PDT)
+Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
+        by smtp.gmail.com with ESMTPSA id s68sm12264705pfb.91.2020.08.24.17.32.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 17:32:53 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Atul Dhudase <adhudase@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Ajit Pandey <ajitp@codeaurora.org>,
+        Alexandru Stan <amstan@chromium.org>,
+        Sujit Kautkar <sujitka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] arm64: dts: qcom: sc7180-trogdor: add initial trogdor and lazor dt
+Date:   Mon, 24 Aug 2020 17:33:39 -0700
+Message-Id: <20200825003341.1797322-1-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: aea195a4-2674-43a3-fef2-08d8488e2a3b
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6321:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB63216A6CA2E2612511B19B3FA0570@BY5PR02MB6321.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: S/HGjKPt84Ssi0ATqwS7GODTNOtPTwA3COY7lry4BLmGCXIh50IlcS60gG0aoG475cTNPJTVlx49L1MyNQpUpIuWiSgI81S08Ocd8qEc7wtWuEqIiWGobR56o+o+iHCbAA7ivObiRsft6FVK1mG/A9uaIaxBH11W6KszrJc6TamX5fPx4PcvKEalt0R72jt0nI9uXxfGbSOizzoy3rSxDnxBIyGNvJo+8DXFkBJF6PxpqSRKYxZiuINjo1FqqpuXgkOXY4dqB4Vn4QK7MARHlk+N9+eTktRxzNo2exE8RVhvkcOXpSwMY8a+br/LqkAbrJzM78PoK/N/kq0i3zrlLBrU34tGUbrsK1pORpNGn0I8O3ofOVOtcqNIVxE7wGu3fjEC1uDsN9CTg/Xl+Ya5og==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(7916004)(396003)(346002)(136003)(376002)(39860400002)(46966005)(8936002)(2906002)(82310400002)(81166007)(83380400001)(5660300002)(356005)(9786002)(9686003)(33716001)(478600001)(53546011)(6636002)(54906003)(47076004)(6862004)(8676002)(186003)(426003)(316002)(82740400003)(26005)(70206006)(70586007)(44832011)(4326008)(336012);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 00:31:10.3866
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: aea195a4-2674-43a3-fef2-08d8488e2a3b
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT057.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6321
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Aug 2020, Ben Levinsky wrote:
-> > -----Original Message-----
-> > From: linux-remoteproc-owner@vger.kernel.org <linux-remoteproc-
-> > owner@vger.kernel.org> On Behalf Of Ben Levinsky
-> > Sent: Tuesday, August 18, 2020 7:24 AM
-> > To: Stefano Stabellini <stefanos@xilinx.com>
-> > Cc: Michal Simek <michals@xilinx.com>; devicetree@vger.kernel.org;
-> > mathieu.poirier@linaro.org; Ed T. Mooring <emooring@xilinx.com>; linux-
-> > remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > robh+dt@kernel.org; Jiaying Liang <jliang@xilinx.com>; linux-arm-
-> > kernel@lists.infradead.org
-> > Subject: RE: [PATCH v8 2/5] firmware: xilinx: Add shutdown/wakeup APIs
-> > 
-> > 
-> > 
-> > > -----Original Message-----
-> > > From: Stefano Stabellini <stefano.stabellini@xilinx.com>
-> > > Sent: Thursday, August 13, 2020 1:36 PM
-> > > To: Ben Levinsky <BLEVINSK@xilinx.com>
-> > > Cc: Stefano Stabellini <stefanos@xilinx.com>; Michal Simek
-> > > <michals@xilinx.com>; devicetree@vger.kernel.org;
-> > > mathieu.poirier@linaro.org; Ed T. Mooring <emooring@xilinx.com>; linux-
-> > > remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > robh+dt@kernel.org; Jiaying Liang <jliang@xilinx.com>; linux-arm-
-> > > kernel@lists.infradead.org
-> > > Subject: Re: [PATCH v8 2/5] firmware: xilinx: Add shutdown/wakeup APIs
-> > >
-> > > On Mon, 10 Aug 2020, Ben Levinsky wrote:
-> > > > Add shutdown/wakeup a resource eemi operations to shutdown
-> > > > or bringup a resource.
-> > > >
-> > > > Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> > > > ---
-> > > > v3:
-> > > > - add xilinx-related platform mgmt fn's instead of wrapping around
-> > > >   function pointer in xilinx eemi ops struct
-> > > > - fix formatting
-> > > > v4:
-> > > > - add default values for enumv3:
-> > > > - add xilinx-related platform mgmt fn's instead of wrapping around
-> > > >   function pointer in xilinx eemi ops struct
-> > > > - fix formatting
-> > > > v4:
-> > > > - add default values for enum
-> > > > ---
-> > > >  drivers/firmware/xilinx/zynqmp.c     | 35
-> > ++++++++++++++++++++++++++++
-> > > >  include/linux/firmware/xlnx-zynqmp.h | 22 +++++++++++++++++
-> > > >  2 files changed, 57 insertions(+)
-> > > >
-> > > > diff --git a/drivers/firmware/xilinx/zynqmp.c
-> > > b/drivers/firmware/xilinx/zynqmp.c
-> > > > index 8d1ff2454e2e..f1a0bd35deeb 100644
-> > > > --- a/drivers/firmware/xilinx/zynqmp.c
-> > > > +++ b/drivers/firmware/xilinx/zynqmp.c
-> > > > @@ -846,6 +846,41 @@ int zynqmp_pm_release_node(const u32 node)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(zynqmp_pm_release_node);
-> > > >
-> > > > +/**
-> > > > + * zynqmp_pm_force_powerdown - PM call to request for another PU or
-> > > subsystem to
-> > > > + *             be powered down forcefully
-> > > > + * @target:    Node ID of the targeted PU or subsystem
-> > > > + * @ack:   Flag to specify whether acknowledge is requested
-> > > > + *
-> > > > + * Return: status, either success or error+reason
-> > > > + */
-> > > > +int zynqmp_pm_force_powerdown(const u32 target,
-> > >
-> > > If the target is really the node id, why not calling it "node", the same
-> > > way as below?
-> > [Ben Levinsky] good point. Will change to "target" in v9
-> > >
-> > >
-> > > > +			      const enum zynqmp_pm_request_ack ack)
-> > > > +{
-> > > > +	return zynqmp_pm_invoke_fn(PM_FORCE_POWERDOWN, target, ack,
-> > > 0, 0, NULL);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(zynqmp_pm_force_powerdown);
-> > > > +
-> > > > +/**
-> > > > + * zynqmp_pm_request_wakeup - PM call to wake up selected master or
-> > > subsystem
-> > > > + * @node:  Node ID of the master or subsystem
-> > > > + * @set_addr:  Specifies whether the address argument is relevant
-> > > > + * @address:   Address from which to resume when woken up
-> > > > + * @ack:   Flag to specify whether acknowledge requested
-> > > > + *
-> > > > + * Return: status, either success or error+reason
-> > > > + */
-> > > > +int zynqmp_pm_request_wakeup(const u32 node,
-> > > > +			     const bool set_addr,
-> > > > +			     const u64 address,
-> > > > +			     const enum zynqmp_pm_request_ack ack)
-> > > > +{
-> > > > +	/* set_addr flag is encoded into 1st bit of address */
-> > > > +	return zynqmp_pm_invoke_fn(PM_REQUEST_WAKEUP, node, address
-> > > | set_addr,
-> > > > +				   address >> 32, ack, NULL);
-> > > > +}
-> > > > +EXPORT_SYMBOL_GPL(zynqmp_pm_request_wakeup);
-> > > > +
-> > > >  /**
-> > > >   * zynqmp_pm_set_requirement() - PM call to set requirement for PM
-> > > slaves
-> > > >   * @node:		Node ID of the slave
-> > > > diff --git a/include/linux/firmware/xlnx-zynqmp.h
-> > > b/include/linux/firmware/xlnx-zynqmp.h
-> > > > index bb347dfe4ba4..4d83a7d69c4c 100644
-> > > > --- a/include/linux/firmware/xlnx-zynqmp.h
-> > > > +++ b/include/linux/firmware/xlnx-zynqmp.h
-> > > > @@ -64,6 +64,8 @@
-> > > >
-> > > >  enum pm_api_id {
-> > > >  	PM_GET_API_VERSION = 1,
-> > > > +	PM_FORCE_POWERDOWN = 8,
-> > > > +	PM_REQUEST_WAKEUP = 10,
-> > > >  	PM_SYSTEM_SHUTDOWN = 12,
-> > > >  	PM_REQUEST_NODE = 13,
-> > > >  	PM_RELEASE_NODE,
-> > > > @@ -376,6 +378,12 @@ int zynqmp_pm_write_pggs(u32 index, u32
-> > value);
-> > > >  int zynqmp_pm_read_pggs(u32 index, u32 *value);
-> > > >  int zynqmp_pm_system_shutdown(const u32 type, const u32 subtype);
-> > > >  int zynqmp_pm_set_boot_health_status(u32 value);
-> > > > +int zynqmp_pm_force_powerdown(const u32 target,
-> > > > +			      const enum zynqmp_pm_request_ack ack);
-> > > > +int zynqmp_pm_request_wakeup(const u32 node,
-> > > > +			     const bool set_addr,
-> > > > +			     const u64 address,
-> > > > +			     const enum zynqmp_pm_request_ack ack);
-> > > >  #else
-> > > >  static inline struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void)
-> > > >  {
-> > > > @@ -526,6 +534,20 @@ static inline int
-> > > zynqmp_pm_set_boot_health_status(u32 value)
-> > > >  {
-> > > >  	return -ENODEV;
-> > > >  }
-> > > > +
-> > > > +static inline int zynqmp_pm_force_powerdown(const u32 target,
-> > > > +				    const enum zynqmp_pm_request_ack ack)
-> > > > +{
-> > > > +	return -ENODEV;
-> > > > +}
-> > > > +
-> > > > +static inline int zynqmp_pm_request_wakeup(const u32 node,
-> > > > +					   const bool set_addr,
-> > > > +					   const u64 address,
-> > > > +				   const enum zynqmp_pm_request_ack ack)
-> > >
-> > > code style
-> [Ben Levinsky] for this, the argument goes over 80 chars if aligned like the others. With that in mind for style, is it better to have the set_addr and address args aligned with ack or to push ack to the right but have the >80 chars style issue?
+From: Rob Clark <robdclark@chromium.org>
 
-I don't have an opinion on code style -- anything that passes
-scripts/checkpatch.pl is fine for me.
+This is essentialy a squash of a bunch of history of trogdor and lazor
+dt updates from the chromium kernel tree.
+
+I don't claim any credit other than wanting to more easily boot upstream
+kernel on these devices.
+
+I've tried to add cc tags for all the original authors.
+
+Cc: Stephen Boyd <swboyd@chromium.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>
+Cc: Atul Dhudase <adhudase@codeaurora.org>
+Cc: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Cheng-Yi Chiang <cychiang@chromium.org>
+Cc: Ajit Pandey <ajitp@codeaurora.org>
+Cc: Alexandru Stan <amstan@chromium.org>
+Cc: Sujit Kautkar <sujitka@chromium.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/Makefile             |    5 +
+ .../boot/dts/qcom/sc7180-trogdor-lazor-r0.dts |   24 +
+ .../dts/qcom/sc7180-trogdor-lazor-r1-lte.dts  |   18 +
+ .../boot/dts/qcom/sc7180-trogdor-lazor-r1.dts |   15 +
+ .../boot/dts/qcom/sc7180-trogdor-lazor.dtsi   |  192 +++
+ .../boot/dts/qcom/sc7180-trogdor-lte-sku.dtsi |   15 +
+ .../boot/dts/qcom/sc7180-trogdor-r1-lte.dts   |   14 +
+ .../arm64/boot/dts/qcom/sc7180-trogdor-r1.dts |  206 +++
+ arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi  | 1364 +++++++++++++++++
+ 9 files changed, 1853 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r0.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-lte-sku.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-r1-lte.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index d8f1466e6758..5899101526a7 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -19,6 +19,11 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-lazor-r0.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-lazor-r1.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-lazor-r1-lte.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-r1.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-r1-lte.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-ganges-kirin.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-discovery.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm630-sony-xperia-nile-pioneer.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r0.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r0.dts
+new file mode 100644
+index 000000000000..ae4c23a4fe65
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r0.dts
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Lazor board device tree source
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++/dts-v1/;
++
++#include "sc7180-trogdor-lazor.dtsi"
++
++/ {
++	model = "Google Lazor (rev0)";
++	compatible = "google,lazor-rev0", "qcom,sc7180";
++};
++
++&sn65dsi86_out {
++	/*
++	 * Lane 0 was incorrectly mapped on the cable, but we've now decided
++	 * that the cable is canon and in -rev1+ we'll make a board change
++	 * that means we no longer need the swizzle.
++	 */
++	lane-polarities = <1 0>;
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
+new file mode 100644
+index 000000000000..2b37113f1e3a
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Lazor board device tree source
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++#include "sc7180-trogdor-lazor-r1.dts"
++#include "sc7180-trogdor-lte-sku.dtsi"
++
++/ {
++	model = "Google Lazor (rev1, rev3+) with LTE";
++	compatible = "google,lazor-sku0", "qcom,sc7180";
++};
++
++&keyboard_backlight {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dts
+new file mode 100644
+index 000000000000..c2a8f7d5b336
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dts
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Lazor board device tree source
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++/dts-v1/;
++
++#include "sc7180-trogdor-lazor.dtsi"
++
++/ {
++	model = "Google Lazor (rev1, rev3+)";
++	compatible = "google,lazor", "qcom,sc7180";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor.dtsi
+new file mode 100644
+index 000000000000..180ef9e04306
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor.dtsi
+@@ -0,0 +1,192 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Lazor board device tree source
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++#include "sc7180.dtsi"
++
++ap_ec_spi: &spi6 {};
++ap_h1_spi: &spi0 {};
++
++#include "sc7180-trogdor.dtsi"
++
++/ {
++	panel: panel {
++		compatible = "boe,nv133fhm-n62";
++		power-supply = <&pp3300_dx_edp>;
++		backlight = <&backlight>;
++		hpd-gpios = <&sn65dsi86_bridge 2 GPIO_ACTIVE_HIGH>;
++
++		ports {
++			port {
++				panel_in_edp: endpoint {
++					remote-endpoint = <&sn65dsi86_out>;
++				};
++			};
++		};
++	};
++};
++
++&ap_sar_sensor {
++	status = "okay";
++};
++
++ap_ts_pen_1v8: &i2c4 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	ap_ts: touchscreen@10 {
++		compatible = "hid-over-i2c";
++		reg = <0x10>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ts_int_l>, <&ts_reset_l>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
++
++		post-power-on-delay-ms = <20>;
++		hid-descr-addr = <0x0001>;
++
++		vdd-supply = <&pp3300_ts>;
++	};
++};
++
++/* PINCTRL - modifications to sc7180-trogdor.dtsi */
++
++&ts_reset_l {
++	pinconf {
++		/* This pin is not connected on -rev0, pull up to park. */
++		/delete-property/bias-disable;
++		bias-pull-up;
++	};
++};
++
++/* PINCTRL - board-specific pinctrl */
++
++&tlmm {
++	gpio-line-names = "ESIM_MISO",
++			  "ESIM_MOSI",
++			  "ESIM_CLK",
++			  "ESIM_CS_L",
++			  "",
++			  "",
++			  "AP_TP_I2C_SDA",
++			  "AP_TP_I2C_SCL",
++			  "TS_RESET_L",
++			  "TS_INT_L",
++			  "",
++			  "EDP_BRIJ_IRQ",
++			  "AP_EDP_BKLTEN",
++			  "AP_RAM_ID2",
++			  "",
++			  "EDP_BRIJ_I2C_SDA",
++			  "EDP_BRIJ_I2C_SCL",
++			  "HUB_RST_L",
++			  "",
++			  "AP_RAM_ID1",
++			  "AP_SKU_ID2",
++			  "",
++			  "",
++			  "AMP_EN",
++			  "P_SENSOR_INT_L",
++			  "AP_SAR_SENSOR_SDA",
++			  "AP_SAR_SENSOR_SCL",
++			  "",
++			  "HP_IRQ",
++			  "AP_RAM_ID0",
++			  "EN_PP3300_DX_EDP",
++			  "AP_BRD_ID2",
++			  "BRIJ_SUSPEND",
++			  "AP_BRD_ID0",
++			  "AP_H1_SPI_MISO",
++			  "AP_H1_SPI_MOSI",
++			  "AP_H1_SPI_CLK",
++			  "AP_H1_SPI_CS_L",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "H1_AP_INT_ODL",
++			  "",
++			  "UART_AP_TX_DBG_RX",
++			  "UART_DBG_TX_AP_RX",
++			  "HP_I2C_SDA",
++			  "HP_I2C_SCL",
++			  "FORCED_USB_BOOT",
++			  "",
++			  "",
++			  "AMP_DIN",
++			  "",
++			  "HP_BCLK",
++			  "HP_LRCLK",
++			  "HP_DOUT",
++			  "HP_DIN",
++			  "HP_MCLK",
++			  "TRACKPAD_INT_1V8_ODL",
++			  "AP_EC_SPI_MISO",
++			  "AP_EC_SPI_MOSI",
++			  "AP_EC_SPI_CLK",
++			  "AP_EC_SPI_CS_L",
++			  "AP_SPI_CLK",
++			  "AP_SPI_MOSI",
++			  "AP_SPI_MISO",
++			  /*
++			   * AP_FLASH_WP_L is crossystem ABI. Schematics
++			   * call it BIOS_FLASH_WP_L.
++			   */
++			  "AP_FLASH_WP_L",
++			  "DBG_SPI_HOLD_L",
++			  "AP_SPI_CS0_L",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "UIM2_DATA",
++			  "UIM2_CLK",
++			  "UIM2_RST",
++			  "UIM2_PRESENT",
++			  "UIM1_DATA",
++			  "UIM1_CLK",
++			  "UIM1_RST",
++			  "",
++			  "EN_PP3300_CODEC",
++			  "EN_PP3300_HUB",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "AP_SKU_ID1",
++			  "AP_RST_REQ",
++			  "",
++			  "AP_BRD_ID1",
++			  "AP_EC_INT_L",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "EDP_BRIJ_EN",
++			  "AP_SKU_ID0",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "AP_TS_PEN_I2C_SDA",
++			  "AP_TS_PEN_I2C_SCL",
++			  "DP_HOT_PLUG_DET",
++			  "EC_IN_RW_ODL";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lte-sku.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lte-sku.dtsi
+new file mode 100644
+index 000000000000..44956e3165a1
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lte-sku.dtsi
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Trogdor dts fragment for LTE SKUs
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++&ap_sar_sensor {
++	label = "proximity-wifi-lte";
++};
++
++&remoteproc_mpss {
++	firmware-name = "qcom/sc7180-trogdor/modem/mba.mbn",
++			"qcom/sc7180-trogdor/modem/qdsp6sw.mbn";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1-lte.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1-lte.dts
+new file mode 100644
+index 000000000000..1123c02bd539
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1-lte.dts
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Trogdor board device tree source
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++#include "sc7180-trogdor-r1.dts"
++#include "sc7180-trogdor-lte-sku.dtsi"
++
++/ {
++	model = "Google Trogdor (rev1+) with LTE";
++	compatible = "google,trogdor-sku0", "qcom,sc7180";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dts
+new file mode 100644
+index 000000000000..1b8bc5a1e625
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dts
+@@ -0,0 +1,206 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Trogdor board device tree source
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++/dts-v1/;
++
++#include "sc7180.dtsi"
++
++ap_ec_spi: &spi6 {};
++ap_h1_spi: &spi0 {};
++
++#include "sc7180-trogdor.dtsi"
++
++/ {
++	model = "Google Trogdor (rev1+)";
++	compatible = "google,trogdor", "qcom,sc7180";
++
++	panel: panel {
++		compatible = "auo,b116xa01";
++		power-supply = <&pp3300_dx_edp>;
++		backlight = <&backlight>;
++		hpd-gpios = <&sn65dsi86_bridge 2 GPIO_ACTIVE_HIGH>;
++
++		ports {
++			port {
++				panel_in_edp: endpoint {
++					remote-endpoint = <&sn65dsi86_out>;
++				};
++			};
++		};
++	};
++};
++
++&ap_sar_sensor_i2c {
++	/* Not hooked up */
++	status = "disabled";
++};
++
++ap_ts_pen_1v8: &i2c4 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	ap_ts: touchscreen@10 {
++		compatible = "elan,ekth3500";
++		reg = <0x10>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ts_int_l>, <&ts_reset_l>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
++
++		vcc33-supply = <&pp3300_ts>;
++
++		reset-gpios = <&tlmm 8 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&sdhc_1 {
++	/*
++	 * HACK: due to b/155826689 we are temporarily overriding the
++	 * compatible string which will cause us to restore the DLL config
++	 * at runtime resume.
++	 */
++	compatible = "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5";
++
++	/* HACK: this emmc is also causing us s2r problems, so further hack. */
++	max-frequency = <100000000>;
++	/delete-property/mmc-ddr-1_8v;
++	/delete-property/mmc-hs400-1_8v;
++	/delete-property/mmc-hs400-enhanced-strobe;
++};
++
++&sdhc_2 {
++	status = "okay";
++};
++
++/* PINCTRL - board-specific pinctrl */
++
++&tlmm {
++	gpio-line-names = "ESIM_MISO",
++			  "ESIM_MOSI",
++			  "ESIM_CLK",
++			  "ESIM_CS_L",
++			  "FP_TO_AP_IRQ_L",
++			  "FP_RST_L",
++			  "AP_TP_I2C_SDA",
++			  "AP_TP_I2C_SCL",
++			  "TS_RESET_L",
++			  "TS_INT_L",
++			  "FPMCU_BOOT0",
++			  "EDP_BRIJ_IRQ",
++			  "AP_EDP_BKLTEN",
++			  "",
++			  "",
++			  "EDP_BRIJ_I2C_SDA",
++			  "EDP_BRIJ_I2C_SCL",
++			  "HUB_RST_L",
++			  "PEN_RST_ODL",
++			  "AP_RAM_ID1",
++			  "AP_RAM_ID2",
++			  "PEN_IRQ_L",
++			  "FPMCU_SEL",
++			  "AMP_EN",
++			  "P_SENSOR_INT_L",
++			  "AP_SAR_SENSOR_SDA",
++			  "AP_SAR_SENSOR_SCL",
++			  "",
++			  "HP_IRQ",
++			  "AP_RAM_ID0",
++			  "EN_PP3300_DX_EDP",
++			  "AP_BRD_ID2",
++			  "BRIJ_SUSPEND",
++			  "AP_BRD_ID0",
++			  "AP_H1_SPI_MISO",
++			  "AP_H1_SPI_MOSI",
++			  "AP_H1_SPI_CLK",
++			  "AP_H1_SPI_CS_L",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "H1_AP_INT_ODL",
++			  "",
++			  "UART_AP_TX_DBG_RX",
++			  "UART_DBG_TX_AP_RX",
++			  "HP_I2C_SDA",
++			  "HP_I2C_SCL",
++			  "FORCED_USB_BOOT",
++			  "",
++			  "",
++			  "AMP_DIN",
++			  "PEN_PDCT_L",
++			  "HP_BCLK",
++			  "HP_LRCLK",
++			  "HP_DOUT",
++			  "HP_DIN",
++			  "HP_MCLK",
++			  "TRACKPAD_INT_1V8_ODL",
++			  "AP_EC_SPI_MISO",
++			  "AP_EC_SPI_MOSI",
++			  "AP_EC_SPI_CLK",
++			  "AP_EC_SPI_CS_L",
++			  "AP_SPI_CLK",
++			  "AP_SPI_MOSI",
++			  "AP_SPI_MISO",
++			  /*
++			   * AP_FLASH_WP_L is crossystem ABI. Schematics
++			   * call it BIOS_FLASH_WP_L.
++			   */
++			  "AP_FLASH_WP_L",
++			  "DBG_SPI_HOLD_L",
++			  "AP_SPI_CS0_L",
++			  "SD_CD_ODL",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "UIM2_DATA",
++			  "UIM2_CLK",
++			  "UIM2_RST",
++			  "UIM2_PRESENT",
++			  "UIM1_DATA",
++			  "UIM1_CLK",
++			  "UIM1_RST",
++			  "",
++			  "EN_PP3300_CODEC",
++			  "EN_PP3300_HUB",
++			  "",
++			  "AP_SPI_FP_MISO",
++			  "AP_SPI_FP_MOSI",
++			  "AP_SPI_FP_CLK",
++			  "AP_SPI_FP_CS_L",
++			  "AP_SKU_ID1",
++			  "AP_RST_REQ",
++			  "",
++			  "AP_BRD_ID1",
++			  "AP_EC_INT_L",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "EDP_BRIJ_EN",
++			  "AP_SKU_ID0",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "AP_TS_PEN_I2C_SDA",
++			  "AP_TS_PEN_I2C_SCL",
++			  "DP_HOT_PLUG_DET",
++			  "EC_IN_RW_ODL";
++};
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+new file mode 100644
+index 000000000000..b04987ab6c22
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+@@ -0,0 +1,1364 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Trogdor device tree source (common between revisions)
++ *
++ * Copyright 2019 Google LLC.
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
++
++/* PMICs depend on spmi_bus label and so must come after SoC */
++#include "pm6150.dtsi"
++#include "pm6150l.dtsi"
++
++/*
++ * Reserved memory changes
++ *
++ * Delete all unused memory nodes and define the peripheral memory regions
++ * required by the board dts.
++ *
++ */
++
++/delete-node/ &hyp_mem;
++/delete-node/ &xbl_mem;
++/delete-node/ &aop_mem;
++/delete-node/ &sec_apps_mem;
++/delete-node/ &tz_mem;
++
++/* Increase the size from 2MB to 8MB */
++&rmtfs_mem {
++	reg = <0x0 0x84400000 0x0 0x800000>;
++};
++
++/ {
++
++	reserved-memory {
++		atf_mem: memory@80b00000 {
++			reg = <0x0 0x80b00000 0x0 0x100000>;
++			no-map;
++		};
++
++		mpss_mem: memory@86000000 {
++			reg = <0x0 0x86000000 0x0 0x8c00000>;
++			no-map;
++		};
++
++		camera_mem: memory@8ec00000 {
++			reg = <0x0 0x8ec00000 0x0 0x500000>;
++			no-map;
++		};
++
++		venus_mem: memory@8f600000 {
++			reg = <0 0x8f600000 0 0x500000>;
++			no-map;
++		};
++
++		wlan_mem: memory@94100000 {
++			reg = <0x0 0x94100000 0x0 0x200000>;
++			no-map;
++		};
++
++		mba_mem: memory@94400000 {
++			reg = <0x0 0x94400000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
++	aliases {
++		bluetooth0 = &bluetooth;
++		hsuart0 = &uart3;
++		serial0 = &uart8;
++		wifi0 = &wifi;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	/* FIXED REGULATORS - parents above children */
++
++	/* This is the top level supply and variable voltage */
++	ppvar_sys: ppvar-sys-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "ppvar_sys";
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	/* This divides ppvar_sys by 2, so voltage is variable */
++	src_vph_pwr: src-vph-pwr-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "src_vph_pwr";
++
++		/* EC turns on with switchcap_on; always on for AP */
++		regulator-always-on;
++		regulator-boot-on;
++
++		vin-supply = <&ppvar_sys>;
++	};
++
++	pp5000_a: pp5000-a-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "pp5000_a";
++
++		/* EC turns on with en_pp5000_a; always on for AP */
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		vin-supply = <&ppvar_sys>;
++	};
++
++	pp3300_a: pp3300-a-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "pp3300_a";
++
++		/* EC turns on with en_pp3300_a; always on for AP */
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		/*
++		 * Actually should be pp3300 but that's practically an alias for
++		 * pp3300_a so we use pp3300's vin-supply here to avoid one more
++		 * node.
++		 */
++		vin-supply = <&ppvar_sys>;
++	};
++
++	pp3300_audio:
++	pp3300_codec: pp3300-codec-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "pp3300_codec";
++
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 83 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-names = "default";
++		pinctrl-0 = <&en_pp3300_codec>;
++
++		vin-supply = <&pp3300_a>;
++	};
++
++	pp3300_dx_edp:
++	pp3300_ts: pp3300-dx-edp-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "pp3300_dx_edp";
++
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&tlmm 30 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		pinctrl-names = "default";
++		pinctrl-0 = <&en_pp3300_dx_edp>;
++
++		vin-supply = <&pp3300_a>;
++	};
++
++	pp3300_fp_tp: pp3300-fp-tp-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "pp3300_fp_tp";
++
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		/* AP turns on with PP1800_VIO_OUT; always on for AP */
++		regulator-always-on;
++		regulator-boot-on;
++
++		vin-supply = <&pp3300_a>;
++	};
++
++	/* BOARD-SPECIFIC TOP LEVEL NODES */
++
++	backlight: backlight {
++		compatible = "pwm-backlight";
++
++		/* The panels don't seem to like anything below ~ 5% */
++		brightness-levels = <
++			196 256 324 400 484 576 676 784 900 1024 1156 1296
++			1444 1600 1764 1936 2116 2304 2500 2704 2916 3136
++			3364 3600 3844 4096
++		>;
++		num-interpolated-steps = <64>;
++		default-brightness-level = <951>;
++
++		pwms = <&cros_ec_pwm 1>;
++		enable-gpios = <&tlmm 12 GPIO_ACTIVE_HIGH>;
++		power-supply = <&ppvar_sys>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ap_edp_bklten>;
++	};
++
++	gpio_keys: gpio-keys {
++		compatible = "gpio-keys";
++		status = "disabled";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pen_pdct_l>;
++
++		pen-insert {
++			label = "Pen Insert";
++
++			/* Insert = low, eject = high */
++			gpios = <&tlmm 52 GPIO_ACTIVE_LOW>;
++			linux,code = <SW_PEN_INSERTED>;
++			linux,input-type = <EV_SW>;
++			wakeup-source;
++		};
++	};
++
++	max98357a: max98357a {
++		compatible = "maxim,max98357a";
++		pinctrl-names = "default";
++		pinctrl-0 = <&amp_en>;
++		sdmode-gpios = <&tlmm 23 GPIO_ACTIVE_HIGH>;
++		#sound-dai-cells = <0>;
++	};
++
++	pwmleds {
++		compatible = "pwm-leds";
++		keyboard_backlight: keyboard-backlight {
++			status = "disabled";
++			label = "cros_ec::kbd_backlight";
++			pwms = <&cros_ec_pwm 0>;
++			max-brightness = <1023>;
++		};
++	};
++};
++
++&qfprom {
++	vcc-supply = <&pp1800_l11a>;
++};
++
++
++&qspi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&qspi_clk>, <&qspi_cs0>, <&qspi_data01>;
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++
++		/* TODO: Increase frequency after testing */
++		spi-max-frequency = <25000000>;
++		spi-tx-bus-width = <2>;
++		spi-rx-bus-width = <2>;
++	};
++};
++
++
++&apps_rsc {
++	pm6150-rpmh-regulators {
++		compatible = "qcom,pm6150-rpmh-regulators";
++		qcom,pmic-id = "a";
++
++		vddpx_1:
++		vdd2:
++		pp1125_s1a: smps1 {
++			regulator-min-microvolt = <1128000>;
++			regulator-max-microvolt = <1128000>;
++		};
++
++		/*
++		 * pp2040_s5a (smps5) and pp1056_s4a (smps4) are just
++		 * inputs to other rails on AOP-managed PMICs on trogdor.
++		 * The system is already configured to manage these rails
++		 * automatically (enable when needed, adjust voltage for
++		 * headroom) so we won't specify anything here.
++		 *
++		 * NOTE: though the rails have a voltage implied by their
++		 * name, the automatic headroom calculation might not result
++		 * in them being that voltage.  ...and that's OK.
++		 * Specifically the only point of these rails is to provide
++		 * an input source for other rails and if we can satisify the
++		 * needs of those other rails with a lower source voltage then
++		 * we save power.
++		 */
++
++		pp1200_l1a: ldo1 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp1000_l2a: ldo2 {
++			regulator-min-microvolt = <944000>;
++			regulator-max-microvolt = <1056000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp1000_l3a: ldo3 {
++			regulator-min-microvolt = <968000>;
++			regulator-max-microvolt = <1064000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdd_qlink_lv:
++		vdd_qlink_lv_ck:
++		vdd_qusb_hs0_core:
++		vdd_ufs1_core:
++		vdda_mipi_csi0_0p9:
++		vdda_mipi_csi1_0p9:
++		vdda_mipi_csi2_0p9:
++		vdda_mipi_csi3_0p9:
++		vdda_mipi_dsi0_pll:
++		vdda_pll_cc_ebi01:
++		vdda_qrefs_0p9:
++		vdda_usb_ss_dp_core:
++		pp900_l4a: ldo4 {
++			regulator-min-microvolt = <824000>;
++			regulator-max-microvolt = <928000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp2700_l5a: ldo5 {
++			regulator-min-microvolt = <2704000>;
++			regulator-max-microvolt = <2704000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		ebi0_cal:
++		ebi1_cal:
++		vddio_ck_ebi0:
++		vddio_ck_ebi1:
++		vddio_ebi0:
++		vddq:
++		pp600_l6a: ldo6 {
++			regulator-min-microvolt = <568000>;
++			regulator-max-microvolt = <648000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdd_cx_wlan:
++		pp800_l9a: ldo9 {
++			regulator-min-microvolt = <488000>;
++			regulator-max-microvolt = <800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdd1:
++		vddpx_3:
++		vddpx_7:
++		vio_in:
++		pp1800_l10a: ldo10 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdd_qfprom:
++		vdda_apc1_cs_1p8:
++		vdda_qrefs_1p8:
++		vdda_qusb_hs0_1p8:
++		vddpx_11:
++		vreg_bb_clk:
++		pp1800_l11a: ldo11 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		mcp_vccq:
++		pp1800_l12a_r: ldo12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp1800_l13a: ldo13 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp1800_prox:
++		pp1800_l14a: ldo14 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp1800_alc5682:
++		pp1800_l15a: ldo15 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp2700_l16a: ldo16 {
++			regulator-min-microvolt = <2496000>;
++			regulator-max-microvolt = <3304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdda_qusb_hs0_3p1:
++		vdd_pdphy:
++		pp3100_l17a: ldo17 {
++			regulator-min-microvolt = <2920000>;
++			regulator-max-microvolt = <3232000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp1800_pen:
++		pp1800_l18a: ldo18 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		mcp_vcc:
++		pp2850_l19a: ldo19 {
++			regulator-min-microvolt = <2960000>;
++			regulator-max-microvolt = <2960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++	};
++
++	pm6150l-rpmh-regulators {
++		compatible = "qcom,pm6150l-rpmh-regulators";
++		qcom,pmic-id = "c";
++
++		pp1300_s8c: smps8 {
++			regulator-min-microvolt = <1120000>;
++			regulator-max-microvolt = <1408000>;
++		};
++
++		pp1800_l1c: ldo1 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vdd_wcss_adc_dac:
++		pp1300_l2c: ldo2 {
++			regulator-min-microvolt = <1168000>;
++			regulator-max-microvolt = <1304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp1200_brij:
++		vdd_ufs1_1p2:
++		vdda_csi0_1p25:
++		vdda_csi1_1p25:
++		vdda_csi2_1p25:
++		vdda_csi3_1p25:
++		vdda_hv_ebi0:
++		vdda_mipi_dsi0_1p2:
++		vdda_usb_ss_dp_1p2:
++		vddpx_10:
++		pp1200_l3c: ldo3 {
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		ld_pp1800_esim_l4c:
++		vddpx_5:
++		pp1800_l4c: ldo4 {
++			regulator-min-microvolt = <1648000>;
++			regulator-max-microvolt = <3304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_6:
++		pp1800_l5c: ldo5 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		vddpx_2:
++		ppvar_l6c: ldo6 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp3300_hub:
++		pp3300_l7c: ldo7 {
++			regulator-min-microvolt = <3304000>;
++			regulator-max-microvolt = <3304000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		pp1800_brij_vccio:
++		pp1800_edp_vpll:
++		pp1800_l8c: ldo8 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp2950_l9c: ldo9 {
++			regulator-min-microvolt = <2952000>;
++			regulator-max-microvolt = <2952000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp3300_l10c: ldo10 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3400000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		pp3300_l11c: ldo11 {
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3400000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
++		};
++
++		src_vreg_bob: bob {
++			regulator-min-microvolt = <3008000>;
++			regulator-max-microvolt = <3960000>;
++			regulator-initial-mode = <RPMH_REGULATOR_MODE_AUTO>;
++		};
++	};
++};
++
++&ap_ec_spi {
++	status = "okay";
++	cros_ec: ec@0 {
++		compatible = "google,cros-ec-spi";
++		reg = <0>;
++		interrupt-parent = <&tlmm>;
++		interrupts = <94 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ap_ec_int_l>;
++		spi-max-frequency = <3000000>;
++
++		cros_ec_pwm: ec-pwm {
++			compatible = "google,cros-ec-pwm";
++			#pwm-cells = <1>;
++		};
++
++		i2c_tunnel: i2c-tunnel {
++			compatible = "google,cros-ec-i2c-tunnel";
++			google,remote-bus = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		pdupdate {
++			compatible = "google,cros-ec-pd-update";
++		};
++
++		typec {
++			compatible = "google,cros-ec-typec";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			connector@0 {
++				compatible = "usb-c-connector";
++				reg = <0>;
++				label = "left";
++				power-role = "dual";
++				data-role = "host";
++				try-power-role = "source";
++			};
++
++			connector@1 {
++				compatible = "usb-c-connector";
++				reg = <1>;
++				label = "right";
++				power-role = "dual";
++				data-role = "host";
++				try-power-role = "source";
++			};
++		};
++	};
++};
++
++&ap_h1_spi {
++	status = "okay";
++	cr50: tpm@0 {
++		compatible = "google,cr50";
++		reg = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&h1_ap_int_odl>;
++		spi-max-frequency = <800000>;
++		interrupt-parent = <&tlmm>;
++		interrupts = <42 IRQ_TYPE_EDGE_RISING>;
++	};
++};
++
++&dsi0 {
++	status = "okay";
++	vdda-supply = <&vdda_mipi_dsi0_1p2>;
++
++	ports {
++		port@1 {
++			endpoint {
++				remote-endpoint = <&sn65dsi86_in>;
++				data-lanes = <0 1 2 3>;
++			};
++		};
++	};
++};
++
++&dsi_phy {
++	status = "okay";
++	vdds-supply = <&vdda_mipi_dsi0_pll>;
++};
++
++edp_brij_i2c: &i2c2 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	sn65dsi86_bridge: bridge@2d {
++		compatible = "ti,sn65dsi86";
++		reg = <0x2d>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&edp_brij_en>, <&edp_brij_irq>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
++
++		enable-gpios = <&tlmm 104 GPIO_ACTIVE_HIGH>;
++
++		vpll-supply = <&pp1800_edp_vpll>;
++		vccio-supply = <&pp1800_brij_vccio>;
++		vcca-supply = <&pp1200_brij>;
++		vcc-supply = <&pp1200_brij>;
++
++		clocks = <&rpmhcc RPMH_LN_BB_CLK3>;
++		clock-names = "refclk";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				sn65dsi86_in: endpoint {
++					remote-endpoint = <&dsi0_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				sn65dsi86_out: endpoint {
++					data-lanes = <0 1>;
++					remote-endpoint = <&panel_in_edp>;
++				};
++			};
++		};
++	};
++};
++
++ap_sar_sensor_i2c: &i2c5 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	ap_sar_sensor: proximity@28 {
++		compatible = "semtech,sx9310";
++		reg = <0x28>;
++		#io-channel-cells = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&p_sensor_int_l>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <24 IRQ_TYPE_LEVEL_LOW>;
++
++		vdd-supply = <&pp3300_a>;
++		svdd-supply = <&pp1800_prox>;
++
++		status = "disabled";
++		label = "proximity-wifi";
++	};
++};
++
++ap_tp_i2c: &i2c7 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	trackpad@15 {
++		compatible = "elan,ekth3000";
++		reg = <0x15>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&trackpad_int_1v8_odl>;
++
++		interrupt-parent = <&tlmm>;
++		interrupts = <58 IRQ_TYPE_EDGE_FALLING>;
++
++		vcc-supply = <&pp3300_fp_tp>;
++
++		wakeup-source;
++	};
++};
++
++hp_i2c: &i2c9 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	alc5682: codec@1a {
++		compatible = "realtek,rt5682i";
++		reg = <0x1a>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hp_irq>;
++
++		#sound-dai-cells = <1>;
++
++		interrupt-parent = <&tlmm>;
++		/*
++		 * This will get ignored because the interrupt type
++		 * is set in rt5682.c.
++		 */
++		interrupts = <28 IRQ_TYPE_EDGE_BOTH>;
++
++		AVDD-supply = <&pp1800_alc5682>;
++		MICVDD-supply = <&pp3300_codec>;
++		VBAT-supply = <&pp3300_audio>;
++
++		realtek,dmic1-data-pin = <1>;
++		realtek,dmic1-clk-pin = <1>;
++		realtek,jd-src = <1>;
++	};
++};
++
++&ipa {
++	status = "okay";
++
++	/*
++	 * Trogdor doesn't have QHEE (Qualcomm's EL2 blob), so the
++	 * modem needs to cover certain init steps (GSI init), and
++	 * the AP needs to wait for it.
++	 */
++	modem-init;
++};
++
++&mdp {
++	status = "okay";
++};
++
++&mdss {
++	status = "okay";
++};
++
++&pm6150_pwrkey {
++	status = "disabled";
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&qupv3_id_1 {
++	status = "okay";
++};
++
++&remoteproc_mpss {
++	status = "okay";
++	compatible = "qcom,sc7180-mss-pil";
++	iommus = <&apps_smmu 0x461 0x0>, <&apps_smmu 0x444 0x3>;
++	memory-region = <&mba_mem &mpss_mem>;
++
++	/* This gets overridden for SKUs with LTE support. */
++	firmware-name = "qcom/sc7180-trogdor/modem-nolte/mba.mbn",
++			"qcom/sc7180-trogdor/modem-nolte/qdsp6sw.mbn";
++};
++
++&sdhc_1 {
++	status = "okay";
++
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc1_on>;
++	pinctrl-1 = <&sdc1_off>;
++	vmmc-supply = <&mcp_vcc>;
++	vqmmc-supply = <&mcp_vccq>;
++};
++
++&sdhc_2 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&sdc2_on>;
++	pinctrl-1 = <&sdc2_off>;
++	vmmc-supply = <&pp2950_l9c>;
++	vqmmc-supply = <&ppvar_l6c>;
++
++	cd-gpios = <&tlmm 69 GPIO_ACTIVE_LOW>;
++};
++
++ap_spi_fp: &spi10 {
++	cros_ec_fp: ec@0 {
++		compatible = "google,cros-ec-spi";
++		reg = <0>;
++		interrupt-parent = <&tlmm>;
++		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&fp_to_ap_irq_l>, <&fp_rst_l>, <&fpmcu_boot0>, <&fpmcu_sel>;
++		spi-max-frequency = <3000000>;
++	};
++};
++
++#include <arm/cros-ec-keyboard.dtsi>
++#include <arm/cros-ec-sbs.dtsi>
++
++&uart3 {
++	status = "okay";
++
++	bluetooth: bluetooth {
++		compatible = "qcom,wcn3991-bt";
++		vddio-supply = <&pp1800_l10a>;
++		vddxo-supply = <&pp1800_l1c>;
++		vddrf-supply = <&pp1300_l2c>;
++		vddch0-supply = <&pp3300_l10c>;
++		max-speed = <3200000>;
++		clocks = <&rpmhcc RPMH_RF_CLK2>;
++	};
++};
++
++&uart8 {
++	status = "okay";
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3 {
++	dr_mode = "host";
++};
++
++&usb_1_hsphy {
++	status = "okay";
++	vdd-supply = <&vdd_qusb_hs0_core>;
++	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
++	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
++	qcom,imp-res-offset-value = <8>;
++	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_15_PERCENT>;
++	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
++	qcom,bias-ctrl-value = <0x22>;
++	qcom,charge-ctrl-value = <3>;
++	qcom,hsdisc-trim-value = <0>;
++};
++
++&usb_1_qmpphy {
++	status = "okay";
++	vdda-phy-supply = <&vdda_usb_ss_dp_1p2>;
++	vdda-pll-supply = <&vdda_usb_ss_dp_core>;
++};
++
++&wifi {
++	status = "okay";
++	vdd-0.8-cx-mx-supply = <&vdd_cx_wlan>;
++	vdd-1.8-xo-supply = <&pp1800_l1c>;
++	vdd-1.3-rfa-supply = <&pp1300_l2c>;
++
++	/*
++	 * TODO: Put ch1 supply in its rightful place, rather than in ch0's
++	 * spot. Channel 0 is held open by bluetooth for now.
++	 */
++	vdd-3.3-ch0-supply = <&pp3300_l11c>;
++	wifi-firmware {
++		iommus = <&apps_smmu 0xc2 0x1>;
++	};
++};
++
++/* PINCTRL - additions to nodes defined in sdm845.dtsi */
++
++&qspi_cs0 {
++	pinconf {
++		pins = "gpio68";
++		bias-disable;
++	};
++};
++
++&qspi_clk {
++	pinconf {
++		pins = "gpio63";
++		bias-disable;
++	};
++};
++
++&qspi_data01 {
++	pinconf {
++		pins = "gpio64", "gpio65";
++
++		/* High-Z when no transfers; nice to park the lines */
++		bias-pull-up;
++	};
++};
++
++&qup_i2c2_default {
++	pinconf {
++		pins = "gpio15", "gpio16";
++		drive-strength = <2>;
++
++		/* Has external pullup */
++		bias-disable;
++	};
++};
++
++&qup_i2c4_default {
++	pinconf {
++		pins = "gpio115", "gpio116";
++		drive-strength = <2>;
++
++		/* Has external pullup */
++		bias-disable;
++	};
++};
++
++&qup_i2c5_default {
++	pinconf {
++		pins = "gpio25", "gpio26";
++		drive-strength = <2>;
++
++		/* Has external pullup */
++		bias-disable;
++	};
++};
++
++&qup_i2c7_default {
++	pinconf {
++		pins = "gpio6", "gpio7";
++		drive-strength = <2>;
++
++		/* Has external pullup */
++		bias-disable;
++	};
++};
++
++&qup_i2c9_default {
++	pinconf {
++		pins = "gpio46", "gpio47";
++		drive-strength = <2>;
++
++		/* Has external pullup */
++		bias-disable;
++	};
++};
++
++&qup_spi0_default {
++	pinconf {
++		pins = "gpio34", "gpio35", "gpio36", "gpio37";
++		drive-strength = <2>;
++		bias-disable;
++	};
++};
++
++&qup_spi6_default {
++	pinconf {
++		pins = "gpio59", "gpio60", "gpio61", "gpio62";
++		drive-strength = <2>;
++		bias-disable;
++	};
++};
++
++&qup_spi10_default {
++	pinconf {
++		pins = "gpio86", "gpio87", "gpio88", "gpio89";
++		drive-strength = <2>;
++		bias-disable;
++	};
++};
++
++&qup_uart3_default {
++	pinconf-cts {
++		/*
++		 * Configure a pull-down on CTS to match the pull of
++		 * the Bluetooth module.
++		 */
++		pins = "gpio38";
++		bias-pull-down;
++	};
++
++	pinconf-rts-tx {
++		/* We'll drive RTS and TX, so no pull */
++		pins = "gpio39", "gpio40";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	pinconf-rx {
++		/*
++		 * Configure a pull-up on RX. This is needed to avoid
++		 * garbage data when the TX pin of the Bluetooth module is
++		 * in tri-state (module powered off or not driving the
++		 * signal yet).
++		 */
++		pins = "gpio41";
++		bias-pull-up;
++	};
++};
++
++&qup_uart8_default {
++	pinconf-tx {
++		pins = "gpio44";
++		drive-strength = <2>;
++		bias-disable;
++	};
++
++	pinconf-rx {
++		pins = "gpio45";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++};
++
++/* PINCTRL - board-specific pinctrl */
++
++&pm6150_gpio {
++	status = "disabled"; /* No GPIOs are connected */
++};
++
++&pm6150l_gpio {
++	gpio-line-names = "AP_SUSPEND",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "",
++			  "";
++};
++
++&tlmm {
++	/*
++	 * pinctrl settings for pins that have no real owners.
++	 */
++	pinctrl-names = "default";
++	pinctrl-0 = <&bios_flash_wp_l>, <&ap_suspend_l_neuter>;
++
++	amp_en: amp-en {
++		pinmux {
++			pins = "gpio23";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio23";
++			bias-pull-down;
++		};
++	};
++
++	ap_ec_int_l: ap-ec-int-l {
++		pinmux {
++			pins = "gpio94";
++			function = "gpio";
++			input-enable;
++		};
++
++		pinconf {
++			pins = "gpio94";
++			bias-pull-up;
++		};
++	};
++
++	ap_edp_bklten: ap-edp-bklten {
++		pinmux {
++			pins = "gpio12";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio12";
++			drive-strength = <2>;
++			bias-disable;
++
++			/* Force backlight to be disabled to match state at boot. */
++			output-low;
++		};
++	};
++
++	ap_suspend_l_neuter: ap-suspend-l-neuter {
++		pinmux  {
++			pins = "gpio27";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio27";
++			bias-disable;
++		};
++	};
++
++	bios_flash_wp_l: bios-flash-wp-l {
++		pinmux {
++			pins = "gpio66";
++			function = "gpio";
++			input-enable;
++		};
++
++		pinconf {
++			pins = "gpio66";
++			bias-disable;
++		};
++	};
++
++	dp_hot_plug_det: dp-hot-plug-det {
++		 pinmux {
++			 pins = "gpio117";
++			 function = "dp_hot";
++		 };
++
++		 config {
++			 pins = "gpio117";
++			 bias-disable;
++			 input-enable;
++			 drive-strength = <2>;
++		 };
++	 };
++
++	edp_brij_en: edp-brij-en {
++		pinmux {
++			pins = "gpio104";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio104";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	edp_brij_irq: edp-brij-irq {
++		pinmux {
++			pins = "gpio11";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio11";
++			drive-strength = <2>;
++			bias-pull-down;
++		};
++	};
++
++	en_pp3300_codec: en-pp3300-codec {
++		pinmux {
++			pins = "gpio83";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio83";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	en_pp3300_dx_edp: en-pp3300-dx-edp {
++		pinmux {
++			pins = "gpio30";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio30";
++			drive-strength = <2>;
++			bias-disable;
++		};
++	};
++
++	fpmcu_boot0: fpmcu-boot0 {
++		pinmux {
++			pins = "gpio10";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio10";
++			bias-disable;
++			drive-strength = <2>;
++			output-low;
++		};
++	};
++
++	fpmcu_sel: fpmcu-sel {
++		pinmux {
++			pins = "gpio22";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio22";
++			bias-disable;
++			drive-strength = <2>;
++			output-high;
++		};
++	};
++
++	fp_rst_l: fp-rst-l {
++		pinmux {
++			pins = "gpio5";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio5";
++			bias-disable;
++			drive-strength = <2>;
++			output-high;
++		};
++	};
++
++	fp_to_ap_irq_l: fp-to-ap-irq-l {
++		pinmux {
++			pins = "gpio4";
++			function = "gpio";
++			input-enable;
++		};
++
++		pinconf {
++			pins = "gpio4";
++
++			/* Has external pullup */
++			bias-disable;
++		};
++	};
++
++
++	h1_ap_int_odl: h1-ap-int-odl {
++		pinmux {
++			pins = "gpio42";
++			function = "gpio";
++			input-enable;
++		};
++
++		pinconf {
++			pins = "gpio42";
++			bias-pull-up;
++		};
++	};
++
++	hp_irq: hp-irq {
++		pinmux {
++			pins = "gpio28";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio28";
++			bias-pull-up;
++		};
++	};
++
++	pen_irq_l: pen-irq-l {
++		pinmux {
++			pins = "gpio21";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio21";
++
++			/* Has external pullup */
++			bias-disable;
++		};
++	};
++
++	pen_pdct_l: pen-pdct-l {
++		pinmux {
++			pins = "gpio52";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio52";
++
++			/* Has external pullup */
++			bias-disable;
++		};
++	};
++
++	pen_rst_odl: pen-rst-odl {
++		pinmux  {
++			pins = "gpio18";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio18";
++			bias-disable;
++			drive-strength = <2>;
++
++			/*
++			 * The pen driver doesn't currently support
++			 * driving this reset line.  By specifying
++			 * output-high here we're relying on the fact
++			 * that this pin has a default pulldown at boot
++			 * (which makes sure the pen was in reset if it
++			 * was powered) and then we set it high here to
++			 * take it out of reset.  Better would be if the
++			 * pen driver could control this and we could
++			 * remove "output-high" here.
++			 */
++			output-high; /* TODO: Remove this? */
++		};
++	};
++
++	p_sensor_int_l: p-sensor-int-l {
++		pinmux {
++			pins = "gpio24";
++			function = "gpio";
++			input-enable;
++		};
++
++		pinconf {
++			pins = "gpio24";
++			bias-pull-up;
++		};
++	};
++
++	trackpad_int_1v8_odl: trackpad-int-1v8-odl {
++		pinmux {
++			pins = "gpio58";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio58";
++
++			/* Has external pullup */
++			bias-disable;
++		};
++	};
++
++	ts_int_l: ts-int-l {
++		pinmux  {
++			pins = "gpio9";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio9";
++			bias-pull-up;
++		};
++	};
++
++	ts_reset_l: ts-reset-l {
++		pinmux  {
++			pins = "gpio8";
++			function = "gpio";
++		};
++
++		pinconf {
++			pins = "gpio8";
++			bias-disable;
++			drive-strength = <2>;
++		};
++	};
++};
++
++&venus {
++	video-firmware {
++		iommus = <&apps_smmu 0x0c42 0x0>;
++	};
++};
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
