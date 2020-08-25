@@ -2,108 +2,92 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBC3C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E810C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D11BB207BC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598377342;
-	bh=Iqt2erpFyqgPmzlkkdVamZ0XSnju1HiOp2ooMVL6Uqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AyWRZvY7fuEXL7vr91DwspTo8SzUmGlVcW2AN5R+KC4A9pNl4qUYkt0GXMxJ3KFjy
-	 MqzFbJEsu6N/lqGSe/HEvmU89dqIcdrqyz9kapOdybMyl6XeoFm3Lip2IqyZT4IFHb
-	 QK1NT/OM6Lf7QryXLX25oxQEEyHIBN3LAW7QMpNw=
+	by mail.kernel.org (Postfix) with ESMTP id 04A8D207BC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbgHYRmV (ORCPT
+        id S1726090AbgHYRuw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:42:21 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:39423 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgHYRmU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 13:42:20 -0400
-Received: by mail-il1-f196.google.com with SMTP id f12so11150418ils.6;
-        Tue, 25 Aug 2020 10:42:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NTp9u+iFGhAjZbw/H+WbVNzQr+UMY6B6b4vLY7DE2lo=;
-        b=MwlGuAjlcVWmp0YPF1lmEUSoBhrUUDjMmxWws8ytNAR+/KY0zxDwpjMidLibZe/sGW
-         hAkxDiVb2tK5lRCEu3uX5kn7Ndb9QmXuVdF268DzLxTIyPTfCX7e1NVyND0oPf2UaJY4
-         AaWuI84lZvsJ3m48+YboHOwyLnwNj1NXXGVP5gxJX1lidBnup70hntaXRtoOJuTUXnIo
-         ioSkI/LdDb3kq8LO8FYABNTIiF3qZKhildyas5Qt9wgKB6gBsAdwwJA+TxJwCyRHPErx
-         d4dstkYxE9p5dJ/Cj9deHjDm5wtMQebUaicPjjaotG7Gar5o2uXtKdavq/EyCKpC8GI+
-         CfIA==
-X-Gm-Message-State: AOAM531Xv1n1+bNnkDJLoTfsU1KVutA08YB2tcxPyVcFcUR9/wOeWQJ/
-        1HrYTZUmPD2SrWxLjOWAbg==
-X-Google-Smtp-Source: ABdhPJzWee0fZTqZEQWL/ptQEMx+PfSomfPDeGF7gm1FmOf20zLrifz3/STLKJkgTmLuKgxEqET0/Q==
-X-Received: by 2002:a05:6e02:670:: with SMTP id l16mr10253072ilt.52.1598377338930;
-        Tue, 25 Aug 2020 10:42:18 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id v84sm9831589ilk.4.2020.08.25.10.42.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 10:42:17 -0700 (PDT)
-Received: (nullmailer pid 1008933 invoked by uid 1000);
-        Tue, 25 Aug 2020 17:42:15 -0000
-Date:   Tue, 25 Aug 2020 11:42:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Crystal Guo <crystal.guo@mediatek.com>
-Cc:     p.zabel@pengutronix.de, matthias.bgg@gmail.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, s-anna@ti.com, afd@ti.com,
-        seiya.wang@mediatek.com, stanley.chu@mediatek.com,
-        yingjoe.chen@mediatek.com, fan.chen@mediatek.com,
-        yong.liang@mediatek.com
-Subject: Re: [v4,1/4] dt-binding: reset-controller: ti: add reset-duration-us
- property
-Message-ID: <20200825174215.GA999117@bogus>
-References: <20200817030324.5690-1-crystal.guo@mediatek.com>
- <20200817030324.5690-2-crystal.guo@mediatek.com>
+        Tue, 25 Aug 2020 13:50:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30548 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbgHYRuv (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 13:50:51 -0400
+IronPort-SDR: 61xovL9MLi8AsEGvSw4FzZ2NPSJcNJ4Kks8gGo9FZOx/NRGaC1lRo/EONcI3dOimW9nFKI711d
+ TPiKIcJ2LXyQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="135718451"
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="135718451"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:50:50 -0700
+IronPort-SDR: mBy4kAEHercHMbotNfm9BjCeJlV7ysa+UDvg8fICyG6emBZiknw+7rsDFbfvm9avTEC0JzKnb8
+ bJT8ln0mMtNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="499399872"
+Received: from adent-mobl.amr.corp.intel.com (HELO ellie) ([10.209.77.195])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Aug 2020 10:50:50 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
+In-Reply-To: <87bliz13kj.fsf@kurt>
+References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <87pn7ftx6b.fsf@intel.com> <87bliz13kj.fsf@kurt>
+Date:   Tue, 25 Aug 2020 10:50:50 -0700
+Message-ID: <87d03ety11.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817030324.5690-2-crystal.guo@mediatek.com>
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:03:21AM +0800, Crystal Guo wrote:
-> introduce 'reset' method to allow device do serialized assert and
-> deassert operations in a single step, which needs a minimum delay
-> to be waited between assert and deassert.
+Hi Kurt,
 
-Why is Mediatek adding to a TI binding?
+Kurt Kanzenbach <kurt@linutronix.de> writes:
 
-> 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> index 86945502ccb5..ab041032339b 100644
-> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> @@ -59,6 +59,11 @@ Required properties:
->  Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
->  common reset controller usage by consumers.
->  
-> +Optional properties:
-> +- reset-duration-us: When do serialized assert and deassert operations, minimum delay in microseconds
-> +is needed to be waited between an assert and a deassert to reset the device. This value can be 0, 0 means
-> +that such a delay is not needed.
+> On Mon Aug 24 2020, Vinicius Costa Gomes wrote:
+>> Hi,
+>>
+>> Kurt Kanzenbach <kurt@linutronix.de> writes:
+>>
+> [snip]
+>>> +	/* Setup timer for schedule switch: The IP core only allows to set a
+>>> +	 * cycle start timer 8 seconds in the future. This is why we setup the
+>>> +	 * hritmer to base_time - 5 seconds. Then, we have enough time to
+>>> +	 * activate IP core's EST timer.
+>>> +	 */
+>>> +	start = ktime_sub_ns(schedule->base_time, (u64)5 * NSEC_PER_SEC);
+>>> +	hrtimer_start_range_ns(&hellcreek_port->cycle_start_timer, start,
+>>> +			       NSEC_PER_SEC, HRTIMER_MODE_ABS);
+>>
+>> If we are talking about seconds here, I don't think you need to use a
+>> hrtimer, you could use a workqueue/delayed_work. Should make things a
+>> bit simpler.
+>
+> I've used hrtimers for one reason: The hrtimer provides a way to fire at
+> an absolute base time based on CLOCK_TAI. All the other facilities such
+> as workqueues, timer list timers, etc do not.
 
-This goes in the reset controller node or each consumer? For the latter, 
-it should be a cell in 'resets' if you need this. But really, I think 
-the reset controller should enforce some minimum time that works for all 
-consumers. Surely having a minimum time per reset isn't really needed.
+Oh, yeah. Good point.
 
-Rob
+
+Cheers,
+-- 
+Vinicius
