@@ -2,234 +2,123 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D5BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17230C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F969204FD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29BF20782
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:48:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZGu+1EFv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VlDRMj6d"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ONPRsiCl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="evMqEEGK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHYOkc (ORCPT
+        id S1726180AbgHYOs3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:40:32 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:50599 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726617AbgHYOk1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:40:27 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 70A0D5805C6;
-        Tue, 25 Aug 2020 10:40:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 10:40:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=w
-        MzjRVZ2eQmnRLOWtihVl3tYEELP/S8Nb3EyoLwdO9Q=; b=ZGu+1EFvpMlJgGP/h
-        7q33zmEHNWl1PX8uKISBMLxwVqQwdmrDUwPBbwH8tEfaBbTxRaWqi/QIyAzk4Ap2
-        PlmBLwPBNEE34nqXb3i+8BdD6Ya4sDE2wbOjjtkOjHANE1rtTW89BWbb5xxYCEO7
-        ELX/yCqNSL9wDWUD7e6gtVX38OXPrb6k/ZyKLf/XJAlgUo0i0veHxuSpPc/oZTOy
-        JQGhDMuVTv8eoztbFGgocgx4GO6RlzoOlEF8o3sh5/xCsKMTmFi2AhjylGjV4vZl
-        ggcSuRhEYSQgtR57lr0T/8Jvxp2VlhP6POBYmfhTd+ztFFFprdu8yHrI1BtpIdNW
-        Sk2jA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=wMzjRVZ2eQmnRLOWtihVl3tYEELP/S8Nb3EyoLwdO
-        9Q=; b=VlDRMj6dBtQg08iBd10GaVK5O3M7B+0mCO0wZduK7cIMoVzhn9/pSI3eq
-        0RKJtAlxoF9AX0UbffAxcCf8gXgnJAyLO6hENEQF0WGRa0pxe82x27bsv4d1NFQU
-        oAZ/T91/XTefiJGVa2SNFlRCobjJflJavbAYVcIE97926YRW5vtFFCxN/k7F5kFd
-        RBtsr3pygiGTaCHTLRDcb6w1Y+TgHWKN8U6eQSwHNBM+07wbLlGU0dgK15JkPMT9
-        3BbIuVnnjxxKdK1AWK0AqcJ6U/Iq6zhMIgekyGDQrXrmny8ShWPZ9s/Y/i/GlHB/
-        tu4QX61Oy2ZLXK27K1oDaBRjW5yjg==
-X-ME-Sender: <xms:2CJFX4pX79xgkgrQW1NbaOfBzTAl_u3mzl1LDaB1-upMlEi6KgMdYg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgkedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtudenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeehledvhfeklefgveelkeeludevffethfdukedvfffhhfegfeeugfehgeef
-    jeevtdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:2CJFX-pdvMGRNKPeQbmAqGMelw_PWcWrPKji7sz0Z0HqGA55PsUdHQ>
-    <xmx:2CJFX9OQrDCtzePv3h8UXa-XRIx98lP2HeImaFSk-wu_aMRWf-vPsQ>
-    <xmx:2CJFX_6n_oSOO04vY4S1Gd-0BjB2__ZVLvE5_e21FL2DlMYC-aSflw>
-    <xmx:2iJFX0HEJT5ve-0Ac8oI61oKCtRX7NdjBnDwErAMJHMjDJgAWn7t3g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4B6EF30600B7;
-        Tue, 25 Aug 2020 10:40:24 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 16:40:22 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 7/7] [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3:
- Enable OV8865 camera
-Message-ID: <20200825144022.mwkcqaqny7l5bab4@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
- <20200821145935.20346-8-kevin.lhopital@bootlin.com>
+        Tue, 25 Aug 2020 10:48:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:50514 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgHYOs1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 10:48:27 -0400
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598366904;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NhozcRiSk9TRKJ8CHvRx3nzWReQ8VTKS10wrtlWnEGk=;
+        b=ONPRsiCldQS7HOmEvqU3RKKeLSuRti974gBs3kojojhxyaZZR6unKHyUITbqa1jM2WlKOS
+        3u8E6RnYzkLvm+mNUPi4KgbSq2VE+3Qej61gEgL2bjaCKg+ecHiVr8NKLyv+zXdAochg//
+        D3U93KF1JogMKVqTpmgKlDrP1PQ/2+47j2E6uc9hGG5J+yW/l8eREr/yW0Nk4MkDHmpwqf
+        9yqingX1xMd+Ko1gDRRgxritgfh+FfdfEebBCwQ6/KyRYe7OktfshOSYJIPbQy+3amQBN6
+        PFW2rVTYnntgPkYQImtEHxpIGUKerz5Ni8MXYLp4i/eS5j6l1DTg2mxGf/nUHw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598366904;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NhozcRiSk9TRKJ8CHvRx3nzWReQ8VTKS10wrtlWnEGk=;
+        b=evMqEEGKL2gESegLl4cXb3HFIl61x3E0NCF/WSZmYE3DEnEwzDBx9K7NH04DMGzGKXhNZb
+        wmCRnQE5P3hBz2DQ==
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v3 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek switches
+In-Reply-To: <20200825135615.GR2588906@lunn.ch>
+References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-3-kurt@linutronix.de> <20200824224450.GK2403519@lunn.ch> <87eenv14bt.fsf@kurt> <20200825135615.GR2588906@lunn.ch>
+Date:   Tue, 25 Aug 2020 16:48:19 +0200
+Message-ID: <87h7sqzsr0.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200821145935.20346-8-kevin.lhopital@bootlin.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+--=-=-=
+Content-Type: text/plain
 
-On Fri, Aug 21, 2020 at 04:59:35PM +0200, K=E9vin L'h=F4pital wrote:
-> The Bananapi M3 supports a camera module which includes an
-> OV8865 sensor connected via the parallel CSI interface and
-> an OV8865 sensor connected via MIPI CSI-2.
->=20
-> The I2C2 bus is shared by the two sensors as well as active-low
-> reset signal but each sensor has it own shutdown line.
->=20
-> The I2c address for the OV8865 is 0x36.
->=20
-> The bus type is hardcoded to 4 due to the lack of available
-> define usable in the device-tree.
->=20
-> Signed-off-by: K=E9vin L'h=F4pital <kevin.lhopital@bootlin.com>
+On Tue Aug 25 2020, Andrew Lunn wrote:
+> I agree with the check here. The question is about the compatible
+> string. Should there be a more specific compatible string as well as
+> the generic one?
 >
-> ---
->  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 99 ++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot=
-/dts/sun8i-a83t-bananapi-m3.dts
-> index 9d34eabba121..f7839094695e 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-> +++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-> @@ -85,6 +85,38 @@
->  		};
->  	};
-> =20
-> +	reg_ov8865_avdd: ov8865-avdd {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-avdd";
-> +		regulator-min-microvolt =3D <2800000>;
-> +		regulator-max-microvolt =3D <2800000>;
-> +		vin-supply =3D <&reg_dldo4>;
-> +	};
-> +
-> +	reg_ov8865_dovdd: ov8865-dovdd {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-dovdd";
-> +		regulator-min-microvolt =3D <2800000>;
-> +		regulator-max-microvolt =3D <2800000>;
-> +		vin-supply =3D <&reg_dldo4>;
-> +	};
-> +
-> +	reg_ov8865_afvdd: ov8865-afvdd {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-afvdd";
-> +		regulator-min-microvolt =3D <2800000>;
-> +		regulator-max-microvolt =3D <2800000>;
-> +		vin-supply =3D <&reg_dldo4>;
-> +	};
-> +
-> +	reg_ov8865_vdd2: ov8865-vdd2 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-vdd2";
-> +		regulator-min-microvolt =3D <1200000>;
-> +		regulator-max-microvolt =3D <1200000>;
-> +		vin-supply =3D <&reg_eldo1>;
-> +	};
-> +
->  	reg_usb1_vbus: reg-usb1-vbus {
->  		compatible =3D "regulator-fixed";
->  		regulator-name =3D "usb1-vbus";
-> @@ -115,10 +147,59 @@
->  	cpu-supply =3D <&reg_dcdc3>;
->  };
-> =20
-> +&ccu {
-> +	assigned-clocks =3D <&ccu CLK_CSI_MCLK>;
-> +	assigned-clock-parents =3D <&osc24M>;
-> +	assigned-clock-rates =3D <24000000>;
-> +};
+> There have been a few discussions about how the Marvell DSA driver
+> does its compatible string. The compatible string tells you where to
+> find the ID register, not what value to expect in the ID register. The
+> ID register can currently be in one of three different locations. Do
+> all current and future Hellcreak devices have the same value for
+> HR_MODID_C?  If not, now is a good time to add a more specific
+> compatible string to tell you where to find the ID register.
+>
+>> My plan was to extend this when I have access to other
+>> revisions. There will be a SPI variant as well. But, I didn't want to
+>> implement it without the ability to test it.
+>
+> Does the SPI variant use the same value for HR_MODID_C?  Maybe you
+> need a different compatible, maybe not, depending on how the driver is
+> structured.
+>
+> The compatible string is part of the ABI. So thinking about it a bit
+> now can make things easier later. I just want to make sure you have
+> thought about this.
 
-Why do you need to use assigned-clocks here?
+I totally agree. The Marvell solution seems to work. For all current
+devices the module ID is located at 0x00. Depending on the chip ID the
+different properties can be configured later. The SPI variant will have
+a different module ID. Anyhow, I'll ask how this will be handled for
+future devices and in general.
 
-> +&csi {
-> +	pinctrl-names =3D "default";
-> +	status =3D "okay";
-> +};
+Thanks,
+Kurt
 
-pinctrl-names alone is useless
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +&csi_in {
-> +	mipi_csi2_from_ov8865: endpoint {
-> +		remote-endpoint =3D <&ov8865_to_mipi_csi2>;
-> +		clock-lanes =3D <0>;
-> +		data-lanes =3D <1 2 3 4>;
-> +		bus-type =3D <4>;
-> +	};
-> +};
-> +
->  &de {
->  	status =3D "okay";
->  };
-> =20
-> +&i2c2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&i2c2_pe_pins>;
-> +	status =3D "okay";
-> +
-> +	ov8865: camera@36 {
-> +		compatible =3D "ovti,ov8865";
-> +		reg =3D <0x36>;
-> +		clocks =3D <&ccu CLK_CSI_MCLK>;
-> +		clock-names =3D"xclk";
-> +		AVDD-supply =3D <&reg_ov8865_avdd>;
-> +		DOVDD-supply =3D <&reg_ov8865_dovdd>;
-> +		VDD2-supply =3D <&reg_ov8865_vdd2>;
-> +		AFVDD-supply =3D <&reg_ov8865_afvdd>;
-> +		powerdown-gpios =3D <&pio 4 17 GPIO_ACTIVE_LOW>; /* PE17 */
-> +		reset-gpios =3D <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
-> +		rotation =3D <180>;
-> +
-> +		port {
-> +			ov8865_to_mipi_csi2: endpoint {
-> +				remote-endpoint =3D <&mipi_csi2_from_ov8865>;
-> +				data-lanes =3D <1 2 3 4>;
-> +				clock-lanes =3D <0>;
-> +				bus-type =3D <4>; /* V4L2_FWNODE_BUS_TYPE_CSI2_DPHY */
-> +			};
-> +		};
-> +	};
-> +};
-> +
->  &ehci0 {
->  	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
->  	status =3D "okay";
-> @@ -191,6 +272,11 @@
->  	status =3D "okay";
->  };
-> =20
-> +&pio {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&csi_mclk_pin>;
-> +};
+-----BEGIN PGP SIGNATURE-----
 
-I'm not sure why you'd need to use the MCLK pin as a hog, assigning it
-to the camera device should be enough?
-
-Maxime
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9FJLMACgkQeSpbgcuY
+8KZEgQ/5AfTcP1BkSGUoLEuxLDEgpD39SvhIEFQS4oTudWmbT80W+UnSbGM39DpX
+4hY1tAMnq13jd9v2QQHSteCNPZ3ODKWs0/Oa4LoE1+019jSkmFDG3ZThTi8evr9+
++kcnDJ8SpQxLb5KfHQrZJtj7tdxjFySP40arQI3W7kqOXHA+jxOOglM6VcJF1oR2
+00SUzrLxK2kupnsg+OJ0CktCyFGymlCG2aHYIcopAqebUCyXTwO4BCiSwTzIuD3+
+cD2oN8eXnEdbb+t14xPBFOzaxZupdRl31QRQ3z0WoJ+Bswh4nm6qIIxGEEzCzczI
+2CLvn5mwtHlVWTwxId3tQS4L9h/jUKx2jXKJ93N1sW83suqW5vEH7VOUxI9haoHm
+EcIzZYEmESEAseve3PxVzZnnXZ+3E883TwJEOtbyO4eqn0sbCn5o50+VPYm/0h3p
+SO09xU+OMC80LiotFeJ2nWTaH69ZHZaZod+83g/yBFrZZd3NO0t6W8PrBZZ4rQ36
+aWH0cn/mbyAHZLMd9nxVAwcfZMcx19VbdI8iUAKkl0wp1StXXLC7LsBWCjONDltp
+cQDtE+MqLnouBBRtCov7o5U/ektg/PzOjZBtBURZ2ZP6Fzib+3N4dMPr1kuBmsVV
+KTlC+sFWuuCAVFywtFAoJ3bSORQ8FHlw75RX7/2i4+e7g2GW0RE=
+=BCe/
+-----END PGP SIGNATURE-----
+--=-=-=--
