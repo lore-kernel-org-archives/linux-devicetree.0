@@ -2,139 +2,221 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BAAC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091B0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7532076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598338156;
-	bh=5FFhlV+WeJfn1l/c2VSEo8l5it+HZbGXLtCi0d0pxFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cgroSecgoqkH2wF9PMN7+rSRVP7F+3N2f6ZVyhJhjts36oTmZfuGC92Gcw4mfqvqF
-	 md7dOMY4Vga2tcwKIDvuqZyyTshXoCZlR4APPOfy2i8wzQlmwYco7T0Ch76G7TD0KS
-	 UeJIaaje2xwDS/yUOjPYYdQXRe4MjkAi5w1dyWLo=
+	by mail.kernel.org (Postfix) with ESMTP id BFF262076C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NqErmEm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgHYGtP (ORCPT
+        id S1729154AbgHYGuf (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:49:15 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51081 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgHYGtO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:49:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t2so1282326wma.0;
-        Mon, 24 Aug 2020 23:49:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xu5xGZSY+yFQgovcXhMUWgqGOjtkm3hsvCXY91EThRQ=;
-        b=gZ2jkEhXAvtvYP27MMIyFV5/J0HVbGIs74uKZvOriMsWEQu6LYcwXom0OosN7q5FFU
-         tUJ3LPJMNighSsaoApLiXek0CUy+YsYS5GUf0jnT2EdUalpfsthvS20XQLTuS941eCVA
-         CQxREM1rw0eWSd8cc553cTYo5NbI7+mYUAZCUvLS4Vd9Hv/wNlhSHQc5cdnoyQ0eylAa
-         rvoBCdFwZl+qCtkgtJ0/OoLM79ZHUT6+cSlZ4zQ/HAQtPg+UVrlF8UDPQf5xSFfcR3d2
-         aA6c7xlLAeuN+ANYX+QD8lAiHcUrYUutsa7IddTRd1VyjmVsW5noUZVgvEwwClAomfwV
-         s+gA==
-X-Gm-Message-State: AOAM5316ADPVifGp3E+YGa74XaffAEg8uiuTCe7O37VW4EO7ztkwDD5P
-        x7sbFFDT2Vz5bPJ+2HQfNj4=
-X-Google-Smtp-Source: ABdhPJzyAcY2Bw92cGcbfsJuTBwKqDGqGkJGMxEMpfhNk68WOOIS/f1lMDDS8tqHLpAt+d0YVzNPiA==
-X-Received: by 2002:a1c:24d5:: with SMTP id k204mr505723wmk.159.1598338152035;
-        Mon, 24 Aug 2020 23:49:12 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id y10sm283662wro.50.2020.08.24.23.49.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 23:49:11 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 08:49:08 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Adam Ford <aford173@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>, Li Jun <jun.li@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 02/16] dt-bindings: mtd: gpmi-nand: Fix matching of
- clocks on different SoCs
-Message-ID: <20200825064908.GA3458@kozik-lap>
-References: <20200824190701.8447-1-krzk@kernel.org>
- <20200824190701.8447-2-krzk@kernel.org>
- <20200825064020.GM13023@pengutronix.de>
+        Tue, 25 Aug 2020 02:50:35 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50768 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbgHYGue (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:50:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oUbp069409;
+        Tue, 25 Aug 2020 01:50:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598338230;
+        bh=tdz2P7L4M7GY6138AgTYwy06Fxammm7gnj52s0oLfW4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NqErmEm2w2etd7BIyxArIlTF1/OHd3NZ8hLCT4WyEwurZ/3kXmoU/WuOeBk7MezRU
+         Ofhv7ZVbaxJWvQldcjndPLJ+e4bwXQY168W3YdkcZTiVAxX/lIXJw7Xb9Z8GAoHQ29
+         PTewyxZX+rXuWSaZZ3wogFB7ojZx4FDpsU/OXwfg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07P6oUCX054547
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Aug 2020 01:50:30 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 25
+ Aug 2020 01:50:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 25 Aug 2020 01:50:30 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oRlL124533;
+        Tue, 25 Aug 2020 01:50:28 -0500
+Subject: Re: [RFC PATCH 2/3] dmaengine: add peripheral configuration
+To:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-3-vkoul@kernel.org>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
+Date:   Tue, 25 Aug 2020 09:52:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200825064020.GM13023@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200824084712.2526079-3-vkoul@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 08:40:20AM +0200, Sascha Hauer wrote:
-> On Mon, Aug 24, 2020 at 09:06:47PM +0200, Krzysztof Kozlowski wrote:
-> > Driver requires different amount of clocks for different SoCs.  Describe
-> > these requirements properly to fix dtbs_check warnings like:
-> > 
-> >     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
-> >  1 file changed, 61 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > index 28ff8c581837..9d764e654e1d 100644
-> > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - fsl,imx6q-gpmi-nand
-> > +              - fsl,imx6sx-gpmi-nand
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          items:
-> > +            - description: SoC gpmi io clock
-> > +            - description: SoC gpmi apb clock
-> > +            - description: SoC gpmi bch clock
-> > +            - description: SoC gpmi bch apb clock
-> > +            - description: SoC per1 bch clock
-> > +        clock-names:
-> > +          items:
-> > +            - const: gpmi_io
-> > +            - const: gpmi_apb
-> > +            - const: gpmi_bch
-> > +            - const: gpmi_bch_apb
-> > +            - const: per1_bch
-> 
-> This enforces this specific order of the clocks given in the dts. The
-> clock binding itself doesn't require any specific order, that's what we
-> have the names array for.
-> 
-> Is this really what we want?
+Hi Vinod,
 
-Indeed but have in mind that the specific order was there already. This
-patch does not address that part, only number of clocks.
+On 24/08/2020 11.47, Vinod Koul wrote:
+> Some complex dmaengine controllers have capability to program the
+> peripheral device, so pass on the peripheral configuration as part of
+> dma_slave_config
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++=
 
-Fixing this for any order could be done with patterns. I can work on
-that.
+>  1 file changed, 75 insertions(+)
+>=20
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 6fbd5c99e30c..264643ca9209 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -380,6 +380,73 @@ enum dma_slave_buswidth {
+>  	DMA_SLAVE_BUSWIDTH_64_BYTES =3D 64,
+>  };
+> =20
+> +/**
+> + * enum spi_transfer_cmd - spi transfer commands
+> + */
+> +enum spi_transfer_cmd {
+> +	SPI_TX =3D 1,
+> +	SPI_RX,
+> +	SPI_DUPLEX,
+> +};
+> +
+> +/**
+> + * struct dmaengine_spi_config - spi config for peripheral
+> + *
+> + * @loopback_en: spi loopback enable when set
+> + * @clock_pol: clock polarity
+> + * @data_pol: data polarity
+> + * @pack_en: process tx/rx buffers as packed
+> + * @word_len: spi word length
+> + * @clk_div: source clock divider
+> + * @clk_src: serial clock
+> + * @cmd: spi cmd
+> + * @cs: chip select toggle
+> + * @rx_len: receive length for spi buffer
+> + */
+> +struct dmaengine_spi_config {
+> +	u8 loopback_en;
+> +	u8 clock_pol;
+> +	u8 data_pol;
+> +	u8 pack_en;
+> +	u8 word_len;
+> +	u32 clk_div;
+> +	u32 clk_src;
+> +	u8 fragmentation;
+> +	enum spi_transfer_cmd cmd;
+> +	u8 cs;
+> +	u32 rx_len;
+> +};
+> +
+> +/**
+> + * struct dmaengine_i2c_config - i2c config for peripheral
+> + *
+> + * @pack_enable: process tx/rx buffers as packed
+> + * @cycle_count: clock cycles to be sent
+> + * @high_count: high period of clock
+> + * @low_count: low period of clock
+> + * @clk_div: source clock divider
+> + * @addr: i2c bus address
+> + * @strech: strech the clock at eot
+> + * @op: i2c cmd
+> + */
+> +struct dmaengine_i2c_config {
+> +	u8 pack_enable;
+> +	u8 cycle_count;
+> +	u8 high_count;
+> +	u8 low_count;
+> +	u16 clk_div;
+> +	u8 addr;
+> +	u8 strech;
+> +	u8 op;
+> +};
+> +
+> +enum dmaengine_peripheral {
+> +	DMAENGINE_PERIPHERAL_SPI,
+> +	DMAENGINE_PERIPHERAL_I2C,
+> +	DMAENGINE_PERIPHERAL_UART,
+> +	DMAENGINE_PERIPHERAL_LAST =3D DMAENGINE_PERIPHERAL_UART,
+> +};
+> +
+>  /**
+>   * struct dma_slave_config - dma slave channel runtime config
+>   * @direction: whether the data shall go in or out on this slave
+> @@ -418,6 +485,10 @@ enum dma_slave_buswidth {
+>   * @slave_id: Slave requester id. Only valid for slave channels. The d=
+ma
+>   * slave peripheral will have unique id as dma requester which need to=
+ be
+>   * pass as slave config.
+> + * @peripheral: type of peripheral to DMA to/from
+> + * @set_config: set peripheral config
+> + * @spi: peripheral config for spi
+> + * @:i2c peripheral config for i2c
+>   *
+>   * This struct is passed in as configuration data to a DMA engine
+>   * in order to set up a certain channel for DMA transport at runtime.
+> @@ -443,6 +514,10 @@ struct dma_slave_config {
+>  	u32 dst_port_window_size;
+>  	bool device_fc;
+>  	unsigned int slave_id;
+> +	enum dmaengine_peripheral peripheral;
+> +	u8 set_config;
+> +	struct dmaengine_spi_config spi;
+> +	struct dmaengine_i2c_config i2c;
 
-Best regards,
-Krzysztof
+Would it be possible to reuse one of the existing feature already
+supported by DMAengine?
+We have DMA_PREP_CMD to give a command instead of a real transfer:
+dmaengine_prep_slave_single(tx_chan, config_data, config_len,
+			    DMA_MEM_TO_DEV, DMA_PREP_CMD);
+dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len, DMA_MEM_TO_DEV,
+			    DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+dma_async_issue_pending(tx_chan);
+
+or the metadata support:
+tx =3D dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len,
+				 DMA_MEM_TO_DEV,
+				 DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+dmaengine_desc_attach_metadata(tx, config_data, config_len);
+dma_async_issue_pending(tx_chan);
+
+By reading the driver itself, it is not clear if you always need to send
+the config for TX, or only when the config is changing and what happens
+if the first transfer (for SPI, since that is the only implemented one)
+is RX, when you don't send config at all...
+
+I'm concerned about the size increase of dma_slave_config (it grows by
+>30 bytes) and for DMAs with hundreds of channels (UDMA) it will add up
+to a sizeable amount.
+
+>  };
+> =20
+>  /**
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
