@@ -2,137 +2,150 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D43C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D192C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 05:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0963A20737
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="LC3ot+Tz"
+	by mail.kernel.org (Postfix) with ESMTP id 50AE820737
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 05:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgHYE6K (ORCPT
+        id S1728377AbgHYFHO (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:58:10 -0400
-Received: from mail-mw2nam10on2058.outbound.protection.outlook.com ([40.107.94.58]:41940
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728994AbgHYE6F (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:58:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CLoyspInkfYkX/g3c+4LXx1S+gp+YUru/QHlh0IxOPZqOFmRUdetD/yIrPkFuvTeUyhWbw5DnLeSOgjtji2iQzIa+/nJx73wkYMB0e5MQWwoT9jdMj45tfZmoezB4dbNGs+jTrOL7lVMFvRkzfi0h1nS1/rJKtEPf8fzByd8atJFENj9ZG+YChn0TX2mErb5lTA1OOab2sode9q2NUvP4TkVBW6XXuwJHxszF6cUteIS7GHgGYMJHbmNxH7x5N0xfPm2cxFZqkJj33B/JTdlw3b93vpIlPjDYzQvv+GkPjF01JeDyPYbtflxVcHjz6Ln+AYrCKI8CgfWTfr0VV0xVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tt81K9lTCWgkQF4gHCHB9yjUBPufJwEE+V1hVKJR8dM=;
- b=CZce8uAn7STA8VA0L3ds2pOb0Bxo/Cgwe/UJNLoe+L/Cj+won//+NmULDLXHsugHpq43WkLuQbFKTx6TSWMLv+1t2BpxeByAnWz/3woWCv8hfB1sL8w0opxQp7DRbfppLhHf5Dng/mQ3ThA6ymaYCpcbx0HySN2YkuUM38cP3w/O2Yq0/CBgFLyfoVdxecSDmKZaPEcXGr+oJPz6B8qxWr1doHsNBaCIouSAwwy1qpnUq4WIcrZt2IsjVGGx6MijfNMyApch6iiyQAkgVJsBsh7P7pWQx3idaIrCYS+53rQNVa6ZmF87Xngbh0lTHziiZvU5wI9dm1lri3d78FQV2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tt81K9lTCWgkQF4gHCHB9yjUBPufJwEE+V1hVKJR8dM=;
- b=LC3ot+TzLdfz6dYe0WOlY4GK8ZNGWTc6iKgXZI52hiJ3VkEg62vcEuHcjaLYPXv0k6vlQFtAhymbL1XFGki/wx/7cCc/HZGkRDK7Waos19ltQcETQLGBh/iLvGWJevTyIhpZ5dV/fsLAa6zg6Dyw9I5Id3yKQzVCm+GxYkVWNkk=
-Received: from BYAPR02MB5896.namprd02.prod.outlook.com (2603:10b6:a03:122::10)
- by BY5PR02MB7026.namprd02.prod.outlook.com (2603:10b6:a03:23d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Tue, 25 Aug
- 2020 04:58:02 +0000
-Received: from BYAPR02MB5896.namprd02.prod.outlook.com
- ([fe80::48ec:6240:92db:c6bf]) by BYAPR02MB5896.namprd02.prod.outlook.com
- ([fe80::48ec:6240:92db:c6bf%5]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
- 04:58:02 +0000
-From:   Manish Narani <MNARANI@xilinx.com>
-To:     Michal Simek <michals@xilinx.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "monstr@monstr.eu" <monstr@monstr.eu>,
-        Michal Simek <michals@xilinx.com>, git <git@xilinx.com>
-CC:     Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Subject: RE: [PATCH] dt-bindings: mmc: Add missing description for
- clk_in/out_sd1
-Thread-Topic: [PATCH] dt-bindings: mmc: Add missing description for
- clk_in/out_sd1
-Thread-Index: AQHWefAjQIJv0fgL10uselMOSXyRxKlIQ1hA
-Date:   Tue, 25 Aug 2020 04:58:02 +0000
-Message-ID: <BYAPR02MB5896EA24D2A0BE05BDE71451C1570@BYAPR02MB5896.namprd02.prod.outlook.com>
-References: <aef586778921c93377ec2f31c86e151b6e93f6c7.1598257520.git.michal.simek@xilinx.com>
-In-Reply-To: <aef586778921c93377ec2f31c86e151b6e93f6c7.1598257520.git.michal.simek@xilinx.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: xilinx.com; dkim=none (message not signed)
- header.d=none;xilinx.com; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [103.250.157.192]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 34f2f94f-bf5d-4a47-d2d8-08d848b37230
-x-ms-traffictypediagnostic: BY5PR02MB7026:
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR02MB70265BBF8D34AD3A1B851927C1570@BY5PR02MB7026.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:510;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gik6MlTfieNn3gr6mLnpRWClx5qqJ6veLBmbMAjU3ka5+D/g76iKV1bAhrR+CfGHV/6qN+8N9MFs7Q9pr2O+0eYiLoYUi2aRiSHnf86HZ64L3OkMZO6o3CpIDkVB9jiw+rNVZUsG9CUPO93Z2nFcwPISpWxL/ISbjnKqGvOdjN3dr14K1P2opvAooZNlfRTs49BGjgmlmdtiagqr00HJeMTjXB1HTDiOYnEBdjH3ztrPHZgl3atXfMQKdQMQ++WOWHxVAspbgScS7TpajcLQK1X2vb8osJFyhxrtt6CiKEXbFo4KB0GcLrJrBFi258ac
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5896.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(39860400002)(396003)(136003)(366004)(5660300002)(6636002)(7416002)(66446008)(66476007)(64756008)(66556008)(8676002)(4326008)(8936002)(316002)(76116006)(110136005)(66946007)(9686003)(55016002)(54906003)(6506007)(478600001)(53546011)(186003)(71200400001)(7696005)(26005)(52536014)(86362001)(2906002)(83380400001)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Ms/xqj3L9IazqZHRqPMbofng3VziS1am4FZ19zhYDiGBc0tsYhaO6+lnghtpPYBnro0s3+iIXx+C/1B4PX/5kCZ9plZdZ8jJoV5xcdQ7KQ1gSNNv4ysbjCJ2orZ1xRgqJKZ4QmqrZ2oJVlbNVdf4zXyCRGK5mjJ/UrGpuvUQc/unbYEb/+y13VZSFwPrAQX3sM4BB+ne/szN78q7GyGmFtIGXFZ8seqNKcR0/Ok23oJ/n76kLtLZO27pEXlSic6pIY2Pih30kQ8wZck4DOwhE0hMT3Fyh7toLWpkMD+lXj/k3GoXR5HiRorXVuNPqsxpyAH6gKOfbHz4+SqA2oi6+7ON6+bfnH2m/g65a5Nnrb2BV4D/2KEceIeS3pUsyhH1S43rqGCBAov95KFj4pSEojmB/9CYDpfREyRNyc2MbY/HFMfY/qIqJceba1IdT5S4O1FdE0Zwx0r8KZBHJYwmuin7Ofu2IOzpnFpj943sOhOMq1LdQnUvwRhpKGM594V4jHFMJ5Q4nSiyV5y8TnGeUsPCOGFpjysUJSswQPmmi0j/JSvy9WVrpk1HkRx+bAWVXNqJ9qyxDYaJ3h9acLx0iKcmv+Eu3kdJrpkIRbeo1YlnZHM7EIH416Mv/b4XlPS7JlGACIfKaSVwbW3bICqntg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Aug 2020 01:07:14 -0400
+Received: from mga03.intel.com ([134.134.136.65]:61368 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726619AbgHYFHM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 01:07:12 -0400
+IronPort-SDR: mboV5hj4gJSSAVPp8AnRTwClfsxC1O/OOV2nkC7TuT+pAX7U0TmWd8JDH3YfuWBEvpz02emysT
+ RInsmn4icgjQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="156037450"
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="156037450"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 22:07:11 -0700
+IronPort-SDR: tpzExRGhkoQqxP5Rctfqoor01FgB+RS41SQ9/FprnaOo2OYBngnuRRdMGioCTFdeYCESQ+FdAQ
+ 3hF7i29NGY1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="322617343"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Aug 2020 22:07:08 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v11 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Tue, 25 Aug 2020 13:07:04 +0800
+Message-Id: <cover.1598331849.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB5896.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34f2f94f-bf5d-4a47-d2d8-08d848b37230
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2020 04:58:02.4033
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pYzU352Ck4fSQqFAkXurBYJ5E4nEKc25h9n8z5rq5midqSF7WP/ffXGl6tzZygOTcI1pkaD2bJs0+OO2pJn8sA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB7026
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
+
+v11:
+- Address below review concerns (Andy Shevchenko)
+  * Fix a issue with dev_err_probe() usage & improve the usage.
+  * Fix & improve a ordering issue with clk_enable/disable &
+    reset_control assert/deassert.
+
+v10:
+- Removed unused of_device.h and added platform_device.h
+  & mod_devicetable.h
+
+v9:
+- Address code quality related review concerns (Andy Shevchenko)
+- Use devm_add_action_or_reset() instead of explicit unwind calls.
+
+v8:
+- Remove fan related optional properties usage, keep
+  them as default. If needed, change pwm-fan driver
+  separately in future to add them as generic properties.
+
+v7:
+- Address code quality related review concerns.
+- Rename fan related property to pwm-*.
+- Fix one make dt_binding_check reported error.
+
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
+
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
 
 
-> -----Original Message-----
-> From: Michal Simek <monstr@monstr.eu> On Behalf Of Michal Simek
-> Sent: Monday, August 24, 2020 1:55 PM
-> To: linux-kernel@vger.kernel.org; monstr@monstr.eu; Michal Simek
-> <michals@xilinx.com>; git <git@xilinx.com>; Manish Narani
-> <MNARANI@xilinx.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>; Rob Herring
-> <robh+dt@kernel.org>; Ulf Hansson <ulf.hansson@linaro.org>; Wan Ahmad
-> Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>;
-> devicetree@vger.kernel.org; linux-mmc@vger.kernel.org
-> Subject: [PATCH] dt-bindings: mmc: Add missing description for clk_in/out=
-_sd1
->=20
-> The commit a8fdb80f4d47 ("arm64: zynqmp: Add ZynqMP SDHCI compatible
-> string") added clock-output-names for both SDHCIs before DT binding yaml
-> conversion. But only clk_in/out_sd0 clock names have been covered by
-> DT binding which ends up with dt yaml checking warnings as:
-> From schema: .../Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
-> ... mmc@ff170000: clock-output-names:0: 'clk_out_sd0' was expected
-> ... mmc@ff170000: clock-output-names:1: 'clk_in_sd0' was expected
->=20
-> Fixes: 16ecd8f33c6e ("dt-bindings: mmc: convert arasan sdhci bindings to =
-yaml")
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
 
-Reviewed-by: Manish Narani <manish.narani@xilinx.com>
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  44 ++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 253 +++++++++++++++++++++
+ 4 files changed, 309 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
+-- 
+2.11.0
 
