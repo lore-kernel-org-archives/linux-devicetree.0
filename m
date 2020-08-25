@@ -2,122 +2,125 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9A3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544F9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B29120706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD442071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bafe9Zxx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rh/jUyId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgHYJif (ORCPT
+        id S1725792AbgHYJir (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:38:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43486 "EHLO
+        Tue, 25 Aug 2020 05:38:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728944AbgHYJif (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:38:35 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28F11C061574;
-        Tue, 25 Aug 2020 02:38:35 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a26so15688203ejc.2;
-        Tue, 25 Aug 2020 02:38:35 -0700 (PDT)
+        with ESMTP id S1728944AbgHYJin (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:38:43 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4C70C061574
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:38:42 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id v24so1794455uaj.7
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:38:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GU7Gx+8lP7j41umYZSyhMriLOz9f2ckA0XGONSnV4sI=;
-        b=Bafe9ZxxYS/73lQ6hU/CDd1pFL1PUYV6cQxMX+GPjKjmgSi3i6P/GXYwoWvuxN0cKy
-         0Q4xd/N+TzXakFcZGPyWgjpo2yrdbngXnHQZuWdGxAYcKc94/X8ejxhK2Ins/YIemBAI
-         t2s7enEmYEKMXnHONoCGe6TQm36Swli4SZedE/73Cp/pnN/ZaoxKgz4GsNhoHNqIAYGu
-         TSUEV6QrfOE/S5VOhTQm9Tceva6AE1o1601nxuHw/Dw2aVnCQ/tOTzR67RLwIKtNrHmm
-         rDkxSOebaurJv+F2ulBzlLd8yWX3JajKHvR7WzP/9aFBelcaIuzIiX2wdnGVb/Y6egHd
-         vlfQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1gWftRufV4NK6rIXKQL8vsvZfEemfLSR6mtXtwRZFzQ=;
+        b=rh/jUyIdqBpxrftU7bsFkeDWmPi0O1o0znXb5JJoLfyzd2AuwzQ3SCf8kqQxkxDptR
+         YtOYN+hqUP9aLBUYZOihy7ayRVUAanhRbLc6b90QTJ1Y7jm4vQMfgsYKEz5NU5ENQKtG
+         5XkQs4MohtrnOz0LgPlLE7bblPwsJrGADpKT0xCTt6Gcq+Mv8yW8HkNAAW7E5fRjTC0/
+         N8xCjtaIh6wf9XQz2oP2eF1Eg0VYqqH/uwRxT635Ra684LOIPSnVuQYVws6mS+fRhlPU
+         tV94mLS6wG4ELRMzjiPZ/2SgyEWB8rDbDx3wE0lKxS8wehQ8lk7725zPeSvnVqoIGI8y
+         Jgig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GU7Gx+8lP7j41umYZSyhMriLOz9f2ckA0XGONSnV4sI=;
-        b=cXI09LEdKLwyzHDhUuHdmcjFugR5C1/cJOnRqefs6XWbqkawgTr8T02e6Hk5gGwa1u
-         D/VQpTHKwOj2LFovYsqD7kvD+MW8sa6svl2knleKHSKQVCvcSoq8JFvMiMYXux2LcKhZ
-         LbKJ1n7gPNDq8uHv8ZhQ+FdF4907ozAlpMKo5CYBiS++lQwtyfwplxcsNvSuNT3DjWGQ
-         yVHpnWhDdJSItIZ1SsF7v2RBQdQ+tJ2Mnqa9i7yrZiVvlQb7oqFaWvptfHYDA7c0vLe9
-         vOh7+lsrg3jav+KJv/huHtno6T0+8pzAN+3/oHR8ER4MUaZZiU3lyUxRjuZDcDjrnvxe
-         QqaQ==
-X-Gm-Message-State: AOAM5327XmD1TsD3/5VD7NJcWau1w2WEyc5lD/s/Yr0akPdOkyrVsEle
-        B+T1YoQIkHMBQdLRjTAadDo=
-X-Google-Smtp-Source: ABdhPJxvv94G4ZIYlmoKUhNAyf6v8rI+nzziWr4BJmxTa4AIZ3wtd0MJdVUUi8zPnfewu4b9rD1Oww==
-X-Received: by 2002:a17:906:e8f:: with SMTP id p15mr5921347ejf.290.1598348313777;
-        Tue, 25 Aug 2020 02:38:33 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id d9sm12408134edt.20.2020.08.25.02.38.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 02:38:33 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 12:38:30 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-Message-ID: <20200825093830.r2zlpowtmhgwm6rz@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de>
- <20200820081118.10105-6-kurt@linutronix.de>
- <20200824225615.jtikfwyrxa7vxiq2@skbuf>
- <878se3133y.fsf@kurt>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1gWftRufV4NK6rIXKQL8vsvZfEemfLSR6mtXtwRZFzQ=;
+        b=WwgWEduEvJG1xZqiwPz4r/MyiSFN57uZoFIjhapstK4pYl67nHmMvnBTSsi+AUAEOv
+         SuRdqJQp51EB8SN3cV8VhCU1Q58MdYazBRJwWtmJ3HhFv9D4X6Da4/r9KYZirTZFfKLp
+         1LpXYQZT/YvhVtz6q0coTF3XwzfvJGbzzZK6p9Idf2/zDIuKSH8gvmvh3RM7aQrTfUNQ
+         ntnf/LuiO9ooDUYAYn0arhpXxxj9GidLyh4zL4PKiwfwvKgq0prrSAJwoBNJvqOmRZpS
+         euVLpHQtLT2XOCyIPfNZV3LwzNmr6Ja3bw4Tdwm8PEgTz2JFTCKzO9IZ8CSCVUF60IhU
+         idBg==
+X-Gm-Message-State: AOAM53022e0e8+7KxbUvyd2W1mbB4y7CSBuTDR1rfkvtXKDAdKEy2WcW
+        rdd+xsWmtzJCq1hqX4im9XKGLeIk2LVDKo6WPumK3Q==
+X-Google-Smtp-Source: ABdhPJzMmCKvJlBmLpXAm8S2BTBSrUskkCWdbQ5/m7WmoIXptfO9SSZImSgVTm+LyNloXbnyCeyilszNaD3qHCnRoyY=
+X-Received: by 2002:ab0:3114:: with SMTP id e20mr4720974ual.104.1598348321741;
+ Tue, 25 Aug 2020 02:38:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878se3133y.fsf@kurt>
+References: <aef586778921c93377ec2f31c86e151b6e93f6c7.1598257520.git.michal.simek@xilinx.com>
+In-Reply-To: <aef586778921c93377ec2f31c86e151b6e93f6c7.1598257520.git.michal.simek@xilinx.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 25 Aug 2020 11:38:05 +0200
+Message-ID: <CAPDyKFooWoUR4-=JWY16xw7qZKG5DGhQw8u6OQ4n42_VjkfgJQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mmc: Add missing description for clk_in/out_sd1
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Manish Narani <manish.narani@xilinx.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:33:53AM +0200, Kurt Kanzenbach wrote:
-> On Tue Aug 25 2020, Vladimir Oltean wrote:
-> > On Thu, Aug 20, 2020 at 10:11:15AM +0200, Kurt Kanzenbach wrote:
-> >
-> > Explain again how this works, please? The hrtimer measures the CLOCK_TAI
-> > of the CPU, but you are offloading the CLOCK_TAI domain of the NIC? So
-> > you are assuming that the CPU and the NIC PHC are synchronized? What if
-> > they aren't?
-> 
-> Yes, I assume that's synchronized with e.g. phc2sys.
-> 
+On Mon, 24 Aug 2020 at 10:25, Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> The commit a8fdb80f4d47 ("arm64: zynqmp: Add ZynqMP SDHCI compatible
+> string") added clock-output-names for both SDHCIs before DT binding yaml
+> conversion. But only clk_in/out_sd0 clock names have been covered by
+> DT binding which ends up with dt yaml checking warnings as:
+> From schema: .../Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> ... mmc@ff170000: clock-output-names:0: 'clk_out_sd0' was expected
+> ... mmc@ff170000: clock-output-names:1: 'clk_in_sd0' was expected
+>
+> Fixes: 16ecd8f33c6e ("dt-bindings: mmc: convert arasan sdhci bindings to yaml")
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-My intuition tells me that this isn't the user's expectation, and that
-it should do the right thing even if it's not synchronized to the system
-clock.
+Applied for fixes, thanks!
 
-> >
-> > And what if the base-time is in the past, do you deal with that (how
-> > does the hardware deal with a base-time in the past)?
-> > A base-time in the past (example: 0) should work: you should advance the
-> > base-time into the nearest future multiple of the cycle-time, to at
-> > least preserve phase correctness of the schedule.
-> 
-> If the hrtimer is programmed with a value in the past, it fires
-> instantly.
+Kind regards
+Uffe
 
-Yes, it does.
 
-> The callback is executed and the start time is programmed.
-> 
-
-With a valid value from the hardware's perspective?
-
-Thanks,
--Vladimir
+> ---
+>
+>  .../devicetree/bindings/mmc/arasan,sdhci.yaml          | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> index 5887c917d480..58fe9d02a781 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> @@ -30,9 +30,13 @@ allOf:
+>      then:
+>        properties:
+>          clock-output-names:
+> -          items:
+> -            - const: clk_out_sd0
+> -            - const: clk_in_sd0
+> +          oneOf:
+> +            - items:
+> +              - const: clk_out_sd0
+> +              - const: clk_in_sd0
+> +            - items:
+> +              - const: clk_out_sd1
+> +              - const: clk_in_sd1
+>
+>  properties:
+>    compatible:
+> --
+> 2.28.0
+>
