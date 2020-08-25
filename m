@@ -7,117 +7,114 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A9FC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C899C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 819792071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F592078D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XFK78CQl";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K5CKLmlH"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="EpCifEom";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hO/KnZpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgHYNgQ (ORCPT
+        id S1726027AbgHYNjW (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:36:16 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:52193 "EHLO
+        Tue, 25 Aug 2020 09:39:22 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:59075 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725998AbgHYNgH (ORCPT
+        by vger.kernel.org with ESMTP id S1726661AbgHYNgP (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:36:07 -0400
+        Tue, 25 Aug 2020 09:36:15 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 430D8CB7;
-        Tue, 25 Aug 2020 09:36:06 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:07 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 305A0CE5;
+        Tue, 25 Aug 2020 09:36:14 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=7A7IyNQAX4KGw2bi0hCwk/gNt7/
-        v19Lp9o3x4DENAWI=; b=XFK78CQlOrY04Z0f4pm6PsGxK52trgYd4RzZAi7cc4x
-        ZuD/l9TkbBAwWP33ZgkIyr6uPNAjmvtEUW3HwC+E+90KIFNUiL4WYB3M7UAcAKF0
-        xlPT7O0ddPJrwtxbFviVBMbgl7dW9ifKII41zXLoAVWg3XZJhS/MCtMVzdGmTkTX
-        y+jsQT5cETKWRWBGuQEBWVDGHrsg8VWobYmXUzi7O00hKzJk//7E0h9+i9GSzOAM
-        2HjHLro5ekq3plgB1/+V+85hiitsEhSDUibKQxWRP/LHJv47RAW1u80qCdt+L+6W
-        zLAEuLcIQlL5XLS+n71gKwvPXLlqb0sUtBjFd6Dz52A==
+        :content-type:in-reply-to; s=fm3; bh=ijja1zd1NrI/KqNd5QwvwVeI+/N
+        wFID0Zk+H/Ib8Sf8=; b=EpCifEomFNpLiC32fhxlKOIVd+6jRivaUp2ddKQCsQd
+        zRxi5vMq558vHws5iChP5gN7MawflsjU52Yqnbzywic21/eE9AI2XwX/s9y5ppqf
+        1jaItK3u489q3AiJIs3FY8X0+jltZRB255Fb/Javq4DyqdYRa5Jp6w3h7cOvkjFN
+        zRTUqFUjKZE6RvbckIT9mgdMugj+ajvd/8g8SrtssPn6vbkXjn/AXGq8z3WDgvbR
+        PFU80Cg2ILWxSa6BnEiS+Ch24yP8wqwmnc2CZtnw/8AstSysZUx4QKRFvWog77Do
+        0751FMiA+lONZp2kwvXgh7K3MYN9SjkMK3gAVlGa62Q==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7A7IyN
-        QAX4KGw2bi0hCwk/gNt7/v19Lp9o3x4DENAWI=; b=K5CKLmlHcw71nJDgSpEpt9
-        TxGws8VwIjUuXZPHQBZPx4mZ1aK2iePGVrx4MweA5sGaCKn6l5zaxpMmUn/jdh1L
-        MT0ZIGKiwbeugKQ2LH+iZ5T7O+qJDilCC5pGZ3/3+DtZATdXHkWLOI/dh3H5D1dw
-        0WvYLIpE3pALi7SOipu9ZfW+axc5DL9BDJiR4bn9AUWcGBxuHZ7dagtH07H1QHBf
-        VgAPWUqtTAERLFwq//BuGGutk49rl7qKHk/9pUVRX1gQVEoxmyTLfGXTcHaz2Cr+
-        xPr9YAqzQa7Z2UqBsaKliv8QAW7HCaleK9VbcpXDA9oxfBVoUnMIc6ILKcTR70UA
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ijja1z
+        d1NrI/KqNd5QwvwVeI+/NwFID0Zk+H/Ib8Sf8=; b=hO/KnZpWpva2pkWv83V455
+        WluLNIVYGYkaEPrkhy4fYbIYW2BekC9Hh4J/HM4YOyp5Lm4jP5AVvNRz3XH91uhI
+        OIVObhsi3IUwaUXThcFf8Bs1se5R+XtD8l0Va3GyAJMbb2cIEiHLgqZ6bFECRJ+S
+        jU2bzLdNCRP4MuW4zYPoTfaNWCjdxGPdmVqgQfG+tlT2QJ+4tLoccFLGYHIz4c5z
+        vuVAnr8c6LVayvh5EZas7ysp5so1mZ2bxXxFGfJMLME1zWPjzhQrQxeBY2yZFQ+F
+        jyRdedQsx5vXvINuNueYQyWef39qFOsSTgeGoyrPzV0m5ZZB3mW05Kx3hEM7UbXQ
         ==
-X-ME-Sender: <xms:xRNFXwRDLUTPQe1yntKB0lzccEDs3t6Fewy_jHeErf4oi8XhYKMJIg>
+X-ME-Sender: <xms:zBNFX-Wt7Sqp1VX5Ch1Wxova3TW0ILo01uyRBIvCxi3C9jL29UMCEw>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudegne
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudekne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:xRNFX9w8ITlfwAeNHwfowmVw101nfaknpJcwaXcPjHKNfEgsHTxWBQ>
-    <xmx:xRNFX93pBAqQJpVcrkfN2NE72QaKP7d_6WO-MjAysKsSzjxEbwsIdw>
-    <xmx:xRNFX0CN0zAkfS4ytkZDicgncFSDB2vm78Zm0fzN9MfxzvrtXls2zw>
-    <xmx:xRNFX-ZQ8M9Xa8WWzjpZ182TYRGqyXWBBrLzAAOEXmEKudq9Z4PiK_7V3E0>
+X-ME-Proxy: <xmx:zBNFX6nkgP6_m4jPRsfVpk3KUUzP3qC00EL9e9NEfyISsM22Yh3bbQ>
+    <xmx:zBNFXyaKfXuldkmN3FNWfkwXZIdykVj9iHoI9VZtEHkHRC4P2GfPzw>
+    <xmx:zBNFX1ViffIuC0jdtK7TgT96yMB_GIKh4bj2aYe1ln5ALD-pky8KrQ>
+    <xmx:zRNFXyd3w2sHe6WP61uQaDKkdukKp8RGA98ZToxCPKtFtb-JrJgONXZkTso>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7B7A43280059;
-        Tue, 25 Aug 2020 09:36:05 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:46:10 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 960A230600B2;
+        Tue, 25 Aug 2020 09:36:12 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 10:50:37 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Frank Lee <frank@allwinnertech.com>
-Cc:     anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        robh+dt@kernel.org, wens@csie.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com
-Subject: Re: [PATCH v5 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
- calibration data in sun50i_h6_ths_calibrate
-Message-ID: <20200825084610.s4wfrdcix46ngztc@gilmour.lan>
+Cc:     robh+dt@kernel.org, wens@csie.org, icenowy@aosc.io,
+        megous@megous.com, clabbe@baylibre.com, karlp@tweak.net.au,
+        bage@linutronix.de, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 15/16] dt-bindings: arm: sunxi: Add Allwinner A100
+ Perf1 Board bindings
+Message-ID: <20200825085037.nrgsah7iueom4pva@gilmour.lan>
 References: <cover.1595572867.git.frank@allwinnertech.com>
- <dcf98648c16aff7649ff82438bfce6caae3e176f.1595572867.git.frank@allwinnertech.com>
+ <0368996b732f300d0b5719e51dbd4322fa09053d.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="amb66d7k4sp7gd6t"
+        protocol="application/pgp-signature"; boundary="5zlmlzykjskcqmd3"
 Content-Disposition: inline
-In-Reply-To: <dcf98648c16aff7649ff82438bfce6caae3e176f.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <0368996b732f300d0b5719e51dbd4322fa09053d.1595572867.git.frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---amb66d7k4sp7gd6t
+--5zlmlzykjskcqmd3
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2020 at 03:11:42PM +0800, Frank Lee wrote:
+On Fri, Jul 24, 2020 at 03:20:12PM +0800, Frank Lee wrote:
 > From: Yangtao Li <frank@allwinnertech.com>
 >=20
-> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
-> calculation. On the other hand, the newer SOC may store other data in
-> the space other than 12bit sensor data. Add mask operation to read data
-> to avoid conversion error.
+> Document board compatible names for Allwinner A100 Perf1 Board.
 >=20
 > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
-
+Applied, thanks!
 Maxime
 
---amb66d7k4sp7gd6t
+--5zlmlzykjskcqmd3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TP0gAKCRDj7w1vZxhR
-xccQAP9CCPtCw7TtG7p625fxJ0FYNYrLiEl6trsuXgmQC1WKygD/baMZswGDFigJ
-KpxCgoleFdIJu2WpLSR+zOzbvULctAw=
-=p4tr
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TQ3QAKCRDj7w1vZxhR
+xaAvAP9zeYUaQsnMXlw6X6M1x8FFSPu772Y3fLxjAgwAnaUj0AD+LvIa19X6V4v/
+v6Q09616KvDpHmwFLosGupxmADJXjQM=
+=q/nN
 -----END PGP SIGNATURE-----
 
---amb66d7k4sp7gd6t--
+--5zlmlzykjskcqmd3--
