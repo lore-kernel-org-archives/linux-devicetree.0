@@ -2,83 +2,174 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD371C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15CAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 960902071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598392642;
-	bh=P7xS/dWDsLf3+VAzqHKaXlw3GIrY/Iu7XnIOreUmcDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xG/+zdqzuDRQSzSNjI53JtjVNEZiD09KTm+skfPcDpjLxxE/cSTgcZ9KxPIHm6Wi8
-	 kKS+8dJAnvu0fwTeZlo2YTJZMIA/Vz3tkiSlglvd6LETD707kn5NCHPTKkfmxqukeK
-	 3ByrTkR93S17xhtuU77u5287cKK1eNnGWsS+Zyz4=
+	by mail.kernel.org (Postfix) with ESMTP id 93E7620738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="GIBAWUdg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="lwlCQ74v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgHYV5V (ORCPT
+        id S1726429AbgHYWCK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:57:21 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40322 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHYV5V (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:57:21 -0400
-Received: by mail-il1-f193.google.com with SMTP id p18so74906ilm.7
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 14:57:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GjO9kVR66d1g6PuKVDC5MRmQctTcbYaJo56NTkeAqjM=;
-        b=NCPtRKUURpujpN4XG8vAVGRKie2KRxwGg5x2w+GHeJ1iEFemeqVEaIEV5DzA4YH6BP
-         o8IyWaph5Wk9wpL43yhxVX3km5/NK8UwNYp6tH3NiABGFo3U5Y+jaaqUcXRqxNabTC1V
-         M23u2I+ZIf4J1xF0Z7Lo9sDqoxIiWIH7Lu9O57ZXSOdIMnpeXaenqQpHMDDxiDIhqu8o
-         a3CRD98L+GHU6NKlmtjECdsn+0gxr2S3IbE001Jyd7iP2giFpvh/o4LB8ggfwULWJ5eY
-         Yx7i0ZBnzuBTs/KKvwnwbixE5PHMOZSU3xsTe4Gcu9avNVDKgX7NxNZFd9V2JG0fWdJs
-         0ZSg==
-X-Gm-Message-State: AOAM531K6nM0YnS44S6EX1mq/40iYHr/dW+QBhZwx/P5mR3pTx141U2m
-        VFBPI19kUuAmMiPhBNpQrQ==
-X-Google-Smtp-Source: ABdhPJy82N7dzwGaEQHw3zZQSbxNrrPETtjhHR6HpfXF4h+fMyTLd9vaf2b94cWGuWBfG8iq+fOJHQ==
-X-Received: by 2002:a92:aa94:: with SMTP id p20mr11099726ill.266.1598392640682;
-        Tue, 25 Aug 2020 14:57:20 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id t88sm203330ild.8.2020.08.25.14.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 14:57:20 -0700 (PDT)
-Received: (nullmailer pid 1410297 invoked by uid 1000);
-        Tue, 25 Aug 2020 21:57:19 -0000
-Date:   Tue, 25 Aug 2020 15:57:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mtd: spi-nor: Sort list of support chip
- names
-Message-ID: <20200825215719.GA1406172@bogus>
-References: <20200819124004.19728-1-geert+renesas@glider.be>
+        Tue, 25 Aug 2020 18:02:10 -0400
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:50749 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHYWCI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:02:08 -0400
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 6E64B76635;
+        Tue, 25 Aug 2020 18:02:04 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=TVO1dOIqV3CDy+jVJp1dbE9btQU=; b=GIBAWU
+        dgW0NzqpvzSp6Fa8tvu1gbceO1PYW827J5S2TCafLOO8V/ua9rhYPeiubN9uCfSu
+        5kZVMM89m/VOS0XGFvFjKj4spv7QwVLLrD3EV4gtsSkP4BwUhgFKWUi6zXyBhohv
+        4E3VlD2+xRWYTjBpuvQ6Iu1kposqMeEKlmrUw=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 3448D76634;
+        Tue, 25 Aug 2020 18:02:04 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=o2Z47pyr/CjE9m2IwY1kw2uotjadTZKlb0RW2Z2wrl4=; b=lwlCQ74vDNe8EKAr2dQGxLuH0pOa5Jh+JtjWI+6MLwhaRdPDH6iheWfuEdpewPxHfW8OPEkliuR771IEnWx6fYLck0jsFH2xGeqyt7WVMQNaOp+Jj7UuRO83UAdtwT6vSwI92euB2MX1ZRxW6YuKUwUnC5E5Bv/n/g+sefDrgCg=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 04FF076633;
+        Tue, 25 Aug 2020 18:02:03 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id A5AC42DA0521;
+        Tue, 25 Aug 2020 18:02:01 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 18:02:01 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Rob Herring <robh@kernel.org>
+cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+        Laura Nixon <laura.nixon@team.mipi.org>,
+        Robert Gough <robert.gough@intel.com>,
+        Matthew Schnoor <matthew.schnoor@intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: MIPI I3C Host Controller
+ Interface
+In-Reply-To: <20200825212932.GA1360264@bogus>
+Message-ID: <nycvar.YSQ.7.78.906.2008251732430.1479@knanqh.ubzr>
+References: <20200819031723.1398378-1-nico@fluxnic.net> <20200819031723.1398378-2-nico@fluxnic.net> <20200825212932.GA1360264@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819124004.19728-1-geert+renesas@glider.be>
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: 9B667186-E71E-11EA-9B46-01D9BED8090B-78420484!pb-smtp1.pobox.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:40:04PM +0200, Geert Uytterhoeven wrote:
-> Sort the list of supported chip names, using "sort -V", to take into
-> account both names and numbers.
+On Tue, 25 Aug 2020, Rob Herring wrote:
+
+> On Tue, Aug 18, 2020 at 11:17:22PM -0400, Nicolas Pitre wrote:
+> > From: Nicolas Pitre <npitre@baylibre.com>
+> > 
+> > The MIPI I3C HCI (Host Controller Interface) specification defines
+> > a common software driver interface to support compliant MIPI I3C
+> > host controller hardware implementations from multiple vendors.
+> > 
+> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> > ---
+> >  .../devicetree/bindings/i3c/mipi-i3c-hci.yaml | 41 +++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml
+> > new file mode 100644
+> > index 0000000000..8fc18ea922
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml
+> > @@ -0,0 +1,41 @@
+> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/i3c/mipi-i3c-hci.yaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: MIPI I3C HCI Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Nicolas Pitre <npitre@baylibre.com>
+> > +
+> > +description: |
+> > +  MIPI I3C Host Controller Interface
+> > +
+> > +  The MIPI I3C HCI (Host Controller Interface) specification defines
+> > +  a common software driver interface to support compliant MIPI I3C
+> > +  host controller hardware implementations from multiple vendors.
+> > +
+> > +  For details, please see:
+> > +  https://www.mipi.org/specifications/i3c-hci
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: mipi-i3c-hci
 > 
-> This makes it easier to read and maintain the list.
+> What about my comments on v1? Pasted again:
 
-Can we just do this when converting to schema?
+Oops, sorry, I missed them.
 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  .../devicetree/bindings/mtd/jedec,spi-nor.txt | 34 +++++++++----------
->  1 file changed, 17 insertions(+), 17 deletions(-)
+> A register interface (or protocol) spec is never complete enough to
+> capture all the details about a specific h/w implementation. One just
+> has to go look at AHCI, EHCI, OHCI, XHCI, UFS, 8250, etc. bindings.
+> Let's not start with pretending that here. Fine for this to be a
+> fallback, but it must have a compatible for a specific implementation.
+
+You might have to indulge me a bit as I don't 
+understand what you're asking.
+
+Currently there are very few implementations. One of them lives in an 
+FPGA and the example below is actually the DT entry I use for it. I'm 
+guessing specific vendor implementations will have their own tweaks 
+eventually, such as clock sources and whatnot. But that is outside of 
+the spec (actually the spec defines a register area for eventual vendor 
+specific usage). But I have no visibility into that and of course the 
+code has no provision for that yet either.
+
+So I imagine there will be something like this in dts files eventually:
+
+	compatibvle = "intel,foobar_soc_i3c_hci", "mipi-i3c-hci";
+
+Is that what you mean?
+
+> Also, which version of the spec does this compatible correspond to?
+
+All of them.
+
+> Or are there not HCI differences in the spec versions you mention in 
+> the cover letter?
+
+The hardware is self advertising per the spec. So there is no need to 
+carry such distinction in the DT compatible. Even vendor extensions are 
+tagged with MIPI vendor IDs in the hardware directly.
+
+> > +  reg:
+> > +    maxItems: 1
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +
+> > +examples:
+> > +  - |
+> > +    mipi_i3c_hci@a0000000 {
+> 
+> i3c@a0000000
+
+OK.
+
+
+Nicolas
