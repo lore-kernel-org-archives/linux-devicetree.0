@@ -2,85 +2,129 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17A5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B742C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C59620786
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F8720782
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgHYPXY convert rfc822-to-8bit (ORCPT
+        id S1726473AbgHYPcy (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:23:24 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:49165 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgHYPXR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 11:23:17 -0400
-X-Originating-IP: 90.89.180.255
-Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
-        (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7DB231BF225;
-        Tue, 25 Aug 2020 15:23:10 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 17:23:09 +0200
-From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 1/7] media: sun6i-csi: Fix the bpp for 10-bit bayer
- formats
-Message-ID: <20200825172309.6756760d@lhopital-XPS-13-9360>
-In-Reply-To: <20200824165536.u2yzonoskiqu3c5j@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
-        <20200821145935.20346-2-kevin.lhopital@bootlin.com>
-        <20200824165536.u2yzonoskiqu3c5j@gilmour.lan>
-Organization: bootlin
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 25 Aug 2020 11:32:54 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:35061 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726294AbgHYPcw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 11:32:52 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id CD3641C0012;
+        Tue, 25 Aug 2020 15:32:48 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 17:32:48 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Bastian Krause <bst@pengutronix.de>
+Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
+        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
+        Arnaud Ebalard <arno@natisbad.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
+Subject: Re: [PATCH 2/3] dt-bindings: rtc: add chargeable flag for rx8130
+Message-ID: <20200825153248.GH2389103@piout.net>
+References: <20200415163701.21989-1-bst@pengutronix.de>
+ <20200415163701.21989-2-bst@pengutronix.de>
+ <20200415185609.GP34509@piout.net>
+ <3d1ecd35-fe37-02e7-74d8-3f37c2197173@pengutronix.de>
+ <a492b6a0-b41c-a088-3ba1-f1448a074b34@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a492b6a0-b41c-a088-3ba1-f1448a074b34@pengutronix.de>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello,
+Hi,
 
-Le Mon, 24 Aug 2020 18:55:36 +0200,
-Maxime Ripard <maxime@cerno.tech> a écrit :
-
-> On Fri, Aug 21, 2020 at 04:59:29PM +0200, Kévin L'hôpital wrote:
-> > 10-bit bayer formats are aligned to 16 bits in memory, so this is
-> > what needs to be used as bpp for calculating the size of the
-> > buffers to allocate.
+On 24/08/2020 15:32:22+0200, Bastian Krause wrote:
+> On 8/24/20 1:31 PM, Bastian Krause wrote:
 > > 
-> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
+> > On 4/15/20 8:56 PM, Alexandre Belloni wrote:
+> >> On 15/04/2020 18:37:00+0200, Bastian Krause wrote:
+> >>> Signed-off-by: Bastian Krause <bst@pengutronix.de>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt | 3 +++
+> >>>  1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> >>> index 66f0a31ae9ce..987a0c9e0cd7 100644
+> >>> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> >>> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
+> >>> @@ -34,6 +34,9 @@ Optional properties:
+> >>>  - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
+> >>>  	Do not use internal trickle charger diode
+> >>>  	Should be given if internal trickle charger diode should be disabled
+> >>> +- aux-voltage-chargeable: rx8130 only
+> >>> +	Epsons's rx8130 supports a backup battery/supercap.
+> >>> +	This flag tells	whether the battery/supercap is chargeable or not.
+> >>>  
+> >>
+> >> I think we should make that a generic property and this should supersede
+> >> trickle-diode-disable which is a bit wonky as I would prefer the default
+> >> to be disabled instead of enabled with the current semantics.
+> > 
+> > Alright, I think I know how to transform the RTC drivers.
+> > 
+> > One question about the DTs though:
+> > 
+> > This means we should remove "trickle-diode-disable" from all upstream
+> > DTs and add "aux-voltage-chargeable" to all upstream DTs that use a RTC
+> > compatible whose driver care in their probe function for
+> > "trickle-diode-disable", right?
 > 
-> Generally speaking, you should also explain why it's not an issue for
-> the callers. Depending on what that function is supposed to be doing
-> (returning the padded bits or the padded bits per pixel), your patch
-> could be either right or wrong.
+> Sorry, forget that.
 > 
-> Since all the callers are using it to generate the number of bytes per
-> line, your patch is indeed correct. But it should be mentionned in the
-> commit log.
+> Here's the situation:
 > 
-> Maxime
+> Currently there is a switch to explicitly disable charging, so the
+> default is to charge. We cannot introduce another boolean switch to turn
+> that the other way around, because that would change the default and
+> break backwards compatibility.
+> 
+> The only way I can think of is to introduce "aux-voltage-chargeable" not
+> as a boolean switch but as an integer, without any default. If this
+> property is not available, the drivers should simply do what they did
+> prior to this change (look for the legacy trickle-diode-disable, use the
+> default they used before).
+> 
+> Are you okay with that?
+> 
 
-All right, I will add this explanation.
+I agree boolean should be avoided in RTC drivers because we need a way
+to express "don't change this value".
 
-Thank you very much for the review
+> Some more context:
+> 
+> I originally tried to add a chargeable flag for rx8130. Prior to this
+> patch, there was no need to set "trickle-diode-disable" for this,
+> because the driver did not pass the chargeable flag to the RTC. With the
+> patch the default would have been to charge as long as
+> "trickle-diode-disable" is not there. So there's a change in behavior.
+> 
 
-Kévin 
+Yes, IIRC, my point was simply to move the documentation for
+aux-voltage-chargeable to the generice rtc binding documentation,
+Documentation/devicetree/bindings/rtc/rtc.yaml
+
+For now, you sould keep support for trickle-diode-disable but it has to be
+superseded by aux-voltage-chargeable if present. Is that more clear?
+
 
 -- 
-Kevin L'Hopital, Bootlin
-Embedded Linux and kernel engineering
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
 https://bootlin.com
