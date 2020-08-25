@@ -2,92 +2,88 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E810C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4878C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04A8D207BC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8CB20782
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kWlKX1Yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgHYRuw (ORCPT
+        id S1726180AbgHYRzh (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:50:52 -0400
-Received: from mga12.intel.com ([192.55.52.136]:30548 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgHYRuv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:50:51 -0400
-IronPort-SDR: 61xovL9MLi8AsEGvSw4FzZ2NPSJcNJ4Kks8gGo9FZOx/NRGaC1lRo/EONcI3dOimW9nFKI711d
- TPiKIcJ2LXyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="135718451"
-X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
-   d="scan'208";a="135718451"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:50:50 -0700
-IronPort-SDR: mBy4kAEHercHMbotNfm9BjCeJlV7ysa+UDvg8fICyG6emBZiknw+7rsDFbfvm9avTEC0JzKnb8
- bJT8ln0mMtNg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
-   d="scan'208";a="499399872"
-Received: from adent-mobl.amr.corp.intel.com (HELO ellie) ([10.209.77.195])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Aug 2020 10:50:50 -0700
-From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>
+        Tue, 25 Aug 2020 13:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgHYRzg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 13:55:36 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7710C061574;
+        Tue, 25 Aug 2020 10:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=13q0yU/4W+VWpJEEdUThAvzf3bI1pgdy0BRgeQelX+A=; b=kWlKX1YrWrdR9fwDglszc5bQml
+        esDRvCt2b8TJ/PpEZbhQ3yELpWLbecx60YAwyFq6rqxbWqkeqOgSTjj+Nynqo993f6Xqs15kL5koH
+        llQ3HU7hPLTiE/zVNDsZo99p8BY7W4+se4rOnwPF7ET4FdmPc6ErFT7T70ZdpqCsFlQo3lyazxrRr
+        VSiGixEg8MiErB+DwhuqpCVSinS9v6hPLt5YOYmhBwjFNvYf8/aIbDVIN9eMohNkrpuDN3ElmlBIb
+        7FcatTwcvg3/AFCgArZ3qKdez7NqQP2g1AkPCHwQoIX/GG6vsCTVTA6VIfVDI4qXM2UYVaDimj5tK
+        JUJSKu6g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAdAS-00040v-VR; Tue, 25 Aug 2020 17:55:33 +0000
+Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
 Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <87bliz13kj.fsf@kurt>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <87pn7ftx6b.fsf@intel.com> <87bliz13kj.fsf@kurt>
-Date:   Tue, 25 Aug 2020 10:50:50 -0700
-Message-ID: <87d03ety11.fsf@intel.com>
+        Jakub Kicinski <kuba@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+References: <6062dc73-99bc-cde0-26a1-5c40ea1447bd@infradead.org>
+ <CGME20200825173041eucas1p29cb450a15648e0ecb1e896fcbe0f9126@eucas1p2.samsung.com>
+ <dleftjr1ruvdjd.fsf%l.stelmach@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dae861c2-71c8-093b-74a6-68cf5c5ae744@infradead.org>
+Date:   Tue, 25 Aug 2020 10:55:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <dleftjr1ruvdjd.fsf%l.stelmach@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Kurt,
 
-Kurt Kanzenbach <kurt@linutronix.de> writes:
-
-> On Mon Aug 24 2020, Vinicius Costa Gomes wrote:
->> Hi,
+>>> +if NET_VENDOR_ASIX
+>>> +
+>>> +config SPI_AX88796C
+>>> +	tristate "Asix AX88796C-SPI support"
+>>> +	depends on SPI
 >>
->> Kurt Kanzenbach <kurt@linutronix.de> writes:
->>
-> [snip]
->>> +	/* Setup timer for schedule switch: The IP core only allows to set a
->>> +	 * cycle start timer 8 seconds in the future. This is why we setup the
->>> +	 * hritmer to base_time - 5 seconds. Then, we have enough time to
->>> +	 * activate IP core's EST timer.
->>> +	 */
->>> +	start = ktime_sub_ns(schedule->base_time, (u64)5 * NSEC_PER_SEC);
->>> +	hrtimer_start_range_ns(&hellcreek_port->cycle_start_timer, start,
->>> +			       NSEC_PER_SEC, HRTIMER_MODE_ABS);
->>
->> If we are talking about seconds here, I don't think you need to use a
->> hrtimer, you could use a workqueue/delayed_work. Should make things a
->> bit simpler.
->
-> I've used hrtimers for one reason: The hrtimer provides a way to fire at
-> an absolute base time based on CLOCK_TAI. All the other facilities such
-> as workqueues, timer list timers, etc do not.
+>> That line is redundant (but not harmful).
+> 
+> Why? Is it because NET_VENDOR_ASIX depends on SPI? Probably it
+> shouldn't. Thanks for spotting.
 
-Oh, yeah. Good point.
+Yes, that.
 
 
-Cheers,
 -- 
-Vinicius
+~Randy
+
