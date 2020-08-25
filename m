@@ -2,115 +2,156 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC482C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E21C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB3D920738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:47:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="RoWNw4NK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kSElpLqy"
+	by mail.kernel.org (Postfix) with ESMTP id EAFF3207DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598363480;
+	bh=eIq1K4YwKevM0Z+xrupyI1e4rDXhwcMQbYLXwiGI9/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aS2+B/tV98+vRl2fuVg0KQDBtYHNPXe1dFxFOcq5iBuoaJQJMc8nEwzKRVdOD9VTB
+	 EYIbk4NLGl88fCEP/orAZX244sFG2i3Mr9RxknGh/Cp+C3dYPhoGzMtKNZ2KIOFa4K
+	 M+X0AkIFjcHoVx42+2+tTLFdKmY6FtolsvSdR4nY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgHYNrB (ORCPT
+        id S1725998AbgHYNvT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:47:01 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:39777 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726113AbgHYNf6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:35:58 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id BDD43C41;
-        Tue, 25 Aug 2020 09:35:56 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=VVtlW4HhdtLjXxeuomS0ncEugVO
-        xoM1/RkR8Lb06Uu8=; b=RoWNw4NKNj/bo2BclZ6HWv24uk7sVQAtdsimNHyLzZe
-        0yZEQQxcS18OjLkqSKhhKV1Jv78o0UHGOgDADSdlpkStNmcVqTGGxA3EqVwqa8gV
-        2Hl243tGBGlZRIebV7Y5v8oITRdx/jzZqVm0hmyxzzq2RjP4GL26GODGrTpR2jmk
-        whHndsPso4pNAbbPnQ+N1Aceiqmaopy5S91vqU+n/XS8oILQBCRns4KrFTz8DQOw
-        5rKXGPBSdqODUaYy8fcgPMDZkcoHXgQ0+UuG3j60GykO1LdcgyFmuo/hVAqDdTwL
-        IZLqx3kj2O5psWEP0je5YQ9+Xcw2vk2V8URGy1GG9lg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=VVtlW4
-        HhdtLjXxeuomS0ncEugVOxoM1/RkR8Lb06Uu8=; b=kSElpLqyWDgFaTEm16ppG3
-        p10cDp/f3+RuHxdQhL5eJwBB5DlcaqzQa0rEPhH3d8wOTvgwlH/nuXVVtpWSxCK6
-        I+kPVTW2wcFx5cZSoWZgCL/FQVS+8UrabvbFL25/HxhcEuwhc+Zy0MIsx0SXo6Ip
-        qvlpz0V4In0BD9qcpAksfTOQFAT4itOgk8qzDE6Tik9yBLXDBZ3/Y/mNkP+NnjIM
-        pNRIp403w5B635yfl5F6GK2G9odzQQwDxP0lp92+kLbQXMTU0Wj9Wcai6kr8grBT
-        LmrmE0zSxQ/RU86zSqLef+uKutezy7m0ly2xbpmtcCGXAVn8qZZaAcVrDfTaRddQ
-        ==
-X-ME-Sender: <xms:uxNFXwC1BbrdST-ojgpYHi7mU6j962QR4yysdYsYC0wJrGvAabRjpw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepjeenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:uxNFXygtAnnreRsIA2TwVkzT1GLfgqHC150PBWfF1RWfppnZqs-4Ow>
-    <xmx:uxNFXzmCv8JxbUoItmpMNdcy3zU1DlPSiLDsW4u3GiUrmx5O-eZidA>
-    <xmx:uxNFX2wU-blq4aLQ60tO5oCFuYlLvBtx_cDr8cCx1nu3TSZDsP6OSg>
-    <xmx:vBNFX2RRcSbsIhEQkNtGzh4o-LPJ1ESPmpimLf2eWPvSdTUhL2g9afrcvMU>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6F4ED30600B1;
-        Tue, 25 Aug 2020 09:35:55 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:39:02 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, airlied@linux.ie,
-        daniel@ffwll.ch, heiko@sntech.de, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 0/2] ARM: dts: sun8i: r40: Enable mali400 GPU
-Message-ID: <20200825083902.5o54lltoglbs3cui@gilmour.lan>
-References: <20200824150434.951693-1-jernej.skrabec@siol.net>
+        Tue, 25 Aug 2020 09:51:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgHYNvS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:51:18 -0400
+Received: from localhost (p54b33ab6.dip0.t-ipconnect.de [84.179.58.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FC0920738;
+        Tue, 25 Aug 2020 13:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598363478;
+        bh=eIq1K4YwKevM0Z+xrupyI1e4rDXhwcMQbYLXwiGI9/k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c/nEA1x+7z5tdSDCHfM2LAtZREXzJ6s4HkGFN6S67BQdim72iZxz/GpoalDTz3RwP
+         /j2Xzj35IPHY1BTNwALSCQWqDUO384Y8Jjs50Goj8hZJ2OfihVB+iKk1N/B+vIdClc
+         amqwfY1JgAc6wOJPiKHGo+g48C6r7/OieN3ZJsNc=
+Date:   Tue, 25 Aug 2020 15:51:13 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+Message-ID: <20200825135113.GB1753@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>, Lee Jones <lee.jones@linaro.org>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "p.zabel" <p.zabel@pengutronix.de>, Icenowy Zheng <icenowy@aosc.io>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+ <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+ <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
+ <20200824080327.GH3248864@dell>
+ <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gemdfh7kx36fvawn"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
 Content-Disposition: inline
-In-Reply-To: <20200824150434.951693-1-jernej.skrabec@siol.net>
+In-Reply-To: <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---gemdfh7kx36fvawn
+--xgyAXRrhYN0wYx8y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 24, 2020 at 05:04:32PM +0200, Jernej Skrabec wrote:
-> Following two patches enable Mali400 GPU on Allwinner R40 SoC. At this
-> point I didn't add table for frequency switching because it would
-> require far more testing and defaults work stable and reasonably well.
+On Tue, Aug 25, 2020 at 10:55:32AM +0200, Maxime Ripard wrote:
+> On Mon, Aug 24, 2020 at 09:03:27AM +0100, Lee Jones wrote:
+> > On Mon, 24 Aug 2020, Frank Lee wrote:
+> >=20
+> > > ping......
+> >=20
+> > "Please don't send content free pings and please allow a reasonable
+> >  time for review.  People get busy, go on holiday, attend conferences
+> >  and so on so unless there is some reason for urgency (like critical
+> >  bug fixes) please allow at least a couple of weeks for review.  If
+> >  there have been review comments then people may be waiting for those
+> >  to be addressed.  Sending content free pings just adds to the mail
+> >  volume (if they are seen at all) and if something has gone wrong
+> >  you'll have to resend the patches anyway so [RESEND]ing with any
+> >  comments addressed is generally a much better approach."
 >=20
-> Please take a look.
+> This is true to some extent, but pinging after a month doesn't seem
+> unreasonable either.
 
-Applied both, thanks
+Especially if resending would mean up to 16 patches sent again.
 
-Maxime
 
---gemdfh7kx36fvawn
+--xgyAXRrhYN0wYx8y
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TOJgAKCRDj7w1vZxhR
-xWEGAQDMARVYvs1kmIOcDlaG6HVY60QAfYio6XLChV8tPlnk8QD+NUSD51f0RiGV
-2CCxdlX746Cq5lcsYWglELWDAYtnEQ0=
-=OzYK
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9FF00ACgkQFA3kzBSg
+KbaQCw/7B0HkLUNDaoRkScvwvMsZwnYphPCyyQwyYSGMOlmp9LUnRLs8wgHuKwvF
+U65QpySYVeF2oRjy1Q5u7oXEQUnprwXLXkVaHt832UpeCw6nvKs/i8Rs8H+0tWo9
+/O7pxPMFrUouMTUAkAqKuKsCOFRflr2R32JquWopYWi+MgzoPAWV1OAtOC0XHdqw
+lWnioiMvY3Japg4eaqxLWZ5nqp8XYy+qXGwJdtiWkFu8+LnTvTcK+stQqROhYlKm
+6Cm6Uy13ngTrnB4ait2I/+YKuwljumU6m8xuxyb7a/j2ZWO80LBwoCiRdGNE1A7V
+SEDzhfVmYNjeHqCBB3Vryx5N5Bkz4Be6paj8tthKHjAXxBbLYfheaXeO6aLpd4l0
+sshVn10Dv84yYcL8GR4baFQCrNiZivjEZiVFXeiA6ygkQeNkQPoT4jGVYiHiNzuO
+y2TAjUKypZ2Dst24Q+38o9HUTa38mSIKKcif0SwmbryPq6NL0elOgd2F68KQJzSk
+ob/zI8yw9nK9Kiz6JpjvKBv+Aaf25R1U7a/URD0VcgJVdUv3X0RJ0yk79HSNeP89
+fEz9mx9k6sK09qRFLZTcYJ/whlSa0SONFcfEma3W7iVmDzjFDW0ZftzMneSFVRbp
+HY/EadYE5G3VNklMSNhyT9Bf9ArEoxN9osMTzwSgpiHzAovoq+o=
+=iNuN
 -----END PGP SIGNATURE-----
 
---gemdfh7kx36fvawn--
+--xgyAXRrhYN0wYx8y--
