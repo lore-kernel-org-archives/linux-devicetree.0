@@ -2,93 +2,117 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8EFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D800C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D066D20639
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BBD20639
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726159AbgHYNVy (ORCPT
+        id S1726159AbgHYN2w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:21:54 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32932 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbgHYNVu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 09:21:50 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t7so10340679otp.0;
-        Tue, 25 Aug 2020 06:21:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DlSyZ7fMYZgHVXExxIJRY2RprZTRuT9I6yW6uVrsj98=;
-        b=QqZ0zaQwxcC6O5ibiUZSpx3b6ryxO/EtKZ4s4OsjYESsIPEs3CXvfq1tnHGn6VDxHJ
-         x3F3RwhXy/SgUO7QOQDNHRmxk1XvYyv06hZ+3TgDaSqzw6BHhM5mxw2o9UKGl4jrJrTW
-         SCsxyH9wo0PJ4Y0ekYno3P/EjSnNQnx8rclOvtfOm82F6v6MHebosXw7WSrMHDiaJXXe
-         dAxFUnL3yGNUEBCzOuh4gpVEGr9ptq18STD4uh7iI+9qyin0jsAFuPpHoleqzLi3WrT4
-         QA5wTwV+QcSh12WgmYGD9emyqPuuVP0Ry5dKtmj8VCweCYVszT3Gl9jsQ8pyNJwON4lt
-         W6Wg==
-X-Gm-Message-State: AOAM532U2ejNdvMAoA001EAaxmvpIFxPjCZWAJfBsNRInWXLeSeroAw1
-        VSl9PPfPS8o3195IrdyqYW3m7rxpYy8GdJNdioU=
-X-Google-Smtp-Source: ABdhPJxCrYtK4zeIcWJudWDZNus4uDhmZJ7N4CYJHgcAKHlzXhAgVucRNkb7+cC81TIp/udAx8UzaPk8NL90p0wVKiE=
-X-Received: by 2002:a9d:1b62:: with SMTP id l89mr6625987otl.145.1598361709295;
- Tue, 25 Aug 2020 06:21:49 -0700 (PDT)
+        Tue, 25 Aug 2020 09:28:52 -0400
+Received: from sauhun.de ([88.99.104.3]:47938 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbgHYN2v (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:28:51 -0400
+Received: from localhost (p54b33ab6.dip0.t-ipconnect.de [84.179.58.182])
+        by pokefinder.org (Postfix) with ESMTPSA id 374132C04D5;
+        Tue, 25 Aug 2020 15:28:47 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 15:28:46 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Phil Reid <preid@electromag.com.au>
+Cc:     Codrin.Ciubotariu@microchip.com, kamel.bouhara@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+Message-ID: <20200825132846.GA1753@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+        Phil Reid <preid@electromag.com.au>,
+        Codrin.Ciubotariu@microchip.com, kamel.bouhara@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+ <20191021202044.GB3607@kunai>
+ <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+ <20191024150726.GA1120@kunai>
+ <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
 MIME-Version: 1.0
-References: <20200825085435.8744-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200825085435.8744-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Aug 2020 15:21:38 +0200
-Message-ID: <CAMuHMdX4JruJNX=Ezrrf_X_-WK0xy+MzYTvmbTnrLDFb1NCTYA@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: r8a7742-iwg21m: Add SPI NOR support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.or>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
+Content-Disposition: inline
+In-Reply-To: <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 10:54 AM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support for the SPI NOR device used to boot up the system
-> to the System on Module DT.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> ---
-> Hi all,
->
-> This patch is part of series [1], since rest of the patches have been
-> acked I am just resending patch 3/3 from the series.
->
-> [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=333197
->
-> v1->v2
-> * Dropped #address-cells/#size-cells from flash node.
-> * Added partitions for flash node.
 
-Thanks for the update!
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+Hi Phil,
 
-Gr{oetje,eeting}s,
+yes, this thread is old but a similar issue came up again...
 
-                        Geert
+On Fri, Oct 25, 2019 at 09:14:00AM +0800, Phil Reid wrote:
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> >=20
+> > > So at the beginning of a new transfer, we should check if SDA (or SCL=
+?)
+> > > is low and, if it's true, only then we should try recover the bus.
+> >=20
+> > Yes, this is the proper time to do it. Remember, I2C does not define a
+> > timeout.
+> >=20
+>=20
+> FYI: Just a single poll at the start of the transfer, for it being low, w=
+ill cause problems with multi-master buses.
+> Bus recovery should be attempted after a timeout when trying to communica=
+te, even thou i2c doesn't define a timeout.
+>=20
+> I'm trying to fix the designware drivers handling of this at the moment.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I wonder what you ended up with? You are right, a single poll is not
+enough. It only might be if one applies the new "single-master" binding
+for a given bus. If that is not present, my best idea so far is to poll
+SDA for the time defined in adapter->timeout and if it is all low, then
+initiate a recovery.
+
+All the best,
+
+   Wolfram
+
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9FEg4ACgkQFA3kzBSg
+KbZfXhAAgtg4dw1Y8ofe9LYQHp/xN3Z+LqaNGBmsKeC7XBv0/j/OuBqokWUtPeZ2
+LKs9hWvaKCiIBNZH8LElTWFS9XSlmiLD7Stw8pUm5Gcav/Hf8FRB3WJ93QGNQcA4
+/kQFrmO7Mxez+Yb3ndImfXQyexOJjzteaxVfbmVLIHC8V2L+LY+M7QiuzEG4vT9C
+/KhzaKVmfGevX0HL0lZcShLCf5Nk8Na/hMfxxK1GisaMvEacilOQBqWyFq5Z9oQd
+h7T0BKO0wn5Az3+lVVzI7qiCTQumy+9bhWJuSWXeVoxmCk2dklCFw/bUnjuVpzOk
+agaRh4BiBmp/zxDVtmS8rihL6htu+2JlFrSPEk1Pl5pfgx5oE2D+cuwRRqkgZwgZ
+EOe60+VfNVkQ5epcCBKRKNOqKnL8ZOG0Q0iVkuxqEVLCnhe4sM31nZ0Z8pioHb8P
+K2Mgr7GvqZCWQLdCHBy16B6LmsIqjwn2BwYcTo9EAGTWbhej7fGoykcuPI4r5QSO
+ivHhv8+sR795YmveXuV9OdXThHoZXVjhe2CQMxm8pQ17PW0M000X3j2FHj4qb5AL
+UQJfYd8o4WHPyJ8VtvdiPbeIQVhhkIysIg5FGJXgydrsMt/CyCuj6epLPWPRm+TB
+vtXTdWN2BLhXYFdxGtnkQdHZnqo58ZGxM3eDHPwywGsWpEr/wAc=
+=3nwt
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
