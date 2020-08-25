@@ -2,239 +2,139 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2269C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B75C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0AF2071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBB52075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598383101;
-	bh=u0yt9nN7jC9w69HbJd62x6Z35R6lns7cJyBEEAs+5T8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hpTsaVBceV18a9ly6aR1+ZznJvthVVA+vieA8nu+fgjeyQakP0VNYMVEsxR2jG0iO
-	 CfM2zrq/XZyZUAvUBcUKmrgFnFjT9bCe8+n19Hpe1e5JjPGHrfOqj+b+DUMqvdEzxV
-	 kldPwQR7eisXYMm894OrmCpjBcNifUk9D2eXCdKg=
+	s=default; t=1598384165;
+	bh=M1J8uZpqgbBk0Tp3JOS/OOQb4fA/JLnQDLU2aYyUXZk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Wzbj9sn90iKrBU9kNnY6yGFFKPLgEigB1ViTvEv+YGHXvqA1XFW+VohrztT4zP6V0
+	 4HCL7vxotrZ07UGtBcEij1/tU8HsGcUZLXQGifHTJnu+tEndrQb9Ugu3l7SaXWH492
+	 UYBKCqiI3RsXkHDQEPam2XlgSfzTlx1HZY+D6Brs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHYTSU (ORCPT
+        id S1726711AbgHYTgA (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:18:20 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37163 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgHYTST (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 15:18:19 -0400
-Received: by mail-io1-f68.google.com with SMTP id b16so13679575ioj.4;
-        Tue, 25 Aug 2020 12:18:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CbaB4dARNo7ofkMDOqGcoP4PrODHbcuDwxHGPmOw1BA=;
-        b=sNCfOT5dHmSDUTFAgW6F8h1cNNYP71UH8D7pGXg0IBeyejyVhUMgaDTqxT5jRy07kS
-         0gL4CIkNpnw0thXdcrHWs1mmyV26lQNBylHFw0YQVwLShE21Sdgo+ar7YcGh6NvT0JRV
-         CvCtbasoIcQodx2rd9ggwii+4QNab6Mon5B6mPf3+NQrFx2snndqgdVcd9y3a3AE6WMK
-         gUDxtCwvY2F8KHQNLuK7terxK5JYI8EmTE0si4nKQeT3iBL0kyAPE5cVWq75J36iNvoW
-         LG1zVsdLz2hW3vgQQn0+YcpU49U6dRbePhOX7fSm7sFEKR+gqR6XsxZDQ0C/SHGq1hmC
-         QxvQ==
-X-Gm-Message-State: AOAM532A+pezKdivMH1y7WEVZirmrEg67HnQjXkRiEccHGcRGFlI7D3o
-        3zD7thA8ZuLmwKEj1PDlhw==
-X-Google-Smtp-Source: ABdhPJyiuVhU4p4Zo1w9sz/+dYV7JwEuyuIWv7XvYB+aH6q7VTjJEiPzSYZ7YE7LmEn2epNgM4kg9A==
-X-Received: by 2002:a02:93c5:: with SMTP id z63mr2612135jah.122.1598383098433;
-        Tue, 25 Aug 2020 12:18:18 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id l5sm9636540ilj.88.2020.08.25.12.18.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 12:18:17 -0700 (PDT)
-Received: (nullmailer pid 1158885 invoked by uid 1000);
-        Tue, 25 Aug 2020 19:18:14 -0000
-Date:   Tue, 25 Aug 2020 13:18:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v5 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine
- bindings
-Message-ID: <20200825191814.GA1155274@bogus>
-References: <20200818035028.2265197-1-cychiang@chromium.org>
- <20200818035028.2265197-2-cychiang@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818035028.2265197-2-cychiang@chromium.org>
+        Tue, 25 Aug 2020 15:36:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgHYTf7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:35:59 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9EB72075E;
+        Tue, 25 Aug 2020 19:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598384158;
+        bh=M1J8uZpqgbBk0Tp3JOS/OOQb4fA/JLnQDLU2aYyUXZk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HIS7rlbZC99+PFJ+c8TL3+mAFsePhLupI704uWAszxjjQtUK0rRn26QHhWk51eWPf
+         osIIVZV6O8lT/j7Ew+BLD285VUcGHCFOkYLMR0yuSzUtYuTjxNzMDHDy+Ab3kRUQYC
+         hmdIrv3bnxN73fG1c+3EPyro5Z47zPoDJd5DzXyQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
+Date:   Tue, 25 Aug 2020 21:35:17 +0200
+Message-Id: <20200825193536.7332-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:50:27AM +0800, Cheng-Yi Chiang wrote:
-> Add devicetree bindings documentation file for sc7180 sound card.
-> 
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> ---
->  .../bindings/sound/qcom,sc7180.yaml           | 127 ++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> new file mode 100644
-> index 000000000000..b5cdaa0fe559
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
-> +
-> +maintainers:
-> +  - Rohit kumar <rohitkr@codeaurora.org>
-> +  - Cheng-Yi Chiang <cychiang@chromium.org>
-> +
-> +description:
-> +  This binding describes the SC7180 sound card which uses LPASS for audio.
-> +
-> +properties:
-> +  compatible:
-> +    contains:
+Hi,
 
-Drop contains. Should be exactly the string listed.
+This is a v3 of cleanup of i.XM 8 bindings and DTSes.
 
-> +      const: qcom,sc7180-sndcard
-> +
-> +  audio-routing:
-> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +    description:
-> +      A list of the connections between audio components. Each entry is a
-> +      pair of strings, the first being the connection's sink, the second
-> +      being the connection's source.
-> +
-> +  model:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description: User specified audio sound card name
-> +
-> +  aux-dev:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle of the codec for headset detection
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^dai-link(@[0-9]+)?$":
+It is separate patchset from i.MX 8 pin configuration cleanup, which
+also touch the bindings [1]. No dependencies (although in my tree this
+comes first).
 
-Unit addresses are hex. Do you really have more than 10?
+Merging
+=======
+There are no dependencies, so dt-bindings could go through Rob's tree,
+DTS through SoC. I think there is no point to push dt-bindings changes
+through subsystem maintainers (gpio, pwm, watchdog, mtd etc). Usually
+Rob has been picking them up.
 
-> +    description:
-> +      Each subnode represents a dai link. Subnodes of each dai links would be
-> +      cpu/codec dais.
-> +
-> +    type: object
-> +
-> +    properties:
-> +      link-name:
-> +        description: Indicates dai-link name and PCM stream name.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        maxItems: 1
-> +
-> +      reg:
-> +        description: dai link address.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
+Changes since v2:
+=================
+1. Add Rob's review,
+2. Correct things pointed during review (see individual patches and
+their change logs).
 
-reg already has a type. Drop.
+[1] dt-bindings: mtd: gpmi-nand: Fix matching of clocks on different SoC
 
-> +        maxItems: 1
-> +
-> +      cpu:
-> +        description: Holds subnode which indicates cpu dai.
-> +        type: object
-> +        properties:
-> +          sound-dai: true
-> +
-> +      codec:
-> +        description: Holds subnode which indicates codec dai.
-> +        type: object
-> +        properties:
-> +          sound-dai: true
-> +
-> +    required:
-> +      - link-name
-> +      - cpu
-> +      - codec
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - model
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +
-> +  - |
-> +    sound {
-> +        compatible = "qcom,sc7180-sndcard";
-> +        model = "sc7180-snd-card";
-> +
-> +        audio-routing =
-> +                    "Headphone Jack", "HPOL",
-> +                    "Headphone Jack", "HPOR";
-> +
-> +        aux-dev = <&alc5682>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        dai-link@0 {
-> +            link-name = "MultiMedia0";
-> +            reg = <0>;
-> +            cpu {
-> +                sound-dai = <&lpass_cpu 0>;
-> +            };
-> +
-> +            codec {
-> +                sound-dai = <&alc5682 0>;
-> +            };
-> +        };
-> +
-> +        dai-link@1 {
-> +            link-name = "MultiMedia1";
-> +            reg = <1>;
-> +            cpu {
-> +                sound-dai = <&lpass_cpu 1>;
-> +            };
-> +
-> +            codec {
-> +                sound-dai = <&max98357a>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.28.0.220.ged08abb693-goog
-> 
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (19):
+  dt-bindings: gpio: fsl-imx-gpio: Add i.MX 8 compatibles
+  dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges property
+  dt-bindings: gpio: fsl-imx-gpio: Add parsing of hogs
+  dt-bindings: gpio: fsl-imx-gpio: Add power-domains
+  dt-bindings: perf: fsl-imx-ddr: Add i.MX 8M compatibles
+  dt-bindings: pwm: imx-pwm: Add i.MX 8M compatibles
+  dt-bindings: serial: fsl-imx-uart: Add i.MX 8M compatibles
+  dt-bindings: watchdog: fsl-imx-wdt: Add i.MX 8M compatibles
+  dt-bindings: mtd: gpmi-nand: Add i.MX 8M compatibles
+  dt-bindings: reset: fsl,imx7-src: Add i.MX 8M compatibles
+  dt-bindings: thermal: imx8mm-thermal: Add i.MX 8M Nano compatible
+  dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8 compatible matching
+  dt-bindings: nvmem: imx-ocotp: Update i.MX 8M compatibles
+  dt-bindings: arm: fsl: Fix Toradex Colibri i.MX 8 binding
+  dt-bindings: arm: fsl: Add ZII Ultra boards binding
+  dt-bindings: interrupt-controller: fsl,irqsteer: Fix compatible
+    matching
+  dt-bindings: serial: fsl-lpuart: Fix compatible matching
+  arm64: dts: imx8mq-evk: Add hog suffix to wl-reg-on
+  arm64: dts: imx8mq-zii-ultra: Add hog suffixes to GPIO hogs
+
+ .../devicetree/bindings/arm/fsl.yaml          | 14 ++++++
+ .../bindings/gpio/fsl-imx-gpio.yaml           | 43 ++++++++++++++++---
+ .../interrupt-controller/fsl,irqsteer.yaml    |  8 ++--
+ .../bindings/mmc/fsl-imx-esdhc.yaml           | 37 ++++++++--------
+ .../devicetree/bindings/mtd/gpmi-nand.yaml    | 18 +++++---
+ .../devicetree/bindings/nvmem/imx-ocotp.yaml  | 38 +++++++++-------
+ .../devicetree/bindings/perf/fsl-imx-ddr.yaml | 16 +++++--
+ .../devicetree/bindings/pwm/imx-pwm.yaml      | 14 ++++--
+ .../bindings/reset/fsl,imx7-src.yaml          | 19 +++++---
+ .../bindings/serial/fsl-imx-uart.yaml         |  4 ++
+ .../bindings/serial/fsl-lpuart.yaml           | 17 +++++---
+ .../bindings/thermal/imx8mm-thermal.yaml      | 10 +++--
+ .../bindings/watchdog/fsl-imx-wdt.yaml        | 11 ++++-
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  2 +-
+ .../boot/dts/freescale/imx8mq-zii-ultra.dtsi  |  8 ++--
+ 15 files changed, 182 insertions(+), 77 deletions(-)
+
+-- 
+2.17.1
+
