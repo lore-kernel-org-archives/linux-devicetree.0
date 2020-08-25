@@ -2,99 +2,126 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BD5C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E49C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC492071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:38:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="d318I0JD"
+	by mail.kernel.org (Postfix) with ESMTP id E19FD2075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgHYGiZ (ORCPT
+        id S1729166AbgHYGkp (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729068AbgHYGiY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:38:24 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A11D4C061574;
-        Mon, 24 Aug 2020 23:38:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o18so15023714eje.7;
-        Mon, 24 Aug 2020 23:38:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Q9k3xF6hWPOQM3uFwSy2qlWDQ5BGn+QdqRbPCM8EhM=;
-        b=d318I0JDAY3KO2OfweXvemxDvpcgVxD/poXqH0o44y89iIIdQ2tKqg8axqlHdT8Acl
-         ZwraWTH8Be+wNIdnhcriuFkqqu+TMMH0QJZ/TUNOpruZNRxE9CT0VlMX/CzWe+IZ+AKh
-         1i6LQwYPsKVqW8t3f2z5GeVPSUXLalcko0o7M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Q9k3xF6hWPOQM3uFwSy2qlWDQ5BGn+QdqRbPCM8EhM=;
-        b=AuRsY8/wXh5c6AUTfKei83ZPPLzod9pc+bVP4uAjLRjKsa9+A2UYrbbWStFClXP2nB
-         Rnat2K6phw+OBLcRqDObIKQ9eE/tLRSmitQJyIN2WHOT+9CTzr7CNNp55rMsegDv7c/M
-         FUKrh5x34dkUWmf/PPhJ7xgsCE8YjyYczkSWwPIEcog+qQoQrCGLWZvktTzaq26pgtSY
-         tk4QzY9ghDtUJ2NzuE6KxNBy39Xx9Q/aEPL8ixXeSyLc3ZHmjL9oSbbOfosd0WeIav80
-         a0YLBsRKze74hckUkkUYAP88RbIwJ1U1PXKUAGLe0VnoW00A0tsCEUr3bZJnT9Op6Pjr
-         Ls4g==
-X-Gm-Message-State: AOAM533W/91YS/kuRs22kAMSivCsyTmUBV4YCNTze+xnwjDuby7ydhHR
-        rfiXYe3kxDM6PsyDo4jV36RnxHtpUrtMpTjMC6KFnVVk4Ro=
-X-Google-Smtp-Source: ABdhPJweMgK6I5TgV9Ly2uJzqR7Tgq7Qn1uQsVbMr86HbZ6rf4REgHoJ8D+2tbHNLahHnsDFOhsp3YQTaEez+w4QafM=
-X-Received: by 2002:a17:906:4ec3:: with SMTP id i3mr8802552ejv.215.1598337503276;
- Mon, 24 Aug 2020 23:38:23 -0700 (PDT)
+        Tue, 25 Aug 2020 02:40:45 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52943 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729107AbgHYGko (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:40:44 -0400
+Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1kASd5-0006Yi-0e; Tue, 25 Aug 2020 08:40:23 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1kASd2-0002aQ-Mk; Tue, 25 Aug 2020 08:40:20 +0200
+Date:   Tue, 25 Aug 2020 08:40:20 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Adam Ford <aford173@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>, Li Jun <jun.li@nxp.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 02/16] dt-bindings: mtd: gpmi-nand: Fix matching of
+ clocks on different SoCs
+Message-ID: <20200825064020.GM13023@pengutronix.de>
+References: <20200824190701.8447-1-krzk@kernel.org>
+ <20200824190701.8447-2-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200820161152.22751-1-eajames@linux.ibm.com> <20200820161152.22751-4-eajames@linux.ibm.com>
-In-Reply-To: <20200820161152.22751-4-eajames@linux.ibm.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 25 Aug 2020 06:38:10 +0000
-Message-ID: <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
-Subject: Re: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824190701.8447-2-krzk@kernel.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:34:56 up 187 days, 14:05, 139 users,  load average: 0.34, 0.21,
+ 0.22
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
->
-> Mask the IRQ status to only the bits that the driver checks. This
-> prevents excessive driver warnings when operating in slave mode
-> when additional bits are set that the driver doesn't handle.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+On Mon, Aug 24, 2020 at 09:06:47PM +0200, Krzysztof Kozlowski wrote:
+> Driver requires different amount of clocks for different SoCs.  Describe
+> these requirements properly to fix dtbs_check warnings like:
+> 
+>     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/i2c/busses/i2c-aspeed.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-> index 31268074c422..abf40f2af8b4 100644
-> --- a/drivers/i2c/busses/i2c-aspeed.c
-> +++ b/drivers/i2c/busses/i2c-aspeed.c
-> @@ -604,6 +604,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
->         writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
->                bus->base + ASPEED_I2C_INTR_STS_REG);
->         readl(bus->base + ASPEED_I2C_INTR_STS_REG);
-> +       irq_received &= 0xf000ffff;
->         irq_remaining = irq_received;
+>  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
+>  1 file changed, 61 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> index 28ff8c581837..9d764e654e1d 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - fsl,imx6q-gpmi-nand
+> +              - fsl,imx6sx-gpmi-nand
+> +    then:
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: SoC gpmi io clock
+> +            - description: SoC gpmi apb clock
+> +            - description: SoC gpmi bch clock
+> +            - description: SoC gpmi bch apb clock
+> +            - description: SoC per1 bch clock
+> +        clock-names:
+> +          items:
+> +            - const: gpmi_io
+> +            - const: gpmi_apb
+> +            - const: gpmi_bch
+> +            - const: gpmi_bch_apb
+> +            - const: per1_bch
 
-This would defeat the check for irq_remaining. I don't think we want to do this.
+This enforces this specific order of the clocks given in the dts. The
+clock binding itself doesn't require any specific order, that's what we
+have the names array for.
 
-Can you explain why these bits are being set in slave mode?
+Is this really what we want?
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
