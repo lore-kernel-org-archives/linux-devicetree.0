@@ -2,268 +2,100 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D39C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB0DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 20:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C954208E4
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06ACB2074A
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 20:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598385064;
-	bh=HfdDetrOC5dI+mKaYMMlLoKzPI2j5QdwTPATE7B03Ls=;
+	s=default; t=1598385690;
+	bh=bTc4v+6F/hagCAOCYn0EUdpt19OkZWEAtYQetr9TA/0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PNP0G0hA1ILgaL0ET3pWEGPl3Lw2MuNb6F8pccKZPCkh6T50TKQTk1ErtCWSBoHnr
-	 cNiyfb2ar6mIzIWvezPQC3RsMD89VoXwpbsYtijO73B4ufe1neAgcDPA+va4ouIyIp
-	 fy6InyTHALfKjSUAC3O8rTielMjhllsZK7WeclD8=
+	b=uU8iquU+BDnfEFLAVSOTWGjITHeVtt85szB6YyoKpcyxm2lSibWc6nLh4lozayJt0
+	 d4VugI1Dbi+12l1jNEn/wW6QAhE/QLReKnj7HHCgOo7AErSZCCBJhNAzFpwUrHiGB5
+	 DB4t6jC2FW+z0SEfRmxBur9K2OFwahHnElWduzRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgHYTu4 (ORCPT
+        id S1726337AbgHYUB3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:50:56 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46223 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726570AbgHYTuy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 15:50:54 -0400
-Received: by mail-io1-f65.google.com with SMTP id d18so4453081iop.13;
-        Tue, 25 Aug 2020 12:50:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=A/K9hgoNgX1yqNOPP0vdW/Zwp8hH78Dq/iAwIqDHpJ0=;
-        b=dxmn8lLmoFft64nQiOXMjNV2Addw4ZkZN887DAHHZl6zuCiYQB/jq2PTstv7onWTuq
-         R8ce/85dZdU+nsZaZ5pl3gTcuY37zbgRndKTLYptWCa5RGyXJTvPBI6FbOwQ29lBQh8N
-         /4ucf5j/KBe6SNnAVjrpRaSQcDSe+Qqb/d4OGQtNE0StoCUVD1H0R5iUqAHps11J+34b
-         gcA2naG94n1ic+G4lNujbW9syeQIwMQaxwDEnc/SLEWetDce7zgroUb55EdFxRzuTv02
-         VWYiUxmQRw97ZZQs7XNbmOYstp8JvBHUoeNKNVSBQWcijOm+dWojCLh8/bAOxMGxgKux
-         l6qg==
-X-Gm-Message-State: AOAM531yqYCv64WX+nxdtW7NlmQHK9ZL7v9peXZmshrAGaPn8kZXmdoy
-        iJuKBTT9jFN0FQ9JDKa9mFYN2BCWKNhP
-X-Google-Smtp-Source: ABdhPJzn0LaWc5LtdVi27oS/66l314ee6b3xtm1XvtotF/5uQAPTfONRn55/eTulnpWZAPL56wpLXg==
-X-Received: by 2002:a02:6d0e:: with SMTP id m14mr11998125jac.23.1598385052474;
-        Tue, 25 Aug 2020 12:50:52 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id u17sm8977ilb.44.2020.08.25.12.50.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 12:50:51 -0700 (PDT)
-Received: (nullmailer pid 1210818 invoked by uid 1000);
-        Tue, 25 Aug 2020 19:50:49 -0000
-Date:   Tue, 25 Aug 2020 13:50:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        Ricardo Ribalda <ribalda@kernel.org>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: media: imx214: Convert to json-schema
-Message-ID: <20200825195049.GA1199184@bogus>
-References: <20200818121755.37706-1-jacopo+renesas@jmondi.org>
- <20200819132823.GH6049@pendragon.ideasonboard.com>
+        Tue, 25 Aug 2020 16:01:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726158AbgHYUB3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:01:29 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12A72072D;
+        Tue, 25 Aug 2020 20:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598385688;
+        bh=bTc4v+6F/hagCAOCYn0EUdpt19OkZWEAtYQetr9TA/0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MtwFGwk4OelnWAHsK7KS1KGH506S1PZ3kare4MTUWPq7jCKnwoKgb2o7vCqoNfWs5
+         RglzVl485H0m+cP4JfbwfwQ+SKsyLWbPjq91O7pjwYne6HsenZz4wBjJbiq3j/7Las
+         Ud8aAq/9a9RtRwSNLbuwHoXPeX8IDt/BSude5F+g=
+Date:   Tue, 25 Aug 2020 21:00:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivasa Rao <srivasam@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vsujithk <vsujithk@codeaurora.org>
+Subject: Re: [PATCH 1/5] dt-bindings: Add sc7180-lpass HDMI header define
+Message-ID: <20200825200052.GI5379@sirena.org.uk>
+References: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
+ <1598375788-1882-2-git-send-email-srivasam@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5uO961YFyoDlzFnP"
 Content-Disposition: inline
-In-Reply-To: <20200819132823.GH6049@pendragon.ideasonboard.com>
+In-Reply-To: <1598375788-1882-2-git-send-email-srivasam@codeaurora.org>
+X-Cookie: Don't get to bragging.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 04:28:23PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
-> 
-> Thank you for the patch.
-> 
-> On Tue, Aug 18, 2020 at 02:17:55PM +0200, Jacopo Mondi wrote:
-> > Convert the imx214 bindings document to json-schema and update
-> > the MAINTAINERS file accordingly.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  .../bindings/media/i2c/sony,imx214.txt        |  53 --------
-> >  .../bindings/media/i2c/sony,imx214.yaml       | 124 ++++++++++++++++++
-> >  MAINTAINERS                                   |   2 +-
-> >  3 files changed, 125 insertions(+), 54 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> > deleted file mode 100644
-> > index f11f28a5fda4..000000000000
-> > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-> > +++ /dev/null
-> > @@ -1,53 +0,0 @@
-> > -* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> > -
-> > -The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-> > -an active array size of 4224H x 3200V. It is programmable through an I2C
-> > -interface.
-> > -Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-> > -throughput of 1.2Gbps/lane.
-> > -
-> > -
-> > -Required Properties:
-> > -- compatible: Shall be "sony,imx214".
-> > -- reg: I2C bus address of the device. Depending on how the sensor is wired,
-> > -       it shall be <0x10> or <0x1a>;
-> > -- enable-gpios: GPIO descriptor for the enable pin.
-> > -- vdddo-supply: Chip digital IO regulator (1.8V).
-> > -- vdda-supply: Chip analog regulator (2.7V).
-> > -- vddd-supply: Chip digital core regulator (1.12V).
-> > -- clocks: Reference to the xclk clock.
-> > -- clock-frequency: Frequency of the xclk clock.
-> > -
-> > -Optional Properties:
-> > -- flash-leds: See ../video-interfaces.txt
-> > -- lens-focus: See ../video-interfaces.txt
-> > -
-> > -The imx214 device node shall contain one 'port' child node with
-> > -an 'endpoint' subnode. For further reading on port node refer to
-> > -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > -
-> > -Required Properties on endpoint:
-> > -- data-lanes: check ../video-interfaces.txt
-> > -- link-frequencies: check ../video-interfaces.txt
-> > -- remote-endpoint: check ../video-interfaces.txt
-> > -
-> > -Example:
-> > -
-> > -	camera-sensor@1a {
-> > -		compatible = "sony,imx214";
-> > -		reg = <0x1a>;
-> > -		vdddo-supply = <&pm8994_lvs1>;
-> > -		vddd-supply = <&camera_vddd_1v12>;
-> > -		vdda-supply = <&pm8994_l17>;
-> > -		lens-focus = <&ad5820>;
-> > -		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> > -		clocks = <&mmcc CAMSS_MCLK0_CLK>;
-> > -		clock-frequency = <24000000>;
-> > -		port {
-> > -			imx214_ep: endpoint {
-> > -				data-lanes = <1 2 3 4>;
-> > -				link-frequencies = /bits/ 64 <480000000>;
-> > -				remote-endpoint = <&csiphy0_ep>;
-> > -			};
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> > new file mode 100644
-> > index 000000000000..ddd4627214b1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
-> > @@ -0,0 +1,124 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/media/i2c/sony,imx214.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> 
-> s/Mp/MP/
-> 
-> > +
-> > +maintainers:
-> > +  - Ricardo Ribalda <ribalda@kernel.org>
-> > +
-> > +description: -|
-> > +  The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-> 
-> s/imx214/IMX214/
-> 
-> > +  an active array size of 4224H x 3200V. It is programmable through an I2C
-> > +  interface.  Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a
-> 
-> s/  Image/ Image/
-> 
-> > +  maximum throughput of 1.2Gbps/lane.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: sony,imx214
-> > +
-> > +  reg:
-> > +    description: -|
-> > +      I2C device address. Depends on how the sensor is wired.
-> 
-> I'd drop the description, it's fairly evident as it's an I2C device,
-> isn't it ?
-> 
-> > +    enum:
-> > +      - 0x10
-> > +      - 0x1a
-> > +
-> > +  clocks:
-> > +    description: Reference to the xclk clock.
-> > +    maxItems: 1
-> > +
-> > +  clock-frequency:
-> > +    description: Frequency of the xclk clock in Hz.
-> > +
-> > +  enable-gpios:
-> > +    description: GPIO descriptor for the enable pin.
-> > +    maxItems: 1
-> > +
-> > +  vdddo-supply:
-> > +    description: Chip digital IO regulator (1.8V).
-> > +    maxItems: 1
-> > +
-> > +  vdda-supply:
-> > +    description: Chip analog regulator (2.7V).
-> > +    maxItems: 1
-> > +
-> > +  vddd-supply:
-> > +    description: Chip digital core regulator (1.12V).
-> > +    maxItems: 1
-> > +
-> > +  flash-leds:
-> > +    description: See ../video-interfaces.txt
-> > +
-> > +  lens-focus:
-> > +    description: See ../video-interfaces.txt
-> > +
-> > +  port:
-> > +    type: object
-> > +    description: |
-> > +      The device node must contain one 'port' child node for its digital output
-> > +      video port, in accordance with the video interface bindings defined in
-> > +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> 
-> I'd drop this, the port node is already described as required below.
-> 
-> > +
-> > +    properties:
-> > +      endpoint:
-> > +        type: object
-> > +        properties:
-> > +          remote-endpoint:
-> > +            description: See ../video-interfaces.txt
-> > +
-> > +          data-lanes:
-> > +            description: See ../video-interfaces.txt
-> 
-> Shouldn't this also express that only 2 or 4 data lanes are allowed ?
-> 
->             $ref: /schemas/types.yaml#/definitions/uint32-array
->             description: See ../video-interfaces.txt
->             anyOf:
->               - items:
->                   - const: 1
->                   - const: 2
->               - items:
->                   - const: 1
->                   - const: 2
->                   - const: 3
->                   - const: 4
-> 
-> Maybe someone more experienced with YAML schemas could propose a better
-> way to express this ? I initially tried to express it with enum instead
-> of anyOf but couldn't get it to work.
 
-There's different ways with minItems/maxItems, but that still uses 
-anyOf and doesn't end up being any better.
+--5uO961YFyoDlzFnP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Tue, Aug 25, 2020 at 10:46:24PM +0530, Srinivasa Rao wrote:
+> From: vsujithk <vsujithk@codeaurora.org>
+>=20
+> Add header defining HDMI dai-id for SC7180 lpass soc.
+>=20
+> Signed-off-by: Srinivasa Rao <srivasam@codeaurora.org>
+> ---
+
+You haven't provided a signoff for the author "vsujithk" (who presumably
+has a more complete name?) - these are important, see
+submitting-patches.rst for details on what the signoff means and why
+it's needed.
+
+--5uO961YFyoDlzFnP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9FbfQACgkQJNaLcl1U
+h9BSlAf/YtTZ0z9aVXnosGU97p0DjhzallSbOSZxFjDNmCb2yZ/ule4Z75XA+5Ga
+pzP1MEIbbmmTsPsx7NQVDZuAWMGdMUISlp6rL12clfwjkg/XoJhMS6pQ4aJaCvQF
+jP5manaErAltKq3qc3rOpj+4x0/xHnLjfVFyqbmy2AQvhhM/ufJNi2v1rGkn7H2e
+vp2EvfC/3BOU7pRa5JjDWfZ1tfHbCIuPuDWvP+pvcJ0fcULucj25U4IKoF+Y8A13
+qZ0E+eWvWeDIn2iVUboRvD2Y8rK7br55aTIlMviSb2Ss8eQJ/BpEeE1WhUDuC/1C
+UzsYrYs1VQYeyG0d2jSuhyYboKdlHA==
+=4xff
+-----END PGP SIGNATURE-----
+
+--5uO961YFyoDlzFnP--
