@@ -2,66 +2,51 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CACC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745B4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 035DB2067C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 519742071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WubUU/NV"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="az6XmRx0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p0+MO18m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgHYJqT (ORCPT
+        id S1729644AbgHYJzm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
+        Tue, 25 Aug 2020 05:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728944AbgHYJqR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:46:17 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42196C061755;
-        Tue, 25 Aug 2020 02:46:16 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id u1so471162edi.4;
-        Tue, 25 Aug 2020 02:46:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lTsKS8Pb8K5WIlay+gSpZALJK9CC4vKfRtBondq1rG0=;
-        b=WubUU/NVMgDBIGpWM+WY1oTuRzE54vLKnQZjndSsLe89JNw7+MYdJGerAlsZ9ySeTY
-         15gwueEu/r8j62UNGT7C2eayRAaY9ZMrNLQzLFkqBWoolNtxGwRDkO9wcOGa5wD14F/R
-         HGgEYYU2to8O37h73hzceBTc+qW4IjlqL7r8zKO7qN0kan3RMu7vGNzwlVfvQ1ZnLCg7
-         0uqbmd3YZcTHHDuDIajMER0iIoywAtDO/BcLFRPRPcHQOm6GOqRH2U+vRDh89Mbo7kvj
-         RPayqch3tZXsTR+Xa5pb2cs8r9yZLqHMOWxBSWYwkvn4tCPJ7Z4I7L2N2voyzE4r70kG
-         Hbzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lTsKS8Pb8K5WIlay+gSpZALJK9CC4vKfRtBondq1rG0=;
-        b=UBuoz5DZkBwjxD8pykLp+xk/4O3UvLneTM1LKQ45HvLzQFIZEgHNpnnNoHyeOIR0DU
-         0dAvmWmtiFXclH35PHuEsm6q+tsx8LHIobQ8dieyv6eQWG1P4nM0yDi1g0H1dLnzywjc
-         KaliTDPHlnKO8fFOf6mcpEMpcRtVC1bf5zBdg9VS5DYlnxCgTsV+PdBvUMc0Js/Jffin
-         W1vjcwqeAAX/dgpAjZddkE2Y1Xjr3wUI/fcQCEOcjn8QYhrXUWOFVeFQviV+Bh02WYXl
-         /oczORiT7bjeySmA19m7zhJ7DMJ3xMsYfxvAmIrLNUz9Z+yLsk1uRISPX1Mykhd1PdrZ
-         TQJQ==
-X-Gm-Message-State: AOAM531OvnsXONHYzhksooMg1k8HpAkCYwWpGS3U3xTuQJPWFpPCvnHY
-        5zr35OuSbc2oC64vrgUj644=
-X-Google-Smtp-Source: ABdhPJwr9ysM8xXqvCVtvOtSxeedByHPMHO/m8GmhNTtL1ZLM4UWcZ1QRYAdRSipjRxoEdwNIT/VyQ==
-X-Received: by 2002:aa7:d688:: with SMTP id d8mr9525604edr.168.1598348774916;
-        Tue, 25 Aug 2020 02:46:14 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id p3sm12461605edx.75.2020.08.25.02.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 02:46:14 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 12:46:12 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
+        with ESMTP id S1729456AbgHYJzk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:55:40 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87148C061574;
+        Tue, 25 Aug 2020 02:55:40 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598349339;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5bdT5tTM+hEnX3GHDG3SgFYwTwZMX1yMI7aVVjqitqY=;
+        b=az6XmRx0k5oLN1bIaAHyCdIuH590fxM3/uYM0egcx2w+6s56vftoivh4/DDL0y8tZaXGgB
+        Xd/dMTYP4htDmj77ZYPKmtuulUTGZiW6ctR83KWrcYJVaEdwSun+H2/FFnQa+vUbFYjyiO
+        3Cs6fxHY+4V3XDEUic1hESs9SRP8bkbUzGnMP1Fh2XCzeSUmfh7zbZX5wg04Bowsz2/unh
+        FEizV4bgRM2CunF+cLppghCcpx9DmSprFsZZcFIAccCKIC8CnzMQmc2XbxV3bNxAHYbi8e
+        Wb51G0XpY5WPkK+74sRRJlVPc96CK/PxFSH9s4N+IsDr4XGf7/UOdqHsDycnGQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598349339;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5bdT5tTM+hEnX3GHDG3SgFYwTwZMX1yMI7aVVjqitqY=;
+        b=p0+MO18mFNv6nUcGw/fOpqWL3EmCv1vx5i0JWx2mxD5NVODpZfbqICiy0wx/6EIRg2VsKJ
+        sQOT40Z3aCsfvoCQ==
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
         Vivien Didelot <vivien.didelot@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -72,46 +57,84 @@ Cc:     Kurt Kanzenbach <kurt@linutronix.de>, Andrew Lunn <andrew@lunn.ch>,
         Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
         ilias.apalodimas@linaro.org
 Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-Message-ID: <20200825094612.ffdt6xkl552ppc3i@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de>
- <20200820081118.10105-6-kurt@linutronix.de>
- <20200822143922.frjtog4mcyaegtyg@skbuf>
- <87imd8zi8z.fsf@kurt>
- <87y2m3txox.fsf@intel.com>
+In-Reply-To: <20200825093830.r2zlpowtmhgwm6rz@skbuf>
+References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200824225615.jtikfwyrxa7vxiq2@skbuf> <878se3133y.fsf@kurt> <20200825093830.r2zlpowtmhgwm6rz@skbuf>
+Date:   Tue, 25 Aug 2020 11:55:37 +0200
+Message-ID: <871rjv123q.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2m3txox.fsf@intel.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinicius,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 24, 2020 at 04:45:50PM -0700, Vinicius Costa Gomes wrote:
-> Kurt Kanzenbach <kurt@linutronix.de> writes:
-> >
-> > With TAPRIO traffic classes and the mapping to queues can be
-> > configured. The switch can also map traffic classes. That sounded like a
-> > good match to me.
+On Tue Aug 25 2020, Vladimir Oltean wrote:
+> On Tue, Aug 25, 2020 at 11:33:53AM +0200, Kurt Kanzenbach wrote:
+>> On Tue Aug 25 2020, Vladimir Oltean wrote:
+>> > On Thu, Aug 20, 2020 at 10:11:15AM +0200, Kurt Kanzenbach wrote:
+>> >
+>> > Explain again how this works, please? The hrtimer measures the CLOCK_T=
+AI
+>> > of the CPU, but you are offloading the CLOCK_TAI domain of the NIC? So
+>> > you are assuming that the CPU and the NIC PHC are synchronized? What if
+>> > they aren't?
+>>=20
+>> Yes, I assume that's synchronized with e.g. phc2sys.
+>>=20
 >
-> The only reason I could think that you would need this that *right now*
-> taprio has pretty glaring oversight: that in the offload parameters each entry
-> 'gate_mask' reference the "Traffic Class" (i.e. bit 0 is Traffic Class
-> 0), and it really should be the HW queue.
+> My intuition tells me that this isn't the user's expectation, and that
+> it should do the right thing even if it's not synchronized to the system
+> clock.
+
+I get your point. But how to do it? We would need a timer based on the
+PTP clock in the switch.
+
 >
+>> >
+>> > And what if the base-time is in the past, do you deal with that (how
+>> > does the hardware deal with a base-time in the past)?
+>> > A base-time in the past (example: 0) should work: you should advance t=
+he
+>> > base-time into the nearest future multiple of the cycle-time, to at
+>> > least preserve phase correctness of the schedule.
+>>=20
+>> If the hrtimer is programmed with a value in the past, it fires
+>> instantly.
+>
+> Yes, it does.
+>
+>> The callback is executed and the start time is programmed.
+>>=20
+>
+> With a valid value from the hardware's perspective?
 
-Sorry, but could you please explain why having the gate_mask reference
-the traffic classes is a glaring oversight, and how changing it would
-help here?
-
-Also, Kurt, could you please explain what the
-HR_PRTCCFG_PCP_TC_MAP_SHIFT field in HR_PRTCCFG is doing?
-To me, it appears that it's configuring ingress QoS classification on
-the port (and the reason why this is strange to me is because you're
-applying this configuration through an egress qdisc), but I want to make
-sure I'm not misunderstanding.
+Yes. That's no problem.
 
 Thanks,
--Vladimir
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E4BkACgkQeSpbgcuY
+8KYTLA//czMWI4/CjiYlrGZSJO5Yo+04S6/y8xANPp50A8kGblNt3YuN5etwykHx
+7xPPR6FdlU/U1FNTbi6FMgi5ryJjE6aktcpnCjkHPL63epMnx2pbt4JMRMNInaYv
+u91chzZcsyMJRb3FTu5SMZVC06aPh7zPgxSIey9+D/Yn7xjtvXKu511mPooPCPC3
+vR5+++wa3sOassjabinJRr2Vjsg+6nzGULd0GCQ3L8gnURN3bB/a4McV0xBWpUpi
+IM256G0NWkRs0NXNX8R9B/Tn7ykeacgErRuLtuL/qXOktI+awR9PStS0O5JI8xnC
+0FodtVyKhPhdTxTiaeNf8tHlyWsxUy812G5uJXWxCSdZrSoRjzCq5oVOmjvxaP5Z
+s/ws+WWOufaDb4eN8QbqHvmTfqMDi7uhUFpEHnuHoBTOaXY0hzLHNKx1n6S/fHMK
+x7kWkgoJ4Xu0xvuOGgVRuZcq5VpG5XaF7Hxzyn4tgT1XXXAyyIbIzvaLZSGOslBc
+yOUmoYPeru2J91Ssh5GLy8nuPadYaQjsynOy+/i7RDDS+yhOuSgt8jBBcHMX3RBX
+YrCGJZY5blnm5YT4Kk+f68p5njinzU9wbCoOuFQe+KX8rDhQJ05GQeVHGSAZOlpV
+nQ+sH4raun37QhMM+s5pe1W8glnBdOFV5M62VMFuHdLRart4DAA=
+=G86F
+-----END PGP SIGNATURE-----
+--=-=-=--
