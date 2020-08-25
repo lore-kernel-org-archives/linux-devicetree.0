@@ -2,122 +2,108 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3241C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 20:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11EA9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 20:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D74932075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 20:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23BA206EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 20:26:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvyGmsYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHYUWF (ORCPT
+        id S1726225AbgHYU0w (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:22:05 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:49118 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYUWF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 16:22:05 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 199B620024;
-        Tue, 25 Aug 2020 22:21:54 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 22:21:53 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
-        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200825202153.GA237836@ravnborg.org>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org>
- <20200819174027.70b39ee9@coco.lan>
- <20200819173558.GA3733@ravnborg.org>
- <20200821155801.0b820fc6@coco.lan>
- <20200821155505.GA300361@ravnborg.org>
- <20200824180225.1a515b6a@coco.lan>
+        Tue, 25 Aug 2020 16:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYU0v (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 16:26:51 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D5EC061574;
+        Tue, 25 Aug 2020 13:26:50 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id v15so7611445pgh.6;
+        Tue, 25 Aug 2020 13:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hViqvBMVikZrtzrVDOIX1RxTOt+cw+ucTuPZjUrSRMo=;
+        b=CvyGmsYJE8o29oOkb16rdJUytyHwpjTL1ouL7mheA5ViFyotFWyMuusPvKOVIzBbao
+         HN1Ig6W+VoQ7ji2J5SeTMm9hgcmbJGc974ulDXgx5Cu5KtSkkeFVuRWgpfBuOG9L5Inq
+         SSuCNeAm67gf3igbQQwKf2DGmEFDS6hemU2rSlNvD7NYXFUMYqXTTedtriqLwljgcA7m
+         nPHZIIFT7+9I2t85zlwF5+FrQLikhSIbSnacdWTSbVy8Drlv/Rq1VTHBytSUOsCcJpPT
+         2TfQY0CnhmLmeH8JmHNmTA6lyAMr1ZFUn9cW9yaswKbCXx2xA4Bu/fTIU/lv14A92s4q
+         VKTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hViqvBMVikZrtzrVDOIX1RxTOt+cw+ucTuPZjUrSRMo=;
+        b=G5Sh4SmITtEsIR7nd7T+JnvNSuBKXLWmfuygTpu5eCfF3lGaksRe+8APuUN/FJyrja
+         rvlmroH+KHIw83Z+Fdxs87lzA4PwcF6sFknHMMr/2gGN200g+MshfcXcRZJ8/+mYtCcd
+         Qh/QEOEHb6Jf47xAE8SFT4geWa1BBd161mkCfd4eTYP2UDhrcRPK15K5JqAXvfvtVt89
+         H342QxezhRx8XxITEF++sFZNsNcmBJr7bJgvzOaOfLWyVmV7/aTswA1K5RatxixLXZVq
+         X4FT7d9IksZRHBtw0L8Fwz11q8LGQhja46zMA7PUqAfdNwgv55S2jR/6tOzGHgry8EoL
+         Gzxg==
+X-Gm-Message-State: AOAM533CLC1Mx5SyoEgEVNY/Gtr7Rn9+yWSwhfGv+U2+SdPCsavY3Aqz
+        87poku292zd8X1dEEy9vQ10=
+X-Google-Smtp-Source: ABdhPJzQ5pw3dFa8nSlHXAXCWo8jZx7k/xr4WSZtGq0OJpfhKUc1gXp8HphomS3PeFnoTJql1GICUw==
+X-Received: by 2002:a63:7e55:: with SMTP id o21mr8126549pgn.5.1598387210237;
+        Tue, 25 Aug 2020 13:26:50 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id x15sm82677pfr.208.2020.08.25.13.26.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 13:26:49 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 13:26:43 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Patrick Williams <patrick@stwcx.xyz>
+Cc:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Subject: Re: [PATCH 4/5] ARM: dts: aspeed: minipack: Update 64MB FMC flash
+ layout
+Message-ID: <20200825202642.GA23335@taoren-ubuntu-R90MNF91>
+References: <20200824211948.12852-1-rentao.bupt@gmail.com>
+ <20200824211948.12852-5-rentao.bupt@gmail.com>
+ <20200825141808.GH3532@heinlein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824180225.1a515b6a@coco.lan>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=e5mUnYsNAAAA:8 a=jmfwfdV-BNFhccFjUE8A:9
-        a=CjuIK1q_8ugA:10 a=pBTelFdiagIA:10 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=xoEH_sTeL_Rfw54TyV31:22
+In-Reply-To: <20200825141808.GH3532@heinlein>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Mauro.
+On Tue, Aug 25, 2020 at 09:18:08AM -0500, Patrick Williams wrote:
+> On Mon, Aug 24, 2020 at 02:19:47PM -0700, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> > 
+> > Set 64Mb FMC flash layout in Minipack device tree explicitly because the
+> > flash layout was removed from "ast2500-facebook-netbmc-common.dtsi".
+> > 
+> > Please note "data0" partition' size is updated to 4MB to be consistent
+> > with other Facebook OpenBMC platforms.
+> > 
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > ---
+> >  .../boot/dts/aspeed-bmc-facebook-minipack.dts | 47 ++++++++++++++++++-
+> >  1 file changed, 45 insertions(+), 2 deletions(-)
+> > 
+> 
+> Reviewed-by: Patrick Williams <patrick@stwcx.xyz>
 
-Laurent and I discussed this driver a little on irc.
-Some highlights:
+Thanks for the review, Patrick.
 
-This parts could use register names:
-+       writel(0x2, noc_dss_base + 0xc);
-+       writel(0x2, noc_dss_base + 0x8c);
-+       writel(0x2, noc_dss_base + 0x10c);
-+       writel(0x2, noc_dss_base + 0x18c);
 
-The two nodes in the DT for DPE and DSI uses overlapping range for reg
-entries. It looks like a syscon node or some iommu thing is needed to do
-this properly.
+Cheers,
 
-The chain will lok like this:
+Tao
 
-DPE -> DSI -> video mux -> {adv7533, panel}
-
-But drm_bridge has not yet support for such non-linear setup.
-The recommendation is to focus on the HDMI prat. Then we can later
-come up with support for a video mux.
-
-The video mux should have a dedicated node with one input node and two
-output nodes. Which is also where the gpio should be.
-
-The DSI node references two DPHY instances - should it be PHY driver(s)?
-
-Does the DSI part contain one or two instances. Clocks looks duplicated.
-
-Does the DPE and DSI share a lot of register blocks - or does it just
-look like this from a first point of view?
-
-You can read though the logs here:
-https://people.freedesktop.org/~cbrill/dri-log/index.php
-
-Could you please try to get back on some of the points above so we can
-help you move forward in the right direction.
-
-Thanks,
-	Sam
