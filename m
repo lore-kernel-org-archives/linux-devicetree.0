@@ -4,78 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0140C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76184C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77CBD20706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45087205CB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598322382;
-	bh=IKQ8aP2CQq2zu/gE707D9lR2A/idWLnTZcTtbRB7mO8=;
+	s=default; t=1598322670;
+	bh=aNWtoCd17dLNob6nW0EMiff9CG3C8gtzra8va5Z8V58=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KgA2nX3Ep60z6q65jGeFn8xLXVp7Dr6UFoMes7xvez10FavOy0Ee+wx3sO5zCRjjs
-	 HbUSx+nb+gUZ1jqZcukhnHJAt9x1SSVNTT6UI9qLXTQlRQoXprH5y8gBggkaTNO2Yu
-	 qBuwShVAvWsgaZVGz+Nvkd+Ww1ssCpY7+2TkZ1EY=
+	b=pdgt7jhgZ+7UIzugDWMapgs2M3+zYvgbAPq09Dd8wNTOszo0+6sRyKNmMJBRG0QnT
+	 J+8qPQ2Jn8tn/NW0FrG2zcYK0CcIQ93NtT84InB00Jr5k8OIYD6/JJQCbRhoPwl/uj
+	 Ry/QDM6uD+oZ33QKxE1s58C1E/gFYa6nuC6P5uag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgHYC0V (ORCPT
+        id S1727850AbgHYCbJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:26:21 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:44619 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgHYC0S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 22:26:18 -0400
-Received: by mail-io1-f68.google.com with SMTP id v6so10914787iow.11;
-        Mon, 24 Aug 2020 19:26:18 -0700 (PDT)
+        Mon, 24 Aug 2020 22:31:09 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35200 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgHYCbI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 22:31:08 -0400
+Received: by mail-il1-f196.google.com with SMTP id q14so9148706ilm.2;
+        Mon, 24 Aug 2020 19:31:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=1GQRlcSM3ouksguMtbD8EEmhZt6aa4eeV/aBcNTK0LA=;
-        b=Ukk3QWusmElkECMUOGIm4FWxCDDv9KCi6k2GKXM3KgqSC3nxA/Ah1JLxRREe75+NAc
-         +6fn+YrwArWKX4MVOGrgSsheYu5+Im55vrPAS4FGEAm96SkNIxXrLu4DKH8P2WArQqSk
-         1JU3xub2ALNyetHwC0QwOjSneZGuoO1bQoFycWXfY2rhzlBUf6clTm1kH7eJSk0l695M
-         W957+jGJL2ms+YwnAzxYSAT9dlJ855SUVFoI8G1zJajE/lZhQzD2ICbVLMfpPV40NzI1
-         HrMHRyp90UwQxoQ+JEs/ZCwEaStSbGgnfDYLGBiDaK5txTxL6BCmXb2FgyL27ppQO67P
-         XJ4Q==
-X-Gm-Message-State: AOAM533Z2ScGtCpsJfTSAQokxgJ3yhArUEu7Bg8HVBf+5JOqT2dYDhuM
-        3MIfLWfBeQvkp7JEfvaC36c0jALLtnJT
-X-Google-Smtp-Source: ABdhPJzIoKI3OnWT62TiuzDaKocAUDfh3R5Kg4yB/rhMt0RNDIXpgPGz0OpkB2hty0328RlUAU/DCg==
-X-Received: by 2002:a5d:88da:: with SMTP id i26mr7236318iol.158.1598322377965;
-        Mon, 24 Aug 2020 19:26:17 -0700 (PDT)
+        bh=PXYDf+qDwAgwtB6BXfF4E9zdnola8K+rSCAg7rcKWX8=;
+        b=NvLVokxZy6QYF/P7kXEwWb+1SboVHeNXx1SGgn/VFl1odoYsA/OLbpjLN2P9fz7qx4
+         FpNl+CnWU6bHSpSxKTQ6SmAkuzUfn1wHlUuE+LUR6P2Xia08MCpDZ3lUdX3tthYLdyAp
+         7FBKJXmXNtE8DsS8jQmfA9FTUmZ4X4FinwGqhrON2nSt2scu880BaczzYgjUhbIdY39l
+         dRRA8zRPj5BZD6HSqS09KpP331pHh4IZjzHDNOieM+w9SCWja9pVqWw88bCceWMacZqf
+         y/m1e/2ZRv6ob9JO2AYV7aboX17jtWom3YSEYtA0TBcBa3yl0KPiqgTUvQslJ6Ywr/Dw
+         vDdw==
+X-Gm-Message-State: AOAM531N+kZbSLclH9WMxmKBYTk+xNnBHvCBBcCXC4YEZR4kjdtXeOl4
+        7tgUVuFd1zyEVI3UDeT1lw==
+X-Google-Smtp-Source: ABdhPJyGDaoxihkaEsUnsTnN1juKRfLn0VDzxtnao8PSrNSlwaaCfOoXA1iVGDNuEkEW0fSsETPJ5g==
+X-Received: by 2002:a92:ba02:: with SMTP id o2mr7216574ili.3.1598322665441;
+        Mon, 24 Aug 2020 19:31:05 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id f6sm7625559ioo.32.2020.08.24.19.26.16
+        by smtp.gmail.com with ESMTPSA id q23sm7699137ior.47.2020.08.24.19.31.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 19:26:17 -0700 (PDT)
-Received: (nullmailer pid 3816723 invoked by uid 1000);
-        Tue, 25 Aug 2020 02:26:15 -0000
-Date:   Mon, 24 Aug 2020 20:26:15 -0600
+        Mon, 24 Aug 2020 19:31:04 -0700 (PDT)
+Received: (nullmailer pid 3824789 invoked by uid 1000);
+        Tue, 25 Aug 2020 02:31:00 -0000
+Date:   Mon, 24 Aug 2020 20:31:00 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Matt Ranostay <matt.ranostay@konsulko.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        jic23@kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: chemical: add Atlas EZO
- Humidity module documentation
-Message-ID: <20200825022615.GA3816694@bogus>
-References: <20200817005052.11565-1-matt.ranostay@konsulko.com>
- <20200817005052.11565-2-matt.ranostay@konsulko.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, linux-pm@vger.kernel.org,
+        Frank Li <frank.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Han Xu <han.xu@nxp.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Will Deacon <will@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        devicetree@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        linux-mmc@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Fugang Duan <fugang.duan@nxp.com>
+Subject: Re: [PATCH v2 01/19] dt-bindings: gpio: fsl-imx-gpio: Add i.MX 8
+ compatibles
+Message-ID: <20200825023100.GA3824736@bogus>
+References: <20200824162652.21047-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200817005052.11565-2-matt.ranostay@konsulko.com>
+In-Reply-To: <20200824162652.21047-1-krzk@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 17 Aug 2020 03:50:51 +0300, Matt Ranostay wrote:
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+On Mon, 24 Aug 2020 18:26:34 +0200, Krzysztof Kozlowski wrote:
+> DTSes with new i.MX 8 SoCs introduce their own compatibles so add them
+> to fix dtbs_check warnings like:
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+>     compatible:0: 'fsl,imx8mm-gpio' is not one of ['fsl,imx1-gpio', 'fsl,imx21-gpio', 'fsl,imx31-gpio', 'fsl,imx35-gpio', 'fsl,imx7d-gpio']
+>     From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+>     compatible: ['fsl,imx8mm-gpio', 'fsl,imx35-gpio'] is too long
+> 
+>   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000:
+>     compatible: Additional items are not allowed ('fsl,imx35-gpio' was unexpected)
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  .../devicetree/bindings/iio/chemical/atlas,sensor.yaml          | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../bindings/gpio/fsl-imx-gpio.yaml           | 21 +++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
