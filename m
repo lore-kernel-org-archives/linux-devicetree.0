@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950FBC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB763C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A2A72076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C2D20786
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgHYQ2b (ORCPT
+        id S1726988AbgHYQ2f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:28:31 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:56907 "EHLO
+        Tue, 25 Aug 2020 12:28:35 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:21607 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726222AbgHYQ2b (ORCPT
+        by vger.kernel.org with ESMTP id S1726940AbgHYQ2d (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:28:31 -0400
+        Tue, 25 Aug 2020 12:28:33 -0400
 X-IronPort-AV: E=Sophos;i="5.76,353,1592838000"; 
-   d="scan'208";a="55277828"
+   d="scan'208";a="55277839"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 26 Aug 2020 01:28:28 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 26 Aug 2020 01:28:32 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F16E340175FB;
-        Wed, 26 Aug 2020 01:28:26 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 215F440175FB;
+        Wed, 26 Aug 2020 01:28:30 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Magnus Damm <magnus.damm@gmail.com>,
@@ -36,9 +36,9 @@ To:     Geert Uytterhoeven <geert+renesas@glider.be>,
 Cc:     linux-kernel@vger.kernel.org,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 1/4] ARM: dts: r8a7742-iwg21d-q7: Enable PCIe Controller
-Date:   Tue, 25 Aug 2020 17:27:15 +0100
-Message-Id: <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/4] ARM: dts: r8a7742-iwg21d-q7: Add can0 support to carrier board
+Date:   Tue, 25 Aug 2020 17:27:17 +0100
+Message-Id: <20200825162718.5838-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -47,37 +47,61 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable PCIe Controller and set PCIe bus clock frequency.
+This patch enables CAN0 interface exposed through connector J20 on the
+carrier board.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 ---
- arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-index 9bf4fbd9c736..73300ab46ea6 100644
+index e709a132f2f7..070fc9729b39 100644
 --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
 +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-@@ -238,6 +238,18 @@
- 	/* status = "okay"; */
+@@ -198,6 +198,13 @@
+ 	};
  };
  
-+&pcie_bus_clk {
-+	clock-frequency = <100000000>;
-+};
++&can0 {
++	pinctrl-0 = <&can0_pins>;
++	pinctrl-names = "default";
 +
-+&pciec {
-+	/* SW2[6] determines which connector is activated
-+	 * ON = PCIe X4 (connector-J7)
-+	 * OFF = mini-PCIe (connector-J26)
-+	 */
 +	status = "okay";
 +};
 +
- &pfc {
- 	avb_pins: avb {
- 		groups = "avb_mdio", "avb_gmii";
+ &cmt0 {
+ 	status = "okay";
+ };
+@@ -214,6 +221,15 @@
+ 	};
+ };
+ 
++&gpio1 {
++	can-trx-en-gpio{
++		gpio-hog;
++		gpios = <28 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "can-trx-en-gpio";
++	};
++};
++
+ &hsusb {
+ 	pinctrl-0 = <&usb0_pins>;
+ 	pinctrl-names = "default";
+@@ -287,6 +303,11 @@
+ 		function = "tpu0";
+ 	};
+ 
++	can0_pins: can0 {
++		groups = "can0_data_d";
++		function = "can0";
++	};
++
+ 	i2c2_pins: i2c2 {
+ 		groups = "i2c2_b";
+ 		function = "i2c2";
 -- 
 2.17.1
 
