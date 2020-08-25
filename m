@@ -7,113 +7,120 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14D6C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D49EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F81C2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352762071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:38:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="nnBNGjSR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="i+5xuPI9"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eEENWt/J";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ukB6Ymh/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgHYNiB (ORCPT
+        id S1726840AbgHYNiV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:38:01 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:50467 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726713AbgHYNgT (ORCPT
+        Tue, 25 Aug 2020 09:38:21 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:58475 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726666AbgHYNgQ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:36:19 -0400
+        Tue, 25 Aug 2020 09:36:16 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id AEB54CC4;
-        Tue, 25 Aug 2020 09:36:17 -0400 (EDT)
+        by mailout.west.internal (Postfix) with ESMTP id CB907C44;
+        Tue, 25 Aug 2020 09:36:14 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:18 -0400
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=cQkt5/9h1tAG3t0Vmxf3pS8UF5z
-        0WBOMLPi+0IB7Lns=; b=nnBNGjSRs8j7RbqJooedtqpq1Od5p+/iJbsRDfEjrQM
-        U4VPW7liitOs0mCSN90XtHDj0ScWtJ3F5F9gAZd98brFW6GLGBVvDjcrxOHzGrcr
-        8s2bXwRsHSLGPsjofB3ux+92bi9U0/3Nn/WsRMVLGUkgr+1u/oQA++6EtiY/HFfV
-        T4ifbQ6KtcJiKrKbDx2we147OrK9qy2BHSOeIvqjaCBJ2U4MkGKp0Pzj4dKgNBFw
-        qcfclVTa0z7cArjeZ+NHSLGWEbUKczogHC9fXMqPO1gNBgqEGCg71B+MRX5p78Tq
-        bi2wQYjCokJy+3BsycU48cG/4sCeejYgpr+h7IG8+Xw==
+        :content-type:in-reply-to; s=fm3; bh=6W84PROEQmkc2RBlckn+N87LQMj
+        GNR/EGQp574cjw3s=; b=eEENWt/Jb5iqxaDm6IwF2aFfKrXAyqlElS+EfV7HFIf
+        YbtslznD2C0ayt97gwGRh+Zw9ip1+ZuUFLki2Xi35AqGVuN3RnYjIYtPjhbRHT5i
+        3K3J/oGSSyTaIMgrsoTiXEKYJnSuSFp4mWJrL3fg2cjECPrcI52z+nX34H3PvMSB
+        S5YAUUjv+S/DNytvTfLdqwXpTKpB+TbimxpC3KTC6FjJzupYSghFqKfjQHxmleh3
+        WxWZG66xcnwDMCaYXbZPDzlxrShma8je6Tfnd3SHOV5IqszBDYWf/shfr1UqK5qs
+        mIhQnDI0F9Qx2BL3gqNIJDbtB8Tzw1edgVX0pZV8kyw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=cQkt5/
-        9h1tAG3t0Vmxf3pS8UF5z0WBOMLPi+0IB7Lns=; b=i+5xuPI9MflZ4khnRVtrgc
-        U/usSXuK7OBLwWN0I8EPO0wMb8oO/fk9pPQYiZDZnlebcR437cGu902rmLQEiy4o
-        DbNk39mGtOspTYsYngpBC+wIJaoDPamAnJZT7uXd8O4IbE2i4oMjYdmvTc/eXQuV
-        cGyWDpBzsde/x9H/GHYMEslzq+fPHAkepUKNTTt/FqFQi/K6XgAs1IyReTcAf1db
-        jXamrsdp87itXn6lns9gcFuYkOqMChjaTYvWNYL/CQKRAw3KM3KQIyTY8EBB1SEF
-        NTckH+xinZkjEpWbPDmvILf0K3omfCkfE9dA9b9ppcVijB3HaQx3QDyWZqW9DcqQ
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=6W84PR
+        OEQmkc2RBlckn+N87LQMjGNR/EGQp574cjw3s=; b=ukB6Ymh/jZqd9UlE8u92dI
+        K4NKtgsf8RtU0VyHzweGw9N4ekYp3R+vKvypo5ZNP5RvmbaTi01ahoUKkfFPuDZB
+        Phi0HT8/DDNgc+vDDCHOiyw92ow12pleduJeS4zpTv9Qc60zWY2L2CDdt+1jN+W4
+        fhEs46zLwDIXQ7V/dwQrc1mQTCRruvsGEWjPE+wZ9/O9r8wK1XuQqX+ym2wfUsLt
+        LOf3rejmXctpa1giUVAQ7sPAZtLs/xWV9ZlPSC+axWfaUbCN+o/PpMC2hhYJH14z
+        983LNk+XUIRHhh5xs8D8kg4EkHZUpcBuCOYevzao0RRQt1qGdGvNeZQuxKBJocqw
         ==
-X-ME-Sender: <xms:0RNFXy3YvuyB7yBQt8cKEzv1nZZSmal1-Fm4Yxn9DxxrrpfblWrvdg>
+X-ME-Sender: <xms:zhNFX9teEcsvc0M8yvwZBjJ6wPd_QPSjaD0fOV-3zP2rEFNEeQUReA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvddune
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:0RNFX1GV7NrUml5UOth7K7WTKyNg8hTJZKSL45xlMVedHS9MSe0OWg>
-    <xmx:0RNFX66x7qCZtwbPz1snbRVbjuiqXC-kT0p_kDMlhmk0OvAeRqzdpg>
-    <xmx:0RNFXz1nj-45gRjUtNrsaWJaAFewUKjLUu6ve5n1C-pBNxvmpbTFMg>
-    <xmx:0RNFX0DR8HX8JgzYIDI-lUnwK2F7HzYCNVyNTppFAYX1qJNnzGoeQO8ULbE>
+    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
+    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:zhNFX2dBeLWcm0a_WglsHYNpsLJ3X1kzLlsbQMLTporojbAzs38wag>
+    <xmx:zhNFXwy7SuMttLMhWUs4pyOMkLJpRHCdHmKmjI3bPKWAlwGc47rIrQ>
+    <xmx:zhNFX0PY0QY19Dz809NtxJkXtI8_GMwBA9y4F0OBSomdG3jY_aakAg>
+    <xmx:zhNFXwlGIL7v88QtUdSSIAvlIzlMLg4KZ-vMFPGfy79VBpdzsoePsQ>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E3459328005A;
-        Tue, 25 Aug 2020 09:36:16 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:53:20 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 109D03280059;
+        Tue, 25 Aug 2020 09:36:13 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 10:51:07 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Frank Lee <frank@allwinnertech.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, wens@csie.org,
-        robh+dt@kernel.org, p.zabel@pengutronix.de,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+Cc:     wens@csie.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com
-Subject: Re: [PATCH v5 02/16] clk: sunxi-ng: add support for the Allwinner
- A100 CCU
-Message-ID: <20200825085320.lpp2uvbmz5s6s6zq@gilmour.lan>
+        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
+        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com
+Subject: Re: [PATCH v5 16/16] arm64: allwinner: A100: add support for
+ Allwinner Perf1 board
+Message-ID: <20200825085107.kxy4gnybrdcu3wvt@gilmour.lan>
 References: <cover.1595572867.git.frank@allwinnertech.com>
- <1eb41bf6c966a0e54820200650d27a5d4f2ac160.1595572867.git.frank@allwinnertech.com>
+ <30f4a3fc6ac84d05094e2c3b89d1dddc8ff6b7fc.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ejggavmyzvpnwykt"
+        protocol="application/pgp-signature"; boundary="lxn37t4dsz2j435x"
 Content-Disposition: inline
-In-Reply-To: <1eb41bf6c966a0e54820200650d27a5d4f2ac160.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <30f4a3fc6ac84d05094e2c3b89d1dddc8ff6b7fc.1595572867.git.frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---ejggavmyzvpnwykt
-Content-Type: text/plain; charset=us-ascii
+--lxn37t4dsz2j435x
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2020 at 02:58:43PM +0800, Frank Lee wrote:
+On Fri, Jul 24, 2020 at 03:21:05PM +0800, Frank Lee wrote:
 > From: Yangtao Li <frank@allwinnertech.com>
 >=20
-> Add support for a100 in the sunxi-ng CCU framework.
+> A100 perf1 is an Allwinner A100-based SBC, with the following features:
+>=20
+> - 1GiB DDR3 DRAM
+> - AXP803 PMIC
+> - 2 USB 2.0 ports
+> - MicroSD slot and on-board eMMC module
+> - on-board Nand flash
+> - =B7=B7=B7
+>=20
+> Adds initial support for it, including UART and PMU.
 >=20
 > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
 
-Applied, thanks!
+Applied thanks!
 Maxime
 
---ejggavmyzvpnwykt
+--lxn37t4dsz2j435x
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TRgAAKCRDj7w1vZxhR
-xZGEAP9AIwovkpCMtR3ClRoxntUwiDR/rQpie/Cju+np5amMfwEAgmabcB5//mqN
-KMpxAytyv+GF0qj1lX7yQAteXlqxoQE=
-=Q4E3
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TQ+gAKCRDj7w1vZxhR
+xfUzAQD3AW8OyYU3exYwA0a3IaKo9c98e6hnoYQ27izQfONzQwD9F/H7Zdhn+YEP
+fuuTq0ApgXKkHP1YOyH41Hacyux6nwo=
+=fy21
 -----END PGP SIGNATURE-----
 
---ejggavmyzvpnwykt--
+--lxn37t4dsz2j435x--
