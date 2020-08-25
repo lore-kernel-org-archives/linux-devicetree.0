@@ -2,129 +2,77 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE70AC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B368FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B64382068F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:09:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B5xhdq/U";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OCzxKklh"
+	by mail.kernel.org (Postfix) with ESMTP id 98A8320715
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 10:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgHYKJ5 (ORCPT
+        id S1729797AbgHYKd5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729456AbgHYKJ5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 06:09:57 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7EBC061574;
-        Tue, 25 Aug 2020 03:09:56 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598350194;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j2XGAM0PRYR03SuJTc/bHX8K9/smJPL4iFCLpG6x1/0=;
-        b=B5xhdq/UJsHzxebd19FJ0qJozrHSlmbQnOPPNTeXA2DoQqrictbJvS0xpHRRIm+E2ZExhL
-        wj6eIr2Wu1aL7kyEDHs0bLFzon1L+MwoZv+L7VxYDlVOrcyG7cajjrAIZusl7VMR4tf9hI
-        cXdc8nGVX5tr4mg/CBRrxpo/ClJjbOqT4dMQ1jj9ekx9OkO92giK0Ea+1vhhJ2bQKoTTnN
-        mWBDKTuzHCa802Jza7AQo28DlYNaIxJ94jBUp2cVSANpcKTpbZ83XNJEf7MFdPoOPXL7uC
-        sfM6kH5npB37cS3SR+f72HeRj27vs41b7DHHKsiYwPggyhFNfLcxeTuJmtUGsg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598350194;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j2XGAM0PRYR03SuJTc/bHX8K9/smJPL4iFCLpG6x1/0=;
-        b=OCzxKklhl/duYKljVNR1MFLPdAEGtchfDape/0CkgrihyRBU5DLxhVUOln5U4XK6FB7Bhe
-        7sD+VKrq/wCvydDA==
-To:     Vladimir Oltean <olteanv@gmail.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <20200825094612.ffdt6xkl552ppc3i@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200822143922.frjtog4mcyaegtyg@skbuf> <87imd8zi8z.fsf@kurt> <87y2m3txox.fsf@intel.com> <20200825094612.ffdt6xkl552ppc3i@skbuf>
-Date:   Tue, 25 Aug 2020 12:09:51 +0200
-Message-ID: <87v9h7yr2o.fsf@kurt>
+        Tue, 25 Aug 2020 06:33:57 -0400
+Received: from mx.socionext.com ([202.248.49.38]:29543 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729801AbgHYKd4 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 06:33:56 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 25 Aug 2020 19:33:55 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 74DAF60060;
+        Tue, 25 Aug 2020 19:33:55 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 25 Aug 2020 19:33:55 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 21F911A0507;
+        Tue, 25 Aug 2020 19:33:55 +0900 (JST)
+Received: from [10.212.5.217] (unknown [10.212.5.217])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id CE5F3120131;
+        Tue, 25 Aug 2020 19:33:54 +0900 (JST)
+Subject: Re: [PATCH v4 0/2] Add new UniPhier AHCI PHY driver
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1594888344-32066-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <c60c0fc3-cb89-36e3-f18e-9a030ece72f1@socionext.com>
+ <20200823132648.GO2639@vkoul-mobl>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <eb19c92d-0987-0c0e-93fb-8fb336cd7d26@socionext.com>
+Date:   Tue, 25 Aug 2020 19:33:54 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <20200823132648.GO2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hi Vinod,
 
-On Tue Aug 25 2020, Vladimir Oltean wrote:
-> Hi Vinicius,
->
-> On Mon, Aug 24, 2020 at 04:45:50PM -0700, Vinicius Costa Gomes wrote:
->> Kurt Kanzenbach <kurt@linutronix.de> writes:
->> >
->> > With TAPRIO traffic classes and the mapping to queues can be
->> > configured. The switch can also map traffic classes. That sounded like a
->> > good match to me.
->>
->> The only reason I could think that you would need this that *right now*
->> taprio has pretty glaring oversight: that in the offload parameters each entry
->> 'gate_mask' reference the "Traffic Class" (i.e. bit 0 is Traffic Class
->> 0), and it really should be the HW queue.
->>
->
-> Sorry, but could you please explain why having the gate_mask reference
-> the traffic classes is a glaring oversight, and how changing it would
-> help here?
->
-> Also, Kurt, could you please explain what the
-> HR_PRTCCFG_PCP_TC_MAP_SHIFT field in HR_PRTCCFG is doing?
-> To me, it appears that it's configuring ingress QoS classification on
-> the port (and the reason why this is strange to me is because you're
-> applying this configuration through an egress qdisc), but I want to make
-> sure I'm not misunderstanding.
+On 2020/08/23 22:26, Vinod Koul wrote:
+> Hello,
+> 
+> On 21-08-20, 18:20, Kunihiko Hayashi wrote:
+>> Gentle ping.
+>> Are there any comments in this series?
+> 
+> Sorry I dont have this in my inbox, can you please rebease and resend to
+> me as well
 
-All the TSN operations in the switch such as the gate control work on
-internally on traffic classes. The traffic class is determined by the
-PCP field on the VLAN tagged frames. This mapping is configurable via
-the pcp to tc map. And the TC also defines the hardware queue.
+Okay, No problem. I confirmed that rebasing the patches had no change.
+I'll resend them.
 
-Thanks,
-Kurt
+Thank you,
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E428ACgkQeSpbgcuY
-8KZc0hAAr/UQ8m5ytLPc9yAbCd4YGVVarPVv51+QvlLmAksbFekiCE26OST4oz/e
-eF5RUqYF0vejPbj2ykH/Bs5TZO9hdsbU+AHLdtgu+X+PB5288QBoD6wk1tq2WEpB
-2Jj5ppoQMQMQdrW8aYh63MBIIyfS8PBFqndWGkO09vCR7LEflnRFYlsl5qNWM91Z
-GvMpNHkqWrJx2nRz1j9NH2J70m8RKeupsWD4RjxJFL+LzFXVfCTWb2Pdgd7PUQ03
-T/SXCVSrMfT1Pc7AkB9SXynDC17VFUeQFmmQEpIvST9UGCW47d0kB+XSl9Mzh6zJ
-qg/HJ6DiKMCT9qtPpcTZXGDXe177TqxeuIvTj/554j/rhA/g5rU+ezJhljUt3jK5
-CMjBxUYbG1S99TL0ywyfxcF49bIJFIfJvoQuAR1QLUShfEiY/7SzDFh/0sRkYVTz
-JF0IzVxHE9rvT1k1DcUrdLCD1Q4zRrUKiHIeY6Z8cT2jbp+ZnAAMe4+k4/c8E+k1
-cjlEylnSwqjvwYruaIyggHdolveiOOaJ8M7E+7KPrUk6yur1EI1eU2i0/vty8mqu
-bfU4BsTqrTZGSQfjH/zu8e2Q+62wEjsNLHa4Zy1s6cN1Y4kH7AhR4Bgo76noTJTF
-4HVzxhQB09PwMhsqprKbrh6xdEQwcWpcoccFrrvy28iCc4Fo4GY=
-=DRuD
------END PGP SIGNATURE-----
---=-=-=--
+---
+Best Regards
+Kunihiko Hayashi
