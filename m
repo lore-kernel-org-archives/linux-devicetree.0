@@ -2,144 +2,200 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3993DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC691C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EFF320706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83C3F20706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:44:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cr0TmoiU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4sUO7BIb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rXlaG4lB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgHYJmH (ORCPT
+        id S1729544AbgHYJoj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
+        Tue, 25 Aug 2020 05:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgHYJmG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:42:06 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74090C061574;
-        Tue, 25 Aug 2020 02:42:05 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598348523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/+Ss+1fob1O6FWxjtF6nrsXHbKK8dvDZbAhYL4hFrIA=;
-        b=cr0TmoiU6ip2MXdtuJMHbf+/qDvLAgwTQYErKTnmX5SNIaMEGNYwvGWAr3U6QVad3Z585b
-        VtkpgavkL9ZPUzBejWqpNxtTf1ofg+cd/ZwrexuAsSgK/fFRpSF3cxARgKSv2998anUH5f
-        YLJNBNgUnDZpp/Hs8BpPey7R+4MA7Rr3Q5NW7T6lXTGaOvPyF8fBMtIOU1nt9EjpheqR+y
-        VOLPrmdIc+bqYVjLbBgQve7o+jfNRe9dFBGSp0ut5rPRLIuR35tx4m3B2ID4csQXy3mlNQ
-        dNlo/Hcf209QeiptBRYRE6XcjS7J/2kFl/8uo5iw4R6lPhL44yl559zr7JgxHA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598348523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/+Ss+1fob1O6FWxjtF6nrsXHbKK8dvDZbAhYL4hFrIA=;
-        b=4sUO7BIbXUi7pGUUyxjGhPiLsadhTbX/cN/SKVZELKKvcHby7SYioronJ6nCQ2SbrrS25R
-        dxPaP/hlQgdJeAAQ==
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <87y2m3txox.fsf@intel.com>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200822143922.frjtog4mcyaegtyg@skbuf> <87imd8zi8z.fsf@kurt> <87y2m3txox.fsf@intel.com>
-Date:   Tue, 25 Aug 2020 11:42:02 +0200
-Message-ID: <875z9712qd.fsf@kurt>
+        with ESMTP id S1729562AbgHYJog (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:44:36 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9732EC0613ED
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:44:34 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id y3so12024712wrl.4
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ujkEUSo+hKd0F+n+n+4eow5fQiAPWkhZFl/qY+hEm7I=;
+        b=rXlaG4lBk/9ZFQ80LD+zjXCgcILpe2q3j7aSpFOOGyjedptgjQU5mRZrzy6a23UqiI
+         bnM4EzVnnxX90gRM6vUv2uga1xs3JH3eXF+My1IkgkO5PR7XUki0KTgOHXQBPBoZON01
+         6wPPHiMKU7a2l1F1ZU0T63cr8N908vdaFBBKmpSuf7nmcI1gkdfeM4AfJB+qFW8P0bMM
+         lTuNAH9Csf5IeDvgHVHClgVHGNIHDQRvMPYoI3MSFBFun8+oUAU3tv+5pj8m7LnQvig0
+         kFrauL6FQC6Z9r25I0NbgRbrNjlHCBlQdUkGyf096c+NA6ai0+EGhV4+PDy0ZteQdrFh
+         AsKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ujkEUSo+hKd0F+n+n+4eow5fQiAPWkhZFl/qY+hEm7I=;
+        b=D0Vw6s8+XrmZjKZkqh9bXtawXCFIh6B5BjWu+oW4gGoYB6D9upWDVUI2agyI0OX5tX
+         uzPHQjFZd0kD4mhHAiLyBNUo2pNoW8yrZ7WsXTLP7Sca9xcM9QJ5O7QpsXXTW6KRvgW8
+         3EY3DqYDIcw0X7y2vIJOQ0QvH11RyF5+VXwmK/Rd1EA2/Qa2tNG+QcCjzkfE5DVItq/X
+         VODARTuCNzWL7+Xfc+SXRg/qPi4fwT1eoX+2N3LijzwpRDXNZo4TsTuH5ST9drnE+VGB
+         v60uwV0rlGeM7S0mx76v/axN9YNj0QcOoRPC7hwpXsRVtgQxIgRjzhL0OFov0T3eT2Vc
+         1w9g==
+X-Gm-Message-State: AOAM530rZ4nsypZ0zjjIWfFEOHJcGpFWhLPSSaDLnkYeH7cy/Y4gmWY+
+        C258J49gaZ2cNLK3p3eKJU27zw==
+X-Google-Smtp-Source: ABdhPJz7G7kxb5c0oWnqP8sVrGmfNv6GBtMKj9praqksNl3MmSemmfB6dRZWvkyjd6gM3062nySHqw==
+X-Received: by 2002:a05:6000:124f:: with SMTP id j15mr9545856wrx.287.1598348673000;
+        Tue, 25 Aug 2020 02:44:33 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:30ce:e04c:9454:bbf8? ([2a01:e34:ed2f:f020:30ce:e04c:9454:bbf8])
+        by smtp.googlemail.com with ESMTPSA id z8sm4516749wmf.10.2020.08.25.02.44.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 02:44:32 -0700 (PDT)
+Subject: Re: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a thermal
+ zone
+To:     Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>
+Cc:     Finley Xiao <finley.xiao@rock-chips.com>, heiko@sntech.de,
+        rui.zhang@intel.com, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, huangtao@rock-chips.com,
+        tony.xie@rock-chips.com, cl@rock-chips.com
+References: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+ <20200824230956.GA3500214@bogus>
+ <c3f54e18-8683-8bd9-90fa-e3465cddf8e8@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <13b84e7e-adfe-5939-e78d-0a20fce0a92e@linaro.org>
+Date:   Tue, 25 Aug 2020 11:44:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <c3f54e18-8683-8bd9-90fa-e3465cddf8e8@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-
-On Mon Aug 24 2020, Vinicius Costa Gomes wrote:
-> Hi Kurt,
->
-> Kurt Kanzenbach <kurt@linutronix.de> writes:
->
->>>> +static void hellcreek_setup_tc_mapping(struct hellcreek *hellcreek,
->>>> +				       struct net_device *netdev)
->>>> +{
->>>> +	int i, j;
->>>> +
->>>> +	/* Setup mapping between traffic classes and port queues. */
->>>> +	for (i = 0; i < netdev_get_num_tc(netdev); ++i) {
->>>> +		for (j = 0; j < netdev->tc_to_txq[i].count; ++j) {
->>>> +			const int queue = j + netdev->tc_to_txq[i].offset;
->>>> +
->>>> +			hellcreek_select_prio(hellcreek, i);
->>>> +			hellcreek_write(hellcreek,
->>>> +					queue << HR_PRTCCFG_PCP_TC_MAP_SHIFT,
->>>> +					HR_PRTCCFG);
->>>> +		}
->>>> +	}
->>>> +}
+On 25/08/2020 10:25, Lukasz Luba wrote:
+> Hi Rob,
+> 
+> On 8/25/20 12:09 AM, Rob Herring wrote:
+>> On Tue, Aug 11, 2020 at 08:31:15PM +0800, Finley Xiao wrote:
+>>> The default value for k_pu is:
+>>>      2 * sustainable_power / (desired_temperature - switch_on_temp)
+>>> The default value for k_po is:
+>>>      sustainable_power / (desired_temperature - switch_on_temp)
+>>> The default value for k_i is 10.
 >>>
->>> What other driver have you seen that does this?
+>>> Even though these parameters of the PID controller can be changed
+>>> by the following sysfs files:
+>>>      /sys/class/thermal/thermal_zoneX/k_pu
+>>>      /sys/class/thermal/thermal_zoneX/k_po
+>>>      /sys/class/thermal/thermal_zoneX/k_i
 >>>
+>>> But it's still more convenient to change the default values by
+>>> devicetree,
+>>> so introduce these three optional properties. If provided these
+>>> properties,
+>>> they will be parsed and associated with the thermal zone via the thermal
+>>> zone parameters.
+>>>
+>>> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/thermal/thermal.txt | 14
+>>> ++++++++++++++
 >>
->> Probably none.
+>> Bindings should be a separate file and this one is a DT schema now.
 >>
->> With TAPRIO traffic classes and the mapping to queues can be
->> configured. The switch can also map traffic classes. That sounded like a
->> good match to me.
->
-> The only reason I could think that you would need this that *right now*
-> taprio has pretty glaring oversight: that in the offload parameters each entry
-> 'gate_mask' reference the "Traffic Class" (i.e. bit 0 is Traffic Class
-> 0), and it really should be the HW queue.
->
-> I have a patch that does the conversion on taprio before talking to the
-> driver. Do you think it would help you avoid doing this on the driver
-> side?
+>>>   drivers/thermal/thermal_of.c                          |  7 +++++++
+>>>   2 files changed, 21 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> index f78bec19ca35..ebe936b57ded 100644
+>>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> @@ -165,6 +165,20 @@ Optional property:
+>>>               2000mW, while on a 10'' tablet is around
+>>>               4500mW.
+>>>   +- k-po:            Proportional parameter of the PID controller when
+>>> +            current temperature is above the target.
+>>> +  Type: signed
+>>> +  Size: one cell
+>>> +
+>>> +- k-pu:            Proportional parameter of the PID controller when
+>>> +            current temperature is below the target.
+>>> +  Type: signed
+>>> +  Size: one cell
+>>> +
+>>> +- k-i:            Integral parameter of the PID controller.
+>>> +  Type: signed
+>>> +  Size: one cell
+>>
+>> What's PID?
+>>
+>> I know nothing about the sysfs params, but the binding needs to stand on
+>> it's own and needs enough detail to educate me.
+> Sorry for the delay, I missed that patch.
+> These parameters are the coefficients for the
+> Proportional-Integral-Derivative (PID) controller [1], which is the
+> core of the Intelligent Power Allocation (IPA) thermal governor.
 
-I think so. As Vladimir pointed out, the driver should setup an identity
-mapping which I already did by default.
+Just a few words to elaborate a bit for Rob who may not have time to
+digest the whole concept from Wikipedia :)
 
-Can you point me your patch?
+The PID is an regulation loop where the input is compared to the output.
 
-Thanks,
-Kurt
+For example when driving a car and you aim a speed cruise of 90km/h. You
+press the accelerator and watch the current speed. The smaller the
+current speed is, the stronger you will push the accelerator. And the
+closer to the cruise speed the car is, the lesser you push the
+accelerator until the car stabilize to the cruise to speed.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+The k-* describes how strong you push the accelerator and release it.
 
------BEGIN PGP SIGNATURE-----
+In the thermal framework, that has an impact on how brutal the
+mitigation acts and depending on them it results in a flat temperature
+curve or a sawtooth aspect.
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E3OoACgkQeSpbgcuY
-8KZ8dxAAxgttX/K0rFFtRu/2uiG0DqMlOfsa6okj35BVMrZYHKyeMh0Z79vSvu3b
-3dP3zk4AzDnWwvv2EriOJndGUouB+5PSh+elxQiaDplbsGRYwFt64PHeazGFrXmg
-Ze/eiqLFNj9dWVVKWwK9dlY8OZN+TMTlykBfLMkjtCS988b7pXj7UiYpAidyQ/pR
-JAmJG/WIkWZPnv976FwHfaji0kHTKlHdm+RxqI6xkFR6fiQelXansUHGW4VVl+/J
-TnvGF+RDss5MiWz1DYnCQC6xir9IsVVp6hJqhzZnnOd4TnoViMSF0XwQpIL0x+OY
-AZod/eAlrQdAEzlj6bW0NA8anVxSBy2Wc0EfdOnsyw/NQ7gyKAZwqITOPZbz43GR
-oSys/Gq3j+2BgTrpzB/nxKwB2EMDy3D0+lH/l0yWcJFXjRgGAWFrx5Jq2iTq/ttp
-PDN+VwMWD371pPRtvqjONZkCVSx4HzC7u3K0oFr9m2OSY0BcVExMtqsUgC9Zr1sQ
-ZHULIPQrJ21CiiMHv6Z26KknKxXzrTh4LY9G2M8k+Lo8A2rTnUT5ZzPdPwDlFFTz
-hD7FZZowi3PJ8Qe5ABf9McUtfXnc+goDiVFAliBq+gRMF/fo94G42o4TVaiTDmFL
-fy6wNzn3gOO4VsXPKFUDzYsgJcyvUS1O5FjpoJr1CD1BUzBIBw4=
-=sWPu
------END PGP SIGNATURE-----
---=-=-=--
+These coefficient depends on the ambient temperature (casing, room
+temperature), the heat sink and the load. Depending on the use cases,
+you may want to change their values at runtime.
+
+From my POV, setting these values in the DT does not really make sense.
+
+It would make much more sense to have the thermal specifications of the
+board (heat sink capacity, resistivity, max temperature or TDP), so from
+there we should be able to compute anything related to the thermal
+profile and configure from the kernel.
+
+
+> Only IPA uses them, thus I don't think the governors parameters:
+> k-po, k-pu, k-i
+> should be part of the DeviceTree. I haven't seen such governors
+> tunnables in the DT, please point me if they exist somewhere.
+> 
+> Do you think Rob they might be specified in the DT?
+> 
+> Regards,
+> Lukasz
+> 
+> [1] https://en.wikipedia.org/wiki/PID_controller
+
+
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
