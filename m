@@ -4,119 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA76C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19B0C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D4D2071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7A82071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="FY+BZBxM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D1ieySps"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="lGWpth+a";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Sz0AYd5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbgHYNgI (ORCPT
+        id S1726709AbgHYNgV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:36:08 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:49681 "EHLO
+        Tue, 25 Aug 2020 09:36:21 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:54433 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726580AbgHYNgD (ORCPT
+        by vger.kernel.org with ESMTP id S1726690AbgHYNgJ (ORCPT
         <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:36:03 -0400
+        Tue, 25 Aug 2020 09:36:09 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DF382C53;
-        Tue, 25 Aug 2020 09:36:01 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 8E1B1C3F;
+        Tue, 25 Aug 2020 09:36:07 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:02 -0400
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ypPIgBZlj0QkzTKDgIZnXB33E2I
-        dNRV4QSnBi+COnQA=; b=FY+BZBxM/ANQECCXkC7udwol6SQYhnzjgPVgEJvWmYk
-        WF/sQHvlu4zQbTE5F3hgXdzPLrmesCWy63bAkUOsLQCxP8TIqMsoIclMPwOaJdX5
-        3rc0CUf1F+2NlIm9vkLoDPKqq2RZ/Jx7DLEIwzUxGffnGEqU4dtcXGrONC1J8A+z
-        U6MWaRxN7AOv5FBncsi3kriGukuH04NQaVlAUV80Gi8i+t86O0APITKWvyb32cg6
-        tv4VSKBd+jG6DIzs7UKCTLPQQmiru8aNqd8g0EXoYwRPcsRNL3mHm4Ul1RxiH24s
-        nZ1H/pQ+0SCkcJD7HQr8I1jp/a0D5rO8qrIi3OEOa6w==
+        :content-type:in-reply-to; s=fm3; bh=zIntnBuXpSaR3WFttpC6Z14pmK0
+        kj+KtCt/Fp/W1l5Y=; b=lGWpth+a8r/ZvS7rtzWVn9X0gS8TO+csaGZXXkrlcfa
+        mj1BQz9G3duhMcmGVb8b8CNVEqOoLQw/kEzaRVjtvJ26RSHOZuc+Nqabs6LnXIN6
+        +76QGjnXKpnoTwqwBV/EpQX1fZ44WmhhCy1JWEbvIK712Z4b6DlOmM5yCLwud28t
+        bHd3wMwGN+6B4s/CW4zkoPLfELmqx1PboJuDPldNI6bfA7AOzElkgmcsQ22JaT2j
+        r5s3gjFxU8GRLB5FiTETGIcOwYnnMvj40fnEgPypgyKyBAZLmj7IQN935MnJ7fEZ
+        VaXwdBZ9Yo31//4UuAc5nt5x7LMhql7EWHH81siEjzA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ypPIgB
-        Zlj0QkzTKDgIZnXB33E2IdNRV4QSnBi+COnQA=; b=D1ieySpsg2WkooCMaqirJB
-        c+0bD5GKSFzdWU+Wk7VM3KUI7RgTDwchMr1EpSy/1u7BwCbzj036PFoEE8uHiGxG
-        ujR+ascEB1fQUgozHMwI+Ad0LTaHjCKODLovvP/uJnMTq22js1y5WkR6UcMyEAPa
-        /VFzY3NTK1QxyJy54PvF4iiilTsyMQV/hHWU//iL7Ziz/8s6w4bexbaUE37pI4RR
-        rH4k2Kuggwz7u9uZU4DG7avXS8YytADwI+20PTmnkQ9I70xSn9DYGWbn5cwo83TN
-        plbdEc39ZkSqLkjt5hCO2bWyj/5B7WRWp27Oohke8iMNLhXmAsXfhxa0gSDJ9ZOg
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=zIntnB
+        uXpSaR3WFttpC6Z14pmK0kj+KtCt/Fp/W1l5Y=; b=Sz0AYd5GZIofWgsXVWunT4
+        7C2x3rRtrodahcssA4o50ODgTN9LQ5JAxK6wAwwroXETMluH2YrwCsdR0cYIqOuZ
+        FetGbtUEwk1exx5bemtdxTGFZ4ORY+IY2FVfX9L2T9tLgE28c773PprywJetrWMc
+        Y4RzZHPT06Tr1UcEpj8SIuCwbTxmzmLiz3hQNjRVVX+itGtiv4FRMQK8gCe0vHdd
+        mCgoQVjcE26HI6w7dmuaM3Pa8d3YINN1zWBKA42Z3QygIARxJBlfhkBWycXSFn3I
+        uu5QicyICAay8X/wVLRag92+WjUesjLCMkDNW7QAr30p8tSX+IyrK80UMpFUqAEQ
         ==
-X-ME-Sender: <xms:wRNFXzUBXODmYvlbqEuxJYgww5qquOYjGRzNXMXq79rrmIXiRYWweA>
+X-ME-Sender: <xms:xxNFX70lvcFM3fLIKcBW1UaDrsY-pAJt7OlBnCd2N5FJDqnicHvQUQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepleenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:wRNFX7k9FIvyXPQKRPVmtlwBrwHIR9VYWwWmV-n7iutQXeNe5sbcnA>
-    <xmx:wRNFX_bV_rKmMyHQ0POSPAoWq1oThWNTATiqfiJxln71LxD5rlNrYw>
-    <xmx:wRNFX-WJZwJKmD9xo7gu5C5PNKqnNBw6St7s_6820ZYsXlABhdzI7g>
-    <xmx:wRNFX_4nh9us8QGBjybN6UYXlVzDuUMIGI1SJOVpWT69NHtSbfPHurMqDUU>
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudegne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:xxNFX6H7omXavv2gD_Bxs4Sk5cGKPZgswA-UZWPoSkxNCbPsGw3TPw>
+    <xmx:xxNFX74hREJYwgUv3l9HegXmWYpbWG1rE9BOlRDOhCCjXFm5IsaGlg>
+    <xmx:xxNFXw1-XpF8oeVbkfPMYvXdzsPyh2FAH5KHidbQCrFl9jJ9fFnBGQ>
+    <xmx:xxNFX2_qGKAorNi0f_WqSrCf8pmEphkvN_A2Y_NzUPHpXaGk1p-8cpU67Bc>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 238EA30600B1;
-        Tue, 25 Aug 2020 09:36:01 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:44:51 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id DAC1F306005F;
+        Tue, 25 Aug 2020 09:36:06 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 10:46:29 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Frank Lee <frank@allwinnertech.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, wens@csie.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 04/16] dt-bindings: pinctrl: sunxi: Add A100 pinctrl
- bindings
-Message-ID: <20200825084451.w5xfgqwszk7brv4c@gilmour.lan>
+Cc:     anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, wens@csie.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v5 09/16] thermal: sun8i: Add A100's THS controller
+ support
+Message-ID: <20200825084629.e6y27bz7ot33ychu@gilmour.lan>
 References: <cover.1595572867.git.frank@allwinnertech.com>
- <a5773d677bcc89af3810cdd187fae54eced82f27.1595572867.git.frank@allwinnertech.com>
+ <48cc75920b5c69027134626157089d8b94942711.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ezfe6ijrj5w62qid"
+        protocol="application/pgp-signature"; boundary="josxa6guw2ghbxyp"
 Content-Disposition: inline
-In-Reply-To: <a5773d677bcc89af3810cdd187fae54eced82f27.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <48cc75920b5c69027134626157089d8b94942711.1595572867.git.frank@allwinnertech.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---ezfe6ijrj5w62qid
+--josxa6guw2ghbxyp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2020 at 03:02:42PM +0800, Frank Lee wrote:
+On Fri, Jul 24, 2020 at 03:11:43PM +0800, Frank Lee wrote:
 > From: Yangtao Li <frank@allwinnertech.com>
 >=20
-> Add device tree binding Documentation details for A100 pinctrl driver,
-> which has a r pin controller and a pin controller with more irq lines.
+> This patch add thermal sensor controller support for A100,
+> which is similar to the previous ones.
 >=20
 > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Acked-by: Maxime Ripard <mripard@kernel.org>
 
 Thanks!
 Maxime
 
---ezfe6ijrj5w62qid
+--josxa6guw2ghbxyp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TPgwAKCRDj7w1vZxhR
-xd0WAP0VlEEuyAwTMWD+dZDnp9yz/vWvxTFhioJZ2/bd+AXDbgD+LzaGkBwR7pn4
-Dy3kMc74IBgMbiWfwLaDJBa/ViRSUA8=
-=nw65
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TP5QAKCRDj7w1vZxhR
+xWG7AP9ycCoJEEoU3y3szHM+UrV64jwpMJbJkqSRhWjjkX8F9QD+K2RIXAF7clKR
+QdTaqcpDsiiVINawzQ9tHkIRczGUvw0=
+=DZKj
 -----END PGP SIGNATURE-----
 
---ezfe6ijrj5w62qid--
+--josxa6guw2ghbxyp--
