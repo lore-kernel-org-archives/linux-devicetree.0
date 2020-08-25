@@ -2,199 +2,171 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CEBC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECB1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBEB20706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598340347;
-	bh=UjCBJMCkqk63JRzde43gORsNZpGbCBgyF4occeqJf1I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=heB8V5hpwoI7Ut8sXUpQ8KdwY59gifyH+Oh2uffRQdB4FaGAprLieDvP+oeZo/Mib
-	 ZpIhF/UFZJamzx2kfu8tmIYyDm4v2Mvu1lUGYQpXeeq3FtvkcwL5C5yE+oCOqHQBg8
-	 oGSUAj2IN9XpE2+EibjG5P1iLCgXLxKr2gupc+hg=
+	by mail.kernel.org (Postfix) with ESMTP id 941DC2071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:29:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YVimBWLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729398AbgHYHZq (ORCPT
+        id S1729447AbgHYH3E (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:25:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44259 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729322AbgHYHZn (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 03:25:43 -0400
-Received: by mail-wr1-f67.google.com with SMTP id c15so11591512wrs.11;
-        Tue, 25 Aug 2020 00:25:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2UDn8nshmtelV8H6R+gegKh3+mv7xE3Ee9qPVJXzBko=;
-        b=S4RdN/vMMc0Coh78HuMqgbN43vnvU4MEkGp4iVIhYKM1Ntu2HrZNF2ZA55pqJethkB
-         VQnR21o1ifR3bFsXjjuAKGABHsFPtUr0O22RQBLsi6pqP2JvCsgVCW9Q7E9M1oDKbKMy
-         FKT/q+bRvuvYmWXozyNqoDnJ4qcummDtpNpqtlLVBXvB4ySCCVU9Am9vb8QA8rxh6Pb4
-         3xqfvENrKTM95G/MOF2fhccDxFkKyfzuvUWfOnBDCHpinuRO9NCe94cnhQTDbPhUGrMj
-         7Gdmd0uuShBNvc/gVFbbxyUq6G7HjhuxUD0GU7RUHgzOBtBD+/Cn+Wv2y8FRqUS7YusC
-         XYeA==
-X-Gm-Message-State: AOAM5326ljVnj3Mz7IkCzbHLXJPObxWqMbbr13/ZkCuHfvmaDGypJa6c
-        Jr/6+kDl7QEPnfFNNtxe1t8=
-X-Google-Smtp-Source: ABdhPJzAtbLQMnecXqAvMsqz572yNqZJ5Dk8OpUuLTfB3ohjDCMwvv1x50yQZ9ondRCQBmNzjHwp/A==
-X-Received: by 2002:adf:9224:: with SMTP id 33mr9207502wrj.24.1598340341132;
-        Tue, 25 Aug 2020 00:25:41 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id f10sm3717581wmj.37.2020.08.25.00.25.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 00:25:40 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:25:37 +0200
-From:   "krzk@kernel.org" <krzk@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "han.xu@nxp.com" <han.xu@nxp.com>,
-        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
-        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "aford173@gmail.com" <aford173@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "richard@nod.at" <richard@nod.at>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "jun.li@nxp.com" <jun.li@nxp.com>
-Subject: Re: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align
- regulator names with schema
-Message-ID: <20200825072537.GA5914@kozik-lap>
-References: <20200824190701.8447-1-krzk@kernel.org>
- <20200824190701.8447-3-krzk@kernel.org>
- <fa042a4f670775f340e88fca8f363252112fd538.camel@fi.rohmeurope.com>
+        Tue, 25 Aug 2020 03:29:04 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16435 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbgHYH3E (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 03:29:04 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f44bd480002>; Tue, 25 Aug 2020 00:27:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 25 Aug 2020 00:29:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 25 Aug 2020 00:29:03 -0700
+Received: from [10.26.74.41] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug
+ 2020 07:28:56 +0000
+Subject: Re: [PATCH v4 7/7] sdhci: tegra: Add missing TMCLK for data timeout
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <robh+dt@kernel.org>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <1598296557-32020-1-git-send-email-skomatineni@nvidia.com>
+ <1598296557-32020-8-git-send-email-skomatineni@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a8ea7d0e-ed1d-165a-bba7-2a39c31cc107@nvidia.com>
+Date:   Tue, 25 Aug 2020 08:28:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <fa042a4f670775f340e88fca8f363252112fd538.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1598296557-32020-8-git-send-email-skomatineni@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598340424; bh=R3hLvCd5YUZLhhnoklm4RrizfdS9HAJpYHSPgk5QwRc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YVimBWLTRrbrR+FkD2wyHFGJzWM82x9PGLcjxAyHWw/Z5zCgc2BKGnQYsvhaBsX34
+         GlEmTtT0sVhAM+a70ut0CbPpN9swBjfOLru9INzrN9Z2wTbqOQqWYyHze8SLVOONEL
+         XjI+Juwc1EiGSxo+5VuQQyuhCBHqIG6ATKQkca54RIHuMUdx5jfNgytCpVXt5KmFHD
+         GoTfedudxaB8zEQ1yiOrBMg6x5E1pu/J31sZthQNAuys7McMDRzS9yigsvbB3czgdJ
+         gIo54HQ6AM32cMzqw8wH6q0CyBWEMsLBNAJ6uzbpBOrrwwXlDONclUzCQ4ffpDgxYX
+         AdbggAbwKFkHg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 06:51:33AM +0000, Vaittinen, Matti wrote:
-> Hello Krzysztof,
+
+On 24/08/2020 20:15, Sowjanya Komatineni wrote:
+> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
 > 
-> Just some questions - please ignore if I misunderstood the impact of
-> the change.
+> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
+> SDMMC hawdware for data timeout to achive better timeout than using
+> SDCLK and using TMCLK is recommended.
 > 
-> On Mon, 2020-08-24 at 21:06 +0200, Krzysztof Kozlowski wrote:
-> > Device tree schema expects regulator names to be lowercase.  This
-> > fixes
-> > dtbs_check warnings like:
-> > 
-> >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
-> > regulators:LDO1:regulator-name:0: 'LDO1' does not match '^ldo[1-6]$'
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 22 +++++++++------
-> > ----
-> >  1 file changed, 11 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> > b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> > index a1e5483dbbbe..299caed5d46e 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
-> > @@ -60,7 +60,7 @@
-> >  
-> >  		regulators {
-> >  			buck1_reg: BUCK1 {
-> > -				regulator-name = "BUCK1";
-> > +				regulator-name = "buck1";
+> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
+> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
+> SDCLK for data timeout.
 > 
-> I am not against this change but I would expect seeing some other
-> patches too? I guess this will change the regulator name in regulator
-> core, right? So maybe I am mistaken but it looks to me this change is
-> visible in suppliers, sysfs and debugfs too? Thus changing this sounds
-> a bit like asking for a nose bleed :) Am I right that the impact of
-> this change has been thoroughly tested? Are there any other patches
-> (that I have not seen) related to this change?
-
-Oh, crap, the names of regulators in the driver are lowercase, but they
-use of_match_ptr for upper case. Seriously, why making a binding which
-is contradictory to the driver implementation on the first day?
-
-The driver goes with binding, right? One expects uppercase, other
-lowercase...
-
-And tell me, what is now the ABI? The binding or the incorrect
-implementation?
-
+> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
+> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
+> is not recommended.
 > 
-> >  				regulator-min-microvolt = <700000>;
-> >  				regulator-max-microvolt = <1300000>;
-> >  				regulator-boot-on;
-> > @@ -69,7 +69,7 @@
-> >  			};
-> >  
-> >  			buck2_reg: BUCK2 {
-> > -				regulator-name = "BUCK2";
-> > +				regulator-name = "buck2";
-> >  				regulator-min-microvolt = <700000>;
-> >  				regulator-max-microvolt = <1300000>;
-> >  				regulator-boot-on;
-> > @@ -79,14 +79,14 @@
-> >  
-> >  			buck3_reg: BUCK3 {
-> >  				// BUCK5 in datasheet
-> > -				regulator-name = "BUCK3";
-> > +				regulator-name = "buck3";
-> >  				regulator-min-microvolt = <700000>;
-> >  				regulator-max-microvolt = <1350000>;
-> >  			};
-> >  
-> >  			buck4_reg: BUCK4 {
-> >  				// BUCK6 in datasheet
-> > -				regulator-name = "BUCK4";
-> > +				regulator-name = "buck4";
-> >  				regulator-min-microvolt = <3000000>;
-> >  				regulator-max-microvolt = <3300000>;
-> >  				regulator-boot-on;
-> > @@ -95,7 +95,7 @@
-> >  
-> >  			buck5_reg: BUCK5 {
-> >  				// BUCK7 in datasheet
-> > -				regulator-name = "BUCK5";
-> > +				regulator-name = "buck5";
+> So, this patch fixes it.
 > 
-> What I see in bd718x7-regulator.c for LDO6 desc is:
+> Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+> Cc: stable <stable@vger.kernel.org> # 5.4
+> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/mmc/host/sdhci-tegra.c | 41 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
 > 
->                         /* LDO6 is supplied by buck5 */
->                         .supply_name = "buck5",
-> 
-> So, is this change going to change the supply-chain for the board? Is
-> this intended? (Or am I mistaken on what is the impact of regulator-
-> name property?)
+> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+> index 31ed321..c0b9405 100644
+> --- a/drivers/mmc/host/sdhci-tegra.c
+> +++ b/drivers/mmc/host/sdhci-tegra.c
+> @@ -140,6 +140,7 @@ struct sdhci_tegra_autocal_offsets {
+>  struct sdhci_tegra {
+>  	const struct sdhci_tegra_soc_data *soc_data;
+>  	struct gpio_desc *power_gpio;
+> +	struct clk *tmclk;
+>  	bool ddr_signaling;
+>  	bool pad_calib_required;
+>  	bool pad_control_available;
+> @@ -1611,6 +1612,44 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>  		goto err_power_req;
+>  	}
+>  
+> +	/*
+> +	 * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
+> +	 * timeout clock and SW can choose TMCLK or SDCLK for hardware
+> +	 * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
+> +	 * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
+> +	 *
+> +	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
+> +	 * 12Mhz TMCLK which is advertised in host capability register.
+> +	 * With TMCLK of 12Mhz provides maximum data timeout period that can
+> +	 * be achieved is 11s better than using SDCLK for data timeout.
+> +	 *
+> +	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
+> +	 * supporting SDR104 mode and when not using SDCLK for data timeout.
+> +	 */
+> +
+> +	if ((soc_data->nvquirks & NVQUIRK_ENABLE_SDR104) &&
+> +	    !(soc_data->pdata->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
+> +		clk = devm_clk_get(&pdev->dev, "tmclk");
+> +		if (IS_ERR(clk)) {
+> +			rc = PTR_ERR(clk);
+> +			if (rc == -EPROBE_DEFER)
+> +				goto err_power_req;
+> +
+> +			dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
+> +			clk = NULL;
+> +		}
+> +
+> +		clk_set_rate(clk, 12000000);
+> +		rc = clk_prepare_enable(clk);
+> +		if (rc) {
+> +			dev_err(&pdev->dev,
+> +				"failed to enable tmclk: %d\n", rc);
+> +			goto err_power_req;
+> +		}
+> +
+> +		tegra_host->tmclk = clk;
+> +	}
+> +
+>  	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
 
-The names will take regulator names from the driver. The problem is with
-matching the of_node.
 
+One thing that I just thought of is that now we may have two clocks,
+shouldn't we use the name, 'sdhci', for requesting the above clock as well?
 
-Dear Rob,
+Unfortunately, the name 'sdhci' has not been populated for all Tegra
+devices until recently and so we may need to check if there are one of
+two clocks populated. If there is only one, then maybe we fall back to
+the above.
 
-Maybe you have an idea how to fix this driver-binding ABI
-incompatibility? Or better just leave it?
+Cheers
+Jon
 
-
-Best regards,
-Krzysztof
-
+-- 
+nvpublic
