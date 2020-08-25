@@ -6,97 +6,79 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B2DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD371C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F11F2071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960902071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598392485;
-	bh=UadddTvuyBtrVP3c3jR7hL0X3Xz+QT2D9MUYEpJ/CGE=;
+	s=default; t=1598392642;
+	bh=P7xS/dWDsLf3+VAzqHKaXlw3GIrY/Iu7XnIOreUmcDA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AVE5oT1fV8YVzvaI/dVqNa6Dt2wUpCXINtpAZTnwtBNtgT7jJVwdQaRz2PV6AkDIK
-	 v/vhK3Ejrs/4T1WIAZhsdprXFwm2reAL36uuXAbago/5NLMqGHYTne4MJU59WRbdQQ
-	 TPBXzK2yi0rgWI9ZOuLazlkb41hRCF1yrGe1UnAg=
+	b=xG/+zdqzuDRQSzSNjI53JtjVNEZiD09KTm+skfPcDpjLxxE/cSTgcZ9KxPIHm6Wi8
+	 kKS+8dJAnvu0fwTeZlo2YTJZMIA/Vz3tkiSlglvd6LETD707kn5NCHPTKkfmxqukeK
+	 3ByrTkR93S17xhtuU77u5287cKK1eNnGWsS+Zyz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHYVyo (ORCPT
+        id S1726336AbgHYV5V (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:54:44 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46233 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHYVyo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:54:44 -0400
-Received: by mail-io1-f65.google.com with SMTP id d18so38053iop.13;
-        Tue, 25 Aug 2020 14:54:44 -0700 (PDT)
+        Tue, 25 Aug 2020 17:57:21 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40322 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHYV5V (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:57:21 -0400
+Received: by mail-il1-f193.google.com with SMTP id p18so74906ilm.7
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 14:57:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=AXgpF78WVo5FFCMhxBNh+NmqVg1TDWWj6afz5WYYhbs=;
-        b=AsaoRna/TZvzZcYCSsE/8fZF9BmpT1Np1lGZYSwuizqHLCa/LH4fPeTeg4mtlRUGR7
-         sp5yvFXNrc86KrvP8DkPmRYsCU2N+B6TaDRgslCGC9lJs7/EvB1A/KqbRHDRfmKAT4dg
-         y9Wdd4p7GGlVWmjJZg7C8r6EQ0k1aC2Djgq4yaDescD9yjIIOIZS1XSNeizZv4MqSMIy
-         tZ2nsjm7i//lSah15oeEFXFHgCqhxTVQ16VMtyeLJPX8Q5Oqj66Ra2PSsCLC+FDRc/Bq
-         KQ0T4zuiZrbnsjQfVdfNlighoxmgwej339ngbBZdqaTBLyFoyqT1xy0KcWa7Y41v9rSr
-         TWdw==
-X-Gm-Message-State: AOAM531gkoYdqlQUz/RWiWTVu2pGAgGh3qPgyj5gkJ3BLQLltFd4S/6u
-        TDU301e73NXCu6xVgCp0Aw==
-X-Google-Smtp-Source: ABdhPJypF+PZ2Q26P3uIyId/gUF6uvU9h3TD4NtAGvuNXl1cQsqt9aXVrnWkBeV3wxxrorZptjlGsQ==
-X-Received: by 2002:a5d:871a:: with SMTP id u26mr10104129iom.92.1598392483867;
-        Tue, 25 Aug 2020 14:54:43 -0700 (PDT)
+        bh=GjO9kVR66d1g6PuKVDC5MRmQctTcbYaJo56NTkeAqjM=;
+        b=NCPtRKUURpujpN4XG8vAVGRKie2KRxwGg5x2w+GHeJ1iEFemeqVEaIEV5DzA4YH6BP
+         o8IyWaph5Wk9wpL43yhxVX3km5/NK8UwNYp6tH3NiABGFo3U5Y+jaaqUcXRqxNabTC1V
+         M23u2I+ZIf4J1xF0Z7Lo9sDqoxIiWIH7Lu9O57ZXSOdIMnpeXaenqQpHMDDxiDIhqu8o
+         a3CRD98L+GHU6NKlmtjECdsn+0gxr2S3IbE001Jyd7iP2giFpvh/o4LB8ggfwULWJ5eY
+         Yx7i0ZBnzuBTs/KKvwnwbixE5PHMOZSU3xsTe4Gcu9avNVDKgX7NxNZFd9V2JG0fWdJs
+         0ZSg==
+X-Gm-Message-State: AOAM531K6nM0YnS44S6EX1mq/40iYHr/dW+QBhZwx/P5mR3pTx141U2m
+        VFBPI19kUuAmMiPhBNpQrQ==
+X-Google-Smtp-Source: ABdhPJy82N7dzwGaEQHw3zZQSbxNrrPETtjhHR6HpfXF4h+fMyTLd9vaf2b94cWGuWBfG8iq+fOJHQ==
+X-Received: by 2002:a92:aa94:: with SMTP id p20mr11099726ill.266.1598392640682;
+        Tue, 25 Aug 2020 14:57:20 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id k7sm46346iow.21.2020.08.25.14.54.40
+        by smtp.gmail.com with ESMTPSA id t88sm203330ild.8.2020.08.25.14.57.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 14:54:43 -0700 (PDT)
-Received: (nullmailer pid 1406034 invoked by uid 1000);
-        Tue, 25 Aug 2020 21:54:38 -0000
-Date:   Tue, 25 Aug 2020 15:54:38 -0600
+        Tue, 25 Aug 2020 14:57:20 -0700 (PDT)
+Received: (nullmailer pid 1410297 invoked by uid 1000);
+        Tue, 25 Aug 2020 21:57:19 -0000
+Date:   Tue, 25 Aug 2020 15:57:19 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org, Jonas Karlman <jonas@kwiboo.se>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v4 1/2] dt-bindings: display: himax, hx8837: Add Himax
- HX8837 bindings
-Message-ID: <20200825215438.GA1405975@bogus>
-References: <20200819102246.634039-1-lkundrak@v3.sk>
- <20200819102246.634039-2-lkundrak@v3.sk>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mtd: spi-nor: Sort list of support chip
+ names
+Message-ID: <20200825215719.GA1406172@bogus>
+References: <20200819124004.19728-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819102246.634039-2-lkundrak@v3.sk>
+In-Reply-To: <20200819124004.19728-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 19 Aug 2020 12:22:45 +0200, Lubomir Rintel wrote:
-> Himax HX8837 is a secondary display controller used to drive the panel
-> on OLPC platforms.
+On Wed, Aug 19, 2020 at 02:40:04PM +0200, Geert Uytterhoeven wrote:
+> Sort the list of supported chip names, using "sort -V", to take into
+> account both names and numbers.
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v3:
-> - Moved to bindings/display/
-> - Added the ports
-> - Converted to YAML
-> - Removed Pavel's Ack, because the changes are substantial
-> 
-> Changes since v2:
-> - s/betweend/between/
-> 
-> Changes since v1:
-> - s/load-gpio/load-gpios/
-> - Use interrupt bindings instead of gpio for the IRQ
-> 
->  .../bindings/display/bridge/himax,hx8837.yaml | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/himax,hx8837.yaml
-> 
+> This makes it easier to read and maintain the list.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Can we just do this when converting to schema?
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  .../devicetree/bindings/mtd/jedec,spi-nor.txt | 34 +++++++++----------
+>  1 file changed, 17 insertions(+), 17 deletions(-)
