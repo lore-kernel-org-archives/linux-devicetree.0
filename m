@@ -4,192 +4,181 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B62C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5C3C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0067A2075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012C32075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598393840;
-	bh=/FOUSdujCr7K101FlkjEFQT7V3qH99OHxy//G/AmMxI=;
+	s=default; t=1598394043;
+	bh=iL1EFp5LvDcgnSYQTBQ+/7CaT/KJbfdmt8xGsOh4YyA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ijAjV979Xfl+Dog97wn31sH0QWe1rpRec2ZfV5EnLNNFZrPXLVBaWIIZUBiqMmjA4
-	 SD31dPoYpYWNl4cV/1qAWs4YQ0nyOH2I21ZmUGBbvmVuGSAXTJc+r3FH5YGIyQvlIS
-	 YbtNCLzc2UfbAe1p+OjwLxyFZ4mjNXO3j7Hz6O04=
+	b=BefodIVdf6VTHcZ+vJO9uVmpL3ZUdyn2vvrt2tM5nNgJ+nIPW9VVOZzpGQn+m7seX
+	 D+am1H8JCl/LmJs1tk0YNr3djb9kujuP6vXLPlNWDvuP8orZcorKBkjz6smIAoDv0w
+	 9/zzajVu3TdbGorI09fflaOEHVR73HYHNCr/tP9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgHYWRT (ORCPT
+        id S1726578AbgHYWUm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:17:19 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:42030 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgHYWRR (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:17:17 -0400
-Received: by mail-il1-f193.google.com with SMTP id t13so105314ile.9;
-        Tue, 25 Aug 2020 15:17:16 -0700 (PDT)
+        Tue, 25 Aug 2020 18:20:42 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:37163 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgHYWUl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:20:41 -0400
+Received: by mail-il1-f194.google.com with SMTP id v2so131810ilq.4;
+        Tue, 25 Aug 2020 15:20:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+gWDI2HSuxEN9PHmssWSsCWOPQwrrYQlqUj19kTiZO8=;
-        b=OQY9F/zTNsU93s9FdY4UeJ85tbK0FjyG4fuyxl+sfQpEvD9vpCoRE3QnNs/E4KR5Fu
-         0pACK004BPJNwDolGL+SN0A4w53c3jXm2l3rJ/CV5xI8O1lEKopV7/ExJpQ2YORLFZLx
-         CYuCBD64UiR9bFhh/bg+vSIsnrAXSd1WTO8vdrzdvoiY3RPNdoNsndHhpWeaNTVFOELS
-         fnOpMHk1Wd1idkSIFIGYHo0oaB1cumFiwK9mtR3GzByxqu76qhoOd+AWVys/zRqJA5xM
-         8D/T61YUCXXNPlXVoJHFspOoV0dkq7K2gH/svi5vi8+y/4KYrNnTgsBad4CQAs6h/Ldr
-         QzCQ==
-X-Gm-Message-State: AOAM531ZeMRhslBL9iWfVocCgYz1QjLcMnf6PWHuV1Y6GsaxA+ytjHH7
-        wakJ+hqYhCOHQDgATwSyDQ==
-X-Google-Smtp-Source: ABdhPJwm1iL8A8bcUtnGf91+AkOK/GRMiWrC+scYAmpNQ1NeVEa2Pr792/aFF2e2Mb9IojjUUBXTNQ==
-X-Received: by 2002:a92:de42:: with SMTP id e2mr10686539ilr.148.1598393835748;
-        Tue, 25 Aug 2020 15:17:15 -0700 (PDT)
+        bh=k3KGmLJGZaOAZkv6OSfgLj0L7NmLhPE7zQczouh7MEU=;
+        b=Osys/usJ78FVhYjt6m5AckJ4c106dBCdzMGkn/WVXs7vIp6VbinlnFdHL7y+3az5CE
+         859AoNFZ4NYQSIn7Sv0oC1lOYPk2dI4BcdUgeifZafjkoCODHmVfvv3FeAORkMdECiqt
+         Nb6x8xtfQacV9o4BTW7wsWws1nAi6tuqq38kHNv36H2H9+4yr0j9nhc+c1Kck4lw9Cm+
+         AQvwpJjVG9DbXs12iRS66P/VoLuco6L+t9TF8XI0vi9x2uaiLljS9D8pPvA84vIDW6Im
+         HczMTqZvQpYHlLEK7NVRMJHDTBqwdRfpnVkFqGJ01LstbeWNmQbdqq9FIKV0DXZNQZno
+         bP8w==
+X-Gm-Message-State: AOAM531Iev/rOGth+x0rbpFE66TX9IKreec2iLjRWRAfD088TbhWWF02
+        CwqUWt3v5CujjqqzfKfOpA==
+X-Google-Smtp-Source: ABdhPJzvk8+3fhcPALS9UgRxvDmg4rJYVAmWzKAM0VmpBUEr/br5MUyUK52jUlLc3MBVxtZH4RMmfw==
+X-Received: by 2002:a92:cf09:: with SMTP id c9mr11410277ilo.38.1598394040539;
+        Tue, 25 Aug 2020 15:20:40 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a16sm218775ilc.7.2020.08.25.15.17.14
+        by smtp.gmail.com with ESMTPSA id p77sm224314ill.39.2020.08.25.15.20.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 15:17:15 -0700 (PDT)
-Received: (nullmailer pid 1441951 invoked by uid 1000);
-        Tue, 25 Aug 2020 22:17:13 -0000
-Date:   Tue, 25 Aug 2020 16:17:13 -0600
+        Tue, 25 Aug 2020 15:20:39 -0700 (PDT)
+Received: (nullmailer pid 1447409 invoked by uid 1000);
+        Tue, 25 Aug 2020 22:20:37 -0000
+Date:   Tue, 25 Aug 2020 16:20:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        jslaby@suse.com, git-dev@xilinx.com, gregkh@linuxfoundation.org
-Subject: Re: [PATCH 2/2] tty: pl011: Add support for xilinx uart
-Message-ID: <20200825221713.GB1429623@bogus>
-References: <1597855439-746-1-git-send-email-shubhrajyoti.datta@xilinx.com>
- <1597855439-746-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bayi Cheng <bayi.cheng@mediatek.com>,
+        Chuanhong Guo <gch981213@gmail.com>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: spi: Convert spi-mtk-nor to json-schema
+Message-ID: <20200825222037.GA1443219@bogus>
+References: <20200820052827.2642164-1-ikjn@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597855439-746-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <20200820052827.2642164-1-ikjn@chromium.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 10:13:59PM +0530, Shubhrajyoti Datta wrote:
-> Xilinx uart is similar to sbsa but it has configurable
-> parity and hardware flow. Add a compatible for the same.
+On Thu, Aug 20, 2020 at 01:28:27PM +0800, Ikjoon Jang wrote:
+> Convert Mediatek ARM SOC's serial NOR flash controller binding
+> to json-schema format.
 > 
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
 > ---
->  drivers/tty/serial/amba-pl011.c | 77 ++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 76 insertions(+), 1 deletion(-)
+>  .../bindings/spi/mediatek,spi-mtk-nor.yaml    | 82 +++++++++++++++++++
+>  .../devicetree/bindings/spi/spi-mtk-nor.txt   | 47 -----------
+>  2 files changed, 82 insertions(+), 47 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
 > 
-> diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-> index 8efd7c2..41dbcee 100644
-> --- a/drivers/tty/serial/amba-pl011.c
-> +++ b/drivers/tty/serial/amba-pl011.c
-> @@ -2073,6 +2073,55 @@ sbsa_uart_set_termios(struct uart_port *port, struct ktermios *termios,
->  	spin_unlock_irqrestore(&port->lock, flags);
->  }
->  
-> +static void
-> +xlnx_sbsa_uart_set_termios(struct uart_port *port, struct ktermios *termios,
-> +			   struct ktermios *old)
-> +{
-> +	struct uart_amba_port *uap =
-> +	    container_of(port, struct uart_amba_port, port);
-> +	unsigned long flags;
-> +	unsigned int lcr_h, old_cr;
+> diff --git a/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+> new file mode 100644
+> index 000000000000..1e4bcf691539
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/spi/mediatek,spi-mtk-nor.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +	tty_termios_encode_baud_rate(termios, uap->fixed_baud, uap->fixed_baud);
-> +	/* The SBSA UART only supports 8n1 without hardware flow control. */
-> +	termios->c_cflag &= ~(CMSPAR | CRTSCTS);
-> +	switch (termios->c_cflag & CSIZE) {
-> +	case CS5:
-> +		lcr_h = UART01x_LCRH_WLEN_5;
-> +		break;
-> +	case CS6:
-> +		lcr_h = UART01x_LCRH_WLEN_6;
-> +		break;
-> +	case CS7:
-> +		lcr_h = UART01x_LCRH_WLEN_7;
-> +		break;
-> +	default:
-> +		lcr_h = UART01x_LCRH_WLEN_8;
-> +		break;
-> +	}
-> +	if (termios->c_cflag & CSTOPB)
-> +		lcr_h |= UART01x_LCRH_STP2;
-> +	if (termios->c_cflag & PARENB) {
-> +		lcr_h |= UART01x_LCRH_PEN;
-> +		if (!(termios->c_cflag & PARODD))
-> +			lcr_h |= UART01x_LCRH_EPS;
-> +		if (termios->c_cflag & CMSPAR)
-> +			lcr_h |= UART011_LCRH_SPS;
-> +	}
-> +	if (uap->fifosize > 1)
-> +		lcr_h |= UART01x_LCRH_FEN;
+> +title: Serial NOR flash controller for MediaTek ARM SoCs
+> +
+> +maintainers:
+> +  - Bayi Cheng <bayi.cheng@mediatek.com>
+> +  - Chuanhong Guo <gch981213@gmail.com>
+> +
+> +description: |
+> +  This spi controller support single, dual, or quad mode transfer for
+> +  SPI NOR flash. There should be only one spi slave device following
+> +  generic spi bindings. It's not recommended to use this controller
+> +  for devices other than SPI NOR flash due to limited transfer
+> +  capability of this controller.
+> +
+> +allOf:
+> +  - $ref: /spi/spi-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt2701-nor
+> +              - mediatek,mt2712-nor
+> +              - mediatek,mt7622-nor
+> +              - mediatek,mt7623-nor
+> +              - mediatek,mt7629-nor
+> +          - enum:
+> +              - mediatek,mt8173-nor
+> +      - items:
+> +          - const: mediatek,mt8173-nor
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: clock used for spi bus
+> +      - description: clock used for controller
+> +
+> +  clock-names:
+> +    items:
+> +      - const: "spi"
+> +      - const: "sf"
 
-I'm guessing at least some of the above code is just copy-n-paste from 
-the pl011 version? Can't you reuse the existing version?
+Don't need quotes.
 
-> +	spin_lock_irqsave(&port->lock, flags);
-> +	uart_update_timeout(port, CS8, uap->fixed_baud);
-> +	pl011_setup_status_masks(port, termios);
-> +	/* first, disable everything */
-> +	old_cr = pl011_read(uap, REG_CR);
-> +	pl011_write(0, uap, REG_CR);
-> +	pl011_write_lcr_h(uap, lcr_h);
-> +	pl011_write(old_cr, uap, REG_CR);
-> +	spin_unlock_irqrestore(&port->lock, flags);
-> +}
 > +
->  static const char *pl011_type(struct uart_port *port)
->  {
->  	struct uart_amba_port *uap =
-> @@ -2179,6 +2228,28 @@ static const struct uart_ops sbsa_uart_pops = {
->  #endif
->  };
->  
-> +static const struct uart_ops xlnx_sbsa_uart_pops = {
-> +	.tx_empty	= pl011_tx_empty,
-> +	.set_mctrl	= sbsa_uart_set_mctrl,
-> +	.get_mctrl	= sbsa_uart_get_mctrl,
-> +	.stop_tx	= pl011_stop_tx,
-> +	.start_tx	= pl011_start_tx,
-> +	.stop_rx	= pl011_stop_rx,
-> +	.startup	= sbsa_uart_startup,
-> +	.shutdown	= sbsa_uart_shutdown,
-> +	.set_termios	= xlnx_sbsa_uart_set_termios,
-> +	.type		= pl011_type,
-> +	.release_port	= pl011_release_port,
-> +	.request_port	= pl011_request_port,
-> +	.config_port	= pl011_config_port,
-> +	.verify_port	= pl011_verify_port,
-> +#ifdef CONFIG_CONSOLE_POLL
-> +	.poll_init     = pl011_hwinit,
-> +	.poll_get_char = pl011_get_poll_char,
-> +	.poll_put_char = pl011_put_poll_char,
-> +#endif
-> +};
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+
+interrupts was required.
+
+Add:
+
+unevaluatedProperties: false
+
 > +
->  static struct uart_amba_port *amba_ports[UART_NR];
->  
->  #ifdef CONFIG_SERIAL_AMBA_PL011_CONSOLE
-> @@ -2754,7 +2825,10 @@ static int sbsa_uart_probe(struct platform_device *pdev)
->  	uap->reg_offset	= uap->vendor->reg_offset;
->  	uap->fifosize	= 32;
->  	uap->port.iotype = uap->vendor->access_32b ? UPIO_MEM32 : UPIO_MEM;
-> -	uap->port.ops	= &sbsa_uart_pops;
-> +	if (of_device_is_compatible(pdev->dev.of_node, "arm,xlnx-sbsa-uart"))
-> +		uap->port.ops	= &xlnx_sbsa_uart_pops;
-> +	else
-> +		uap->port.ops	= &sbsa_uart_pops;
->  	uap->fixed_baud = baudrate;
->  
->  	snprintf(uap->type, sizeof(uap->type), "SBSA");
-> @@ -2781,6 +2855,7 @@ static int sbsa_uart_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id sbsa_uart_of_match[] = {
->  	{ .compatible = "arm,sbsa-uart", },
-> +	{ .compatible = "arm,xlnx-sbsa-uart", },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, sbsa_uart_of_match);
-> -- 
-> 2.7.4
-> 
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/mt8173-clk.h>
+> +
+> +    soc {
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      nor_flash: spi@1100d000 {
+> +        compatible = "mediatek,mt8173-nor";
+> +        reg = <0 0x1100d000 0 0xe0>;
+> +        interrupts = <&spi_flash_irq>;
+> +        clocks = <&pericfg CLK_PERI_SPI>, <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+> +        clock-names = "spi", "sf";
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        flash@0 {
+> +          compatible = "jedec,spi-nor";
+> +          reg = <0>;
+> +        };
+> +      };
+> +    };
+> +
