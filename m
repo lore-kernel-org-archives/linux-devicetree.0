@@ -2,119 +2,97 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3FCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5648C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 386412076C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0A620706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tE2luUpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgHYRPA (ORCPT
+        id S1726514AbgHYRQ5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:15:00 -0400
-Received: from mailoutvs3.siol.net ([185.57.226.194]:34355 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726770AbgHYROQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:14:16 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id B548E524B4B;
-        Tue, 25 Aug 2020 19:14:11 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta10.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta10.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id BS2R_IF3ccAG; Tue, 25 Aug 2020 19:14:11 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 6E50A524B0B;
-        Tue, 25 Aug 2020 19:14:11 +0200 (CEST)
-Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 31092524B4B;
-        Tue, 25 Aug 2020 19:14:09 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     mchehab@kernel.org, robh+dt@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH 2/3] ARM: dts: sun8i: r40: Add IR nodes
-Date:   Tue, 25 Aug 2020 19:13:57 +0200
-Message-Id: <20200825171358.1286902-3-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200825171358.1286902-1-jernej.skrabec@siol.net>
-References: <20200825171358.1286902-1-jernej.skrabec@siol.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Aug 2020 13:16:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48045 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726483AbgHYRQz (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 13:16:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598375814; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=KLK4RTTuf3ksuy/5zrVG85yqJucbVICT8rtcZnGayM0=; b=tE2luUpLcW81GEoNjkugNl+8CKkXqVLDAtFTT8uxskHrnsNtpvJ8cBdh2MUFJi79ZTZX4bX9
+ D54FRrZOwOuNt+1IKLwEIWNXYPDtVTk2vqm27H+m9J8H8RtPPHHuyZhdmP8K8ufOf+5/oKwt
+ aLqCTW9UxfSN2uyfPNiNPvtlNAs=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f454785f558dbf280451a77 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 17:16:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EEA04C43387; Tue, 25 Aug 2020 17:16:52 +0000 (UTC)
+Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C939FC433C6;
+        Tue, 25 Aug 2020 17:16:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C939FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
+From:   Srinivasa Rao <srivasam@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Srinivasa Rao <srivasam@codeaurora.org>
+Subject: [PATCH 0/5]: Qualcomm's lpass-hdmi ASoC driver to support audio over dp port
+Date:   Tue, 25 Aug 2020 22:46:23 +0530
+Message-Id: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Allwinner R40 has two IR cores, add nodes for them.
+These patches are to support audio over DP port on Qualcomm's SC7180 LPASS Asoc.
+It includes machine driver, cpu driver, platform driver updates for HDMI path support, 
+device tree documention, lpass variant structure optimization and configuration changes.
+These patches depends on the DP patch series 
+https://patchwork.kernel.org/project/dri-devel/list/?series=332029
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- arch/arm/boot/dts/sun8i-r40.dtsi | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+vsujithk (5):
+  dt-bindings: Add sc7180-lpass HDMI header define
+  dt-bindings: Add dts entry for lpass-hdmi dp audio
+  ASoC: qcom: add support for lpass hdmi driver
+  ASoC: qcom: Add support for audio over DP
+  Optimise lpass variant structure
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r=
-40.dtsi
-index d481fe7989b8..dff9a3dc1fba 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -513,6 +513,16 @@ i2c4_pins: i2c4-pins {
- 				function =3D "i2c4";
- 			};
-=20
-+			ir0_pins: ir0-pins {
-+				pins =3D "PB4";
-+				function =3D "ir0";
-+			};
-+
-+			ir1_pins: ir1-pins {
-+				pins =3D "PB23";
-+				function =3D "ir1";
-+			};
-+
- 			mmc0_pins: mmc0-pins {
- 				pins =3D "PF0", "PF1", "PF2",
- 				       "PF3", "PF4", "PF5";
-@@ -591,6 +601,32 @@ wdt: watchdog@1c20c90 {
- 			clocks =3D <&osc24M>;
- 		};
-=20
-+		ir0: ir@1c21800 {
-+			compatible =3D "allwinner,sun8i-r40-ir",
-+				     "allwinner,sun6i-a31-ir";
-+			reg =3D <0x01c21800 0x400>;
-+			pinctrl-0 =3D <&ir0_pins>;
-+			pinctrl-names =3D "default";
-+			clocks =3D <&ccu CLK_BUS_IR0>, <&ccu CLK_IR0>;
-+			clock-names =3D "apb", "ir";
-+			interrupts =3D <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-+			resets =3D <&ccu RST_BUS_IR0>;
-+			status =3D "disabled";
-+		};
-+
-+		ir1: ir@1c21c00 {
-+			compatible =3D "allwinner,sun8i-r40-ir",
-+				     "allwinner,sun6i-a31-ir";
-+			reg =3D <0x01c21c00 0x400>;
-+			pinctrl-0 =3D <&ir1_pins>;
-+			pinctrl-names =3D "default";
-+			clocks =3D <&ccu CLK_BUS_IR1>, <&ccu CLK_IR1>;
-+			clock-names =3D "apb", "ir";
-+			interrupts =3D <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+			resets =3D <&ccu RST_BUS_IR1>;
-+			status =3D "disabled";
-+		};
-+
- 		ths: thermal-sensor@1c24c00 {
- 			compatible =3D "allwinner,sun8i-r40-ths";
- 			reg =3D <0x01c24c00 0x100>;
---=20
-2.28.0
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  |  42 ++
+ include/dt-bindings/sound/sc7180-lpass.h           |   1 +
+ sound/soc/qcom/Kconfig                             |   5 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/lpass-apq8016.c                     |  25 +-
+ sound/soc/qcom/lpass-cpu.c                         |  92 ++-
+ sound/soc/qcom/lpass-hdmi.c                        | 685 +++++++++++++++++++++
+ sound/soc/qcom/lpass-hdmi.h                        | 129 ++++
+ sound/soc/qcom/lpass-ipq806x.c                     |  25 +-
+ sound/soc/qcom/lpass-lpaif-reg.h                   |  51 +-
+ sound/soc/qcom/lpass-platform.c                    | 287 +++++++--
+ sound/soc/qcom/lpass-sc7180.c                      | 147 ++++-
+ sound/soc/qcom/lpass.h                             | 123 +++-
+ 13 files changed, 1467 insertions(+), 147 deletions(-)
+ create mode 100644 sound/soc/qcom/lpass-hdmi.c
+ create mode 100644 sound/soc/qcom/lpass-hdmi.h
+
+-- 
+2.7.4
 
