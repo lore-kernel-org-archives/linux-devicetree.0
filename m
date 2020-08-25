@@ -2,278 +2,105 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DD1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715FAC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5113420706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:33:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xvnlCiEV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="67q605LP"
+	by mail.kernel.org (Postfix) with ESMTP id 43FDE2071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598348082;
+	bh=iLhF9CJwZ8QUh5DuvKsLlkhW2dg54+n1MTOWIYJs+9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y7cgcYu9St6nvAgaJrXi26ouowrMYmIubB6rveq0CuxJek9UryFM0hFyyDjO2GfTp
+	 sIWRPDMBeWbIGWPw9Y5J7jhS2OdKVEIUU03w/jxXfANsi/Vo6+9YGlsFRWbbjak6VQ
+	 9sZgLybku/3PcInnbsiCOK3QtpcOJuY21q5akCYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgHYJd6 (ORCPT
+        id S1729023AbgHYJek (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:33:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:48358 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728059AbgHYJd6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:33:58 -0400
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598348035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tlp8/fNSaYSi6aDNZlHRPGlKoplHZk6XSLrY3fMUxmo=;
-        b=xvnlCiEVynCsuxHY4yE97hqIs5KwP2IfSTwOOc42z3GPaN0vSCf7MEAqGn74PUWhN0HhaJ
-        H8u7KyrENEAVFI8EDQNA78lI3o0HeUH5v52iu5uWdiZ7T2uI5ghzwltlNXJn7EkDGAXKWP
-        l4aTYTC6Pe9Vr3bD0EBb8L650VRAadGNlBQcSGkzdUgDH3AKsnc9HY28SArEoASugq1HHf
-        EwZkoJCDkYE5dbubVSS3+vGKpvcrD/s7hEZ5D80dEWJ5PZFg6HLlvCIBFaMZ+UKinKX+RZ
-        1hf+xsGwTX+SRtK38+gE7oMBS+QDU74MF1/GeLP8iGZg+uyXvFxrPX1au7Z7IA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598348035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tlp8/fNSaYSi6aDNZlHRPGlKoplHZk6XSLrY3fMUxmo=;
-        b=67q605LPp9WYw/vDJ5DlqLWL6E5NodJoTDDep5/BKXMhesjosXg3elcfjKhQ+aTg0Q8cpK
-        gbuAE7qotihqwbBA==
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <20200824225615.jtikfwyrxa7vxiq2@skbuf>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200824225615.jtikfwyrxa7vxiq2@skbuf>
-Date:   Tue, 25 Aug 2020 11:33:53 +0200
-Message-ID: <878se3133y.fsf@kurt>
+        Tue, 25 Aug 2020 05:34:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34530 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728059AbgHYJek (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:34:40 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96D8820706;
+        Tue, 25 Aug 2020 09:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598348080;
+        bh=iLhF9CJwZ8QUh5DuvKsLlkhW2dg54+n1MTOWIYJs+9w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YTqCrQ8br8SvcPLpu342YqgAXUZTdk11PQz2Du4qg5vwpjaGIeiewhlS2e+9cP5z+
+         JjykoK9uYm5+7Q7C5s8rUAZ/ZmWre4R/+Bu6XdbrmgATdWqzXsCOenWNKvNpzjKwkq
+         bz47p0VqD5HiByf0Nd+1t7IAJqV5rTtU/TYt1+ps=
+Date:   Tue, 25 Aug 2020 10:34:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
+Message-ID: <20200825093404.GB5379@sirena.org.uk>
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
+ <20200820113015.GB5854@sirena.org.uk>
+ <CAE+NS36C0AwbrFJdYGY6_n_g3DVitp_e1GfZUxjMbKu1bJ_t4w@mail.gmail.com>
+ <20200824194840.GF4676@sirena.org.uk>
+ <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Content-Disposition: inline
+In-Reply-To: <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
+X-Cookie: Don't get to bragging.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
 
-On Tue Aug 25 2020, Vladimir Oltean wrote:
-> On Thu, Aug 20, 2020 at 10:11:15AM +0200, Kurt Kanzenbach wrote:
-[snip]
->> +static struct hellcreek_schedule *hellcreek_taprio_to_schedule(
->> +	const struct tc_taprio_qopt_offload *taprio)
->
-> Personal indentation preference:
->
-> static struct hellcreek_schedule
-> *hellcreek_taprio_to_schedule(const struct tc_taprio_qopt_offload *taprio)
+--jq0ap7NbKX2Kqbes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sure.
+On Tue, Aug 25, 2020 at 05:21:06PM +0800, Gene Chen wrote:
+> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8825=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:49=E5=AF=AB=E9=81=93=EF=BC=9A
 
->
->> +{
->> +	struct hellcreek_schedule *schedule;
->> +	size_t i;
->> +
->> +	/* Allocate some memory first */
->> +	schedule = kzalloc(sizeof(*schedule), GFP_KERNEL);
->> +	if (!schedule)
->> +		return ERR_PTR(-ENOMEM);
->> +	schedule->entries = kcalloc(taprio->num_entries,
->> +				    sizeof(*schedule->entries),
->> +				    GFP_KERNEL);
->> +	if (!schedule->entries) {
->> +		kfree(schedule);
->> +		return ERR_PTR(-ENOMEM);
->> +	}
->> +
->> +	/* Construct hellcreek schedule */
->> +	schedule->num_entries = taprio->num_entries;
->> +	schedule->base_time   = taprio->base_time;
->> +
->> +	for (i = 0; i < taprio->num_entries; ++i) {
->> +		const struct tc_taprio_sched_entry *t = &taprio->entries[i];
->> +		struct hellcreek_gcl_entry *k = &schedule->entries[i];
->> +
->> +		k->interval	  = t->interval;
->> +		k->gate_states	  = t->gate_mask;
->> +		k->overrun_ignore = 0;
->
-> Tab to align with gate_states and interval?
+> > So shouldn't there be a documented LDO_VIN1/2 then?
 
-Hm. I've used M x align. It should take care of it.
+> LDO_VINx is HW design layout, so actually it can't be changed by device t=
+ree.
+> LDO_VIN1/LDO_VIN2 supply from VSYS, not regulator, so I think usually
+> not to show the supply from in device tree.
+> or I should declare a dummy reference to system power like "*-supply =3D
+> <&system_power>;"?
 
-> What does overrun_ignore do, anyway?
+When you say it's from the hardware design do you mean it's fixed by the
+silicon or is this something that's fixed in the board?
 
-I don't remember. The HW engineer suggested to set it to zero.
-
->
->> +
->> +		/* Update complete cycle time */
->> +		schedule->cycle_time += t->interval;
->> +	}
->> +
->> +	return schedule;
->> +}
->> +
->> +static enum hrtimer_restart hellcreek_set_schedule(struct hrtimer *timer)
->> +{
->> +	struct hellcreek_port *hellcreek_port =
->> +		hrtimer_to_hellcreek_port(timer);
->
-> That moment when not even the helper macro fits in 80 characters..
-> I think you should let this line have 81 characters.
-
-OK.
-
->
->> +	struct hellcreek *hellcreek = hellcreek_port->hellcreek;
->> +	struct hellcreek_schedule *schedule;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&hellcreek->reg_lock, flags);
->> +
->> +	/* First select port */
->> +	hellcreek_select_tgd(hellcreek, hellcreek_port->port);
->> +
->> +	/* Set admin base time and switch schedule */
->> +	hellcreek_start_schedule(hellcreek,
->> +				 hellcreek_port->current_schedule->base_time);
->> +
->> +	schedule = hellcreek_port->current_schedule;
->> +	hellcreek_port->current_schedule = NULL;
->> +
->> +	spin_unlock_irqrestore(&hellcreek->reg_lock, flags);
->> +
->> +	dev_dbg(hellcreek->dev, "ARMed EST timer for port %d\n",
->> +		hellcreek_port->port);
->> +
->> +	/* Free resources */
->> +	kfree(schedule->entries);
->> +	kfree(schedule);
->> +
->> +	return HRTIMER_NORESTART;
->> +}
->> +
->> +static int hellcreek_port_set_schedule(struct dsa_switch *ds, int port,
->> +				       const struct tc_taprio_qopt_offload *taprio)
->> +{
->> +	struct net_device *netdev = dsa_to_port(ds, port)->slave;
->> +	struct hellcreek *hellcreek = ds->priv;
->> +	struct hellcreek_port *hellcreek_port;
->> +	struct hellcreek_schedule *schedule;
->> +	unsigned long flags;
->> +	ktime_t start;
->> +	u16 ctrl;
->> +
->> +	hellcreek_port = &hellcreek->ports[port];
->> +
->> +	/* Convert taprio data to hellcreek schedule */
->> +	schedule = hellcreek_taprio_to_schedule(taprio);
->> +	if (IS_ERR(schedule))
->> +		return PTR_ERR(schedule);
->> +
->> +	dev_dbg(hellcreek->dev, "Configure traffic schedule on port %d\n",
->> +		port);
->> +
->> +	/* Cancel an in flight timer */
->> +	hrtimer_cancel(&hellcreek_port->cycle_start_timer);
->> +
->> +	spin_lock_irqsave(&hellcreek->reg_lock, flags);
->> +
->> +	if (hellcreek_port->current_schedule) {
->> +		kfree(hellcreek_port->current_schedule->entries);
->> +		kfree(hellcreek_port->current_schedule);
->> +	}
->> +
->> +	hellcreek_port->current_schedule = schedule;
->> +
->> +	/* First select port */
->> +	hellcreek_select_tgd(hellcreek, port);
->> +
->> +	/* Setup traffic class <-> queue mapping */
->> +	hellcreek_setup_tc_mapping(hellcreek, netdev);
->> +
->> +	/* Enable gating and set the admin state to forward everything in the
->> +	 * mean time
->> +	 */
->> +	ctrl = (0xff << TR_TGDCTRL_ADMINGATESTATES_SHIFT) | TR_TGDCTRL_GATE_EN;
->> +	hellcreek_write(hellcreek, ctrl, TR_TGDCTRL);
->> +
->> +	/* Cancel pending schedule */
->> +	hellcreek_write(hellcreek, 0x00, TR_ESTCMD);
->> +
->> +	/* Setup a new schedule */
->> +	hellcreek_setup_gcl(hellcreek, port, schedule);
->> +
->> +	/* Configure cycle time */
->> +	hellcreek_set_cycle_time(hellcreek, schedule);
->> +
->> +	/* Setup timer for schedule switch: The IP core only allows to set a
->> +	 * cycle start timer 8 seconds in the future. This is why we setup the
->> +	 * hritmer to base_time - 5 seconds. Then, we have enough time to
->> +	 * activate IP core's EST timer.
->> +	 */
->> +	start = ktime_sub_ns(schedule->base_time, (u64)5 * NSEC_PER_SEC);
->> +	hrtimer_start_range_ns(&hellcreek_port->cycle_start_timer, start,
->> +			       NSEC_PER_SEC, HRTIMER_MODE_ABS);
->
-> Explain again how this works, please? The hrtimer measures the CLOCK_TAI
-> of the CPU, but you are offloading the CLOCK_TAI domain of the NIC? So
-> you are assuming that the CPU and the NIC PHC are synchronized? What if
-> they aren't?
-
-Yes, I assume that's synchronized with e.g. phc2sys.
-
->
-> And what if the base-time is in the past, do you deal with that (how
-> does the hardware deal with a base-time in the past)?
-> A base-time in the past (example: 0) should work: you should advance the
-> base-time into the nearest future multiple of the cycle-time, to at
-> least preserve phase correctness of the schedule.
-
-If the hrtimer is programmed with a value in the past, it fires
-instantly. The callback is executed and the start time is
-programmed.
-
->
-> Just trying to understand if this whole hrtimer thing is worth it. It
-> complicates the driver by quite a significant amount.
-
-See my other reply mail, why I used hrtimers.
-
-Thanks,
-Kurt
-
---=-=-=
+--jq0ap7NbKX2Kqbes
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E2wEACgkQeSpbgcuY
-8KahRg//RRRGwIWAQhR1Iw4EZ6hKkS4kLrB+gu3Jm5Tn2xoBXfTPlDYO0zQYC1BF
-QC7WKamPNFqtNOZKj51FWJY2W8M0H+qtMvO1rUd6VZx91knpCGBSwCyTncFiMobM
-IHRG+KaTer2k0wUjgG0OxTe9N9K+fCSg6y82RUfUTDO2mNUh/psgWI64VuuJJIzF
-2KjT6Z6ekM7tY3zMOG2ifXM9fjNLeZ9nKAbpa4X+wzYHmP1k6Nnl3IJYpf984DTo
-EPkBUMG8ruVXPKuKCt6ujhHMv7tuS/SCAVSCTk0kGIl0OI4XEM8HGuyyGq3kRtEh
-xOV8dOdhzEsTI0IEpg34P/wv1dIqX6HCRX8H+/UwpwX6Y9Mx8+x9d39p+Ul4kzvy
-yGpv95u6xisI7eVhqLWXQf0c2BecxhB+z/vSia0Oo38bxr2xNVFOuEyERbCi/FvR
-wiZtdasdCavxqt5TLv+Be69BedL2+5y8hMH4rx+UwjICRLJ5k5VcZnQvMIJqOrZs
-NcbrKhiIqfwSFFz8bkVK2g+NKh4pQdItKMVmB0E03LZ6rzzZW94Iid+rQ22LAqxc
-wv5z74wotwlORJIGi/tgl2wI2l5gfEZV+j20acnAdzgmntpRk4KAJYOXPQX6VSWJ
-SdLxNG674wZWdoJaIPYCk21Nhf09+MXHUvK65Q1NGwJzDDPXdCQ=
-=jME8
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E2wsACgkQJNaLcl1U
+h9DBaAf/UJOBy/iygjB9JFJ4GtbOAjn/N/rUqf1/KFMnz3cPKgQYUsIJGpdxmbn5
+DiJcykHC4+eYbi6+EjG+YXvfTeqXZiqBZgYy2fgI0foL8niNbNR4l4f2dizSAusa
+FzlufGHoNmhjW/frLoBo544S4VCf3g/bXwum3c+bkGZCeT4uwKT8spBK1Dqt/69N
+bWgQB+uCUjC0vRlMAZAnbAR45zd0H8B/eLyjIK1qGXoEeUpMQPPYbGyg1GypOK6n
+h5E6oy2FV29bq/+vsCQ6uf6Xy+CWtkHma69fI1hWNP4SXzePWEpOW5TZbHb/3E3t
+SgvJzDJJ2VxGUsR2uxU/jhedGNW/Ag==
+=aMgv
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--jq0ap7NbKX2Kqbes--
