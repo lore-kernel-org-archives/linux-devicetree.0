@@ -2,171 +2,100 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A260C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 23:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B730CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 23:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5C4220738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 23:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598396789;
-	bh=BHBom7uvQSruolWt1yr7oEcBpf4ZoT7u4+Gfmz9pZC0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xeqA2QKtJpJZ6h3F/Ojnr8QM8fRULmPBCHzkpwmSU6emBPOxl1GgyPFuLFyYYqUjq
-	 7yV2GNWsYrLctIVEfL9dX1R9nZGCabfDTwg+xjZOwuJrM+aqdSqsz/Je5PhoWvw7Wa
-	 ZuXNmjLhTu/pDQDpQEsGcd+H6pM+uwdoCcXJ9Cuk=
+	by mail.kernel.org (Postfix) with ESMTP id 912342075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 23:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgHYXG2 (ORCPT
+        id S1726337AbgHYXoL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:06:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726356AbgHYXG1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:06:27 -0400
-Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D08AF2076C
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 23:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598396786;
-        bh=BHBom7uvQSruolWt1yr7oEcBpf4ZoT7u4+Gfmz9pZC0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rl31BktPtqc3PWxHB+IIBGgJqmnrWxrjOoHNAgNuUeiVLRDXQqRTBXoaJbZX7cPUb
-         1p49hnza/6bXCuxRHh9IfepucG9u6UKqs42WcsiCwGYC47fhyGAGUUl3D99UqYr07j
-         9f6Qyw6DRpQLqqvxL5Xl7KAUv3b9Rcns+jUWYlZA=
-Received: by mail-oi1-f181.google.com with SMTP id n128so309599oif.0
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 16:06:26 -0700 (PDT)
-X-Gm-Message-State: AOAM533vpEaXlq+/Lzdj0lr2AsRZjLnCMMTE2xGvr7mMrlXm1eZG8j+r
-        uYO/51r4cfNuvkzTJN6+DJiwsAs0c20IAVi7Yg==
-X-Google-Smtp-Source: ABdhPJx6ZzfXVbElsfjZylrjU/5tyZhCP29bjYFSeWpzKqBiEa5vShND8XRZ6vtTEADkiWj3LiEbQDEFJBqnwj2QCUw=
-X-Received: by 2002:aca:e1d6:: with SMTP id y205mr2436807oig.152.1598396786162;
- Tue, 25 Aug 2020 16:06:26 -0700 (PDT)
+        Tue, 25 Aug 2020 19:44:11 -0400
+Received: from anchovy3.45ru.net.au ([203.30.46.155]:46166 "EHLO
+        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgHYXoK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 19:44:10 -0400
+Received: (qmail 18469 invoked by uid 5089); 25 Aug 2020 23:44:07 -0000
+Received: by simscan 1.2.0 ppid: 18331, pid: 18332, t: 0.0840s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.22?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy2.45ru.net.au with ESMTPA; 25 Aug 2020 23:44:06 -0000
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+To:     Wolfram Sang <wsa@the-dreams.de>, Codrin.Ciubotariu@microchip.com,
+        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
+        thomas.petazzoni@bootlin.com
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+ <20191021202044.GB3607@kunai>
+ <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+ <20191024150726.GA1120@kunai>
+ <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
+ <20200825132846.GA1753@kunai>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <8deeae50-2d67-d728-7afd-1b8f1b7a927e@electromag.com.au>
+Date:   Wed, 26 Aug 2020 07:44:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200819031723.1398378-1-nico@fluxnic.net> <20200819031723.1398378-2-nico@fluxnic.net>
- <20200825212932.GA1360264@bogus> <nycvar.YSQ.7.78.906.2008251732430.1479@knanqh.ubzr>
-In-Reply-To: <nycvar.YSQ.7.78.906.2008251732430.1479@knanqh.ubzr>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 25 Aug 2020 17:06:15 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKJByNNwgP34_=G3bdVaZiM1OCUY94N1pTRzgNvqHjcWw@mail.gmail.com>
-Message-ID: <CAL_JsqKJByNNwgP34_=G3bdVaZiM1OCUY94N1pTRzgNvqHjcWw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: MIPI I3C Host Controller Interface
-To:     Nicolas Pitre <nico@fluxnic.net>
-Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
-        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
-        Laura Nixon <laura.nixon@team.mipi.org>,
-        Robert Gough <robert.gough@intel.com>,
-        Matthew Schnoor <matthew.schnoor@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200825132846.GA1753@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:02 PM Nicolas Pitre <nico@fluxnic.net> wrote:
->
-> On Tue, 25 Aug 2020, Rob Herring wrote:
->
-> > On Tue, Aug 18, 2020 at 11:17:22PM -0400, Nicolas Pitre wrote:
-> > > From: Nicolas Pitre <npitre@baylibre.com>
-> > >
-> > > The MIPI I3C HCI (Host Controller Interface) specification defines
-> > > a common software driver interface to support compliant MIPI I3C
-> > > host controller hardware implementations from multiple vendors.
-> > >
-> > > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> > > ---
-> > >  .../devicetree/bindings/i3c/mipi-i3c-hci.yaml | 41 +++++++++++++++++++
-> > >  1 file changed, 41 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml
-> > > new file mode 100644
-> > > index 0000000000..8fc18ea922
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/i3c/mipi-i3c-hci.yaml
-> > > @@ -0,0 +1,41 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: "http://devicetree.org/schemas/i3c/mipi-i3c-hci.yaml#"
-> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > > +
-> > > +title: MIPI I3C HCI Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Nicolas Pitre <npitre@baylibre.com>
-> > > +
-> > > +description: |
-> > > +  MIPI I3C Host Controller Interface
-> > > +
-> > > +  The MIPI I3C HCI (Host Controller Interface) specification defines
-> > > +  a common software driver interface to support compliant MIPI I3C
-> > > +  host controller hardware implementations from multiple vendors.
-> > > +
-> > > +  For details, please see:
-> > > +  https://www.mipi.org/specifications/i3c-hci
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: mipi-i3c-hci
-> >
-> > What about my comments on v1? Pasted again:
->
-> Oops, sorry, I missed them.
->
-> > A register interface (or protocol) spec is never complete enough to
-> > capture all the details about a specific h/w implementation. One just
-> > has to go look at AHCI, EHCI, OHCI, XHCI, UFS, 8250, etc. bindings.
-> > Let's not start with pretending that here. Fine for this to be a
-> > fallback, but it must have a compatible for a specific implementation.
->
-> You might have to indulge me a bit as I don't
-> understand what you're asking.
->
-> Currently there are very few implementations. One of them lives in an
-> FPGA and the example below is actually the DT entry I use for it. I'm
-> guessing specific vendor implementations will have their own tweaks
-> eventually, such as clock sources and whatnot.
+On 25/08/2020 21:28, Wolfram Sang wrote:
+> Hi Phil,
+> 
+> yes, this thread is old but a similar issue came up again...
+> 
+> On Fri, Oct 25, 2019 at 09:14:00AM +0800, Phil Reid wrote:
+> 
+>>>
+>>>> So at the beginning of a new transfer, we should check if SDA (or SCL?)
+>>>> is low and, if it's true, only then we should try recover the bus.
+>>>
+>>> Yes, this is the proper time to do it. Remember, I2C does not define a
+>>> timeout.
+>>>
+>>
+>> FYI: Just a single poll at the start of the transfer, for it being low, will cause problems with multi-master buses.
+>> Bus recovery should be attempted after a timeout when trying to communicate, even thou i2c doesn't define a timeout.
+>>
+>> I'm trying to fix the designware drivers handling of this at the moment.
+> 
+> I wonder what you ended up with? You are right, a single poll is not
+> enough. It only might be if one applies the new "single-master" binding
+> for a given bus. If that is not present, my best idea so far is to poll
+> SDA for the time defined in adapter->timeout and if it is all low, then
+> initiate a recovery.
+> 
 
-Yes, exactly. And bugs too.
+On my todo list still.
 
-> But that is outside of
-> the spec (actually the spec defines a register area for eventual vendor
-> specific usage). But I have no visibility into that and of course the
-> code has no provision for that yet either.
->
-> So I imagine there will be something like this in dts files eventually:
->
->         compatibvle = "intel,foobar_soc_i3c_hci", "mipi-i3c-hci";
->
-> Is that what you mean?
+Our system eventually recovers at the moment and the multi-master bus
+doesn't contain anything that's time critical to our systems operation.
 
-Yes. Even your FPGA is tied to some implementation...
 
-> > Also, which version of the spec does this compatible correspond to?
->
-> All of them.
->
-> > Or are there not HCI differences in the spec versions you mention in
-> > the cover letter?
->
-> The hardware is self advertising per the spec. So there is no need to
-> carry such distinction in the DT compatible. Even vendor extensions are
-> tagged with MIPI vendor IDs in the hardware directly.
+-- 
+Regards
+Phil Reid
 
-Oh good, folks are learning. :)
+ElectroMagnetic Imaging Technology Pty Ltd
+Development of Geophysical Instrumentation & Software
+www.electromag.com.au
 
-Is the vendor ID (and revision) discoverable even if no vendor
-extensions? If so, then I'm more comfortable with "mipi-i3c-hci" on
-it's own. The exception will be if there's setup needed to discover
-the h/w which seems likely. In that case, we should probably do
-compatible strings based on VID/PID like PCI, USB, etc. No need to
-define that now I guess, but please add some sort of summary of the
-above about the discoverability of the HCI implementer and features.
-
-Rob
+3 The Avenue, Midland WA 6056, AUSTRALIA
+Ph: +61 8 9250 8100
+Fax: +61 8 9250 7100
+Email: preid@electromag.com.au
