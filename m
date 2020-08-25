@@ -2,109 +2,68 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DB5C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D484CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D34E2067C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8637207BC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgHYPur convert rfc822-to-8bit (ORCPT
+        id S1726149AbgHYPxU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:50:47 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37452 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgHYPuq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 11:50:46 -0400
-Received: by mail-lj1-f195.google.com with SMTP id w14so14391751ljj.4;
-        Tue, 25 Aug 2020 08:50:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uxFnQngY1sbC1vkgUVU9ZThc1q84F2BALBF2JF4Hio4=;
-        b=ssM2w+s0v92K52IKPVBHowKRPuW3t1OoO1Xdd6V75ln2hOYz2Mum5KRBkefPa87c5E
-         h42QPyZeRFqNC0NddtnXZcFIKlzyXMW/naS3qx4x6s/CMblHEE1ALW6e3TT5ALwgrXRe
-         Rf/4Prffuu/x8SPy9TfH3pTQW2jXzUAyCmxJvjPP4GBnvcO7kXUGq35K+zfyQY2I+Gjx
-         TOszehTsEvqmSamOuuLlpWcA9XGtapLchIMxFYwPC+lhhXEYWlbfBsqWG4Fo762PEvMT
-         Z85Fas15Uu5rXBIESItBLlI2oVUupywMAN3CR0wLPDk/2N5uXLU/E/j9YIaHidWo0sKP
-         JWqA==
-X-Gm-Message-State: AOAM5300WoFDoIjfCzh5l+G+Wnr7paDsS20HnSQnExeQlkmacJGXSVq6
-        Iu6BHLcoMpHFww715dnAFkY/kRXx19ZFGg==
-X-Google-Smtp-Source: ABdhPJyjWDMcpwz3b8SYuKAHGQLBZsh5DHqtmVD/iOydSwV89V6jKUAJZ9HA2rPQeDpAOxQeQ9TVhA==
-X-Received: by 2002:a2e:a28d:: with SMTP id k13mr5040448lja.11.1598370643927;
-        Tue, 25 Aug 2020 08:50:43 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id e25sm2907268ljj.130.2020.08.25.08.50.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 08:50:43 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id v4so14410865ljd.0;
-        Tue, 25 Aug 2020 08:50:43 -0700 (PDT)
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr5274009lji.47.1598370643108;
- Tue, 25 Aug 2020 08:50:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com> <20200821145935.20346-2-kevin.lhopital@bootlin.com>
-In-Reply-To: <20200821145935.20346-2-kevin.lhopital@bootlin.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 25 Aug 2020 23:50:30 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65enzLHdK09-8Nm7=YU9-bRP=0Q+BXjXah6MZR2-y=zrA@mail.gmail.com>
-Message-ID: <CAGb2v65enzLHdK09-8Nm7=YU9-bRP=0Q+BXjXah6MZR2-y=zrA@mail.gmail.com>
-Subject: Re: [PATCH 1/7] media: sun6i-csi: Fix the bpp for 10-bit bayer formats
-To:     =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tue, 25 Aug 2020 11:53:20 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:33821 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgHYPxS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 11:53:18 -0400
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id A5FDE100002;
+        Tue, 25 Aug 2020 15:53:14 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Reto Schneider <code@reto-schneider.ch>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Reto Schneider <reto.schneider@husqvarnagroup.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Yong Deng <yong.deng@magewell.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Kamel Bouhara <kamel.bouhara@bootlin.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: arm: at91: Add GARDENA smart Gateway (Art. 19000) board
+Date:   Tue, 25 Aug 2020 17:53:14 +0200
+Message-Id: <159837068692.2863543.14754905231256837957.b4-ty@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200822151023.31629-1-code@reto-schneider.ch>
+References: <20200810171921.8679-1-code@reto-schneider.ch> <20200822151023.31629-1-code@reto-schneider.ch>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:00 PM Kévin L'hôpital
-<kevin.lhopital@bootlin.com> wrote:
->
-> 10-bit bayer formats are aligned to 16 bits in memory, so this is what
-> needs to be used as bpp for calculating the size of the buffers to
-> allocate.
->
-> Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
+On Sat, 22 Aug 2020 17:10:20 +0200, Reto Schneider wrote:
+> Document devicetree's bindings for the GARDENA smart Gateway with
+> article number 19000, based on the SAM9G25 Atmel SoC.
 
-Please add:
+Applied, thanks!
 
-Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI V3s")
+I did join back the long line in the device tree documention as I found that
+clearer.
 
+[1/2] dt-bindings: arm: at91: Add GARDENA smart Gateway (Art. 19000) board
+      commit: c05a4bff5c509afda0ee60009d62b5abc0e08311
+[2/2] ARM: at91: Add GARDENA smart Gateway (Art. 19000) support
+      commit: 25ffa0dde53c14cd6ddc938e39f70db4f8837591
 
-
-> ---
->  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-> index c626821aaedb..8b83d15de0d0 100644
-> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-> @@ -100,7 +100,7 @@ static inline int sun6i_csi_get_bpp(unsigned int pixformat)
->         case V4L2_PIX_FMT_SGBRG10:
->         case V4L2_PIX_FMT_SGRBG10:
->         case V4L2_PIX_FMT_SRGGB10:
-> -               return 10;
-> +               return 16;
->         case V4L2_PIX_FMT_SBGGR12:
->         case V4L2_PIX_FMT_SGBRG12:
->         case V4L2_PIX_FMT_SGRBG12:
-> --
-> 2.17.1
->
+Best regards,
+-- 
+Alexandre Belloni <alexandre.belloni@bootlin.com>
