@@ -2,91 +2,100 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF15C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2479C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1EE204EC
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFDDE204EC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598321316;
+	bh=Km8rnTMesXg90cUmftiuCmTvP8alLopOvgyUMhpvZDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=inw4dQ7hyr/dYAnmgSulO+4pa0/VDlinJxf6z7iaLLYJTnn0HfCkg1XxPJ2sjl+Yp
+	 gD7eMzt4frf0fSIBqn8Nz+gnp0b7mW+Wgu6fJO1D1f12mkpRGcnCSWiIQ3Bwf4yosx
+	 n8FeO4H4BFOq+B7wyYZsh/WoVqnijtUFVgu31MUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgHYCGW (ORCPT
+        id S1725947AbgHYCIg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:06:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:22502 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbgHYCGU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:06:20 -0400
-IronPort-SDR: nY5AJJUihEOJMWen1N4GIuFx8gOEXN/kjkIZPq9uT4dPhGzsKT0sUaNRGLYWb+Klqjj4ydsp1p
- 0YrPNqv6o0Lg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="240842061"
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="240842061"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 19:06:17 -0700
-IronPort-SDR: HYdsVlnoJ91iiAQGAlXli/r/WWrNT8Utc6wNaact7bwI3XMdBlMtXIYiqvMBN9k11ezV0TXIdg
- GqTEz9oQCepw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="298931072"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 24 Aug 2020 19:06:19 -0700
-Received: from [10.213.45.180] (vramuthx-MOBL1.gar.corp.intel.com [10.213.45.180])
-        by linux.intel.com (Postfix) with ESMTP id A75095805EB;
-        Mon, 24 Aug 2020 19:06:16 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        Mon, 24 Aug 2020 22:08:36 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40534 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgHYCIf (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 22:08:35 -0400
+Received: by mail-io1-f67.google.com with SMTP id q132so448651iod.7;
+        Mon, 24 Aug 2020 19:08:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rftte33K9X8W4i2yhAHfYadgnzv4cujRdhAJKZI2Ty4=;
+        b=iZOWsfzDRiu63QBoJqqfxsGynJKsQMEfCjBWyRoKktjMoFf1T2JMdu7o67L45qLd6S
+         ERyl3sfqT3Du3VDBkZUO7BC+ax3lRTXug2tE3LcHtp1tiQf0MUHFtqCU2E/+Jltg5ojl
+         HRxWXyEU1hW/jewTLlGSKvSoMmNbdU/sx1dT/tmjXj6ryCDTDEm7D0uXzsLicpzmM0if
+         zhjxSkl61uryQvcUwjVQpGv6ffVg8oznFgM9+HFQH0fl2cVcqNlDiY97LWtgTBmm5sDv
+         M0oReuXUhgPu3/95wjbArgrowT1QghyOvD2giNBdRM8igVBj2agcLTeYUXaeJ4zEgFf5
+         TqUQ==
+X-Gm-Message-State: AOAM530BplRT6Z8W7gRWzBVaRiBIt2THEYuNHLCdkbWgpF0a+a6416Pt
+        o+JsD+CLP5+nnMsvYMdJxQ==
+X-Google-Smtp-Source: ABdhPJz1vzKft6egaSzEgZqE3U+MF2iN7p7VQ4sVzHA8LE6oqB/qexZ7jcHxbimsqXP33WOz1cUejw==
+X-Received: by 2002:a02:9f87:: with SMTP id a7mr8190898jam.35.1598321314588;
+        Mon, 24 Aug 2020 19:08:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id f18sm8399898ilj.24.2020.08.24.19.08.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 19:08:34 -0700 (PDT)
+Received: (nullmailer pid 3787077 invoked by uid 1000);
+        Tue, 25 Aug 2020 02:08:32 -0000
+Date:   Mon, 24 Aug 2020 20:08:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, Vinay Simha BN <simhavcs@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-pm@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        "Bruce E . Robertson" <bruce.e.robertson@intel.com>,
+        devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20200817070009.4631-1-krzk@kernel.org>
- <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
- <20200824103841.GA26466@kozik-lap>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <46e18f5e-8b5d-676b-19dd-51a57ff83de3@linux.intel.com>
-Date:   Tue, 25 Aug 2020 10:06:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        David Heidelberg <david@ixit.cz>,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Jonghwa Lee <jonghwa3.lee@samsung.com>
+Subject: Re: [PATCH v3 02/10] dt-bindings: power: supply: Add device-tree
+ binding for Summit SMB3xx
+Message-ID: <20200825020832.GA3787024@bogus>
+References: <20200813213409.24222-1-digetx@gmail.com>
+ <20200813213409.24222-3-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200824103841.GA26466@kozik-lap>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813213409.24222-3-digetx@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 14 Aug 2020 00:34:01 +0300, Dmitry Osipenko wrote:
+> From: David Heidelberg <david@ixit.cz>
+> 
+> Summit SMB3xx series is a Programmable Switching Li+ Battery Charger.
+> This patch adds device-tree binding for Summit SMB345, SMB347 and SMB358
+> chargers.
+> 
+> Signed-off-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  .../power/supply/summit,smb347-charger.yaml   | 152 ++++++++++++++++++
+>  .../dt-bindings/power/summit,smb347-charger.h |  19 +++
+>  2 files changed, 171 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/summit,smb347-charger.yaml
+>  create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
+> 
 
-On 24/8/2020 6:38 pm, Krzysztof Kozlowski wrote:
-> On Mon, Aug 24, 2020 at 06:36:04PM +0800, Ramuthevar, Vadivel MuruganX wrote:
->> Hi,
->>
->>   Thank you for the patches and optimized the code as well.
->>   I have applied your patches and tested, it's working fine
->>   with few minor changes as per Intel's LGM board.
->>
->>   can I send the patches along with patches or we need to wait until
->>   your patch get merge?
-> 
-> You can just base your patches on top of mine, send them and mention in
-> cover letter that they are based on these series (with link to
-> discussion).
-Thank you very for the confirmation, sure will do the rebase over your 
-patch and sent.
-
-Regards
-Vadivel
-> 
-> Best regards,
-> Krzysztof
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
