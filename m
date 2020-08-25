@@ -2,123 +2,112 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17230C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD52C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E29BF20782
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ONPRsiCl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="evMqEEGK"
+	by mail.kernel.org (Postfix) with ESMTP id DB1802075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598367099;
+	bh=AUllHjwye2TIaljSNACL7VBXEIh69WdMA3ahzf153ik=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MJljMx2dZurGSpSF6c2yx4VQSIDHhnKgvjKgVFxOx9Ig3fJG/l4WN2XDWSc4BSg/F
+	 B9q8tgjt2zq6IKD/pJVheRsOAIAykQFGCzOj5pRZOKIsFP5xPv93ZFYsimYWY6dMzr
+	 KvgVOW7sHI/Q7hvIaGDYmedV2Wke6HF/mAQ3CzZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbgHYOs3 (ORCPT
+        id S1726351AbgHYOvj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:48:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50514 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgHYOs1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 10:48:27 -0400
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598366904;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NhozcRiSk9TRKJ8CHvRx3nzWReQ8VTKS10wrtlWnEGk=;
-        b=ONPRsiCldQS7HOmEvqU3RKKeLSuRti974gBs3kojojhxyaZZR6unKHyUITbqa1jM2WlKOS
-        3u8E6RnYzkLvm+mNUPi4KgbSq2VE+3Qej61gEgL2bjaCKg+ecHiVr8NKLyv+zXdAochg//
-        D3U93KF1JogMKVqTpmgKlDrP1PQ/2+47j2E6uc9hGG5J+yW/l8eREr/yW0Nk4MkDHmpwqf
-        9yqingX1xMd+Ko1gDRRgxritgfh+FfdfEebBCwQ6/KyRYe7OktfshOSYJIPbQy+3amQBN6
-        PFW2rVTYnntgPkYQImtEHxpIGUKerz5Ni8MXYLp4i/eS5j6l1DTg2mxGf/nUHw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598366904;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NhozcRiSk9TRKJ8CHvRx3nzWReQ8VTKS10wrtlWnEGk=;
-        b=evMqEEGKL2gESegLl4cXb3HFIl61x3E0NCF/WSZmYE3DEnEwzDBx9K7NH04DMGzGKXhNZb
-        wmCRnQE5P3hBz2DQ==
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v3 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek switches
-In-Reply-To: <20200825135615.GR2588906@lunn.ch>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-3-kurt@linutronix.de> <20200824224450.GK2403519@lunn.ch> <87eenv14bt.fsf@kurt> <20200825135615.GR2588906@lunn.ch>
-Date:   Tue, 25 Aug 2020 16:48:19 +0200
-Message-ID: <87h7sqzsr0.fsf@kurt>
+        Tue, 25 Aug 2020 10:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgHYOvg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:51:36 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B8342075F;
+        Tue, 25 Aug 2020 14:51:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598367095;
+        bh=AUllHjwye2TIaljSNACL7VBXEIh69WdMA3ahzf153ik=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PK5uSW+BTKDzTjXEUvGROPruPWyCN+UX0s7aKo0087o6tw39xkTTyG41NJNZR3AP/
+         GE1JD2VZ3aeOJUJnPf7Xb5rO6jhlMLaGBWcBD4/3oIwsIa9tlE4NIOu24cvTotv/Fp
+         IL95pYyZrtSdJRjncevKEr84ykN4r9gVYL2gJQC8=
+Date:   Tue, 25 Aug 2020 20:21:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+Message-ID: <20200825145131.GS2639@vkoul-mobl>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-2-vkoul@kernel.org>
+ <20200824174009.GA2948650@bogus>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824174009.GA2948650@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hey Rob,
 
-On Tue Aug 25 2020, Andrew Lunn wrote:
-> I agree with the check here. The question is about the compatible
-> string. Should there be a more specific compatible string as well as
-> the generic one?
->
-> There have been a few discussions about how the Marvell DSA driver
-> does its compatible string. The compatible string tells you where to
-> find the ID register, not what value to expect in the ID register. The
-> ID register can currently be in one of three different locations. Do
-> all current and future Hellcreak devices have the same value for
-> HR_MODID_C?  If not, now is a good time to add a more specific
-> compatible string to tell you where to find the ID register.
->
->> My plan was to extend this when I have access to other
->> revisions. There will be a SPI variant as well. But, I didn't want to
->> implement it without the ability to test it.
->
-> Does the SPI variant use the same value for HR_MODID_C?  Maybe you
-> need a different compatible, maybe not, depending on how the driver is
-> structured.
->
-> The compatible string is part of the ABI. So thinking about it a bit
-> now can make things easier later. I just want to make sure you have
-> thought about this.
+On 24-08-20, 11:40, Rob Herring wrote:
+> On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
+> > Add devicetree binding documentation for GPI DMA controller
+> > implemented on Qualcomm SoCs
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
+> >  1 file changed, 87 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+> > 
+> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
 
-I totally agree. The Marvell solution seems to work. For all current
-devices the module ID is located at 0x00. Depending on the chip ID the
-different properties can be configured later. The SPI variant will have
-a different module ID. Anyhow, I'll ask how this will be handled for
-future devices and in general.
+Okay updating dt-schema I do see this, now the question is what is this
+and what does it mean ;-) I am not sure I comprehend the error message.
+I see this for all the new properties I added as required for this
+device node
 
-Thanks,
-Kurt
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: {'description': 'Bitmap of supported GPII instances for OS', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: 'not' is a required property
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: {'description': 'Maximum number of GPII instances available', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
+> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: 'not' is a required property
+> 
+> ./Documentation/devicetree/bindings/dma/qcom-gpi.yaml: $id: relative path/filename doesn't match actual path or filename
+> 	expected: http://devicetree.org/schemas/dma/qcom-gpi.yaml#
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: ignoring, error in schema: properties: qcom,max-num-gpii
+> warning: no schema found in file: ./Documentation/devicetree/bindings/dma/qcom-gpi.yaml
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.example.dt.yaml: example-0: dma@800000:reg:0: [0, 8388608, 0, 393216] is too long
+> 	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+> 
+> 
+> See https://patchwork.ozlabs.org/patch/1350170
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9FJLMACgkQeSpbgcuY
-8KZEgQ/5AfTcP1BkSGUoLEuxLDEgpD39SvhIEFQS4oTudWmbT80W+UnSbGM39DpX
-4hY1tAMnq13jd9v2QQHSteCNPZ3ODKWs0/Oa4LoE1+019jSkmFDG3ZThTi8evr9+
-+kcnDJ8SpQxLb5KfHQrZJtj7tdxjFySP40arQI3W7kqOXHA+jxOOglM6VcJF1oR2
-00SUzrLxK2kupnsg+OJ0CktCyFGymlCG2aHYIcopAqebUCyXTwO4BCiSwTzIuD3+
-cD2oN8eXnEdbb+t14xPBFOzaxZupdRl31QRQ3z0WoJ+Bswh4nm6qIIxGEEzCzczI
-2CLvn5mwtHlVWTwxId3tQS4L9h/jUKx2jXKJ93N1sW83suqW5vEH7VOUxI9haoHm
-EcIzZYEmESEAseve3PxVzZnnXZ+3E883TwJEOtbyO4eqn0sbCn5o50+VPYm/0h3p
-SO09xU+OMC80LiotFeJ2nWTaH69ZHZaZod+83g/yBFrZZd3NO0t6W8PrBZZ4rQ36
-aWH0cn/mbyAHZLMd9nxVAwcfZMcx19VbdI8iUAKkl0wp1StXXLC7LsBWCjONDltp
-cQDtE+MqLnouBBRtCov7o5U/ektg/PzOjZBtBURZ2ZP6Fzib+3N4dMPr1kuBmsVV
-KTlC+sFWuuCAVFywtFAoJ3bSORQ8FHlw75RX7/2i4+e7g2GW0RE=
-=BCe/
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+~Vinod
