@@ -2,157 +2,113 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3F1DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 05:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7086EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 05:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EF13204FD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 05:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356B0204FD
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 05:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tgp7wuTv"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oYDoh1MC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgHYFaf (ORCPT
+        id S1728810AbgHYFjK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbgHYFae (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 01:30:34 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FD8C061574
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 22:30:34 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id t13so9355930ile.9
-        for <devicetree@vger.kernel.org>; Mon, 24 Aug 2020 22:30:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=neyZL3XwDDi0ek1Ye3rJ4gqwsEJHH61znyG0zceh0QI=;
-        b=Tgp7wuTv1IHgsnqufqj9kjl/EVG0o2Nw3FYx6C+gcxh1x2TkxJ8YIs9hPgIs9vpkMJ
-         O8R/7xm1A5mAEiLUgFSpsxhojvedDXqhIj3R3FMfpQb1c1M2XdQI68wVDLH5CGgTKY+F
-         qKwXfDhK4d7y03HzJ332+JWXqi6jHdnq0TmwNjXxljodZzmAgYin9M1xSm5i30gMP8p2
-         961FsHzDOX9anHSzig1GZZv2V4F0L+L2mBOxVpbRQjQ1FEsXG/lwIa6YPzjat2iKui7M
-         yY6CMuG17kF6TaLMhrsE3PkSM3if2O6rmzxhKD44cA3tUcn47THJDHSyHwa3Ee5rvZsy
-         6RuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=neyZL3XwDDi0ek1Ye3rJ4gqwsEJHH61znyG0zceh0QI=;
-        b=irlFTyrGCelqiFbuWeo7bERqeck2basHY6juVzIPrvVcxfCUJK0d92pysfbfL9A8//
-         r3FMqS+sKALtbTetPJyJrUtNWMR+2wqZf2KRMljvK2yJ+jsDhtp2nwne8UMgqA47FHMk
-         6TkcuomABguwwKDT+jH98VPCOn1ocyEIQUexBLcqj3q+mR6Gtl6QQ6NJ9HokOaHgRHEP
-         RJ5khuc8bknFr/heqJIZAPtf4/LZMt675SvVlaVou28rpkEAfMvAWvLmjg8Dc7O/yXMy
-         U4mc6k5xKcHS+c/oomg6UVJT33sV5hLStlsHEoSYOgF6Uw9pv0HO0702MGYi5wdUGoyD
-         M36Q==
-X-Gm-Message-State: AOAM530vd3CdOLVhv0NB98yns7bxZBM/mlVwScyb7Q5GKzLhVvsHboFG
-        V4k7HEaTqwWOkI+jXfkpzC8qFWh7dT3OjxyjG3mHSw==
-X-Google-Smtp-Source: ABdhPJy+FagyNB5/9MOEumL7LTOxvNb64K7Nk3DXYrDlwAYByZ74V/wFNbSr+6jt6N7XAq4eL1Uk36CxIQafL+2NmeY=
-X-Received: by 2002:a92:9fdb:: with SMTP id z88mr7872110ilk.57.1598333433252;
- Mon, 24 Aug 2020 22:30:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200825152551.1.I6d12081e37d27ba7580a1af877727d882935787a@changeid>
-In-Reply-To: <20200825152551.1.I6d12081e37d27ba7580a1af877727d882935787a@changeid>
-From:   "Anand K. Mistry" <amistry@google.com>
-Date:   Tue, 25 Aug 2020 15:30:22 +1000
-Message-ID: <CAATStaPRS0Tduo7czesD9rzBDfVLgiWrHUQi+kAadGZAvUv+GA@mail.gmail.com>
-Subject: Re: [PATCH] CHROMIUM: arm64: dts: mt8183-elm: Set GPU power regulator
- to always on
-To:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Cc:     djkurtz@chromium.org, Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
+        Tue, 25 Aug 2020 01:39:10 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:35280 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728145AbgHYFjK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 01:39:10 -0400
+X-UUID: bd94c9fa368a4a7a80f5ff7bd8c919c9-20200825
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=VRegGJ4jV43Hdy8Pytxo0IKxzzf+VLe4lBHE+Uv90dM=;
+        b=oYDoh1MCKW1tSpK6SqegVMnHSCYkZNOGtgIdYX2Bnb2sAv2cpr/78Lwx8r/Gmse1ZQtP/WRfxmxkFIZb8XsVvT3Ej9chGGipXP/vmdumfSAala4DCiTp4Sieuz8OWjpbNQXySTf3TyOIVdeAgjwPRdJjnWuGTOOgSXoBV3xkaBk=;
+X-UUID: bd94c9fa368a4a7a80f5ff7bd8c919c9-20200825
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <tiffany.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 415149096; Tue, 25 Aug 2020 13:39:06 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 25 Aug 2020 13:39:05 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 25 Aug 2020 13:39:05 +0800
+Message-ID: <1598333944.1969.0.camel@mtksdaap41>
+Subject: Re: [PATCH v4 14/17] media: mtk-vcodec: venc: use platform data for
+ ENUM_FRAMESIZES
+From:   Tiffany Lin <tiffany.lin@mediatek.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Aug 2020 13:39:04 +0800
+In-Reply-To: <20200821103608.2310097-15-acourbot@chromium.org>
+References: <20200821103608.2310097-1-acourbot@chromium.org>
+         <20200821103608.2310097-15-acourbot@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-:facepalm: sorry about the subject line. I'll fix it up in the next revision.
+T24gRnJpLCAyMDIwLTA4LTIxIGF0IDE5OjM2ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
+ZToNCj4gdmlkaW9jX2VudW1fZnJhbWVzaXplcygpIGFzc3VtZXMgdGhhdCBhbGwgZW5jb2RlcnMg
+c3VwcG9ydCBILjI2NCBhbmQgVlA4LA0KPiB3aGljaCBpcyBub3QgbmVjZXNzYXJpbHkgdHJ1ZSBh
+bmQgcmVxdWlyZXMgdG8gZHVwbGljYXRlIGluZm9ybWF0aW9uIGFib3V0DQo+IHRoZSBzdXBwb3J0
+ZWQgY29kZWNzIHdoaWNoIGlzIGFscmVhZHkgc3RvcmVkIGluIHRoZSBwbGF0Zm9ybSBkYXRhLg0K
+PiANCj4gRml4IHRoaXMgYnkgcmVmZXJyaW5nIHRvIHRoZSBwbGF0Zm9ybSBkYXRhIHRvIGZpbmQg
+b3V0IHdoZXRoZXIgYSBnaXZlbg0KPiBmb3JtYXQgaXMgc3VwcG9ydGVkLiBTaW5jZSB0aGUgc3Vw
+cG9ydGVkIHNpemVzIGFyZSBhbGwgdGhlIHNhbWUNCj4gcmVnYXJkbGVzcyBvZiB0aGUgZm9ybWF0
+LCB3ZSBjYW4gdGhlbiByZXR1cm4gYSBjb3B5IG9mIGEgc3RhdGljIHZhbHVlIGlmDQo+IHRoZSBm
+b3JtYXQgaXMgc3VwcG9ydGVkLg0KPiANCg0KQWNrZWQtYnk6IFRpZmZhbnkgTGluIDx0aWZmYW55
+LmxpbkBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJlIENvdXJib3Qg
+PGFjb3VyYm90QGNocm9taXVtLm9yZz4NCj4gLS0tDQo+ICAuLi4vcGxhdGZvcm0vbXRrLXZjb2Rl
+Yy9tdGtfdmNvZGVjX2VuYy5jICAgICAgfCAyNCArKysrKysrKy0tLS0tLS0tLS0tDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5j
+LmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmMuYw0K
+PiBpbmRleCAxYTk4MWQ4NDJjMTkuLmY4ZDRmYmU5MjdmOSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMNCj4gKysrIGIvZHJp
+dmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMNCj4gQEAgLTI2
+LDE3ICsyNiw5IEBADQo+ICANCj4gIHN0YXRpYyB2b2lkIG10a192ZW5jX3dvcmtlcihzdHJ1Y3Qg
+d29ya19zdHJ1Y3QgKndvcmspOw0KPiAgDQo+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG10a19jb2Rl
+Y19mcmFtZXNpemVzIG10a192ZW5jX2ZyYW1lc2l6ZXNbXSA9IHsNCj4gLQl7DQo+IC0JCS5mb3Vy
+Y2MJPSBWNEwyX1BJWF9GTVRfSDI2NCwNCj4gLQkJLnN0ZXB3aXNlID0geyBNVEtfVkVOQ19NSU5f
+VywgTVRLX1ZFTkNfTUFYX1csIDE2LA0KPiAtCQkJICAgICAgTVRLX1ZFTkNfTUlOX0gsIE1US19W
+RU5DX01BWF9ILCAxNiB9LA0KPiAtCX0sDQo+IC0Jew0KPiAtCQkuZm91cmNjID0gVjRMMl9QSVhf
+Rk1UX1ZQOCwNCj4gLQkJLnN0ZXB3aXNlID0geyBNVEtfVkVOQ19NSU5fVywgTVRLX1ZFTkNfTUFY
+X1csIDE2LA0KPiAtCQkJICAgICAgTVRLX1ZFTkNfTUlOX0gsIE1US19WRU5DX01BWF9ILCAxNiB9
+LA0KPiAtCX0sDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHY0bDJfZnJtc2l6ZV9zdGVwd2lzZSBt
+dGtfdmVuY19mcmFtZXNpemVzID0gew0KPiArCU1US19WRU5DX01JTl9XLCBNVEtfVkVOQ19NQVhf
+VywgMTYsDQo+ICsJTVRLX1ZFTkNfTUlOX0gsIE1US19WRU5DX01BWF9ILCAxNiwNCj4gIH07DQo+
+ICANCj4gICNkZWZpbmUgTlVNX1NVUFBPUlRFRF9GUkFNRVNJWkUgQVJSQVlfU0laRShtdGtfdmVu
+Y19mcmFtZXNpemVzKQ0KPiBAQCAtMTM0LDE3ICsxMjYsMjEgQEAgc3RhdGljIGludCB2aWRpb2Nf
+ZW51bV9mbXQoc3RydWN0IHY0bDJfZm10ZGVzYyAqZiwNCj4gIHN0YXRpYyBpbnQgdmlkaW9jX2Vu
+dW1fZnJhbWVzaXplcyhzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqZmgsDQo+ICAJCQkJICBzdHJ1
+Y3QgdjRsMl9mcm1zaXplZW51bSAqZnNpemUpDQo+ICB7DQo+ICsJY29uc3Qgc3RydWN0IG10a192
+Y29kZWNfZW5jX3BkYXRhICpwZGF0YSA9DQo+ICsJCWZoX3RvX2N0eChmaCktPmRldi0+dmVuY19w
+ZGF0YTsNCj4gIAlpbnQgaSA9IDA7DQo+ICANCj4gIAlpZiAoZnNpemUtPmluZGV4ICE9IDApDQo+
+ICAJCXJldHVybiAtRUlOVkFMOw0KPiAgDQo+IC0JZm9yIChpID0gMDsgaSA8IE5VTV9TVVBQT1JU
+RURfRlJBTUVTSVpFOyArK2kpIHsNCj4gLQkJaWYgKGZzaXplLT5waXhlbF9mb3JtYXQgIT0gbXRr
+X3ZlbmNfZnJhbWVzaXplc1tpXS5mb3VyY2MpDQo+ICsJZm9yIChpID0gMDsgaSA8IHBkYXRhLT5u
+dW1fY2FwdHVyZV9mb3JtYXRzOyArK2kpIHsNCj4gKwkJY29uc3Qgc3RydWN0IG10a192aWRlb19m
+bXQgKmZtdCA9ICZwZGF0YS0+Y2FwdHVyZV9mb3JtYXRzW2ldOw0KPiArDQo+ICsJCWlmIChmc2l6
+ZS0+cGl4ZWxfZm9ybWF0ICE9IGZtdC0+Zm91cmNjKQ0KPiAgCQkJY29udGludWU7DQo+ICANCj4g
+IAkJZnNpemUtPnR5cGUgPSBWNEwyX0ZSTVNJWkVfVFlQRV9TVEVQV0lTRTsNCj4gLQkJZnNpemUt
+PnN0ZXB3aXNlID0gbXRrX3ZlbmNfZnJhbWVzaXplc1tpXS5zdGVwd2lzZTsNCj4gKwkJZnNpemUt
+PnN0ZXB3aXNlID0gbXRrX3ZlbmNfZnJhbWVzaXplczsNCj4gIAkJcmV0dXJuIDA7DQo+ICAJfQ0K
+PiAgDQoNCg==
 
-On Tue, 25 Aug 2020 at 15:26, Anand K Mistry <amistry@google.com> wrote:
->
-> Keep the da9212 BUCKB always-on. This works around an issue on Elm/Hana
-> devices where sometimes, the regulator is disabled before scpsys is
-> suspended, causing the suspension of scpsys to fail.
->
-> Usually, the GPU and scpsys are suspended by the runtime PM before the
-> system is suspended, due to the GPU being idle. In this case, scpsys is
-> suspended inline with the GPU suspend, which then disables the
-> regulator. However, if the GPU is still active when system is suspended,
-> GPU suspend occurs but defers suspending scpsys to the PM's noirq phase.
-> Since GPU suspend disables the regulator, scpsys isn't powered and
-> suspending it fails with the following error:
-> [  523.773227] mtk-scpsys 10006000.scpsys: Failed to power off domain mfg_2d
->
-> On resume, scpsys is resumed in the noirq phase. Since scpsys requires
-> power from the regulator, which is still disabled at this point,
-> attempting to turn it on will hang the CPU. A HW watchdog eventually
-> reboots the system.
->
-> The obvious solution would be to add a link to the regulator from scpsys
-> in the devicetree. This would prevent the regulator from being disabled
-> until scpsys is suspended. However, in the case where suspending scpsys
-> is deferred to the noirq phase, disabling the regulator will fail since
-> it is connected over I2C which requires IRQs to be enabled. Even in the
-> usual case where scpsys is suspended inline with the GPU, PM will always
-> attempt to resume scpsys in noirq. This will attempt to enable the
-> regulator, which will also fail due to being unable to communicate over
-> I2C.
->
-> Since I2C can't be using with IRQs disabled, a workaround is to never
-> turn off the regulator.
->
-> Measuring power on the GPU rail on a Elm DVT shows that the change in
-> power usage is negligible. The two relavent cases are S0 with an idle
-> GPU, and S3.
->
-> In S0 with an idle GPU, current behaviour with the regulator off:
-> @@           NAME  COUNT  AVERAGE  STDDEV      MAX    MIN
-> @@         gpu_mw    600     1.74    1.31     6.75   0.00
-> ... and with the regulator on, but no load:
-> @@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
-> @@         gpu_mw    600     1.68    1.25    7.13   0.00
-> The difference being well within the margin of error.
->
-> In S3, current behaviour with the regulator off:
-> @@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
-> @@         gpu_mw    600     0.94    0.74    3.25   0.00
-> ... and with the regulator on:
-> @@           NAME  COUNT  AVERAGE  STDDEV     MAX     MIN
-> @@         gpu_mw    600     0.83    0.66    3.25    0.00
->
-> Signed-off-by: Anand K Mistry <amistry@google.com>
->
-> ---
->
->  arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> index a5a12b2599a4..1294f27b21c1 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-> @@ -304,6 +304,7 @@ da9211_vgpu_reg: BUCKB {
->                                 regulator-min-microamp  = <2000000>;
->                                 regulator-max-microamp  = <3000000>;
->                                 regulator-ramp-delay = <10000>;
-> +                               regulator-always-on;
->                         };
->                 };
->         };
-> --
-> 2.28.0.297.g1956fa8f8d-goog
->
-
-
--- 
-Anand K. Mistry
-Software Engineer
-Google Australia
