@@ -2,373 +2,115 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999A2C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ED1C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF412075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04892075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="H5z51FJG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tB7mY0ZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHYO51 (ORCPT
+        id S1726739AbgHYPLH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37914 "EHLO
+        Tue, 25 Aug 2020 11:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgHYO5N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 10:57:13 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1CAC061574;
-        Tue, 25 Aug 2020 07:57:12 -0700 (PDT)
-Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7972029E;
-        Tue, 25 Aug 2020 16:57:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598367428;
-        bh=ApFDUDAZh97tdh8G+B/ThY2Go5hWkE36+XZ4tnyH2c0=;
-        h=Reply-To:Subject:From:To:References:Date:In-Reply-To:From;
-        b=H5z51FJGbyJguEYCNyY0/0s0QD+/zUvg4YVL1hh1z8W9l0P3FXK+nIXMR5QsxJhP5
-         zjSr1Bx/NLsYClfN6CX2WyvpD+JJGN1xyb4lqDGiQElbT+3ciKTjR85XqTk2WkvJS1
-         iqQOBoD0NV6wfHTcmWHoZlGDdtBwwk+WfEWSD9mw=
-Reply-To: kieran.bingham@ideasonboard.com
-Subject: Re: [PATCH v5 9/9] arm64: dts: renesas: salvator: add a connection
- from adv748x codec (HDMI input) to the R-Car SoC
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-To:     Alex Riesen <alexander.riesen@cetitec.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        with ESMTP id S1726113AbgHYPLE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 11:11:04 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0CAC061755;
+        Tue, 25 Aug 2020 08:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=LPG5Lc7nCg6NrS7ax+6DMhtaCUehIHNu6awjAcV2BcE=; b=tB7mY0ZOpnz4kAH3i8HK3Mu2Dr
+        KdjEI6mp7kDoq4wQGigAPa4qc5Uzr0yGhCJqcti2O8wuhkO6l6Y5mOSL5jBo8HryngLeovoPGDjvT
+        6NodraZ/TUTwHK4CD7ro8a1FOfHYzy0YSFWm5tmdL574Q81rla/G/tPLAgmKQmu9ZnQluf4rmyxgf
+        36SM1gZq65OUuvNaW1W4PtfWlUuVHkOZzx9ekjEmCBgdQC/lzKDU5CnupngOBr3GGGxzUhWMQ1ePt
+        szktTlwydy0dQUcdxA0P35WDPeRCbcYF+OC7Fbzc4p7owylhuQMtnZlwQAd780JWGROiokTNr5vxl
+        WvTtxoaA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAab6-0005G5-QJ; Tue, 25 Aug 2020 15:10:53 +0000
+Subject: Re: [PATCH v5 5/6] can: ctucanfd: CTU CAN FD open-source IP core -
+ platform and next steps and mainlining chances
+To:     Pavel Pisa <pisa@cmp.felk.cvut.cz>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1585852001.git.alexander.riesen@cetitec.com>
- <90f2c14fcbe5d06eefdaeadbe8a6efc8c91523f3.1585852001.git.alexander.riesen@cetitec.com>
- <fd19ca3c-e815-499e-0c46-0a4e2684b6b9@ideasonboard.com>
-Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
- mQINBFYE/WYBEACs1PwjMD9rgCu1hlIiUA1AXR4rv2v+BCLUq//vrX5S5bjzxKAryRf0uHat
- V/zwz6hiDrZuHUACDB7X8OaQcwhLaVlq6byfoBr25+hbZG7G3+5EUl9cQ7dQEdvNj6V6y/SC
- rRanWfelwQThCHckbobWiQJfK9n7rYNcPMq9B8e9F020LFH7Kj6YmO95ewJGgLm+idg1Kb3C
- potzWkXc1xmPzcQ1fvQMOfMwdS+4SNw4rY9f07Xb2K99rjMwZVDgESKIzhsDB5GY465sCsiQ
- cSAZRxqE49RTBq2+EQsbrQpIc8XiffAB8qexh5/QPzCmR4kJgCGeHIXBtgRj+nIkCJPZvZtf
- Kr2EAbc6tgg6DkAEHJb+1okosV09+0+TXywYvtEop/WUOWQ+zo+Y/OBd+8Ptgt1pDRyOBzL8
- RXa8ZqRf0Mwg75D+dKntZeJHzPRJyrlfQokngAAs4PaFt6UfS+ypMAF37T6CeDArQC41V3ko
- lPn1yMsVD0p+6i3DPvA/GPIksDC4owjnzVX9kM8Zc5Cx+XoAN0w5Eqo4t6qEVbuettxx55gq
- 8K8FieAjgjMSxngo/HST8TpFeqI5nVeq0/lqtBRQKumuIqDg+Bkr4L1V/PSB6XgQcOdhtd36
- Oe9X9dXB8YSNt7VjOcO7BTmFn/Z8r92mSAfHXpb07YJWJosQOQARAQABtDBLaWVyYW4gQmlu
- Z2hhbSA8a2llcmFuLmJpbmdoYW1AaWRlYXNvbmJvYXJkLmNvbT6JAlcEEwEKAEECGwMFCwkI
- BwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQLdeYP70o/eNy1HqhHkZyEKRh/QUCXWTtygUJ
- CyJXZAAKCRChHkZyEKRh/f8dEACTDsbLN2nioNZMwyLuQRUAFcXNolDX48xcUXsWS2QjxaPm
- VsJx8Uy8aYkS85mdPBh0C83OovQR/OVbr8AxhGvYqBs3nQvbWuTl/+4od7DfK2VZOoKBAu5S
- QK2FYuUcikDqYcFWJ8DQnubxfE8dvzojHEkXw0sA4igINHDDFX3HJGZtLio+WpEFQtCbfTAG
- YZslasz1YZRbwEdSsmO3/kqy5eMnczlm8a21A3fKUo3g8oAZEFM+f4DUNzqIltg31OAB/kZS
- enKZQ/SWC8PmLg/ZXBrReYakxXtkP6w3FwMlzOlhGxqhIRNiAJfXJBaRhuUWzPOpEDE9q5YJ
- BmqQL2WJm1VSNNVxbXJHpaWMH1sA2R00vmvRrPXGwyIO0IPYeUYQa3gsy6k+En/aMQJd27dp
- aScf9am9PFICPY5T4ppneeJLif2lyLojo0mcHOV+uyrds9XkLpp14GfTkeKPdPMrLLTsHRfH
- fA4I4OBpRrEPiGIZB/0im98MkGY/Mu6qxeZmYLCcgD6qz4idOvfgVOrNh+aA8HzIVR+RMW8H
- QGBN9f0E3kfwxuhl3omo6V7lDw8XOdmuWZNC9zPq1UfryVHANYbLGz9KJ4Aw6M+OgBC2JpkD
- hXMdHUkC+d20dwXrwHTlrJi1YNp6rBc+xald3wsUPOZ5z8moTHUX/uPA/qhGsbkCDQRWBP1m
- ARAAzijkb+Sau4hAncr1JjOY+KyFEdUNxRy+hqTJdJfaYihxyaj0Ee0P0zEi35CbE6lgU0Uz
- tih9fiUbSV3wfsWqg1Ut3/5rTKu7kLFp15kF7eqvV4uezXRD3Qu4yjv/rMmEJbbD4cTvGCYI
- d6MDC417f7vK3hCbCVIZSp3GXxyC1LU+UQr3fFcOyCwmP9vDUR9JV0BSqHHxRDdpUXE26Dk6
- mhf0V1YkspE5St814ETXpEus2urZE5yJIUROlWPIL+hm3NEWfAP06vsQUyLvr/GtbOT79vXl
- En1aulcYyu20dRRxhkQ6iILaURcxIAVJJKPi8dsoMnS8pB0QW12AHWuirPF0g6DiuUfPmrA5
- PKe56IGlpkjc8cO51lIxHkWTpCMWigRdPDexKX+Sb+W9QWK/0JjIc4t3KBaiG8O4yRX8ml2R
- +rxfAVKM6V769P/hWoRGdgUMgYHFpHGSgEt80OKK5HeUPy2cngDUXzwrqiM5Sz6Od0qw5pCk
- NlXqI0W/who0iSVM+8+RmyY0OEkxEcci7rRLsGnM15B5PjLJjh1f2ULYkv8s4SnDwMZ/kE04
- /UqCMK/KnX8pwXEMCjz0h6qWNpGwJ0/tYIgQJZh6bqkvBrDogAvuhf60Sogw+mH8b+PBlx1L
- oeTK396wc+4c3BfiC6pNtUS5GpsPMMjYMk7kVvEAEQEAAYkCPAQYAQoAJgIbDBYhBJAt15g/
- vSj943LUeqEeRnIQpGH9BQJdizzIBQkLSKZiAAoJEKEeRnIQpGH9eYgQAJpjaWNgqNOnMTmD
- MJggbwjIotypzIXfhHNCeTkG7+qCDlSaBPclcPGYrTwCt0YWPU2TgGgJrVhYT20ierN8LUvj
- 6qOPTd+Uk7NFzL65qkh80ZKNBFddx1AabQpSVQKbdcLb8OFs85kuSvFdgqZwgxA1vl4TFhNz
- PZ79NAmXLackAx3sOVFhk4WQaKRshCB7cSl+RIng5S/ThOBlwNlcKG7j7W2MC06BlTbdEkUp
- ECzuuRBv8wX4OQl+hbWbB/VKIx5HKlLu1eypen/5lNVzSqMMIYkkZcjV2SWQyUGxSwq0O/sx
- S0A8/atCHUXOboUsn54qdxrVDaK+6jIAuo8JiRWctP16KjzUM7MO0/+4zllM8EY57rXrj48j
- sbEYX0YQnzaj+jO6kJtoZsIaYR7rMMq9aUAjyiaEZpmP1qF/2sYenDx0Fg2BSlLvLvXM0vU8
- pQk3kgDu7kb/7PRYrZvBsr21EIQoIjXbZxDz/o7z95frkP71EaICttZ6k9q5oxxA5WC6sTXc
- MW8zs8avFNuA9VpXt0YupJd2ijtZy2mpZNG02fFVXhIn4G807G7+9mhuC4XG5rKlBBUXTvPU
- AfYnB4JBDLmLzBFavQfvonSfbitgXwCG3vS+9HEwAjU30Bar1PEOmIbiAoMzuKeRm2LVpmq4
- WZw01QYHU/GUV/zHJSFk
-Organization: Ideas on Board
-Message-ID: <c7d93d6c-4893-8bd0-5859-87f30389b5d5@ideasonboard.com>
-Date:   Tue, 25 Aug 2020 15:57:04 +0100
+        Drew Fustini <pdp7pdp7@gmail.com>
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        David Miller <davem@davemloft.net>, mark.rutland@arm.com,
+        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>, Pavel Machek <pavel@ucw.cz>
+References: <cover.1597518433.git.ppisa@pikron.com>
+ <4ceda3a9d68263b4e0dfe66521a46f40b2e502f7.1597518433.git.ppisa@pikron.com>
+ <73e3dad8-9ab7-2f8f-312c-1957b4572b08@infradead.org>
+ <202008251125.41514.pisa@cmp.felk.cvut.cz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6f26127d-5403-3ea2-9b6d-11dc35b0d5c2@infradead.org>
+Date:   Tue, 25 Aug 2020 08:10:43 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <fd19ca3c-e815-499e-0c46-0a4e2684b6b9@ideasonboard.com>
+In-Reply-To: <202008251125.41514.pisa@cmp.felk.cvut.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Alex,
-
-On 18/06/2020 17:32, Kieran Bingham wrote:
-> Hi Alex,
+On 8/25/20 2:25 AM, Pavel Pisa wrote:
+> Hello Randy and Rob,
 > 
-> On 02/04/2020 19:35, Alex Riesen wrote:
->> As all known variants of the Salvator board have the HDMI decoder
->> chip (the ADV7482) connected to the SSI4 on R-Car SoC, the ADV7482
->> endpoint and the connection definitions are placed in the common board
->> file.
->>
->> For the same reason, the CLK_C clock line and I2C configuration (similar
->> to the ak4613, on the same interface) are added into the common file.
->>
->> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
->>
->> --
->>
->> v5: Add dummy ssi4 node to the rcar sound card in r8a77961, as the
->>     devices (Salvator-X 2nd version with R-Car M3 W+) also reference
->>     salvator-common.dtsi.
->>     Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>
->> v2: Also add ssi4_ctrl pin group in the sound pins. The pins are
->>     responsible for SCK4 (sample clock) WS4 and (word boundary input),
->>     and are required for SSI audio input over I2S.
->>
->>     The adv748x shall provide its own implementation of the output clock
->>     (MCLK), connected to the audio_clk_c line of the R-Car SoC.
->>
->>     If the frequency of the ADV748x MCLK were fixed, the clock
->>     implementation were not necessary, but it does not seem so: the MCLK
->>     depends on the value in a speed multiplier register and the input sample
->>     rate (48kHz).
->>
->>     Remove audio clock C from the clocks of adv7482.
->>
->>     The clocks property of the video-receiver node lists the input
->>     clocks of the device, which is quite the opposite from the
->>     original intention: the adv7482 on Salvator X boards is a
->>     provide of the MCLK clock for I2S audio output.
->>
->>     Remove old definition of &sound_card.dais and reduce size of changes
->>     in the Salvator-X specific device tree source.
->>
->>     Declare video-receiver a clock producer, as the adv748x driver
->>     implements the master clock used I2S audio output.
->>
->>     Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>
->> v2: The driver provides only MCLK clock, not the SCLK and LRCLK,
->>     which are part of the I2S protocol.
->>
->>     Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> ---
->>  .../boot/dts/renesas/r8a77950-salvator-x.dts  |  3 +-
->>  arch/arm64/boot/dts/renesas/r8a77961.dtsi     |  1 +
->>  .../boot/dts/renesas/salvator-common.dtsi     | 47 +++++++++++++++++--
-
-Once again I'm back trying to test this series, and one issue I've had
-is that the board I have (r8a77951-salvator-xs.dts) isn't included in
-this DT update.
-
-For v6, Should we include the relevant changes to all the following?
-
-arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
-arch/arm64/boot/dts/renesas/r8a77951-salvator-x.dts
-arch/arm64/boot/dts/renesas/r8a77960-salvator-x.dts
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-arch/arm64/boot/dts/renesas/salvator-x.dtsi
-
-And perhaps handle the salvator-xs in a second (yet very similar) patch?
-
-arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dts
-arch/arm64/boot/dts/renesas/r8a77960-salvator-xs.dts
-arch/arm64/boot/dts/renesas/r8a77961-salvator-xs.dts
-arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
-arch/arm64/boot/dts/renesas/salvator-xs.dtsi
-
-I think I've added the relevant entries to my dtb, but I haven't
-successfully captured audio yet.
-
-I can see the device being listed through arecord:
-
-kbingham@salvator-xs:~$ arecord -l
-**** List of CAPTURE Hardware Devices ****
-card 0: rcarsound [rcar-sound], device 0: rsnd-dai.0-ak4613-hifi
-ak4613-hifi-0 []
-  Subdevices: 0/1
-  Subdevice #0: subdevice #0
-card 0: rcarsound [rcar-sound], device 3: rsnd-dai.3-adv748x-i2s
-adv748x.4-0070-3 []
-  Subdevices: 1/1
-  Subdevice #0: subdevice #0
-
-
-But as yet, everything I try to record fails or is empty silence.
-
-Debugging ...
-
---
-Regards
-
-Kieran
-
-
-
->>  3 files changed, 45 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
->> index 2438825c9b22..e16c146808b6 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
->> +++ b/arch/arm64/boot/dts/renesas/r8a77950-salvator-x.dts
->> @@ -146,7 +146,8 @@ &sata {
->>  &sound_card {
->>  	dais = <&rsnd_port0	/* ak4613 */
->>  		&rsnd_port1	/* HDMI0  */
->> -		&rsnd_port2>;	/* HDMI1  */
->> +		&rsnd_port2	/* HDMI1  */
->> +		&rsnd_port3>;	/* adv7482 hdmi-in  */
+> thanks much for review, I have corrected FPGA spelling
+> and binding YAML license.
 > 
-> Ah - that was confusing at first... but HDMI0 and HDMI1 are *outputs*,
-> where of course the adv7482 is an input ;-)
-> 
-> 
-> Otherwise, I can't spot anything else yet so:
-> 
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> 
-> But I fear there may have been some churn around here, so it would be
-> good to see a rebase too.
-> 
-> --
-> Kieran
-> 
-> 
-> 
->>  };
->>  
->>  &usb2_phy2 {
->> diff --git a/arch/arm64/boot/dts/renesas/r8a77961.dtsi b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
->> index be3824bda632..b79907beaf31 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a77961.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/r8a77961.dtsi
->> @@ -861,6 +861,7 @@ rcar_sound,src {
->>  			rcar_sound,ssi {
->>  				ssi0: ssi-0 { };
->>  				ssi1: ssi-1 { };
->> +				ssi4: ssi-4 { };
->>  			};
->>  		};
->>  
->> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
->> index 98bbcafc8c0d..ead7f8d7a929 100644
->> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
->> @@ -460,7 +460,7 @@ pca9654: gpio@20 {
->>  		#gpio-cells = <2>;
->>  	};
->>  
->> -	video-receiver@70 {
->> +	adv7482_hdmi_in: video-receiver@70 {
->>  		compatible = "adi,adv7482";
->>  		reg = <0x70 0x71 0x72 0x73 0x74 0x75
->>  		       0x60 0x61 0x62 0x63 0x64 0x65>;
->> @@ -469,6 +469,7 @@ video-receiver@70 {
->>  
->>  		#address-cells = <1>;
->>  		#size-cells = <0>;
->> +		#clock-cells = <0>; /* the MCLK for I2S output */
->>  
->>  		interrupt-parent = <&gpio6>;
->>  		interrupt-names = "intrq1", "intrq2";
->> @@ -510,6 +511,15 @@ adv7482_txb: endpoint {
->>  				remote-endpoint = <&csi20_in>;
->>  			};
->>  		};
->> +
->> +		port@c {
->> +			reg = <12>;
->> +
->> +			adv7482_i2s: endpoint {
->> +				remote-endpoint = <&rsnd_endpoint3>;
->> +				system-clock-direction-out;
->> +			};
->> +		};
->>  	};
->>  
->>  	csa_vdd: adc@7c {
->> @@ -684,7 +694,8 @@ sdhi3_pins_uhs: sd3_uhs {
->>  	};
->>  
->>  	sound_pins: sound {
->> -		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
->> +		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a",
->> +			 "ssi4_data", "ssi4_ctrl";
->>  		function = "ssi";
->>  	};
->>  
->> @@ -733,8 +744,8 @@ &rcar_sound {
->>  	pinctrl-0 = <&sound_pins &sound_clk_pins>;
->>  	pinctrl-names = "default";
->>  
->> -	/* Single DAI */
->> -	#sound-dai-cells = <0>;
->> +	/* multi DAI */
->> +	#sound-dai-cells = <1>;
->>  
->>  	/* audio_clkout0/1/2/3 */
->>  	#clock-cells = <1>;
->> @@ -758,8 +769,19 @@ &rcar_sound {
->>  		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
->>  		 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
->>  		 <&audio_clk_a>, <&cs2000>,
->> -		 <&audio_clk_c>,
->> +		 <&adv7482_hdmi_in>,
->>  		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
->> +	clock-names = "ssi-all",
->> +		      "ssi.9", "ssi.8", "ssi.7", "ssi.6",
->> +		      "ssi.5", "ssi.4", "ssi.3", "ssi.2",
->> +		      "ssi.1", "ssi.0",
->> +		      "src.9", "src.8", "src.7", "src.6",
->> +		      "src.5", "src.4", "src.3", "src.2",
->> +		      "src.1", "src.0",
->> +		      "mix.1", "mix.0",
->> +		      "ctu.1", "ctu.0",
->> +		      "dvc.0", "dvc.1",
->> +		      "clk_a", "clk_b", "clk_c", "clk_i";
->>  
->>  	ports {
->>  		#address-cells = <1>;
->> @@ -777,6 +799,21 @@ rsnd_endpoint0: endpoint {
->>  				capture  = <&ssi1 &src1 &dvc1>;
->>  			};
->>  		};
->> +		rsnd_port3: port@3 {
->> +			reg = <3>;
->> +			rsnd_endpoint3: endpoint {
->> +				remote-endpoint = <&adv7482_i2s>;
->> +
->> +				dai-tdm-slot-num = <8>;
->> +				dai-tdm-slot-width = <32>;
->> +				dai-format = "left_j";
->> +				mclk-fs = <256>;
->> +				bitclock-master = <&adv7482_i2s>;
->> +				frame-master = <&adv7482_i2s>;
->> +
->> +				capture = <&ssi4>;
->> +			};
->> +		};
->>  	};
->>  };
->>  
+> On Sunday 16 of August 2020 01:28:13 Randy Dunlap wrote:
+>> On 8/15/20 12:43 PM, Pavel Pisa wrote:
+>>> diff --git a/drivers/net/can/ctucanfd/Kconfig
+>>> b/drivers/net/can/ctucanfd/Kconfig index e1636373628a..a8c9cc38f216
+>>> 100644
+>>> --- a/drivers/net/can/ctucanfd/Kconfig
+>>> +++ b/drivers/net/can/ctucanfd/Kconfig
+>>> @@ -21,4 +21,15 @@ config CAN_CTUCANFD_PCI
+>>>  	  PCIe board with PiKRON.com designed transceiver riser shield is
+>>> available at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
+>>>
+>>> +config CAN_CTUCANFD_PLATFORM
+>>> +	tristate "CTU CAN-FD IP core platform (FPGA, SoC) driver"
+>>> +	depends on OF
 >>
+>> Can this be
+>> 	depends on OF || COMPILE_TEST
+>> ?
 > 
+> I am not sure for this change. Is it ensured/documented somewhere that
+> header files provide dummy definition such way, that OF drivers builds
+> even if OF support is disabled? If I remember well, CTU CAN FD OF
+> module build fails if attempted in the frame of native x86_64
+> build where OF has been disabled. Does COMPILE_TEST ensure that
+> such build succeeds.
+> 
+
+COMPILE_TEST won't ensure anything.
+OTOH, <linux/of.h> has lots of stubs for handling the case of
+CONFIG_OF not being enabled.
 
 -- 
-Regards
---
-Kieran
+~Randy
+
