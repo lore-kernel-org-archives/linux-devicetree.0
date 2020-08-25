@@ -2,88 +2,254 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4A4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA3AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4326C2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598389601;
-	bh=gAUip50adMQSwtUZj1WpJAPjLktOGowW4b/hrHR1tMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l+P3tJde+pURMigg+nxrfbmNoBFVh4/eY3P0/tS2QKupf6ve2GhhjisQMZv/CU1gO
-	 hSOrU3EtX11RotBvS7Is1HO6z+Gmd+lgaXRaYzmc7AhMncnqKXMKiXQq4kP55g0uXO
-	 AhZH5xXDXinjzSOcVOFcgXl+RPhyFFvTlLjEwT/8=
+	by mail.kernel.org (Postfix) with ESMTP id A65A420665
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FBglIdt8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgHYVGk (ORCPT
+        id S1726483AbgHYVKV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:06:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:41944 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgHYVGk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:06:40 -0400
-Received: by mail-il1-f196.google.com with SMTP id q14so170296ilj.8;
-        Tue, 25 Aug 2020 14:06:39 -0700 (PDT)
+        Tue, 25 Aug 2020 17:10:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHYVKU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:10:20 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A153C061755
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 14:10:20 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id a1so164348vsp.4
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 14:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nv+nHABf+7pKY4zhisehwzpgqw3omZaeWbPdYJaF9h4=;
+        b=FBglIdt8odJ/zBvyclcpdTXeqmx/SarwaxcVOuYLB+yIIuX5zIKrVhzvt61NwOEMnB
+         AOgzCRxByu2Q4Li6hGpHuPiB3Ye6WIOlaEPciHKvV2SgDmzKrbqlxDA/7ANjx+k9MOlo
+         HFB+UiDxu9euZ7ovkn9WF8eReuRebJ6tx/4H8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3X1NqT5A+cySDgCFQQiNu5MRA8ZaigPXSkYW97Cnxog=;
-        b=t8ySb2sqdHufvDvv7BgZ/7xf2L2Oz/BuYmuhXTd/02BFwqRYoPdvRHXJvrDlyhhFVf
-         SCW5i7vgO8S3rOHnYIeyqRKO6GNWolo6pH6kSLZ3x0+Ou1j2qZ5c+zA4MxJ7FOePxOQN
-         faCjtMn2aup8mqxckhItxagCJZzwSiXJ1Q49jLzhj7kMgNvO8dkVlbQlYf9ODoDAhYhO
-         O6WERUZu9P+uZWQwRbp025vO0HATmIJF6K4fsEZEtk10uZTq8b7nONPSE4c8weRlXQnG
-         tpJZbnptIF5slCIH04Fc+YPl590claSwVxT4dIk8284620f9FM1TPMUBLJWZ2DZGxzpL
-         Vv8g==
-X-Gm-Message-State: AOAM532oSilvIt7V0nyEIYsZ9CUtstIEYDXYtWI3wFEJFy40MubVhpTS
-        G92/f+qzG0zLMhovJZUVPg==
-X-Google-Smtp-Source: ABdhPJxYsxHHKAA+ZuE7WE9u5m3Ev9HuMupIV6b4bAnJbmky8o0ZMD2wD0uKgxWbPd0FGvqbyZdAoQ==
-X-Received: by 2002:a92:4184:: with SMTP id o126mr11211031ila.6.1598389598801;
-        Tue, 25 Aug 2020 14:06:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id e68sm9019182iof.36.2020.08.25.14.06.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 14:06:38 -0700 (PDT)
-Received: (nullmailer pid 1330191 invoked by uid 1000);
-        Tue, 25 Aug 2020 21:06:35 -0000
-Date:   Tue, 25 Aug 2020 15:06:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, sakari.ailus@linux.intel.com,
-        mchehab@kernel.org, linux-media@vger.kernel.org,
-        hverkuil-cisco@xs4all.nl, laurent.pinchart@ideasonboard.com
-Subject: Re: [PATCH 2/3] dt-bindings: media: ov772x: Make bus-type mandatory
-Message-ID: <20200825210635.GA1327534@bogus>
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
- <20200818122012.37956-3-jacopo+renesas@jmondi.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nv+nHABf+7pKY4zhisehwzpgqw3omZaeWbPdYJaF9h4=;
+        b=cpPbCL9sX4LNFFJ+B6KpkPqn6GdWU8uSom2hlNyyos9YfQcq9nz51pFt/9zVewcUWR
+         HKyipRA0+Y09pfZe0N4Yrf2mjtlXVgdHyGv6Q72V8kvga/sZLjx+1qST1Ln8o7oyTRqt
+         nnS8gSyZ6k1cFuh7/WtezwttqNr+bY2KYUUGujmGyES7gIA/MbNCl1EWAr/00ZjoGYqY
+         YZLzxJo2BVajBtancZT8pPQgeoxWX6HPmxiTXa7QIt+uC/H4HzDWXgtTcqpGHexCLKbx
+         c6a68+8Rh2RtRcHVrK9aiwAiwaLRr3uHkxZOYEo4p8MMesuWfpnnlsUNJzTzXHScKdX1
+         bb3g==
+X-Gm-Message-State: AOAM532rH8Xa7d2oqqsNUl787Fr0P872fm4PMbis6Na7ErS9dDeJOJ/Q
+        q2KQYMNHSxmLNKANP2l3GmpoITItKV4NJg==
+X-Google-Smtp-Source: ABdhPJyPNc/Dh+bmhB1/ROyrN+JwK86+KNw61wKRs2u7BDUYkq/eH0usXrcLBVp0suAbgCqxnPVMnA==
+X-Received: by 2002:a67:c916:: with SMTP id w22mr6793286vsk.22.1598389818559;
+        Tue, 25 Aug 2020 14:10:18 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id 6sm25973vss.28.2020.08.25.14.10.17
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 14:10:17 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id u46so68939uau.6
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 14:10:17 -0700 (PDT)
+X-Received: by 2002:a9f:2966:: with SMTP id t93mr7153412uat.90.1598389816754;
+ Tue, 25 Aug 2020 14:10:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818122012.37956-3-jacopo+renesas@jmondi.org>
+References: <20200825003341.1797322-1-robdclark@gmail.com>
+In-Reply-To: <20200825003341.1797322-1-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 25 Aug 2020 14:10:05 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vwa1ffbbQpyi9aHksbweVW-TNkXACc-fJFeyndM0EOvA@mail.gmail.com>
+Message-ID: <CAD=FV=Vwa1ffbbQpyi9aHksbweVW-TNkXACc-fJFeyndM0EOvA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180-trogdor: add initial trogdor and
+ lazor dt
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Atul Dhudase <adhudase@codeaurora.org>,
+        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
+        Ajit Pandey <ajitp@codeaurora.org>,
+        Alexandru Stan <amstan@chromium.org>,
+        Sujit Kautkar <sujitka@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 18 Aug 2020 14:20:11 +0200, Jacopo Mondi wrote:
-> In order to establish required properties based on the selected
-> bus type, make the 'bus-type' property mandatory.
-> 
-> Binary compatibility with existing DTB is kept as the driver does not
-> enforce the property to be present, and shall fall-back to default
-> parallel bus configuration, which was the only supported bus type, if
-> the property is not specified.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  Documentation/devicetree/bindings/media/i2c/ov772x.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
+Hi,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, Aug 24, 2020 at 5:32 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
+> new file mode 100644
+> index 000000000000..2b37113f1e3a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-lte.dts
+> @@ -0,0 +1,18 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Google Lazor board device tree source
+> + *
+> + * Copyright 2020 Google LLC.
+> + */
+> +
+> +#include "sc7180-trogdor-lazor-r1.dts"
+> +#include "sc7180-trogdor-lte-sku.dtsi"
+> +
+> +/ {
+> +       model = "Google Lazor (rev1, rev3+) with LTE";
+
+Since we're not handling the currently-being-debugged eMMC problem by
+hacking the -rev2 dts, above model should probably just say:
+
+"Google Lazor (rev1+) with LTE";
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dts
+> new file mode 100644
+> index 000000000000..c2a8f7d5b336
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1.dts
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Google Lazor board device tree source
+> + *
+> + * Copyright 2020 Google LLC.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sc7180-trogdor-lazor.dtsi"
+> +
+> +/ {
+> +       model = "Google Lazor (rev1, rev3+)";
+
+"Google Lazor (rev1+)";
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dts
+> new file mode 100644
+> index 000000000000..1b8bc5a1e625
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-r1.dts
+> +&sdhc_1 {
+> +       /*
+> +        * HACK: due to b/155826689 we are temporarily overriding the
+> +        * compatible string which will cause us to restore the DLL config
+> +        * at runtime resume.
+> +        */
+> +       compatible = "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5";
+> +
+> +       /* HACK: this emmc is also causing us s2r problems, so further hack. */
+> +       max-frequency = <100000000>;
+> +       /delete-property/mmc-ddr-1_8v;
+> +       /delete-property/mmc-hs400-1_8v;
+> +       /delete-property/mmc-hs400-enhanced-strobe;
+> +};
+
+I'd be inclined to leave the "sdhc_1" hacks out.  Qualcomm's gotta fix
+this without hacks.  It means that trogdor boards won't work quite
+work right until they do but it needs to be fixed in a saner way.
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+> new file mode 100644
+> index 000000000000..b04987ab6c22
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+> @@ -0,0 +1,1364 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Google Trogdor device tree source (common between revisions)
+> + *
+> + * Copyright 2019 Google LLC.
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +
+> +/* PMICs depend on spmi_bus label and so must come after SoC */
+> +#include "pm6150.dtsi"
+> +#include "pm6150l.dtsi"
+> +
+> +/*
+> + * Reserved memory changes
+> + *
+> + * Delete all unused memory nodes and define the peripheral memory regions
+> + * required by the board dts.
+> + *
+
+Get rid of extra blank line?
+
+> + */
+> +
+> +/delete-node/ &hyp_mem;
+> +/delete-node/ &xbl_mem;
+> +/delete-node/ &aop_mem;
+> +/delete-node/ &sec_apps_mem;
+> +/delete-node/ &tz_mem;
+> +
+> +/* Increase the size from 2MB to 8MB */
+> +&rmtfs_mem {
+> +       reg = <0x0 0x84400000 0x0 0x800000>;
+> +};
+> +
+> +/ {
+> +
+
+Get rid of extra blank line?
+
+
+> +       /* BOARD-SPECIFIC TOP LEVEL NODES */
+> +
+> +       backlight: backlight {
+> +               compatible = "pwm-backlight";
+> +
+> +               /* The panels don't seem to like anything below ~ 5% */
+> +               brightness-levels = <
+> +                       196 256 324 400 484 576 676 784 900 1024 1156 1296
+> +                       1444 1600 1764 1936 2116 2304 2500 2704 2916 3136
+> +                       3364 3600 3844 4096
+> +               >;
+> +               num-interpolated-steps = <64>;
+> +               default-brightness-level = <951>;
+
+I suspect that this isn't quite right because locally we have the
+series from <https://lore.kernel.org/r/20200721042522.2403410-1-amstan@chromium.org>.
+From looking at <https://crrev.com/c/2291209> I think you just gotta
+drop these properties.
+
+
+> +&wifi {
+> +       status = "okay";
+> +       vdd-0.8-cx-mx-supply = <&vdd_cx_wlan>;
+> +       vdd-1.8-xo-supply = <&pp1800_l1c>;
+> +       vdd-1.3-rfa-supply = <&pp1300_l2c>;
+> +
+> +       /*
+> +        * TODO: Put ch1 supply in its rightful place, rather than in ch0's
+> +        * spot. Channel 0 is held open by bluetooth for now.
+> +        */
+> +       vdd-3.3-ch0-supply = <&pp3300_l11c>;
+
+I'd be tempted to just do this correctly for upstream.  Seems like the
+ath10k patch is ready to go anyway?
