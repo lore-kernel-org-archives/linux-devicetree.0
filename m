@@ -2,236 +2,123 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD28EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17170C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E2020706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2062068F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kSjlVWgo"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m+RehNr2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rozxMcs0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbgHYJVP (ORCPT
+        id S1728245AbgHYJYC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbgHYJVN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:21:13 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FE5C061755
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:21:13 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u20so6854759pfn.0
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:21:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=CabenADhkeDmn9ATtQd7NLLVZBNFWUdF1srj48ypUAI=;
-        b=kSjlVWgouzQuBvJvV62xPzMHc4Vj3H4P2jq5sEj88IFUueTeSlgbZJQQNE3NPTOaIv
-         AUFfCzVN60vZgbqISgmmC4fDhSRw0k+/pe+jV/GUy7I2Czq2iQctt613YQmZPS5WbSj/
-         7Z92ZI2S3kDbhgkMw9zM0X/7FiWzayW+Uocbo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=CabenADhkeDmn9ATtQd7NLLVZBNFWUdF1srj48ypUAI=;
-        b=DhovV+EKbgM2bARjlCHxHxnRn76FSLf4eTAHO4+VxLtZTJ3uMeZgIYYL+6Mus5kSES
-         u/JgBUdjx2055Q1YNQyKQuOCmBiceA2D9s0o7dbe7X3q7edPRzmgV26NOibUPWvAUTkE
-         FQc4UO4CHeQtN98QO32MOujfF5NiSShIsvTFA8nzT9nVzBsex+oj7K3Zo9BJZuF7dz4M
-         agM9NQ9CeO9XA0K2jG/qMjmc8hZ1ujpv6A3qV8kHadtcGQo88Nzp0IE9551F6qgC0j2B
-         AB8BRr7CKKWuI8SSf3RdT+mPZORwjyPRv8KL0FhnRq3JMBlPKY8suBXF9fkQ36JIH7IP
-         Q2PA==
-X-Gm-Message-State: AOAM531Ti8B+0pMuYVnLEZUBaO0gDcaX6Bo+uhpXGR++2hevCzHNrM7B
-        2X+RmX3PG4hedBoLrqAr8QQXlQ==
-X-Google-Smtp-Source: ABdhPJxdwZWXCwKiihvkw3GaI/1XdPFEcf/CzYv8zUyN/gMdBfFcd2+g74fujhZp9Fj7e9zwfmwJng==
-X-Received: by 2002:a17:902:b681:: with SMTP id c1mr7154572pls.10.1598347272513;
-        Tue, 25 Aug 2020 02:21:12 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id s125sm14294117pfb.125.2020.08.25.02.21.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 02:21:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200825003341.1797322-1-robdclark@gmail.com>
-References: <20200825003341.1797322-1-robdclark@gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180-trogdor: add initial trogdor and lazor dt
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Atul Dhudase <adhudase@codeaurora.org>,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Ajit Pandey <ajitp@codeaurora.org>,
-        Alexandru Stan <amstan@chromium.org>,
-        Sujit Kautkar <sujitka@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Tue, 25 Aug 2020 05:24:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48256 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726015AbgHYJYC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:24:02 -0400
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598347438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QRNKMEQGP/oxKMIBwg2FMgejXTXp0qu327EEThRhFoU=;
+        b=m+RehNr2luN8m/xEougOS1ofSnMT+WtSW/4Cvj8iTkiZcp2BMqtrpDP2UzQtZy9W1916ex
+        IDxYtRcKfLhexK2BeiWtPUkPipb/rQ3Q/mjtyuHsEA47GkT8w8rtXu/lBL9WNKFgnwlhU+
+        oHGFu6DtP2MSYvCkDfrH5m7ExLCajv5gKu8oZZt+SQ18m9Joq3x6fEach+B4YbMFLD9zZ5
+        rnSieUaenCKiMsfNVsUS9nppPk8sCNiEx76kbNq8bBkwe60dwoYajkAGfBlK/7pdgtZRiD
+        j/hFUgPvSLNZF6GV/sPfA4ZPbTJnN+ZPbuCVjTr5M1XxmkEqt55aBNQUpQszcA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598347438;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QRNKMEQGP/oxKMIBwg2FMgejXTXp0qu327EEThRhFoU=;
+        b=rozxMcs0LnO6Yb4Bpx8jojLFZOQKkwQlkMzAmgBMpQ1/qkn1mmMSg6RQ9L4GTellRmwJoy
+        /mmEZkrdwRjGncCw==
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org
-Date:   Tue, 25 Aug 2020 02:21:10 -0700
-Message-ID: <159834727050.334488.84544239322533805@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
+In-Reply-To: <87pn7ftx6b.fsf@intel.com>
+References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <87pn7ftx6b.fsf@intel.com>
+Date:   Tue, 25 Aug 2020 11:23:56 +0200
+Message-ID: <87bliz13kj.fsf@kurt>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Quoting Rob Clark (2020-08-24 17:33:39)
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/bo=
-ot/dts/qcom/sc7180-trogdor.dtsi
-> new file mode 100644
-> index 000000000000..b04987ab6c22
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-> @@ -0,0 +1,1364 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-[...]
-> +
-> +       gpio_keys: gpio-keys {
-> +               compatible =3D "gpio-keys";
-> +               status =3D "disabled";
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&pen_pdct_l>;
-> +
-> +               pen-insert {
-> +                       label =3D "Pen Insert";
-> +
-> +                       /* Insert =3D low, eject =3D high */
-> +                       gpios =3D <&tlmm 52 GPIO_ACTIVE_LOW>;
-> +                       linux,code =3D <SW_PEN_INSERTED>;
-> +                       linux,input-type =3D <EV_SW>;
-> +                       wakeup-source;
-> +               };
-> +       };
-> +
-> +       max98357a: max98357a {
+--=-=-=
+Content-Type: text/plain
 
-Maybe node name should be 'audio-codec' or 'dac' or 'amp' or 'speaker'
-or 'codec'?
+On Mon Aug 24 2020, Vinicius Costa Gomes wrote:
+> Hi,
+>
+> Kurt Kanzenbach <kurt@linutronix.de> writes:
+>
+[snip]
+>> +	/* Setup timer for schedule switch: The IP core only allows to set a
+>> +	 * cycle start timer 8 seconds in the future. This is why we setup the
+>> +	 * hritmer to base_time - 5 seconds. Then, we have enough time to
+>> +	 * activate IP core's EST timer.
+>> +	 */
+>> +	start = ktime_sub_ns(schedule->base_time, (u64)5 * NSEC_PER_SEC);
+>> +	hrtimer_start_range_ns(&hellcreek_port->cycle_start_timer, start,
+>> +			       NSEC_PER_SEC, HRTIMER_MODE_ABS);
+>
+> If we are talking about seconds here, I don't think you need to use a
+> hrtimer, you could use a workqueue/delayed_work. Should make things a
+> bit simpler.
 
-> +               compatible =3D "maxim,max98357a";
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&amp_en>;
-> +               sdmode-gpios =3D <&tlmm 23 GPIO_ACTIVE_HIGH>;
-> +               #sound-dai-cells =3D <0>;
-> +       };
-> +
-> +       pwmleds {
-> +               compatible =3D "pwm-leds";
-> +               keyboard_backlight: keyboard-backlight {
-> +                       status =3D "disabled";
-> +                       label =3D "cros_ec::kbd_backlight";
-> +                       pwms =3D <&cros_ec_pwm 0>;
-> +                       max-brightness =3D <1023>;
-> +               };
-> +       };
-> +};
-> +
-> +&qfprom {
-> +       vcc-supply =3D <&pp1800_l11a>;
-> +};
-> +
-> +
+I've used hrtimers for one reason: The hrtimer provides a way to fire at
+an absolute base time based on CLOCK_TAI. All the other facilities such
+as workqueues, timer list timers, etc do not.
 
-Drop double newline?
+In the typical setup, we run ptp4l as boundary clock (or as TAB which is
+work in progress) and phc2sys to synchronize the ptp clock to the Linux
+system. Let's assume we setup a TAPRIO schedule with a base time X. Now,
+the grand master time changes meaning the timer has to go off earlier or
+later.
 
-> +&qspi {
-> +       status =3D "okay";
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&qspi_clk>, <&qspi_cs0>, <&qspi_data01>;
-> +
-> +       flash@0 {
-> +               compatible =3D "jedec,spi-nor";
-> +               reg =3D <0>;
-> +
-> +               /* TODO: Increase frequency after testing */
+Thanks,
+Kurt
 
-Maybe drop this TODO? I don't see it being too meaningful.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +               spi-max-frequency =3D <25000000>;
-> +               spi-tx-bus-width =3D <2>;
-> +               spi-rx-bus-width =3D <2>;
-> +       };
-> +};
-> +
-> +
+-----BEGIN PGP SIGNATURE-----
 
-Drop double newline?
-
-> +&apps_rsc {
-> +       pm6150-rpmh-regulators {
-> +               compatible =3D "qcom,pm6150-rpmh-regulators";
-> +
-> +&wifi {
-> +       status =3D "okay";
-> +       vdd-0.8-cx-mx-supply =3D <&vdd_cx_wlan>;
-> +       vdd-1.8-xo-supply =3D <&pp1800_l1c>;
-> +       vdd-1.3-rfa-supply =3D <&pp1300_l2c>;
-> +
-> +       /*
-> +        * TODO: Put ch1 supply in its rightful place, rather than in ch0=
-'s
-> +        * spot. Channel 0 is held open by bluetooth for now.
-> +        */
-> +       vdd-3.3-ch0-supply =3D <&pp3300_l11c>;
-> +       wifi-firmware {
-> +               iommus =3D <&apps_smmu 0xc2 0x1>;
-> +       };
-> +};
-> +
-> +/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-
-Oops, that should be sc7180.dtsi
-
-> +
-> +&qspi_cs0 {
-> +       pinconf {
-> +               pins =3D "gpio68";
-> +               bias-disable;
-> +       };
-[...]
-> +/* PINCTRL - board-specific pinctrl */
-> +
-> +&pm6150_gpio {
-> +       status =3D "disabled"; /* No GPIOs are connected */
-> +};
-> +
-> +&pm6150l_gpio {
-> +       gpio-line-names =3D "AP_SUSPEND",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "";
-> +};
-> +
-> +&tlmm {
-[...]
-> +
-> +&venus {
-> +       video-firmware {
-> +               iommus =3D <&apps_smmu 0x0c42 0x0>;
-> +       };
-> +};
-
-I believe this node should come before the PINCTRL comment above and be
-sorted alphabetically by node name.
-
- +/* PINCTRL - additions to nodes defined in sdm845.dtsi */
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E2KwACgkQeSpbgcuY
+8KZI1hAAxZyBTPvX3bOspeP4+mTNo1MOcA5ebZrtgulz4qjSjElJ4qWF1/YO+BBe
+In4z0AKaydFU7jJQLvVV1bkhusxmnjgQDF4tPi4z+IuY+OANJcNoARPWrRLWhUW5
+Bqy2XbOsS4dFiq3HFrG248N5zr0pp9pqhvQmhoNoMzTF8vw/y8IogkRn2H8vrPpZ
+K7TfOtPi4t1N8R4bOG7PT1H8KxP6mDNp2tH3ZBObbqhsJu7K1vDb25FnZl1yRkEt
+DDJLm//1gM4Kabd1F0CgCHIaV8FvQ5X3QIBC8f8JtElpJIO6nh43nDsiQkuQWgaO
+TXwm6FIDCM2PUValKCaUet1GvX+KSCLQg6GUX3j6itJJeElINZFqTdmKwNsbrQzN
+jLqW8YYU7aBYUyV1+8zNv4KMSbossoKZ9GrYYdGwMKKEBL0RRCNFgMhccWFK1Zw4
+5MdII5cdNl4KSsM6IQ0XfUOlyUaQuPYySEP5Kpqzf6NW9fcFVCwV/97EUOOfhQKO
+Jk7hOCI8+ANWf8UqD+pS7HRlaHd7E2V++ScS2ivN93bphdtYPVFtWdhg9VkqgXQR
+NmerMw8OosflJFnTL0EZxD19+j8t042Uy4n9PrXThzGxwUm4sVXu8l6zhTjpXMrg
+0cTLP23Rq62eAXZUxpDH9Tr79snC4m0xv/mAX0/kiEeuODffRac=
+=0oB8
+-----END PGP SIGNATURE-----
+--=-=-=--
