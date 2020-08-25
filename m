@@ -2,206 +2,140 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC261C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 12:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B398BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 12:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD0B2074A
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 12:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A24820767
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 12:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMKzNPGR"
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="wEO9WqPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729458AbgHYM07 (ORCPT
+        id S1726802AbgHYMbd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42274 "EHLO
+        Tue, 25 Aug 2020 08:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726015AbgHYM06 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 08:26:58 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C913C061574;
-        Tue, 25 Aug 2020 05:26:58 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id g13so12216456ioo.9;
-        Tue, 25 Aug 2020 05:26:58 -0700 (PDT)
+        with ESMTP id S1726609AbgHYMba (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 08:31:30 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443CEC061756
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 05:31:30 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id a5so12553659wrm.6
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 05:31:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wzcj8m5vFo9wtP7uviYdKc5PC5IJoO+QABXYTEcm/QQ=;
-        b=QMKzNPGRrERw9HyuJHYh//aByTTYk6xved9OV+s/sN3XgKrdGYFCYUHeBvcE3n136J
-         ZDiAPI314pmDApXJ5v/gF3jWHyLPdpayfQDDkEr18AB92xc/P56ZJOba1trauDK2Y9tz
-         nywaxJwwsF1GdOh6yI68ObfqZb8rIzFXWucxmIQsWZAgcpvvMh56W265wRSQ9wLVXtcx
-         nfnFxcy0uC39ywWv9ujRDOUxvETaJeNrPwUP6mJQTLRi0hK+hhgCPQZzSgcomUeVaQAr
-         dDtzdBt98W/T6WByYwu+73euWPUHQ92ItBPAB+uQPkveTqdqmayB3pfRehukCFg3dlBe
-         0wgA==
+        bh=+HLPhy+qXHIinU4+E7TS6jEdPNtNrgqFPzcA0O6t5kU=;
+        b=wEO9WqPQBcLwZUKcvqXvWeTQyatZBnoj8MNgvqBl3wXtPJizAT/oQ/SdGZfZ4EMq/E
+         eyFKyYTJISm+DV330UA3npw7Dk0YMydTsCuYN9jpA+MHjIs/adfjauEBoaNXRZ0HI9Le
+         JDdxy0U/s9OnS3u2btlKuWA8skzmnHXl+FdDvALKESloVFY3kHERMGM8vAtLPvLngs7q
+         pN4QuFCkbyvSu3wmqoe19Atprq/sp9hCBmKWOpw9qfETRsv0KPDoH2X3ZJsbn1hKBRKu
+         pSMBFzyQPBylG6jIRY2gLJ9lFIrCS6nd9xiUy1RuilZMNT57weEJFi5aBrdPQmLzGZTH
+         70ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wzcj8m5vFo9wtP7uviYdKc5PC5IJoO+QABXYTEcm/QQ=;
-        b=rSdaEZGx1VWFiQJpxrFWHGOnrbVoTxpyBqMmxsLlgjhSmkjVRNFM66zJzDWvoEopN7
-         Cm2alG7Tk84OjqLxOE2WinUfX/Cc2j6jmRplK4DsiBCl7IBD2glqvux4aWmpHb426PF0
-         /jIp4Tb/6s7qTDhFADUWeFLZk1l41rY+ADa9n9VAHFb9P/TOopn0WDHmgDa8ih05aJ5B
-         pBKnafDv8L2bSdw/pj145GoQOT3eYgNlBpbwURzDBSoYBtpFXUp7qVm/iWvWmhqDbMCS
-         srWbMf0fb7OCgBn79c0Sq5FHNEImCwx9KWmOrArMEvdZrCq8gwbdag4REwbFXJ9oTQNu
-         31hQ==
-X-Gm-Message-State: AOAM531UZoHew4Xk2dNKyW5uCWUPDfIJM0XikSfsWgp51QTyKucJdaDL
-        s6hZRPzTMNX73uglP0tIUXj840JfK6DowbGPnuM=
-X-Google-Smtp-Source: ABdhPJyGsUoC/LkI1d2bqGvQuY/p0TswaMdrh4UELE3XPT8OzGZIBRz06RutIQlDXcmCFjsUlnyiGQCLVwdzp0rcciA=
-X-Received: by 2002:a02:ce32:: with SMTP id v18mr10452366jar.28.1598358417617;
- Tue, 25 Aug 2020 05:26:57 -0700 (PDT)
+        bh=+HLPhy+qXHIinU4+E7TS6jEdPNtNrgqFPzcA0O6t5kU=;
+        b=CnjS5QMaUhVUZWKb18p4kihKhQFRVoODJ3aNBggVFJZt3zkFnIfDT1yyaE6G4CsdcK
+         JcYyIOxYPrSzGOB8YWBjgHIswhAbcArVYI3txLx2bDnrHuefP5VwmZ3978swtPrxGqSs
+         rWf9OHoR7cJmaom0n5gko3+IJ1pp4kH7uNrRe37061LwhmJVQjIHaCgToTEgetHC1she
+         u+pphIctGf68IGCO8iBcbj4sbac64zeJ3G/eKKsPd3DLdagHJ1yXTclXMFyLJNrO77r1
+         jjDzeYurN7yGTkQoSH8gMTC2/sJu66ehHKDmDDAHkc/dzFD2KQqcO0esC+bnUPE3+PXn
+         VVlA==
+X-Gm-Message-State: AOAM5313MonqWM0yQdeF2yLhovoKkaTUttaCQlL9XiGgLwRkWo5NOqXp
+        QXEjs+TZ0mv/SW0iJqQEjJ0LOZaIniAfkY7+/8N/yQ==
+X-Google-Smtp-Source: ABdhPJz1mB4Fdo1aDIpEuz/ea4FV6oUPMILZjNgY202nHhhVQ2y6zu7/a0D9cIzuEsl4KQKXulFb7/NPn2fB9IdTTE0=
+X-Received: by 2002:a5d:644b:: with SMTP id d11mr10206039wrw.373.1598358688698;
+ Tue, 25 Aug 2020 05:31:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200812202018.49046-1-alcooperx@gmail.com> <20200812202018.49046-2-alcooperx@gmail.com>
- <20200824233040.GA3532378@bogus>
-In-Reply-To: <20200824233040.GA3532378@bogus>
-From:   Alan Cooper <alcooperx@gmail.com>
-Date:   Tue, 25 Aug 2020 08:26:46 -0400
-Message-ID: <CAOGqxeXWXkRD=agGL45D0sGe64TUBBq=OtibkX8AkiC5g0sWww@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add support for Broadcom USB pin map driver
-To:     Rob Herring <robh@kernel.org>
-Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <20200819152120.GA106437@ravnborg.org> <20200819153045.GA18469@pendragon.ideasonboard.com>
+ <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
+ <20200820090326.3f400a15@coco.lan> <20200820100205.GA5962@pendragon.ideasonboard.com>
+ <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com> <20200825133025.13f047f0@coco.lan>
+In-Reply-To: <20200825133025.13f047f0@coco.lan>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Tue, 25 Aug 2020 13:31:16 +0100
+Message-ID: <CAPj87rNkqp0hDEv63jhJsMzsQ0qMLucjWE4KVByCFoMRrnfUKA@mail.gmail.com>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        USB list <linux-usb@vger.kernel.org>
+        lkml <linux-kernel@vger.kernel.org>,
+        Liuyao An <anliuyao@huawei.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 7:30 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Aug 12, 2020 at 04:20:16PM -0400, Al Cooper wrote:
-> > Add DT bindings for the Broadcom USB pin map driver. This driver allows
-> > some USB input and output signals to be mapped to any GPIO instead
-> > of the normal dedicated pins to/from the XHCI controller.
->
-> Is this a driver or h/w block because bindings are for h/w blocks?
+Hi Mauro,
 
-This is a hardware block. I'll remove "driver" from the description.
+On Tue, 25 Aug 2020 at 12:30, Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+> Sorry, but I can't agree that review is more important than to be able
+> to properly indicate copyrights in a valid way at the legal systems that
+> it would apply ;-)
 
->
-> >
-> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> > ---
-> >  .../bindings/usb/brcm,usb-pinmap.yaml         | 63 +++++++++++++++++++
-> >  1 file changed, 63 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml b/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > new file mode 100644
-> > index 000000000000..19cf6ad36373
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > @@ -0,0 +1,63 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/usb/brcm,usb-pinmap.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Broadcom USB pin map Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Al Cooper <alcooperx@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +      items:
-> > +          - const: brcm,usb-pinmap
->
-> 2 space indentation please.
+The way to properly indicate copyright coverage is to insert a
+copyright statement in the file. This has been the accepted way of
+communicating copyright notices since approximately the dawn of time.
+The value of the 'author' field within a chain of git commits does not
+have privileged legal value.
 
-Fixed.
+If what you were saying is true, it would be impossible for any
+project to copy code from any other project, unless they did git
+filter-branch and made sure to follow renames too. As others have
+noted, it would also be impossible for any patches to be developed
+collaboratively by different copyright holders, or for maintainers to
+apply changes.
 
->
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: Must be defined if any out-gpios are specified.
->
-> 'dependencies' can express this in schema.
+This is accepted community practice and has passed signoffs from a
+million different lawyers and copyright holders. If you wish to break
+with this and do something different, the onus is on you to provide
+the community with _specific_ legal advice; if this is accepted, the
+development model would have to drastically change in the presence of
+single pieces of code developed by multiple distinct copyright
+holders.
 
-Okay.
-
->
-> > +
-> > +  in-gpios:
-> > +    description: Array of one or more GPIO pins used for input signals.
->
-> You need to define how many GPIOs are valid.
-
-I tried to avoid doing this because there is a possibility that future
-chips will have a few more signals added and the driver was written so
-new signals can be added entirely in device tree without any changes
-to the driver. If this is unacceptable, I can add the current max in
-and out valid gpios.
-
->
-> > +
-> > +  in-names:
-> > +    description: Array of input signal names, one per gpio in in-gpios.
->
-> No, this isn't how we name GPIOs. The part before '-gpios' is how.
-
-This is the meant to be a description of how each gpio is being used
-to help with error messages in the driver.
-What if I use "brcmstb,in-functions" instead?
-
->
-> > +
-> > +  in-masks:
-> > +    description: Array of enable and mask pairs, one per gpio in-gpios.
->
-> Needs a vendor prefix.
-
-I'll change it to "brcmstb,in-masks"
-
->
-> > +
-> > +  out-gpios:
-> > +    description: Array of one or more GPIO pins used for output signals.
-> > +
-> > +  out-names:
-> > +    description: Array of output signal names, one per gpio in out-gpios.
-> > +
-> > +  out-masks:
-> > +    description: Array of enable, value, changed and clear masks, one
-> > +      per gpio in out-gpios.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    usb_pinmap: usb-pinmap@22000d0 {
-> > +        compatible = "brcm,usb-pinmap";
-> > +        reg = <0x22000d0 0x4>;
-> > +        in-gpios = <&gpio 18 0>, <&gpio 19 0>;
-> > +        in-names = "VBUS", "PWRFLT";
-> > +        in-masks = <0x8000 0x40000 0x10000 0x80000>;
-> > +        out-gpios = <&gpio 20 0>;
-> > +        out-names = "PWRON";
-> > +        out-masks = <0x20000 0x800000 0x400000 0x200000>;
-> > +        interrupts = <0x0 0xb2 0x4>;
-> > +    };
-> > +
-> > +...
-> > --
-> > 2.17.1
-> >
+Cheers,
+Daniel
