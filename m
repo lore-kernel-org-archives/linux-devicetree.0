@@ -2,131 +2,299 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60F5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3968BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03DB2074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA332074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598382569;
-	bh=ssDyPfQcVN6Sqtp+YOn0YBvFkVw5Yp/MrLc0Y4GDLrk=;
+	s=default; t=1598382865;
+	bh=Jc1yTj2k+TMe4kkbP/gEbLKCPGt2TGTJIwlnUB29iv4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0V0p32LEn4vdmKR+mq/oMe8x8y5ta7g9qAalyvBNV3tXxg/rvyoFhNPHkBc+bc4Bz
-	 iaPYn87Xc1k95jzI1PnWk0mjQ7mR6IZu/aL3XR1vxd+j5k2KZNHU2XAbF8NX1nrgP6
-	 KOEvGIQpgucWmGPiqXe5FszlHicn9bP8qgqVleZU=
+	b=HYj714MEhAoJf94jq6F31J5068pVtUpwt9XNv/bZKB5bt97EbdxUjal+NCbMFoE1V
+	 ZyJYpwTXUM7XQgf78BMB6v7XiP0IE3uJUy/UP3KVBaYIQPyVd9UaBGAtoSz1XuTco3
+	 DcN+jKo2gqPO1Y25dXbK7EjFmaWTGovxTizjnOwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbgHYTJ3 (ORCPT
+        id S1726466AbgHYTOY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:09:29 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45727 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYTJ2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 15:09:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id u126so13605887iod.12;
-        Tue, 25 Aug 2020 12:09:28 -0700 (PDT)
+        Tue, 25 Aug 2020 15:14:24 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33765 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgHYTOX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 15:14:23 -0400
+Received: by mail-io1-f67.google.com with SMTP id g14so13671641iom.0;
+        Tue, 25 Aug 2020 12:14:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=eEnscZ144fB/Icib0BxejX+dHld9Sfy5N1mdgz0fLTI=;
-        b=L7yeUWLDE+/X4BIjbkx7Wk9thw+UYUayUj87dyl/CFzlbw30h55BkoTZR6F617iSBZ
-         BaloxHgc4ljE0oGYd7sFHFAlI7znob+apR05PqB7khwxPszYLJGFGTWmPqvTFYbju5bN
-         SJxSxITcCwDsyotcHg/GGZnU79rYJlOS+uQmXsvIv0UYX1sUtg1ettw3n4uDqjbg5tFB
-         GL+c4FhQdwYc9LEh86KLg9joYuR0zQ8XwdVhH/Ke+LFLaaDqFZw+SKEYFs1i1XUmf4kM
-         MfVHz/cC6+/MHEjovL0pz9yim6EwAFR3j3rALVIJwSUsTOXcgA2+xrb5OkwkqsEgGeB4
-         41fA==
-X-Gm-Message-State: AOAM531RNOdQQUYZPAE9T06qpC8W8DyRP/31vsCGq3x9RgGroJJ5sPH9
-        +EsldKX8nnLzKDx9DSjEYQ==
-X-Google-Smtp-Source: ABdhPJyG8THBO7xd0t/WMwBcD/ftApc9n5G5bBZV+A53FZSw7DcNoHRLyBUu6gbhqznyE9MRd5K6EA==
-X-Received: by 2002:a05:6602:2106:: with SMTP id x6mr9859814iox.84.1598382567254;
-        Tue, 25 Aug 2020 12:09:27 -0700 (PDT)
+        bh=kXT8efqVig+LdM0yrUNVxG9QbnNoRGTPjf9llPDOwRE=;
+        b=nIby3NiXyE2w705KoHFl+DkpTd1H2CJjBbqCUS+c3Xjs8VA9NGuZuxg2Qvajk4Vasy
+         DqN+5Wguw2L+7pR8qGCJ86qJZwBRmmSBNOjyuha7cn/hWe7pmJncXLM5W/nZTJhe2RpD
+         +XmsFPGMad4muSFfqqc9hGU+KS3iv7CT1TNDokr9MVqQ4tln2FUze6YgW0hnpgmq2U7K
+         EmpULmtC35cZIwqdObeKOHM9H6r3qpfuzb6WXo4QgiP4l23nNQhMr45qW6u+SyEW0d8b
+         5z0uX1Mt97+E83LNv/Lp87AGyBDKkWVNKbuMKN4k/FKKyIsUG76lVWoI0TXEHYpKHX5A
+         9rIQ==
+X-Gm-Message-State: AOAM531qR6OpoALNA+Nc2/iGvhrJtSsTecFADlZzAYGSh7hrg6XLxSZn
+        68cx40tcTAiGOjJvrXr6Iw==
+X-Google-Smtp-Source: ABdhPJyhmrq6L2ellWa/YRk71sLM4zWMKvwTlQe8Q4nMUBOQkfLv2+j6dZS/bqwkv9tf4ChqXUl/hw==
+X-Received: by 2002:a6b:1885:: with SMTP id 127mr10161104ioy.205.1598382861817;
+        Tue, 25 Aug 2020 12:14:21 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id o62sm9717855ilb.38.2020.08.25.12.09.22
+        by smtp.gmail.com with ESMTPSA id i144sm1075486ioa.55.2020.08.25.12.14.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 12:09:26 -0700 (PDT)
-Received: (nullmailer pid 1144568 invoked by uid 1000);
-        Tue, 25 Aug 2020 19:09:21 -0000
-Date:   Tue, 25 Aug 2020 13:09:21 -0600
+        Tue, 25 Aug 2020 12:14:21 -0700 (PDT)
+Received: (nullmailer pid 1152461 invoked by uid 1000);
+        Tue, 25 Aug 2020 19:14:19 -0000
+Date:   Tue, 25 Aug 2020 13:14:19 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc:     tglx@linutronix.de, maz@kernel.org, devicetree@vger.kernel.org,
-        jason@lakedaemon.net, robh+dt@kernel.org, s-anna@ti.com,
-        linux-omap@vger.kernel.org, david@lechnology.com,
-        linux-arm-kernel@lists.infradead.org,
-        Roger Quadros <rogerq@ti.com>, praneeth@ti.com,
-        "Andrew F . Davis" <afd@ti.com>, lee.jones@linaro.org,
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Lee Jones <lee.jones@linaro.org>, Keerthy <j-keerthy@ti.com>,
+        Axel Lin <axel.lin@ingics.com>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/5] dt-bindings: irqchip: Add PRU-ICSS interrupt
- controller bindings
-Message-ID: <20200825190921.GA1144515@bogus>
-References: <1597671613-20879-1-git-send-email-grzegorz.jaszczyk@linaro.org>
- <1597671613-20879-2-git-send-email-grzegorz.jaszczyk@linaro.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: mfd: lp87565: convert to yaml
+Message-ID: <20200825191419.GA1144795@bogus>
+References: <20200817145018.3992-1-luca@lucaceresoli.net>
+ <20200817145018.3992-2-luca@lucaceresoli.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597671613-20879-2-git-send-email-grzegorz.jaszczyk@linaro.org>
+In-Reply-To: <20200817145018.3992-2-luca@lucaceresoli.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 17 Aug 2020 15:40:09 +0200, Grzegorz Jaszczyk wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Mon, Aug 17, 2020 at 04:50:16PM +0200, Luca Ceresoli wrote:
+> The definition of "xxx-in-supply" was generic, thus define in detail the
+> possible cases for each chip variant.
 > 
-> The Programmable Real-Time Unit and Industrial Communication Subsystem
-> (PRU-ICSS or simply PRUSS) contains an interrupt controller (INTC) that
-> can handle various system input events and post interrupts back to the
-> device-level initiators. The INTC can support up to 64 input events on
-> most SoCs with individual control configuration and h/w prioritization.
-> These events are mapped onto 10 output interrupt lines through two levels
-> of many-to-one mapping support. Different interrupt lines are routed to
-> the individual PRU cores or to the host CPU or to other PRUSS instances.
+> While there also apply a few smaller improvements:
 > 
-> The K3 AM65x and J721E SoCs have the next generation of the PRU-ICSS IP,
-> commonly called ICSSG. The ICSSG interrupt controller on K3 SoCs provide
-> a higher number of host interrupts (20 vs 10) and can handle an increased
-> number of input events (160 vs 64) from various SoC interrupt sources.
+>  - document that the only possible I2C slave address is 0x60 as per the
+>    datasheet and fix the second example accordingly
+>  - remove "MFD driver" from the title as it is implementation specific
+>  - replace "PMIC" with "buck converter" in title as it is more informative
 > 
-> Add the bindings document for these interrupt controllers on all the
-> applicable SoCs. It covers the OMAP architecture SoCs - AM33xx, AM437x
-> and AM57xx; the Keystone 2 architecture based 66AK2G SoC; the Davinci
-> architecture based OMAPL138 SoCs, and the K3 architecture based AM65x
-> and J721E SoCs.
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
 > ---
-> v4->v5:
-> - Fix typo in commit description.
-> - Update interrupt-cells description regarding each cells meaning.
-> v3->v4:
-> - Drop allOf references to interrupt-controller.yaml and
->   interrupts.yaml.
-> - Drop items descriptions and use only maxItems: 1 as suggested by Rob.
-> - Convert irqs-reserved property from uint8-array to bitmask.
-> - Minor descriptions updates.
-> - Change interrupt-cells to 3 in order to provide 2-level mapping
->   description for interrupts routed to the main CPU (as Marc requested).
-> - Merge the irqs-reserved and irqs-shared to one property since they
->   can be handled by one logic.
-> - Drop reviewed-by due to introduced changes.
-> - Add another example illustrating irqs-reserved property usage.
-> v2->v3:
-> - Convert dt-binding to YAML
-> v1->v2:
-> - https://patchwork.kernel.org/patch/11069767/
 > 
-> update irq-pruss-intc binding
+> Changes in v4:
+>  - split in two different bindings (Rob)
+>  - remove "MFD driver" from title as it is implementation specific; also
+>    replace "PMIC" with "buck converter" which is more informative
+> 
+> Changes in v3:
+>  - fix yaml errors
+> 
+> Changes in v2:
+>  - this patch replaces patch "regulator: lp87565: dt: remove duplicated
+>    section" in RFC,v1 (Rob Herring)
+>  - use capital letters consistently (Lee Jones)
+>  - replace "regulator" -> "mfd" in subject line (Lee Jones)
+>  - replace "dt:" suffix with "dt-bindings:" prefix in subject line
 > ---
->  .../interrupt-controller/ti,pruss-intc.yaml        | 158 +++++++++++++++++++++
->  1 file changed, 158 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,pruss-intc.yaml
-> 
+>  .../devicetree/bindings/mfd/lp87565.txt       | 79 -----------------
+>  .../bindings/mfd/ti,lp87561-q1.yaml           | 68 +++++++++++++++
+>  .../bindings/mfd/ti,lp87565-q1.yaml           | 85 +++++++++++++++++++
+>  3 files changed, 153 insertions(+), 79 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti,lp87561-q1.yaml
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti,lp87565-q1.yaml
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+[...]
+
+> diff --git a/Documentation/devicetree/bindings/mfd/ti,lp87561-q1.yaml b/Documentation/devicetree/bindings/mfd/ti,lp87561-q1.yaml
+> new file mode 100644
+> index 000000000000..c0c56e9e5a06
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ti,lp87561-q1.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/ti,lp87561-q1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LP87561-Q1 single 4-phase output buck converter
+> +
+> +maintainers:
+> +  - Keerthy <j-keerthy@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: ti,lp87561-q1
+> +
+> +  reg:
+> +    description: I2C slave address
+> +    const: 0x60
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description:
+> +      The first cell is the pin number.
+> +      The second cell is is used to specify flags.
+> +      See ../gpio/gpio.txt for more information.
+> +    const: 2
+> +
+> +  buck3210-in-supply:
+> +    description:
+> +      Phandle to parent supply node for all the four BUCK converters.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - buck3210-in-supply
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    i2c@0 {
+> +        reg = <0x0 0x100>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@60 {
+> +            compatible = "ti,lp87561-q1";
+> +            reg = <0x60>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +
+> +            buck3210-in-supply = <&vsys_3v3>;
+> +
+> +            regulators {
+> +                buck3210_reg: buck3210 {
+
+This needs to be described:
+
+regulators:
+  type: object
+
+  properties:
+    buck3210:
+      type: object
+      $ref: /schemas/regulators/regulators.yaml#
+
+  required:
+    - buck3210
+
+  additionalProperties: false
+
+  
+> +                    /* VDD_CORE */
+> +                    regulator-name = "buck3210";
+> +                    regulator-min-microvolt = <800000>;
+> +                    regulator-max-microvolt = <800000>;
+> +                    regulator-always-on;
+> +                    regulator-boot-on;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/mfd/ti,lp87565-q1.yaml b/Documentation/devicetree/bindings/mfd/ti,lp87565-q1.yaml
+> new file mode 100644
+> index 000000000000..1eafe0fb90cc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ti,lp87565-q1.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/ti,lp87565-q1.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI LP87565-Q1 / LP87565 dual 2-phase output buck converter
+> +
+> +maintainers:
+> +  - Keerthy <j-keerthy@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - const: ti,lp87565
+> +      - const: ti,lp87565-q1
+> +
+> +  reg:
+> +    description: I2C slave address
+> +    const: 0x60
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description:
+> +      The first cell is the pin number.
+> +      The second cell is is used to specify flags.
+> +      See ../gpio/gpio.txt for more information.
+> +    const: 2
+> +
+> +  buck10-in-supply:
+> +    description:
+> +      Phandle to parent supply node for BUCK0 and BUCK1 converters.
+> +
+> +  buck23-in-supply:
+> +    description:
+> +      Phandle to parent supply node for BUCK2 and BUCK3 converters.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - buck10-in-supply
+> +  - buck23-in-supply
+> +
+> +examples:
+> +  - |
+> +    i2c@0 {
+> +        reg = <0x0 0x100>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@60 {
+> +            compatible = "ti,lp87565-q1";
+> +            reg = <0x60>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +
+> +            buck10-in-supply = <&vsys_3v3>;
+> +            buck23-in-supply = <&vsys_3v3>;
+> +
+> +            regulators {
+> +                buck10_reg: buck10 {
+> +                    /* VDD_MPU */
+> +                    regulator-name = "buck10";
+> +                    regulator-min-microvolt = <850000>;
+> +                    regulator-max-microvolt = <1250000>;
+> +                    regulator-always-on;
+> +                    regulator-boot-on;
+> +                };
+> +
+> +                buck23_reg: buck23 {
+> +                    /* VDD_GPU */
+> +                    regulator-name = "buck23";
+> +                    regulator-min-microvolt = <850000>;
+> +                    regulator-max-microvolt = <1250000>;
+> +                    regulator-boot-on;
+> +                    regulator-always-on;
+> +                };
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.28.0
+> 
