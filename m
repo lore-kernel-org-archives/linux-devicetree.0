@@ -4,84 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAEBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AB5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6B22067C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:24:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2C020706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 02:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598322296;
-	bh=2fXo6WMEhOukNxp9QSnklE9RApbK6RnJP29LNN0SF9I=;
+	s=default; t=1598322370;
+	bh=mLY6EWOIRQlHEGEXqwtBgRFEFwdDwGDZvzVdlknvX2Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Cjt4EMZJJJhZOgf7IGA5wwZm03URSG8Qe45Sx/fbJOuRXUSI9Nw+zNfsYuhawC0Z+
-	 KoVfTC6nfMeMG2Wd7KX7k/ohtIlc59zK4p9/BphyCkt9l/y4ZTPJ16XGQfmsn+D/oQ
-	 u3ag25WyXsE+qPAPujzR/smN8PcA4bDDqKFNGkKM=
+	b=q7Z/2yS+37dNss8gzXRmatZEp+zSYD9BhZzUbgzAe7F1hkjocyhlFzrmqN0E+mwTe
+	 i2zdhVuz5ktiZOFMKuOuX3jHJo9ZotQhCbDvTYqVizT4pquw9mJIeeUQzcXv3/KbuS
+	 qdqD65xRgHegAyTifack2BtHOrw8CY610u0exv2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726737AbgHYCYz (ORCPT
+        id S1725947AbgHYC0K (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:24:55 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35734 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgHYCYz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 22:24:55 -0400
-Received: by mail-il1-f195.google.com with SMTP id q14so9139705ilm.2;
-        Mon, 24 Aug 2020 19:24:54 -0700 (PDT)
+        Mon, 24 Aug 2020 22:26:10 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:38487 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgHYC0I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Aug 2020 22:26:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id h4so10935530ioe.5;
+        Mon, 24 Aug 2020 19:26:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=cnGNl3PoVaj60h5F2GDcq1Io9++p+vzr9OQfXOLKtr0=;
-        b=BJA7EoRWlFR1IPigQuBkai6SVUEMcCyfz2JMY9EFdYtmheG1+bkF1QRr957an2/Fa9
-         3rIIDioF8/B4pwF27TU1cw4fuFaDoSJqB5ShaKPaJTZb75XMdGxiiVvgWFInWIciCiRo
-         74x3JKetF3yJWq/l06aOqqK0RezUSbp2KMbKMe9oobaEvfiOOg0Sus5MGuHiNvEiV6PO
-         EKfdDO8ljs8Tu5vLvRjLROo/CxyVkJFti/GR3Gat/F+GZGwp6+h7diHlGjaceKN6kAPU
-         ClM+AkZh91d74Wq780E/3fNhtUdcgl1I+GlKmX5+/z5pJo8CKdHFLvh+4omMfduueRTz
-         QyXw==
-X-Gm-Message-State: AOAM5300AG8VGzdnTKWHxqTJbHugBOpA+zpDyUseQxm8NX93fBDyBe9h
-        qh6leAb7n5DmsVBEs/hzew==
-X-Google-Smtp-Source: ABdhPJxxMXAYunE5D/8szs4hodew5EZxrd5G982SUEy99gWp7s5jgl8d0JotwLRtLgn9+B8qf5zINw==
-X-Received: by 2002:a92:8556:: with SMTP id f83mr7326180ilh.135.1598322294415;
-        Mon, 24 Aug 2020 19:24:54 -0700 (PDT)
+        bh=MVs+XZqfKwaKJqJ+/fAMeb4kyiC4Q663ysaFu8EcOcQ=;
+        b=LGIwGe6vX+21BBD7TSU/k9oxCoT3MPoXUB+lUdhCriC9qEB0bhPhg3pbogYL/Fp2dU
+         56Q1v6Z91N63WmWn+4abmj9uvHqmqc+F6iIkxTOW9v9SUq3TjS7LuuT5TuVmdBgwxENv
+         qmK46ZW9jyWvffQ7iJuVO0arTukYOkorlkr6XFHRwxyiLhHsGYHMTkIXbyNxiXgfS7Wj
+         Uc+uHcBcqQMYPr1ecFsr7g9EG3H9hhVqiT/K4nRLJc06u8kzXnLusTrtFtAfWvcRxJ0z
+         WV0XUjsoRQ9UCVHCLEEF8lTNqXhrXfapkVVbmOoQ0aBPzPUfFnzEXHzOMvcD0TMKKl/H
+         8vxQ==
+X-Gm-Message-State: AOAM531VNtQV0ENI86ARTDGWpp4PmuMx4CdQI6c/CpaMutMiiT7BOyeG
+        NAWXRNV86nqUdhj5R2yRnw==
+X-Google-Smtp-Source: ABdhPJwVLmUWRG3eEJmfYl9RyJ1uZxvCuvTxZNwyP1GM7YPLTJQdPSI/9oTn59Tl7UOcBEJlJ58bYw==
+X-Received: by 2002:a02:9307:: with SMTP id d7mr8374323jah.71.1598322367810;
+        Mon, 24 Aug 2020 19:26:07 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a11sm8200512ilh.74.2020.08.24.19.24.52
+        by smtp.gmail.com with ESMTPSA id d1sm8144326ila.67.2020.08.24.19.26.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 19:24:53 -0700 (PDT)
-Received: (nullmailer pid 3814348 invoked by uid 1000);
-        Tue, 25 Aug 2020 02:24:51 -0000
-Date:   Mon, 24 Aug 2020 20:24:51 -0600
+        Mon, 24 Aug 2020 19:26:07 -0700 (PDT)
+Received: (nullmailer pid 3816273 invoked by uid 1000);
+        Tue, 25 Aug 2020 02:26:02 -0000
+Date:   Mon, 24 Aug 2020 20:26:02 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jeff LaBundy <jeff@labundy.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, dmitry.torokhov@gmail.com
-Subject: Re: [PATCH 3/6] dt-bindings: input: iqs269a: Add bindings for OTP
- variants
-Message-ID: <20200825022451.GA3814295@bogus>
-References: <1597612467-15093-1-git-send-email-jeff@labundy.com>
- <1597612467-15093-4-git-send-email-jeff@labundy.com>
+To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc:     linux-mediatek@lists.infradead.org, sean.wang@mediatek.com,
+        erin.lo@mediatek.com, hongzhou.yang@mediatek.com,
+        sin_jieyang@mediatek.com, sj.huang@mediatek.com,
+        hui.liu@mediatek.com, biao.huang@mediatek.com,
+        mark.rutland@arm.com, matthias.bgg@gmail.com, robh+dt@kernel.org,
+        sean.wang@kernel.org, seiya.wang@mediatek.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        chuanjia.liu@mediatek.com, linus.walleij@linaro.org,
+        jg_poxu@mediatek.com, linux-kernel@vger.kernel.org,
+        srv_heupstream@mediatek.com
+Subject: Re: [PATCH v4 2/3] dt-bindings: pinctrl: mt8192: add binding document
+Message-ID: <20200825022602.GA3816243@bogus>
+References: <20200817001702.1646-1-zhiyong.tao@mediatek.com>
+ <20200817001702.1646-3-zhiyong.tao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597612467-15093-4-git-send-email-jeff@labundy.com>
+In-Reply-To: <20200817001702.1646-3-zhiyong.tao@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sun, 16 Aug 2020 16:14:24 -0500, Jeff LaBundy wrote:
-> This patch adds bindings for the D0 order code of the device. This
-> order code represents an OTP variant that enables a touch-and-hold
-> function in place of slider 1.
+On Mon, 17 Aug 2020 08:17:01 +0800, Zhiyong Tao wrote:
+> The commit adds mt8192 compatible node in binding document.
 > 
-> Also included is the ability to specify the 00 order code (default
-> option with no OTP customization) explicitly.
-> 
-> Signed-off-by: Jeff LaBundy <jeff@labundy.com>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
 > ---
->  .../devicetree/bindings/input/iqs269a.yaml         | 30 +++++++++++++++++++++-
->  1 file changed, 29 insertions(+), 1 deletion(-)
+>  .../bindings/pinctrl/pinctrl-mt8192.yaml      | 155 ++++++++++++++++++
+>  1 file changed, 155 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
