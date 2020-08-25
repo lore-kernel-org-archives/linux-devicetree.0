@@ -2,185 +2,142 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2DAC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A7DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D3462075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598384591;
-	bh=T7emTSFO5uJgMv9F5qD0jsbVyyNdU0/gSUUVHX2s6Vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KxnvjboaWc8/el6gXdSzl2g6NLchsAIvFOWB9wKD7bJzCzKqkBgzYL6kO0yKVRAQD
-	 x24Z+pPYBBKphq0Se+aGYF+Dx4REOfy32djQJAfp+VXsBvqmcQVwuPggcXaiZCElXA
-	 3+U3uVJia91i+Amt9Kf9bIveSi31HbV1Wte+zUuc=
+	by mail.kernel.org (Postfix) with ESMTP id EF31C2074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 19:48:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IJO6wug5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgHYTnL (ORCPT
+        id S1726090AbgHYTsH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:43:11 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:36614 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHYTnK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 15:43:10 -0400
-Received: by mail-io1-f68.google.com with SMTP id i10so8158551iow.3;
-        Tue, 25 Aug 2020 12:43:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xFa4K2EMnvtSpb7MXWNHE/NvCVe7Pt+4e7+jJHBanys=;
-        b=RWWyOZTC34l4psCUv40YziStvOB1Sju+6sqfXEqpMfEBjbdv5WHhV3D3QQVTonDfof
-         9EDuFhEi/LdgR9uHIvIqsPOxxAphKpU2i6vD0qea5JiXseyoikJyEHI1J0PeEssqbeQk
-         vPwxEPXqLPkSo8h5Y1CIXX4eDKl01Zq4JZyPGw42yKzqVBTdprFlk2Kq1U+0x+Vc3wEo
-         fXSfjJ/cQMMiy4T+t2EKWJjUiIi0Bw/Um61woo8FJm3RTGGoqdnlN2Ai7HHBwQMpfARu
-         m++o187vME2t90J7eLaxn3SIQ7Lx6cYpbSDz1DrZuAt1EYPiqxgMptW7KQN9wQyHhahL
-         8+5Q==
-X-Gm-Message-State: AOAM5319nVVIyI2n29oyjj6E795wEWPD2Z00vpEZ9sNhAFWk04djIPQ/
-        DLoJ974wiavfgEcjPKVtaQ==
-X-Google-Smtp-Source: ABdhPJw/xaJIuCeQO1r6j9JB2bC93O0bNOs9R51Cj4LIZPtj20c0bgEkzt2KrzZok2oxQxpiHdKeDg==
-X-Received: by 2002:a6b:bfc1:: with SMTP id p184mr10370531iof.193.1598384589390;
-        Tue, 25 Aug 2020 12:43:09 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id f128sm9645725ilh.71.2020.08.25.12.43.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 12:43:08 -0700 (PDT)
-Received: (nullmailer pid 1198512 invoked by uid 1000);
-        Tue, 25 Aug 2020 19:43:06 -0000
-Date:   Tue, 25 Aug 2020 13:43:06 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Landen Chao <landen.chao@mediatek.com>
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
-        vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, davem@davemloft.net,
-        sean.wang@mediatek.com, opensource@vdorst.com,
-        frank-w@public-files.de, dqfext@gmail.com
-Subject: Re: [PATCH net-next v2 4/7] dt-bindings: net: dsa: add new MT7531
- binding to support MT7531
-Message-ID: <20200825194306.GA1160944@bogus>
-References: <cover.1597729692.git.landen.chao@mediatek.com>
- <1ec38b68deec6f1c23e1236d38035b1823ea2ebf.1597729692.git.landen.chao@mediatek.com>
+        Tue, 25 Aug 2020 15:48:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726149AbgHYTsH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:48:07 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PJVxDs006515;
+        Tue, 25 Aug 2020 15:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=7Rl2UklbYVkVJfBrMuiwtrmhml+iZDfjKAcAFsLmd3w=;
+ b=IJO6wug5RqiSOpBic/JM2E7zcG24hhtuSpdf7fsjlf13Y0352A1nu+kKrvvp2FSFh/Zr
+ YYT3cViGFZF4kSEiAwTfvT8w9RSHuv0swMNpR7FYX36wrzELn3nUa1fTCsdtMI7SaZDs
+ cVFE9Fbp3ubrpuKKMAMRPXK3xmkPiaScjEAUncQbEIOfDnIu5r/gw2PIa/PqboRwdtEg
+ +ZpaJXgWP5JC2D998EK/gnlk6HFPJfuhcrgMR709RgDnOV07PwcMjERlCpHThLI39aFf
+ FmssUYM3Vrfw3tJ7hk1NnO9OUHHn5Rs+yCBgWX2oQtc4TGkP6GJgeUtSxHSZh8wpngY3 +Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3358kn0tpu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 15:47:55 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PJWGuu007381;
+        Tue, 25 Aug 2020 15:47:55 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3358kn0tpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 15:47:55 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PJl7xm014803;
+        Tue, 25 Aug 2020 19:47:54 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01dal.us.ibm.com with ESMTP id 332uttb3mf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 19:47:54 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PJlrQs16253940
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 19:47:53 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 688C7AC05E;
+        Tue, 25 Aug 2020 19:47:53 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A8F2AC059;
+        Tue, 25 Aug 2020 19:47:52 +0000 (GMT)
+Received: from [9.211.52.131] (unknown [9.211.52.131])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Aug 2020 19:47:52 +0000 (GMT)
+Subject: Re: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     linux-input@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
+ <20200820161152.22751-4-eajames@linux.ibm.com>
+ <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <8fc365dd-8a89-9e5c-ed70-093ef2bf7265@linux.ibm.com>
+Date:   Tue, 25 Aug 2020 14:47:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ec38b68deec6f1c23e1236d38035b1823ea2ebf.1597729692.git.landen.chao@mediatek.com>
+In-Reply-To: <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_08:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ adultscore=0 impostorscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ mlxlogscore=861 clxscore=1015 priorityscore=1501 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250143
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 03:14:09PM +0800, Landen Chao wrote:
-> Add devicetree binding to support the compatible mt7531 switch as used
-> in the MediaTek MT7531 switch.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Landen Chao <landen.chao@mediatek.com>
-> ---
->  .../devicetree/bindings/net/dsa/mt7530.txt    | 71 ++++++++++++++++++-
->  1 file changed, 68 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-> index c5ed5d25f642..50eaf40fb612 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-> @@ -5,6 +5,7 @@ Required properties:
->  
->  - compatible: may be compatible = "mediatek,mt7530"
->  	or compatible = "mediatek,mt7621"
-> +	or compatible = "mediatek,mt7531"
->  - #address-cells: Must be 1.
->  - #size-cells: Must be 0.
->  - mediatek,mcm: Boolean; if defined, indicates that either MT7530 is the part
-> @@ -32,10 +33,13 @@ Required properties for the child nodes within ports container:
->  
->  - reg: Port address described must be 6 for CPU port and from 0 to 5 for
->  	user ports.
-> -- phy-mode: String, must be either "trgmii" or "rgmii" for port labeled
-> -	 "cpu".
-> +- phy-mode: String, the follow value would be acceptable for port labeled "cpu"
-> +	If compatible mediatek,mt7530 or mediatek,mt7621 is set,
-> +	must be either "trgmii" or "rgmii"
-> +	If compatible mediatek,mt7531 is set,
-> +	must be either "sgmii", "1000base-x" or "2500base-x"
->  
-> -Port 5 of the switch is muxed between:
-> +Port 5 of mt7530 and mt7621 switch is muxed between:
->  1. GMAC5: GMAC5 can interface with another external MAC or PHY.
->  2. PHY of port 0 or port 4: PHY interfaces with an external MAC like 2nd GMAC
->     of the SOC. Used in many setups where port 0/4 becomes the WAN port.
-> @@ -308,3 +312,64 @@ Example 3: MT7621: Port 5 is connected to external PHY: Port 5 -> external PHY.
->  		};
->  	};
->  };
-> +
-> +Example 4: MT7531BE port6 -- up-clocked 2.5Gbps SGMII -- MT7622 CPU 1st GMAC
 
-Does this really need another example?
+On 8/25/20 1:38 AM, Joel Stanley wrote:
+> On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
+>> Mask the IRQ status to only the bits that the driver checks. This
+>> prevents excessive driver warnings when operating in slave mode
+>> when additional bits are set that the driver doesn't handle.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   drivers/i2c/busses/i2c-aspeed.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+>> index 31268074c422..abf40f2af8b4 100644
+>> --- a/drivers/i2c/busses/i2c-aspeed.c
+>> +++ b/drivers/i2c/busses/i2c-aspeed.c
+>> @@ -604,6 +604,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+>>          writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+>>                 bus->base + ASPEED_I2C_INTR_STS_REG);
+>>          readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+>> +       irq_received &= 0xf000ffff;
+>>          irq_remaining = irq_received;
+> This would defeat the check for irq_remaining. I don't think we want to do this.
+>
+> Can you explain why these bits are being set in slave mode?
 
-> +
-> +&eth {
-> +	gmac0: mac@0 {
-> +		compatible = "mediatek,eth-mac";
-> +		reg = <0>;
-> +		phy-mode = "2500base-x";
-> +
-> +		fixed-link {
-> +			speed = <2500>;
-> +			full-duplex;
-> +			pause;
-> +		};
-> +	};
-> +
-> +	&mdio0 {
-> +		switch@0 {
-> +			compatible = "mediatek,mt7531";
-> +			reg = <0>;
-> +			reset-gpios = <&pio 54 0>;
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				reg = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					label = "lan0";
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					label = "lan1";
-> +				};
-> +
-> +				port@2 {
-> +					reg = <2>;
-> +					label = "lan2";
-> +				};
-> +
-> +				port@3 {
-> +					reg = <3>;
-> +					label = "lan3";
-> +				};
-> +
-> +				port@4 {
-> +					reg = <4>;
-> +					label = "wan";
-> +				};
-> +
-> +				port@6 {
-> +					reg = <6>;
-> +					label = "cpu";
-> +					ethernet = <&gmac0>;
-> +					phy-mode = "2500base-x";
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.17.1
+
+No, I don't have any documentation for the bits that are masked off 
+here, so I don't know why they would get set.
+
+The check for irq_remaining is still useful for detecting that the 
+driver state machine might be out of sync with what the master is doing.
+
+
+Thanks,
+
+Eddie
+
+
