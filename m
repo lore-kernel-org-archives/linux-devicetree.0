@@ -2,241 +2,109 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7F9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC4CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92BED20706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9F72083B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lDWU0Ulk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3dQF/4f0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHYRTD (ORCPT
+        id S1726306AbgHYRUF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:19:03 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:16366 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726709AbgHYRRe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:17:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598375853; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=mlRiq2WMOEkcip2bkPufg08DlnczE+1xGAMC00+J42E=; b=lDWU0UlkxT2RMqKEtXBazehb1l7RgmddD1ZXmQoZSjoAF02Ywo1lzrUa0ps1uvCsCJMRnoyr
- YdP5DMA3f0pbRhbF/TQSEu0AkaGM11cD7IOAhtlkSEzPxiwO121uuTUlBJ32JOfyfcq2BHEs
- URVruzA0TSJDXCf5ngwOVYHZW1c=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f4547a95bce3a955fce97a8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 17:17:29
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DAA15C433CA; Tue, 25 Aug 2020 17:17:29 +0000 (UTC)
-Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: srivasam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7DA6EC433C6;
-        Tue, 25 Aug 2020 17:17:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7DA6EC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
-From:   Srinivasa Rao <srivasam@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     vsujithk <vsujithk@codeaurora.org>,
-        Srinivasa Rao <srivasam@codeaurora.org>
-Subject: [PATCH 4/5] ASoC: qcom: Add support for audio over DP
-Date:   Tue, 25 Aug 2020 22:46:27 +0530
-Message-Id: <1598375788-1882-5-git-send-email-srivasam@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
-References: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
+        Tue, 25 Aug 2020 13:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYRUD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 13:20:03 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 626CEC061574;
+        Tue, 25 Aug 2020 10:20:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=J0sCtfCRKI0PUi5IGIcZ/gUzI83eFMEqQ3PM5FwtjnU=; b=3dQF/4f0dY0Lx3K4jejK7ksnPs
+        jAXQ8un2Eb6vaIXj7mboT6pCfFyq51VgHnlBq9iOio2foQH9p09N3qiBh8/wZA2Tswx5qTGQmlWSU
+        U1n7V1ukJ+6fUnvIZNRGXmfQPQgnW8iZJzs3YnppULCjIjGShBVQVi88bXMTyDP74LGzWlf0+VYyx
+        Hv6LdyaSh8MBiZiWSSri20H/0UsG4dewv4fo6N2FwxMUFmOQEvUKADfGOaH4xqCRKQoNWygHI1Vxb
+        58xV/XZTak50R5yOXhncjrLF75qJuNmKgYgZEDzAk8oWWN+mX3hRA9FlNnN1jYWFRbR7whN6Vt4IT
+        1gniMZzQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAcc1-0004rI-4Q; Tue, 25 Aug 2020 17:19:57 +0000
+Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+To:     =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+References: <CGME20200825170322eucas1p2c6619aa3e02d2762e07da99640a2451c@eucas1p2.samsung.com>
+ <20200825170311.24886-1-l.stelmach@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6062dc73-99bc-cde0-26a1-5c40ea1447bd@infradead.org>
+Date:   Tue, 25 Aug 2020 10:19:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200825170311.24886-1-l.stelmach@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: vsujithk <vsujithk@codeaurora.org>
+On 8/25/20 10:03 AM, Łukasz Stelmach wrote:
+> diff --git a/drivers/net/ethernet/asix/Kconfig b/drivers/net/ethernet/asix/Kconfig
+> new file mode 100644
+> index 000000000000..4b127a4a659a
+> --- /dev/null
+> +++ b/drivers/net/ethernet/asix/Kconfig
+> @@ -0,0 +1,20 @@
+> +#
+> +# Asix network device configuration
+> +#
+> +
+> +config NET_VENDOR_ASIX
+> +	bool "Asix devices"
 
-Add changes to support audio over DP playback for SC7180.
+Most vendor entries also have:
+	default y
+so that they will be displayed in the config menu.
 
-Signed-off-by: Srinivasa Rao <srivasam@codeaurora.org>
----
- sound/soc/qcom/lpass-sc7180.c | 121 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 120 insertions(+), 1 deletion(-)
+> +	depends on SPI
+> +	help
+> +	  If you have a network (Ethernet) interface based on a chip from ASIX, say Y
+> +
+> +if NET_VENDOR_ASIX
+> +
+> +config SPI_AX88796C
+> +	tristate "Asix AX88796C-SPI support"
+> +	depends on SPI
 
-diff --git a/sound/soc/qcom/lpass-sc7180.c b/sound/soc/qcom/lpass-sc7180.c
-index 167bf2c..cea7ae7 100644
---- a/sound/soc/qcom/lpass-sc7180.c
-+++ b/sound/soc/qcom/lpass-sc7180.c
-@@ -62,6 +62,24 @@ static struct snd_soc_dai_driver sc7180_lpass_cpu_dai_driver[] = {
- 	},
- };
- 
-+static struct snd_soc_dai_driver sc7180_lpass_cpu_hdmi_dai_driver[] = {
-+	[0] = {
-+		.id = HDMI,
-+		.name = "Hdmi",
-+		.playback = {
-+			.stream_name = "Hdmi Playback",
-+			.formats	= SNDRV_PCM_FMTBIT_S24_3LE |
-+							SNDRV_PCM_FMTBIT_S24_LE,
-+			.rates = SNDRV_PCM_RATE_48000,
-+			.rate_min	= 48000,
-+			.rate_max	= 48000,
-+			.channels_min	= 2,
-+			.channels_max	= 2,
-+		},
-+		.ops    = &asoc_qcom_lpass_hdmi_dai_ops,
-+	},
-+};
-+
- static int sc7180_lpass_alloc_dma_channel(struct lpass_data *drvdata,
- 					   int direction)
- {
-@@ -88,13 +106,37 @@ static int sc7180_lpass_alloc_dma_channel(struct lpass_data *drvdata,
- 
- 	return chan;
- }
-+static int sc7180_lpass_alloc_hdmi_dma_channel(struct lpass_data *drvdata,
-+					   int direction)
-+{
-+	struct lpass_variant *v = drvdata->variant;
-+	int chan = 0;
-+
-+	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
-+		chan = find_first_zero_bit(&drvdata->dma_ch_bit_map,
-+					v->rdma_channels);
-+
-+		if (chan >= v->rdma_channels)
-+			return -EBUSY;
-+	}
-+	set_bit(chan, &drvdata->dma_ch_bit_map);
-+
-+	return chan;
- 
-+}
- static int sc7180_lpass_free_dma_channel(struct lpass_data *drvdata, int chan)
- {
- 	clear_bit(chan, &drvdata->dma_ch_bit_map);
- 
- 	return 0;
- }
-+static int sc7180_lpass_free_hdmi_dma_channel(struct lpass_data *drvdata, int chan)
-+{
-+	clear_bit(chan, &drvdata->dma_ch_bit_map);
-+
-+	return 0;
-+}
-+
- 
- static int sc7180_lpass_init(struct platform_device *pdev)
- {
-@@ -190,15 +232,92 @@ static struct lpass_variant sc7180_data = {
- 				   "mi2s-bit-clk0",
- 				   "mi2s-bit-clk1",
- 				},
-+	.id				= I2S_INTERFACE,
- 	.init			= sc7180_lpass_init,
- 	.exit			= sc7180_lpass_exit,
- 	.alloc_dma_channel	= sc7180_lpass_alloc_dma_channel,
- 	.free_dma_channel	= sc7180_lpass_free_dma_channel,
- };
- 
-+static struct lpass_variant sc7180_hdmi_data = {
-+	.hdmi_tx_ctl_addr	= 0x1000,
-+	.hdmi_legacy_addr	= 0x1008,
-+	.hdmi_vbit_addr		= 0x610c0,
-+	.hdmi_ch_lsb_addr	= 0x61048,
-+	.hdmi_ch_msb_addr	= 0x6104c,
-+	.ch_stride		= 0x8,
-+	.hdmi_parity_addr	= 0x61034,
-+	.hdmi_dmactl_addr	= 0x61038,
-+	.hdmi_dma_stride	= 0x4,
-+	.hdmi_DP_addr		= 0x610c8,
-+	.hdmi_sstream_addr	= 0x6101c,
-+	.irq_reg_base		= 0x63000,
-+	.irq_ports		= 1,
-+	.rdma_reg_base		= 0x64000,
-+	.rdma_reg_stride	= 0x1000,
-+	.rdma_channels		= 4,
-+
-+	.rdma_dyncclk		= REG_FIELD_ID(0x64000, 14, 14, 4, 0x1000),
-+	.rdma_bursten		= REG_FIELD_ID(0x64000, 13, 13, 4, 0x1000),
-+	.rdma_burst8		= REG_FIELD_ID(0x64000, 15, 15, 4, 0x1000),
-+	.rdma_burst16		= REG_FIELD_ID(0x64000, 16, 16, 4, 0x1000),
-+	.rdma_dynburst		= REG_FIELD_ID(0x64000, 18, 18, 4, 0x1000),
-+	.rdma_wpscnt		= REG_FIELD_ID(0x64000, 10, 12, 4, 0x1000),
-+	.rdma_fifowm		= REG_FIELD_ID(0x64000, 1, 5, 4, 0x1000),
-+	.rdma_enable		= REG_FIELD_ID(0x64000, 0, 0, 4, 0x1000),
-+
-+	.sstream_en		= REG_FIELD(0x6101c, 0, 0),
-+	.dma_sel			= REG_FIELD(0x6101c, 1, 2),
-+	.auto_bbit_en	= REG_FIELD(0x6101c, 3, 3),
-+	.layout			= REG_FIELD(0x6101c, 4, 4),
-+	.layout_sp		= REG_FIELD(0x6101c, 5, 8),
-+	.set_sp_on_en	= REG_FIELD(0x6101c, 10, 10),
-+	.dp_audio		= REG_FIELD(0x6101c, 11, 11),
-+	.dp_staffing_en	= REG_FIELD(0x6101c, 12, 12),
-+	.dp_sp_b_hw_en	= REG_FIELD(0x6101c, 13, 13),
-+
-+	.mute			= REG_FIELD(0x610c8, 0, 0),
-+	.as_sdp_cc		= REG_FIELD(0x610c8, 1, 3),
-+	.as_sdp_ct		= REG_FIELD(0x610c8, 4, 7),
-+	.aif_db4			= REG_FIELD(0x610c8, 8, 15),
-+	.frequency		= REG_FIELD(0x610c8, 16, 21),
-+	.mst_index		= REG_FIELD(0x610c8, 28, 29),
-+	.dptx_index		= REG_FIELD(0x610c8, 30, 31),
-+
-+	.soft_reset		= REG_FIELD(0x1000, 31, 31),
-+	.force_reset	= REG_FIELD(0x1000, 30, 30),
-+
-+	.use_hw_chs		= REG_FIELD(0x61038, 0, 0),
-+	.use_hw_usr		= REG_FIELD(0x61038, 1, 1),
-+	.hw_chs_sel		= REG_FIELD(0x61038, 2, 4),
-+	.hw_usr_sel		= REG_FIELD(0x61038, 5, 6),
-+
-+	.replace_vbit	= REG_FIELD(0x610c0, 0, 0),
-+	.vbit_stream	= REG_FIELD(0x610c0, 1, 1),
-+
-+	.legacy_en		=  REG_FIELD(0x1008, 0, 0),
-+	.calc_en		=  REG_FIELD(0x61034, 0, 0),
-+	.lsb_bits		=  REG_FIELD(0x61048, 0, 31),
-+	.msb_bits		=  REG_FIELD(0x6104c, 0, 31),
-+
-+	.clk_name		= (const char*[]) {
-+					"pcnoc-sway-clk",
-+					"audio-core",
-+					"pcnoc-mport-clk",
-+				},
-+	.num_clks		= 3,
-+	.id			= HDMI_INTERFACE,
-+	.dai_driver		= sc7180_lpass_cpu_hdmi_dai_driver,
-+	.num_dai		= ARRAY_SIZE(sc7180_lpass_cpu_hdmi_dai_driver),
-+	.init			= sc7180_lpass_init,
-+	.exit			= sc7180_lpass_exit,
-+	.alloc_dma_channel = sc7180_lpass_alloc_hdmi_dma_channel,
-+	.free_dma_channel = sc7180_lpass_free_hdmi_dma_channel,
-+
-+};
- static const struct of_device_id sc7180_lpass_cpu_device_id[] = {
- 	{.compatible = "qcom,sc7180-lpass-cpu", .data = &sc7180_data},
--	{}
-+	{.compatible = "qcom,sc7180-lpass-hdmi", .data = &sc7180_hdmi_data}
- };
- 
- static struct platform_driver sc7180_lpass_cpu_platform_driver = {
+That line is redundant (but not harmful).
+
+> +	depends on GPIOLIB
+> +	help
+> +	  Say Y here if you intend to attach a Asix AX88796C as SPI mode
+> +
+> +endif # NET_VENDOR_ASIX
+
+
 -- 
-2.7.4
+~Randy
 
