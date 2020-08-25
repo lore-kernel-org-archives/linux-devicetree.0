@@ -4,128 +4,142 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11218C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3993DC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0DBF20706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EFF320706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PNHRCbBH"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cr0TmoiU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4sUO7BIb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgHYJjD (ORCPT
+        id S1728944AbgHYJmH (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:39:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
+        Tue, 25 Aug 2020 05:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729520AbgHYJjB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:39:01 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A523C0613ED
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:39:01 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id h19so2026712ual.10
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 02:39:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GRCPvvkD3DNNctf3RoNCERPOL0qUeUuvx/q+40LlnM4=;
-        b=PNHRCbBHBeNz0jPjwR1OVPyaqN6fv3xIQuIswRVb/4kD0fOjuqU1fvrZ5xtHUL1Ib0
-         vm6HA7ncP0OCSmWplLJ+dfxFloRBi9lC3wC/Pck1Bvn1hOUmXAV2V9mJUUZfn79/LMSl
-         hLfgk6QQuPi7IeB5DXIi08hwmDoLGRUs0TTkPt/fADESW6V12+1g6LYDV05ifZuOIOiQ
-         f3Cy0lBxmjUONoqPxY9euolW/EfTMN4mRRcUoE0jtTaKNJvuOC5lQ2TEvMKdPE8qhf/G
-         QG6auxd1+wD7AK0KmMQSpzbLyBOY+uANXbkpE2Adcv0klfZOJlj4DKUXLVdYOenuJiFG
-         6CIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GRCPvvkD3DNNctf3RoNCERPOL0qUeUuvx/q+40LlnM4=;
-        b=twyoC0yKRsWfeSV0w2vzhWZs2jdVNNuNxBs3rQUuoDaolb2WJgOkR1RbEi6YC1/sQ2
-         rMdGwX6rdihh9Hu6UySIemJ6KO7iCDGJJesLLMv4UbYPeHMD3HjDW1dGCgmHkQpkxGj5
-         0BQdyYrdFSm4Ctk5GGL3crSOswzv1sEpUG/n7/wBMB7brNZZRnjTbgtWDdyDddJP2jzG
-         autIlTS5QxZdnA0K+57WgGJ6zIWQl9upYQGhV63pNmCN14g+0R9U5sX/iaZ9R3FJLOe/
-         soFrpMPL1Syg1j3YLJvF2XXVl4APk3aISNzUtVp0K+rLu1h+snlyVz0xWbGrjTN/fgQt
-         /qAw==
-X-Gm-Message-State: AOAM5308My4t4XNyn2oK40s71eMggP+3+69Fnt/n/ckgum/YS81BlQHD
-        1sQvsvLhQjJTBp9Qre5lqBCyM7GvFGh7QWPI/GEJJQ==
-X-Google-Smtp-Source: ABdhPJw8Qer3hMMoOxTE6yeDTh8VDWMJr82m9f7kGUNVgXNGF8KAhmZIOcyAdOVJd49ANRvATn9YWpz0AxB9BwwpCGs=
-X-Received: by 2002:ab0:64c3:: with SMTP id j3mr4711708uaq.129.1598348340769;
- Tue, 25 Aug 2020 02:39:00 -0700 (PDT)
+        with ESMTP id S1726000AbgHYJmG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:42:06 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74090C061574;
+        Tue, 25 Aug 2020 02:42:05 -0700 (PDT)
+From:   Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598348523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/+Ss+1fob1O6FWxjtF6nrsXHbKK8dvDZbAhYL4hFrIA=;
+        b=cr0TmoiU6ip2MXdtuJMHbf+/qDvLAgwTQYErKTnmX5SNIaMEGNYwvGWAr3U6QVad3Z585b
+        VtkpgavkL9ZPUzBejWqpNxtTf1ofg+cd/ZwrexuAsSgK/fFRpSF3cxARgKSv2998anUH5f
+        YLJNBNgUnDZpp/Hs8BpPey7R+4MA7Rr3Q5NW7T6lXTGaOvPyF8fBMtIOU1nt9EjpheqR+y
+        VOLPrmdIc+bqYVjLbBgQve7o+jfNRe9dFBGSp0ut5rPRLIuR35tx4m3B2ID4csQXy3mlNQ
+        dNlo/Hcf209QeiptBRYRE6XcjS7J/2kFl/8uo5iw4R6lPhL44yl559zr7JgxHA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598348523;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/+Ss+1fob1O6FWxjtF6nrsXHbKK8dvDZbAhYL4hFrIA=;
+        b=4sUO7BIbXUi7pGUUyxjGhPiLsadhTbX/cN/SKVZELKKvcHby7SYioronJ6nCQ2SbrrS25R
+        dxPaP/hlQgdJeAAQ==
+To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
+In-Reply-To: <87y2m3txox.fsf@intel.com>
+References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200822143922.frjtog4mcyaegtyg@skbuf> <87imd8zi8z.fsf@kurt> <87y2m3txox.fsf@intel.com>
+Date:   Tue, 25 Aug 2020 11:42:02 +0200
+Message-ID: <875z9712qd.fsf@kurt>
 MIME-Version: 1.0
-References: <20200825081357.32354-1-lars.povlsen@microchip.com>
-In-Reply-To: <20200825081357.32354-1-lars.povlsen@microchip.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 25 Aug 2020 11:38:24 +0200
-Message-ID: <CAPDyKFq+eJgGZVxLqY3WP8DAtCMGGtc1LNGvTmCPTy7siSDddA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] mmc: Adding support for Microchip Sparx5 SoC
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, SoC Team <soc@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Aug 2020 at 10:14, Lars Povlsen <lars.povlsen@microchip.com> wrote:
->
-> The patch adds eMMC support for Sparx5, by adding a driver for the SoC
-> SDHCI controller, DT configuration and DT binding documentation.
->
-> Changes in v5:
-> - DT+yaml: Change (mmc|sdhci)@600800000 to mmc0@600800000
-> - Add missing "static" attribute to probe function
-> - Drop MMC_SDHCI_IO_ACCESSORS, as it is not required (anymore)
->
-> Changes in v4:
-> - Disable clock if sdhci_add_host() fails
-> - Remove dev_err if sdhci_add_host() fails
->
-> Changes in v3:
-> - Add dt-bindings for property "microchip,clock-delay"
-> - Enforce "microchip,clock-delay" valid range in driver
-> - Removed a noisy pr_debug() in sdhci_sparx5_adma_write_desc()
->
-> Changes in v2:
-> - Changes in driver as per review comments
->  - Drop debug code
->  - Drop sysfs code
->  - use usleep_range()
->  - use mmc_hostname() in pr_debug()
->  - Remove deactivated code
->  - Minor cosmetics
->
-> Lars Povlsen (3):
->   dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
->   sdhci: sparx5: Add Sparx5 SoC eMMC driver
->   arm64: dts: sparx5: Add Sparx5 eMMC support
->
->  .../mmc/microchip,dw-sparx5-sdhci.yaml        |  65 +++++
->  arch/arm64/boot/dts/microchip/sparx5.dtsi     |  24 ++
->  .../boot/dts/microchip/sparx5_pcb125.dts      |  23 ++
->  .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  23 ++
->  .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  23 ++
->  drivers/mmc/host/Kconfig                      |  12 +
->  drivers/mmc/host/Makefile                     |   1 +
->  drivers/mmc/host/sdhci-of-sparx5.c            | 269 ++++++++++++++++++
->  8 files changed, 440 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
->  create mode 100644 drivers/mmc/host/sdhci-of-sparx5.c
->
+--=-=-=
+Content-Type: text/plain
 
-For some reason, patchwork doesn't seem to accept your patches. Can
-you please have a look to figure it out, at least until next time.
+On Mon Aug 24 2020, Vinicius Costa Gomes wrote:
+> Hi Kurt,
+>
+> Kurt Kanzenbach <kurt@linutronix.de> writes:
+>
+>>>> +static void hellcreek_setup_tc_mapping(struct hellcreek *hellcreek,
+>>>> +				       struct net_device *netdev)
+>>>> +{
+>>>> +	int i, j;
+>>>> +
+>>>> +	/* Setup mapping between traffic classes and port queues. */
+>>>> +	for (i = 0; i < netdev_get_num_tc(netdev); ++i) {
+>>>> +		for (j = 0; j < netdev->tc_to_txq[i].count; ++j) {
+>>>> +			const int queue = j + netdev->tc_to_txq[i].offset;
+>>>> +
+>>>> +			hellcreek_select_prio(hellcreek, i);
+>>>> +			hellcreek_write(hellcreek,
+>>>> +					queue << HR_PRTCCFG_PCP_TC_MAP_SHIFT,
+>>>> +					HR_PRTCCFG);
+>>>> +		}
+>>>> +	}
+>>>> +}
+>>>
+>>> What other driver have you seen that does this?
+>>>
+>>
+>> Probably none.
+>>
+>> With TAPRIO traffic classes and the mapping to queues can be
+>> configured. The switch can also map traffic classes. That sounded like a
+>> good match to me.
+>
+> The only reason I could think that you would need this that *right now*
+> taprio has pretty glaring oversight: that in the offload parameters each entry
+> 'gate_mask' reference the "Traffic Class" (i.e. bit 0 is Traffic Class
+> 0), and it really should be the HW queue.
+>
+> I have a patch that does the conversion on taprio before talking to the
+> driver. Do you think it would help you avoid doing this on the driver
+> side?
 
-In this case, I picked them from the emails, so patch 1 and patch2
-applied for next, thanks!
+I think so. As Vladimir pointed out, the driver should setup an identity
+mapping which I already did by default.
 
-Kind regards
-Uffe
+Can you point me your patch?
+
+Thanks,
+Kurt
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E3OoACgkQeSpbgcuY
+8KZ8dxAAxgttX/K0rFFtRu/2uiG0DqMlOfsa6okj35BVMrZYHKyeMh0Z79vSvu3b
+3dP3zk4AzDnWwvv2EriOJndGUouB+5PSh+elxQiaDplbsGRYwFt64PHeazGFrXmg
+Ze/eiqLFNj9dWVVKWwK9dlY8OZN+TMTlykBfLMkjtCS988b7pXj7UiYpAidyQ/pR
+JAmJG/WIkWZPnv976FwHfaji0kHTKlHdm+RxqI6xkFR6fiQelXansUHGW4VVl+/J
+TnvGF+RDss5MiWz1DYnCQC6xir9IsVVp6hJqhzZnnOd4TnoViMSF0XwQpIL0x+OY
+AZod/eAlrQdAEzlj6bW0NA8anVxSBy2Wc0EfdOnsyw/NQ7gyKAZwqITOPZbz43GR
+oSys/Gq3j+2BgTrpzB/nxKwB2EMDy3D0+lH/l0yWcJFXjRgGAWFrx5Jq2iTq/ttp
+PDN+VwMWD371pPRtvqjONZkCVSx4HzC7u3K0oFr9m2OSY0BcVExMtqsUgC9Zr1sQ
+ZHULIPQrJ21CiiMHv6Z26KknKxXzrTh4LY9G2M8k+Lo8A2rTnUT5ZzPdPwDlFFTz
+hD7FZZowi3PJ8Qe5ABf9McUtfXnc+goDiVFAliBq+gRMF/fo94G42o4TVaiTDmFL
+fy6wNzn3gOO4VsXPKFUDzYsgJcyvUS1O5FjpoJr1CD1BUzBIBw4=
+=sWPu
+-----END PGP SIGNATURE-----
+--=-=-=--
