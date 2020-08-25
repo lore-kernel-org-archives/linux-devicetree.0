@@ -2,130 +2,108 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFB4C433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBC3C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B438D207DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWtTyCh4"
+	by mail.kernel.org (Postfix) with ESMTP id D11BB207BC
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 17:42:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598377342;
+	bh=Iqt2erpFyqgPmzlkkdVamZ0XSnju1HiOp2ooMVL6Uqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AyWRZvY7fuEXL7vr91DwspTo8SzUmGlVcW2AN5R+KC4A9pNl4qUYkt0GXMxJ3KFjy
+	 MqzFbJEsu6N/lqGSe/HEvmU89dqIcdrqyz9kapOdybMyl6XeoFm3Lip2IqyZT4IFHb
+	 QK1NT/OM6Lf7QryXLX25oxQEEyHIBN3LAW7QMpNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgHYRkd (ORCPT
+        id S1725936AbgHYRmV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35086 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgHYRkc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 13:40:32 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C03BC061574;
-        Tue, 25 Aug 2020 10:40:32 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id nv17so1622242pjb.3;
-        Tue, 25 Aug 2020 10:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2CIAlEB0sn0czmBCstmmbk0rRRc0a7Q7Eg5uRFK+DTM=;
-        b=OWtTyCh4mBkSanD+KT2LmsSmys9GdgNPDuMOUrEMBvirSVEpgWaccxzuVDCSUPzr+g
-         UL3d/b/WhkUnWbhm0C+dKAbICczXHeEay6JEghnYPq1AWGXV0OqUHZVzSR0vH40qB4T7
-         CvKheJOKe1bLwlHMjKz6V1TnFYQX/QwQ3zFo3OtKNBualjgvS3McIxk5bZckCXdHUxPn
-         y5cllopsvswApow32o5Hqk8i69l4DMq5zNUIBV31X/TRx3SDq4RkHJpDQFbpdjwtNLEK
-         YafzqTXU3/pyTiKmRDgRCRX9RrujtgeJf8Hbr9VBxTZRL/Jzkqt3LfmQHxV5h/PRKVwB
-         vyvA==
+        Tue, 25 Aug 2020 13:42:21 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:39423 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgHYRmU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 13:42:20 -0400
+Received: by mail-il1-f196.google.com with SMTP id f12so11150418ils.6;
+        Tue, 25 Aug 2020 10:42:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2CIAlEB0sn0czmBCstmmbk0rRRc0a7Q7Eg5uRFK+DTM=;
-        b=A+n5alUnkz/m6ra9z01JjGdiTqBX2TkMKr+7HXDFTg3kAk/S9CB/sx3PWn5pwDE//w
-         E0udbLC4dIkRkpqP+mP3LpnwsHVbaDtCBYoERoxyfNhqCpkx5qTVIr8VbwfNplNjyUnc
-         TLEe326HQmGKldC5HAUaE2tnNqaUG6YS2NSXuyDWlGmD1+unY73jHrGvtnrsqTLElEEt
-         NOmdun1c9d+56PUgqH52I1tbYpCStzB9W/8RJkln+YQeEBQvxxATtKRjS7mFlITLMVP6
-         QWZGWEjuBd5i9DXMwhCZj7EpzpFWSWEjvPMUIziUy0oz+fkQ6fhh0Y1Unf9eHj8Hz2Kw
-         nTnA==
-X-Gm-Message-State: AOAM530Z0c0qybj+uBNWhb82MQyzUWm8EaxcTLm1K+XFlM2U8K6JRHiE
-        lg1AH3tWBwuRc1JMlJAcl2g=
-X-Google-Smtp-Source: ABdhPJygG/iRoMRtYkc62+6+vovnxiIUBYXGvz6sXIt/PP/MjnVCr6wdHgCpE82t+Egu2LRmdgvskQ==
-X-Received: by 2002:a17:90a:eb17:: with SMTP id j23mr2403499pjz.151.1598377230639;
-        Tue, 25 Aug 2020 10:40:30 -0700 (PDT)
-Received: from [10.69.79.32] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id b6sm3378574pjz.33.2020.08.25.10.40.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 10:40:29 -0700 (PDT)
-Subject: Re: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Julien Grall <julien.grall@arm.com>,
-        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:ALLWINNER A10 CSI DRIVER" <linux-media@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <b19bc982-a0c4-c6ff-d8f5-650f2b3a83c8@gmail.com>
-Date:   Tue, 25 Aug 2020 10:40:27 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NTp9u+iFGhAjZbw/H+WbVNzQr+UMY6B6b4vLY7DE2lo=;
+        b=MwlGuAjlcVWmp0YPF1lmEUSoBhrUUDjMmxWws8ytNAR+/KY0zxDwpjMidLibZe/sGW
+         hAkxDiVb2tK5lRCEu3uX5kn7Ndb9QmXuVdF268DzLxTIyPTfCX7e1NVyND0oPf2UaJY4
+         AaWuI84lZvsJ3m48+YboHOwyLnwNj1NXXGVP5gxJX1lidBnup70hntaXRtoOJuTUXnIo
+         ioSkI/LdDb3kq8LO8FYABNTIiF3qZKhildyas5Qt9wgKB6gBsAdwwJA+TxJwCyRHPErx
+         d4dstkYxE9p5dJ/Cj9deHjDm5wtMQebUaicPjjaotG7Gar5o2uXtKdavq/EyCKpC8GI+
+         CfIA==
+X-Gm-Message-State: AOAM531Xv1n1+bNnkDJLoTfsU1KVutA08YB2tcxPyVcFcUR9/wOeWQJ/
+        1HrYTZUmPD2SrWxLjOWAbg==
+X-Google-Smtp-Source: ABdhPJzWee0fZTqZEQWL/ptQEMx+PfSomfPDeGF7gm1FmOf20zLrifz3/STLKJkgTmLuKgxEqET0/Q==
+X-Received: by 2002:a05:6e02:670:: with SMTP id l16mr10253072ilt.52.1598377338930;
+        Tue, 25 Aug 2020 10:42:18 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id v84sm9831589ilk.4.2020.08.25.10.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 10:42:17 -0700 (PDT)
+Received: (nullmailer pid 1008933 invoked by uid 1000);
+        Tue, 25 Aug 2020 17:42:15 -0000
+Date:   Tue, 25 Aug 2020 11:42:15 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Crystal Guo <crystal.guo@mediatek.com>
+Cc:     p.zabel@pengutronix.de, matthias.bgg@gmail.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, s-anna@ti.com, afd@ti.com,
+        seiya.wang@mediatek.com, stanley.chu@mediatek.com,
+        yingjoe.chen@mediatek.com, fan.chen@mediatek.com,
+        yong.liang@mediatek.com
+Subject: Re: [v4,1/4] dt-binding: reset-controller: ti: add reset-duration-us
+ property
+Message-ID: <20200825174215.GA999117@bogus>
+References: <20200817030324.5690-1-crystal.guo@mediatek.com>
+ <20200817030324.5690-2-crystal.guo@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200824193036.6033-1-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817030324.5690-2-crystal.guo@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Aug 17, 2020 at 11:03:21AM +0800, Crystal Guo wrote:
+> introduce 'reset' method to allow device do serialized assert and
+> deassert operations in a single step, which needs a minimum delay
+> to be waited between assert and deassert.
 
-On 8/24/2020 12:30 PM, Jim Quinlan wrote:
+Why is Mediatek adding to a TI binding?
+
 > 
-> Patchset Summary:
->    Enhance a PCIe host controller driver.  Because of its unusual design
->    we are foced to change dev->dma_pfn_offset into a more general role
->    allowing multiple offsets.  See the 'v1' notes below for more info.
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> index 86945502ccb5..ab041032339b 100644
+> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> @@ -59,6 +59,11 @@ Required properties:
+>  Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
+>  common reset controller usage by consumers.
+>  
+> +Optional properties:
+> +- reset-duration-us: When do serialized assert and deassert operations, minimum delay in microseconds
+> +is needed to be waited between an assert and a deassert to reset the device. This value can be 0, 0 means
+> +that such a delay is not needed.
 
-We are version 11 and counting, and it is not clear to me whether there 
-is any chance of getting these patches reviewed and hopefully merged for 
-the 5.10 merge window.
+This goes in the reset controller node or each consumer? For the latter, 
+it should be a cell in 'resets' if you need this. But really, I think 
+the reset controller should enforce some minimum time that works for all 
+consumers. Surely having a minimum time per reset isn't really needed.
 
-There are a lot of different files being touched, so what would be the 
-ideal way of routing those changes towards inclusion?
-
-Thanks!
--- 
-Florian
+Rob
