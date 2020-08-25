@@ -7,216 +7,152 @@ X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB81C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D11C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99DD82071E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907082075E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:53:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598392129;
-	bh=HdWdCg5End0CQJcfKxWBW19NbLdV3wK4LQlQ8qpg/xo=;
+	s=default; t=1598392381;
+	bh=EDPzsxGrzbd8yVTZyGVgWxXMOHbylkPvfIMOpW/XevE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sm2QspPt6bb4d37w/iNGf6c/H7NB4bKn3+lc56GSQTNYDiItGH2EeL5NH2pLyevTN
-	 IJy7uFhGLkwR0Dj0vVYYTQ9DVY5Kr9KCVSCtI6rzyZjUXDzStZ94F9VQOdFcE+8Ni5
-	 nzNZNoTqWfIeqWNPDoeKU4JhyVJEQHBD/myqiOlc=
+	b=W84c0/J6qWhBFPkOuEj2xqApDLCC05ZvRoFyqbWOBRpyKVj04t4mA1pRV7KCR0ieC
+	 UA0uorBvgP2IxhmAYdjKNPGHKK07LGs6lWV8Ohomfp/dCZTalYmLGcf8QJO+6jV20s
+	 z+Whi7IxR2oBzX1PSLIBEmMO+/gwNeQEdWdMkGG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgHYVst (ORCPT
+        id S1726611AbgHYVxB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:48:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42541 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHYVss (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:48:48 -0400
-Received: by mail-io1-f66.google.com with SMTP id g13so45619ioo.9;
-        Tue, 25 Aug 2020 14:48:47 -0700 (PDT)
+        Tue, 25 Aug 2020 17:53:01 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43739 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHYVw7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:52:59 -0400
+Received: by mail-il1-f195.google.com with SMTP id e11so55619ils.10;
+        Tue, 25 Aug 2020 14:52:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RQP52sLIM0MfnF4NggVw656j4jf7VJADZKCoTHNbNKI=;
-        b=oqfUPgX+gjBxakDKpvrTAQSwUlYMUsVtv6Tfnxy30v26D+DiH400WcudOQ84Be+Fxe
-         gtz8Zm3ZiBvSLnv/QesK1GgeOjZC4QTJXJGk8iacUc9K6bXfk5h3n9HChizhDdK2yIbe
-         TBS67Dq2eNk4OpuHnTk0dNBYOFHPkJ4fjDx+VO5Ppa/DNRT5Vj9f/2xlM7DaSHrcb66p
-         /HSL77Kz4WcaUtl2JQmGtO3LseCQSj9E3MYc1R5wMTt2RfBRfOd2DwqfP9H3HT1Muu0F
-         6oLSahObcCzSe1e0qo/tbzA8W4vuYBNEx1fg/vo2Ax1+jNpb59mdzJhKDsGbFtjORZNd
-         8piA==
-X-Gm-Message-State: AOAM531NIDvbYZAGtueRMHADMnnzlgzCVjUGT+GTR+pFoPvU4dazS0oK
-        0Byv+dkzhCEu3RbsQGFw5HCr7knbL3uN
-X-Google-Smtp-Source: ABdhPJwIny58KBr2tW0qD6I6vbfQzkQqr7DvAVQaFDJyISwKyKf4dn22aFNXa8TQpK0wTX1V5yeJGQ==
-X-Received: by 2002:a6b:5009:: with SMTP id e9mr10947465iob.156.1598392127545;
-        Tue, 25 Aug 2020 14:48:47 -0700 (PDT)
+        bh=z862RBqRInU1jmo+k1WEqk2fp00qEJO4pngR/l2zG04=;
+        b=IJOk15H2QDh0m5biEKrvgWBAqGzxW39Iq6BRxw7dfl6mvwjiPLxeiAb1YtSUQCQQpm
+         gzCAGSsY5liF3CCXc2JXtTKuidG0Zli5zHcu3Qw4S+fA42mUpVvT7Q5ymP5hc6Dk3WMO
+         k8Cf/6LB3NxDmPFZ8WtvgDPRTH5MxF4WlBzIZJV1z2cU9UU0+g3mNXR3LeLjbqDWmU7C
+         XCCCH445M1ehDGRZG+6GmaTqwC22QaqLsqveKqEhUqVXXmCGIAOvF5wEn93q8J0F2g28
+         n/B5w5Q8WrphW2pFFs+uJs0rALPDzNH4fnTlY5KMFyfEp2DdpkAcb3unb+zgzXr7/Nhv
+         pGDw==
+X-Gm-Message-State: AOAM5339O6xfv58cH5Su4LdleJvvb0LI7rPCSQ41aP9xLcGbrhL0zf6A
+        l6DheIbN8tMTD3TdPZrL3w==
+X-Google-Smtp-Source: ABdhPJx3VbGqokXyWzIiTWH+YZW0T23M3rLSC5vTwacOnJTPXEiL3A51zhWfOq6sV0mmYmWUyNoC2Q==
+X-Received: by 2002:a92:5bd5:: with SMTP id c82mr11194112ilg.166.1598392378364;
+        Tue, 25 Aug 2020 14:52:58 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id t187sm23566iof.54.2020.08.25.14.48.44
+        by smtp.gmail.com with ESMTPSA id k18sm174461ils.42.2020.08.25.14.52.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 14:48:47 -0700 (PDT)
-Received: (nullmailer pid 1396452 invoked by uid 1000);
-        Tue, 25 Aug 2020 21:48:42 -0000
-Date:   Tue, 25 Aug 2020 15:48:42 -0600
+        Tue, 25 Aug 2020 14:52:57 -0700 (PDT)
+Received: (nullmailer pid 1403055 invoked by uid 1000);
+        Tue, 25 Aug 2020 21:52:53 -0000
+Date:   Tue, 25 Aug 2020 15:52:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
-Cc:     maz@kernel.org, tglx@linutronix.de, jason@lakedaemon.net,
-        matthias.bgg@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, yj.chiang@mediatek.com,
-        alix.wu@mediatek.com, daniel@0x0f.com
-Subject: Re: [PATCH 2/2] dt-bindings: interrupt-controller: Add MStar
- interrupt controller
-Message-ID: <20200825214842.GA1367012@bogus>
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
- <20200819034231.20726-3-mark-pk.tsai@mediatek.com>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] ASoC: dt-bindings: qcom: Document "aux-devs" property
+Message-ID: <20200825215253.GA1397515@bogus>
+References: <20200819091533.2334-1-stephan@gerhold.net>
+ <20200819091533.2334-2-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819034231.20726-3-mark-pk.tsai@mediatek.com>
+In-Reply-To: <20200819091533.2334-2-stephan@gerhold.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 11:42:31AM +0800, Mark-PK Tsai wrote:
-> Add binding for MStar interrupt controller.
+On Wed, Aug 19, 2020 at 11:15:32AM +0200, Stephan Gerhold wrote:
+> In some cases we need to probe additional audio components that do
+> not appear as part of the DAI links specified in the device tree.
+> Examples for this are auxiliary devices such as analog amplifiers
+> or codecs.
 > 
-> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> To make them work they need to be added as part of "aux-devs"
+> and connected to some other audio component using the audio routes
+> configurable using "(qcom,)audio-routing".
+> 
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 > ---
->  .../interrupt-controller/mstar,mst-intc.yaml  | 82 +++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml
+>  .../devicetree/bindings/sound/qcom,apq8016-sbc.txt        | 7 +++++++
+>  Documentation/devicetree/bindings/sound/qcom,apq8096.txt  | 8 ++++++++
+>  Documentation/devicetree/bindings/sound/qcom,sdm845.txt   | 8 ++++++++
+>  3 files changed, 23 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml
-> new file mode 100644
-> index 000000000000..6e383315e529
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: GPL-2.0
-
-Dual license new bindings.
-
-(GPL-2.0-only OR BSD-2-Clause)
-
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/mstar,mst-intc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt b/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+> index 84b28dbe9f15..23998262a0a7 100644
+> --- a/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+> +++ b/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+> @@ -34,6 +34,13 @@ Required properties:
+>  			  * DMIC
+>  			  * Ext Spk
+>  
+> +Optional properties:
 > +
-> +title: MStar Interrupt Controller
+> +- aux-devs		: A list of phandles for auxiliary devices (e.g. analog
+> +			  amplifiers) that do not appear directly within the DAI
+> +			  links. Should be connected to another audio component
+> +			  using "qcom,audio-routing".
 > +
-> +maintainers:
-> +  - Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+>  Dai-link subnode properties and subnodes:
+>  
+>  Required dai-link subnodes:
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+> index c814e867850f..248df5056fec 100644
+> --- a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+> +++ b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+> @@ -55,6 +55,14 @@ This binding describes the APQ8096 sound card, which uses qdsp for audio.
+>  	Value type: <stringlist>
+>  	Definition: The user-visible name of this sound card.
+>  
+> +- aux-devs
+> +	Usage: optional
+> +	Value type: <phandles with arguments>
+
+How do you know how many arguments? It either has to be fixed or needs a 
+#.*cells in the phandles. For the latter, you'd need to come up with a 
+common binding.
+
+> +	Definition: A list of phandles for auxiliary devices (e.g. analog
+> +		    amplifiers) that do not appear directly within the DAI
+> +		    links. Should be connected to another audio component
+> +		    using "audio-routing".
 > +
-> +description: |+
-> +  MStar, SigmaStar and Mediatek DTV SoCs contain multiple legacy
-> +  interrupt controllers that routes interrupts to the GIC.
+>  = dailinks
+>  Each subnode of sndcard represents either a dailink, and subnodes of each
+>  dailinks would be cpu/codec/platform dais.
+> diff --git a/Documentation/devicetree/bindings/sound/qcom,sdm845.txt b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+> index ca8c89e88bfa..3d5cbe953cf7 100644
+> --- a/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+> +++ b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
+> @@ -24,6 +24,14 @@ This binding describes the SDM845 sound card, which uses qdsp for audio.
+>  	Value type: <stringlist>
+>  	Definition: The user-visible name of this sound card.
+>  
+> +- aux-devs
+> +	Usage: optional
+> +	Value type: <phandles with arguments>
+> +	Definition: A list of phandles for auxiliary devices (e.g. analog
+> +		    amplifiers) that do not appear directly within the DAI
+> +		    links. Should be connected to another audio component
+> +		    using "audio-routing".
 > +
-> +  The HW block exposes a number of interrupt controllers, each
-> +  can support up to 64 interrupts.
-> +
-> +allOf:
-> +  - $ref: /schemas/interrupt-controller.yaml#
-
-Drop this. It is applied based on node name matching already.
-
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: mstar,mst-intc
-> +      - enum:
-> +          - mediatek,mt58xx-intc
-
-Normally, the 1st entry would be enum as that's where you'd add new 
-compatibles (as the fallback is constant). But if you don't forsee any 
-additions, just make both 'const'
-
-> +
-> +  interrupt-controller: true
-> +
-> +  "#address-cells":
-> +    enum: [ 0, 1, 2 ]
-
-This would normally be 0 in an interrupt controller. It's only relevant 
-if you have an 'interrupt-map' which this is the parent for.
-
-> +  "#size-cells":
-> +    enum: [ 1, 2 ]
-
-And this should be dropped.
-
-> +
-> +  "#interrupt-cells":
-> +    const: 3
-> +    description: |
-> +      Use the same format as specified by GIC in arm,gic.yaml.
-
-That's odd. You have the same SPI and PPI stuff?
-
-> +
-> +  reg:
-> +    description: |
-> +      Physical base address of the mstar interrupt controller
-> +      registers and length of memory mapped region.
-
-Drop this. That's every 'reg' property.
-
-> +    minItems: 1
-
-maxItems is more logical.
-
-> +
-> +  mstar,irqs-map-range:
-> +    description: |
-> +      The range of parent interrupt controller's interrupt lines
-> +      that are hardwired to mstar interrupt controller.
-
-Is this <start size> or <start end>?
-
-Really, this should just use 'interrupts' even though that's a bit 
-verbose. Or be implied by the compatible string. What's the maximum 
-number of parent interrupts?
-
-In any case, we really need to stop having vendor specific properties 
-for this.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +    items:
-> +      minItems: 2
-> +      maxItems: 2
-> +
-> +  mstar,intc-no-eoi:
-> +    description: |
-
-Don't need '|' if there's no formatting.
-
-> +      Mark this controller has no End Of Interrupt(EOI) implementation.
-> +      This is a empty, boolean property.
-
-You can drop this line. The schema says this.
-
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - mstar,irqs-map-range
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    mst_intc0: interrupt-controller@1f2032d0 {
-> +      compatible = "mstar,mst-intc", "mediatek,mt58xx-intc";
-> +      interrupt-controller;
-> +      #interrupt-cells = <3>;
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      interrupt-parent = <&gic>;
-> +      reg = <0x1f2032d0 0x30>;
-> +      mstar,irqs-map-range = <0 63>;
-
-Is 0 a PPI or SPI? This property is making some assumption and wouldn't 
-be able to support both types or another parent interrupt controller.
-
-> +    };
-> +...
+>  = dailinks
+>  Each subnode of sndcard represents either a dailink, and subnodes of each
+>  dailinks would be cpu/codec/platform dais.
 > -- 
-> 2.18.0
+> 2.28.0
+> 
