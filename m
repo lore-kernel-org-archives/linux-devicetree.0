@@ -2,35 +2,56 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E49C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BAAC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E19FD2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7532076C
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598338156;
+	bh=5FFhlV+WeJfn1l/c2VSEo8l5it+HZbGXLtCi0d0pxFs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cgroSecgoqkH2wF9PMN7+rSRVP7F+3N2f6ZVyhJhjts36oTmZfuGC92Gcw4mfqvqF
+	 md7dOMY4Vga2tcwKIDvuqZyyTshXoCZlR4APPOfy2i8wzQlmwYco7T0Ch76G7TD0KS
+	 UeJIaaje2xwDS/yUOjPYYdQXRe4MjkAi5w1dyWLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgHYGkp (ORCPT
+        id S1729116AbgHYGtP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:40:45 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52943 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729107AbgHYGko (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:40:44 -0400
-Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kASd5-0006Yi-0e; Tue, 25 Aug 2020 08:40:23 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1kASd2-0002aQ-Mk; Tue, 25 Aug 2020 08:40:20 +0200
-Date:   Tue, 25 Aug 2020 08:40:20 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
+        Tue, 25 Aug 2020 02:49:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51081 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbgHYGtO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:49:14 -0400
+Received: by mail-wm1-f65.google.com with SMTP id t2so1282326wma.0;
+        Mon, 24 Aug 2020 23:49:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xu5xGZSY+yFQgovcXhMUWgqGOjtkm3hsvCXY91EThRQ=;
+        b=gZ2jkEhXAvtvYP27MMIyFV5/J0HVbGIs74uKZvOriMsWEQu6LYcwXom0OosN7q5FFU
+         tUJ3LPJMNighSsaoApLiXek0CUy+YsYS5GUf0jnT2EdUalpfsthvS20XQLTuS941eCVA
+         CQxREM1rw0eWSd8cc553cTYo5NbI7+mYUAZCUvLS4Vd9Hv/wNlhSHQc5cdnoyQ0eylAa
+         rvoBCdFwZl+qCtkgtJ0/OoLM79ZHUT6+cSlZ4zQ/HAQtPg+UVrlF8UDPQf5xSFfcR3d2
+         aA6c7xlLAeuN+ANYX+QD8lAiHcUrYUutsa7IddTRd1VyjmVsW5noUZVgvEwwClAomfwV
+         s+gA==
+X-Gm-Message-State: AOAM5316ADPVifGp3E+YGa74XaffAEg8uiuTCe7O37VW4EO7ztkwDD5P
+        x7sbFFDT2Vz5bPJ+2HQfNj4=
+X-Google-Smtp-Source: ABdhPJzyAcY2Bw92cGcbfsJuTBwKqDGqGkJGMxEMpfhNk68WOOIS/f1lMDDS8tqHLpAt+d0YVzNPiA==
+X-Received: by 2002:a1c:24d5:: with SMTP id k204mr505723wmk.159.1598338152035;
+        Mon, 24 Aug 2020 23:49:12 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id y10sm283662wro.50.2020.08.24.23.49.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 23:49:11 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 08:49:08 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Richard Weinberger <richard@nod.at>,
@@ -49,79 +70,71 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH 02/16] dt-bindings: mtd: gpmi-nand: Fix matching of
  clocks on different SoCs
-Message-ID: <20200825064020.GM13023@pengutronix.de>
+Message-ID: <20200825064908.GA3458@kozik-lap>
 References: <20200824190701.8447-1-krzk@kernel.org>
  <20200824190701.8447-2-krzk@kernel.org>
+ <20200825064020.GM13023@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200824190701.8447-2-krzk@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 08:34:56 up 187 days, 14:05, 139 users,  load average: 0.34, 0.21,
- 0.22
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+In-Reply-To: <20200825064020.GM13023@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:06:47PM +0200, Krzysztof Kozlowski wrote:
-> Driver requires different amount of clocks for different SoCs.  Describe
-> these requirements properly to fix dtbs_check warnings like:
+On Tue, Aug 25, 2020 at 08:40:20AM +0200, Sascha Hauer wrote:
+> On Mon, Aug 24, 2020 at 09:06:47PM +0200, Krzysztof Kozlowski wrote:
+> > Driver requires different amount of clocks for different SoCs.  Describe
+> > these requirements properly to fix dtbs_check warnings like:
+> > 
+> >     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
+> >  1 file changed, 61 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > index 28ff8c581837..9d764e654e1d 100644
+> > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - fsl,imx6q-gpmi-nand
+> > +              - fsl,imx6sx-gpmi-nand
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          items:
+> > +            - description: SoC gpmi io clock
+> > +            - description: SoC gpmi apb clock
+> > +            - description: SoC gpmi bch clock
+> > +            - description: SoC gpmi bch apb clock
+> > +            - description: SoC per1 bch clock
+> > +        clock-names:
+> > +          items:
+> > +            - const: gpmi_io
+> > +            - const: gpmi_apb
+> > +            - const: gpmi_bch
+> > +            - const: gpmi_bch_apb
+> > +            - const: per1_bch
 > 
->     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
+> This enforces this specific order of the clocks given in the dts. The
+> clock binding itself doesn't require any specific order, that's what we
+> have the names array for.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
->  1 file changed, 61 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> index 28ff8c581837..9d764e654e1d 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx6q-gpmi-nand
-> +              - fsl,imx6sx-gpmi-nand
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: SoC gpmi io clock
-> +            - description: SoC gpmi apb clock
-> +            - description: SoC gpmi bch clock
-> +            - description: SoC gpmi bch apb clock
-> +            - description: SoC per1 bch clock
-> +        clock-names:
-> +          items:
-> +            - const: gpmi_io
-> +            - const: gpmi_apb
-> +            - const: gpmi_bch
-> +            - const: gpmi_bch_apb
-> +            - const: per1_bch
+> Is this really what we want?
 
-This enforces this specific order of the clocks given in the dts. The
-clock binding itself doesn't require any specific order, that's what we
-have the names array for.
+Indeed but have in mind that the specific order was there already. This
+patch does not address that part, only number of clocks.
 
-Is this really what we want?
+Fixing this for any order could be done with patterns. I can work on
+that.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+Krzysztof
