@@ -2,103 +2,99 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F080C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F053C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1F5E2074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598342544;
-	bh=bW13b8whVUygt/4rBdV1/g0/gNKmPIYE6suPowRZoFg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Oi7NCohCBqc6MAFM0edjxyvxNfSiX+ZHZEtMZWg/xweV0O4pYXzEt4mhflbG/vDy2
-	 +0oAjQu+3s0JrQ+2DTxrOYgAfYTDMdmzMvcTixDEQ1Hae7GAvPfKPMirRuzzzPUyha
-	 uCYurgxZ6Xlwgw1H2sPd1YqDm7YLMLcSb1qfds+k=
+	by mail.kernel.org (Postfix) with ESMTP id EB2832074D
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:07:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IX7F62He"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725893AbgHYICW (ORCPT
+        id S1725947AbgHYIHT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 04:07:19 -0400
+Received: from m12-18.163.com ([220.181.12.18]:46137 "EHLO m12-18.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgHYICV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:02:21 -0400
-Received: from localhost (p54b333df.dip0.t-ipconnect.de [84.179.51.223])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FFE020706;
-        Tue, 25 Aug 2020 08:02:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598342541;
-        bh=bW13b8whVUygt/4rBdV1/g0/gNKmPIYE6suPowRZoFg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BQVvCvXTMwC+xwU4G+qX71HTNbcHnrkKm+kDkjp0Xiqq0t/ULU/CYo34QzzS8okrL
-         MbodXfeiu5FlhH4w57HMfN8h77BrrJw2QT1cDwx/RrFkgmT95G0wZKUckGj36uyuCN
-         qqv4UcJY8haGJ3F+sHlQjtd0naMmKm5OlqqJDHEg=
-Date:   Tue, 25 Aug 2020 10:02:18 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Frank Lee <frank@allwinnertech.com>
-Cc:     gregory.clement@bootlin.com, robh+dt@kernel.org,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tiny.windzz@gmail.com,
-        huangshuosheng@allwinnertech.com, liyong@allwinnertech.com,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 13/16] dt-bindings: i2c: mv64xxx: Add compatible for
- the A100 i2c node.
-Message-ID: <20200825080218.GI1861@ninjato>
-References: <cover.1595572867.git.frank@allwinnertech.com>
- <a6393e8feec580e11dccd5df20417e66e8485cd0.1595572867.git.frank@allwinnertech.com>
+        id S1725936AbgHYIHO (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:07:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=zMFqi
+        tvmokU7WJOHKlhJDoojMhKyDKyoilWEUYA3xEs=; b=IX7F62HeJ0itCSLv5HTN0
+        IEZ+TPmC2vi89ze1LJVB7Jk6pcnFwnsIVjLkdQIsHVmY/Shm/ecEG30by8lW5fMc
+        JVxTMUvxOHWd439Q8DhgNgw7YnekM/9QBg0crq/InGn2SpRFfX/3qnJOdt9uQBLc
+        qO+jS0/riQIkC4J/MnUqj4=
+Received: from [192.168.1.166] (unknown [58.33.102.45])
+        by smtp14 (Coremail) with SMTP id EsCowAC3ErdGxkRfdL9eKw--.56621S2;
+        Tue, 25 Aug 2020 16:05:27 +0800 (CST)
+Subject: Re: [PATCH v2 2/2] leds: Add an optional property named 'sdb-gpios'
+To:     Rob Herring <robh@kernel.org>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200808033731.15695-1-von81@163.com>
+ <20200808033731.15695-2-von81@163.com> <20200824222154.GA3421740@bogus>
+From:   Grant Feng <von81@163.com>
+Message-ID: <d0ae6853-94a7-ca4e-61f1-e5119efa41bf@163.com>
+Date:   Tue, 25 Aug 2020 16:05:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fckbADODYWZD5TdN"
-Content-Disposition: inline
-In-Reply-To: <a6393e8feec580e11dccd5df20417e66e8485cd0.1595572867.git.frank@allwinnertech.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200824222154.GA3421740@bogus>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: EsCowAC3ErdGxkRfdL9eKw--.56621S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uFyUCr47AF13WF1fWF1xKrg_yoW8Xr4Upr
+        s2kF10yF9IqFy7K3yjva4UJryUZa18AF4UKF4kXFyrG3WDuFySq3yIkrn8W3WUXrWxuay0
+        vFsYgFW8Cr1UA3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07b7Xo7UUUUU=
+X-Originating-IP: [58.33.102.45]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/xtbBLQeLOlziZJTFsAAAsg
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
---fckbADODYWZD5TdN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2020-08-25 6:21, Rob Herring wrote:
+> On Sat, Aug 08, 2020 at 11:37:31AM +0800, Grant Feng wrote:
+>> The chip enters hardware shutdown when the SDB pin is pulled low.
+>> The chip releases hardware shutdown when the SDB pin is pulled high.
+>>
+>> Signed-off-by: Grant Feng <von81@163.com>
+>> ---
+>>   Documentation/devicetree/bindings/leds/leds-is31fl319x.txt | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+>> index fc2603484544..e8bef4be57dc 100644
+>> --- a/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+>> +++ b/Documentation/devicetree/bindings/leds/leds-is31fl319x.txt
+>> @@ -16,6 +16,7 @@ Optional properties:
+>>   - audio-gain-db : audio gain selection for external analog modulation input.
+>>   	Valid values: 0 - 21, step by 3 (rounded down)
+>>   	Default: 0
+>> +- sdb-gpios : Specifier of the GPIO connected to SDB pin.
+> We normally use 'shutdown-gpios' for a shutdown GPIO.
+Thanks for the review.
+>>   
+>>   Each led is represented as a sub-node of the issi,is31fl319x device.
+>>   There can be less leds subnodes than the chip can support but not more.
+>> @@ -44,6 +45,7 @@ fancy_leds: leds@65 {
+>>   	#address-cells = <1>;
+>>   	#size-cells = <0>;
+>>   	reg = <0x65>;
+>> +	sdb-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+>>   
+>>   	red_aux: led@1 {
+>>   		label = "red:aux";
+>> -- 
+>> 2.17.1
+>>
+>>
 
-On Fri, Jul 24, 2020 at 03:17:01PM +0800, Frank Lee wrote:
-> From: Yangtao Li <frank@allwinnertech.com>
->=20
-> Allwinner A100 have a mv64xxx i2c interface available to be used.
->=20
-> Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-For the record, this got upstream during the 5.9 merge window. I seem to
-have forgotten to send a mail that this patch got applied. Sorry!
-
-
---fckbADODYWZD5TdN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9ExYoACgkQFA3kzBSg
-KbY0xQ/3Q36zIMyVlkjykwjnFr9cNVl74rUXASPx+KqYBCPCcRW4YHzmDvdsmycj
-thCvkVfvYy8WWgeyn5sccWYNir9oHTKAaToZ+VztJsrwK8a5xIjjZ+qbVpScLQGX
-6aiXnzwl8Nj7N0ntuZJRt+ghWAuYEi59FpWmxFCtecMC+V0vkQfj9xfaiQ+/NUWA
-MpIzHekbvoZKSvsMv91iJZcuA2+ouZiudy0/zi9tQB3aRXUIrVttSWFCkdT8yzAk
-oC+Ix3zT9UeB1/2hnhjl0BTj8rcSFSiIsU2q+jYdyfG1sQZvWQEGj+Hcx5DvDFqp
-sm+HM+UIORNOrJyL3k1j78QKdoj+n0CqKyXQPHsZl17aziTy5i47bQx45xiQLA1x
-0rOlZM1vHkn7pFCcJ94jc+KpjpxrNoqiXM3WHF7e17w3VsK9buCUJQIScepPYn+y
-LwlApNjGfYS6ZgpY5P/9IH34Gb4jl3pwdhCZwZaCm/zr9igthNEhuOc9BB6veBFk
-nBHiwl8vpVed60Uu1Mn+O0XwGqTdU9RyIwq3iBv0w2PLellX6+Gm/CSO6RzA8e9n
-Ii/h7SSrqsJmmE5NKg6jSrkk/OlVrjK+Vt1HxndUc/pG41ZDIE6/85vEG41N3KG0
-ekOcl9ttQkxwsbmRbLq/ONZCrpKzbNtMNP0AyJz7376ICmOgCg==
-=kqFI
------END PGP SIGNATURE-----
-
---fckbADODYWZD5TdN--
