@@ -2,135 +2,120 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569B8C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AA9C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 374082075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1DE2065F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 08:14:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="kRmTEwWN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="eU6bzw/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgHYIIs (ORCPT
+        id S1726191AbgHYIOM (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:08:48 -0400
-Received: from m12-11.163.com ([220.181.12.11]:38754 "EHLO m12-11.163.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbgHYIIs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:08:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=uzJQefAboauO6PTuM2
-        6KoCfp7NDYLyFh9K9UE5Px/BM=; b=kRmTEwWNKXXJnJulcK9KWXwmwC3JvpNYPp
-        AugMKjabHJSXa4Ew+Ck677FL3jgjHYBV2N4/b9EncsBAHCRNThWmTPuO1r+487GF
-        O1PiiOQCuRt1HEmxpaxHl4CUO42evvO2IAGPRZQq4zl2y8wsPdEOOVG7QOy2ykah
-        ZAg04EZeE=
-Received: from localhost.localdomain (unknown [58.33.102.45])
-        by smtp7 (Coremail) with SMTP id C8CowAD3rDXqxkRfAWr+DA--.63807S2;
-        Tue, 25 Aug 2020 16:08:15 +0800 (CST)
-From:   Grant Feng <von81@163.com>
-To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/2] leds: is31fl32xx: Add shutdown pin and generate a 5ms low pulse when startup
-Date:   Tue, 25 Aug 2020 16:07:57 +0800
-Message-Id: <20200825080758.5283-1-von81@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: C8CowAD3rDXqxkRfAWr+DA--.63807S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AF17trWUCr1rGr17JFW3trb_yoW8KFW7pF
-        4qkFy5Ar4YvrWxKwnrAF4UZFy3A348JF4DtFWxC3y3J3W2krn0qFy0yryqv3W5WFZ5uay5
-        AF4DKF15Gr48Aw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jwsqXUUUUU=
-X-Originating-IP: [58.33.102.45]
-X-CM-SenderInfo: xyrqmii6rwjhhfrp/1tbiUQ+LOlWBQf6LUgAAsd
+        Tue, 25 Aug 2020 04:14:12 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:10977 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgHYIOM (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 04:14:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1598343251; x=1629879251;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=g0oeSZlVpkf2Kzf0aWXXwlGNTwXvDpPW9GbL9juy12M=;
+  b=eU6bzw/L480AjZueaHDRy+xI0PLXTFsIloiV9KY0I6gObO+Zj/4IEdok
+   jKVUClfX799xuA3zoIBJWUBd884rH9Q4odWcTpfybBajDbflA3LKlLXEf
+   K50SA2BstfhDuXOC01qOCTHoUJTPlQ+dUptLXEQYWLAw5xiseNAtUMj9U
+   /6747HrvFpUHzwXSrefimG/QKw57wERU8W4H6TxaBjq6qfl+mfZDxpuZH
+   GKqlhisggP0bchccOdA6LPZ891GEnftBxNY7O7D2r4uF/A4LfgWywRviP
+   urcDlzUAeD2BH66fWUPg0kFcxfCrz3VACXiqVONU8uccmENZ8L0PmSG2Q
+   Q==;
+IronPort-SDR: /wZRFZLMaC+FjjwakJmXc7gnUIOu6foIdLH8Cp825Cq/gPdvA98qu5moD2NNYiQzpp3w6tX0GN
+ VS0U7j05HD+k9rfXdYWnfK+AIpca/dmjnDuQPWkc8r4eZK7cuFzkNuqY+Jr4pWiKNY+ePMp28/
+ rdph1RlRy0fi2fn70mFrYroAB1gOPIw59ZpAbhblYirvohScFia4oNxfz4JKxrI0Q8i6UOXOdS
+ eGnte/DjDGrUfd9vGguVA0CdJGVkYzMnrZnfhfCYDdxlTip/h5fB7YletARsvCxyzEYFQ5TZ+0
+ MAk=
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="86802294"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2020 01:14:06 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 01:14:05 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 25 Aug 2020 01:13:23 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        SoC Team <soc@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v5 0/3] mmc: Adding support for Microchip Sparx5 SoC
+Date:   Tue, 25 Aug 2020 10:13:54 +0200
+Message-ID: <20200825081357.32354-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-generate a 5ms low pulse on shutdown pin when startup, then the chip
-becomes more stable in the complex EM environment.
+The patch adds eMMC support for Sparx5, by adding a driver for the SoC
+SDHCI controller, DT configuration and DT binding documentation.
 
-Signed-off-by: Grant Feng <von81@163.com>
----
- drivers/leds/leds-is31fl32xx.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+Changes in v5:
+- DT+yaml: Change (mmc|sdhci)@600800000 to mmc0@600800000
+- Add missing "static" attribute to probe function
+- Drop MMC_SDHCI_IO_ACCESSORS, as it is not required (anymore)
 
-diff --git a/drivers/leds/leds-is31fl32xx.c b/drivers/leds/leds-is31fl32xx.c
-index cd768f991da1..946ad2f71e00 100644
---- a/drivers/leds/leds-is31fl32xx.c
-+++ b/drivers/leds/leds-is31fl32xx.c
-@@ -16,6 +16,8 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- 
- /* Used to indicate a device has no such register */
- #define IS31FL32XX_REG_NONE 0xFF
-@@ -43,6 +45,7 @@ struct is31fl32xx_led_data {
- struct is31fl32xx_priv {
- 	const struct is31fl32xx_chipdef *cdef;
- 	struct i2c_client *client;
-+	struct gpio_desc *shutdown_gpio;
- 	unsigned int num_leds;
- 	struct is31fl32xx_led_data leds[];
- };
-@@ -282,11 +285,17 @@ static int is31fl32xx_software_shutdown(struct is31fl32xx_priv *priv,
- 	return 0;
- }
- 
--static int is31fl32xx_init_regs(struct is31fl32xx_priv *priv)
-+static int is31fl32xx_init(struct is31fl32xx_priv *priv)
- {
- 	const struct is31fl32xx_chipdef *cdef = priv->cdef;
- 	int ret;
- 
-+	if (priv->shutdown_gpio) {
-+		gpiod_direction_output(priv->shutdown_gpio, 0);
-+		mdelay(5);
-+		gpiod_direction_output(priv->shutdown_gpio, 1);
-+	}
-+
- 	ret = is31fl32xx_reset_regs(priv);
- 	if (ret)
- 		return ret;
-@@ -372,6 +381,15 @@ static int is31fl32xx_parse_dt(struct device *dev,
- 	struct device_node *child;
- 	int ret = 0;
- 
-+	priv->shutdown_gpio = devm_gpiod_get_optional(dev,
-+						"shutdown",
-+						GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->shutdown_gpio)) {
-+		ret = PTR_ERR(priv->shutdown_gpio);
-+		dev_err(dev, "Failed to get shutdown gpio: %d\n", ret);
-+		return ret;
-+	}
-+
- 	for_each_child_of_node(dev->of_node, child) {
- 		struct is31fl32xx_led_data *led_data =
- 			&priv->leds[priv->num_leds];
-@@ -453,11 +471,11 @@ static int is31fl32xx_probe(struct i2c_client *client,
- 	priv->cdef = cdef;
- 	i2c_set_clientdata(client, priv);
- 
--	ret = is31fl32xx_init_regs(priv);
-+	ret = is31fl32xx_parse_dt(dev, priv);
- 	if (ret)
- 		return ret;
- 
--	ret = is31fl32xx_parse_dt(dev, priv);
-+	ret = is31fl32xx_init(priv);
- 	if (ret)
- 		return ret;
- 
+Changes in v4:
+- Disable clock if sdhci_add_host() fails
+- Remove dev_err if sdhci_add_host() fails
+
+Changes in v3:
+- Add dt-bindings for property "microchip,clock-delay"
+- Enforce "microchip,clock-delay" valid range in driver
+- Removed a noisy pr_debug() in sdhci_sparx5_adma_write_desc()
+
+Changes in v2:
+- Changes in driver as per review comments
+ - Drop debug code
+ - Drop sysfs code
+ - use usleep_range()
+ - use mmc_hostname() in pr_debug()
+ - Remove deactivated code
+ - Minor cosmetics
+
+Lars Povlsen (3):
+  dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
+  sdhci: sparx5: Add Sparx5 SoC eMMC driver
+  arm64: dts: sparx5: Add Sparx5 eMMC support
+
+ .../mmc/microchip,dw-sparx5-sdhci.yaml        |  65 +++++
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  24 ++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  23 ++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  23 ++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  23 ++
+ drivers/mmc/host/Kconfig                      |  12 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-sparx5.c            | 269 ++++++++++++++++++
+ 8 files changed, 440 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-sparx5.c
+
 -- 
-2.17.1
-
+2.27.0
 
