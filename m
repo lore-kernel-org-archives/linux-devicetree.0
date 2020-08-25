@@ -2,133 +2,118 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F8EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37293C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C472074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06EE620706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WjBc9ONP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sIJwn8VJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbgHYJ3m (ORCPT
+        id S1728622AbgHYJcZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:29:42 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:12754 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726149AbgHYJ3m (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:29:42 -0400
-X-UUID: 4ab557a0b8c348b6879857d307f40f92-20200825
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=pzm6RISn/tNeKbUICcBC7qg5/+/y+MTOUCaljQkJv5I=;
-        b=WjBc9ONPbH2xD4WxLXUJLuFNUrmcxAywnOvIJ56DGvSswJiwg0LamrKhcxY5oqiO5LdTTv9IfQqfxnRx8yvmDo8BgWleofTk4jQACBZTpakTIO4qfIW9ISIz0PPvCaGnfIJnQclKIh9g2UwPm+2XSDs36z68lNqveiE2RCurNwU=;
-X-UUID: 4ab557a0b8c348b6879857d307f40f92-20200825
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1131286243; Tue, 25 Aug 2020 17:29:37 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 25 Aug 2020 17:29:34 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 25 Aug 2020 17:29:34 +0800
-Message-ID: <1598347775.16267.0.camel@mtksdccf07>
-Subject: Re: [PATCH] thermal: power_allocate: add upper and lower limits
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-CC:     Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>, <hsinyi@chromium.org>,
-        <linux-pm@vger.kernel.org>, <srv_heupstream@mediatek.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 25 Aug 2020 17:29:35 +0800
-In-Reply-To: <03286571-c110-7f5e-a911-24f8c3e4fd42@arm.com>
-References: <20200424071601.2636-1-michael.kao@mediatek.com>
-         <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
-         <1588156776.3573.1.camel@mtksdccf07>
-         <03286571-c110-7f5e-a911-24f8c3e4fd42@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 25 Aug 2020 05:32:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728059AbgHYJcY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:32:24 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D2D3C061574;
+        Tue, 25 Aug 2020 02:32:24 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id b17so7352757ejq.8;
+        Tue, 25 Aug 2020 02:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+OL1BkKHPa8TO+ySMXJR94J2ke1VHUzpaMpCsDy49Uc=;
+        b=sIJwn8VJ/fl4uKwSIoVsD1/JlWGZN9GOeQe3Q7xG77WwSNi/GpYpklD+Rsx5Y9PTG8
+         VPZ8np6Cg2DKZs0V/X8i+AB6H0sjxW0XkqJhozfgjGOGsD+5eK2IbXDUd1KA7i5P362Q
+         eyzhzr9hUmB100MXL8FNwA8lMSs5HETaGDJmP3Rm5f6vzD2nfW6M2Ckuvx5zwbZwya7m
+         JEP26uvbfGEDav8bYbzO/MEK7QI2iQHCVqmV93XGRsOYFJMldE2+DxOZhQRGSdY4JnTi
+         yiZ31p4CR2kdYcLsc7OzlrTIheEZXhCJq/YjRkaw5Tfk8jogbnhmkF+q7JwLblYCxTK2
+         iODg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+OL1BkKHPa8TO+ySMXJR94J2ke1VHUzpaMpCsDy49Uc=;
+        b=XsfHzy/nTghSTwq6/tjMcRhgvHfkVOtwwQseMSttbjawGYF7N+tDKGT9+V1H4UUIUu
+         BIi7qxNFIL/Jfg2L5WcnOlZ83hcNexY/c6kw3qO6P4Cdwb8hZdRZ6lsq6q9P7RpqfpoY
+         9CaSBTA7UlN39UESxJdg2zkwTxaEt51xGXQt7ZI9+mUrfA1By1agZfJQM89JKC4VOy/N
+         9enlWb5Dw/qPC3kVO7DPSPDzc1j9w+6YKiIsEADd9E2SW9Kzm09vsjv0PlKBIAtfDW7h
+         WpbmCYKwb7TjXqPmBAKnvN/4c8nT9uI9MGdVhCzN93niQTFsh7sC1UGpTe9yljmbuzov
+         ng6g==
+X-Gm-Message-State: AOAM533YQSDw9juuOIa+odpA4KfNB/h8CZ4xRG94W00aRzM6qH+zFSmA
+        /I/8l5H+9K5SSXZV0Zc3hec=
+X-Google-Smtp-Source: ABdhPJyJibwrKvFmGrHifck0mtLct24rvFhYheJeMPjbYsJJLnDUGC4LhSGzTJII8y99QwwCJqsmKQ==
+X-Received: by 2002:a17:906:35d6:: with SMTP id p22mr1478713ejb.221.1598347942793;
+        Tue, 25 Aug 2020 02:32:22 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id c4sm482930edr.49.2020.08.25.02.32.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 02:32:22 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 12:32:19 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org
+Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
+Message-ID: <20200825093219.bybzzpyfbbccjanf@skbuf>
+References: <20200820081118.10105-1-kurt@linutronix.de>
+ <20200820081118.10105-6-kurt@linutronix.de>
+ <87pn7ftx6b.fsf@intel.com>
+ <87bliz13kj.fsf@kurt>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bliz13kj.fsf@kurt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA0LTI5IGF0IDIxOjI0ICswMTAwLCBMdWthc3ogTHViYSB3cm90ZToNCj4g
-DQo+IE9uIDQvMjkvMjAgMTE6MzkgQU0sIE1pY2hhZWwgS2FvIHdyb3RlOg0KPiA+IE9uIEZyaSwg
-MjAyMC0wNC0yNCBhdCAxMDoyMiArMDEwMCwgTHVrYXN6IEx1YmEgd3JvdGU6DQo+ID4+IEhpIE1p
-Y2hhZWwsDQo+ID4+DQo+ID4+IE9uIDQvMjQvMjAgODoxNiBBTSwgTWljaGFlbCBLYW8gd3JvdGU6
-DQo+ID4+PiBUaGUgdXBwZXIgYW5kIGxvd2VyIGxpbWl0cyBvZiB0aGVybWFsIHRocm90dGxlIHN0
-YXRlIGluIHRoZQ0KPiA+Pj4gZGV2aWNlIHRyZWUgZG8gbm90IGFwcGx5IHRvIHRoZSBwb3dlcl9h
-bGxvY2F0ZSBnb3Zlcm5vci4NCj4gPj4+IEFkZCB0aGUgdXBwZXIgYW5kIGxvd2VyIGxpbWl0cyB0
-byB0aGUgcG93ZXJfYWxsb2NhdGUgZ292ZXJub3IuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1i
-eTogTWljaGFlbCBLYW8gPG1pY2hhZWwua2FvQG1lZGlhdGVrLmNvbT4NCj4gPj4+IC0tLQ0KPiA+
-Pj4gICAgZHJpdmVycy90aGVybWFsL3RoZXJtYWxfY29yZS5jIHwgMiArLQ0KPiA+Pj4gICAgMSBm
-aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4+Pg0KPiA+Pj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYyBiL2RyaXZlcnMvdGhl
-cm1hbC90aGVybWFsX2NvcmUuYw0KPiA+Pj4gaW5kZXggOWEzMjFkYzU0OGM4Li5mNmZlZWQyMjY1
-YmQgMTAwNjQ0DQo+ID4+PiAtLS0gYS9kcml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMNCj4g
-Pj4+ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYw0KPiA+Pj4gQEAgLTU5OCw3
-ICs1OTgsNyBAQCBpbnQgcG93ZXJfYWN0b3Jfc2V0X3Bvd2VyKHN0cnVjdCB0aGVybWFsX2Nvb2xp
-bmdfZGV2aWNlICpjZGV2LA0KPiA+Pj4gICAgCWlmIChyZXQpDQo+ID4+PiAgICAJCXJldHVybiBy
-ZXQ7DQo+ID4+PiAgICANCj4gPj4+IC0JaW5zdGFuY2UtPnRhcmdldCA9IHN0YXRlOw0KPiA+Pj4g
-KwlpbnN0YW5jZS0+dGFyZ2V0ID0gY2xhbXBfdmFsKHN0YXRlLCBpbnN0YW5jZS0+bG93ZXIsIGlu
-c3RhbmNlLT51cHBlcik7DQo+ID4+PiAgICAJbXV0ZXhfbG9jaygmY2Rldi0+bG9jayk7DQo+ID4+
-PiAgICAJY2Rldi0+dXBkYXRlZCA9IGZhbHNlOw0KPiA+Pj4gICAgCW11dGV4X3VubG9jaygmY2Rl
-di0+bG9jayk7DQo+ID4+Pg0KPiA+Pg0KPiA+PiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaCBhbmQg
-aGF2aW5nIHRvIGxvb2sgYXQgaXQuIEkgaGF2ZSBzb21lIGNvbmNlcm5zDQo+ID4+IHdpdGggdGhp
-cyBhcHByb2FjaC4gTGV0J3MgYW5hbHl6ZSBpdCBmdXJ0aGVyLg0KPiA+Pg0KPiA+PiBJbiBkZWZh
-dWx0IHRoZSBjb29saW5nIGRldmljZXMgaW4gdGhlIHRoZXJtYWwgem9uZSB3aGljaCBpcyB1c2Vk
-IGJ5IElQQQ0KPiA+PiBkbyBub3QgaGF2ZSB0aGlzICdsb3dlcicgYW5kICd1cHBlcicgbGltaXRz
-LiBUaGV5IGFyZSBzZXQgdG8NCj4gPj4gVEhFUk1BTF9OT19MSU1JVCBpbiBEVCB0byBnaXZlIGZ1
-bGwgY29udHJvbCB0byBJUEEgb3ZlciB0aGUgc3RhdGVzLg0KPiA+Pg0KPiA+PiBUaGlzIHRoZSBm
-dW5jdGlvbiAncG93ZXJfYWN0b3Jfc2V0X3Bvd2VyJyBhY3R1YWxseSB0cmFuc2xhdGVzIGdyYW50
-ZWQNCj4gPj4gcG93ZXIgdG8gdGhlIHN0YXRlIHRoYXQgZGV2aWNlIHdpbGwgcnVuIGZvciB0aGUg
-bmV4dCBwZXJpb2QuDQo+ID4+IFRoZSBJUEEgYWxnb3JpdGhtIGhhcyBhbHJlYWR5IHNwbGl0IHRo
-ZSBwb3dlciBidWRnZXQuDQo+ID4+IE5vdyB3aGF0IGhhcHBlbiB3aGVuIHRoZSAnbG93ZXInIHZh
-bHVlIHdpbGwgY2hhbmdlIHRoZSBzdGF0ZSB0byBhIHN0YXRlDQo+ID4+IHdoaWNoIGNvbnN1bWVz
-IG1vcmUgcG93ZXIgdGhhbiB3YXMgY2FsY3VsYXRlZCBpbiB0aGUgSVBBIGFsZy4uLiBJdCB3aWxs
-DQo+ID4+IGJlY2FtZSB1bnN0YWJsZS4NCj4gPj4NCj4gPj4gSSB3b3VsZCByYXRoZXIgc2VlIGEg
-Y2hhbmdlIHdoaWNoIHVzZXMgdGhlc2UgJ2xvd2VyJyBhbmQgJ3VwcGVyJyBsaW1pdHMNCj4gPj4g
-YmVmb3JlIHRoZSBJUEEgZG8gdGhlIGNhbGN1bGF0aW9uIG9mIHRoZSBwb3dlciBidWRnZXQuIEJ1
-dCB0aGlzIHdhc24ndA0KPiA+PiBhIHJlcXVpcmVtZW50IGFuZCB3ZSBhc3N1bWVkIHRoYXQgSVBB
-IGhhcyBmdWxsIGNvbnRyb2wgb3ZlciB0aGUgY29vbGluZw0KPiA+PiBkZXZpY2UgKHdoaWNoIEkg
-ZGVzY3JpYmVkIGFib3ZlIHdpdGggdGhpcyBEVCBUSEVSTUFMX05PX0xJTUlUKS4NCj4gPj4NCj4g
-Pj4gSXMgdGhlcmUgYSBwcm9ibGVtIHdpdGggeW91ciBwbGF0Zm9ybSB0aGF0IGl0IGhhcyB0byBw
-cm92aWRlIHNvbWUNCj4gPj4gbWluaW1hbCBwZXJmb3JtYW5jZSwgc28geW91IHRyaWVkIHRvIGlu
-dHJvZHVjZSB0aGlzIGNsYW1waW5nPw0KPiA+Pg0KPiA+PiBSZWdhcmRzLA0KPiA+PiBMdWthc3oN
-Cj4gPiANCj4gPiANCj4gPiBIaSBMdWthc3osDQo+ID4gDQo+ID4gSSByZWZlciB0byB0aGUgZG9j
-dW1lbnRhdGlvbiBzZXR0aW5ncyBvZiB0aGUgdGhlcm1hbCBkZXZpY2UgdHJlZQ0KPiA+IChEb2N1
-bWVudGF0aW9uIC8gZGV2aWNldHJlZSAvIGJpbmRpbmdzIC8gdGhlcm1hbCAvIHRoZXJtYWwudHh0
-KS4NCj4gPiANCj4gPiBJdCBzaG93cyB0aGF0IGNvb2xpbmctZGV2aWNlIGlzIGEgbWFuZGF0b3J5
-IHByb3BlcnR5LCBzbyBtYXgvbWluIGNvb2xpbmcNCj4gPiBzdGF0ZSBzaG91bGQgYmUgYWJsZSB0
-byBzdXBwb3J0IGluIGZyYW1ld29yayBwb2ludCBvZiB2aWV3Lg0KPiA+IE90aGVyd2lzZSwgdGhl
-IGxpbWl0YXRpb24gc2hvdWxkIGJlIGFkZGVkIGluIGJpbmRpbmcgZG9jdW1lbnQuDQo+ID4gDQo+
-ID4gRGlmZmVyZW50IGhhcmR3YXJlIG1lY2hhbmlzbXMgaGF2ZSBkaWZmZXJlbnQgaGVhdCBkaXNz
-aXBhdGlvbg0KPiA+IGNhcGFiaWxpdGllcy4NCj4gPiBMaW1pdGluZyB0aGUgaW5wdXQgaGVhdCBz
-b3VyY2UgY2FuIHNsb3cgZG93biB0aGUgaGVhdCBhY2N1bXVsYXRpb24gYW5kDQo+ID4gdGVtcGVy
-YXR1cmUgYnVyc3QuDQo+ID4gV2Ugd2FudCB0byByZWR1Y2UgdGhlIGFjY3VtdWxhdGlvbiBvZiBo
-ZWF0IGF0IGhpZ2ggdGVtcGVyYXR1cmUgYnkNCj4gPiBsaW1pdGluZyB0aGUgbWluaW11bSBnZWFy
-IG9mIHRoZXJtYWwgdGhyb3R0bGUuDQo+IA0KPiBJIGFncmVlIHRoYXQgdGhlc2UgJ2xvd2VyJyBh
-bmQgJ3VwcGVyJyBsaW1pdHMgc2hvdWxkbid0IGJlIGp1c3QNCj4gaWdub3JlZCBhcyBpcyBjdXJy
-ZW50bHkuIFRoaXMgcGF0Y2ggY2xhbXBzIHRoZSB2YWx1ZSBhdCBsYXRlIHN0YWdlLA0KPiB0aG91
-Z2guDQo+IA0KPiBMZXQgbWUgaGF2ZSBhIGxvb2sgaG93IGl0IGNvdWxkIGJlIHRha2VuIGludG8g
-YWNjb3VudCBpbiB0aGUgZWFybHkNCj4gc3RhZ2UsIGJlZm9yZSB0aGUgcG93ZXIgY2FsY3VsYXRp
-b24gYW5kIHNwbGl0IGFyZSBkb25lLiBNYXliZSB0aGVyZQ0KPiBpcyBhIGNsZWFuIHdheSB0byBp
-bmplY3QgdGhpcy4NCj4gDQo+IFJlZ2FyZHMsDQo+IEx1a2Fzeg0KSGkgTHVrYXN6LA0KDQpBZnRl
-ciB0aGUgcmVzZWFyY2gsIGRvIHlvdSBoYXZlIGFueSBpZGVhcyBvciBzdWdnZXN0aW9ucz8NCg0K
-QmVzdCBSZWdhcmRzLA0KTWljaGFlbA0KDQo=
+On Tue, Aug 25, 2020 at 11:23:56AM +0200, Kurt Kanzenbach wrote:
+> On Mon Aug 24 2020, Vinicius Costa Gomes wrote:
+> > Hi,
+> >
+> > Kurt Kanzenbach <kurt@linutronix.de> writes:
+> >
+> [snip]
+> >> +	/* Setup timer for schedule switch: The IP core only allows to set a
+> >> +	 * cycle start timer 8 seconds in the future. This is why we setup the
+> >> +	 * hritmer to base_time - 5 seconds. Then, we have enough time to
+> >> +	 * activate IP core's EST timer.
+> >> +	 */
+> >> +	start = ktime_sub_ns(schedule->base_time, (u64)5 * NSEC_PER_SEC);
+> >> +	hrtimer_start_range_ns(&hellcreek_port->cycle_start_timer, start,
+> >> +			       NSEC_PER_SEC, HRTIMER_MODE_ABS);
+> >
+> > If we are talking about seconds here, I don't think you need to use a
+> > hrtimer, you could use a workqueue/delayed_work. Should make things a
+> > bit simpler.
+> 
+> I've used hrtimers for one reason: The hrtimer provides a way to fire at
+> an absolute base time based on CLOCK_TAI. All the other facilities such
+> as workqueues, timer list timers, etc do not.
 
+That still doesn't justify the complexity of irqsave spinlocks and such.
+You could just as well schedule a workqueue from that hrtimer and have
+process context...
+
+Thanks,
+-Vladimir
