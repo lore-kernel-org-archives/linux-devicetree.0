@@ -2,139 +2,109 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC30C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44E7C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25FEE20782
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:04:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="aDlbWI41"
+	by mail.kernel.org (Postfix) with ESMTP id C1CD820782
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 16:05:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598371540;
+	bh=aGLGo98E6HiFPlDLRykNprtjv24L6n+HV+GRHpEpYMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UteLt7qqKD/pc9PsrjmOeTm4Bb16N/xlT8Tl+ixOAL7rLDcyOtwLaJ5/HOorIAIgP
+	 aNqSgjH1BLp/CO3iq3D5oDn3x/c8gh2F6t8JvI7wK3cDObq/SWKB1F9GABB40BOyn/
+	 tYizAUEMJLzd0QWu1jcB2MBoMveUv53tgNmm1TH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHYQEB (ORCPT
+        id S1726457AbgHYQFk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:04:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgHYQDB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 12:03:01 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EC6C061786
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 09:02:53 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u128so7697737pfb.6
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 09:02:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KPkLZJgZoXiLJffiihBupgXf4zrj4jokhwZeTXsnTGE=;
-        b=aDlbWI41jY6pIx7QLbALlOlZ4VvpjQBnUpX9orTDHefzfXPlapLoMkrMZ01zGUGjk8
-         5ahNPY6spEthv1QWrR2y6eWmBHQrMNSONkdxxlTzXsffWrylY9+6K8P6ryiPVZ5WC1i+
-         4z/KKPpPw2+JBaAMNJd6/0F8hO4uMJesatg0sZ4G4KGpZvLHTNAJrIMjLsgAEPspW9/V
-         F667p0bwmn6FmU5BjKJYD3VnPBir5RlBT8DF/w92lvjhisgnwK9VX0c+gBBptGF/KWl8
-         aAR9hrR6lVF4ylWYCyLoToNz+ozfJSwdPXe6pbX1Xr2Mg3ImhrSwbrwNFnWxfJR7L7B8
-         ukoQ==
+        Tue, 25 Aug 2020 12:05:40 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33218 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgHYQFh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 12:05:37 -0400
+Received: by mail-io1-f66.google.com with SMTP id g14so13034505iom.0
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 09:05:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=KPkLZJgZoXiLJffiihBupgXf4zrj4jokhwZeTXsnTGE=;
-        b=lCkzambM8l7/R/p1nVWsndmZkuT+4ZKa2DCoJH+dIHZlkfG9XbrM+El/+B9Ir878ex
-         Win9l6PkpzjIvjOBnJCC0GHrXqK8e0sBGdCa6o4URc02QS7s4HfgIqvz+1gtgS6UurWJ
-         S7gtJ/119045Gu/5Iy6/6T0XXQDNFONXZKGhMj7mSL+5qs7pzMv1eiWle/Fm1BLT1SFK
-         Ft7/brKitHwREHDcTl5CgrnjWQF02vAa+FtEOgxKHm+SkQS8XUjHGu578CQaxyigntyz
-         ebgQ58co3bz+U0dSlxX2RcSvtUqzzbslpMdsoDhaSwnCl9/GK8bhwhy1EYsTZ44t6cof
-         2sLA==
-X-Gm-Message-State: AOAM530vARsaAkWo4wBRKQ+rP6hVUxr2hrSCurrBHCChA0pHbfOJX7fB
-        e2Cvoe914G7Pe1yF9lNK5IO6UQ==
-X-Google-Smtp-Source: ABdhPJwFkVnCpRijagKF/eo1R4lg5/JWfJN9V6X1I79qjxwyzwaRx8jYAPMLkIGwV6qy4eXXe+qikQ==
-X-Received: by 2002:a63:4f22:: with SMTP id d34mr7393022pgb.320.1598371372168;
-        Tue, 25 Aug 2020 09:02:52 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id s125sm15564588pfb.125.2020.08.25.09.02.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=USbVo7pdWQ2iWUYfdtVits61UbxkogYWPU+SGBVoiSM=;
+        b=rCY2F8rIJtHxQEcFWEPLZwWQmyE4fKQW+A/kET5q3GtBdgkMFdSMLFPEQHH3PpBUOT
+         8JRbzjOyA+8D9Vy8mtUM4Etc6kCJWcr8dV0MqnflLScvH6iqGjoQgZG5IhkvzCjtbMkA
+         EN0L0cpYrbrTM9Z2MDQF1d5gQFmQNPe2nBAXfRHXFm7ifo0EqrUMFWMkOY7Yke4evce6
+         9iYEkVY2md+Bi7Mw3ezGWlp8cFyxkNqjazfbezQnYLqD7fdxzs69C+W0eyHdybjj5pF9
+         iol0IeicDl75MkCavz0utCFOmnNfbL6GIef5GJU1rzRXGDyAvRObV+BCeUnxzjWV3CXr
+         8RzA==
+X-Gm-Message-State: AOAM531DZLGOx4lanxlVLssKQcPWRhSfnVzfJkiF7PukTDnL7scag4Wb
+        QVAME848E1szkASOEriFaA==
+X-Google-Smtp-Source: ABdhPJyrmxHLtqigmu8qg0y8JrSWYH0+kDFnN8rsGoDoBHrPo16Cm4OAj/Vy435rF8nD8peSSuII4g==
+X-Received: by 2002:a02:950e:: with SMTP id y14mr11193741jah.106.1598371535869;
+        Tue, 25 Aug 2020 09:05:35 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id z9sm9234336ilm.78.2020.08.25.09.05.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 09:02:51 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:02:51 -0700 (PDT)
-X-Google-Original-Date: Tue, 25 Aug 2020 08:24:30 PDT (-0700)
-Subject:     Re: [PATCH 1/3] dt-bindings: riscv: Add DT documentation for DDR Controller in SiFive SoCs
-In-Reply-To: <1598357182-4226-2-git-send-email-yash.shah@sifive.com>
-CC:     robh+dt@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        aou@eecs.berkeley.edu, james.morse@arm.com, rrichter@marvell.com,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        sachin.ghadi@sifive.com, yash.shah@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     yash.shah@sifive.com
-Message-ID: <mhng-45ab2484-537a-45da-8fb2-b19329728caa@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Aug 2020 09:05:35 -0700 (PDT)
+Received: (nullmailer pid 862704 invoked by uid 1000);
+        Tue, 25 Aug 2020 16:05:32 -0000
+Date:   Tue, 25 Aug 2020 10:05:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: dt-bindings: renesas, rsnd: switch to yaml
+ base Documentation
+Message-ID: <20200825160532.GA862290@bogus>
+References: <87wo1nwdft.wl-kuninori.morimoto.gx@renesas.com>
+ <87tuwrwdf0.wl-kuninori.morimoto.gx@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87tuwrwdf0.wl-kuninori.morimoto.gx@renesas.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Aug 2020 05:06:20 PDT (-0700), yash.shah@sifive.com wrote:
-> Add device tree bindings for SiFive FU540 DDR controller driver
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+On Tue, 25 Aug 2020 13:37:54 +0900, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> This patch switches from .txt base to .yaml base Document.
+> It is still keeping detail explanations at .txt
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > ---
->  .../devicetree/bindings/riscv/sifive-ddr.yaml      | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/riscv/sifive-ddr.yaml
->
-> diff --git a/Documentation/devicetree/bindings/riscv/sifive-ddr.yaml b/Documentation/devicetree/bindings/riscv/sifive-ddr.yaml
-> new file mode 100644
-> index 0000000..0288119
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/riscv/sifive-ddr.yaml
-> @@ -0,0 +1,41 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/riscv/sifive-ddr.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: SiFive DDR memory controller binding
-> +
-> +description: |
-> +  The Sifive DDR controller driver is used to manage the Cadence DDR
-> +  controller present in SiFive FU540-C000 SoC. Currently the driver is
-> +  used to manage EDAC feature of the DDR controller.
-> +
-> +maintainers:
-> +  - Yash Shah <yash.shah@sifive.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - sifive,fu540-c000-ddr
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    memory-controller@100b0000 {
-> +        compatible = "sifive,fu540-c000-ddr";
-> +        reg = <0x100b0000 0x4000>;
-> +        interrupts = <31>;
-> +    };
+>  .../bindings/sound/renesas,rsnd.txt           | 520 ------------------
+>  .../bindings/sound/renesas,rsnd.yaml          | 454 +++++++++++++++
+>  2 files changed, 454 insertions(+), 520 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/renesas,rsnd.yaml
+> 
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.example.dt.yaml: example-0: sound@ec500000:reg:0: [0, 3964665856, 0, 4096] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.example.dt.yaml: example-0: sound@ec500000:reg:1: [0, 3965321216, 0, 256] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.example.dt.yaml: example-0: sound@ec500000:reg:2: [0, 3964928000, 0, 4096] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.example.dt.yaml: example-0: sound@ec500000:reg:3: [0, 3964932096, 0, 4736] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/renesas,rsnd.example.dt.yaml: example-0: sound@ec500000:reg:4: [0, 3967025152, 0, 512] is too long
+	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
+
+
+See https://patchwork.ozlabs.org/patch/1350780
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
