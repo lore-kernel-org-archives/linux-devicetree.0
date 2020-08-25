@@ -2,255 +2,221 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968B1C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB81C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 711D5206EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:41:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DqOkuMuD"
+	by mail.kernel.org (Postfix) with ESMTP id 99DD82071E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 21:48:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598392129;
+	bh=HdWdCg5End0CQJcfKxWBW19NbLdV3wK4LQlQ8qpg/xo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Sm2QspPt6bb4d37w/iNGf6c/H7NB4bKn3+lc56GSQTNYDiItGH2EeL5NH2pLyevTN
+	 IJy7uFhGLkwR0Dj0vVYYTQ9DVY5Kr9KCVSCtI6rzyZjUXDzStZ94F9VQOdFcE+8Ni5
+	 nzNZNoTqWfIeqWNPDoeKU4JhyVJEQHBD/myqiOlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726356AbgHYVlz (ORCPT
+        id S1726336AbgHYVst (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:41:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgHYVlz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:41:55 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A93FC061574;
-        Tue, 25 Aug 2020 14:41:54 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 015C6B96;
-        Tue, 25 Aug 2020 23:41:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598391710;
-        bh=oIW/o+o09IZFTbk6H12Vwpg7pFr3ZcWqBKwfERJIvCk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DqOkuMuDlfpmV+tRjFvR5gpS+rS5SELMmrrhyLXJxX6osCuuoVBEMki8O9G1Yiz42
-         cj1ikG6fVknpY0Nbk8v2Im2PcrrR432637dJoTJnNLFNMBy59GHXqltkPIvrzbBrny
-         d/npNXhKPk5QQvkDPXgZBePbVmZwLNIQwgSLD2Js=
-Date:   Wed, 26 Aug 2020 00:41:30 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        devicetree@vger.kernel.org, linux-media@vger.kernel.org,
-        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, mchehab@kernel.org,
-        sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: media: ov772x: Convert to json-schema
-Message-ID: <20200825214130.GN6767@pendragon.ideasonboard.com>
-References: <20200818122012.37956-1-jacopo+renesas@jmondi.org>
- <20200818122012.37956-2-jacopo+renesas@jmondi.org>
- <20200819135204.GJ6049@pendragon.ideasonboard.com>
- <20200824083211.u2zm4o6f4wrxlu6k@uno.localdomain>
- <20200824113440.GC6002@pendragon.ideasonboard.com>
- <20200824121513.gvsr5sdodgpyv4w5@uno.localdomain>
- <20200824121457.GD6002@pendragon.ideasonboard.com>
- <20200825205531.GA1298396@bogus>
+        Tue, 25 Aug 2020 17:48:49 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:42541 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHYVss (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 17:48:48 -0400
+Received: by mail-io1-f66.google.com with SMTP id g13so45619ioo.9;
+        Tue, 25 Aug 2020 14:48:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RQP52sLIM0MfnF4NggVw656j4jf7VJADZKCoTHNbNKI=;
+        b=oqfUPgX+gjBxakDKpvrTAQSwUlYMUsVtv6Tfnxy30v26D+DiH400WcudOQ84Be+Fxe
+         gtz8Zm3ZiBvSLnv/QesK1GgeOjZC4QTJXJGk8iacUc9K6bXfk5h3n9HChizhDdK2yIbe
+         TBS67Dq2eNk4OpuHnTk0dNBYOFHPkJ4fjDx+VO5Ppa/DNRT5Vj9f/2xlM7DaSHrcb66p
+         /HSL77Kz4WcaUtl2JQmGtO3LseCQSj9E3MYc1R5wMTt2RfBRfOd2DwqfP9H3HT1Muu0F
+         6oLSahObcCzSe1e0qo/tbzA8W4vuYBNEx1fg/vo2Ax1+jNpb59mdzJhKDsGbFtjORZNd
+         8piA==
+X-Gm-Message-State: AOAM531NIDvbYZAGtueRMHADMnnzlgzCVjUGT+GTR+pFoPvU4dazS0oK
+        0Byv+dkzhCEu3RbsQGFw5HCr7knbL3uN
+X-Google-Smtp-Source: ABdhPJwIny58KBr2tW0qD6I6vbfQzkQqr7DvAVQaFDJyISwKyKf4dn22aFNXa8TQpK0wTX1V5yeJGQ==
+X-Received: by 2002:a6b:5009:: with SMTP id e9mr10947465iob.156.1598392127545;
+        Tue, 25 Aug 2020 14:48:47 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id t187sm23566iof.54.2020.08.25.14.48.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 14:48:47 -0700 (PDT)
+Received: (nullmailer pid 1396452 invoked by uid 1000);
+        Tue, 25 Aug 2020 21:48:42 -0000
+Date:   Tue, 25 Aug 2020 15:48:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+Cc:     maz@kernel.org, tglx@linutronix.de, jason@lakedaemon.net,
+        matthias.bgg@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, yj.chiang@mediatek.com,
+        alix.wu@mediatek.com, daniel@0x0f.com
+Subject: Re: [PATCH 2/2] dt-bindings: interrupt-controller: Add MStar
+ interrupt controller
+Message-ID: <20200825214842.GA1367012@bogus>
+References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
+ <20200819034231.20726-3-mark-pk.tsai@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825205531.GA1298396@bogus>
+In-Reply-To: <20200819034231.20726-3-mark-pk.tsai@mediatek.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Tue, Aug 25, 2020 at 02:55:31PM -0600, Rob Herring wrote:
-> On Mon, Aug 24, 2020 at 03:14:57PM +0300, Laurent Pinchart wrote:
-> > On Mon, Aug 24, 2020 at 02:15:13PM +0200, Jacopo Mondi wrote:
-> > > On Mon, Aug 24, 2020 at 02:34:40PM +0300, Laurent Pinchart wrote:
-> > > > On Mon, Aug 24, 2020 at 10:32:11AM +0200, Jacopo Mondi wrote:
-> > > > > On Wed, Aug 19, 2020 at 04:52:04PM +0300, Laurent Pinchart wrote:
-> > > > > > On Tue, Aug 18, 2020 at 02:20:10PM +0200, Jacopo Mondi wrote:
-> > > > > > > Convert the ov772x binding document to json-schema and update
-> > > > > > > the MAINTAINERS file accordingly.
-> > > > > > >
-> > > > > > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > > > > > ---
-> > > > > > >  .../devicetree/bindings/media/i2c/ov772x.txt  | 40 ---------
-> > > > > > >  .../devicetree/bindings/media/i2c/ov772x.yaml | 84 +++++++++++++++++++
-> > > > > >
-> > > > > > Could yuo rename this to ovti,ov772x.yaml ?
-> > > > > >
-> > > > > > >  MAINTAINERS                                   |  2 +-
-> > > > > > >  3 files changed, 85 insertions(+), 41 deletions(-)
-> > > > > > >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> > > > > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > > > > >
-> > > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.txt b/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> > > > > > > deleted file mode 100644
-> > > > > > > index 0b3ede5b8e6a..000000000000
-> > > > > > > --- a/Documentation/devicetree/bindings/media/i2c/ov772x.txt
-> > > > > > > +++ /dev/null
-> > > > > > > @@ -1,40 +0,0 @@
-> > > > > > > -* Omnivision OV7720/OV7725 CMOS sensor
-> > > > > > > -
-> > > > > > > -The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
-> > > > > > > -such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
-> > > > > > > -support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
-> > > > > > > -
-> > > > > > > -Required Properties:
-> > > > > > > -- compatible: shall be one of
-> > > > > > > -	"ovti,ov7720"
-> > > > > > > -	"ovti,ov7725"
-> > > > > > > -- clocks: reference to the xclk input clock.
-> > > > > > > -
-> > > > > > > -Optional Properties:
-> > > > > > > -- reset-gpios: reference to the GPIO connected to the RSTB pin which is
-> > > > > > > -  active low, if any.
-> > > > > > > -- powerdown-gpios: reference to the GPIO connected to the PWDN pin which is
-> > > > > > > -  active high, if any.
-> > > > > > > -
-> > > > > > > -The device node shall contain one 'port' child node with one child 'endpoint'
-> > > > > > > -subnode for its digital output video port, in accordance with the video
-> > > > > > > -interface bindings defined in Documentation/devicetree/bindings/media/
-> > > > > > > -video-interfaces.txt.
-> > > > > > > -
-> > > > > > > -Example:
-> > > > > > > -
-> > > > > > > -&i2c0 {
-> > > > > > > -	ov772x: camera@21 {
-> > > > > > > -		compatible = "ovti,ov7725";
-> > > > > > > -		reg = <0x21>;
-> > > > > > > -		reset-gpios = <&axi_gpio_0 0 GPIO_ACTIVE_LOW>;
-> > > > > > > -		powerdown-gpios = <&axi_gpio_0 1 GPIO_ACTIVE_LOW>;
-> > > > > > > -		clocks = <&xclk>;
-> > > > > > > -
-> > > > > > > -		port {
-> > > > > > > -			ov772x_0: endpoint {
-> > > > > > > -				remote-endpoint = <&vcap1_in0>;
-> > > > > > > -			};
-> > > > > > > -		};
-> > > > > > > -	};
-> > > > > > > -};
-> > > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov772x.yaml b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > > > > > new file mode 100644
-> > > > > > > index 000000000000..2b84fefeb4aa
-> > > > > > > --- /dev/null
-> > > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov772x.yaml
-> > > > > > > @@ -0,0 +1,84 @@
-> > > > > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > > > > +%YAML 1.2
-> > > > > > > +---
-> > > > > > > +$id: http://devicetree.org/schemas/media/i2c/ov772x.yaml#
-> > > > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > > > +
-> > > > > > > +title:  Omnivision OV7720/OV7725 CMOS sensor
-> > > > > > > +
-> > > > > > > +maintainers:
-> > > > > > > +  - Jacopo Mondi <jacopo@jmondi.org>
-> > > > > > > +
-> > > > > > > +description: -|
-> > > > > > > +  The Omnivision OV7720/OV7725 sensor supports multiple resolutions output,
-> > > > > > > +  such as VGA, QVGA, and any size scaling down from CIF to 40x30. It also can
-> > > > > > > +  support the YUV422, RGB565/555/444, GRB422 or raw RGB output formats.
-> > > > > > > +
-> > > > > > > +properties:
-> > > > > > > +  compatible:
-> > > > > > > +    enum:
-> > > > > > > +      - ovti,ov7720
-> > > > > > > +      - ovti,ov7725
-> > > > > > > +
-> > > > > > > +  reg:
-> > > > > > > +    maxItems: 1
-> > > > > > > +
-> > > > > > > +  clocks:
-> > > > > > > +    maxItems: 1
-> > > > > > > +
-> > > > > > > +  reset-gpios:
-> > > > > > > +    description: -|
-> > > > > > > +      Reference to the GPIO connected to the RSTB pin which is active low.
-> > > > > > > +    maxItems: 1
-> > > > > > > +
-> > > > > > > +  powerdown-gpios:
-> > > > > > > +    description: -|
-> > > > > > > +      Reference to the GPIO connected to the PWDN pin which is active high.
-> > > > > > > +    maxItems: 1
-> > > > > > > +
-> > > > > > > +  port:
-> > > > > > > +    type: object
-> > > > > > > +    description: |
-> > > > > > > +      The device node must contain one 'port' child node for its digital output
-> > > > > > > +      video port, in accordance with the video interface bindings defined in
-> > > > > > > +      Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > > > > >
-> > > > > > You can simply write
-> > > > > >
-> > > > > >       Digital input video port. See ../video-interfaces.txt.
-> > > > > >
-> > > > > > > +
-> > > > > > > +    properties:
-> > > > > > > +      endpoint:
-> > > > > > > +        type: object
-> > > > > > > +        properties:
-> > > > > > > +          remote-endpoint:
-> > > > > > > +            description: A phandle to the bus receiver's endpoint node.
-> > > > > >
-> > > > > >            required:
-> > > > > > 	     - remote-endpoint
-> > > > > >
-> > > > > >            additionalProperties: false
-> > > > >
-> > > > > I receveied a reply to you on previous json-schema conversion attempt
-> > > > > where you suggested to not set remote-endpoint as required, as we
-> > > > > allow empty ones to be later filled in in, maybe with an overlay.
-> > > > >
-> > > > > Which Laurent should I listen to ? I tend to agree with the one that
-> > > > > said to drop remote-endpoint from the required properties list.
-> > > >
-> > > > Maybe I recall incorrectly, didn't I say that endpoint shouldn't be
-> > > > mandatory ? Ports should be mandatory as they describe the hardware,
-> > > > endpoints describe a connection, and within a connection, I'm not sure
-> > > > to see a use-case for not setting remote-endpoint. Maybe I need to look
-> > > > better ? :-)
-> > > >
-> > > 
-> > > I might be confused as well, but to me port and endpoint should be
-> > > there as they represent the available endpoints of the devices connections.
-> > > Connections to external devices that can be established (or overwritten)
-> > > by applying an overlay, and such are not mandatory.
-> > > 
-> > > As I see it:
-> > > - port/endpoints: establish the available device connection endpoitns
-> > >   and shall be mandatory (also to give a known place where to 'plug'
-> > >   the connections)
-> > > 
-> > > - remote-endpoints: data connections to external devices, which might
-> > >   depend on the board assembly or installed 'capes' and expansions. As
-> > >   such, they can be modeled as an overlay fragment to be applied on the
-> > >   (known layout of the) device.
-> > 
-> > Only the port represents a connection point. The endpoint node is part
-> > of the representation of the link, it doesn't map to a particular
-> > hardware resource on the port side.
+On Wed, Aug 19, 2020 at 11:42:31AM +0800, Mark-PK Tsai wrote:
+> Add binding for MStar interrupt controller.
 > 
-> I think all of 'endpoint' should be dropped if you only have 
-> 'remote-endpoint' (and no other properties) and you don't have multiple 
-> endpoints (typically only if the h/w has some sort of built-in mux or 
-> connection selector). 
+> Signed-off-by: Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> ---
+>  .../interrupt-controller/mstar,mst-intc.yaml  | 82 +++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml
+> new file mode 100644
+> index 000000000000..6e383315e529
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mstar,mst-intc.yaml
+> @@ -0,0 +1,82 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Makes sense to me, I'll keep this in mind during review.
+Dual license new bindings.
 
-> Once we have a generic graph schema, it can enforce that 'port' has 
-> 'endpoint' and 'endpoint' has 'remote-endpoint'.
+(GPL-2.0-only OR BSD-2-Clause)
 
-I think 'endpoint' should be optional though, as a port can exist but
-not be connected. 'remote-endpoint' should be mandatory.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/mstar,mst-intc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: MStar Interrupt Controller
+> +
+> +maintainers:
+> +  - Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+> +
+> +description: |+
+> +  MStar, SigmaStar and Mediatek DTV SoCs contain multiple legacy
+> +  interrupt controllers that routes interrupts to the GIC.
+> +
+> +  The HW block exposes a number of interrupt controllers, each
+> +  can support up to 64 interrupts.
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
 
-> Doing this hasn't been 
-> too high on my list simply because dtc already does all or most of that.
+Drop this. It is applied based on node name matching already.
 
--- 
-Regards,
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: mstar,mst-intc
+> +      - enum:
+> +          - mediatek,mt58xx-intc
 
-Laurent Pinchart
+Normally, the 1st entry would be enum as that's where you'd add new 
+compatibles (as the fallback is constant). But if you don't forsee any 
+additions, just make both 'const'
+
+> +
+> +  interrupt-controller: true
+> +
+> +  "#address-cells":
+> +    enum: [ 0, 1, 2 ]
+
+This would normally be 0 in an interrupt controller. It's only relevant 
+if you have an 'interrupt-map' which this is the parent for.
+
+> +  "#size-cells":
+> +    enum: [ 1, 2 ]
+
+And this should be dropped.
+
+> +
+> +  "#interrupt-cells":
+> +    const: 3
+> +    description: |
+> +      Use the same format as specified by GIC in arm,gic.yaml.
+
+That's odd. You have the same SPI and PPI stuff?
+
+> +
+> +  reg:
+> +    description: |
+> +      Physical base address of the mstar interrupt controller
+> +      registers and length of memory mapped region.
+
+Drop this. That's every 'reg' property.
+
+> +    minItems: 1
+
+maxItems is more logical.
+
+> +
+> +  mstar,irqs-map-range:
+> +    description: |
+> +      The range of parent interrupt controller's interrupt lines
+> +      that are hardwired to mstar interrupt controller.
+
+Is this <start size> or <start end>?
+
+Really, this should just use 'interrupts' even though that's a bit 
+verbose. Or be implied by the compatible string. What's the maximum 
+number of parent interrupts?
+
+In any case, we really need to stop having vendor specific properties 
+for this.
+
+> +    $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +    items:
+> +      minItems: 2
+> +      maxItems: 2
+> +
+> +  mstar,intc-no-eoi:
+> +    description: |
+
+Don't need '|' if there's no formatting.
+
+> +      Mark this controller has no End Of Interrupt(EOI) implementation.
+> +      This is a empty, boolean property.
+
+You can drop this line. The schema says this.
+
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - mstar,irqs-map-range
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    mst_intc0: interrupt-controller@1f2032d0 {
+> +      compatible = "mstar,mst-intc", "mediatek,mt58xx-intc";
+> +      interrupt-controller;
+> +      #interrupt-cells = <3>;
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      interrupt-parent = <&gic>;
+> +      reg = <0x1f2032d0 0x30>;
+> +      mstar,irqs-map-range = <0 63>;
+
+Is 0 a PPI or SPI? This property is making some assumption and wouldn't 
+be able to support both types or another parent interrupt controller.
+
+> +    };
+> +...
+> -- 
+> 2.18.0
