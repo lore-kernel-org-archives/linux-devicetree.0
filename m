@@ -2,115 +2,214 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 116BBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CC2C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1AF9204FD
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:39:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XfIj7G4H"
+	by mail.kernel.org (Postfix) with ESMTP id B0A56205CB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:45:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598341508;
+	bh=wpcwA+cGlXKPbTWci3GgRf8sbZhaqgxIiZSuSQs8n0M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DFBtnSa5H4mfjbx+tOZTfxkk9OeSlpv0iXpSd1TFbaVEE6UQds6CqlE/rnkoEl6RB
+	 einFKEVMYaVi9ysFrzEpP/cLrYx076dcOmK5XeyRjYcZ3PR0pjWkJIuJzw0XLQp1kE
+	 K2UYcMp1AZ1Vc+NXvA4GuxWFP0V/Gg2LK75gMNdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbgHYHjv (ORCPT
+        id S1726024AbgHYHpI (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:39:51 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17265 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729470AbgHYHju (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 03:39:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f44c0370000>; Tue, 25 Aug 2020 00:39:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 25 Aug 2020 00:39:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 25 Aug 2020 00:39:49 -0700
-Received: from [10.26.74.41] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug
- 2020 07:39:42 +0000
-Subject: Re: [PATCH v4 3/7] dt-bindings: mmc: tegra: Add tmclk for Tegra210
- and later
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <1598296557-32020-1-git-send-email-skomatineni@nvidia.com>
- <1598296557-32020-4-git-send-email-skomatineni@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <64f1b068-d935-ae47-e5f3-fa318196a5af@nvidia.com>
-Date:   Tue, 25 Aug 2020 08:39:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 03:45:08 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36971 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728650AbgHYHpG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 03:45:06 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x9so1207253wmi.2;
+        Tue, 25 Aug 2020 00:45:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PxsmdDcFch7c22J7JxfwpI7tti1SyAdvo+8oYjg1+2I=;
+        b=jRYVLUyrg5J8GFyxLM9vY+UymrAuJdGBi/6dsCoOZOwcgX3sNRutlOKXECX+ZHO4/r
+         bV7yO5CB62IU02btiRHbAv/WAmsyED2sLIfp6nFCnQv6VgxecPZo1vebA2cbZ27lvpef
+         Tqr+UWa1d6B3bbCnjaPfqr7GHuq0Pj7ZcoZD+y4HRYD9QYFZaPuBGQb9zCl5dSCQehKY
+         NftbkVmIwtuUWvJ+Z/PfmVDBcwEB1c0OuuAcHeFT56iMiFXJrbnKN7h4ZOP7TLlocLMb
+         fCzzgS2wMLtiqsZGW7ugKJZ3D/5mSrbHZ0kEWdXoM1kD1xln/HVaC/n8rNwzlddL5pKP
+         b6bw==
+X-Gm-Message-State: AOAM530lqHxxd4NVjywmXtp9TTr4wboTnysxVDaAQLDzbUFzt1kcav8v
+        ixB6wqm3UQ6ga32xPjn/920=
+X-Google-Smtp-Source: ABdhPJznfSTxJORBNcaOSIRYMPeV1drxg7rKMYcnYQCiCc89bTxVFyAryIoMQ5VngTiyECIcH0/2Yw==
+X-Received: by 2002:a1c:a3c4:: with SMTP id m187mr717799wme.43.1598341503219;
+        Tue, 25 Aug 2020 00:45:03 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id h7sm4200304wmf.43.2020.08.25.00.45.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:45:02 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:45:00 +0200
+From:   "krzk@kernel.org" <krzk@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "han.xu@nxp.com" <han.xu@nxp.com>,
+        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
+        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "aford173@gmail.com" <aford173@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "jun.li@nxp.com" <jun.li@nxp.com>
+Subject: Re: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align
+ regulator names with schema
+Message-ID: <20200825074500.GA19323@kozik-lap>
+References: <20200824190701.8447-1-krzk@kernel.org>
+ <20200824190701.8447-3-krzk@kernel.org>
+ <fa042a4f670775f340e88fca8f363252112fd538.camel@fi.rohmeurope.com>
+ <20200825072537.GA5914@kozik-lap>
 MIME-Version: 1.0
-In-Reply-To: <1598296557-32020-4-git-send-email-skomatineni@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598341175; bh=0xmlVzVjCdyLV1AnfSQ918bzgENv4gOD4+okuss+xJk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=XfIj7G4H0xTpGl2IgChp5HG/WcgT5qIic+yVtzUw6ExSGLFRI/ZtypWGTe8+C3Nzt
-         nti+eZgjJijD/uqo4bMRoQcvrrcb+1yU5MnHFPehNNZN8rcRiMYodpSkKJIX3sWt6+
-         hIuoMVE1V1U+7vPqXO4VMUWYf8bI4ePPH4Gqhod0qiYB+u9pE3+A0acIyTMaD/EHSC
-         jzAaho3KwuEEMXX0kxJ3R9W0eowowsEjH0B+QGjsPuZtwgBHXGPLGXrpb/b6Ub8OxW
-         GhR/KwHzT3yIPCzf6nDEXbRPbbxFKop+nJqlamWAxVdCGIo1ThSQfm44d5TlktttX7
-         dK/Om5HMMrO+w==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200825072537.GA5914@kozik-lap>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-On 24/08/2020 20:15, Sowjanya Komatineni wrote:
-> Tegra210 and later uses separate SDMMC_LEGACY_TM clock for data
-> timeout.
+On Tue, Aug 25, 2020 at 09:25:37AM +0200, krzk@kernel.org wrote:
+> On Tue, Aug 25, 2020 at 06:51:33AM +0000, Vaittinen, Matti wrote:
+> > Hello Krzysztof,
+> > 
+> > Just some questions - please ignore if I misunderstood the impact of
+> > the change.
+> > 
+> > On Mon, 2020-08-24 at 21:06 +0200, Krzysztof Kozlowski wrote:
+> > > Device tree schema expects regulator names to be lowercase.  This
+> > > fixes
+> > > dtbs_check warnings like:
+> > > 
+> > >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
+> > > regulators:LDO1:regulator-name:0: 'LDO1' does not match '^ldo[1-6]$'
+> > > 
+> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > ---
+> > >  .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 22 +++++++++------
+> > > ----
+> > >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > index a1e5483dbbbe..299caed5d46e 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > @@ -60,7 +60,7 @@
+> > >  
+> > >  		regulators {
+> > >  			buck1_reg: BUCK1 {
+> > > -				regulator-name = "BUCK1";
+> > > +				regulator-name = "buck1";
+> > 
+> > I am not against this change but I would expect seeing some other
+> > patches too? I guess this will change the regulator name in regulator
+> > core, right? So maybe I am mistaken but it looks to me this change is
+> > visible in suppliers, sysfs and debugfs too? Thus changing this sounds
+> > a bit like asking for a nose bleed :) Am I right that the impact of
+> > this change has been thoroughly tested? Are there any other patches
+> > (that I have not seen) related to this change?
 > 
-> So, this patch adds "tmclk" to Tegra sdhci clock property in the
-> device tree binding.
+> Oh, crap, the names of regulators in the driver are lowercase, but they
+> use of_match_ptr for upper case. Seriously, why making a binding which
+> is contradictory to the driver implementation on the first day?
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 23 +++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
+> The driver goes with binding, right? One expects uppercase, other
+> lowercase...
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> index 2cf3aff..9603d05 100644
-> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> @@ -17,6 +17,8 @@ Required properties:
->    - "nvidia,tegra194-sdhci": for Tegra194
->  - clocks : Must contain one entry, for the module clock.
->    See ../clocks/clock-bindings.txt for details.
-> +  Must also contain "tmclk" entry for Tegra210, Tegra186, and Tegra194.
-> +  Tegra210 and later uses separate SDMMC_LEGACY_TM clock for data timeout.
+> And tell me, what is now the ABI? The binding or the incorrect
+> implementation?
 
-Maybe we should make this a bit clearer ...
+Wait, my mistake. I got confused by my own change. The node name stays
+the same, so of_match will be correct.
 
-- clocks : For Tegra210, Tegra186 and Tegra194 must contain two entries;
-           one for the module clock and one for the timeout clock. For
-           all other Tegra devices, must contain a single entry for the
-           module clock. See ../clocks/clock-bindings.txt for details.
-- clock-names: For Tegra210, Tegra186 and Tegra194 must contain the
-               strings 'sdhci' and 'tmclk' to represent the module and
-               timeout clocks, respectively. For all other Tegra devices
-               must contain the string 'sdhci' to represent the module
-               clock.
+The driver internally already uses lowercase names.
 
-Cheers
-Jon
+Everything looks good. I will just double check whether the constraints
+did not change on the board after boot.
 
--- 
-nvpublic
+> 
+> > 
+> > >  				regulator-min-microvolt = <700000>;
+> > >  				regulator-max-microvolt = <1300000>;
+> > >  				regulator-boot-on;
+> > > @@ -69,7 +69,7 @@
+> > >  			};
+> > >  
+> > >  			buck2_reg: BUCK2 {
+> > > -				regulator-name = "BUCK2";
+> > > +				regulator-name = "buck2";
+> > >  				regulator-min-microvolt = <700000>;
+> > >  				regulator-max-microvolt = <1300000>;
+> > >  				regulator-boot-on;
+> > > @@ -79,14 +79,14 @@
+> > >  
+> > >  			buck3_reg: BUCK3 {
+> > >  				// BUCK5 in datasheet
+> > > -				regulator-name = "BUCK3";
+> > > +				regulator-name = "buck3";
+> > >  				regulator-min-microvolt = <700000>;
+> > >  				regulator-max-microvolt = <1350000>;
+> > >  			};
+> > >  
+> > >  			buck4_reg: BUCK4 {
+> > >  				// BUCK6 in datasheet
+> > > -				regulator-name = "BUCK4";
+> > > +				regulator-name = "buck4";
+> > >  				regulator-min-microvolt = <3000000>;
+> > >  				regulator-max-microvolt = <3300000>;
+> > >  				regulator-boot-on;
+> > > @@ -95,7 +95,7 @@
+> > >  
+> > >  			buck5_reg: BUCK5 {
+> > >  				// BUCK7 in datasheet
+> > > -				regulator-name = "BUCK5";
+> > > +				regulator-name = "buck5";
+> > 
+> > What I see in bd718x7-regulator.c for LDO6 desc is:
+> > 
+> >                         /* LDO6 is supplied by buck5 */
+> >                         .supply_name = "buck5",
+> > 
+> > So, is this change going to change the supply-chain for the board? Is
+> > this intended? (Or am I mistaken on what is the impact of regulator-
+> > name property?)
+
+Good point, let me check the supplies.
+
+> 
+> The names will take regulator names from the driver. The problem is with
+> matching the of_node.
+> 
+> 
+> Dear Rob,
+> 
+> Maybe you have an idea how to fix this driver-binding ABI
+> incompatibility? Or better just leave it?
+
+Not valid anymore, I just got confused...
+
+Best regards,
+Krzysztof
+
