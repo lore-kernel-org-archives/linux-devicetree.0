@@ -2,189 +2,173 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E1CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D1BC433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F7C2075F
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598338541;
-	bh=O8xVWhecf0GTNNOQhzrq9+gFIK5wLyvxcyy2rCvFaVg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TJTuZ0RTHVfOLJPVWadiRKKGwNBkpu9JvLzTzYwU//TnXStqHZkFNwRNavlk4yMUs
-	 ctVxnzi+bbKEz4eGoU0DhaGanje8eo9RDVrTf+dEu7MWLHD8BTql5IjvHWx/g3lcfR
-	 lo8L0Iu+6baSv4+rRHcZrsX6O5clpfyZQXABdK68=
+	by mail.kernel.org (Postfix) with ESMTP id 2A78420782
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 06:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbgHYGzl (ORCPT
+        id S1729261AbgHYG5C (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:55:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39147 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729148AbgHYGzk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:55:40 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g75so1073879wme.4;
-        Mon, 24 Aug 2020 23:55:38 -0700 (PDT)
+        Tue, 25 Aug 2020 02:57:02 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37275 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728440AbgHYG5B (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 02:57:01 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k2so2982494ots.4;
+        Mon, 24 Aug 2020 23:57:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1/BMEK5hdF0iweITjCzRL7tnq3hV766kEY/n/gaXN14=;
-        b=WHzldN0LodFs4WwI1EiYmhb8ySSaSJGDjLsyILIAUtbX6NZUpj9poLC3tfs2etTU1Q
-         0hsnnl3yyVRnIF7PTLAhkCU1IPDknPPnqS0xI1CVzTW6f3L7fuuP4SjAgRuJ8ys+utLz
-         LQ/jZkZzIdcasBBm+uEB81qzz8wyYNj//OpKVLx1xj1jYq8H+PLusLAFFZnT97HrmFPb
-         zuZn4EGWjX3IBiwgTS98GuMBBdWHsg1DGp3wh52fI/6X7etyyMVoRHYzjdgqLKiBxXFm
-         rotwOddo+254em0OlKRjNYjVPgrrPqP8nAPVGD8OEM/pPjEfK9c0YAclcdoXOdr4UOZV
-         z+HQ==
-X-Gm-Message-State: AOAM530jjo0WCxiUtnSAhAoIJ3xEzC9FVl/q1kjrsaTR4JDZ8CizO7XU
-        OOOtqtxyuybtlJPcUScePvY=
-X-Google-Smtp-Source: ABdhPJzVthOSQHuBCkTElEnSeTuy6N11zAwWgCV1RLWESAC/VoowTAPU7THZp0e1uMR0gy8Ohekb8Q==
-X-Received: by 2002:a1c:7fd3:: with SMTP id a202mr547797wmd.67.1598338538029;
-        Mon, 24 Aug 2020 23:55:38 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id z1sm11576477wru.6.2020.08.24.23.55.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 23:55:37 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 08:55:34 +0200
-From:   "krzk@kernel.org" <krzk@kernel.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "linux-imx@nxp.com" <linux-imx@nxp.com>,
-        "han.xu@nxp.com" <han.xu@nxp.com>,
-        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
-        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "aford173@gmail.com" <aford173@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "richard@nod.at" <richard@nod.at>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "jun.li@nxp.com" <jun.li@nxp.com>
-Subject: Re: [PATCH 01/16] dt-bindings: mfd: rohm,bd71847-pmic: Correct clock
- properties requirements
-Message-ID: <20200825065534.GB3458@kozik-lap>
-References: <20200824190701.8447-1-krzk@kernel.org>
- <b75867fd1c662a83d933ae8f0c4373ba017eb808.camel@fi.rohmeurope.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QgmWakfGzlYbO0ljlUwKI6Yfn9O1Rwl8ggXKdPZE8fU=;
+        b=VPbFfGrtUDdMvtQHjSoZBm8rM67HXuetUVDp7jaNakl/ZOXXtRw5u21wPIuCHVF8ox
+         /e2LMwMgwpQE3+/FxEb5re1PcvxnC5j8Ywnn5kNds+032FHYxbJogGBDAaJ9FItGHFkw
+         QTOOlVaQZKvzP/huaMbC0aHBcCDnarh4g4wEmHg52u2urPfq50VmwoPf8sum0dTpJpJg
+         M7aXUelVIsDUEUM+xzNHDM6+IsH6+APVUpupeD64sGBEwCSLXRSaqxss2gUba2kS7OQu
+         LqsnR6BVI1KZSlPkY0/zJ7OnrmHW2rcAWaMJDxbu6upFPJn1SpVuuhYbxgkhQDb7dQTT
+         B2jA==
+X-Gm-Message-State: AOAM532kOHipqChR04iiNfvv8DsuYu5xkC/BAm/FW6cy4As7wfJBA0DZ
+        pubiCysqhHDdrtHP1FapvOYp+ZxEt+hdOfvEYZo=
+X-Google-Smtp-Source: ABdhPJzHQO0yAe1Cq0Vf1R8l/rKlVOnpJ3cb7ChgIvVfnCs4jMYfskKbRHQqJUGLZRmaTFbx+mBrA7mlVlM7MseFM50=
+X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr6120302otn.250.1598338620365;
+ Mon, 24 Aug 2020 23:57:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b75867fd1c662a83d933ae8f0c4373ba017eb808.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200821111956.4989-1-geert+renesas@glider.be> <20200824091340.htydmmo2fazq2gku@uno.localdomain>
+In-Reply-To: <20200824091340.htydmmo2fazq2gku@uno.localdomain>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 25 Aug 2020 08:56:49 +0200
+Message-ID: <CAMuHMdWy=jsFf2CyyiG6H5i0jNX8pg65y-1AEzA0XK7LB9--Xw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: rza1: Convert to json-schema
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 06:23:36AM +0000, Vaittinen, Matti wrote:
-> 
-> Hello Krzysztof,
-> 
-> On Mon, 2020-08-24 at 21:06 +0200, Krzysztof Kozlowski wrote:
-> > The input clock and number of clock provider cells are not required
-> > for
-> > the PMIC to operate.  They are needed only for the optional bd718x7
-> > clock driver.
-> 
-> I have always found the DT bindings hard to do. I quite often end up
-> having a different view with Rob so I probably could just shut-up and
-> watch how this evolves :)
-> 
-> But as keeping my mouth is so difficult...
-> 
-> ...All of the drivers are optional. The PMIC can power-on without any
-> drivers. Drivers are mostly used just for disabling the voltage from
-> graphics accelerator block when it is not needed (optional). Or some
-> DVS (optional). But yes, maybe the clk driver is "more optional" than
-> the rest. XD So, I am not against this.
+Hi Jacopo,
 
-Each regulator node is optional, it can be skipped. And device will
-work and regulator driver will bind. The difference here is that without
-clocks the clock driver won't even bind... but if we keep clocks as
-required, then multiple DTSes do not pass the bindings check.
+On Mon, Aug 24, 2020 at 11:09 AM Jacopo Mondi <jacopo@jmondi.org> wrote:
+> On Fri, Aug 21, 2020 at 01:19:56PM +0200, Geert Uytterhoeven wrote:
+> > Convert the Renesas RZ/A1 combined Pin and GPIO controller Device Tree
+> > binding documentation to json-schema.
+> >
+> > Rename "rza1-pinctrl" to "rza1-ports", to match the compatible value
+> > scheme.
+> > Use "pinctrl" generic node name.
+> > Drop generic and consumer examples, as they do not belong here.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I don't have strong feelings about dropping requirement for clocks, just
-this looks easier to implement and logical to me (this is a PMIC so
-clock is a secondary feature).
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-ports.yaml
 
-> 
-> > Add also clock-output-names as driver takes use of it.
-> > 
-> > This fixes dtbs_check warnings like:
-> > 
-> >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
-> > 'clocks' is a required property
-> >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
-> > '#clock-cells' is a required property
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/mfd/rohm,bd71847-pmic.yaml       | 9
-> > +++++++--
-> >  1 file changed, 7 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-
-> > pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-
-> > pmic.yaml
-> > index 77bcca2d414f..5d531051a153 100644
-> > --- a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
-> > @@ -38,6 +38,9 @@ properties:
-> >    "#clock-cells":
-> >      const: 0
-> >  
-> > +  clock-output-names:
-> > +    maxItems: 1
-> 
-> I had this in original binding (text) document patch series. For some
-> reason it was later dropped. Unfortunately I didn't easily find a
-> reason as to why. Adding it back now is absolutely fine for me though.
-> 
+> > +    properties:
+> > +      gpio-controller: true
 > > +
-> >  # The BD71847 abd BD71850 support two different HW states as reset
-> > target
-> >  # states. States are called as SNVS and READY. At READY state all
-> > the PMIC
-> >  # power outputs go down and OTP is reload. At the SNVS state all
-> > other logic
-> > @@ -116,12 +119,14 @@ required:
-> >    - compatible
-> >    - reg
-> >    - interrupts
-> > -  - clocks
-> > -  - "#clock-cells"
-> >    - regulators
-> >  
-> >  additionalProperties: false
-> >  
-> > +dependencies:
-> > +  '#clock-cells': [clocks]
-> > +  clocks: ['#clock-cells']
-> 
-> This is new to me. Please educate me - does this simply mean that if
-> '#clock-cells' is given, then also the 'clocks' must be given - and the
-> other way around?
+> > +      '#gpio-cells':
+> > +        const: 2
+> > +
+> > +      gpio-ranges:
+> > +        maxItems: 1
+> > +
+> > +    required:
+> > +      - gpio-controller
+>
+> Doesn't 'true' imply required ?
 
-Yes, because the clocks do not have sense without clock-cells and vice versa.
+No, true means that a property for which the schema is declared
+elsewhere is applicable here.
 
-> 
-> If so, then:
-> Acked-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> 
+> > +      - '#gpio-cells'
+> > +      - gpio-ranges
+> > +
+> > +
+> > +additionalProperties:
+> > +  anyOf:
+>
+> Confused by this part. This describes a GPIO consumer, doesn't it ?
+> Does this part belong here ?
 
-Thanks.
+It describes the ping multiplexing sub-node, as a child (first item of
+anOf), or grandchild (second item of anyOf).
 
-Best regards,
-Krzysztof
+> > +    - type: object
+> > +      allOf:
+> > +        - $ref: pincfg-node.yaml#
+> > +        - $ref: pinmux-node.yaml#
+> > +
+> > +      description:
+> > +        A pin multiplexing sub-node describes how to configure a set of (or a
+> > +        single) pin in some desired alternate function mode.
+> > +        A single sub-node may define several pin configurations.
+> > +        A few alternate function require special pin configuration flags to be
+> > +        supplied along with the alternate function configuration number.
+> > +        The hardware reference manual specifies when a pin function requires
+> > +        "software IO driven" mode to be specified. To do so use the generic
+> > +        properties from the <include/linux/pinctrl/pinconf_generic.h> header
+> > +        file to instruct the pin controller to perform the desired pin
+> > +        configuration operation.
+> > +        The hardware reference manual specifies when a pin has to be configured
+> > +        to work in bi-directional mode and when the IO direction has to be
+> > +        specified by software. Bi-directional pins must be managed by the pin
+> > +        controller driver internally, while software driven IO direction has to
+> > +        be explicitly selected when multiple options are available.
+> > +
+> > +      properties:
+> > +        pinmux:
+> > +          description: |
+> > +            Integer array representing pin number and pin multiplexing
+> > +            configuration.
+> > +            When a pin has to be configured in alternate function mode, use
+> > +            this property to identify the pin by its global index, and provide
+> > +            its alternate function configuration number along with it.
+> > +            When multiple pins are required to be configured as part of the
+> > +            same alternate function they shall be specified as members of the
+> > +            same argument list of a single "pinmux" property.
+> > +            Helper macros to ease assembling the pin index from its position
+> > +            (port where it sits on and pin number) and alternate function
+> > +            identifier are provided by the pin controller header file at:
+> > +            <include/dt-bindings/pinctrl/r7s72100-pinctrl.h>
+> > +            Integers values in "pinmux" argument list are assembled as:
+> > +            ((PORT * 16 + PIN) | MUX_FUNC << 16)
+> > +
+> > +        phandle: true
+> > +        input-enable: true
+> > +        output-enable: true
+> > +
+> > +      required:
+> > +        - pinmux
+> > +
+> > +      additionalProperties: false
+> > +
+> > +    - type: object
+> > +      properties:
+> > +        phandle: true
+> > +
+> > +      additionalProperties:
+> > +        $ref: "#/additionalProperties/anyOf/0"
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
