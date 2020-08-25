@@ -2,251 +2,247 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC8DC433E3
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C17DC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D523206EB
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:46:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="OZKFsb8L"
+	by mail.kernel.org (Postfix) with ESMTP id 1F6CE206EB
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598341847;
+	bh=FYA3iXqGm68dq2/AIC2yAdRz4HmUkj2uRSXATXo7/rU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UXHh0HEqqL9MaB+VppPk+iEsuo+Iqu8ZVyORwo+6R5SJHZcQrV4duiC4nNoDj6JJr
+	 gG0Z4959sa6QpHftq0oYt2oeOgJKzn61V8mAT/7RYenMJRlP6JUiVLwJTCLQAzSLa8
+	 qrFmgamo12wKCuRXPGO7BlyqrLOQGtWm/vTBboTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgHYHqr (ORCPT
+        id S1726024AbgHYHuq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:46:47 -0400
-Received: from mga03.intel.com ([134.134.136.65]:7987 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726024AbgHYHqq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:46:46 -0400
-IronPort-SDR: uEqmwbz+9LojJMvRggajQdp957xj7Haayt09j5TtnrJeodEGDteuERoVGicTjQqjFD6eSYkyKS
- utWlzpNCP45A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="156058451"
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="156058451"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 00:46:44 -0700
-IronPort-SDR: LJaXywChxPd6k4tqvuJ4xFUN7OHgzFHZsLUSUbJ5jDlzI5aPd97bhp3tgnsUhYsQ9GoYsnBwi2
- a4TiYzNM+Zlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="443542002"
-Received: from orsmsx601-2.jf.intel.com (HELO ORSMSX601.amr.corp.intel.com) ([10.22.229.81])
-  by orsmga004.jf.intel.com with ESMTP; 25 Aug 2020 00:46:44 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 25 Aug 2020 00:46:43 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 25 Aug 2020 00:46:43 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.50) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Tue, 25 Aug 2020 00:46:42 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T46nqw7Bx2KAyVLfHum9ifB7PnUEyWc2KRc4pmgyMaKOH9+4A/UQvuin+acyOBUApmhHKkJUn6IGBEj6pA9MGpSa3FiNFp2TC11EBsA5A7yd9g8zSNxk63el7qWipn4nMxKdHAwLQhOZ92y23Bs+h44aK9pJkqCDv6GEL9rTzeyVdIPfog4kJCYd636JRJx/YWpWsQCE/w6W7p7xTgGibWHLpO2V9cGav6znQyR/8LLwnAn5req8nERi79Ja0G/yT73CCrs80ubkgs8J1OlzzH1pOmaFwWEnFOKOWTPAK4LTy3pDVCqx2fj9SLn0K9MCfc43rC60GNO94R6PcbkWPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RFrCFRgbKELb64Uc+pLB2s8pf5CrkTFwGSzcd+mSWXk=;
- b=JnYQ7iXRBT3V3ZNHsqnhWVQMluDDHipL4tygIlG5UuEy6jAf/DN+524aRhBLx0VkUYOOkhDHLZoXAa+2I2sKlakQATYjYcTq3Du0XuHE583U7cShM+igTzW69da4UtnlQiihrmQ30D2n/C3Fq2ewOnhTHa3LfdnKLvQ756NHUdxXLEGr5iLOhTaQo9+HIYhHwHacj+PI8ptZLWh24Dgu3apqp7c0VOvcmjRbYFFTFmOWF9LlKTTxysJxrQOd7fK03rUIDsWDz1Ufksec4j+1icpax+7HHj4HBETY43MlBg9ktK849ws2/xIXsLATq79QFXk62WwODZqGp4Xwy2gMwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RFrCFRgbKELb64Uc+pLB2s8pf5CrkTFwGSzcd+mSWXk=;
- b=OZKFsb8LEjhblAkmLUuBhqFLMv/4czHxWepso9DiXUxrCx4y8OlOkY7hmS3SXpDanrbd1ABs9wHHGrzlSEOs7hLkdE121Kr8z1e091hlkRa75kY1YF7nj/9X50E+BNmZOAv0I5VzNLHaOvC1tM4Ah3NJhQf/97IgGgMcI+nBu0w=
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com (2603:10b6:805:57::20)
- by SN6PR11MB2829.namprd11.prod.outlook.com (2603:10b6:805:62::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Tue, 25 Aug
- 2020 07:46:41 +0000
-Received: from SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::6407:40fd:19e3:e270]) by SN6PR11MB2575.namprd11.prod.outlook.com
- ([fe80::6407:40fd:19e3:e270%7]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
- 07:46:41 +0000
-From:   "G Jaya Kumaran, Vineetha" <vineetha.g.jaya.kumaran@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        Tue, 25 Aug 2020 03:50:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35154 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbgHYHuo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 03:50:44 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b17so10902903wru.2;
+        Tue, 25 Aug 2020 00:50:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zDClTj1s5N+7to7OhV01SAjKraKRfpn6FyxoNR9IkEU=;
+        b=bN5XDiUE4nUX3oPmRJkcEPxQdXjIOD0VRzGvRvbaqpjAmg4MCPDIvxLlf00nSEwsmm
+         OpTWCpyaJVrxFt7Uphlub9Hn97Vp+WIi5wdFHX38mHW6tkzAba6Wa1Zp/b2JTqOhFw59
+         +2KUxEwiAPsGj1EaUOSr9zEJhsUTnZwONavX4qxsRx8A+OG81t8WWou6ZMPinGUhD6Mu
+         5biDDiHlm8ngOUfmYHqskIZopbgh/4nsbXGywSw3ylOlFxEVdDrYW12bOf+aCztZDlEV
+         xyuAXnjKcXSY3K2zSAp0wn7NBmIJX5v6D5hBo1CpSyAP2SEBCoib05tVKyyF8S5ufjH0
+         Ztig==
+X-Gm-Message-State: AOAM531tFbMXON9O85VWXl4dgKbCWn3HDP2Zp1+rjMtLOutr9KlTr4oV
+        vBHFUTs80Kk9yXh1/Qculn8=
+X-Google-Smtp-Source: ABdhPJz4Djn1xXgFIG+eLnd2hHpypc7Vf0VfaQwoafVN0wzGR0eJoRGVKcMj9sJTv9d70FoXI70fpA==
+X-Received: by 2002:a5d:5589:: with SMTP id i9mr9269809wrv.127.1598341841452;
+        Tue, 25 Aug 2020 00:50:41 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id v9sm17639149wru.37.2020.08.25.00.50.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:50:40 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:50:38 +0200
+From:   "krzk@kernel.org" <krzk@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "han.xu@nxp.com" <han.xu@nxp.com>,
+        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
+        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "aford173@gmail.com" <aford173@gmail.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Wan Mohamad, Wan Ahmad Zainie" 
-        <wan.ahmad.zainie.wan.mohamad@intel.com>,
-        "Raja Subramanian, Lakshmi Bai" 
-        <lakshmi.bai.raja.subramanian@intel.com>
-Subject: RE: [PATCH v4 1/2] pwm: Add PWM driver for Intel Keem Bay
-Thread-Topic: [PATCH v4 1/2] pwm: Add PWM driver for Intel Keem Bay
-Thread-Index: AQHWeJEW5nX/PDGTyUqcgDnOs9O82KlG5fkAgAFzlxA=
-Date:   Tue, 25 Aug 2020 07:46:41 +0000
-Message-ID: <SN6PR11MB25756879B956FD79276ED4A9F6570@SN6PR11MB2575.namprd11.prod.outlook.com>
-References: <1598106646-16595-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <1598106646-16595-2-git-send-email-vineetha.g.jaya.kumaran@intel.com>
- <20200824075246.GZ1891694@smile.fi.intel.com>
-In-Reply-To: <20200824075246.GZ1891694@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: linux.intel.com; dkim=none (message not signed)
- header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [161.142.240.59]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 09cd8d5d-937e-49de-3e4f-08d848cb01db
-x-ms-traffictypediagnostic: SN6PR11MB2829:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR11MB28290A91F428C39B09934887F6570@SN6PR11MB2829.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5Emf4DGfLtYWzN4EYE1bBckIzfNJ+59aXsygzXC5TKDjslwxsCHFRChJ5fdRUTcFgfmOsMbAxOw1oaDU8DapCekkksJ3MC1PWqTamhZwmz5j1UMf7dOtXC+vff94/TDidnO3O3lSz/o/PbRjzszyP/x17lWLc7XBWaEAemlzPCZZU9zDnctwPYY1zaHsP4gzRrJKHmuej6/J787e9I9ZDS4xKc6aZzXMV7ILQ811jm2bcGXhnsDXzxnDiNjiAarBcc7mWAcD7+8iHaxuWYu3ChY0BRlc8fGiMUn/bhYq+Fz0ZnyARmm8jHEudaDaBbGdoih4/lqOjBELAbpdqzj5oQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2575.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(2906002)(71200400001)(76116006)(9686003)(86362001)(478600001)(6506007)(66446008)(54906003)(4326008)(186003)(55016002)(64756008)(5660300002)(7696005)(8676002)(83380400001)(26005)(66556008)(6916009)(66476007)(53546011)(33656002)(52536014)(66946007)(316002)(8936002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 0n4ds24cMOYMuIj5qJhjN9UBy91jwxHszCjd+F+ngyeYQOnh8Bh73hhRFqj9PAJErWqgi7csmn8vfgCGgVb6xyyz5aHBDuwv31gdLEiuNQGlx7Q1XGnLjRpIboy8W0Pc7eaCkBmr8UPVrQhqTr4jUKarmEtFYtBN1/TEHws1OQDysPqHtMzXpFYMGr5VNrtFkRmip0cgbMmD1DtX3x6jStNkbdwqZ5W9kC+uSbcmh7ghU/5CfkTqWKap9h+YoqUJ7OP+f06dGbEwTC5A/zdf9NQeKyGemgCq11Wovxj6ftw5yJAPh3BySzc6+sKwtTcDz7bwak2rfmjTz5etu16r5HlMVPgsTu+fdydocxhMpi6T9kdnHInREQVQUqLjw5Ie46JdD07zbGjjJwTZXasFmFMiO2otetdyeUkjHm2Zrc2U4H05pTw0JYrYhBD6TrUuzak625JVvheArpcnT99E4jL9sOZ5dQuDJvBzSGNxobcUfkb8KdpOGcW3Wj0jiOscsTU1TvvsQbE4tBUTv9mSyaaUO06KhMWqWPDEDQWncu3ebe7QkFE6UI06vFyitZcPZuYSyxiNRiQw8sBAVMD5fpDoyyYi/BcVOBce7eXZTa/5aWZ6saKBm0TPp9KSffc6hGrAr2lU63kMBDqMM1XGkA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "jun.li@nxp.com" <jun.li@nxp.com>
+Subject: Re: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align
+ regulator names with schema
+Message-ID: <20200825075038.GA10148@kozik-lap>
+References: <20200824190701.8447-1-krzk@kernel.org>
+ <20200824190701.8447-3-krzk@kernel.org>
+ <fa042a4f670775f340e88fca8f363252112fd538.camel@fi.rohmeurope.com>
+ <20200825072537.GA5914@kozik-lap>
+ <20200825074500.GA19323@kozik-lap>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2575.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 09cd8d5d-937e-49de-3e4f-08d848cb01db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2020 07:46:41.8262
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hPozfZCasaiaDhFJcu7EhABMdiAiKMe+OHhIcUgy/Y8Al5QUykxZ2xTRdxOmuBdRDY68s+u6jDREBvFVjX+WuDc2cnsdqdKOyfFqJwdQrbUaWgG61PBc0UBpuDNVuyhR
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2829
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200825074500.GA19323@kozik-lap>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Tue, Aug 25, 2020 at 09:45:00AM +0200, krzk@kernel.org wrote:
+> On Tue, Aug 25, 2020 at 09:25:37AM +0200, krzk@kernel.org wrote:
+> > On Tue, Aug 25, 2020 at 06:51:33AM +0000, Vaittinen, Matti wrote:
+> > > Hello Krzysztof,
+> > > 
+> > > Just some questions - please ignore if I misunderstood the impact of
+> > > the change.
+> > > 
+> > > On Mon, 2020-08-24 at 21:06 +0200, Krzysztof Kozlowski wrote:
+> > > > Device tree schema expects regulator names to be lowercase.  This
+> > > > fixes
+> > > > dtbs_check warnings like:
+> > > > 
+> > > >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
+> > > > regulators:LDO1:regulator-name:0: 'LDO1' does not match '^ldo[1-6]$'
+> > > > 
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 22 +++++++++------
+> > > > ----
+> > > >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > > b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > > index a1e5483dbbbe..299caed5d46e 100644
+> > > > --- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > > +++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > > > @@ -60,7 +60,7 @@
+> > > >  
+> > > >  		regulators {
+> > > >  			buck1_reg: BUCK1 {
+> > > > -				regulator-name = "BUCK1";
+> > > > +				regulator-name = "buck1";
+> > > 
+> > > I am not against this change but I would expect seeing some other
+> > > patches too? I guess this will change the regulator name in regulator
+> > > core, right? So maybe I am mistaken but it looks to me this change is
+> > > visible in suppliers, sysfs and debugfs too? Thus changing this sounds
+> > > a bit like asking for a nose bleed :) Am I right that the impact of
+> > > this change has been thoroughly tested? Are there any other patches
+> > > (that I have not seen) related to this change?
+> > 
+> > Oh, crap, the names of regulators in the driver are lowercase, but they
+> > use of_match_ptr for upper case. Seriously, why making a binding which
+> > is contradictory to the driver implementation on the first day?
+> > 
+> > The driver goes with binding, right? One expects uppercase, other
+> > lowercase...
+> > 
+> > And tell me, what is now the ABI? The binding or the incorrect
+> > implementation?
+> 
+> Wait, my mistake. I got confused by my own change. The node name stays
+> the same, so of_match will be correct.
+> 
+> The driver internally already uses lowercase names.
+> 
+> Everything looks good. I will just double check whether the constraints
+> did not change on the board after boot.
 
-> -----Original Message-----
-> From: linux-pwm-owner@vger.kernel.org <linux-pwm-
-> owner@vger.kernel.org> On Behalf Of Andy Shevchenko
-> Sent: Monday, August 24, 2020 3:53 PM
-> To: G Jaya Kumaran, Vineetha <vineetha.g.jaya.kumaran@intel.com>
-> Cc: thierry.reding@gmail.com; u.kleine-koenig@pengutronix.de;
-> robh+dt@kernel.org; linux-pwm@vger.kernel.org;
-> devicetree@vger.kernel.org; Wan Mohamad, Wan Ahmad Zainie
-> <wan.ahmad.zainie.wan.mohamad@intel.com>; Raja Subramanian, Lakshmi
-> Bai <lakshmi.bai.raja.subramanian@intel.com>
-> Subject: Re: [PATCH v4 1/2] pwm: Add PWM driver for Intel Keem Bay
->=20
-> On Sat, Aug 22, 2020 at 10:30:45PM +0800,
-> vineetha.g.jaya.kumaran@intel.com wrote:
-> > From: "Lai, Poey Seng" <poey.seng.lai@intel.com>
-> >
->=20
-> Side note, please use my @linux.intel.com address in the Cc list.
->=20
-> > Enable PWM support for the Intel Keem Bay SoC.
->=20
-> ...
->=20
-> > + * Authors: Lai Poey Seng <poey.seng.lai@intel.com>
-> > + *          Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.co=
-m>
->=20
-> Seems you missed Co-developed-by in the tag block of commit message.
->=20
+Constraints look good.
 
-OK, I will add this in.
+> 
+> > 
+> > > 
+> > > >  				regulator-min-microvolt = <700000>;
+> > > >  				regulator-max-microvolt = <1300000>;
+> > > >  				regulator-boot-on;
+> > > > @@ -69,7 +69,7 @@
+> > > >  			};
+> > > >  
+> > > >  			buck2_reg: BUCK2 {
+> > > > -				regulator-name = "BUCK2";
+> > > > +				regulator-name = "buck2";
+> > > >  				regulator-min-microvolt = <700000>;
+> > > >  				regulator-max-microvolt = <1300000>;
+> > > >  				regulator-boot-on;
+> > > > @@ -79,14 +79,14 @@
+> > > >  
+> > > >  			buck3_reg: BUCK3 {
+> > > >  				// BUCK5 in datasheet
+> > > > -				regulator-name = "BUCK3";
+> > > > +				regulator-name = "buck3";
+> > > >  				regulator-min-microvolt = <700000>;
+> > > >  				regulator-max-microvolt = <1350000>;
+> > > >  			};
+> > > >  
+> > > >  			buck4_reg: BUCK4 {
+> > > >  				// BUCK6 in datasheet
+> > > > -				regulator-name = "BUCK4";
+> > > > +				regulator-name = "buck4";
+> > > >  				regulator-min-microvolt = <3000000>;
+> > > >  				regulator-max-microvolt = <3300000>;
+> > > >  				regulator-boot-on;
+> > > > @@ -95,7 +95,7 @@
+> > > >  
+> > > >  			buck5_reg: BUCK5 {
+> > > >  				// BUCK7 in datasheet
+> > > > -				regulator-name = "BUCK5";
+> > > > +				regulator-name = "buck5";
+> > > 
+> > > What I see in bd718x7-regulator.c for LDO6 desc is:
+> > > 
+> > >                         /* LDO6 is supplied by buck5 */
+> > >                         .supply_name = "buck5",
+> > > 
+> > > So, is this change going to change the supply-chain for the board? Is
+> > > this intended? (Or am I mistaken on what is the impact of regulator-
+> > > name property?)
+> 
+> Good point, let me check the supplies.
 
-> ...
->=20
-> > +#include <linux/bitfield.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
->=20
-> > +#include <linux/of.h>
->=20
-> There is no user of this header. But mod_devicetable.h is missing.
->=20
+This patch actually fixes the supplies which before were not working
+because of case mismatch.
 
-OK, will remove this, and add in mod_devicetable.h
+Before:
 
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pwm.h>
-> > +#include <linux/regmap.h>
->=20
-> ...
->=20
-> > +	/*
-> > +	 * The upper 16 bits of the KMB_PWM_HIGHLOW_OFFSET register
-> contain
-> > +	 * the high time of the waveform, while the last 16 bits contain
-> > +	 * the low time of the waveform, in terms of clock cycles.
-> > +	 *
-> > +	 * high time =3D clock rate * duty cycle / NSEC_PER_SEC
-> > +	 * low time =3D  clock rate * (period - duty cycle) / NSEC_PER_SEC
-> > +	 *
-> > +	 * e.g. For period 50us, duty cycle 30us, and clock rate 500MHz:
->=20
-> > +	 * high time =3D (500MHz * 30us) / 1000000000 =3D 0x3A98
->=20
-> 10^9 divisor now is redundant. It's school physics about units.
->=20
-> > +	 * low time =3D (500MHz * 20us) / 1000000000 =3D 0x2710
->=20
-> Ditto.
->=20
+ regulator                      use open bypass  opmode voltage current     min     max
+---------------------------------------------------------------------------------------
+ regulator-dummy                  4    5      0 unknown     0mV     0mA     0mV     0mV
+    LDO6                          1    0      0 unknown  1200mV     0mA   900mV  1800mV
+ BUCK1                            1    0      0 unknown   850mV     0mA   700mV  1300mV
+ BUCK2                            2    1      0 unknown  1000mV     0mA   700mV  1300mV
+    cpu0-cpu                      1                                 0mA  1000mV  1000mV
+ BUCK3                            1    0      0 unknown   975mV     0mA   700mV  1350mV
+ BUCK4                            1    0      0 unknown  3300mV     0mA  3000mV  3300mV
+ BUCK5                            1    0      0 unknown  1800mV     0mA  1605mV  1995mV
+ BUCK6                            1    0      0 unknown  1200mV     0mA   800mV  1400mV
+ LDO1                             1    0      0 unknown  1800mV     0mA  1600mV  1900mV
+ LDO2                             1    0      0 unknown   800mV     0mA   800mV   900mV
+ LDO3                             1    0      0 unknown  1800mV     0mA  1800mV  3300mV
+ LDO4                             1    0      0 unknown   900mV     0mA   900mV  1800mV
+ ldo5                             1    4      0 unknown  1800mV     0mA  1800mV  1800mV
 
-Thank you for pointing this out - will fix this.
 
-> > +	 * Value written to KMB_PWM_HIGHLOW_OFFSET =3D 0x3A982710
-> > +	 */
->=20
-> Note, in the code you are operating different units.
->=20
-> ...
->=20
-> > +	div =3D clk_rate * state->duty_cycle;
-> > +	div =3D DIV_ROUND_CLOSEST_ULL(div, NSEC_PER_SEC);
->=20
-> For example, here you have clock rate in Hz, duty cycle in ns, that's why=
- you
-> need to use NSEC_PER_SEC divisor here.
->=20
-> ...
->=20
-> > +	div =3D clk_rate * (state->period - state->duty_cycle);
-> > +	div =3D DIV_ROUND_CLOSEST_ULL(div, NSEC_PER_SEC);
->=20
-> Same here.
->=20
-> (Just to be clear, code is okay!)
->=20
-> ...
->=20
-> > +	priv->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > +	if (IS_ERR(priv->clk))
-> > +		dev_err_probe(dev, PTR_ERR(priv->clk),
-> > +			     "Failed to get clock\n");
->=20
-> First of all, it can be one line, second, it misses something...
->=20
 
-Missed the return - sorry, will fix it.
+After:
+ regulator                      use open bypass  opmode voltage current     min     max
+---------------------------------------------------------------------------------------
+buck1                            1    0      0 unknown   850mV     0mA   700mV  1300mV
+ buck2                            2    1      0 unknown   850mV     0mA   700mV  1300mV
+    cpu0-cpu                      1                                 0mA   850mV   850mV
+ buck3                            1    0      0 unknown   975mV     0mA   700mV  1350mV
+ buck4                            1    0      0 unknown  3300mV     0mA  3000mV  3300mV
+ buck5                            2    1      0 unknown  1800mV     0mA  1605mV  1995mV
+    ldo6                          1    0      0 unknown  1200mV     0mA   900mV  1800mV
+ buck6                            1    0      0 unknown  1200mV     0mA   800mV  1400mV
+ ldo1                             1    0      0 unknown  1800mV     0mA  1600mV  1900mV
+ ldo2                             1    0      0 unknown   800mV     0mA   800mV   900mV
+ ldo3                             1    0      0 unknown  1800mV     0mA  1800mV  3300mV
+ ldo4                             1    0      0 unknown   900mV     0mA   900mV  1800mV
+ ldo5                             0    0      0 unknown  3300mV     0mA     0mV     0mV
 
-Thanks for the feedback, Andy. Will make the changes and resubmit.
-
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
-
+Best regards,
+Krzysztof
