@@ -4,174 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6F4C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C25AC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3971F20706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2ACF2075F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 22:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598393359;
-	bh=qqSPjqAn22g136ysY+v/6TnF8riitWpRVjKqhlooOEE=;
+	s=default; t=1598393572;
+	bh=Of113EnxCqZ07WTSyQiM3vjm12EBTMirsA3n9O6h8Lg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=03A8bEW6PEALbii7ivL6Q9+glFtpeiIn2r1rb7u5qg8Snj+ChHRFgNisYHWSl0MeG
-	 Eg5DoogI9SPCdwTbLBCudrp/t44Vf5e6dqt6jJ1FZ2le+x6t0vyIax/UgNkTrUKYQV
-	 d3ZUJYxvZZCAYJPJoE21jWpv/hJIQFewFPHgFaHs=
+	b=fk6W0tRa2Ig4bcvnn3y6JlnNlap+LlmfkIFjQ6+rvdORxtwf951KQLD1zT5ilZw7t
+	 hEPjC6Yotx3vY9TC3cd9/XflB4QvRvMrgmqlHd1TDo+JKzt2sl4qWCExG/l3E0ldJi
+	 rLlyi5N8NtGIzD12OTLHCLndVRxbV+Fx9qEEBn+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHYWJS (ORCPT
+        id S1726619AbgHYWMv (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:09:18 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:35620 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHYWJQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:09:16 -0400
-Received: by mail-il1-f194.google.com with SMTP id q14so122031ilm.2;
-        Tue, 25 Aug 2020 15:09:16 -0700 (PDT)
+        Tue, 25 Aug 2020 18:12:51 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:36055 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbgHYWMv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 18:12:51 -0400
+Received: by mail-il1-f195.google.com with SMTP id f75so121215ilh.3;
+        Tue, 25 Aug 2020 15:12:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=BLKrtDPioAUBLdZ6oe5KeScwSDtIqCbNdo8WBPjs1eA=;
-        b=ooQMt37K0HYFlofYfjX5p5HCY0cg5LMFZ5F+EdFcteWJ9KOOqKyvZRvsZV+uvu/SVx
-         r3MD9Sa7uFzdp28dYCVuBGWRLIzxNpXccIXwgNULI9jPURQa/g+iaEbAqAPNE1oZeOcO
-         fWn7hnibC9dSunoTX4CqPpXEeLUxOW7H9blFRS0oWZXAuNGI8HBmE1vp50MBrCmow0pT
-         WjO/lBAZqNyXdyMkxOgD4ltxz5ReXy9qeYHVW3VhLlk5gDk7n2UND578Fp59w4ibMTsT
-         kq6j9kvEH4WEJeiYOQqSNBboQgiDxpTCUGgKpoFtW2U9QAv809AFNV/+qDK4sCg3ISVJ
-         nXKA==
-X-Gm-Message-State: AOAM532UFwnrhkzcGPYvu9Fbfdo5Bd7FeUEd5ZLuhLNrnoq7gMGIJIkc
-        OHewcjPkZ6i7qY0rbifCEQ==
-X-Google-Smtp-Source: ABdhPJwfitAczHxFgEpj40L+UcJQ4elxja7tGAVv1BecnVUuns4Xh8xcC4bbofLEa/jynI/Aush6KQ==
-X-Received: by 2002:a92:d646:: with SMTP id x6mr11132185ilp.237.1598393355818;
-        Tue, 25 Aug 2020 15:09:15 -0700 (PDT)
+        bh=FtjWOGoBGwHdWV2mCBLJ32YFGif1JFKNUa42upB2AAM=;
+        b=t5vCAEskRx/+e14DLFTY3NLOSPxL8Zs5e1DzdJCd3fmRKwxmzxiFS5eVrzbF7WxcnE
+         +QkED894zCPPyNfR1piSWQIVd2gKmZJw8GOR79vEaWjY7OIy9h25a1CY1yhBJ1DajmRA
+         FUfLk6/lTluu00YDrAhgY37isuBKbUphZjwfFMvdnOQy3+JhUqLna1j/LVzp09Smtm5O
+         WI+II9iAV6Xv/3uF506sxqvRg0Ohz6AUUupJjCvtE3kMbnczjRkI/w3Bh8Giyao8+fOa
+         SZJ9qbqycUVvkWDtiF9PsdRMuwT/PXAUNJ8BSzzmMesY0OT25+oUNZZB4IJoEBFvAfpo
+         AKpA==
+X-Gm-Message-State: AOAM530tFCVEgDClV4wpK9uN5i+1E8ewwCMgoHSxkMYQsy7cGlUbnOlp
+        6o3vmtiRPjoznyVwYcHpDAcNswbr7U9eUU8=
+X-Google-Smtp-Source: ABdhPJzp2v3fVY1P4ngfkmA53AKhzUHzmoTGfLtjsRJZeHZ5ogRB6fzJiGIPCI2pH60VdBnwDBrPKw==
+X-Received: by 2002:a92:c7d4:: with SMTP id g20mr11066461ilk.40.1598393569835;
+        Tue, 25 Aug 2020 15:12:49 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id u89sm199111ili.87.2020.08.25.15.09.14
+        by smtp.gmail.com with ESMTPSA id p124sm74373iof.19.2020.08.25.15.12.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 15:09:14 -0700 (PDT)
-Received: (nullmailer pid 1429315 invoked by uid 1000);
-        Tue, 25 Aug 2020 22:09:13 -0000
-Date:   Tue, 25 Aug 2020 16:09:13 -0600
+        Tue, 25 Aug 2020 15:12:49 -0700 (PDT)
+Received: (nullmailer pid 1435001 invoked by uid 1000);
+        Tue, 25 Aug 2020 22:12:47 -0000
+Date:   Tue, 25 Aug 2020 16:12:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
- SIRQ controller binding
-Message-ID: <20200825220913.GA1423455@bogus>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
+To:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        jslaby@suse.com, git-dev@xilinx.com, gregkh@linuxfoundation.org
+Subject: Re: [PATCH 1/2] bindings: serial: Add xilinx compatible
+Message-ID: <20200825221247.GA1429623@bogus>
+References: <1597855439-746-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
+In-Reply-To: <1597855439-746-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:37:56PM +0300, Cristian Ciocaltea wrote:
-> Actions Semi Owl SoCs SIRQ interrupt controller is found in S500, S700
-> and S900 SoCs and provides support for handling up to 3 external
-> interrupt lines.
-> 
-> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+On Wed, Aug 19, 2020 at 10:13:58PM +0530, Shubhrajyoti Datta wrote:
+> Add the arm,xlnx-sbsa-uart compatible.
+> Xilinx versal uart is similar to sbsa-uart except that it has
+> termios configurable.
+
+Yet still not just a pl011? Sigh.
+
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 > ---
-> Changes in v5:
->  - Updated controller description statements both in the commit message
->    and the binding doc
+>  Documentation/devicetree/bindings/serial/pl011.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
->  .../actions,owl-sirq.yaml                     | 68 +++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> new file mode 100644
-> index 000000000000..cf9b7a514e4e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> @@ -0,0 +1,68 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/interrupt-controller/actions,owl-sirq.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Actions Semi Owl SoCs SIRQ interrupt controller
-> +
-> +maintainers:
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +  - Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> +
-> +description: |
-> +  This interrupt controller is found in the Actions Semi Owl SoCs (S500, S700
-> +  and S900) and provides support for handling up to 3 external interrupt lines.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +        - enum:
-> +          - actions,s500-sirq
-> +          - actions,s700-sirq
-> +          - actions,s900-sirq
-> +        - const: actions,owl-sirq
-> +      - const: actions,owl-sirq
+> diff --git a/Documentation/devicetree/bindings/serial/pl011.yaml b/Documentation/devicetree/bindings/serial/pl011.yaml
+> index c23c93b..6e123b1 100644
+> --- a/Documentation/devicetree/bindings/serial/pl011.yaml
+> +++ b/Documentation/devicetree/bindings/serial/pl011.yaml
+> @@ -20,6 +20,7 @@ select:
+>          enum:
+>            - arm,pl011
+>            - zte,zx296702-uart
+> +          - arm,xlnx-sbsa-uart
+>    required:
+>      - compatible
+>  
+> @@ -32,6 +33,7 @@ properties:
+>        - items:
+>            - const: zte,zx296702-uart
+>            - const: arm,primecell
+> +          - const: arm,xlnx-sbsa-uart
 
-This should be dropped. You should always have the SoC specific 
-compatible.
+You are defining compatible must be:
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +    description:
-> +      The first cell is the input IRQ number, between 0 and 2, while the second
-> +      cell is the trigger type as defined in interrupt.txt in this directory.
-> +
-> +  'actions,ext-interrupts':
-> +    description: |
-> +      Contains the GIC SPI IRQ numbers mapped to the external interrupt
-> +      lines. They shall be specified sequentially from output 0 to 2.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 3
-> +    maxItems: 3
+compatible = "zte,zx296702-uart", "arm,primecell", "arm,xlnx-sbsa-uart";
 
-Can't you use 'interrupts' here?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - 'actions,ext-interrupts'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    sirq: interrupt-controller@b01b0200 {
-> +      compatible = "actions,s500-sirq", "actions,owl-sirq";
-> +      reg = <0xb01b0200 0x4>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +      actions,ext-interrupts = <13>, /* SIRQ0 */
-> +                               <14>, /* SIRQ1 */
-> +                               <15>; /* SIRQ2 */
-> +    };
-> +
-> +...
-> -- 
-> 2.28.0
-> 
+Probably not what you want. And breaks ZTE.
