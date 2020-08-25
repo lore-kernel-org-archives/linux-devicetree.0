@@ -2,135 +2,105 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A90DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6913CC433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56A3920738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:53:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6qMNMd5"
+	by mail.kernel.org (Postfix) with ESMTP id 42CBB20738
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:56:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725998AbgHYNxb (ORCPT
+        id S1726218AbgHYN4Y (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgHYNx0 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 09:53:26 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4275C061756
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 06:53:25 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id x9so2177735wmi.2
-        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 06:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=m5K7q4ntfOvCuWo9VcwV3Y8K7PEmWf/RHpOYApWqYOo=;
-        b=p6qMNMd5VglEdqFcIL1iv1XVKPRZ+sI70S8iThAOM+4AcOZuWdjDKeIKcuVwOrv97l
-         mlzPdyztvYgnW6wJDVCB3Zwj5L/YbWx44evE1cefrB4fkVlzOUNZGIK1bwBRlX34j8Vx
-         rop3HtmimD+WJ70KqcQt4D6PQzT1TvsMJ/x9dio43yiqkEcoej/f4of2ZQlmhTfC4p+n
-         WIxtyaIr6IzvFHkq73aPJzB8sua9bocWmlXJIpI7t5WUNXF+apZlgt3q1ncLtpusFoWn
-         NSctCbUnOTq51icB0I75NTaV26VnEpI1kjT4ICWIZXkbN4xEi1Hp16oDmEPe/fetgm3z
-         M2hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=m5K7q4ntfOvCuWo9VcwV3Y8K7PEmWf/RHpOYApWqYOo=;
-        b=WCBZg3jd5UAF8vASelZzF6pqeveHxNNlQ2vcxBO6H4JPpQrGw+cdK7Rs13y8uOIs2R
-         0qdr9uIZJ8U8RrsTYRL2G+/0h6a+EMSmEz7GltjDRGPBLsKhDawVk4VqgmOv3qzHcN75
-         mtyaCvHmT5ZG+CBbGre34O4SCDlBnF95dQfUAAEnuxaCDf6bwzeWDODCUGRWFgq/bJj5
-         2BDF2gID5WxOEqzLqFGQbaOpwG5m/OHWyuSpcXjXM9TvA3jvujBgdeDjbQfbB+YAY5fl
-         qhE8VdFjGiyvgQXlmNVH9YinUPVfxWNW85a5d8gewErw1D5l6XxyENC7B6bikCtdb5YR
-         rpVw==
-X-Gm-Message-State: AOAM5329WA1ioDb2VzMhGdjQk6gojpZwLebkoFKPJNYLnPb0bdbDvdBJ
-        2HcihO9iZ/IwhzjvdMHo16Zu3w==
-X-Google-Smtp-Source: ABdhPJy8k9/Nb4tlj+y4Bq+1w/ACN3QGov3SCl+s4GMHcCRvFUwVSFwb3GgE8g5wKq+pB2bBXE/pBA==
-X-Received: by 2002:a1c:c90d:: with SMTP id f13mr2243927wmb.25.1598363603543;
-        Tue, 25 Aug 2020 06:53:23 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id h10sm30075699wro.57.2020.08.25.06.53.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 06:53:22 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 14:53:20 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Frank Lee <tiny.windzz@gmail.com>,
-        Frank Lee <frank@allwinnertech.com>,
-        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
-        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
-        Marc Zyngier <maz@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        "p.zabel" <p.zabel@pengutronix.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        clabbe@baylibre.com, bage@linutronix.de,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
-Message-ID: <20200825135320.GM3248864@dell>
-References: <cover.1595572867.git.frank@allwinnertech.com>
- <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
- <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
- <20200824080327.GH3248864@dell>
- <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
+        Tue, 25 Aug 2020 09:56:24 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:49302 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726045AbgHYN4V (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:56:21 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kAZQt-00BmIB-U5; Tue, 25 Aug 2020 15:56:15 +0200
+Date:   Tue, 25 Aug 2020 15:56:15 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Kurt Kanzenbach <kurt@linutronix.de>
+Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
+        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
+Subject: Re: [PATCH v3 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek
+ switches
+Message-ID: <20200825135615.GR2588906@lunn.ch>
+References: <20200820081118.10105-1-kurt@linutronix.de>
+ <20200820081118.10105-3-kurt@linutronix.de>
+ <20200824224450.GK2403519@lunn.ch>
+ <87eenv14bt.fsf@kurt>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
+In-Reply-To: <87eenv14bt.fsf@kurt>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 25 Aug 2020, Maxime Ripard wrote:
-
-> On Mon, Aug 24, 2020 at 09:03:27AM +0100, Lee Jones wrote:
-> > On Mon, 24 Aug 2020, Frank Lee wrote:
-> > 
-> > > ping......
-> > 
-> > "Please don't send content free pings and please allow a reasonable
-> >  time for review.  People get busy, go on holiday, attend conferences
-> >  and so on so unless there is some reason for urgency (like critical
-> >  bug fixes) please allow at least a couple of weeks for review.  If
-> >  there have been review comments then people may be waiting for those
-> >  to be addressed.  Sending content free pings just adds to the mail
-> >  volume (if they are seen at all) and if something has gone wrong
-> >  you'll have to resend the patches anyway so [RESEND]ing with any
-> >  comments addressed is generally a much better approach."
+> >> +static int hellcreek_detect(struct hellcreek *hellcreek)
+> >> +{
+> >> +	u16 id, rel_low, rel_high, date_low, date_high, tgd_ver;
+> >> +	u8 tgd_maj, tgd_min;
+> >> +	u32 rel, date;
+> >> +
+> >> +	id	  = hellcreek_read(hellcreek, HR_MODID_C);
+> >> +	rel_low	  = hellcreek_read(hellcreek, HR_REL_L_C);
+> >> +	rel_high  = hellcreek_read(hellcreek, HR_REL_H_C);
+> >> +	date_low  = hellcreek_read(hellcreek, HR_BLD_L_C);
+> >> +	date_high = hellcreek_read(hellcreek, HR_BLD_H_C);
+> >> +	tgd_ver   = hellcreek_read(hellcreek, TR_TGDVER);
+> >> +
+> >> +	if (id != HELLCREEK_MODULE_ID)
+> >> +		return -ENODEV;
+> >
+> > Are there other Hellcreek devices? I'm just wondering if we should
+> > have a specific compatible for 0x4c30 as well as the more generic 
+> > "hirschmann,hellcreek".
 > 
-> This is true to some extent, but pinging after a month doesn't seem
-> unreasonable either.
+> Yes, there will be different revisions of the Hellcreek devices. This ID
+> is really device specific. A lot of features of this switch are
+> configured in the VHDL code. For instance the MAC settings (100 or 1000
+> Mbit/s).
+> 
+> I've discussed this with the HW engineer from Hirschmann. He suggested
+> to keep this check here, as the driver is currently specific for the
+> that device. We have to make sure that the driver matches the hardware.
 
-Pinging is mostly a fruitless exercise.
+I agree with the check here. The question is about the compatible
+string. Should there be a more specific compatible string as well as
+the generic one?
 
-After a month, many Maintainers would have purged any un-serviced
-mails anyway.  If a patch-set is left hanging, still requiring
-attention before the next version, submitting a [RESEND] is generally
-a better option.
+There have been a few discussions about how the Marvell DSA driver
+does its compatible string. The compatible string tells you where to
+find the ID register, not what value to expect in the ID register. The
+ID register can currently be in one of three different locations. Do
+all current and future Hellcreak devices have the same value for
+HR_MODID_C? If not, now is a good time to add a more specific
+compatible string to tell you where to find the ID register.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> My plan was to extend this when I have access to other revisions. There
+> will be a SPI variant as well. But, I didn't want to implement it without the
+> ability to test it.
+
+Does the SPI variant use the same value for HR_MODID_C? Maybe you need
+a different compatible, maybe not, depending on how the driver is
+structured.
+
+The compatible string is part of the ABI. So thinking about it a bit
+now can make things easier later. I just want to make sure you have
+thought about this.
+
+	Andrew
