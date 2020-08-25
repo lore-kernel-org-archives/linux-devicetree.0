@@ -2,213 +2,230 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8A9C433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09468C433E3
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38EE020715
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D9F2068E
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598355161;
+	bh=hS8MOXkGn7JYwFlDKqfpgI96hhlOO6z5RGuYqJxyWNk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ibZtsFNyPSNoygKcA5ilM3VX7pIJl3yP6nmfS2eNl+MhgA18UdITE0qV8NL25QCav
+	 tk/lPa7lQGjB6En7fQ2IjWj6/WXNzkJKhIdgRo7SXIYZsTI3OYG3+trZ+816N9hQio
+	 H0ICTdgCPWsXEiWshrhEDnlsjg77L8qZsA7cKVLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbgHYLY2 (ORCPT
+        id S1729878AbgHYLaj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:24:28 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49232 "EHLO inva020.nxp.com"
+        Tue, 25 Aug 2020 07:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729873AbgHYLYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:24:24 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E3EB21A12CE;
-        Tue, 25 Aug 2020 13:24:21 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D5D4E1A059F;
-        Tue, 25 Aug 2020 13:24:21 +0200 (CEST)
-Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BEA35203CB;
-        Tue, 25 Aug 2020 13:24:21 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 14:24:21 +0300
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fugang Duan <fugang.duan@nxp.com>, devicetree@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-clk@vger.kernel.org
-Subject: Re: [PATCH v2 11/17] clk: imx: Add blk_ctrl combo driver
-Message-ID: <20200825112421.eut7gx3i4eirhnfw@fsr-ub1664-175>
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
- <1597406966-13740-12-git-send-email-abel.vesa@nxp.com>
- <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
+        id S1729710AbgHYLai (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:30:38 -0400
+Received: from coco.lan (ip5f5ad5a4.dynamic.kabel-deutschland.de [95.90.213.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B53082068E;
+        Tue, 25 Aug 2020 11:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598355037;
+        bh=hS8MOXkGn7JYwFlDKqfpgI96hhlOO6z5RGuYqJxyWNk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vjYUYXjEaXVD3eAv3vZmxrvIuLgKkLKqMeS9kLfzQ69qD0P0HbZowGUT/hmAmwffm
+         yhiHRysfyy1aN6khI/k+KqtD8yKFr0XivtzoBQzJmSmoZhDkN4wwHZH+fXlz9L07Pt
+         MOWyOw/24QeMx5Wugndtf9E49WkpaoSdesV/9YFE=
+Date:   Tue, 25 Aug 2020 13:30:25 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liuyao An <anliuyao@huawei.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200825133025.13f047f0@coco.lan>
+In-Reply-To: <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+        <20200819152120.GA106437@ravnborg.org>
+        <20200819153045.GA18469@pendragon.ideasonboard.com>
+        <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
+        <20200820090326.3f400a15@coco.lan>
+        <20200820100205.GA5962@pendragon.ideasonboard.com>
+        <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
-User-Agent: NeoMutt/20180622
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 20-08-25 12:48:41, Philipp Zabel wrote:
-> On Fri, 2020-08-14 at 15:09 +0300, Abel Vesa wrote:
-> > On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
-> > RM and usually is comprised of some GPRs that are considered too
-> > generic to be part of any dedicated IP from that specific subsystem.
-> > 
-> > In general, some of the GPRs have some clock bits, some have reset bits,
-> > so in order to be able to use the imx clock API, this needs to be
-> > in a clock driver. From there it can use the reset controller API and
-> > leave the rest to the syscon.
-> > 
-> > This driver is intended to work with the following BLK_CTRL IPs found in
-> > i.MX8MP (but it might be reused by the future i.MX platforms that
-> > have this kind of IP in their design):
-> >  - Audio
-> >  - Media
-> >  - HDMI
-> > 
-> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-> > ---
-> >  drivers/clk/imx/Makefile       |   2 +-
-> >  drivers/clk/imx/clk-blk-ctrl.c | 327 +++++++++++++++++++++++++++++++++++++++++
-> >  drivers/clk/imx/clk-blk-ctrl.h |  81 ++++++++++
-> >  3 files changed, 409 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/clk/imx/clk-blk-ctrl.c
-> >  create mode 100644 drivers/clk/imx/clk-blk-ctrl.h
-> > 
-> > diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> > index 928f874c..7afe1df 100644
-> > --- a/drivers/clk/imx/Makefile
-> > +++ b/drivers/clk/imx/Makefile
-> > @@ -27,7 +27,7 @@ obj-$(CONFIG_MXC_CLK_SCU) += \
-> >  
-> >  obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
-> >  obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
-> > -obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
-> > +obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o clk-blk-ctrl.o
-> >  obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
-> >  obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
-> >  
-> > diff --git a/drivers/clk/imx/clk-blk-ctrl.c b/drivers/clk/imx/clk-blk-ctrl.c
-> > new file mode 100644
-> > index 00000000..1672646
-> > --- /dev/null
-> > +++ b/drivers/clk/imx/clk-blk-ctrl.c
-> > @@ -0,0 +1,327 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright 2020 NXP.
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/reset-controller.h>
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_runtime.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/string.h>
-> > +#include <linux/types.h>
-> > +
-> > +#include "clk.h"
-> > +#include "clk-blk-ctrl.h"
-> > +
-> > +struct reset_hw {
-> > +	u32 offset;
-> > +	u32 shift;
-> > +	u32 mask;
-> > +	bool asserted;
-> > +};
-> > +
-> > +struct pm_safekeep_info {
-> > +	uint32_t *regs_values;
-> > +	uint32_t *regs_offsets;
-> > +	uint32_t regs_num;
-> > +};
-> > +
-> > +struct imx_blk_ctrl_drvdata {
-> > +	void __iomem *base;
-> > +	struct reset_controller_dev rcdev;
-> > +	struct reset_hw *rst_hws;
-> > +	struct pm_safekeep_info pm_info;
-> > +
-> > +	spinlock_t lock;
-> > +};
-> > +
-> > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
-> > +				  unsigned long id, bool assert)
-> > +{
-> > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
-> > +			struct imx_blk_ctrl_drvdata, rcdev);
-> > +	unsigned int offset = drvdata->rst_hws[id].offset;
-> > +	unsigned int shift = drvdata->rst_hws[id].shift;
-> > +	unsigned int mask = drvdata->rst_hws[id].mask;
-> > +	void __iomem *reg_addr = drvdata->base + offset;
-> > +	unsigned long flags;
-> > +	unsigned int asserted_before = 0, asserted_after = 0;
-> > +	u32 reg;
-> > +	int i;
-> > +
-> > +	spin_lock_irqsave(&drvdata->lock, flags);
-> > +
-> > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
-> > +		if (drvdata->rst_hws[i].asserted)
-> > +			asserted_before++;
-> > +
-> > +	if (asserted_before == 0 && assert)
-> > +		pm_runtime_get(rcdev->dev);
-> 
-> Shouldn't that be pm_runtime_get_sync() ?
-> 
-> I would do that unconditionally before locking drvdata->lock and then
-> drop unnecessary refcounts afterwards.
-> 
+Em Tue, 25 Aug 2020 05:29:29 +1000
+Dave Airlie <airlied@gmail.com> escreveu:
 
-I thought we already discussed this on the last's version thread.
+> On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Mauro,
+> >
+> > On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote: =
+=20
+> > > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu: =20
+> > > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote: =20
+> > > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote: =20
+> > > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab=
+ wrote: =20
+> > > > > > > This patch series port the out-of-tree driver for Hikey 970 (=
+which
+> > > > > > > should also support Hikey 960) from the official 96boards tre=
+e:
+> > > > > > >
+> > > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> > > > > > >
+> > > > > > > Based on his history, this driver seems to be originally writ=
+ten
+> > > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The origi=
+nal
+> > > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
+> > > > > > > implementation for FB dev API.
+> > > > > > >
+> > > > > > > As I need to preserve the original history (with has patches =
+from
+> > > > > > > both HiSilicon and from Linaro),  I'm starting from the origi=
+nal
+> > > > > > > patch applied there. The remaining patches are incremental,
+> > > > > > > and port this driver to work with upstream Kernel.
+> > > > > > > =20
+> > > > ... =20
+> > > > > > > - Due to legal reasons, I need to preserve the authorship of
+> > > > > > >   each one responsbile for each patch. So, I need to start fr=
+om
+> > > > > > >   the original patch from Kernel 4.4; =20
+> > > > ... =20
+> > > > > > I do acknowledge you need to preserve history and all -
+> > > > > > but this patchset is not easy to review. =20
+> > > > >
+> > > > > Why do we need to preserve history ? Adding relevant Signed-off-b=
+y and
+> > > > > Co-developed-by should be enough, shouldn't it ? Having a public =
+branch
+> > > > > that contains the history is useful if anyone is interested, but =
+I don't
+> > > > > think it's required in mainline. =20
+> > > >
+> > > > Yea. I concur with Laurent here. I'm not sure what legal reasoning =
+you
+> > > > have on this but preserving the "absolute" history here is actively
+> > > > detrimental for review and understanding of the patch set.
+> > > >
+> > > > Preserving Authorship, Signed-off-by lines and adding Co-developed-=
+by
+> > > > lines should be sufficient to provide both atribution credit and DCO
+> > > > history. =20
+> > >
+> > > I'm not convinced that, from legal standpoint, folding things would
+> > > be enough. See, there are at least 3 legal systems involved here
+> > > among the different patch authors:
+> > >
+> > >       - civil law;
+> > >       - common law;
+> > >       - customary law + common law.
+> > >
+> > > Merging stuff altogether from different law systems can be problemati=
+c,
+> > > and trying to discuss this with experienced IP property lawyers will
+> > > for sure take a lot of time and efforts. I also bet that different
+> > > lawyers will have different opinions, because laws are subject to
+> > > interpretation. With that matter I'm not aware of any court rules
+> > > with regards to folded patches. So, it sounds to me that folding
+> > > patches is something that has yet to be proofed in courts around
+> > > the globe.
+> > >
+> > > At least for US legal system, it sounds that the Country of
+> > > origin of a patch is relevant, as they have a concept of
+> > > "national technology" that can be subject to export regulations.
+> > >
+> > > From my side, I really prefer to play safe and stay out of any such
+> > > legal discussions. =20
+> >
+> > Let's be serious for a moment. If you think there are legal issues in
+> > taking GPL-v2.0-only patches and squashing them while retaining
+> > authorship information through tags, the Linux kernel if *full* of that.
+> > You also routinely modify patches that you commit to the media subsystem
+> > to fix "small issues".
+> >
+> > The country of origin argument makes no sense either, the kernel code
+> > base if full of code coming from pretty much all country on the planet.
+> >
+> > Keeping the patches separate make this hard to review. Please squash
+> > them. =20
+>=20
+> I'm inclined to agree with Laurent here.
+>=20
+> Patches submitted as GPL-v2 with DCO lines and author names/companies
+> should be fine to be squashed and rearranged,
+> as long as the DCO and Authorship is kept somewhere in the new patch
+> that is applied.
+>=20
+> Review is more important here.
 
-The assert and deassert do not necessary get called in pairs,
-leading to the device power domain staying always on because
-some use called assert multiple times without doig the same number
-of deasserts.
+Sorry, but I can't agree that review is more important than to be able
+to properly indicate copyrights in a valid way at the legal systems that
+it would apply ;-)
 
-> > +
-> > +	if (assert) {
-> > +		reg = readl(reg_addr);
-> > +		writel(reg & ~(mask << shift), reg_addr);
-> > +		drvdata->rst_hws[id].asserted = true;
-> > +	} else {
-> > +		reg = readl(reg_addr);
-> > +		writel(reg | (mask << shift), reg_addr);
-> > +		drvdata->rst_hws[id].asserted = false;
-> > +	}
-> > +
-> > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
-> > +		if (drvdata->rst_hws[i].asserted)
-> > +			asserted_after++;
-> > +
-> > +	if (asserted_before == 1 && asserted_after == 0)
-> > +		pm_runtime_put(rcdev->dev);
-> > +
-> > +	spin_unlock_irqrestore(&drvdata->lock, flags);
-> > +
-> > +	return 0;
-> > +}
-> 
-> regards
-> Philipp
+In any case, there's an easy way to make the code easy to review:
+I can write the patches against staging (where it is OK to submit
+preserving the history) and then add a final patch moving it out
+of staging.
+
+You can then just review the last patch, as it will contain the
+entire code on it.
+
+Another alternative, as I'm already doing with Sam, is for me to
+submit the folded code as a reply to 00/xx. You can then just=20
+review the final code, without concerning about how the code reached
+there.
+
+=46rom review point of the view, this will be the same as reviewing
+a folded patch, but, from legal standpoint, the entire copyright
+chain will be preserved.
+
+Thanks,
+Mauro
