@@ -2,106 +2,213 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E47EC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8A9C433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7182075B
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NQINZ5Rf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4+WhodGi"
+	by mail.kernel.org (Postfix) with ESMTP id 38EE020715
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 11:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgHYLVs (ORCPT
+        id S1729530AbgHYLY2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:21:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60044 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729979AbgHYLVg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 07:21:36 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF452C061574;
-        Tue, 25 Aug 2020 04:21:35 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598354492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nGrucTK6525pBpaxiLtxZM8yZYWGEHd+0H3dBZO4qJg=;
-        b=NQINZ5RfH7FO65a1aHSHSh75mSRPV8RsQ7Zl62YhPiTL4My9tMBqYklKV9oodMjNeufuOW
-        MfcL1jlC9T/FTDuQMXrUBUWhxR0w2/uFg0FY+TqBPcSfIDrhprPVgktXWznz/ihqs5aZxp
-        A8TkZ+zcJSx3ghyPRfp86ORLf7ggTgZQ35MKPdJrB/rnVJ9H2b21HeP5t4Kvfh8F0hlUpf
-        V46VIm95qBpdVYxYuScQgg4k67jOF076AjgYJ8nGFl7g9xrPSo9IHWrqRsebjHus/CGm7d
-        IV2YXs3qn11JvbNJk27/Sujt5YGIdkA0JFIJS/ZspRkDBZsFU2o+5GbI+Bwx5g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598354492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nGrucTK6525pBpaxiLtxZM8yZYWGEHd+0H3dBZO4qJg=;
-        b=4+WhodGiRzkVRO0VTFVT7qkWpsmJMan999hb01hJ84lHjYIbFD6oW0Co7BQ5aqmcPpDk11
-        dNzyjReygXxdzsDA==
-To:     David Miller <davem@davemloft.net>, olteanv@gmail.com
-Cc:     kuba@kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, bigeasy@linutronix.de,
-        richardcochran@gmail.com, kamil.alkhouri@hs-offenburg.de,
-        ilias.apalodimas@linaro.org, ivan.khoronzhuk@linaro.org,
-        vinicius.gomes@intel.com, xiaoliang.yang_1@nxp.com, Po.Liu@nxp.com
-Subject: Re: [PATCH v3 0/8] Hirschmann Hellcreek DSA driver
-In-Reply-To: <20200824.153518.700546598086140133.davem@davemloft.net>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200824143110.43f4619f@kicinski-fedora-PC1C0HJN> <20200824220203.atjmjrydq4qyt33x@skbuf> <20200824.153518.700546598086140133.davem@davemloft.net>
-Date:   Tue, 25 Aug 2020 13:21:30 +0200
-Message-ID: <87sgcbynr9.fsf@kurt>
+        Tue, 25 Aug 2020 07:24:28 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49232 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729873AbgHYLYY (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:24:24 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E3EB21A12CE;
+        Tue, 25 Aug 2020 13:24:21 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D5D4E1A059F;
+        Tue, 25 Aug 2020 13:24:21 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id BEA35203CB;
+        Tue, 25 Aug 2020 13:24:21 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 14:24:21 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>, devicetree@vger.kernel.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 11/17] clk: imx: Add blk_ctrl combo driver
+Message-ID: <20200825112421.eut7gx3i4eirhnfw@fsr-ub1664-175>
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
+ <1597406966-13740-12-git-send-email-abel.vesa@nxp.com>
+ <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On 20-08-25 12:48:41, Philipp Zabel wrote:
+> On Fri, 2020-08-14 at 15:09 +0300, Abel Vesa wrote:
+> > On i.MX8MP, there is a new type of IP which is called BLK_CTRL in
+> > RM and usually is comprised of some GPRs that are considered too
+> > generic to be part of any dedicated IP from that specific subsystem.
+> > 
+> > In general, some of the GPRs have some clock bits, some have reset bits,
+> > so in order to be able to use the imx clock API, this needs to be
+> > in a clock driver. From there it can use the reset controller API and
+> > leave the rest to the syscon.
+> > 
+> > This driver is intended to work with the following BLK_CTRL IPs found in
+> > i.MX8MP (but it might be reused by the future i.MX platforms that
+> > have this kind of IP in their design):
+> >  - Audio
+> >  - Media
+> >  - HDMI
+> > 
+> > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > ---
+> >  drivers/clk/imx/Makefile       |   2 +-
+> >  drivers/clk/imx/clk-blk-ctrl.c | 327 +++++++++++++++++++++++++++++++++++++++++
+> >  drivers/clk/imx/clk-blk-ctrl.h |  81 ++++++++++
+> >  3 files changed, 409 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/clk/imx/clk-blk-ctrl.c
+> >  create mode 100644 drivers/clk/imx/clk-blk-ctrl.h
+> > 
+> > diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+> > index 928f874c..7afe1df 100644
+> > --- a/drivers/clk/imx/Makefile
+> > +++ b/drivers/clk/imx/Makefile
+> > @@ -27,7 +27,7 @@ obj-$(CONFIG_MXC_CLK_SCU) += \
+> >  
+> >  obj-$(CONFIG_CLK_IMX8MM) += clk-imx8mm.o
+> >  obj-$(CONFIG_CLK_IMX8MN) += clk-imx8mn.o
+> > -obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o
+> > +obj-$(CONFIG_CLK_IMX8MP) += clk-imx8mp.o clk-blk-ctrl.o
+> >  obj-$(CONFIG_CLK_IMX8MQ) += clk-imx8mq.o
+> >  obj-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
+> >  
+> > diff --git a/drivers/clk/imx/clk-blk-ctrl.c b/drivers/clk/imx/clk-blk-ctrl.c
+> > new file mode 100644
+> > index 00000000..1672646
+> > --- /dev/null
+> > +++ b/drivers/clk/imx/clk-blk-ctrl.c
+> > @@ -0,0 +1,327 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2020 NXP.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/reset-controller.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_runtime.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/string.h>
+> > +#include <linux/types.h>
+> > +
+> > +#include "clk.h"
+> > +#include "clk-blk-ctrl.h"
+> > +
+> > +struct reset_hw {
+> > +	u32 offset;
+> > +	u32 shift;
+> > +	u32 mask;
+> > +	bool asserted;
+> > +};
+> > +
+> > +struct pm_safekeep_info {
+> > +	uint32_t *regs_values;
+> > +	uint32_t *regs_offsets;
+> > +	uint32_t regs_num;
+> > +};
+> > +
+> > +struct imx_blk_ctrl_drvdata {
+> > +	void __iomem *base;
+> > +	struct reset_controller_dev rcdev;
+> > +	struct reset_hw *rst_hws;
+> > +	struct pm_safekeep_info pm_info;
+> > +
+> > +	spinlock_t lock;
+> > +};
+> > +
+> > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
+> > +				  unsigned long id, bool assert)
+> > +{
+> > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
+> > +			struct imx_blk_ctrl_drvdata, rcdev);
+> > +	unsigned int offset = drvdata->rst_hws[id].offset;
+> > +	unsigned int shift = drvdata->rst_hws[id].shift;
+> > +	unsigned int mask = drvdata->rst_hws[id].mask;
+> > +	void __iomem *reg_addr = drvdata->base + offset;
+> > +	unsigned long flags;
+> > +	unsigned int asserted_before = 0, asserted_after = 0;
+> > +	u32 reg;
+> > +	int i;
+> > +
+> > +	spin_lock_irqsave(&drvdata->lock, flags);
+> > +
+> > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
+> > +		if (drvdata->rst_hws[i].asserted)
+> > +			asserted_before++;
+> > +
+> > +	if (asserted_before == 0 && assert)
+> > +		pm_runtime_get(rcdev->dev);
+> 
+> Shouldn't that be pm_runtime_get_sync() ?
+> 
+> I would do that unconditionally before locking drvdata->lock and then
+> drop unnecessary refcounts afterwards.
+> 
 
-On Mon Aug 24 2020, David Miller wrote:
-> Agreed, Kurt can you repost this series without the TAPRIO support for
-> now since it's controversial and needs more discussion and changes?
+I thought we already discussed this on the last's version thread.
 
-OK. It seems like the TAPRIO implementation has to be discussed more and
-it might be good to do that separately.
+The assert and deassert do not necessary get called in pairs,
+leading to the device power domain staying always on because
+some use called assert multiple times without doig the same number
+of deasserts.
 
-I'll replace the spinlocks (which were only introduced for the hrtimers)
-with mutexes and post a sane version of the driver without the TAPRIO
-support.
-
->
-> Thank you.
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9E9DoACgkQeSpbgcuY
-8KbFjhAAga1JgZ6IRftUgmWMjZCHAq7TMBpRzGySx2owt5cV6CephpKsjs3jccmW
-wM2kubrqvX5nSgRNET5F6oqoU3WkTqxdIXJ/M+/mTdCMXgH2aN0ColKn/1Nj+xPP
-JUxZVVF0oJGjUcpT9jMf01/ZN/XV8BbhRV6ZI+c1r+tyI5X0cTPSUkk6/PV8Nz8T
-FsJIlxpQmM1b1oYrayVVI1Yy0uXhV65m5W39cuci0snp5/8F8exAKzn3t7dApGXU
-DFSzaiDA8QYiEhSBcgFjDJ06o3Ioq6xwdelfhjmxic2az7KDXNgiGc/Ik4W2e2cW
-cIuCY0MTX+d4J5OxN/eAGTQaub4Ggu0qyZbiOR7QBQWHqOIxGKaiLobL0KALehzr
-ReUDSYHdKJL2QAAkk27Jm2Ee5zHCQjTcxC88PbIRkeG28ufeZNqLPjekDFTlAfY7
-F4KIyeA1iqvZQ64qrKec1i1ldVYLO3GGfpMqbIhi8euor9OK1NuCdF9JvsGi6v+W
-5zDy8sis0EKx+eGQUR3GZu2dbbo+c89RD/DE35CBRSsF5VAUu28EV3qI/XBqM5Hh
-s5Su8CL1ZhF9mb2gwfNDa+POxOnyNHyd+P8Qnj4N5JOBofWpAX4HZIU7nQDmY8TA
-GXXt8K8DxIuNQYf4RYUJWITtsD/0ekoE6XUGhXaIoYlQ0msrhBM=
-=iSfE
------END PGP SIGNATURE-----
---=-=-=--
+> > +
+> > +	if (assert) {
+> > +		reg = readl(reg_addr);
+> > +		writel(reg & ~(mask << shift), reg_addr);
+> > +		drvdata->rst_hws[id].asserted = true;
+> > +	} else {
+> > +		reg = readl(reg_addr);
+> > +		writel(reg | (mask << shift), reg_addr);
+> > +		drvdata->rst_hws[id].asserted = false;
+> > +	}
+> > +
+> > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
+> > +		if (drvdata->rst_hws[i].asserted)
+> > +			asserted_after++;
+> > +
+> > +	if (asserted_before == 1 && asserted_after == 0)
+> > +		pm_runtime_put(rcdev->dev);
+> > +
+> > +	spin_unlock_irqrestore(&drvdata->lock, flags);
+> > +
+> > +	return 0;
+> > +}
+> 
+> regards
+> Philipp
