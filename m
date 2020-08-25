@@ -2,105 +2,155 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6913CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A037C433DF
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42CBB20738
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 13:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D57120665
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 14:11:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbgHYN4Y (ORCPT
+        id S1726095AbgHYOLU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:56:24 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:49302 "EHLO vps0.lunn.ch"
+        Tue, 25 Aug 2020 10:11:20 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:58902 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbgHYN4V (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:56:21 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kAZQt-00BmIB-U5; Tue, 25 Aug 2020 15:56:15 +0200
-Date:   Tue, 25 Aug 2020 15:56:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v3 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek
- switches
-Message-ID: <20200825135615.GR2588906@lunn.ch>
-References: <20200820081118.10105-1-kurt@linutronix.de>
- <20200820081118.10105-3-kurt@linutronix.de>
- <20200824224450.GK2403519@lunn.ch>
- <87eenv14bt.fsf@kurt>
+        id S1726090AbgHYOLS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:11:18 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CB7C21A05DF;
+        Tue, 25 Aug 2020 16:11:16 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BD4D81A05DD;
+        Tue, 25 Aug 2020 16:11:16 +0200 (CEST)
+Received: from localhost (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A81D92030A;
+        Tue, 25 Aug 2020 16:11:16 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 17:11:16 +0300
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>, Rob Herring <robh@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 11/17] clk: imx: Add blk_ctrl combo driver
+Message-ID: <20200825141116.wgvybk7mtozvjxmb@fsr-ub1664-175>
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
+ <1597406966-13740-12-git-send-email-abel.vesa@nxp.com>
+ <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
+ <20200825112421.eut7gx3i4eirhnfw@fsr-ub1664-175>
+ <8e8e33386eea12036bb17529b4d578704bf735d1.camel@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87eenv14bt.fsf@kurt>
+In-Reply-To: <8e8e33386eea12036bb17529b4d578704bf735d1.camel@pengutronix.de>
+User-Agent: NeoMutt/20180622
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> >> +static int hellcreek_detect(struct hellcreek *hellcreek)
-> >> +{
-> >> +	u16 id, rel_low, rel_high, date_low, date_high, tgd_ver;
-> >> +	u8 tgd_maj, tgd_min;
-> >> +	u32 rel, date;
-> >> +
-> >> +	id	  = hellcreek_read(hellcreek, HR_MODID_C);
-> >> +	rel_low	  = hellcreek_read(hellcreek, HR_REL_L_C);
-> >> +	rel_high  = hellcreek_read(hellcreek, HR_REL_H_C);
-> >> +	date_low  = hellcreek_read(hellcreek, HR_BLD_L_C);
-> >> +	date_high = hellcreek_read(hellcreek, HR_BLD_H_C);
-> >> +	tgd_ver   = hellcreek_read(hellcreek, TR_TGDVER);
-> >> +
-> >> +	if (id != HELLCREEK_MODULE_ID)
-> >> +		return -ENODEV;
-> >
-> > Are there other Hellcreek devices? I'm just wondering if we should
-> > have a specific compatible for 0x4c30 as well as the more generic 
-> > "hirschmann,hellcreek".
+On 20-08-25 14:07:29, Philipp Zabel wrote:
+> On Tue, 2020-08-25 at 14:24 +0300, Abel Vesa wrote:
+> [...]
+> > > > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
+> > > > +				  unsigned long id, bool assert)
+> > > > +{
+> > > > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
+> > > > +			struct imx_blk_ctrl_drvdata, rcdev);
+> > > > +	unsigned int offset = drvdata->rst_hws[id].offset;
+> > > > +	unsigned int shift = drvdata->rst_hws[id].shift;
+> > > > +	unsigned int mask = drvdata->rst_hws[id].mask;
+> > > > +	void __iomem *reg_addr = drvdata->base + offset;
+> > > > +	unsigned long flags;
+> > > > +	unsigned int asserted_before = 0, asserted_after = 0;
+> > > > +	u32 reg;
+> > > > +	int i;
+> > > > +
+> > > > +	spin_lock_irqsave(&drvdata->lock, flags);
+> > > > +
+> > > > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
+> > > > +		if (drvdata->rst_hws[i].asserted)
+> > > > +			asserted_before++;
+> > > > +
+> > > > +	if (asserted_before == 0 && assert)
+> > > > +		pm_runtime_get(rcdev->dev);
+> > > 
+> > > Shouldn't that be pm_runtime_get_sync() ?
+> > > 
+> > > I would do that unconditionally before locking drvdata->lock and then
+> > > drop unnecessary refcounts afterwards.
+> > > 
+> > 
+> > I thought we already discussed this on the last's version thread.
 > 
-> Yes, there will be different revisions of the Hellcreek devices. This ID
-> is really device specific. A lot of features of this switch are
-> configured in the VHDL code. For instance the MAC settings (100 or 1000
-> Mbit/s).
+> This is about something different. pm_runtime_get() just queues the
+> device to be enabled at a later point, but I presume you want to have it
+> enabled before writing to its registers. (The question here is can you
+> write to the registers, and have the device update its internal state,
+> while the power domain is disabled?)
+> Either way, if you want the reset to be asserted after the function
+> returns (as is required by the reset API), as I understand it, you have
+> to make sure that the power domain is activated before the function
+> returns.
+> Therefore pm_runtime_get_sync() is required instead of pm_runtime_get(),
+> and that must be called outside of the spin locked section. My
+> suggestion would be:
 > 
-> I've discussed this with the HW engineer from Hirschmann. He suggested
-> to keep this check here, as the driver is currently specific for the
-> that device. We have to make sure that the driver matches the hardware.
+> 	if (assert)
+> 		pm_runtime_get_sync();
+> 	spin_lock_irqsave();
+> 	/* ... */
+> 	spin_unlock_irqrestore();
+> 	if (assert && asserted_before)
+> 		pm_runtime_put();
+> 
 
-I agree with the check here. The question is about the compatible
-string. Should there be a more specific compatible string as well as
-the generic one?
+You're right this makes more sense.
 
-There have been a few discussions about how the Marvell DSA driver
-does its compatible string. The compatible string tells you where to
-find the ID register, not what value to expect in the ID register. The
-ID register can currently be in one of three different locations. Do
-all current and future Hellcreak devices have the same value for
-HR_MODID_C? If not, now is a good time to add a more specific
-compatible string to tell you where to find the ID register.
+> unless the following might be an issue:
+> 
+> > > > +
+> > > > +	if (assert) {
+> > > > +		reg = readl(reg_addr);
+> > > > +		writel(reg & ~(mask << shift), reg_addr);
+> > > > +		drvdata->rst_hws[id].asserted = true;
+> > > > +	} else {
+> > > > +		reg = readl(reg_addr);
+> > > > +		writel(reg | (mask << shift), reg_addr);
+> 
+> Could this cause problems if the power domain is already disabled? If
+> so, it would be best to either temporarily enable power, or to skip the
+> register writes if asserted_before == 0 && !assert.
 
-> My plan was to extend this when I have access to other revisions. There
-> will be a SPI variant as well. But, I didn't want to implement it without the
-> ability to test it.
+I'll go with the latter one since it leaves the PD off.
 
-Does the SPI variant use the same value for HR_MODID_C? Maybe you need
-a different compatible, maybe not, depending on how the driver is
-structured.
-
-The compatible string is part of the ABI. So thinking about it a bit
-now can make things easier later. I just want to make sure you have
-thought about this.
-
-	Andrew
+> 
+> > > > +		drvdata->rst_hws[id].asserted = false;
+> > > > +	}
+> > > > +
+> > > > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
+> > > > +		if (drvdata->rst_hws[i].asserted)
+> > > > +			asserted_after++;
+> > > > +
+> > > > +	if (asserted_before == 1 && asserted_after == 0)
+> > > > +		pm_runtime_put(rcdev->dev);
+> > > > +
+> > > > +	spin_unlock_irqrestore(&drvdata->lock, flags);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> 
+> regards
+> Philipp
