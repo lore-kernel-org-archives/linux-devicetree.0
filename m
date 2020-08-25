@@ -2,119 +2,134 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D3B5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0DFC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 118C32074D
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D1A20706
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 07:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598339864;
+	bh=wLdHygwvaiYBk/F4V/2+fKbs30aTabWqtLDHuUd5Kj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mirDZubgpRYg7zz7blO9eZrMzJ5eTwquG8aAhNBWywJPUicwT56OGnvS9rJsDTWqA
+	 Xf+W0/frHDR07kJQLWf0ISKRLJRzZ92NOWbvA0dvvDA2NgP6nYUagk8O/vXNMwe5PM
+	 xxLC0fMnajBR9lHNQ13ExOjGBQB7rZ16SwI5637I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbgHYHNu (ORCPT
+        id S1729291AbgHYHRj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:13:50 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41961 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYHNt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 03:13:49 -0400
-Received: by mail-oi1-f194.google.com with SMTP id 2so5227214ois.8;
-        Tue, 25 Aug 2020 00:13:49 -0700 (PDT)
+        Tue, 25 Aug 2020 03:17:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44519 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbgHYHRi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 03:17:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c15so11570333wrs.11;
+        Tue, 25 Aug 2020 00:17:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hEm1P38xCylCBB9bnM3qGxp+JWCXA+1Kg/EWbIL2N1w=;
-        b=ZqVwctJUwmj/eeyLLEdLWag1SkN9eieP/CVPGemce5cHqKOOP3rkfmB23ddtUl97Bt
-         eAl7jELYbbqr//Wy2CqMhZPDhTlfHEHfgNR8ZlsrKdjP1pRyvZ4aHq/Jre1UQclsOeNb
-         3sh3CAWmObBdxLMthjiSENReRsOKedcRsudRHe2Man5kkgH8o5L8xtkIUCVXiuuUCRG9
-         kA7PR9XhMPfGLES18Xvc6HLlVK9iNqkh9FtAKndFujHO4I+BgmK7rh23n9akaGVzaodr
-         jetdPwjuPSwYQWwt15/LsxwIXoEbRC51LN0s/N+qpnjRK1pFcEbS/Mzz7Piqu/PCVyp4
-         1IXQ==
-X-Gm-Message-State: AOAM531qGp5gkxBAwWb6g36wD75lpafskmWXO+LdSH+o5UpfeTKHkjKg
-        RHhedLkx0Q/0xm2dU6vb6LUt/+KmvaR5xjDzA58=
-X-Google-Smtp-Source: ABdhPJyxAbcnJS0QJpZY9jKSLmbiV06mLMpJtqu/EKEEd/HBfraBWMnQvv61vMSFNkbco12yPsCsDiURmq4Idvf7Bkg=
-X-Received: by 2002:aca:b742:: with SMTP id h63mr270221oif.148.1598339628739;
- Tue, 25 Aug 2020 00:13:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VUO6i/U3AVhRZX9XkX8wTuXOsuDoxa3aV3dAz0woA4o=;
+        b=B5MJrhLrcQOv6vRhgOJDKnTX6i2punZBmlED4d9nHBgO4GDgjRlXucq8UVrIk/Hs0u
+         KxOCtmKrmiukHNUkrco6xa0Idv0062LAodAWPgcLXNOZe6UPcOkG5uA6HpgGzUoTUxRQ
+         bVs0TXd1toasqxcoFwCsbmkCa7D/Cbw4EGa5tDd/khQvV2i3d76+1WfPqE0SNp0+/vRT
+         bZkDdW7lutuovzf1UphK6AYlwhSd/eg9vQ2+kQ0Mk+7JVr9jJD6nQIzenAVnN0Dk8IDc
+         WBni8SPBdi26MqRYWRcPvQ1OlVD0PJtCGaa1aHgUTLNE8/BKuACYwCPuupE4tx9iVYTU
+         kndQ==
+X-Gm-Message-State: AOAM533rXg3WB00+MNa0CB+S+sh2T8LirELK547/L2c3u8/saju7/EbJ
+        hOJ7UCyUkHNZBWvj9rW9PNY=
+X-Google-Smtp-Source: ABdhPJzJYPNbntZuVXqhHtMzbv8B44RjyoelOfsWDije4BgkxJQBl+U8ambvcHbMGJuX5NndB1iaIw==
+X-Received: by 2002:adf:fd84:: with SMTP id d4mr8719602wrr.243.1598339855693;
+        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id y3sm20848575wrs.36.2020.08.25.00.17.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:17:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
+ compatibles
+Message-ID: <20200825071732.GD3458@kozik-lap>
+References: <20200824162652.21047-1-krzk@kernel.org>
+ <20200824162652.21047-13-krzk@kernel.org>
+ <20200825044653.GK13023@pengutronix.de>
 MIME-Version: 1.0
-References: <20200811080227.3170-1-biju.das.jz@bp.renesas.com>
- <20200811080227.3170-3-biju.das.jz@bp.renesas.com> <TY2PR01MB36928D9A5BF4A43429662BCED8560@TY2PR01MB3692.jpnprd01.prod.outlook.com>
- <TYBPR01MB53094D6F8B941E2D94198A3486560@TYBPR01MB5309.jpnprd01.prod.outlook.com>
- <TY2PR01MB3692F94908BF9CD36A629110D8560@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB3692F94908BF9CD36A629110D8560@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Aug 2020 09:13:37 +0200
-Message-ID: <CAMuHMdXGWmODV_bpg1jP3C-3NDk31CncLJMOkCxExnzY7__qVw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: usb: renesas,usb3-peri: Document HS
- and SS data bus
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200825044653.GK13023@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 2:08 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> > From: Biju Das, Sent: Monday, August 24, 2020 8:55 PM
-> > > > --- a/Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml
-> > > > +++ b/Documentation/devicetree/bindings/usb/renesas,usb3-peri.yaml
-> > > <snip>
-> > > > @@ -79,9 +92,20 @@ examples:
-> > > >          companion = <&xhci0>;
-> > > >          usb-role-switch;
-> > > >
-> > > > -        port {
-> > > > -            usb3_role_switch: endpoint {
-> > > > -                remote-endpoint = <&hd3ss3220_ep>;
-> > > > -            };
-> > > > -        };
-> > > > +         ports {
-> > >
-> > > I think we should use spaces instead of tab here and below.
-> >
-> > I have ran dt_binding_check on this file and it did n't complain.
-> >
-> > First 5 character must be space, after that if you use tab, it won't complain.
-> > I am not sure is it the correct way or not?
-> >
-> > Geert/Shimoda-San can you please comment.
-> > Based on your input, if needed I will send v3 with only spaces.
->
-> I don't know why dt_binding_check didn't complain though,
-> according to writing_schema.rst:
-> ---
-> examples
->   Optional. A list of one or more DTS hunks implementing the
->   binding. Note: YAML doesn't allow leading tabs, so spaces must be used instead.
-> ---
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/writing-schema.rst?h=v5.9-rc2#n71
+On Tue, Aug 25, 2020 at 06:46:53AM +0200, Sascha Hauer wrote:
+> On Mon, Aug 24, 2020 at 06:26:46PM +0200, Krzysztof Kozlowski wrote:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,imx6q-ocotp
+> > +              - fsl,imx6sl-ocotp
+> > +              - fsl,imx6sx-ocotp
+> > +              - fsl,imx6ul-ocotp
+> > +              - fsl,imx6ull-ocotp
+> > +              - fsl,imx7d-ocotp
+> > +              - fsl,imx6sll-ocotp
+> > +              - fsl,imx7ulp-ocotp
+> > +              - fsl,imx8mq-ocotp
+> > +              - fsl,imx8mm-ocotp
+> > +              - fsl,imx8mn-ocotp
+> > +              - fsl,imx8mp-ocotp
+> > +          - const: syscon
+> > +      - items:
+> > +          # The devices are not really compatible with fsl,imx8mm-ocotp, however
+> > +          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
+> 
+> Shouldn't this be fixed? It seems strange to justify a binding with
+> existing code.
 
-Indeed. Hence my .vimrc has:
+The fsl,imx8mn-ocotp is actually compatible with "mm", only the
+fsl,imx8mp-ocotp is not (although someone might argue that subset of
+"mp" falls into "mn").
 
-    autocmd FileType yaml setlocal expandtab sw=2
+The problem is that drivers/soc/imx/soc-imx8m.c checks revision only
+against the fsl,imx8mm-ocotp compatible, not the others. It's the
+pattern used in that driver also for other i.MX 8. Therefore it is a
+binding implemented and actually used, regardless whether it is correct
+from hardware point of view or not.
 
-Gr{oetje,eeting}s,
+If that's preferred, I could adjust the drivers/soc/imx/soc-imx8m.c for
+the incompatible "mp". It should not break anything.
 
-                        Geert
+Best regards,
+Krzysztof
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
