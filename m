@@ -2,166 +2,305 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE7DC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FFEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6310720706
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB6A2068F
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598347764;
+	bh=giUh8kfdw+J36IN0Ge8r43Cgn1ew0GISv68WF0PHD6c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=v+7yzP1CBaB0My3UOsBIbXBAofp5IBSsxC6+9gRpkG3AoiMjmBD3km3PrZdxBcIxx
+	 /rfZ0IjG4grDTqRXmj4dGLfraz+n+IOV1gasRD5Ci39WQLe07ZrGvCBbRoP4N+0jbv
+	 ijQclFpGjRvDc+Z6Y5JeTFbapPIgJGzWx/7ULT+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgHYJ1R (ORCPT
+        id S1726000AbgHYJ3S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYJ1O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:27:14 -0400
-Received: from relay.felk.cvut.cz (relay.felk.cvut.cz [IPv6:2001:718:2:1611:0:1:0:70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 05EDDC061574;
-        Tue, 25 Aug 2020 02:27:12 -0700 (PDT)
-Received: from cmp.felk.cvut.cz (haar.felk.cvut.cz [147.32.84.19])
-        by relay.felk.cvut.cz (8.15.2/8.15.2) with ESMTP id 07P9PiZd063077;
-        Tue, 25 Aug 2020 11:25:44 +0200 (CEST)
-        (envelope-from pisa@cmp.felk.cvut.cz)
-Received: from haar.felk.cvut.cz (localhost [127.0.0.1])
-        by cmp.felk.cvut.cz (8.14.0/8.12.3/SuSE Linux 0.6) with ESMTP id 07P9PhbJ023763;
-        Tue, 25 Aug 2020 11:25:44 +0200
-Received: (from pisa@localhost)
-        by haar.felk.cvut.cz (8.14.0/8.13.7/Submit) id 07P9Pg7v023760;
-        Tue, 25 Aug 2020 11:25:42 +0200
-X-Authentication-Warning: haar.felk.cvut.cz: pisa set sender to pisa@cmp.felk.cvut.cz using -f
-From:   Pavel Pisa <pisa@cmp.felk.cvut.cz>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        "Marc Kleine-Budde" <mkl@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Drew Fustini <pdp7pdp7@gmail.com>
-Subject: Re: [PATCH v5 5/6] can: ctucanfd: CTU CAN FD open-source IP core - platform and next steps and mainlining chances
-Date:   Tue, 25 Aug 2020 11:25:41 +0200
-User-Agent: KMail/1.9.10
-Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        David Miller <davem@davemloft.net>, mark.rutland@arm.com,
-        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marin Jerabek <martin.jerabek01@gmail.com>,
-        Ondrej Ille <ondrej.ille@gmail.com>,
-        Jiri Novak <jnovak@fel.cvut.cz>,
-        Jaroslav Beran <jara.beran@gmail.com>,
-        Petr Porazil <porazil@pikron.com>, Pavel Machek <pavel@ucw.cz>
-References: <cover.1597518433.git.ppisa@pikron.com> <4ceda3a9d68263b4e0dfe66521a46f40b2e502f7.1597518433.git.ppisa@pikron.com> <73e3dad8-9ab7-2f8f-312c-1957b4572b08@infradead.org>
-In-Reply-To: <73e3dad8-9ab7-2f8f-312c-1957b4572b08@infradead.org>
-X-KMail-QuotePrefix: > 
+        Tue, 25 Aug 2020 05:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgHYJ3S (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:29:18 -0400
+Received: from coco.lan (ip5f5ad5a4.dynamic.kabel-deutschland.de [95.90.213.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4DDB2068F;
+        Tue, 25 Aug 2020 09:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598347757;
+        bh=giUh8kfdw+J36IN0Ge8r43Cgn1ew0GISv68WF0PHD6c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OKFVKlDTuVbtfdKMEfHQBUFSi6MOoM/ICBdx2oNDMshzM1tuFmSkFC0ODT1FPGhDr
+         b7AS2aRWF8NI00LIOrrbKPdWaBa0Gjyn1+ysZ6fqrQbtNQrvTE1vPu95P57J0bncnn
+         Gq9NmF0ow7xDJkWWG20g38ccq9mUWJW5xrahMJrU=
+Date:   Tue, 25 Aug 2020 11:29:12 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Josh Cartwright <joshc@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
+Message-ID: <20200825112912.4fca31ad@coco.lan>
+In-Reply-To: <20200819230812.GB2090217@bogus>
+References: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
+        <20200819230812.GB2090217@bogus>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202008251125.41514.pisa@cmp.felk.cvut.cz>
-X-FELK-MailScanner-Information: 
-X-MailScanner-ID: 07P9PiZd063077
-X-FELK-MailScanner: Found to be clean
-X-FELK-MailScanner-SpamCheck: not spam, SpamAssassin (not cached,
-        score=-2.35, required 6, autolearn=not spam, BAYES_00 -0.50,
-        KHOP_HELO_FCRDNS 0.40, NICE_REPLY_A -2.25, SPF_HELO_NONE 0.00,
-        SPF_NONE 0.00)
-X-FELK-MailScanner-From: pisa@cmp.felk.cvut.cz
-X-FELK-MailScanner-Watermark: 1598952344.9039@HkfVtbUmYo4kbaG1GUmWow
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hello Randy and Rob,
+Em Wed, 19 Aug 2020 17:08:12 -0600
+Rob Herring <robh@kernel.org> escreveu:
 
-thanks much for review, I have corrected FPGA spelling
-and binding YAML license.
+> On Wed, Aug 19, 2020 at 05:20:06PM +0200, Mauro Carvalho Chehab wrote:
+> > Convert the SPMI bus documentation to JSON/yaml.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > ---
+> > 
+> > Rob,
+> > 
+> > As promissed, this patch converts the spmi.txt generic bus bindings to
+> > html.  
+> 
+> Thanks!
+> 
+> > 
+> >  .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
+> >  .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
+> >  .../devicetree/bindings/spmi/spmi.txt         | 41 ------------
+> >  .../devicetree/bindings/spmi/spmi.yaml        | 62 +++++++++++++++++++
+> >  4 files changed, 65 insertions(+), 44 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
+> >  create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> > index fffc8fde3302..79367a43b27d 100644
+> > --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> > @@ -37,7 +37,7 @@ Required properties:
+> >                     or generalized "qcom,spmi-pmic".
+> >  - reg:             Specifies the SPMI USID slave address for this device.
+> >                     For more information see:
+> > -                   Documentation/devicetree/bindings/spmi/spmi.txt
+> > +                   Documentation/devicetree/bindings/spmi/spmi.yaml
+> >  
+> >  Required properties for peripheral child nodes:
+> >  - compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
+> > diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+> > index e16b9b5afc70..ca645e21fe47 100644
+> > --- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+> > +++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+> > @@ -7,8 +7,8 @@ devices to control a single SPMI master.
+> >  The PMIC Arbiter can also act as an interrupt controller, providing interrupts
+> >  to slave devices.
+> >  
+> > -See spmi.txt for the generic SPMI controller binding requirements for child
+> > -nodes.
+> > +See Documentation/devicetree/bindings/spmi/spmi.yaml for the generic SPMI
+> > +controller binding requirements for child nodes.
+> >  
+> >  See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+> >  generic interrupt controller binding documentation.
+> > diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
+> > deleted file mode 100644
+> > index 4bb10d161a27..000000000000
+> > --- a/Documentation/devicetree/bindings/spmi/spmi.txt
+> > +++ /dev/null
+> > @@ -1,41 +0,0 @@
+> > -System Power Management Interface (SPMI) Controller
+> > -
+> > -This document defines a generic set of bindings for use by SPMI controllers.  A
+> > -controller is modelled in device tree as a node with zero or more child nodes,
+> > -each representing a unique slave on the bus.
+> > -
+> > -Required properties:
+> > -- #address-cells : must be set to 2
+> > -- #size-cells : must be set to 0
+> > -
+> > -Child nodes:
+> > -
+> > -An SPMI controller node can contain zero or more child nodes representing slave
+> > -devices on the bus.  Child 'reg' properties are specified as an address, type
+> > -pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
+> > -SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
+> > -These are the identifiers "statically assigned by the system integrator", as
+> > -per the SPMI spec.
+> > -
+> > -Each child node must have one and only one 'reg' entry of type SPMI_USID.
+> > -
+> > -#include <dt-bindings/spmi/spmi.h>
+> > -
+> > -	spmi@.. {
+> > -		compatible = "...";
+> > -		reg = <...>;
+> > -
+> > -		#address-cells = <2>;
+> > -		#size-cells = <0>;
+> > -
+> > -		child@0 {
+> > -			compatible = "...";
+> > -			reg = <0 SPMI_USID>;
+> > -		};
+> > -
+> > -		child@7 {
+> > -			compatible = "...";
+> > -			reg = <7 SPMI_USID
+> > -			       3 SPMI_GSID>;
+> > -		};
+> > -	};
+> > diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
+> > new file mode 100644
+> > index 000000000000..8d72796b9bec
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
+> > @@ -0,0 +1,62 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/spmi/spmi.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: System Power Management Interface (SPMI) Controller
+> > +
+> > +maintainers:
+> > +  - Josh Cartwright <joshc@codeaurora.org>
+> > +
+> > +description: |
+> > +  The System Power Management (SPMI) controller is a 2-wire bus defined
+> > +  by the MIPI Alliance for power management control to be used on SoC designs.
+> > +
+> > +  SPMI controllers are modelled in device tree using a generic set of
+> > +  bindings defined here, plus any bus controller specific properties, if
+> > +  needed.
+> > +
+> > +  Each SPMI controller has zero or more child nodes (up to 16 ones), each
+> > +  one representing an unique slave at the bus.
+> > +
+> > +properties:
+> > +  $nodename:
+> > +    pattern: "spmi@[0-9a-f]+"  
+> 
+> Just "spmi@.*" as we shouldn't assume unit-address details of the parent 
+> bus.
 
-On Sunday 16 of August 2020 01:28:13 Randy Dunlap wrote:
-> On 8/15/20 12:43 PM, Pavel Pisa wrote:
-> > diff --git a/drivers/net/can/ctucanfd/Kconfig
-> > b/drivers/net/can/ctucanfd/Kconfig index e1636373628a..a8c9cc38f216
-> > 100644
-> > --- a/drivers/net/can/ctucanfd/Kconfig
-> > +++ b/drivers/net/can/ctucanfd/Kconfig
-> > @@ -21,4 +21,15 @@ config CAN_CTUCANFD_PCI
-> >  	  PCIe board with PiKRON.com designed transceiver riser shield is
-> > available at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
-> >
-> > +config CAN_CTUCANFD_PLATFORM
-> > +	tristate "CTU CAN-FD IP core platform (FPGA, SoC) driver"
-> > +	depends on OF
->
-> Can this be
-> 	depends on OF || COMPILE_TEST
-> ?
+Ok.
 
-I am not sure for this change. Is it ensured/documented somewhere that
-header files provide dummy definition such way, that OF drivers builds
-even if OF support is disabled? If I remember well, CTU CAN FD OF
-module build fails if attempted in the frame of native x86_64
-build where OF has been disabled. Does COMPILE_TEST ensure that
-such build succeeds.
+> 
+> > +
+> > +  compatible:
+> > +    description: filled by the SPMI bus controller
+> > +
+> > +  reg:
+> > +    maxItems: 1  
+> 
+> No need for 'reg' and 'compatible' here. Those will be covered by 
+> specific SPMI controller schemas.
 
-As for the next steps, I expect that without any review of Marc Kleine-Budde
-or Wolfgang Grandegger from initial attempt for submission from February 2019,
-we are at the end of the road now.
+Ok. I was in doubt about those, as the original .txt file had it with
+a <...>.
 
-If there is confirmed preference, I would shorten license headers in the
-C files, but I am not sure if SPDX-License-Identifier is recognized by 
-copyright law and because code and CTU CAN FD IP can be used outside
-of Linux kernel by others, we would like to keep legally binding preamble.
-It is reduced by not listing address to obtain complete GPL-2.0 from anyway.
-And change of preamble requires to update main repository, because
-header files are generated from IP core IPXACT definition by Python
-based tools. 
+> But you do need:
+> 
+> "#address-cells":
+>   const: 2
+> 
+> "#size-cells":
+>   const: 0
 
-I am aware of only one other suggestion not followed yet and it
-is separation of part of ctucan_tx_interrupt() function into new
-one suggested by Pavel Machek. I agree that function length of 108
-lines is big. When blank lines are removed we are on 68 lines and 28
-lines are switch statement. The function consist of two nested loops.
-External one required to ensure no lost interrupt when edge triggered
-delivery or implementation is used. For me personally, it is more
-readable in the actual format then to separate and propagate local
-variables to another function. And particular function code received
-only formatting and ctu_can_fd_ -> ctucan_hw_ rename in past year
-so it is tested many/many times by manual PCI test and automated
-Zynq tests. Each of the following pipelines which contains two jobs
-ands by test of FPGA design and driver build and tests on real HW  
+Ok. 
 
-   https://gitlab.fel.cvut.cz/canbus/zynq/zynq-can-sja1000-top/pipelines
+> 
+> > +
+> > +patternProperties:
+> > +  "@([0-9]|1[0-5])$":  
+> 
+> While buses define their own unit-address format, unit addresses are 
+> normally hex.
 
-You can go through years of the testing and development back.
-So I have even tendency to not shuffle code which does not
-result in indisputable better readability and breaks more than year
-of unmodified code successful (pass) test result line and confidence.
+I don't have a strong preference here. Yet, as this bus can have only up 
+to 16 child (starting from 0), I guess decimal would make more sense.
 
-Because I understand that you all are loaded a lot I expect that after
-ACK/review-by by Rob, there is no need to send v6 to
-  devicetree@vger.kernel.org
-I am not sure about cross-post to
-  netdev@vger.kernel.org
-  linux-kernel@vger.kernel.org
-when the progress is stuck on
-  linux-can@vger.kernel.org
-Problem is that linux-can seems to eat core driver patch, probably because it 
-is too long.
+> 
+> > +    description: up to 16 child PMIC nodes  
+> 
+>        type: object
+> 
+> Need to also define 'reg' constraints as defined by the bus:
+> 
+> properties:
+>   reg:
+>     minItems: 1
+>     maxItems: 2  #??? Not sure about this. Is it 1 SPMI_USID and 1 \
+> SPMI_GSID entry at most?
 
-Thanks to all for patience and if somebody does want to be loaded by minor
-updates, resends and pings to linux-can, send me note to not bother you
-again.
 
-Thanks for your time,
+I guess so. Currently, no devices use SPMI_GSID. I guess that we
+can place maxItems: 2. If later needed, this could be changed in
+the future.
 
-Pavel
+>     items:
+>       items:
+>         - minimum: 0
+>           maximum: 0xf
+>         - enum: [ 0, 1 ]
+> 
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/spmi/spmi.h>
+> > +
+> > +    spmi@.. {
+> > +      compatible = "...";
+> > +      reg = <...>;  
+> 
+> Example has to build now. Just drop these 2 properties.
 
-PS: I would be available on Drew Fustini's LPC 2020
-    BoF: upstream drivers for open source FPGA SoC peripherals 
-    today. If there is interrest I can provide some information
-    and show some overview and results.
+OK.
 
+> 
+> > +
+> > +      #address-cells = <2>;
+> > +      #size-cells = <0>;
+> > +
+> > +      child@0 {
+> > +        compatible = "...";
+> > +        reg = <0 SPMI_USID>;
+> > +      };
+> > +
+> > +      child@7 {
+> > +        compatible = "...";
+> > +        reg = <7 SPMI_USID
+> > +               3 SPMI_GSID>;
+> > +      };
+> > +    };
+> > -- 
+> > 2.26.2
+> > 
+> >   
+
+
+
+Thanks,
+Mauro
