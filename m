@@ -2,68 +2,68 @@ Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED4AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED3EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 678382067C
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D5F2075B
+	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9PsfJra"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AklZ0aZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgHYJN4 (ORCPT
+        id S1728687AbgHYJVU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39660 "EHLO
+        Tue, 25 Aug 2020 05:21:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgHYJNz (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:13:55 -0400
+        with ESMTP id S1728475AbgHYJVR (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 05:21:17 -0400
 Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09A2CC061574;
-        Tue, 25 Aug 2020 02:13:55 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id v2so9803958ilq.4;
-        Tue, 25 Aug 2020 02:13:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D6AC061574;
+        Tue, 25 Aug 2020 02:21:17 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id v2so9819879ilq.4;
+        Tue, 25 Aug 2020 02:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=e5ThzYEzbweOX9AK40FRPwqF+0B+9KjoG4gy6j07O+s=;
-        b=D9PsfJraNVZZzczEmo/ImHzAeNSbSBg1Vx9KnI2s0VqFH1ieYZjtEMg5NEKTW2iTg4
-         lzLstK3DIPmSgykX1sOF0Mnz92NSHb8xnoHxnsnNywoN4bpAF7HLqzjPR9HHDMuZjfD4
-         UMpryXfkdTuMiqCBJkdsqjX95CwLFCswo86UaJWMDyGDBlX76ASIFti4yOsGnYX6c2PD
-         poy0zZ/dZ05EftN0S0znrJGKEzgPmd7Uajaap7r1we9xk6YOL2ZAXN+fvvufZfGfhI6Q
-         kVtFj6Ottl5408EvM+tAUv2IEIMYfBOJ7N0WIJIFMVHvjhkTVaOUGZfsQk2w1pZDDil6
-         C9vw==
+        bh=O5ZePddE7+2hNWWo8aSkH/TkS7aUaHrfFN3bU8JewnQ=;
+        b=AklZ0aZuCA3+GJ0XJ+PRbCWWB0W1arHTu7OZqdh5V49EiqOpO0rOB/mGE7iOY1tLfb
+         hoiKGScSflRxbFxkm4pzX7YttP3A7ZcwYsr2L0CB0foOE3EF0WoHGdj/ilpgJM2dnDOr
+         ju1wdEHTC4t/lfElQ9XC2D6AP7CU0uJoXECSmqjfa7fyGiWm8UHHVCuGi9Mog6GRbzS3
+         2UOPsIhvT2h8BykHwMAxlXr7cPoYsiUxyrWjbztXm+sHk/n8rO8W1MAyTaslSOO7oW/p
+         +wPobgqN4vA5xD60ZVvrS19F2UkiDxFBZIqmPG9OPi7NpElliZpEK6ZGBEpdg8Icy7Q6
+         A8hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=e5ThzYEzbweOX9AK40FRPwqF+0B+9KjoG4gy6j07O+s=;
-        b=noBqyjPXFZbfbjUGZMVG69GHoYIjz1B0oaJqPRaDxahJIPokYHExa2Mi9MH0LvYQ8P
-         c33VCaf63XGun9m/0pQqkww7jXI9fDgc9X4TRFifi8V3Tow7v+33e/Nz+fmqp6TXDhiM
-         4PBIYggs++iLz+2A9EQThlIPI3tY7zMUWRUf7eBQrYIRcktTTuuKbIuma2fGkaIqEir0
-         jdbjtbXdh3Aeq0TNPmf9HcHl8rhAEafTbnbbHc3q2R3UIazXPDFgVpPsFiawbUgPtPi4
-         6B3c7o2PnUnJpfA2tEZKSlIV0Nsy4Ud6g3LBQkTOU/R4PUKoFeIBs5+CnSKIzLo6XfF1
-         kjJw==
-X-Gm-Message-State: AOAM5316E6Kxv0olsWhfLnCebKD8HJs3ZRUfWkCfX1zilQr0y5qeglOr
-        tOq8htlmAgiexAQY+TSfVfBjPZTODW3OXPDtG9Q=
-X-Google-Smtp-Source: ABdhPJxkGE/Ak8QiOBhgh/v/E2MCch1eEax9ocriOCg/LnbS6Ir9UtiHnywVsetJ+GNbQXQDybROB7SgftwxChw5bXw=
-X-Received: by 2002:a92:d386:: with SMTP id o6mr8500809ilo.292.1598346834380;
- Tue, 25 Aug 2020 02:13:54 -0700 (PDT)
+        bh=O5ZePddE7+2hNWWo8aSkH/TkS7aUaHrfFN3bU8JewnQ=;
+        b=qRfXbsyIqhuJ0STjvx9QPZjnV3VGqRbOk9RRvXEGrMLR31tvnW7XTn4pD1A2Ngg+Ml
+         PiJKFBjrb6EsrDxgNTkSjtuOU0lt62EhH6TfEjV37/9E9CF+xZ+bdTx2KLecOLfEnflV
+         34HXHuq3mgJ8wgynHKTN2HTJiLkFfSIwfr0cFRMY7Ji11bSHosXJmdH/IcL11+hOEXR0
+         NM4WqXUQu72EXTXsNEDmFBfpdfoGOH8mBzOstreAxbvYByYDC2Cz3lTaMyeNrSVS/TbZ
+         gkQZetesKDodJEHseUIlgmi+QqIKVCfOSnK5nsAAOymLr47N3WzR40MpOjr7Zmg+Lqxq
+         /7ag==
+X-Gm-Message-State: AOAM533et9HsBj4Nq1CpIXIHt2yIkDOTspnv7ZyYRwNSjVCdkkQYgc7j
+        EC5juV7bEtm1s/uWbdLB/FAjTlANcY3AQ1A2Io1XfIvSUCM=
+X-Google-Smtp-Source: ABdhPJwUTHNJrsritlvIyqvwywRovUNlslidY5JbPeOUgN5sF/K+k8KoxiM3CYAkzCB6ZeH4UcpQc/ljrwCFnEkzwbA=
+X-Received: by 2002:a92:d386:: with SMTP id o6mr8517221ilo.292.1598347277087;
+ Tue, 25 Aug 2020 02:21:17 -0700 (PDT)
 MIME-Version: 1.0
 References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com>
- <20200820114524.GC5854@sirena.org.uk> <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
- <20200824110458.GB4676@sirena.org.uk>
-In-Reply-To: <20200824110458.GB4676@sirena.org.uk>
+ <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
+ <20200820113015.GB5854@sirena.org.uk> <CAE+NS36C0AwbrFJdYGY6_n_g3DVitp_e1GfZUxjMbKu1bJ_t4w@mail.gmail.com>
+ <20200824194840.GF4676@sirena.org.uk>
+In-Reply-To: <20200824194840.GF4676@sirena.org.uk>
 From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Tue, 25 Aug 2020 17:13:43 +0800
-Message-ID: <CAE+NS36ZK2pq8CAcmiqiUf6Ph5RET5aO4nUPFUd-EDHVEuharA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360 regulator
+Date:   Tue, 25 Aug 2020 17:21:06 +0800
+Message-ID: <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
         lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
@@ -77,72 +77,25 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8824=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:05=E5=AF=AB=E9=81=93=EF=BC=9A
-
-
-
+Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8825=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:49=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On Mon, Aug 24, 2020 at 06:23:19PM +0800, Gene Chen wrote:
-> > Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
+> On Mon, Aug 24, 2020 at 03:21:57PM +0800, Gene Chen wrote:
+> > > On Thu, Aug 20, 2020 at 03:53:42PM +0800, Gene Chen wrote:
 >
-> > > This device only exists in the context of a single parent device, the=
-re
-> > > should be no need for a compatible string here - this is just a detai=
-l
-> > > of how Linux does things.  The MFD should just instntiate the platfor=
-m
-> > > device.
+> > > > +  LDO_VIN3-supply:
+> > > > +    description: Input supply phandle(s) for LDO3
 >
-> > Trying to autoload module without of_id_table will cause run-time error=
-:
-> > ueventd: LoadWithAliases was unable to load
-> > of:NregulatorT(null)Cmediatek,mt6360-regulator
+> > > Only LDO3 needs a supply?
 >
-> You shouldn't have this described in the device tree at all, like I say
-> the MFD should just instantiate the platform device.
+> > LDO_VIN1/LDO_VIN2 is real MT6360 pin supply from VSYS to LDO1/2/3/5
+> > LDO_VIN3 is also real pin supply from BUCK2 to LDO6/7
+>
+> So shouldn't there be a documented LDO_VIN1/2 then?
 
-After I replace of_device_id by platform_device_id as below, I can
-autoload module.
-But I can't get of_node to parse init_data.
-Should I use dev->parent->of_node and set
-regulator_desc.regulator_node to parse each regulator definition in
-device tree?
-
-diff --git a/drivers/mfd/mt6360-core.c b/drivers/mfd/mt6360-core.c
-index e995220..444dc8e 100644
---- a/drivers/mfd/mt6360-core.c
-+++ b/drivers/mfd/mt6360-core.c
-@@ -328,7 +328,7 @@ static const struct mfd_cell mt6360_devs[] =3D {
-        OF_MFD_CELL("mt6360-led", mt6360_led_resources,
-                    NULL, 0, 0, "mediatek,mt6360-led"),
-        OF_MFD_CELL("mt6360-regulator", mt6360_regulator_resources,
--                   NULL, 0, 0, "mediatek,mt6360-regulator"),
-+                   NULL, 0, 0, NULL),
-        OF_MFD_CELL("mt6360-tcpc", NULL,
-                    NULL, 0, 0, "mediatek,mt6360-tcpc"),
- };
-diff --git a/drivers/regulator/mt6360-regulator.c
-b/drivers/regulator/mt6360-regulator.c
-index 97c16a2..d525bf1 100644
---- a/drivers/regulator/mt6360-regulator.c
-+++ b/drivers/regulator/mt6360-regulator.c
-@@ -438,11 +438,18 @@ static int mt6360_regulator_probe(struct
-platform_device *pdev)
-        return 0;
- }
-
-+static const struct platform_device_id mt6360_regulator_id[] =3D {
-+       { "mt6360-regulator", },
-+       { },
-+};
-+MODULE_DEVICE_TABLE(platform, mt6360_regulator_id);
-+
- static struct platform_driver mt6360_regulator_driver =3D {
-        .driver =3D {
-                .name =3D "mt6360-regulator",
-        },
-        .probe =3D mt6360_regulator_probe,
-+       .id_table =3D mt6360_regulator_id,
- };
+LDO_VINx is HW design layout, so actually it can't be changed by device tre=
+e.
+LDO_VIN1/LDO_VIN2 supply from VSYS, not regulator, so I think usually
+not to show the supply from in device tree.
+or I should declare a dummy reference to system power like "*-supply =3D
+<&system_power>;"?
