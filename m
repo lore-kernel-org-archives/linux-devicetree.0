@@ -2,186 +2,91 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52B5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D9BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B26420707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801A62067C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LnYiAQap"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="CXrvnvMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgHZJVl (ORCPT
+        id S1728358AbgHZJwX (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:21:41 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12311 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgHZJVk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 05:21:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f46292c0000>; Wed, 26 Aug 2020 02:19:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 26 Aug 2020 02:21:40 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 26 Aug 2020 02:21:40 -0700
-Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Aug
- 2020 09:21:40 +0000
-Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
-        id 522FF42775; Wed, 26 Aug 2020 12:21:37 +0300 (EEST)
-Date:   Wed, 26 Aug 2020 12:21:37 +0300
-From:   Peter De Schrijver <pdeschrijver@nvidia.com>
-To:     <treding@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/3 resend] dt-bindings: Bindings for reserved memory for
- BPMP mail
-Message-ID: <20200826092137.GB9594@pdeschrijver-desktop.Nvidia.com>
-References: <20200807162006.17333-1-pdeschrijver@nvidia.com>
+        Wed, 26 Aug 2020 05:52:23 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:11244 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgHZJwU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 05:52:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598435537;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=F/c9iaxZixYGzGo5s+iEIuFcmUCvaL5Q1xK1gdH/2pQ=;
+        b=CXrvnvMsa5Sr8yVBvB03YgKPIgU1Qn8VJLpZKnG69ncEe/2npG/827xbFG4qZfDyGA
+        KAWylIyWsA8Uqc61dKYYTke6qqwH9p+RhajR3K+FFPQq43OnVJYA0FkyXwxhFJW42TAi
+        vcd9vvY919XSAiLqNxy+XEvY1Nyf3A09uAM4W3/QnSlP3kabhCCyur53kn/Gx0lzv/xv
+        owyrJVwokUG6cx/BSPVcN/rU/C1pn5GNU/wUty3fjVPks4dwOXeCWv4qOF8ePTsM6Zpp
+        jUgSHoIWv2XknBAUZ9eKbyH7Rn9Ze4C7abgIXnytOrmJ+HI36YZfE3/3289p/YE/j2c9
+        j2RQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4W6NYn8D"
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7Q9qGl6U
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Aug 2020 11:52:16 +0200 (CEST)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH v2 0/2] ASoC: qcom: common: Parse auxiliary devices from device tree
+Date:   Wed, 26 Aug 2020 11:51:39 +0200
+Message-Id: <20200826095141.94017-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200807162006.17333-1-pdeschrijver@nvidia.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598433580; bh=IgZ9D8kj8Ws8KdDfV0GqwE/BWT/dLRsg8NwOwEBz4b4=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
-         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
-        b=LnYiAQapIlzBFcyGTZCj5c9pMPMvqqqtMY1QVacVOAC1+Ojc1HJ3rKbehujF7gDsK
-         eM53sd2Sop62pJOq29fhmaBB7/YNYUAHOJIaMHitUQ87XejGtg5TS61/xBZf/8It+X
-         4frc2kCGHWt5iBNkAqPfkIGhr3ke9rCu8qXUG11Cd4kdkG1Ubvj8zfwkwMHzmBFFs0
-         OzfVUbYcoj5+9usQwSaCdDx4ek0J6V+v1vv06u4YbhUIHj8wwMHpncAYj/MwNtPN66
-         SDsO4QIZTheBm7KLjAd82kC5eMemDqhbDVPKTzG0iukRh09xawJqnJTxD3lXR4sIet
-         hCw1yQ0Vfugsg==
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 07, 2020 at 07:20:06PM +0300, Peter De Schrijver wrote:
-> Tegra234 will use DRAM to store the messages exchanged between Linux and
-> BPMP firmware rather than sysram as used in Tegra186 and Tegra194. The
-> kernel will be informed about the size and location of the DRAM area to
-> be used using the DT reserved memory bindings.
-> 
+In some cases we need to probe additional audio components that do
+not appear as part of the DAI links specified in the device tree.
+Examples for this are auxiliary devices such as analog amplifiers
+or codecs.
 
-Plans have changed so also on Tegra234 the IPC messages will be stored
-in sysram, hence these patches can be ignored.
+The ASoC core provides a way to probe these components by adding
+them to snd_soc_card->aux_dev.
 
-Peter.
+This patch set allows specifying them in the device tree through
+a new "aux-devs" property.
 
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
->  .../firmware/nvidia,tegra186-bpmp.txt         | 38 ++++++++++++++++++-
->  .../reserved-memory/tegra234-bpmp-shmem.txt   | 33 ++++++++++++++++
->  2 files changed, 69 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-> index ff380dadb5f9..ff8fc4b6816d 100644
-> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-> @@ -13,12 +13,18 @@ Required properties:
->      One of:
->      - "nvidia,tegra186-bpmp"
->  - mboxes : The phandle of mailbox controller and the mailbox specifier.
-> -- shmem : List of the phandle of the TX and RX shared memory area that
-> -	  the IPC between CPU and BPMP is based on.
->  - #clock-cells : Should be 1.
->  - #power-domain-cells : Should be 1.
->  - #reset-cells : Should be 1.
->  
-> +Optinal properties:
-> +- shmem : List of the phandle of the TX and RX shared memory area that
-> +	  the IPC between CPU and BPMP is based on.
-> +- memory-region : phandle to reserved memory region used for IPC between
-> +	  CPU-NS and BPMP.
-> +One 1 of the above 2 properties must be present. In case both are present
-> +memory-region will take precedence and shmem will be ignored.
-> +
->  This node is a mailbox consumer. See the following files for details of
->  the mailbox subsystem, and the specifiers implemented by the relevant
->  provider(s):
-> @@ -105,3 +111,31 @@ bpmp {
->  		...
->  	};
->  };
-> +
-> +memory-region binding for BPMP
-> +------------------------------
-> +
-> +The shared memory area for the IPC TX and RX between CPU-NS and BPMP
-> +resides in normal SDRAM and is defined using a sub-node of the reserved-memory
-> +node. See ../reserved-memory/nvidia,tegra234-bpmp-shmem.txt for binding.
-> +
-> +Example:
-> +
-> +hsp_top: hsp@3c00000 {
-> +	...
-> +	#mbox-cells = <2>;
-> +};
-> +
-> +bpmp: bpmp {
-> +	compatible = "nvidia,tegra234-bpmp", "nvidia,tegra186-bpmp";
-> +	mboxes = <&hsp_top TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
-> +	memory-region = <&dram_cpu_bpmp_mail>;
-> +	#clock-cells = <1>;
-> +	#reset-cells = <1>;
-> +	#power-domain-cells = <1>;
-> +
-> +	i2c {
-> +		compatible = "...";
-> +		...
-> +	};
-> +};
-> diff --git a/Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt b/Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
-> new file mode 100644
-> index 000000000000..44338184d94b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
-> @@ -0,0 +1,33 @@
-> +* Tegra CPU-NS - BPMP IPC reserved memory binding
-> +
-> +Define a memory region used for communication between CPU-NS and BPMP.
-> +Typically this node is created by the bootloader as the physical address
-> +has to be known to both CPU-NS and BPMP for correct IPC operation.
-> +
-> +The memory region is defined using a child node under /reserved-memory.
-> +The sub-node is named shmem@<address> and has the following properties:
-> +
-> +- compatible:
-> +	compatible = "nvidia,tegra234-bpmp-shmem";
-> +
-> +- reg:
-> +	The physical address and size of the shared SDRAM region
-> +
-> +- no-map:
-> +	To prevent the OS from creating a virtual mapping for this region.
-> +	(See reserved-memory.txt for deatils on the no-map property)
-> +
-> +Example:
-> +
-> +/ {
-> +	reserved-memory {
-> +		...
-> +		dram_cpu_bpmp_mail: shmem@0xf1be0000  {
-> +			compatible = "nvidia,tegra234-bpmp-shmem";
-> +			reg = <0x0 0xf1be0000 0x0 0x2000>;
-> +			no-map;
-> +		};
-> +
-> +		...
-> +	};
-> +};
-> -- 
-> 2.17.1
-> 
+v1: https://lore.kernel.org/linux-arm-msm/20200819091533.2334-1-stephan@gerhold.net/
+Changes in v2:
+  - Fix value type in device tree bindings:
+    aux-devs should be array of phandles without any arguments, so change
+    <phandles with arguments> -> <array of phandles>
+
+Stephan Gerhold (2):
+  ASoC: dt-bindings: qcom: Document "aux-devs" property
+  ASoC: qcom: common: Parse auxiliary devices from device tree
+
+ .../devicetree/bindings/sound/qcom,apq8016-sbc.txt        | 7 +++++++
+ Documentation/devicetree/bindings/sound/qcom,apq8096.txt  | 8 ++++++++
+ Documentation/devicetree/bindings/sound/qcom,sdm845.txt   | 8 ++++++++
+ sound/soc/qcom/common.c                                   | 4 ++++
+ 4 files changed, 27 insertions(+)
+
+-- 
+2.28.0
+
