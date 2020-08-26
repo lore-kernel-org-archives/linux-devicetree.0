@@ -2,247 +2,206 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D154C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06596C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 05:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 145B82076C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598416631;
-	bh=1yCPLYQsfFn9Sm8/Cw10dPtWahWPZ+11bgyvxCCEz+A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r2eaAr7aEzPHqxIshIrD417X35kghq6mB6byBmzBOau6oN566PSq9AvUrPWBtdoE6
-	 kagerd7mmiZVmjXEr8VHOLQ7FnI1LvQmGFJo7G8ltG7pZ2rWGJ+w7g1PLW05GqZv4i
-	 YCBA/P65jljRj6XGzW4+3FEM9NaiAe3NMTWFJrcY=
+	by mail.kernel.org (Postfix) with ESMTP id CBC832076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 05:11:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LQj7nEji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725294AbgHZEhK (ORCPT
+        id S1725853AbgHZFLk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgHZEhK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:37:10 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E4422071E;
-        Wed, 26 Aug 2020 04:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598416629;
-        bh=1yCPLYQsfFn9Sm8/Cw10dPtWahWPZ+11bgyvxCCEz+A=;
+        Wed, 26 Aug 2020 01:11:40 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47509 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgHZFLi (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 01:11:38 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200826051135euoutp02e5d551df7b2b5d99978f8dd4ab4f2aac~uuVXLc0l72850028500euoutp02L;
+        Wed, 26 Aug 2020 05:11:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200826051135euoutp02e5d551df7b2b5d99978f8dd4ab4f2aac~uuVXLc0l72850028500euoutp02L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598418695;
+        bh=UoWZxsq2ehgW6OJCcDlHRW36cf3DBAGPj6G6QPuhOk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S70jTlpPPlRanbVj6W7qmgM+THSKuELvDonfbKzKo1pkDUdAcGcrOWkWsZaGZnxdZ
-         5yhWwdMUJpyk232DKjHeyJFlZmQeu1g/568SKUu/ER5YjpVWHZjU0k5lgkxQzu4yiQ
-         4Vz+gtx06NDQ5RZpCGCV428AlTtyeRwWoIjhTyBc=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kAnBL-001Nos-7e; Wed, 26 Aug 2020 06:37:07 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Josh Cartwright <joshc@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: convert spmi.txt to spmi.yaml
-Date:   Wed, 26 Aug 2020 06:36:49 +0200
-Message-Id: <ee4c4ca9f29a39f6af772b3a526a996176499da3.1598415179.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200826061150.3eb96ab3@coco.lan>
-References: <20200826061150.3eb96ab3@coco.lan>
+        b=LQj7nEji6ZHBRvG8OclXTVyjMFZD6W6NYuQ+HDNHW8GbULvR3lgq9bL46Hz6+9pdC
+         rjiuAMKGgPvryc2dRdzCXSOcAaPwniLnH7ijo6P+OxB3rfyhntALLGj1ieadr7Fr53
+         4UKfOJUur5HLD/zQJR8dqjn2qp0ke5Q6VakWpH8o=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200826051134eucas1p2e7e95ebb5be135386f7e12e5fd00a133~uuVWRFIe-0099700997eucas1p27;
+        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 7E.36.05997.60FE54F5; Wed, 26
+        Aug 2020 06:11:34 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9~uuVVoxr7O2361423614eucas1p2M;
+        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200826051134eusmtrp16606dc6df146f0b38b332affe9d28037~uuVVoC1Bn2068720687eusmtrp1v;
+        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-0d-5f45ef06ddf3
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 40.7A.06314.60FE54F5; Wed, 26
+        Aug 2020 06:11:34 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200826051134eusmtip2c4cbe24fe8f6a11cc1119606acfc10e1~uuVVapPyv0656206562eusmtip2a;
+        Wed, 26 Aug 2020 05:11:33 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
+Date:   Wed, 26 Aug 2020 07:11:18 +0200
+In-Reply-To: <20200825185152.GC2693@kozik-lap> (Krzysztof Kozlowski's
+        message of "Tue, 25 Aug 2020 20:51:52 +0200")
+Message-ID: <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7djP87ps713jDZ68NLTYOGM9q8Wc8y0s
+        FvOPnGO16H/8mtni/PkN7BYXtvWxWmx6fI3V4vKuOWwWM87vY7I4NHUvo8XaI3fZLY4tELNo
+        3XuE3YHX4/K1i8weW1beZPLYtKqTzWPzknqPvi2rGD0+b5ILYIvisklJzcksSy3St0vgyji4
+        7TVbwQTxinUzepkaGJtEuhg5OSQETCT2Pmpi72Lk4hASWMEocWn5BUYI5wujxJ9pL9ggnM+M
+        Eif/TWeDaZl84DITRGI5o8SH08ugnOeMEq/PHGXpYuTgYBPQk1i7NgKkQURAU+L63++sIDXM
+        ArOYJS5u+c4CkhAWsJc4urqHEcRmEVCV+HPyFtgGToFSiXcntjKD2LwC5hLTnk1mArFFBSwl
+        try4zw4RF5Q4OfMJ2BxmgVyJmeffgN0tIfCXXaLr7AlmiFNdJG6f3s8CYQtLvDq+hR3ClpE4
+        PbkH7FAJgXqJyZPMIHp7GCW2zfkBVW8tcefcL6iXHSVaDq5nhqjnk7jxVhBiL5/EpG3TocK8
+        Eh1tQhDVKhLr+vdATZGS6H21ghHC9pBY/BfCFhJoZJT49UZuAqPCLCTfzELyzSygqczAoFu/
+        Sx8irC2xbOFrZgjbVmLduvcsCxhZVzGKp5YW56anFhvlpZbrFSfmFpfmpesl5+duYgSmt9P/
+        jn/ZwbjrT9IhRgEORiUe3gVsrvFCrIllxZW5hxhVgCY92rD6AqMUS15+XqqSCK/T2dNxQrwp
+        iZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTAuPyOzxdmK/3KA
+        2yWVJY0atuWyUcknbZbtOyby807ky8+b7BsuMEvpZIcsK5xzabuS0LHQG8JypxjFH/DPN3YJ
+        /fOxtULta69BdSv7rAU/L9jJPbQorv1TX99n4ub5nqFLMcr+V//DndPi5aM7vjUaP631rS95
+        O5mpZvlmZQMD8zmGNY+DK5VYijMSDbWYi4oTAQTkyOB3AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xe7ps713jDbZc5bDYOGM9q8Wc8y0s
+        FvOPnGO16H/8mtni/PkN7BYXtvWxWmx6fI3V4vKuOWwWM87vY7I4NHUvo8XaI3fZLY4tELNo
+        3XuE3YHX4/K1i8weW1beZPLYtKqTzWPzknqPvi2rGD0+b5ILYIvSsynKLy1JVcjILy6xVYo2
+        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQyzi47TVbwQTxinUzepkaGJtEuhg5
+        OSQETCQmH7jM1MXIxSEksJRR4uiOD0AOB1BCSmLl3HSIGmGJP9e62CBqnjJKPHreDVbDJqAn
+        sXZtBEiNiICmxPW/31lBapgF+pgl7i78yQiSEBawlzi6ugfMFhLQlbi3eh8riM0ioCrx5+Qt
+        NpA5nAKlEtO32oCEeQXMJaY9m8wEYosKWEpseXGfHSIuKHFy5hMWEJtZIFvi6+rnzBMYBWYh
+        Sc1CkpoFNJUZ6KT1u/QhwtoSyxa+ZoawbSXWrXvPsoCRdRWjSGppcW56brGhXnFibnFpXrpe
+        cn7uJkZgZG479nPzDsZLG4MPMQpwMCrx8C5gc40XYk0sK67MPcSoAjTm0YbVFxilWPLy81KV
+        RHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCvTmRGYp0eR8YDLJK4k3NDU0t7A0NDc2NzazUBLn
+        7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAWHHFi2XGperEM8snrIh3qy/Wm2O0++S3BKvPU0oe
+        i586cz9inlW/d3yz65XGjl/a7l8CL21gdgxOkNKy+Ln88N8j7H8kzLd/X3iPv2XfSrfvfscq
+        Lnv47ePPnde10lKCq/TmoZ2hvOLaJ6vKol6u4Hmk/Xx7df6s6acad1f2p6R9eH5yxsxCLyWW
+        4oxEQy3mouJEAP4Td0XuAgAA
+X-CMS-MailID: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
+X-Msg-Generator: CA
+X-RootMTR: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
+References: <20200825185152.GC2693@kozik-lap>
+        <CGME20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9@eucas1p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert the SPMI bus documentation to JSON/yaml.
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
+It was <2020-08-25 wto 20:51>, when Krzysztof Kozlowski wrote:
+> On Tue, Aug 25, 2020 at 07:03:11PM +0200, =C5=81ukasz Stelmach wrote:
+>> Enable ax88796c driver for the ethernet chip on Exynos3250-based
+>> ARTIK5 boards.
+>>=20
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  arch/arm/configs/exynos_defconfig   | 2 ++
+>>  arch/arm/configs/multi_v7_defconfig | 2 ++
+>>  2 files changed, 4 insertions(+)
+>>=20
+>> Please DO NOT merge before these two
+>
+> Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
+> it does not change anything except automated systems booting these
+> defconfigs... The boards might be broken by DT.
 
-v2:
-- addressed issues pointed by Rob;
-- made clear that group ID is a future extension, that it is not
-  currently supported.
+I was told, to ask for deferred merge of defconfig and it makes sense to
+me. DT won't break anything if the driver isn't compiled. However, I can
+see that you have a word you may decide about DT too. My point is to
+wait until spi-s3c64xx patches are merged and not to break ARTIK5
+boards.
 
- .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
- .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
- .../devicetree/bindings/spmi/spmi.txt         | 41 ----------
- .../devicetree/bindings/spmi/spmi.yaml        | 75 +++++++++++++++++++
- 4 files changed, 78 insertions(+), 44 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
- create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
+>>=20
+>>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung=
+.com/
+>>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung=
+.com/
+>>=20
+>> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos=
+_defconfig
+>> index 6e8b5ff0859c..82480b2bf545 100644
+>> --- a/arch/arm/configs/exynos_defconfig
+>> +++ b/arch/arm/configs/exynos_defconfig
+>> @@ -107,6 +107,8 @@ CONFIG_MD=3Dy
+>>  CONFIG_BLK_DEV_DM=3Dy
+>>  CONFIG_DM_CRYPT=3Dm
+>>  CONFIG_NETDEVICES=3Dy
+>> +CONFIG_NET_VENDOR_ASIX=3Dy
+>> +CONFIG_SPI_AX88796C=3Dy
+>>  CONFIG_SMSC911X=3Dy
+>>  CONFIG_USB_RTL8150=3Dm
+>>  CONFIG_USB_RTL8152=3Dy
+>> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/mult=
+i_v7_defconfig
+>> index e9e76e32f10f..a8b4e95d4148 100644
+>> --- a/arch/arm/configs/multi_v7_defconfig
+>> +++ b/arch/arm/configs/multi_v7_defconfig
+>> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=3Dy
+>>  CONFIG_SATA_MV=3Dy
+>>  CONFIG_SATA_RCAR=3Dy
+>>  CONFIG_NETDEVICES=3Dy
+>> +CONFIG_NET_VENDOR_ASIX=3Dy
+>> +CONFIG_SPI_AX88796C=3Dm
+>>  CONFIG_VIRTIO_NET=3Dy
+>>  CONFIG_B53_SPI_DRIVER=3Dm
+>>  CONFIG_B53_MDIO_DRIVER=3Dm
+>> --=20
+>> 2.26.2
+>>=20
+>
+>
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-index fffc8fde3302..79367a43b27d 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-@@ -37,7 +37,7 @@ Required properties:
-                    or generalized "qcom,spmi-pmic".
- - reg:             Specifies the SPMI USID slave address for this device.
-                    For more information see:
--                   Documentation/devicetree/bindings/spmi/spmi.txt
-+                   Documentation/devicetree/bindings/spmi/spmi.yaml
- 
- Required properties for peripheral child nodes:
- - compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
-diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-index e16b9b5afc70..ca645e21fe47 100644
---- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-+++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-@@ -7,8 +7,8 @@ devices to control a single SPMI master.
- The PMIC Arbiter can also act as an interrupt controller, providing interrupts
- to slave devices.
- 
--See spmi.txt for the generic SPMI controller binding requirements for child
--nodes.
-+See Documentation/devicetree/bindings/spmi/spmi.yaml for the generic SPMI
-+controller binding requirements for child nodes.
- 
- See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
- generic interrupt controller binding documentation.
-diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
-deleted file mode 100644
-index 4bb10d161a27..000000000000
---- a/Documentation/devicetree/bindings/spmi/spmi.txt
-+++ /dev/null
-@@ -1,41 +0,0 @@
--System Power Management Interface (SPMI) Controller
--
--This document defines a generic set of bindings for use by SPMI controllers.  A
--controller is modelled in device tree as a node with zero or more child nodes,
--each representing a unique slave on the bus.
--
--Required properties:
--- #address-cells : must be set to 2
--- #size-cells : must be set to 0
--
--Child nodes:
--
--An SPMI controller node can contain zero or more child nodes representing slave
--devices on the bus.  Child 'reg' properties are specified as an address, type
--pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
--SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
--These are the identifiers "statically assigned by the system integrator", as
--per the SPMI spec.
--
--Each child node must have one and only one 'reg' entry of type SPMI_USID.
--
--#include <dt-bindings/spmi/spmi.h>
--
--	spmi@.. {
--		compatible = "...";
--		reg = <...>;
--
--		#address-cells = <2>;
--		#size-cells = <0>;
--
--		child@0 {
--			compatible = "...";
--			reg = <0 SPMI_USID>;
--		};
--
--		child@7 {
--			compatible = "...";
--			reg = <7 SPMI_USID
--			       3 SPMI_GSID>;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
-new file mode 100644
-index 000000000000..0e54978245b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
-@@ -0,0 +1,75 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spmi/spmi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: System Power Management Interface (SPMI) Controller
-+
-+maintainers:
-+  - Josh Cartwright <joshc@codeaurora.org>
-+
-+description: |
-+  The System Power Management (SPMI) controller is a 2-wire bus defined
-+  by the MIPI Alliance for power management control to be used on SoC designs.
-+
-+  SPMI controllers are modelled in device tree using a generic set of
-+  bindings defined here, plus any bus controller specific properties, if
-+  needed.
-+
-+  Each SPMI controller has zero or more child nodes (up to 16 ones), each
-+  one representing an unique slave at the bus.
-+
-+properties:
-+  $nodename:
-+    pattern: "spmi@.*"
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 2
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  ".*@([0-9]|1[0-5])$":
-+    description: up to 16 child PMIC nodes
-+    type: object
-+
-+    properties:
-+      reg:
-+        minItems: 1
-+        maxItems: 2
-+        items:
-+          - minimum: 0
-+            maximum: 0xf
-+          - enum: [ 0 ]
-+            description: |
-+              0 means user ID address. 1 is reserved for group ID address.
-+
-+    required:
-+      - reg
-+
-+required:
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/spmi/spmi.h>
-+
-+    spmi@0 {
-+      reg = <0 0>;
-+
-+      #address-cells = <2>;
-+      #size-cells = <0>;
-+
-+      child@0 {
-+        reg = <0 SPMI_USID>;
-+      };
-+
-+      child@7 {
-+        reg = <7 SPMI_USID>;
-+      };
-+    };
--- 
-2.26.2
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl9F7vYACgkQsK4enJil
+gBAFHQgAmtB7lnKmjz1HmpsDGOZW6GL7+dy6DzX/WdcZYKl/BqPGkdJdS3mmZ2vL
+ReeRKBNGMi1tF5ke//+PK2ymKNUlM+oNogikadhqey9bPRNNehuAHT5A3iL+KulJ
+ynt0tiCPR1+1Map3UNgiMzAhcLmLZnJ+CIDeTq8z+USD7noFT05O3G4rNGnh5wMc
+iIyx3zVUCCVVoqEE1HlulzOgXc1p1E9ZnoH331iBVEr3aTUDoLvSoymMRx6eA2zA
+ggmUcoaFC5qjBza+qipukpqir4OZ40lisI3pgD8YPtJlJkZz4B7JitjcIb5s/7hT
+8h5mI4Wf/w2tA+GWcoYAnMfKZR+O2Q==
+=cYnG
+-----END PGP SIGNATURE-----
+--=-=-=--
