@@ -2,105 +2,184 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E65C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161DBC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E580520707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598422488;
-	bh=49bBfzJ0v+qJasfusLzXWkh70Zib8QKIhWug9Dvwlmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cdJSNkDkz6MmpMtALyyBcqB8qkwdUyjEZW4qY/GQDdzXzE+UsgqLAezZ1PWjmKVWB
-	 rr2ma0u3RDKj35OmmB/X+kFsyjR02THqE/2lfZl8MDPLy06tI89IJdH1XRikv9BZJW
-	 XTigRTCte1HHI6o7c4cI+Nh+RFgl9/UbwjHoBzy0=
+	by mail.kernel.org (Postfix) with ESMTP id E313B2076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:24:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="hWxt+jlZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726014AbgHZGOs (ORCPT
+        id S1726014AbgHZGYo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgHZGOr (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:14:47 -0400
-Received: from localhost (p54b33436.dip0.t-ipconnect.de [84.179.52.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E8C206FA;
-        Wed, 26 Aug 2020 06:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598422487;
-        bh=49bBfzJ0v+qJasfusLzXWkh70Zib8QKIhWug9Dvwlmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O8u9cTodiav9/5/uP9JrzGmXxnudMVcpy4d3occvVrX6f8H99soSLyI+MDGAYZRB5
-         Z28E1Jc2+mNow1kniqA+dqyDjeptyQ9Ilrm25IDtW01AWqv0p0bKusZiX74vo7lQE5
-         uoeEC/KzlsT0z26TFgL2ySaUWeHZjaHj0YC8cpKE=
-Date:   Wed, 26 Aug 2020 08:14:44 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Codrin.Ciubotariu@microchip.com
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        Wed, 26 Aug 2020 02:24:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39912 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgHZGYn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 02:24:43 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C9A6C061574;
+        Tue, 25 Aug 2020 23:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=I82j6H9k82ao43czQe8LTe540Te4tbOROzYysGGKyDQ=; b=hWxt+jlZbe0ByW+y6QJjZJodVY
+        2FLGMuMy2S6R0No77t44A8cSZoE3btVzprEDmbn0UpXcOT7YCndSBqfPMMGiXn4dw8N6hXgERfybY
+        f4XTefvESCA+N/TD5JlJe7Bw4AmjCrCNJXfRSjdbnWNngn5yYv/5BLYwD+mxg8/06ZVo=;
+Received: from p200300ccff0d72001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0d:7200:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1kAorB-0002Cy-9i; Wed, 26 Aug 2020 08:24:25 +0200
+Date:   Wed, 26 Aug 2020 08:24:23 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, marcel.ziswiler@toradex.com,
+        sebastien.szymanski@armadeus.com, rjones@gateworks.com,
+        leoyang.li@nxp.com, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, Ludovic.Desroches@microchip.com,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
-Subject: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Message-ID: <20200826061444.GB1081@ninjato>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
- <20200802170820.GC10193@kunai>
- <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH RFC 2/2] ARM: dts: imx: add devicetree for Tolino Shine
+ 2 HD
+Message-ID: <20200826082423.6e756fbb@aktux>
+In-Reply-To: <20200816125247.GA103070@latitude>
+References: <20200815193336.21598-1-andreas@kemnade.info>
+        <20200815193336.21598-3-andreas@kemnade.info>
+        <20200816125247.GA103070@latitude>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
-Content-Disposition: inline
-In-Reply-To: <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On Sun, 16 Aug 2020 14:54:41 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Sat, Aug 15, 2020 at 09:33:36PM +0200, Andreas Kemnade wrote:
+> > This adds a devicetree for the Tolino Shine 2 HD Ebook reader. It is ba=
+sed
+> > on boards marked with "37NB-E60QF0+4A2". It is equipped with an i.MX6SL
+> > SoC.
+> >=20
+> > Expected to work:
+> > - Buttons
+> > - Wifi
+> > - Touchscreen
+> > - LED
+> > - uSD
+> > - USB
+> > - RTC
+> >=20
+> > Not working due to missing drivers:
+> > - Backlight (requires NTXEC driver)
+> > - EPD
+> >=20
+> > Not working due to unknown reasons:
+> > - deep sleep (echo standby >/sys/power/state works),
+> >   wakeup fails when imx_gpc_pre_suspend(true) was called.
+> >=20
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> > Reason for RFC: The suspend trouble might be caused by bad devicetree.
+> > But as the devicetree is already useful I decided to submit it. =20
+> [...]
+> > +++ b/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
+> > @@ -0,0 +1,582 @@
+> > +// SPDX-License-Identifier: (GPL-2.0) =20
+>=20
+> I don't think the parentheses are required when you don't have a logical
+> operator (OR) in the SPDX expression.
+>=20
+> > +&i2c1 {
+> > +	pinctrl-names =3D "default","sleep";
+> > +	pinctrl-0 =3D <&pinctrl_i2c1>;
+> > +	pinctrl-1 =3D <&pinctrl_i2c1_sleep>;
+> > +	status =3D "okay";
+> > +
+> > +	/* TODO: embedded controller at 0x43 (driver missing) */ =20
+>=20
+> Sorry for the delay, BTW. I'm still (slowly) working on v2.
+>=20
+> > +	ricoh619: pmic@32 {
+> > +		compatible =3D "ricoh,rc5t619";
+> > +		pinctrl-names =3D "default";
+> > +		pinctrl-0 =3D <&pinctrl_ricoh_gpio>;
+> > +		reg =3D <0x32>;
+> > +		interrupt-parent =3D <&gpio5>;
+> > +		interrupts =3D <11 IRQ_TYPE_EDGE_FALLING>;
+> > +		system-power-controller;
+> > +
+> > +		regulators { =20
+>=20
+> How did you derive the regulator voltages?
+>=20
+Several sources:
+- deriving from the existing device trees,
+- looking for board specific variances in
+board-mx6sl_ntx.c of the Tolino kernel,=20
+- looking for comments in the file.
+
+I compared a register dump of the PMIC from both the vendor kernel
+and my devicetree and found no significant differences.
 
 
-> Thanks, this would be great! I tested this on a sam9x60, with the HW=20
-> feature for the 9 pulses disabled, with a picky audio codec as I2C device.
-> Please let me know of the result.
+> > +	pinctrl_hog: hoggrp {
+> > +		fsl,pins =3D <
+> > +			MX6SL_PAD_LCD_DAT0__GPIO2_IO20	0x79
+> > +			MX6SL_PAD_LCD_DAT1__GPIO2_IO21	0x79
+> > +			MX6SL_PAD_LCD_DAT2__GPIO2_IO22	0x79
+> > +			MX6SL_PAD_LCD_DAT3__GPIO2_IO23	0x79
+> > +			MX6SL_PAD_LCD_DAT4__GPIO2_IO24	0x79
+> > +			MX6SL_PAD_LCD_DAT5__GPIO2_IO25	0x79
+> > +			MX6SL_PAD_LCD_DAT6__GPIO2_IO26	0x79
+> > +			MX6SL_PAD_LCD_DAT7__GPIO2_IO27	0x79
+> > +			MX6SL_PAD_LCD_DAT8__GPIO2_IO28	0x79
+> > +			MX6SL_PAD_LCD_DAT9__GPIO2_IO29	0x79
+> > +			MX6SL_PAD_LCD_DAT10__GPIO2_IO30	0x79
+> > +			MX6SL_PAD_LCD_DAT11__GPIO2_IO31	0x79
+> > +			MX6SL_PAD_LCD_DAT12__GPIO3_IO00	0x79
+> > +			MX6SL_PAD_LCD_DAT13__GPIO3_IO01	0x79
+> > +			MX6SL_PAD_LCD_DAT14__GPIO3_IO02	0x79
+> > +			MX6SL_PAD_LCD_DAT15__GPIO3_IO03	0x79
+> > +			MX6SL_PAD_LCD_DAT16__GPIO3_IO04	0x79
+> > +			MX6SL_PAD_LCD_DAT17__GPIO3_IO05	0x79
+> > +			MX6SL_PAD_LCD_DAT18__GPIO3_IO06	0x79
+> > +			MX6SL_PAD_LCD_DAT19__GPIO3_IO07	0x79
+> > +			MX6SL_PAD_LCD_DAT20__GPIO3_IO08	0x79
+> > +			MX6SL_PAD_LCD_DAT21__GPIO3_IO09	0x79
+> > +			MX6SL_PAD_LCD_DAT22__GPIO3_IO10	0x79
+> > +			MX6SL_PAD_LCD_DAT23__GPIO3_IO11	0x79
+> > +			MX6SL_PAD_LCD_CLK__GPIO2_IO15		0x79
+> > +			MX6SL_PAD_LCD_ENABLE__GPIO2_IO16	0x79
+> > +			MX6SL_PAD_LCD_HSYNC__GPIO2_IO17	0x79
+> > +			MX6SL_PAD_LCD_VSYNC__GPIO2_IO18	0x79
+> > +			MX6SL_PAD_LCD_RESET__GPIO2_IO19	0x79
+> > +			MX6SL_PAD_KEY_COL3__GPIO3_IO30		0x79
+> > +			MX6SL_PAD_KEY_ROW7__GPIO4_IO07		0x79
+> > +			MX6SL_PAD_ECSPI2_MOSI__GPIO4_IO13	0x79
+> > +			MX6SL_PAD_KEY_COL5__GPIO4_IO02		0x79
+> > +			MX6SL_PAD_KEY_ROW6__GPIO4_IO05		0x79
+> > +		>;
+> > +	}; =20
+>=20
+> Why are there so many hogged pins? Will some of them receive a proper
+> configuration once the EPDC driver is implemented?
+>=20
+I copied them over and found no hints in the
+Tolino kernel that it is a bad idea.
 
-I can't make use of the feature on the platform I had in mind, sadly. It
-doesn't really support switching from/to GPIO pinctrl states. If that
-ever changes, I will add bus recovery for that controller, but I think
-this is low priority.
-
-On the good side, there are patches which make i2c-mv64xxx another user
-of your new mechanism, so everything is well, I think.
-
-
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9F/dAACgkQFA3kzBSg
-KbYNJw/+NFAFce8+QOGLjzXTrfZC+xhRwteAfXf5szBpChtCKinehTdgy/VIPABE
-DvkKYf5ocko7S08+wPdXNeeCX6CDglhgeBB89fW1MVOzIoiTcQ4TisNWegjFOIcD
-bbrMCoDObXs3PvnpaH58u3x10O1TXvPBZchywcmHT4TnZ8KwvdWOV63cX7ZNoYtE
-bJTuQaBJwgsisfCrOqAIw1w1hQ0/+9wln56NlAktwGR2hQfUfmXU3RrhmYssVHao
-Pc975YvoyRN4OJlwz8eITEfWG+2NcazKwT28Mv5LJU0Q7h5Tau4rwjzfU2Op32bW
-h4E3AV80ocUML8etDOfFYEc8N5biVOMURyJWxM2OaipIpfGoBkT9BTswvd61q3+R
-RacGLtRmaFyLtjWLndRy9DVZ1V+B6KsdGugQqABrzOwiAXK3OMf965427aI7v60B
-S2ZrxK3QhFTctotYAqHm7wCzLJNZBchSZzxYgJDEwuscbAbN7dBECdiCAfPYyO0K
-R+YbY6TuFZwBaEhKmJQ9IP26DB+Av5963X9CjU+e+nUxaPr5Nq/cS3sD5ku3bgGJ
-kJtaaM6fG9M8ZLa5bzOKQlOR1B4/Zojp5KCk4vTUhUzV97VX0VfaR8J7D4/k+Cal
-dF/LAlikTn1TZmLiLdYZrUFu7FPU9JTvXET48Uoa2s9vEPFw7rQ=
-=+8C1
------END PGP SIGNATURE-----
-
---tsOsTdHNUZQcU9Ye--
+Regards,
+Andreas
