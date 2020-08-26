@@ -2,132 +2,186 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9EBC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52B5C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58DD6206FA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B26420707
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SQFo15B+"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LnYiAQap"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgHZJTr (ORCPT
+        id S1727956AbgHZJVl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38714 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbgHZJTq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 05:19:46 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52140C061574
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 02:19:44 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id h3so910522oie.11
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 02:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lZhkQxNLw77frpz6ZMdHyemforQJCP3lk4DGDC08wQk=;
-        b=SQFo15B+++qeSPzHZf2QXnMtumb0EW49HHCk4BopK4PnC5U07MD1/tISq37ka7/WrU
-         d0eQqlPHSmALWhupGDYFc80znGHBtRopb7r9iCO41v1ug9FPvzWfeIyaVbj35wY1WXe6
-         PcOc3mMXNt1FuByQMrYJh89OMZA1uiRBQRFF0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lZhkQxNLw77frpz6ZMdHyemforQJCP3lk4DGDC08wQk=;
-        b=AUXL5wDsiaJnVv6w5uxqSr5QfzYWXKbTuKM4ho1xnKRBSrd7StXhjkOM550S/DQPNe
-         yboUcCr3mu8MpfqDLPfTkQo+rvpJ8q0rCrXohuleXmgAPxLNZrjqIcApiRDZV7V4QUUQ
-         22+V8ZpPBeM3lKM7ivDVaqsQTV0WKOHLhgHC1NsTNDVyieGTloH8dnvbQL/vCLogTH0x
-         eXnJJKIQ8x2aoJNdcTi51eH/YDhqvqqxbSWKO/F3KcysMKQxBX31VnXF6Gu69WYHWJ7Y
-         3gL9YJFAG12+QJF5Oagf/mvJOaZLQAZy0PKfDdn4bSLGthvls/bAIrd+TTHX/7/ifMTl
-         FxXg==
-X-Gm-Message-State: AOAM5336YbAWPWJB5BoQDGR0NKAliMFAI9sEsfntKS69g4vRdoLYPqfm
-        gMyzNLGzd8FQa7ASrrad5fxE2VTTzH8/4A==
-X-Google-Smtp-Source: ABdhPJxoZRsS2DtI0j/Ii1EjySkcvZtz964cp4RQnijpjlF4A8IGL7EuxIeEVoMcocIfxyxVWfITpQ==
-X-Received: by 2002:a05:6808:610:: with SMTP id y16mr3161834oih.0.1598433582129;
-        Wed, 26 Aug 2020 02:19:42 -0700 (PDT)
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com. [209.85.167.172])
-        by smtp.gmail.com with ESMTPSA id j4sm374139otp.75.2020.08.26.02.19.40
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 02:19:40 -0700 (PDT)
-Received: by mail-oi1-f172.google.com with SMTP id j21so912039oii.10
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 02:19:40 -0700 (PDT)
-X-Received: by 2002:a05:6808:482:: with SMTP id z2mr3200722oid.94.1598433579877;
- Wed, 26 Aug 2020 02:19:39 -0700 (PDT)
+        Wed, 26 Aug 2020 05:21:41 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12311 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgHZJVk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 05:21:40 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f46292c0000>; Wed, 26 Aug 2020 02:19:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 26 Aug 2020 02:21:40 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 26 Aug 2020 02:21:40 -0700
+Received: from tbergstrom-lnx.Nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Aug
+ 2020 09:21:40 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 522FF42775; Wed, 26 Aug 2020 12:21:37 +0300 (EEST)
+Date:   Wed, 26 Aug 2020 12:21:37 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     <treding@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/3 resend] dt-bindings: Bindings for reserved memory for
+ BPMP mail
+Message-ID: <20200826092137.GB9594@pdeschrijver-desktop.Nvidia.com>
+References: <20200807162006.17333-1-pdeschrijver@nvidia.com>
 MIME-Version: 1.0
-References: <20200821103608.2310097-4-acourbot@chromium.org> <202008212314.jscpXSEF%lkp@intel.com>
-In-Reply-To: <202008212314.jscpXSEF%lkp@intel.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Wed, 26 Aug 2020 18:19:29 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MXD1RpGGCOb+7=cUUNOymbtgiDGvG_+S4DtsTU49-ORKA@mail.gmail.com>
-Message-ID: <CAPBb6MXD1RpGGCOb+7=cUUNOymbtgiDGvG_+S4DtsTU49-ORKA@mail.gmail.com>
-Subject: Re: [PATCH v4 03/17] media: mtk-vcodec: add SCP firmware ops
-To:     kernel test robot <lkp@intel.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        kbuild-all@lists.01.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200807162006.17333-1-pdeschrijver@nvidia.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598433580; bh=IgZ9D8kj8Ws8KdDfV0GqwE/BWT/dLRsg8NwOwEBz4b4=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=LnYiAQapIlzBFcyGTZCj5c9pMPMvqqqtMY1QVacVOAC1+Ojc1HJ3rKbehujF7gDsK
+         eM53sd2Sop62pJOq29fhmaBB7/YNYUAHOJIaMHitUQ87XejGtg5TS61/xBZf/8It+X
+         4frc2kCGHWt5iBNkAqPfkIGhr3ke9rCu8qXUG11Cd4kdkG1Ubvj8zfwkwMHzmBFFs0
+         OzfVUbYcoj5+9usQwSaCdDx4ek0J6V+v1vv06u4YbhUIHj8wwMHpncAYj/MwNtPN66
+         SDsO4QIZTheBm7KLjAd82kC5eMemDqhbDVPKTzG0iukRh09xawJqnJTxD3lXR4sIet
+         hCw1yQ0Vfugsg==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Sat, Aug 22, 2020 at 12:14 AM kernel test robot <lkp@intel.com> wrote:
->
-> Hi Alexandre,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on linuxtv-media/master]
-> [also build test ERROR on robh/for-next v5.9-rc1 next-20200821]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
->
-> url:    https://github.com/0day-ci/linux/commits/Alexandre-Courbot/media-mtk-vcodec-venc-support-for-MT8183/20200821-184118
-> base:   git://linuxtv.org/media_tree.git master
-> config: sh-allmodconfig (attached as .config)
-> compiler: sh4-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=sh
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
->
-> >> ERROR: modpost: "scp_get_venc_hw_capa" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "scp_ipi_send" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "scp_put" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "scp_get" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "scp_get_vdec_hw_capa" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "scp_ipi_register" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "scp_mapping_dm_addr" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "scp_get_rproc" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> >> ERROR: modpost: "rproc_boot" [drivers/media/platform/mtk-vcodec/mtk-vcodec-common.ko] undefined!
-> ERROR: modpost: "__delay" [drivers/net/phy/mdio-cavium.ko] undefined!
+On Fri, Aug 07, 2020 at 07:20:06PM +0300, Peter De Schrijver wrote:
+> Tegra234 will use DRAM to store the messages exchanged between Linux and
+> BPMP firmware rather than sysram as used in Tegra186 and Tegra194. The
+> kernel will be informed about the size and location of the DRAM area to
+> be used using the DT reserved memory bindings.
+> 
 
-This issue should be fixed by the following patch, sent to the
-remoteproc tree:
+Plans have changed so also on Tegra234 the IPC messages will be stored
+in sysram, hence these patches can be ignored.
 
-https://lkml.org/lkml/2020/8/21/489
+Peter.
+
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> ---
+>  .../firmware/nvidia,tegra186-bpmp.txt         | 38 ++++++++++++++++++-
+>  .../reserved-memory/tegra234-bpmp-shmem.txt   | 33 ++++++++++++++++
+>  2 files changed, 69 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+> index ff380dadb5f9..ff8fc4b6816d 100644
+> --- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+> +++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
+> @@ -13,12 +13,18 @@ Required properties:
+>      One of:
+>      - "nvidia,tegra186-bpmp"
+>  - mboxes : The phandle of mailbox controller and the mailbox specifier.
+> -- shmem : List of the phandle of the TX and RX shared memory area that
+> -	  the IPC between CPU and BPMP is based on.
+>  - #clock-cells : Should be 1.
+>  - #power-domain-cells : Should be 1.
+>  - #reset-cells : Should be 1.
+>  
+> +Optinal properties:
+> +- shmem : List of the phandle of the TX and RX shared memory area that
+> +	  the IPC between CPU and BPMP is based on.
+> +- memory-region : phandle to reserved memory region used for IPC between
+> +	  CPU-NS and BPMP.
+> +One 1 of the above 2 properties must be present. In case both are present
+> +memory-region will take precedence and shmem will be ignored.
+> +
+>  This node is a mailbox consumer. See the following files for details of
+>  the mailbox subsystem, and the specifiers implemented by the relevant
+>  provider(s):
+> @@ -105,3 +111,31 @@ bpmp {
+>  		...
+>  	};
+>  };
+> +
+> +memory-region binding for BPMP
+> +------------------------------
+> +
+> +The shared memory area for the IPC TX and RX between CPU-NS and BPMP
+> +resides in normal SDRAM and is defined using a sub-node of the reserved-memory
+> +node. See ../reserved-memory/nvidia,tegra234-bpmp-shmem.txt for binding.
+> +
+> +Example:
+> +
+> +hsp_top: hsp@3c00000 {
+> +	...
+> +	#mbox-cells = <2>;
+> +};
+> +
+> +bpmp: bpmp {
+> +	compatible = "nvidia,tegra234-bpmp", "nvidia,tegra186-bpmp";
+> +	mboxes = <&hsp_top TEGRA_HSP_MBOX_TYPE_DB TEGRA_HSP_DB_MASTER_BPMP>;
+> +	memory-region = <&dram_cpu_bpmp_mail>;
+> +	#clock-cells = <1>;
+> +	#reset-cells = <1>;
+> +	#power-domain-cells = <1>;
+> +
+> +	i2c {
+> +		compatible = "...";
+> +		...
+> +	};
+> +};
+> diff --git a/Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt b/Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
+> new file mode 100644
+> index 000000000000..44338184d94b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reserved-memory/tegra234-bpmp-shmem.txt
+> @@ -0,0 +1,33 @@
+> +* Tegra CPU-NS - BPMP IPC reserved memory binding
+> +
+> +Define a memory region used for communication between CPU-NS and BPMP.
+> +Typically this node is created by the bootloader as the physical address
+> +has to be known to both CPU-NS and BPMP for correct IPC operation.
+> +
+> +The memory region is defined using a child node under /reserved-memory.
+> +The sub-node is named shmem@<address> and has the following properties:
+> +
+> +- compatible:
+> +	compatible = "nvidia,tegra234-bpmp-shmem";
+> +
+> +- reg:
+> +	The physical address and size of the shared SDRAM region
+> +
+> +- no-map:
+> +	To prevent the OS from creating a virtual mapping for this region.
+> +	(See reserved-memory.txt for deatils on the no-map property)
+> +
+> +Example:
+> +
+> +/ {
+> +	reserved-memory {
+> +		...
+> +		dram_cpu_bpmp_mail: shmem@0xf1be0000  {
+> +			compatible = "nvidia,tegra234-bpmp-shmem";
+> +			reg = <0x0 0xf1be0000 0x0 0x2000>;
+> +			no-map;
+> +		};
+> +
+> +		...
+> +	};
+> +};
+> -- 
+> 2.17.1
+> 
