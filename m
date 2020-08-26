@@ -2,122 +2,98 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A0EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 10:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7298BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 10:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF3C20838
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 10:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5251D2080C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 10:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LllienEV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbgHZK1b (ORCPT
+        id S1728610AbgHZKtx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:27:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:13396 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgHZK13 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:27:29 -0400
-IronPort-SDR: vs0AHLDefYozqd6t3WJxRSS0MsMTIXgK8Wp8SYfiUn8QoxRCJOtlR0W8y2U/4i0XwoZlfTCq2v
- Q4myRPcB121A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="217813981"
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="217813981"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 03:27:29 -0700
-IronPort-SDR: u/W915HsqS8dQB+oVmMwsukJLKLwOmbsdZU/SVAmJSBEIKZRXKIFYRagQZJD/JkCa7ahGCmKpJ
- MglXJsyLmnKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="299423395"
-Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
-  by orsmga006.jf.intel.com with ESMTP; 26 Aug 2020 03:27:27 -0700
-From:   vineetha.g.jaya.kumaran@intel.com
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        robh+dt@kernel.org
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        wan.ahmad.zainie.wan.mohamad@intel.com,
-        andriy.shevchenko@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com
-Subject: [PATCH v5 2/2] dt-bindings: pwm: keembay: Add bindings for Intel Keem Bay PWM
-Date:   Wed, 26 Aug 2020 18:25:59 +0800
-Message-Id: <1598437559-25828-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1598437559-25828-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-References: <1598437559-25828-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        Wed, 26 Aug 2020 06:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbgHZKtl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 06:49:41 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7D0C061574;
+        Wed, 26 Aug 2020 03:49:34 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id p11so764132pfn.11;
+        Wed, 26 Aug 2020 03:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZdoBCKVRuvYYbqZgZKgMCJZ6Rhom1CCtkDlusoa4B08=;
+        b=LllienEVsS0/YjEfXtvj5rzxdou1vCQqakXHq/OJq1M43/7W6Tuce2RiG3zpoyoenK
+         xvZU1CKhfVuAvYMO1FUfFmxq/9zXDnkRUSsMVUEkO9k57kIvlvQM4a+za/PYjNyyNt84
+         DvS4G2CHiG57/KJqI1BiaW0cUZ/LizVqlduxg8n36+2sxP7B0lN/dhN/RE74bWwscmMx
+         ZyeiqtzgqcuIWazjMhtO3y4fmjHYkdQ+QEipKr/Tx6BFfJswaLNhq8DkEuRooKGcrj0Q
+         5v7Ifi+xwuIIW9thT/QhR8ozQwp8yLuUODd1+Zhf7TLOXwklQD3NnsTEr5+dR3JpX43Z
+         3uDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZdoBCKVRuvYYbqZgZKgMCJZ6Rhom1CCtkDlusoa4B08=;
+        b=ihS2ZqtQ44HYv46GBjmgk5x0kphq63QJiaDFhtOGcXH810ZWHMKGPPfMU7AtvQa54J
+         HK6As9w8dxIxaKq35EKQvN5gMRttTjz3dz+sGCgx66EdnAVyzvn6dgNtcAUd8bCj074o
+         YTpeIOAAPrWsYaXQRWga1UeRLLStN6Dr+IIUd0dlSmDsY54LHoo4A0LIuDHF+bH5UFUG
+         tILahDKrAxtUtbhfRywJOnlC+MsGqWFC4JXGpNot36QdxIeT9oDf9Zki+mfSMoyuN04Z
+         qEYOhBcNQ9Htn9v+KM84cWD2mMfgxEQR93FL9oMskqJTTfyoJH1OZ6VTVOQOLlhwFVqw
+         rj0g==
+X-Gm-Message-State: AOAM531z0h4C9DoSuIt+xBQ+3ij1bFnvyua+XsX/nNIk7tUi600AMQjL
+        CFuEJhrIrojAKtVOcE0/9Is=
+X-Google-Smtp-Source: ABdhPJxwc1Phv6qBxJ2Uh381P86SiHzLD+oSSBz+RODYM2sy8PuJJw64PLZ/dXz5PJcQKd5fcw1f8A==
+X-Received: by 2002:a63:c30e:: with SMTP id c14mr9908486pgd.225.1598438974128;
+        Wed, 26 Aug 2020 03:49:34 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:56a:2197:d2eb:7e49:dfa1:a882])
+        by smtp.gmail.com with ESMTPSA id d127sm2540349pfc.175.2020.08.26.03.49.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 03:49:33 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, gene_chen@richtek.com,
+        Wilma.Wu@mediatek.com, shufan_lee@richtek.com,
+        cy_huang@richtek.com, benjamin.chao@mediatek.com
+Subject: [PATCH v4 0/2] regulator: mt6360: Add support for MT6360 regulator
+Date:   Wed, 26 Aug 2020 18:49:16 +0800
+Message-Id: <1598438958-26802-1-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
+This patch series add MT6360 regulator support contains driver and binding document
 
-Add PWM Device Tree bindings documentation for the Intel Keem Bay SoC.
+Gene Chen (2)
+  regulator: mt6360: Add support for MT6360 regulator
+  dt-bindings: regulator: mt6360: Add DT binding
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
----
- .../devicetree/bindings/pwm/intel,keembay-pwm.yaml | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
+ Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml |  113 ++
+ drivers/regulator/Kconfig                                         |    9 
+ drivers/regulator/Makefile                                        |    1 
+ drivers/regulator/mt6360-regulator.c                              |  459 ++++++++++
+ include/dt-bindings/regulator/mediatek,mt6360-regulator.h         |   16 
+ 5 files changed, 598 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-new file mode 100644
-index 00000000..a374334
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/intel,keembay-pwm.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 Intel Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/intel,keembay-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Intel Keem Bay PWM Device Tree Bindings
-+
-+maintainers:
-+  - Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - intel,keembay-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+required:
-+ - compatible
-+ - reg
-+ - clocks
-+ - '#pwm-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #define KEEM_BAY_A53_GPIO
-+
-+    pwm@203200a0 {
-+      compatible = "intel,keembay-pwm";
-+      reg = <0x203200a0 0xe8>;
-+      clocks = <&scmi_clk KEEM_BAY_A53_GPIO>;
-+      #pwm-cells = <2>;
-+    };
--- 
-1.9.1
+changelogs between v1 & v2
+ - regulator: merge regmap to mfd driver for r/w with crc
+
+changelogs between v2 & v3
+ - Move regmap define to MFD parent driver
+ - Add bindings document
+
+changelogs between v3 & v4
+ - replace of_node binding table by platform_id_table
+ - set regulator_desc.regulators_node find dt
 
