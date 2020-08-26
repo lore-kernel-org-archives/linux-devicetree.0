@@ -2,110 +2,105 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B210C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 05:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E65C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76D782078D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 05:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E580520707
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598421465;
-	bh=VIUzUu/h2wdFkcTjJvViiZyHJeKsITsy61I885Oe8qQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=x3D+XFnBf4yBnHTrZgD1qIOPr/RpGE1dc1EqEpAWqohYo8gFzWCJAFf10uasESsP1
-	 WQ6igKS/nf6m0EHounlmj2IR0+bGKfgHzpdkMVNpQMKNH7i6VX15F5pdLuECov2kOk
-	 gHehI6OZFlDoCw0KoEyjEHEpYGCCKu+qada1ufgs=
+	s=default; t=1598422488;
+	bh=49bBfzJ0v+qJasfusLzXWkh70Zib8QKIhWug9Dvwlmg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cdJSNkDkz6MmpMtALyyBcqB8qkwdUyjEZW4qY/GQDdzXzE+UsgqLAezZ1PWjmKVWB
+	 rr2ma0u3RDKj35OmmB/X+kFsyjR02THqE/2lfZl8MDPLy06tI89IJdH1XRikv9BZJW
+	 XTigRTCte1HHI6o7c4cI+Nh+RFgl9/UbwjHoBzy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgHZF5p (ORCPT
+        id S1726014AbgHZGOs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 01:57:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39826 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 02:14:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgHZF5o (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 01:57:44 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        id S1725786AbgHZGOr (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:14:47 -0400
+Received: from localhost (p54b33436.dip0.t-ipconnect.de [84.179.52.54])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E342B206FA;
-        Wed, 26 Aug 2020 05:57:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E8C206FA;
+        Wed, 26 Aug 2020 06:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598421464;
-        bh=VIUzUu/h2wdFkcTjJvViiZyHJeKsITsy61I885Oe8qQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Zik0cEXf4IOd/9yoCR/qz/EWtsqQkZRCrQmFbTJm1tFt8saY4cZh4rB8BBqTPb5YM
-         Mkvk6bheqdV44uKQsT9EdDU1uRjG84aUNUwMcHaBLC8S7aoMZrmX5ob/HTJKi9q3IK
-         areZpymcNtdpul0a1xA4GbLC+eBarOo9mUHi3dnw=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kAoRJ-001PY0-SQ; Wed, 26 Aug 2020 07:57:41 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] dtbs: hikey970: add wifi support
-Date:   Wed, 26 Aug 2020 07:57:40 +0200
-Message-Id: <b22e5799fe16a6902f95a8bd3f0f41f5a260c1ad.1598421453.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        s=default; t=1598422487;
+        bh=49bBfzJ0v+qJasfusLzXWkh70Zib8QKIhWug9Dvwlmg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O8u9cTodiav9/5/uP9JrzGmXxnudMVcpy4d3occvVrX6f8H99soSLyI+MDGAYZRB5
+         Z28E1Jc2+mNow1kniqA+dqyDjeptyQ9Ilrm25IDtW01AWqv0p0bKusZiX74vo7lQE5
+         uoeEC/KzlsT0z26TFgL2ySaUWeHZjaHj0YC8cpKE=
+Date:   Wed, 26 Aug 2020 08:14:44 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Codrin.Ciubotariu@microchip.com
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, Ludovic.Desroches@microchip.com,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
+Subject: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
+Message-ID: <20200826061444.GB1081@ninjato>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
+ <20200802170820.GC10193@kunai>
+ <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
+Content-Disposition: inline
+In-Reply-To: <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The dwmmc2 is used on Hikey 970 for WiFi support. The
-hi3670.dtsi adds it, but with status="disabled".
 
-For WiFi to work,it needs to be enabled. While here, add
-the missing properties:
+--tsOsTdHNUZQcU9Ye
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	#address-cells = <0x1>;
-	#size-cells = <0x0>;
 
-and add
-	ti,non-removable
+> Thanks, this would be great! I tested this on a sam9x60, with the HW=20
+> feature for the 9 pulses disabled, with a picky audio codec as I2C device.
+> Please let me know of the result.
 
-To DT properties, as the WiFi support is on a non-removable slot.
+I can't make use of the feature on the platform I had in mind, sadly. It
+doesn't really support switching from/to GPIO pinctrl states. If that
+ever changes, I will add bus recovery for that controller, but I think
+this is low priority.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+On the good side, there are patches which make i2c-mv64xxx another user
+of your new mechanism, so everything is well, I think.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-index f218acceec0b..a2b0d2a1d09d 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-@@ -402,6 +402,7 @@ &sd_clk_cfg_func
- 
- &dwmmc2 { /* WIFI */
- 	bus-width = <0x4>;
-+	ti,non-removable;
- 	non-removable;
- 	broken-cd;
- 	cap-power-off-card;
-@@ -409,8 +410,12 @@ &dwmmc2 { /* WIFI */
- 	pinctrl-0 = <&sdio_pmx_func
- 		     &sdio_clk_cfg_func
- 		     &sdio_cfg_func>;
-+	status = "ok";
-+
- 	/* WL_EN */
- 	vmmc-supply = <&wlan_en>;
-+	#address-cells = <0x1>;
-+	#size-cells = <0x0>;
- 	status = "ok";
- 
- 	wlcore: wlcore@2 {
--- 
-2.26.2
 
+--tsOsTdHNUZQcU9Ye
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9F/dAACgkQFA3kzBSg
+KbYNJw/+NFAFce8+QOGLjzXTrfZC+xhRwteAfXf5szBpChtCKinehTdgy/VIPABE
+DvkKYf5ocko7S08+wPdXNeeCX6CDglhgeBB89fW1MVOzIoiTcQ4TisNWegjFOIcD
+bbrMCoDObXs3PvnpaH58u3x10O1TXvPBZchywcmHT4TnZ8KwvdWOV63cX7ZNoYtE
+bJTuQaBJwgsisfCrOqAIw1w1hQ0/+9wln56NlAktwGR2hQfUfmXU3RrhmYssVHao
+Pc975YvoyRN4OJlwz8eITEfWG+2NcazKwT28Mv5LJU0Q7h5Tau4rwjzfU2Op32bW
+h4E3AV80ocUML8etDOfFYEc8N5biVOMURyJWxM2OaipIpfGoBkT9BTswvd61q3+R
+RacGLtRmaFyLtjWLndRy9DVZ1V+B6KsdGugQqABrzOwiAXK3OMf965427aI7v60B
+S2ZrxK3QhFTctotYAqHm7wCzLJNZBchSZzxYgJDEwuscbAbN7dBECdiCAfPYyO0K
+R+YbY6TuFZwBaEhKmJQ9IP26DB+Av5963X9CjU+e+nUxaPr5Nq/cS3sD5ku3bgGJ
+kJtaaM6fG9M8ZLa5bzOKQlOR1B4/Zojp5KCk4vTUhUzV97VX0VfaR8J7D4/k+Cal
+dF/LAlikTn1TZmLiLdYZrUFu7FPU9JTvXET48Uoa2s9vEPFw7rQ=
+=+8C1
+-----END PGP SIGNATURE-----
+
+--tsOsTdHNUZQcU9Ye--
