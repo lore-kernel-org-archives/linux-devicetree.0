@@ -2,133 +2,161 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63E3C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 17:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F516C433E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 17:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9100A20737
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 17:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A7B206FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 17:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RabYfrQO"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qXbgfVY/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHZRMr (ORCPT
+        id S1727041AbgHZRPo (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:12:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55984 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgHZRMl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 13:12:41 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47719C061574;
-        Wed, 26 Aug 2020 10:12:41 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id h2so1191154plr.0;
-        Wed, 26 Aug 2020 10:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=foFtRttkojftmX4pY4pyI5q5jMC4/A1XtpwKxw5ra3U=;
-        b=RabYfrQO/VyKQRW/Ewp/P9Hi4+pn7atkXUXjA6FN1k8Oe0Qq80gdJEVUFrzd4xZmId
-         /n9qNtjOlRi2ToCO+guN4FSSOFrOU9UK17ByWhxJ/cY7JONFPt/jvV5/MG3Jy5NX4sOp
-         313dduRI+Az6ws9TFXSVOOS5mSYEbOp+3cjC8QnfN8xwkrvx+3wERHsF6VPw2J0Hqycy
-         gc0KnYEzTvVy4BSuwbiPj1kevPL/cvpieZckDqVNwPg3qDrfCoL5fvbM8HH9ZXD7Plj0
-         hACH64k/1qPw2iW2DFrO9IsAS2AIpIn0XhvKrVSpGxgnaemlI+3NsIVROU2v5XG3bAsr
-         dgXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=foFtRttkojftmX4pY4pyI5q5jMC4/A1XtpwKxw5ra3U=;
-        b=dNlciVGAa7uLuQokpJnDXcJ5OGmd5cOAC7HLF0rCb0283B9jZZqe653Xptz2NduwEx
-         2kCGBfs19BjDeJrYBsWSY4L7qFhP3fWoR7iueBy51YEpW8jN4L3p7cMFgXnIohyJrDdn
-         xKnErAdlWFX4Ly3XuYE274gx8Z/Y7r+qB99PXaLLrBorHBqdnBVi3XEyAPdu8pd4m/tM
-         ckSxe1OvUPzxc7YKvWafOiMVNmm4RyJeLU2bOVmSduiQXJQfLv4JsZnNmOiWHbSSORqB
-         SERLnrDj6D1WWC4xz32sMp3vZTlWCmaV05maDu0nCdxB1/OA3EmCxiuGF2scxMyQV86R
-         tDDQ==
-X-Gm-Message-State: AOAM533LQOAvVemvOqPVc3Lb31uyEA90NaT65pc4zEx4g5XiTSM4t/Tj
-        AuwZCSC22jPEIdlzI1UWVEez32HDsLs=
-X-Google-Smtp-Source: ABdhPJzkPfG8CS5m+0FMlo14AoxxxwmRlGR9ERwxyG1rptAqQXc7gSAS3CfJKXeT1cxGTQ6TYM5wGg==
-X-Received: by 2002:a17:90a:d594:: with SMTP id v20mr7273635pju.227.1598461960747;
-        Wed, 26 Aug 2020 10:12:40 -0700 (PDT)
-Received: from localhost.localdomain (cpe-172-112-234-200.socal.res.rr.com. [172.112.234.200])
-        by smtp.gmail.com with ESMTPSA id z10sm1957870pjt.30.2020.08.26.10.12.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 10:12:40 -0700 (PDT)
-From:   lindsey.stanpoor@gmail.com
-To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org, heiko@sntech.de,
-        balbi@kernel.org, cnemo@tutanota.com
-Subject: [PATCH 4/4] arm64: dts: rockchip: enable rk3328-rock64 usb3 nodes
-Date:   Wed, 26 Aug 2020 10:12:30 -0700
-Message-Id: <20200826171230.17041-2-lindsey.stanpoor@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826171230.17041-1-lindsey.stanpoor@gmail.com>
-References: <20200826170623.15469-1-travelvia@airmail.cc>
- <20200826171230.17041-1-lindsey.stanpoor@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 26 Aug 2020 13:15:44 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:55395 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbgHZRPm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 13:15:42 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200826171540euoutp01739dec7fdc3d66aa80bbd52a57da35ea~u4NkKsrms1033910339euoutp01_
+        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 17:15:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200826171540euoutp01739dec7fdc3d66aa80bbd52a57da35ea~u4NkKsrms1033910339euoutp01_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598462140;
+        bh=76OUI6kZLvGNA+1rSSjmylaVxRhw/F8xCRxQ/TEodJM=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=qXbgfVY/sqRu9gt99eIf4YVtn3n40OixmB9D/+8lWPL5A8mlrwjaisQ5kxMsK1w1M
+         DMqfeCn0Uk9mMIe4JlvI3LuzW2yvR1DGQg7JbJrtq1hUSoG3Xlzj8bbH6xNYX4HldZ
+         KAtuWz3674U1rv9Pn2+0LitwNApW8uH/ldnlAfVg=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200826171540eucas1p1bcd0aeccbe67bc5ddb709b27d4f571e8~u4Njs6tIG1337913379eucas1p1J;
+        Wed, 26 Aug 2020 17:15:40 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A1.AE.06318.BB8964F5; Wed, 26
+        Aug 2020 18:15:39 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87~u4NjBr9K90677706777eucas1p2K;
+        Wed, 26 Aug 2020 17:15:39 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200826171539eusmtrp22689a7514204a322c73ee17f1e7477c3~u4NjA3XYZ0859008590eusmtrp2V;
+        Wed, 26 Aug 2020 17:15:39 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-ca-5f4698bbc755
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 18.4C.06314.BB8964F5; Wed, 26
+        Aug 2020 18:15:39 +0100 (BST)
+Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200826171538eusmtip1b3620b893e0bcf28afa09652cd6ced2d~u4NiWnxe90053800538eusmtip1e;
+        Wed, 26 Aug 2020 17:15:38 +0000 (GMT)
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+To:     linux-clk@vger.kernel.org
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 1/3] clk: samsung: Add clk ID definitions for the CPU parent
+ clocks
+Date:   Wed, 26 Aug 2020 19:15:27 +0200
+Message-Id: <20200826171529.23618-1-s.nawrocki@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRjHeXfO2TkOV6cp+bZKYyZ0Qc3LhxOKlqScIKKiIiRbMw8qOidn
+        ztuXhPCSqYkQilleyLSFqWuZ09JQ2yB1UyS1pRbNyEsjzEvebaej9O33/C88Dy8vgUjKMSkR
+        n5TCsEmKRJlQhLYYV8ze7WUR8hOTtmCquawRo0YWfmBUZY8Zo+7bZhHKYmnCKZ1tGKPmCiYw
+        aqitQkiVWToEVEPPOE4Nfginst/24FT3z1yM2hxuRilt2zo4tZv+NZqN04bycZzWae8K6ZdP
+        btNFei2g53XuF4SRouAYJjE+lWF9Q26K4h5UDKPJrc7py906QRboE+UDJwKSgXCq0ALygYiQ
+        kPUA6rQPcc6QkAsAFpuv8TwP4HqXz05hrfkFyhfqABzWVwv4wVGoWljCuJSQ9IOF74sAx67k
+        QWg1rgi5EEIuIjBf/1vAGS7kFajL6/sXQkkvaJzrRzgWk0HQmNcE+HUe8HnTO4QrQ/IxDu1j
+        rzDeOAOXn7Zvh1zgjEmP83wAbhkqBXzhDoAF7Z9xfigG8IuparsRBMfMq46bCMdNR2Fjmy8v
+        n4YlW58AJ0NyFxy17+FkxIElLaUIL4thXo6ETx+Ga9pSAc9SeG9yC+WZhlk5jwD/dFFw2V6D
+        FQP38v+7qgDQAjdGo1bGMuqAJCbNR61QqjVJsT63VEodcPyY3k3TYivoWI/uAiQBZM7iI/II
+        uQRTpKozlF0AEojMVRzW33tDIo5RZGQyrErOahIZdRfYT6AyN3FAzXSUhIxVpDAJDJPMsDuu
+        gHCSZgGvZlXndGZoYe2iyekPG5VWvRHjmdBp/r7pkev/rLJ6KqRFih0fqjHNp0deD/1Km92g
+        ZjVbHr935PVlw3nlzMZZb1Wt4dLVJz3pCFsZ/uZjf/Qh5zCmYfaki/9FUU79gD01ZMDTqvmW
+        PtIxGZhi1w8uGWvXNmx95zom9tVZrVkyVB2n8DuGsGrFXzEMNKAtAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsVy+t/xu7q7Z7jFGzw+x2exccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFtsenyN1eJjzz1Wi8u75rBZzDi/j8li7ZG77BYXT7latO49wm5x
+        +E07q8W/axtZLFbt+sPowO/x/kYru8fOWXfZPTat6mTz2Lyk3qNvyypGj8+b5ALYovRsivJL
+        S1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyps65xlKwg6fi
+        x+FNTA2MZ7i6GDk5JARMJH5vXMfSxcjFISSwlFHiypYnbF2MHEAJKYn5LUoQNcISf651sUHU
+        fGKU6Hp/hh0kwSZgKNF7tI8RxBYRkJW4dewnWBGzQCOLxNmJa1hBEsICwRLzl65nA7FZBFQl
+        jn08ywxi8wpYSxzr2MAIsUFeYvWGA8wTGHkWMDKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93E
+        CAztbcd+bt7BeGlj8CFGAQ5GJR5ejXi3eCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXH
+        F5XmpBYfYjQFWj6RWUo0OR8Yd3kl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KL
+        YPqYODilGhhjXE+Ynyvw/m79hPnMg1Xrlx9cO3+Df+DyKpGfqarZryXXnRdSWR4Q8mNHAKPa
+        JK8DytOTH0cFGgbxlMZKKnYr886a7f/w4Bspo5PiWlJW1cenpidobFXb49Dt2axX9TttjtOO
+        tD2Xrdbxa+x48vtHHkPV1YObZJZezflqevTx98cNb+efi2lQYinOSDTUYi4qTgQAZbgSBoMC
+        AAA=
+X-CMS-MailID: 20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87
+References: <CGME20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87@eucas1p2.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Cameron Nemo <cnemo@tutanota.com>
+Add clock ID definitions for the CPU parent clocks for SoCs
+which don't have such definitions yet. This will allow us to
+reference the parent clocks directly by cached struct clk_hw
+pointers in the clock provider, rather than doing clk lookup
+by name.
 
-Enable USB3 nodes for the rk3328-based PINE Rock64 board.
-
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Cameron Nemo <cnemo@tutanota.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ include/dt-bindings/clock/exynos5250.h | 4 +++-
+ include/dt-bindings/clock/exynos5420.h | 5 +++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-index 86cfb5c50a94..82c27eab6a52 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -363,10 +363,6 @@ &tsadc {
- 	status = "okay";
- };
+diff --git a/include/dt-bindings/clock/exynos5250.h b/include/dt-bindings/clock/exynos5250.h
+index bc8a3c5..e259cc0 100644
+--- a/include/dt-bindings/clock/exynos5250.h
++++ b/include/dt-bindings/clock/exynos5250.h
+@@ -172,8 +172,10 @@
+ #define CLK_MOUT_GPLL		1025
+ #define CLK_MOUT_ACLK200_DISP1_SUB	1026
+ #define CLK_MOUT_ACLK300_DISP1_SUB	1027
++#define CLK_MOUT_APLL		1028
++#define CLK_MOUT_MPLL		1029
  
--&uart2 {
--	status = "okay";
--};
--
- &u2phy {
- 	status = "okay";
+ /* must be greater than maximal clock id */
+-#define CLK_NR_CLKS		1028
++#define CLK_NR_CLKS		1030
  
-@@ -379,11 +375,24 @@ u2phy_otg: otg-port {
- 	};
- };
- 
-+&uart2 {
-+	status = "okay";
-+};
+ #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5250_H */
+diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+index ff917c8..9fffc6c 100644
+--- a/include/dt-bindings/clock/exynos5420.h
++++ b/include/dt-bindings/clock/exynos5420.h
+@@ -231,6 +231,11 @@
+ #define CLK_MOUT_SCLK_SPLL	660
+ #define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
+ #define CLK_MOUT_SW_ACLK_G3D	662
++#define CLK_MOUT_APLL		663
++#define CLK_MOUT_MSPLL_CPU	664
++#define CLK_MOUT_KPLL		665
++#define CLK_MOUT_MSPLL_KFC	666
 +
- &usb20_otg {
- 	dr_mode = "host";
- 	status = "okay";
- };
  
-+&usbdrd3 {
-+	status = "okay";
-+};
-+
-+&usbdrd_dwc3 {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
- &usb_host0_ehci {
- 	status = "okay";
- };
+ /* divider clocks */
+ #define CLK_DOUT_PIXEL		768
 -- 
-2.28.0
+2.7.4
 
