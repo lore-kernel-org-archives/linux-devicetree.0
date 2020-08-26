@@ -2,240 +2,123 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BA1C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684DAC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D442177B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="c2eno+ca"
+	by mail.kernel.org (Postfix) with ESMTP id 368B02224D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598452552;
+	bh=5o+Weq2TI4lpoW9aAd1oqeAnn8E4uK9m6ij1jx6/Jso=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pWtoqxwV3c4MPvY/zqeOy51HfpkRYqCIgLtps0e+pUIm9R9UbkQrgYSbss987LHIn
+	 sznLhLK9dZVnX37BLvFFHbOA0fRUKag2dkxdkqeuTbCQgzeDnYNbGgrTLVFbc/vUsv
+	 AP1BlpapqcWQ4pe7md6pSAQUAylGyX4TaBF069Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgHZOKX (ORCPT
+        id S1727103AbgHZOft (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:10:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgHZOKW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 10:10:22 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD2B3C061756
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 07:10:21 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id d139so1912764qke.11
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 07:10:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=4SOxWdwKrVd7Rs8H8CO46YzvqktHGZXPaEWImz9lP9k=;
-        b=c2eno+caDxPjGqUaShOtwkH+Ua48sWEUnbnfaCKsi5NelMzzT/qYhVCKwJksUtcG0p
-         +qSIAsA5H8+4SyTzTnu5hJsx8VVfSnjgDirRhIvT8gk10eiDtPKpmnR+1wkSUUOc7CXd
-         6bK602fned3kG28/v9wFl42h6+nwD0hC67+ugTYdQKuvYo6Je4ikXSbO/wMhe/VbehDG
-         v27jiXWuRCU2tiWEUYQ/TM+mPoIRXJbmT75sLqCK1K8GOL+/UQKEUeVZcsTK80p1EsfW
-         hAGgcm8iFgQIMvY7r0nSQ2DPYPLykTRsLgzqnWcCVtLZ9dEgRnzURMjSl7SCARLxU728
-         8i3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=4SOxWdwKrVd7Rs8H8CO46YzvqktHGZXPaEWImz9lP9k=;
-        b=R90OxQq0mX0ejwd4pyggUHDlaYn01fOhl448PpLhQdpw528os8Kc+kKpi/7rLz9Wqs
-         F4pdpOFT8h2nvRCjJVgfESGNEhy5JFwztDPdgkZYYCi7aihtZC7S0/CpSpRx8f3fO6ac
-         58a0NYbXKtLwNAUmFMXDx/5vD/h3qIU9Euwe0f9N0b+PDICNBvDCn8/g3fguqGV5BR1S
-         AGTa+EsaE89W7PLUDCqJeOlQPKeUpmsupMBzkn+zAXennkRMBa2q9nNXqktxKJTabWjG
-         CYxX2y4eePKwPn6psqhLvsr22JY4qtMPzJjvAQ+JN4G5fs5WqQpltm/gAkq2ilydgGAb
-         +nog==
-X-Gm-Message-State: AOAM531FB+r23K6kZy9sy/BnD8J/OUDiIMH4U91+qoXVVuF2YWcPJGjw
-        2W+kKqza8R0TnY3UBglS/EUFYw==
-X-Google-Smtp-Source: ABdhPJwkSNT72+PEdYl3Nm1abDOh/V+5kPeI+dZtxPtbEPcesP4QqqA85A+ELO0dTvB7bCighuhYFQ==
-X-Received: by 2002:a37:5fc4:: with SMTP id t187mr14697742qkb.224.1598451019676;
-        Wed, 26 Aug 2020 07:10:19 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id r8sm1773767qke.117.2020.08.26.07.10.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 07:10:18 -0700 (PDT)
-Message-ID: <ae3814b877ea264b0231321d12d946761941e004.camel@ndufresne.ca>
-Subject: Re: [PATCH v3 3/3] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
- Subsystem driver
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vishal Sagar <vsagar@xilinx.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Hyun Kwon <hyunk@xilinx.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joe@perches.com" <joe@perches.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Dinesh Kumar <dineshk@xilinx.com>
-Date:   Wed, 26 Aug 2020 10:10:17 -0400
-In-Reply-To: <20200819165641.GS6049@pendragon.ideasonboard.com>
-References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
-         <20200618053304.14551-4-vishal.sagar@xilinx.com>
-         <50cc4f4b-e788-c5ad-cd6a-b428b96d5377@xs4all.nl>
-         <20200715213315.GF6144@pendragon.ideasonboard.com>
-         <BY5PR02MB6867211CA1F22DC01D6A8F15A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
-         <20200819165641.GS6049@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Wed, 26 Aug 2020 10:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgHZOfm (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:35:42 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD18A214F1;
+        Wed, 26 Aug 2020 14:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598452541;
+        bh=5o+Weq2TI4lpoW9aAd1oqeAnn8E4uK9m6ij1jx6/Jso=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XB9DLQ8Znxu1bqvlC1oq23FDxPprGSx+e/i56odL7DPq4b6eHm0qmNoy1CcePIjJG
+         KezPc1OvHfS0Z7iCq3BtlBHz9tAwN4ZjFw6dlf3YFS4FB8SuAclBY5zd14H/c2snSk
+         hrl5jxNOVqkgna5cgY9XLAyzsAii0rvBI58OJOyg=
+Received: by mail-oi1-f172.google.com with SMTP id z22so1709992oid.1;
+        Wed, 26 Aug 2020 07:35:41 -0700 (PDT)
+X-Gm-Message-State: AOAM530YaQ4FtK44uhoCK+tdoUZJ/CH5MH2lCjphMjtOXqE0oBTLrCbF
+        4u76pZcaq2EEbBxsEbkGBIAJBqPZCHp8sQsQkQ==
+X-Google-Smtp-Source: ABdhPJznMyrXHCgvGOzyNLJmvN6N6XMX+bu9hHdgp3ZYk8rqYBdiOPxYXKrvW0Oz4r/BHJoVj5hanNU41lF2nUGIbiU=
+X-Received: by 2002:aca:d5c4:: with SMTP id m187mr2683714oig.106.1598452540969;
+ Wed, 26 Aug 2020 07:35:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200824084712.2526079-1-vkoul@kernel.org> <20200824084712.2526079-2-vkoul@kernel.org>
+ <20200824174009.GA2948650@bogus> <20200825145131.GS2639@vkoul-mobl> <20200826063246.GW2639@vkoul-mobl>
+In-Reply-To: <20200826063246.GW2639@vkoul-mobl>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 26 Aug 2020 08:35:29 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
+Message-ID: <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Le mercredi 19 août 2020 à 19:56 +0300, Laurent Pinchart a écrit :
-> Hi Vishal,
-> 
-> (Hans, there's a question for you below)
-> 
-> On Wed, Aug 19, 2020 at 01:47:49PM +0000, Vishal Sagar wrote:
-> > On Thursday, July 16, 2020 3:03 AM Laurent Pinchart wrote:
-> > > On Thu, Jun 25, 2020 at 11:43:01AM +0200, Hans Verkuil wrote:
-> > > > On 18/06/2020 07:33, Vishal Sagar wrote:
-> > > > > The Xilinx UHD-SDI Rx subsystem soft IP is used to capture native SDI
-> > > > > streams from SDI sources like SDI broadcast equipment like cameras and
-> > > > > mixers. This block outputs either native SDI, native video or
-> > > > > AXI4-Stream compliant data stream for further processing. Please refer
-> > > > > to PG290 for details.
-> > > > > 
-> > > > > The driver is used to configure the IP to add framer, search for
-> > > > > specific modes, get the detected mode, stream parameters, errors, etc.
-> > > > > It also generates events for video lock/unlock, bridge over/under flow.
-> > > > > 
-> > > > > The driver supports 10/12 bpc YUV 422 media bus format currently. It
-> > > > > also decodes the stream parameters based on the ST352 packet embedded in the
-> > > > > stream. In case the ST352 packet isn't present in the stream, the core's
-> > > > > detected properties are used to set stream properties.
-> > > > > 
-> > > > > The driver currently supports only the AXI4-Stream IP configuration.
-> > > > > 
-> > > > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > > > > ---
-> > > > > v3
-> > > > > - fixed KConfig with better description
-> > > > > - removed unnecessary header files
-> > > > > - converted uppercase to lowercase for all hex values
-> > > > > - merged core struct to state struct
-> > > > > - removed most one line functions and replaced with direct reg
-> > > > >   read/write or macros
-> > > > > - dt property bpp to bpc. default 10. not mandatory.
-> > > > > - fixed subscribe events, log_status, s_stream
-> > > > > - merged overflow/underflow to one event
-> > > > > - moved all controls to xilinx-sdirxss.h
-> > > > > - max events from 128 to 8
-> > > > > - used FIELD_GET() instead of custom macro
-> > > > > - updated the controls documentation
-> > > > > - added spinlock
-> > > > > - removed 3GB control and added mode to detect bitmask
-> > > > > - fixed format for (width, height, colorspace, xfer func, etc)
-> > > > > - added dv_timings_cap, s/g_dv_timings
-> > > > > - fixed set/get_format
-> > > > > - fix v4l control registrations
-> > > > > - fix order of registration / deregistration in probe() remove()
-> > > > > - fixed other comments from Hyun, Laurent and Hans
-> > > > > - things yet to close
-> > > > >   - adding source port for connector (Laurent's suggestion)
-> > > > >   - adding new FIELD type for Transport Stream V4L2_FIELD_ALTERNATE_PROG (Han's suggestion)
-> > > > >   - Update / remove EDH or CRC related controls
-> > > > > 
-> > > > > v2
-> > > > > - Added DV timing support based on Hans Verkuilś feedback
-> > > > > - More documentation to custom v4l controls and events
-> > > > > - Fixed Hyunś comments
-> > > > > - Added macro for masking and shifting as per Joe Perches comments
-> > > > > - Updated to latest as per Xilinx github repo driver like
-> > > > >   adding new DV timings not in mainline yet uptill 03/21/20
-> > > > > 
-> > > > >  drivers/media/platform/xilinx/Kconfig         |   11 +
-> > > > >  drivers/media/platform/xilinx/Makefile        |    1 +
-> > > > >  .../media/platform/xilinx/xilinx-sdirxss.c    | 2121 +++++++++++++++++
-> > > > >  include/uapi/linux/v4l2-controls.h            |    6 +
-> > > > >  include/uapi/linux/xilinx-sdirxss.h           |  283 +++
-> > > > >  5 files changed, 2422 insertions(+)
-> > > > >  create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
-> > > > >  create mode 100644 include/uapi/linux/xilinx-sdirxss.h
-> 
-> [snip]
-> 
-> > > > > diff --git a/drivers/media/platform/xilinx/xilinx-sdirxss.c b/drivers/media/platform/xilinx/xilinx-sdirxss.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..e39aab7c656a
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/media/platform/xilinx/xilinx-sdirxss.c
-> > > > > @@ -0,0 +1,2121 @@
-> 
-> [snip]
-> 
-> > > > > +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
-> > > > > +		ctrl->val = xsdirxss->ts_is_interlaced;
-> > > > > +		break;
-> > > > 
-> > > > I assume this control will disappear once you added support for
-> > > > FIELD_ALTERNATE_PROG?
-> > > 
-> > > I'm not sure FIELD_ALTERNATE_PROG is a good idea. The v4l2_field
-> > > specifies today how frames are split into multiple buffers. There's an
-> > > implicit assumption that a frame split into two buffers is captured with
-> > > interlacing. In the SDI case, the two concepts get decoupled, a
-> > > progressive frame can be transmitted (and captured) in two separate
-> > > parts. If we add a *_PROG field, we'll need to duplicate most of the
-> > > v4l2_field values with a _PROG suffix, as the progressive frame can be
-> > > captured in alternate buffers on a video node, but also in separate odd
-> > > and even buffers on two video nodes. Tt the hardware level, data is
-> > > transmitted with odd lines on one link, and even lines on a second link.
-> > > There are then two instances of this IP core, one for each link. One
-> > > instance would receive and process the even lines, the other instance
-> > > the odd lines. The output of the two instances can then be connected to
-> > > two separate DMA engines, or combined in the FPGA fabric, depending on
-> > > how the user designs the system.
-> > 
-> > My apologies to give incorrect info regarding this.
-> > In the progressive segmented frame, a progressive captured frame is sent
-> > across to receiver over an interlaced transport. The 2 fields received
-> > are similar to how V4L2_FIELD_ALTERNATE is except that the fields weren't
-> > captured at 2 different times.
-> 
-> I've now read more about progressive segmented frames, and I was indeed
-> wrong about the fact that the two segments are transported over
-> different links.
-> 
-> I still wonder, however, if a _PROG suffix is the best option. Wouldn't
-> we need to also add V4L2_FIELD_TOP_PROG, V4L2_FIELD_BOTTOM_PROG,
-> V4L2_FIELD_SEQ_TB_PROG and V4L2_FIELD_SEQ_BT_PROG, not necessarily for
-> this driver, but for other devices that would support capturing the
-> odd/even segments only, or support capturing both segments in a single
-> buffer, one after the other ?
-> 
-> Maybe that's unavoidable, as enum v4l2_field combines both the buffer
-> layout and the fact that the frame is interlaced or progressive. If we
-> had to redesign it we could do better, but having to keep backward
-> compatibility, duplicating most values with a _PROG suffix may be the
-> best option.
-> 
-> Hans, any opinion ?
+On Wed, Aug 26, 2020 at 12:32 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 25-08-20, 20:21, Vinod Koul wrote:
+> > Hey Rob,
+> >
+> > On 24-08-20, 11:40, Rob Herring wrote:
+> > > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
+> > > > Add devicetree binding documentation for GPI DMA controller
+> > > > implemented on Qualcomm SoCs
+> > > >
+> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > ---
+> > > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++=
+++++
+> > > >  1 file changed, 87 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.=
+yaml
+> > > >
+> > >
+> > >
+> > > My bot found errors running 'make dt_binding_check' on your patch:
+> > >
+> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/=
+dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring t=
+ransfer size compare to channel transfer ring. Event ring length =3D ev-fac=
+tor * transfer ring size', 'maxItems': 1} is not valid under any of the giv=
+en schemas (Possible causes of the failure):
+> > >     /builds/robherring/linux-dt-review/Documentation/devicetree/bindi=
+ngs/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required prope=
+rty
+> >
+> > Okay updating dt-schema I do see this, now the question is what is this
+> > and what does it mean ;-) I am not sure I comprehend the error message.
+> > I see this for all the new properties I added as required for this
+> > device node
+>
+> Okay I think I have figured it out, I need to provide ref to
+> /schemas/types.yaml#definitions/uint32 for this to work, which does
+> makes sense to me.
+>
+>   qcom,max-num-gpii:
+>     $ref: /schemas/types.yaml#definitions/uint32
+>     maxItems: 1
 
-Can't your receiver store these two fragment directly into a
-progressive buffer instead of leaking this HW specific thing into uAPI
-? All you'd need is support for stride (bytesperline) at the HW
-writeback level, and then you can hide this complexicuty to userspace
-by filling the top/bottom line only. You simply multiply the stride by
-two in this context.
+uint32 is always 1 item, so drop. Is there a max value you can define?
+Otherwise, up to 2^32 - 1 is valid.
 
-> 
-> > So I will add the V4L2_FIELD_ALTERNATE_PROG in next patch version.
-> 
-> [snip]
-> 
-
+>     description:
+>       Number of GPII instances
+>
+> Looks good to schema tool
+>
+> --
+> ~Vinod
