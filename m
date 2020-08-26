@@ -2,239 +2,217 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC6BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4254EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19FED20786
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VgzHV/iN"
+	by mail.kernel.org (Postfix) with ESMTP id 20F3D20786
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgHZIy5 (ORCPT
+        id S1727831AbgHZI6l convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:54:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727873AbgHZIy4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 04:54:56 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6143CC061757
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 01:54:56 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id y6so578990plt.3
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 01:54:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qadicGXgYcKSNNg1g3go9gjZkk5hffA2czmSYcbwqeQ=;
-        b=VgzHV/iNY+RV3kQGcpWagm0E5cDIzUJBfRj8kWs+4M3XFc2gek9bNT+b4PXw+/b4ob
-         bOI9+m63UM96I12pdmdG6t4os3qcXBLBnZd5Bazs2C2Oz6z1JRKv65geOMJxWCy4DZXR
-         v9vdoApNkhj3Dy1LT3yHgDW/CAErOzLnt8VkY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qadicGXgYcKSNNg1g3go9gjZkk5hffA2czmSYcbwqeQ=;
-        b=pJud7IZuRFuy18AZCXGGo1OQPg5I0926XgL/NySxAwRnxsPRJbNyDbwcJp11BhvYhJ
-         qhySFsKHKxuhIr0VNcrXDSNeWnuHGZYc+z2bVhR3K4HkV5SGw2m2E0o/5JV+mABetAzf
-         /ucNPztd+MXo5tpAL5M6A2ulwKrL8dkKhCr62KQLThJ31gc//Bg/rhZ8jIXyQ3jwAaZA
-         VR1rLHZGdmcz7cOYTwwd472P1F3bryplYb4P+WL1ds4eXMud23UEKThrpYwTcysZkvKj
-         wI2zhx+LSSoASoFDS8CZ96+6C3EE6b/DrXljeqdo9AH1xRI+q+veoVbthsYpJ9oahNmL
-         GmFQ==
-X-Gm-Message-State: AOAM531JmwrralKB9W6kR2qzfMj5yQhZJnrQD3fgYZRpkeH5SlVLG4+I
-        v5vYOTmf4ByowwQrTbQXQfDhIQ==
-X-Google-Smtp-Source: ABdhPJzWRfgimLFOdQX8RCV3Sw17ksdclDCbGcimvVj7p/+/yoe05SEkkQ42vUBTyKihWIgxgA7eoQ==
-X-Received: by 2002:a17:90a:8a97:: with SMTP id x23mr5154324pjn.195.1598432095759;
-        Wed, 26 Aug 2020 01:54:55 -0700 (PDT)
-Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
-        by smtp.gmail.com with ESMTPSA id v91sm1702990pjv.12.2020.08.26.01.54.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 01:54:54 -0700 (PDT)
-From:   Ikjoon Jang <ikjn@chromium.org>
-To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bayi Cheng <bayi.cheng@mediatek.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
+        Wed, 26 Aug 2020 04:58:41 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:59043 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgHZI6l (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 04:58:41 -0400
+X-Originating-IP: 90.89.180.255
+Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id E21B21BF218;
+        Wed, 26 Aug 2020 08:58:34 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 10:58:34 +0200
+From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, Ikjoon Jang <ikjn@chromium.org>
-Subject: [PATCH v2] dt-bindings: spi: Convert spi-mtk-nor to json-schema
-Date:   Wed, 26 Aug 2020 16:54:50 +0800
-Message-Id: <20200826085450.508556-1-ikjn@chromium.org>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-In-Reply-To: <20200820052827.2642164-1-ikjn@chromium.org>
-References: <20200820052827.2642164-1-ikjn@chromium.org>
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 7/7] [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3:
+ Enable OV8865 camera
+Message-ID: <20200826105834.0100d4a7@lhopital-XPS-13-9360>
+In-Reply-To: <20200825144022.mwkcqaqny7l5bab4@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        <20200821145935.20346-8-kevin.lhopital@bootlin.com>
+        <20200825144022.mwkcqaqny7l5bab4@gilmour.lan>
+Organization: bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Convert Mediatek ARM SOC's serial NOR flash controller binding
-to json-schema format.
+Hello,
 
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
----
-v2: remove unnecessary quotes, set interrupts as required,
-    add unevaluatedProperties:false
----
- .../bindings/spi/mediatek,spi-mtk-nor.yaml    | 85 +++++++++++++++++++
- .../devicetree/bindings/spi/spi-mtk-nor.txt   | 47 ----------
- 2 files changed, 85 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
- delete mode 100644 Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+Le Tue, 25 Aug 2020 16:40:22 +0200,
+Maxime Ripard <maxime@cerno.tech> a écrit :
 
-diff --git a/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
-new file mode 100644
-index 000000000000..42c9205ac991
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/mediatek,spi-mtk-nor.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Serial NOR flash controller for MediaTek ARM SoCs
-+
-+maintainers:
-+  - Bayi Cheng <bayi.cheng@mediatek.com>
-+  - Chuanhong Guo <gch981213@gmail.com>
-+
-+description: |
-+  This spi controller support single, dual, or quad mode transfer for
-+  SPI NOR flash. There should be only one spi slave device following
-+  generic spi bindings. It's not recommended to use this controller
-+  for devices other than SPI NOR flash due to limited transfer
-+  capability of this controller.
-+
-+allOf:
-+  - $ref: /spi/spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - mediatek,mt2701-nor
-+              - mediatek,mt2712-nor
-+              - mediatek,mt7622-nor
-+              - mediatek,mt7623-nor
-+              - mediatek,mt7629-nor
-+          - enum:
-+              - mediatek,mt8173-nor
-+      - items:
-+          - const: mediatek,mt8173-nor
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: clock used for spi bus
-+      - description: clock used for controller
-+
-+  clock-names:
-+    items:
-+      - const: spi
-+      - const: sf
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/mt8173-clk.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      nor_flash: spi@1100d000 {
-+        compatible = "mediatek,mt8173-nor";
-+        reg = <0 0x1100d000 0 0xe0>;
-+        interrupts = <&spi_flash_irq>;
-+        clocks = <&pericfg CLK_PERI_SPI>, <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-+        clock-names = "spi", "sf";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        flash@0 {
-+          compatible = "jedec,spi-nor";
-+          reg = <0>;
-+        };
-+      };
-+    };
-+
-diff --git a/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-deleted file mode 100644
-index 984ae7fd4f94..000000000000
---- a/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-+++ /dev/null
-@@ -1,47 +0,0 @@
--* Serial NOR flash controller for MediaTek ARM SoCs
--
--Required properties:
--- compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
--		  and it's the fallback compatible for other Soc.
--		  For every other SoC, should contain both the SoC-specific compatible
--		  string and "mediatek,mt8173-nor".
--		  The possible values are:
--		  "mediatek,mt2701-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt2712-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt7622-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt7623-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
--		  "mediatek,mt8173-nor"
--- reg: 		  physical base address and length of the controller's register
--- interrupts:	  Interrupt number used by the controller.
--- clocks: 	  the phandle of the clocks needed by the nor controller
--- clock-names: 	  the names of the clocks
--		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
--		  and "sf" is used for controller, these are the clocks witch
--		  hardware needs to enabling nor flash and nor flash controller.
--		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
--- #address-cells: should be <1>
--- #size-cells:	  should be <0>
--
--There should be only one spi slave device following generic spi bindings.
--It's not recommended to use this controller for devices other than SPI NOR
--flash due to limited transfer capability of this controller.
--
--Example:
--
--nor_flash: spi@1100d000 {
--	compatible = "mediatek,mt8173-nor";
--	reg = <0 0x1100d000 0 0xe0>;
--	interrupts = <&spi_flash_irq>;
--	clocks = <&pericfg CLK_PERI_SPI>,
--		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
--	clock-names = "spi", "sf";
--	#address-cells = <1>;
--	#size-cells = <0>;
--
--	flash@0 {
--		compatible = "jedec,spi-nor";
--		reg = <0>;
--	};
--};
--
+> Hi,
+> 
+> On Fri, Aug 21, 2020 at 04:59:35PM +0200, Kévin L'hôpital wrote:
+> > The Bananapi M3 supports a camera module which includes an
+> > OV8865 sensor connected via the parallel CSI interface and
+> > an OV8865 sensor connected via MIPI CSI-2.
+> > 
+> > The I2C2 bus is shared by the two sensors as well as active-low
+> > reset signal but each sensor has it own shutdown line.
+> > 
+> > The I2c address for the OV8865 is 0x36.
+> > 
+> > The bus type is hardcoded to 4 due to the lack of available
+> > define usable in the device-tree.
+> > 
+> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
+> >
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 99
+> > ++++++++++++++++++++ 1 file changed, 99 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+> > b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts index
+> > 9d34eabba121..f7839094695e 100644 ---
+> > a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts +++
+> > b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts @@ -85,6 +85,38 @@
+> >  		};
+> >  	};
+> >  
+> > +	reg_ov8865_avdd: ov8865-avdd {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "ov8865-avdd";
+> > +		regulator-min-microvolt = <2800000>;
+> > +		regulator-max-microvolt = <2800000>;
+> > +		vin-supply = <&reg_dldo4>;
+> > +	};
+> > +
+> > +	reg_ov8865_dovdd: ov8865-dovdd {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "ov8865-dovdd";
+> > +		regulator-min-microvolt = <2800000>;
+> > +		regulator-max-microvolt = <2800000>;
+> > +		vin-supply = <&reg_dldo4>;
+> > +	};
+> > +
+> > +	reg_ov8865_afvdd: ov8865-afvdd {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "ov8865-afvdd";
+> > +		regulator-min-microvolt = <2800000>;
+> > +		regulator-max-microvolt = <2800000>;
+> > +		vin-supply = <&reg_dldo4>;
+> > +	};
+> > +
+> > +	reg_ov8865_vdd2: ov8865-vdd2 {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "ov8865-vdd2";
+> > +		regulator-min-microvolt = <1200000>;
+> > +		regulator-max-microvolt = <1200000>;
+> > +		vin-supply = <&reg_eldo1>;
+> > +	};
+> > +
+> >  	reg_usb1_vbus: reg-usb1-vbus {
+> >  		compatible = "regulator-fixed";
+> >  		regulator-name = "usb1-vbus";
+> > @@ -115,10 +147,59 @@
+> >  	cpu-supply = <&reg_dcdc3>;
+> >  };
+> >  
+> > +&ccu {
+> > +	assigned-clocks = <&ccu CLK_CSI_MCLK>;
+> > +	assigned-clock-parents = <&osc24M>;
+> > +	assigned-clock-rates = <24000000>;
+> > +};  
+> 
+> Why do you need to use assigned-clocks here?
+
+I could do it in the ov8865 node, does it sound good to you ?
+
+> 
+> > +&csi {
+> > +	pinctrl-names = "default";
+> > +	status = "okay";
+> > +};  
+> 
+> pinctrl-names alone is useless
+> 
+> > +
+> > +&csi_in {
+> > +	mipi_csi2_from_ov8865: endpoint {
+> > +		remote-endpoint = <&ov8865_to_mipi_csi2>;
+> > +		clock-lanes = <0>;
+> > +		data-lanes = <1 2 3 4>;
+> > +		bus-type = <4>;
+> > +	};
+> > +};
+> > +
+> >  &de {
+> >  	status = "okay";
+> >  };
+> >  
+> > +&i2c2 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&i2c2_pe_pins>;
+> > +	status = "okay";
+> > +
+> > +	ov8865: camera@36 {
+> > +		compatible = "ovti,ov8865";
+> > +		reg = <0x36>;
+> > +		clocks = <&ccu CLK_CSI_MCLK>;
+> > +		clock-names ="xclk";
+> > +		AVDD-supply = <&reg_ov8865_avdd>;
+> > +		DOVDD-supply = <&reg_ov8865_dovdd>;
+> > +		VDD2-supply = <&reg_ov8865_vdd2>;
+> > +		AFVDD-supply = <&reg_ov8865_afvdd>;
+> > +		powerdown-gpios = <&pio 4 17 GPIO_ACTIVE_LOW>; /*
+> > PE17 */
+> > +		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16
+> > */
+> > +		rotation = <180>;
+> > +
+> > +		port {
+> > +			ov8865_to_mipi_csi2: endpoint {
+> > +				remote-endpoint =
+> > <&mipi_csi2_from_ov8865>;
+> > +				data-lanes = <1 2 3 4>;
+> > +				clock-lanes = <0>;
+> > +				bus-type = <4>; /*
+> > V4L2_FWNODE_BUS_TYPE_CSI2_DPHY */
+> > +			};
+> > +		};
+> > +	};
+> > +};
+> > +
+> >  &ehci0 {
+> >  	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+> >  	status = "okay";
+> > @@ -191,6 +272,11 @@
+> >  	status = "okay";
+> >  };
+> >  
+> > +&pio {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&csi_mclk_pin>;
+> > +};  
+> 
+> I'm not sure why you'd need to use the MCLK pin as a hog, assigning it
+> to the camera device should be enough?
+
+Yes you are right, I will put it in the ov8865 node.
+> 
+> Maxime
+
+Thank you very much for the review.
+Kévin
+
+
 -- 
-2.28.0.297.g1956fa8f8d-goog
-
+Kevin L'Hopital, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
