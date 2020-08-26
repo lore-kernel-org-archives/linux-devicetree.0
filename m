@@ -2,241 +2,187 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E43C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C85C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35BE520707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jwUfxZB/"
+	by mail.kernel.org (Postfix) with ESMTP id 559B320707
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgHZNCd (ORCPT
+        id S1730075AbgHZNHC (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:02:33 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:12555 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730158AbgHZNCI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 09:02:08 -0400
-X-UUID: 4841d7c73c73427abf164f97f122eeae-20200826
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=q+YqZIg/PDK9Io6p3eN7H4lQSTi+FeEESntXUiBV/o8=;
-        b=jwUfxZB/TXvTh36YPSmZHmeheITFTvdLka6igL/3qMwASlnQobZUtwv9BJ70Tq/BUcnvTlcfwsUMlIY2QOCjrc6ZdM1JWwtF8Pf6XonigHwDLDUxux4RuT1MY0hqpXutTRdHhzPV3s8ZqxlDwDB+be8FD9Xf+DOoawNbWEsn1B0=;
-X-UUID: 4841d7c73c73427abf164f97f122eeae-20200826
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 743984469; Wed, 26 Aug 2020 21:02:02 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 26 Aug 2020 21:01:57 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 26 Aug 2020 21:01:57 +0800
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        Wed, 26 Aug 2020 09:07:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:64060 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729415AbgHZNHA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:07:00 -0400
+IronPort-SDR: /607Am9j0FiDmdz6acy05rZYaIVZTEwE5T/nH+7gU+dtyCSY3YGk7pW1MgfjqHitkBW5h6avBU
+ v5iSXsPmJZSA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="153707315"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="153707315"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 06:06:59 -0700
+IronPort-SDR: vhWikEF2x91gbE3FLX3rzmF9JvPFIj9WUTUiu8X2AEkNoJGHiQGqb/KXJmqL8dnA/XB73Zmtsr
+ Wl1d9ntDLUrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="403059104"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 26 Aug 2020 06:06:57 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 26 Aug 2020 16:06:56 +0300
+Date:   Wed, 26 Aug 2020 16:06:56 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>
-CC:     <wsd_upstream@mediatek.com>, <hector.yuan@mediatek.com>
-Subject: [PATCH v3 1/2] cpufreq: mediatek-hw: Add support for Mediatek cpufreq HW driver
-Date:   Wed, 26 Aug 2020 21:01:52 +0800
-Message-ID: <1598446913-24325-2-git-send-email-hector.yuan@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1598446913-24325-1-git-send-email-hector.yuan@mediatek.com>
-References: <1598446913-24325-1-git-send-email-hector.yuan@mediatek.com>
+        Tobias Schramm <t.schramm@manjaro.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/4] usb: typec: Add
+ typec_port_register_altmodes_from_fwnode()
+Message-ID: <20200826130656.GA813478@kuha.fi.intel.com>
+References: <20200714113617.10470-1-hdegoede@redhat.com>
+ <20200714113617.10470-3-hdegoede@redhat.com>
+ <20200727130528.GB883641@kuha.fi.intel.com>
+ <469f369a-73f4-c348-b9ee-1662956f45be@redhat.com>
+ <20200811143833.GC627773@kuha.fi.intel.com>
+ <6c223f20-cf63-392e-f694-869cb231c46d@redhat.com>
+ <20200812124955.GB1169992@kuha.fi.intel.com>
+ <38f09a2a-4c6c-69b0-a61d-a67d2dc79546@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38f09a2a-4c6c-69b0-a61d-a67d2dc79546@redhat.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-RnJvbTogIkhlY3Rvci5ZdWFuIiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KDQpBZGQgTVQ2
-Nzc5IGNwdWZyZXEgSFcgc3VwcG9ydC4NCg0KU2lnbmVkLW9mZi1ieTogSGVjdG9yLll1YW4gPGhl
-Y3Rvci55dWFuQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvY3B1ZnJlcS9LY29uZmlnLmFy
-bSAgICAgICAgICAgfCAgIDEyICsrDQogZHJpdmVycy9jcHVmcmVxL01ha2VmaWxlICAgICAgICAg
-ICAgICB8ICAgIDEgKw0KIGRyaXZlcnMvY3B1ZnJlcS9tZWRpYXRlay1jcHVmcmVxLWh3LmMgfCAg
-MzA1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDMgZmlsZXMgY2hhbmdlZCwg
-MzE4IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9jcHVmcmVxL21l
-ZGlhdGVrLWNwdWZyZXEtaHcuYw0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcHVmcmVxL0tjb25m
-aWcuYXJtIGIvZHJpdmVycy9jcHVmcmVxL0tjb25maWcuYXJtDQppbmRleCBjNmNiZmM4Li44ZTU4
-YzEyIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9jcHVmcmVxL0tjb25maWcuYXJtDQorKysgYi9kcml2
-ZXJzL2NwdWZyZXEvS2NvbmZpZy5hcm0NCkBAIC0xMjEsNiArMTIxLDE4IEBAIGNvbmZpZyBBUk1f
-TUVESUFURUtfQ1BVRlJFUQ0KIAloZWxwDQogCSAgVGhpcyBhZGRzIHRoZSBDUFVGcmVxIGRyaXZl
-ciBzdXBwb3J0IGZvciBNZWRpYVRlayBTb0NzLg0KIA0KK2NvbmZpZyBBUk1fTUVESUFURUtfQ1BV
-RlJFUV9IVw0KKwl0cmlzdGF0ZSAiTWVkaWFUZWsgQ1BVRnJlcSBIVyBkcml2ZXIiDQorCWRlcGVu
-ZHMgb24gQVJDSF9NRURJQVRFSyB8fCBDT01QSUxFX1RFU1QNCisJZGVmYXVsdCBtDQorCWhlbHAN
-CisJICBTdXBwb3J0IGZvciB0aGUgQ1BVRnJlcSBIVyBkcml2ZXIuDQorCSAgU29tZSBNZWRpYVRl
-ayBjaGlwc2V0cyBoYXZlIGEgSFcgZW5naW5lIHRvIG9mZmxvYWQgdGhlIHN0ZXBzDQorCSAgbmVj
-ZXNzYXJ5IGZvciBjaGFuZ2luZyB0aGUgZnJlcXVlbmN5IG9mIHRoZSBDUFVzLiBGaXJtd2FyZSBs
-b2FkZWQNCisJICBpbiB0aGlzIGVuZ2luZSBleHBvc2VzIGEgcHJvZ3JhbW1pbmcgaW50ZXJmYWNl
-IHRvIHRoZSBPUy4NCisJICBUaGUgZHJpdmVyIGltcGxlbWVudHMgdGhlIGNwdWZyZXEgaW50ZXJm
-YWNlIGZvciB0aGlzIEhXIGVuZ2luZS4NCisJICBTYXkgWSBpZiB5b3Ugd2FudCB0byBzdXBwb3J0
-IENQVUZyZXEgSFcuDQorDQogY29uZmlnIEFSTV9PTUFQMlBMVVNfQ1BVRlJFUQ0KIAlib29sICJU
-SSBPTUFQMisiDQogCWRlcGVuZHMgb24gQVJDSF9PTUFQMlBMVVMNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2NwdWZyZXEvTWFrZWZpbGUgYi9kcml2ZXJzL2NwdWZyZXEvTWFrZWZpbGUNCmluZGV4IGY2
-NjcwYzQuLmRjMWYzNzEgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2NwdWZyZXEvTWFrZWZpbGUNCisr
-KyBiL2RyaXZlcnMvY3B1ZnJlcS9NYWtlZmlsZQ0KQEAgLTU3LDYgKzU3LDcgQEAgb2JqLSQoQ09O
-RklHX0FSTV9JTVg2UV9DUFVGUkVRKQkJKz0gaW14NnEtY3B1ZnJlcS5vDQogb2JqLSQoQ09ORklH
-X0FSTV9JTVhfQ1BVRlJFUV9EVCkJKz0gaW14LWNwdWZyZXEtZHQubw0KIG9iai0kKENPTkZJR19B
-Uk1fS0lSS1dPT0RfQ1BVRlJFUSkJKz0ga2lya3dvb2QtY3B1ZnJlcS5vDQogb2JqLSQoQ09ORklH
-X0FSTV9NRURJQVRFS19DUFVGUkVRKQkrPSBtZWRpYXRlay1jcHVmcmVxLm8NCitvYmotJChDT05G
-SUdfQVJNX01FRElBVEVLX0NQVUZSRVFfSFcpCSs9IG1lZGlhdGVrLWNwdWZyZXEtaHcubw0KIG9i
-ai0kKENPTkZJR19NQUNIX01WRUJVX1Y3KQkJKz0gbXZlYnUtY3B1ZnJlcS5vDQogb2JqLSQoQ09O
-RklHX0FSTV9PTUFQMlBMVVNfQ1BVRlJFUSkJKz0gb21hcC1jcHVmcmVxLm8NCiBvYmotJChDT05G
-SUdfQVJNX1BYQTJ4eF9DUFVGUkVRKQkrPSBweGEyeHgtY3B1ZnJlcS5vDQpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9jcHVmcmVxL21lZGlhdGVrLWNwdWZyZXEtaHcuYyBiL2RyaXZlcnMvY3B1ZnJlcS9t
-ZWRpYXRlay1jcHVmcmVxLWh3LmMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAw
-Li44NmNlN2YwDQotLS0gL2Rldi9udWxsDQorKysgYi9kcml2ZXJzL2NwdWZyZXEvbWVkaWF0ZWst
-Y3B1ZnJlcS1ody5jDQpAQCAtMCwwICsxLDMwNSBAQA0KKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
-aWVyOiBHUEwtMi4wDQorLyoNCisgKiBDb3B5cmlnaHQgKGMpIDIwMjAgTWVkaWFUZWsgSW5jLg0K
-KyAqLw0KKw0KKyNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5oPg0KKyNpbmNsdWRlIDxsaW51eC9j
-cHVmcmVxLmg+DQorI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4NCisjaW5jbHVkZSA8bGludXgva2Vy
-bmVsLmg+DQorI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KKyNpbmNsdWRlIDxsaW51eC9vZl9h
-ZGRyZXNzLmg+DQorI2luY2x1ZGUgPGxpbnV4L29mX3BsYXRmb3JtLmg+DQorI2luY2x1ZGUgPGxp
-bnV4L3BtX29wcC5oPg0KKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQorDQorI2RlZmluZSBMVVRf
-TUFYX0VOVFJJRVMJCQkzMlUNCisjZGVmaW5lIExVVF9GUkVRCQkJR0VOTUFTSygxMSwgMCkNCisj
-ZGVmaW5lIExVVF9WT0xUCQkJR0VOTUFTSygyOCwgMTIpDQorI2RlZmluZSBMVVRfUk9XX1NJWkUJ
-CQkweDQNCisNCitlbnVtIHsNCisJUkVHX0xVVF9UQUJMRSwNCisJUkVHX0VOQUJMRSwNCisJUkVH
-X1BFUkZfU1RBVEUsDQorDQorCVJFR19BUlJBWV9TSVpFLA0KK307DQorDQorc3RydWN0IGNwdWZy
-ZXFfbXRrIHsNCisJc3RydWN0IGNwdWZyZXFfZnJlcXVlbmN5X3RhYmxlICp0YWJsZTsNCisJdm9p
-ZCBfX2lvbWVtICpyZWdfYmFzZXNbUkVHX0FSUkFZX1NJWkVdOw0KKwljcHVtYXNrX3QgcmVsYXRl
-ZF9jcHVzOw0KK307DQorDQorc3RhdGljIGNvbnN0IHUxNiBjcHVmcmVxX210a19vZmZzZXRzW1JF
-R19BUlJBWV9TSVpFXSA9IHsNCisJW1JFR19MVVRfVEFCTEVdCQk9IDB4MCwNCisJW1JFR19FTkFC
-TEVdCT0gMHg4NCwNCisJW1JFR19QRVJGX1NUQVRFXQk9IDB4ODgsDQorfTsNCisNCitzdGF0aWMg
-c3RydWN0IGNwdWZyZXFfbXRrICptdGtfZnJlcV9kb21haW5fbWFwW05SX0NQVVNdOw0KKw0KK3N0
-YXRpYyBpbnQgbXRrX2NwdWZyZXFfaHdfdGFyZ2V0X2luZGV4KHN0cnVjdCBjcHVmcmVxX3BvbGlj
-eSAqcG9saWN5LA0KKwkJCQkgICAgICAgdW5zaWduZWQgaW50IGluZGV4KQ0KK3sNCisJc3RydWN0
-IGNwdWZyZXFfbXRrICpjID0gcG9saWN5LT5kcml2ZXJfZGF0YTsNCisNCisJd3JpdGVsX3JlbGF4
-ZWQoaW5kZXgsIGMtPnJlZ19iYXNlc1tSRUdfUEVSRl9TVEFURV0pOw0KKwlhcmNoX3NldF9mcmVx
-X3NjYWxlKHBvbGljeS0+cmVsYXRlZF9jcHVzLA0KKwkJCSAgICBwb2xpY3ktPmZyZXFfdGFibGVb
-aW5kZXhdLmZyZXF1ZW5jeSwNCisJCQkgICAgcG9saWN5LT5jcHVpbmZvLm1heF9mcmVxKTsNCisN
-CisJcmV0dXJuIDA7DQorfQ0KKw0KK3N0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2NwdWZyZXFfaHdf
-Z2V0KHVuc2lnbmVkIGludCBjcHUpDQorew0KKwlzdHJ1Y3QgY3B1ZnJlcV9tdGsgKmM7DQorCXN0
-cnVjdCBjcHVmcmVxX3BvbGljeSAqcG9saWN5Ow0KKwl1bnNpZ25lZCBpbnQgaW5kZXg7DQorDQor
-CXBvbGljeSA9IGNwdWZyZXFfY3B1X2dldF9yYXcoY3B1KTsNCisJaWYgKCFwb2xpY3kpDQorCQly
-ZXR1cm4gMDsNCisNCisJYyA9IHBvbGljeS0+ZHJpdmVyX2RhdGE7DQorDQorCWluZGV4ID0gcmVh
-ZGxfcmVsYXhlZChjLT5yZWdfYmFzZXNbUkVHX1BFUkZfU1RBVEVdKTsNCisJaW5kZXggPSBtaW4o
-aW5kZXgsIExVVF9NQVhfRU5UUklFUyAtIDEpOw0KKw0KKwlyZXR1cm4gcG9saWN5LT5mcmVxX3Rh
-YmxlW2luZGV4XS5mcmVxdWVuY3k7DQorfQ0KKw0KK3N0YXRpYyBpbnQgbXRrX2NwdWZyZXFfaHdf
-Y3B1X2luaXQoc3RydWN0IGNwdWZyZXFfcG9saWN5ICpwb2xpY3kpDQorew0KKwlzdHJ1Y3QgY3B1
-ZnJlcV9tdGsgKmM7DQorCXN0cnVjdCBkZXZpY2UgKmNwdV9kZXY7DQorCWludCByZXQ7DQorDQor
-CWNwdV9kZXYgPSBnZXRfY3B1X2RldmljZShwb2xpY3ktPmNwdSk7DQorCWlmICghY3B1X2Rldikg
-ew0KKwkJcHJfZXJyKCIlczogZmFpbGVkIHRvIGdldCBjcHUlZCBkZXZpY2VcbiIsIF9fZnVuY19f
-LA0KKwkJICAgICAgIHBvbGljeS0+Y3B1KTsNCisJCXJldHVybiAtRU5PREVWOw0KKwl9DQorDQor
-CWMgPSBtdGtfZnJlcV9kb21haW5fbWFwW3BvbGljeS0+Y3B1XTsNCisJaWYgKCFjKSB7DQorCQlw
-cl9lcnIoIk5vIHNjYWxpbmcgc3VwcG9ydCBmb3IgQ1BVJWRcbiIsIHBvbGljeS0+Y3B1KTsNCisJ
-CXJldHVybiAtRU5PREVWOw0KKwl9DQorDQorCWNwdW1hc2tfY29weShwb2xpY3ktPmNwdXMsICZj
-LT5yZWxhdGVkX2NwdXMpOw0KKw0KKwlyZXQgPSBkZXZfcG1fb3BwX2dldF9vcHBfY291bnQoY3B1
-X2Rldik7DQorCWlmIChyZXQgPD0gMCkNCisJCWRldl9lcnIoY3B1X2RldiwgIk9QUCB0YWJsZSBp
-cyBub3QgcmVhZHlcbiIpOw0KKw0KKwlwb2xpY3ktPmZyZXFfdGFibGUgPSBjLT50YWJsZTsNCisJ
-cG9saWN5LT5kcml2ZXJfZGF0YSA9IGM7DQorDQorCS8qIEhXIHNob3VsZCBiZSBpbiBlbmFibGVk
-IHN0YXRlIHRvIHByb2NlZWQgbm93ICovDQorCXdyaXRlbF9yZWxheGVkKDB4MSwgYy0+cmVnX2Jh
-c2VzW1JFR19FTkFCTEVdKTsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KK3N0YXRpYyBzdHJ1Y3Qg
-ZnJlcV9hdHRyICptdGtfY3B1ZnJlcV9od19hdHRyW10gPSB7DQorCSZjcHVmcmVxX2ZyZXFfYXR0
-cl9zY2FsaW5nX2F2YWlsYWJsZV9mcmVxcywNCisJTlVMTA0KK307DQorDQorc3RhdGljIHN0cnVj
-dCBjcHVmcmVxX2RyaXZlciBjcHVmcmVxX210a19od19kcml2ZXIgPSB7DQorCS5mbGFncwkJPSBD
-UFVGUkVRX1NUSUNLWSB8IENQVUZSRVFfTkVFRF9JTklUSUFMX0ZSRVFfQ0hFQ0sgfA0KKwkJCSAg
-Q1BVRlJFUV9IQVZFX0dPVkVSTk9SX1BFUl9QT0xJQ1ksDQorCS52ZXJpZnkJCT0gY3B1ZnJlcV9n
-ZW5lcmljX2ZyZXF1ZW5jeV90YWJsZV92ZXJpZnksDQorCS50YXJnZXRfaW5kZXgJPSBtdGtfY3B1
-ZnJlcV9od190YXJnZXRfaW5kZXgsDQorCS5nZXQJCT0gbXRrX2NwdWZyZXFfaHdfZ2V0LA0KKwku
-aW5pdAkJPSBtdGtfY3B1ZnJlcV9od19jcHVfaW5pdCwNCisJLm5hbWUJCT0gIm10ay1jcHVmcmVx
-LWh3IiwNCisJLmF0dHIJCT0gbXRrX2NwdWZyZXFfaHdfYXR0ciwNCit9Ow0KKw0KK3N0YXRpYyBp
-bnQgbXRrX2NwdWZyZXFfaHdfb3BwX2NyZWF0ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
-LA0KKwkJCQkgICAgIHN0cnVjdCBjcHVmcmVxX210ayAqYykNCit7DQorCXN0cnVjdCBkZXZpY2Ug
-KmRldiA9ICZwZGV2LT5kZXY7DQorCXZvaWQgX19pb21lbSAqYmFzZV90YWJsZTsNCisJdTMyIGRh
-dGEsIGksIGZyZXEsIHZvbHQsIHByZXZfZnJlcSA9IDA7DQorCXVuc2lnbmVkIGxvbmcgY3B1Ow0K
-Kw0KKwljLT50YWJsZSA9IGRldm1fa2NhbGxvYyhkZXYsIExVVF9NQVhfRU5UUklFUyArIDEsDQor
-CQkJCXNpemVvZigqYy0+dGFibGUpLCBHRlBfS0VSTkVMKTsNCisJaWYgKCFjLT50YWJsZSkNCisJ
-CXJldHVybiAtRU5PTUVNOw0KKw0KKwliYXNlX3RhYmxlID0gYy0+cmVnX2Jhc2VzW1JFR19MVVRf
-VEFCTEVdOw0KKw0KKwlmb3IgKGkgPSAwOyBpIDwgTFVUX01BWF9FTlRSSUVTOyBpKyspIHsNCisJ
-CWRhdGEgPSByZWFkbF9yZWxheGVkKGJhc2VfdGFibGUgKyAoaSAqIExVVF9ST1dfU0laRSkpOw0K
-KwkJZnJlcSA9IEZJRUxEX0dFVChMVVRfRlJFUSwgZGF0YSkgKiAxMDAwOw0KKwkJdm9sdCA9IEZJ
-RUxEX0dFVChMVVRfVk9MVCwgZGF0YSkgKiAxMDsNCisJCWMtPnRhYmxlW2ldLmZyZXF1ZW5jeSA9
-IGZyZXE7DQorDQorCQlkZXZfZGJnKGRldiwgImluZGV4PSVkIGZyZXE9JWRcbiIsDQorCQkJaSwg
-Yy0+dGFibGVbaV0uZnJlcXVlbmN5KTsNCisNCisJCWlmIChmcmVxID09IHByZXZfZnJlcSkNCisJ
-CQlicmVhazsNCisNCisJCXByZXZfZnJlcSA9IGZyZXE7DQorDQorCQlmb3JfZWFjaF9jcHUoY3B1
-LCAmYy0+cmVsYXRlZF9jcHVzKQ0KKwkJCWRldl9wbV9vcHBfYWRkKGdldF9jcHVfZGV2aWNlKGNw
-dSksIGZyZXEsIHZvbHQpOw0KKwl9DQorDQorCWMtPnRhYmxlW2ldLmZyZXF1ZW5jeSA9IENQVUZS
-RVFfVEFCTEVfRU5EOw0KKw0KKwlyZXR1cm4gMDsNCit9DQorDQorc3RhdGljIGludCBtdGtfZ2V0
-X3JlbGF0ZWRfY3B1cyhpbnQgaW5kZXgsIHN0cnVjdCBjcHVtYXNrICptKQ0KK3sNCisJc3RydWN0
-IGRldmljZV9ub2RlICpjcHVfbnA7DQorCXN0cnVjdCBvZl9waGFuZGxlX2FyZ3MgYXJnczsNCisJ
-aW50IGNwdSwgcmV0Ow0KKw0KKwlmb3JfZWFjaF9wb3NzaWJsZV9jcHUoY3B1KSB7DQorCQljcHVf
-bnAgPSBvZl9jcHVfZGV2aWNlX25vZGVfZ2V0KGNwdSk7DQorCQlpZiAoIWNwdV9ucCkNCisJCQlj
-b250aW51ZTsNCisNCisJCXJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9hcmdzKGNwdV9ucCwg
-Im10ay1mcmVxLWRvbWFpbiIsDQorCQkJCQkJICIjZnJlcS1kb21haW4tY2VsbHMiLCAwLA0KKwkJ
-CQkJCSAmYXJncyk7DQorCQlvZl9ub2RlX3B1dChjcHVfbnApOw0KKwkJaWYgKHJldCA8IDApDQor
-CQkJY29udGludWU7DQorDQorCQlpZiAoaW5kZXggPT0gYXJncy5hcmdzWzBdKQ0KKwkJCWNwdW1h
-c2tfc2V0X2NwdShjcHUsIG0pOw0KKwl9DQorDQorCXJldHVybiAwOw0KK30NCisNCitzdGF0aWMg
-aW50IG10a19jcHVfcmVzb3VyY2VzX2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwN
-CisJCQkJICB1bnNpZ25lZCBpbnQgY3B1LCBpbnQgaW5kZXgpDQorew0KKwlzdHJ1Y3QgY3B1ZnJl
-cV9tdGsgKmM7DQorCXN0cnVjdCByZXNvdXJjZSAqcmVzOw0KKwlzdHJ1Y3QgZGV2aWNlICpkZXYg
-PSAmcGRldi0+ZGV2Ow0KKwljb25zdCB1MTYgKm9mZnNldHM7DQorCWludCByZXQsIGksIGNwdV9y
-Ow0KKwl2b2lkIF9faW9tZW0gKmJhc2U7DQorDQorCWlmIChtdGtfZnJlcV9kb21haW5fbWFwW2Nw
-dV0pDQorCQlyZXR1cm4gMDsNCisNCisJYyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqYyks
-IEdGUF9LRVJORUwpOw0KKwlpZiAoIWMpDQorCQlyZXR1cm4gLUVOT01FTTsNCisNCisJb2Zmc2V0
-cyA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+ZGV2KTsNCisJaWYgKCFvZmZzZXRz
-KQ0KKwkJcmV0dXJuIC1FSU5WQUw7DQorDQorCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShw
-ZGV2LCBJT1JFU09VUkNFX01FTSwgaW5kZXgpOw0KKwliYXNlID0gZGV2bV9pb3JlbWFwX3Jlc291
-cmNlKGRldiwgcmVzKTsNCisJaWYgKElTX0VSUihiYXNlKSkNCisJCXJldHVybiBQVFJfRVJSKGJh
-c2UpOw0KKw0KKwlmb3IgKGkgPSBSRUdfTFVUX1RBQkxFOyBpIDwgUkVHX0FSUkFZX1NJWkU7IGkr
-KykNCisJCWMtPnJlZ19iYXNlc1tpXSA9IGJhc2UgKyBvZmZzZXRzW2ldOw0KKw0KKwlyZXQgPSBt
-dGtfZ2V0X3JlbGF0ZWRfY3B1cyhpbmRleCwgJmMtPnJlbGF0ZWRfY3B1cyk7DQorCWlmIChyZXQp
-IHsNCisJCWRldl9lcnIoZGV2LCAiRG9tYWluLSVkIGZhaWxlZCB0byBnZXQgcmVsYXRlZCBDUFVz
-XG4iLCBpbmRleCk7DQorCQlyZXR1cm4gcmV0Ow0KKwl9DQorDQorCXJldCA9IG10a19jcHVmcmVx
-X2h3X29wcF9jcmVhdGUocGRldiwgYyk7DQorCWlmIChyZXQpIHsNCisJCWRldl9lcnIoZGV2LCAi
-RG9tYWluLSVkIGZhaWxlZCB0byBjcmVhdGUgT1BQXG4iLCBpbmRleCk7DQorCQlyZXR1cm4gcmV0
-Ow0KKwl9DQorDQorCWZvcl9lYWNoX2NwdShjcHVfciwgJmMtPnJlbGF0ZWRfY3B1cykNCisJCW10
-a19mcmVxX2RvbWFpbl9tYXBbY3B1X3JdID0gYzsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KK3N0
-YXRpYyBpbnQgbXRrX3Jlc291cmNlc19pbml0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-DQorew0KKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmNwdV9ucDsNCisJc3RydWN0IG9mX3BoYW5kbGVf
-YXJncyBhcmdzOw0KKwl1bnNpZ25lZCBpbnQgY3B1Ow0KKwlpbnQgcmV0Ow0KKw0KKwlmb3JfZWFj
-aF9wb3NzaWJsZV9jcHUoY3B1KSB7DQorCQljcHVfbnAgPSBvZl9jcHVfZGV2aWNlX25vZGVfZ2V0
-KGNwdSk7DQorCQlpZiAoIWNwdV9ucCkgew0KKwkJCWRldl9kYmcoJnBkZXYtPmRldiwgIkZhaWxl
-ZCB0byBnZXQgY3B1ICVkIGRldmljZVxuIiwNCisJCQkJY3B1KTsNCisJCQljb250aW51ZTsNCisJ
-CX0NCisNCisJCXJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9hcmdzKGNwdV9ucCwgIm10ay1m
-cmVxLWRvbWFpbiIsDQorCQkJCQkJICIjZnJlcS1kb21haW4tY2VsbHMiLCAwLCAmYXJncyk7DQor
-CQlpZiAocmV0IDwgMCkNCisJCQlyZXR1cm4gcmV0Ow0KKw0KKwkJcmV0ID0gbXRrX2NwdV9yZXNv
-dXJjZXNfaW5pdChwZGV2LCBjcHUsIGFyZ3MuYXJnc1swXSk7DQorCQlpZiAocmV0KQ0KKwkJCXJl
-dHVybiByZXQ7DQorCX0NCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KK3N0YXRpYyBpbnQgbXRrX2Nw
-dWZyZXFfaHdfZHJpdmVyX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQorew0K
-KwlpbnQgcmV0Ow0KKw0KKwkvKiBHZXQgdGhlIGJhc2VzIG9mIGNwdWZyZXEgZm9yIGRvbWFpbnMg
-Ki8NCisJcmV0ID0gbXRrX3Jlc291cmNlc19pbml0KHBkZXYpOw0KKwlpZiAocmV0KSB7DQorCQlk
-ZXZfZXJyKCZwZGV2LT5kZXYsICJDUFVGcmVxIHJlc291cmNlIGluaXQgZmFpbGVkXG4iKTsNCisJ
-CXJldHVybiByZXQ7DQorCX0NCisNCisJcmV0ID0gY3B1ZnJlcV9yZWdpc3Rlcl9kcml2ZXIoJmNw
-dWZyZXFfbXRrX2h3X2RyaXZlcik7DQorCWlmIChyZXQpIHsNCisJCWRldl9lcnIoJnBkZXYtPmRl
-diwgIkNQVUZyZXEgSFcgZHJpdmVyIGZhaWxlZCB0byByZWdpc3RlclxuIik7DQorCQlyZXR1cm4g
-cmV0Ow0KKwl9DQorDQorCWRldl9kYmcoJnBkZXYtPmRldiwgIk1lZGlhdGVrIENQVUZyZXEgSFcg
-ZHJpdmVyIGluaXRpYWxpemVkXG4iKTsNCisJb2ZfcGxhdGZvcm1fcG9wdWxhdGUocGRldi0+ZGV2
-Lm9mX25vZGUsIE5VTEwsIE5VTEwsICZwZGV2LT5kZXYpOw0KKw0KKwlyZXR1cm4gMDsNCit9DQor
-DQorc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgbXRrX2NwdWZyZXFfaHdfbWF0Y2hb
-XSA9IHsNCisJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxjcHVmcmVxLWh3IiwgLmRhdGEgPSAm
-Y3B1ZnJlcV9tdGtfb2Zmc2V0cyB9LA0KKwl7fQ0KK307DQorDQorc3RhdGljIHN0cnVjdCBwbGF0
-Zm9ybV9kcml2ZXIgbXRrX2NwdWZyZXFfaHdfZHJpdmVyID0gew0KKwkucHJvYmUgPSBtdGtfY3B1
-ZnJlcV9od19kcml2ZXJfcHJvYmUsDQorCS5kcml2ZXIgPSB7DQorCQkubmFtZSA9ICJtdGstY3B1
-ZnJlcS1odyIsDQorCQkub2ZfbWF0Y2hfdGFibGUgPSBtdGtfY3B1ZnJlcV9od19tYXRjaCwNCisJ
-fSwNCit9Ow0KKw0KK3N0YXRpYyBpbnQgX19pbml0IG10a19jcHVmcmVxX2h3X2luaXQodm9pZCkN
-Cit7DQorCXJldHVybiBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJm10a19jcHVmcmVxX2h3X2Ry
-aXZlcik7DQorfQ0KK3N1YnN5c19pbml0Y2FsbChtdGtfY3B1ZnJlcV9od19pbml0KTsNCisNCitN
-T0RVTEVfREVTQ1JJUFRJT04oIm10ayBDUFVGUkVRIEhXIERyaXZlciIpOw0KK01PRFVMRV9MSUNF
-TlNFKCJHUEwgdjIiKTsNCi0tIA0KMS43LjkuNQ0K
+On Wed, Aug 26, 2020 at 02:37:28PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 8/12/20 2:49 PM, Heikki Krogerus wrote:
+> > On Wed, Aug 12, 2020 at 10:36:32AM +0200, Hans de Goede wrote:
+> > > Hi,
+> > > 
+> > > On 8/11/20 4:38 PM, Heikki Krogerus wrote:
+> > > > Hi,
+> > > > 
+> > > > > > > +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
+> > > > > > > +	const struct typec_altmode_ops *ops, void *drvdata,
+> > > > > > > +	struct typec_altmode **altmodes, size_t n,
+> > > > > > > +	struct fwnode_handle *fwnode)
+> > > > > > > +{
+> > > > > > > +	struct fwnode_handle *altmodes_node, *child;
+> > > > > > > +	struct typec_altmode_desc desc;
+> > > > > > > +	struct typec_altmode *alt;
+> > > > > > > +	size_t index = 0;
+> > > > > > > +	u32 svid, vdo;
+> > > > > > > +	int ret;
+> > > > > > > +
+> > > > > > > +	altmodes_node = fwnode_get_named_child_node(fwnode, "altmodes");
+> > > > > > > +	if (!altmodes_node)
+> > > > > > > +		return;
+> > > > > > 
+> > > > > > Do we need that? Why not just make the sub-nodes describing the
+> > > > > > alternate modes direct children of the connector node instead of
+> > > > > > grouping them under a special sub-node?
+> > > > > 
+> > > > > If you envision how this will look in e.g. DTS sources then I think
+> > > > > you will see that this grouping keeps the DTS source code more
+> > > > > readable. Grouping things together like this is somewhat normal in
+> > > > > devicetree files. E.g. PMIC's or other regulator providers typical
+> > > > > have a "regulators" node grouping all their regulators; and also the OF
+> > > > > graph bindings which are used in the USB-connector node start with a
+> > > > > "ports" parent / grouping node.
+> > > > > 
+> > > > > > If the child node of the connector has device properties "svid" and
+> > > > > > "vdo" then it is an alt mode that the connector supports, and it can't
+> > > > > > be anything else, no?
+> > > > > 
+> > > > > If you want to get rid of the altmodes parent/grouping node, then the
+> > > > > usual way to do this would be to add a compatible string to the nodes,
+> > > > > rather then check for the existence of some properties.
+> > > > 
+> > > > I'm looking at this from ACPI PoW. We do not have compatible string in
+> > > > ACPI (and in case you are wondering, the _HID PRP0001 is not a
+> > > > reliable solution for that).
+> > > 
+> > > Note my main use-case for this is the ACPI case too, remember the
+> > > infamous drivers/platform/x86/intel_cht_int33fe_typec.c that is my
+> > > main consumer for this patch. Although there the info is lacking in ACPI
+> > > so I need to inject it with c-code.
+> > > 
+> > > > If you wish to group the altmodes under a subnode, then that's fine, but
+> > > > the "altmodes" node will need to be optional, just like the "ports"
+> > > > OF-graph node is optional. So we need to be able to support systems
+> > > > where the alternate mode subnodes are directly under the connector as
+> > > > well.
+> > > 
+> > > So for the ports case, AFAIK not having a ports subnode to group them
+> > > is only used in the case there are no other type of subnodes.
+> > > 
+> > > With the existing usb-connector devicetree-bindings we will have both
+> > > ports subnodes and altmode subnodes. The usb-connector devicetree-bindings
+> > > already specify that the port subnodes *must* be grouped together under
+> > > a single ports subnode (for usb-connector nodes).
+> > > 
+> > > So it seems logical and much cleaner to me to also group the altmodes
+> > > together under an altmodes subnode. This also solves the problem of
+> > > having to due heuristics to tell different kinds of subnodes apart.
+> > > 
+> > > Question: why do you write: "we need to be able to support systems
+> > > where the alternate mode subnodes are directly under the connector as
+> > > well" are there already systems out there (or on their way) which
+> > > contain ACPI table which contain a fwnode adhering to the usb-connector
+> > > bindings + having subnodes which set a svid + vdo ?
+> > 
+> > There are indeed platforms on their way, but I'll see if I can still
+> > influence what goes into the ACPI tables of those platforms.
+> > 
+> > > Because unless such systems already exist I don't see why we need to
+> > > be able to support them ?  New systems can use whatever scheme we
+> > > can come-up with and unless existing systems already have what we
+> > > need, except for the altmodes grouping node, then we will need some
+> > > translating code which generates the expected swnodes anyways and
+> > > then the translator can easily inject the grouping node.
+> > > 
+> > > So I do not see why we would " need to be able to support systems
+> > > where the alternate mode subnodes are directly under the connector as
+> > > well" ?
+> > > 
+> > > If you insist I can make the altmodes node optional and simply
+> > > skip any child nodes which do not have both a svid and a vdo
+> > > property, but having the subnode (and then logging an error on
+> > > missing svid or vdo props) seems cleaner to me.
+> > 
+> > I'm trying to get the way the USB Type-C connectors are described
+> > in ACPI (including the alternate modes) documented somewhere. I think
+> > I already mentioned that to you already. There is now a discussion
+> > with our Windows folks how to move forward with that. In any case,
+> > additional nodes like that "altmodes" node are really problematic in
+> > Windows because of way they handle the nodes, and to be honest, I
+> > don't see any way I could convince those guys to accept it.
+> > 
+> > But all that is really not your problem. I have now a feeling that the
+> > way we will end up describing the alternate modes in ACPI will not be
+> > compatible with DT :-(. So I guess we can just go ahead with this, and
+> > then add support for ACPI later?
+> 
+> So since you wrote "So I guess we can just go ahead with this" O was
+> wondering what the next steps are for getting this series (minus the
+> DT-binding patch) upstream ?
 
+Sorry Hans. I forgot about this topic. I do have one question. I'll
+ask it separately against the patch.
+
+thanks,
+
+-- 
+heikki
