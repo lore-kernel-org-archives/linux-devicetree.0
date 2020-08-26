@@ -2,303 +2,247 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F8BC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D154C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377202071E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145B82076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598416631;
+	bh=1yCPLYQsfFn9Sm8/Cw10dPtWahWPZ+11bgyvxCCEz+A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=r2eaAr7aEzPHqxIshIrD417X35kghq6mB6byBmzBOau6oN566PSq9AvUrPWBtdoE6
+	 kagerd7mmiZVmjXEr8VHOLQ7FnI1LvQmGFJo7G8ltG7pZ2rWGJ+w7g1PLW05GqZv4i
+	 YCBA/P65jljRj6XGzW4+3FEM9NaiAe3NMTWFJrcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725861AbgHZEfl (ORCPT
+        id S1725294AbgHZEhK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:35:41 -0400
-Received: from mga18.intel.com ([134.134.136.126]:38861 "EHLO mga18.intel.com"
+        Wed, 26 Aug 2020 00:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725267AbgHZEfi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:35:38 -0400
-IronPort-SDR: oAzWnS5u6cSS159zAz5mpvrGox5dtm9yFjUk9ulLYx7Sog3m5udBbVRbAg5NOAB25cx3akviOF
- GK22Mt2fN/GQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="143897919"
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="143897919"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 21:35:36 -0700
-IronPort-SDR: sQzOyYirYcZ4xF2e+uvt2DCyBjrgyZ2lB/CORy5Y2Zy18e9ozZht3Pz0qByIMohhnTYlr81u0j
- mNcawb9dlZgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="373260415"
-Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
-  by orsmga001.jf.intel.com with ESMTP; 25 Aug 2020 21:35:33 -0700
-From:   vineetha.g.jaya.kumaran@intel.com
-To:     davem@davemloft.net, kuba@kernel.org, mcoquelin.stm32@gmail.com,
-        robh+dt@kernel.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        weifeng.voon@intel.com, hock.leong.kweh@intel.com,
-        boon.leong.ong@intel.com, lakshmi.bai.raja.subramanian@intel.com
-Subject: [PATCH v3 2/2] net: stmmac: Add dwmac-intel-plat for GBE driver
-Date:   Wed, 26 Aug 2020 12:33:42 +0800
-Message-Id: <1598416422-30796-3-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1598416422-30796-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
-References: <1598416422-30796-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+        id S1725267AbgHZEhK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 00:37:10 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E4422071E;
+        Wed, 26 Aug 2020 04:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598416629;
+        bh=1yCPLYQsfFn9Sm8/Cw10dPtWahWPZ+11bgyvxCCEz+A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=S70jTlpPPlRanbVj6W7qmgM+THSKuELvDonfbKzKo1pkDUdAcGcrOWkWsZaGZnxdZ
+         5yhWwdMUJpyk232DKjHeyJFlZmQeu1g/568SKUu/ER5YjpVWHZjU0k5lgkxQzu4yiQ
+         4Vz+gtx06NDQ5RZpCGCV428AlTtyeRwWoIjhTyBc=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kAnBL-001Nos-7e; Wed, 26 Aug 2020 06:37:07 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Josh Cartwright <joshc@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: convert spmi.txt to spmi.yaml
+Date:   Wed, 26 Aug 2020 06:36:49 +0200
+Message-Id: <ee4c4ca9f29a39f6af772b3a526a996176499da3.1598415179.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200826061150.3eb96ab3@coco.lan>
+References: <20200826061150.3eb96ab3@coco.lan>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Rusaimi Amira Ruslan <rusaimi.amira.rusaimi@intel.com>
+Convert the SPMI bus documentation to JSON/yaml.
 
-Add dwmac-intel-plat to enable the stmmac driver in Intel Keem Bay.
-Also add fix_mac_speed and tx_clk in order to change link speeds.
-This is required as mac_speed_o is not connected in the
-Intel Keem Bay SoC.
-
-Signed-off-by: Rusaimi Amira Ruslan <rusaimi.amira.rusaimi@intel.com>
-Signed-off-by: Vineetha G. Jaya Kumaran <vineetha.g.jaya.kumaran@intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |  10 ++
- drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
- .../net/ethernet/stmicro/stmmac/dwmac-intel-plat.c | 191 +++++++++++++++++++++
- 3 files changed, 202 insertions(+)
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Kconfig b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-index 9a47c5a..7572cea 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Kconfig
-+++ b/drivers/net/ethernet/stmicro/stmmac/Kconfig
-@@ -209,6 +209,16 @@ config DWMAC_IMX8
- 	  device driver. This driver is used for i.MX8 series like
- 	  iMX8MP/iMX8DXL GMAC ethernet controller.
+v2:
+- addressed issues pointed by Rob;
+- made clear that group ID is a future extension, that it is not
+  currently supported.
+
+ .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
+ .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
+ .../devicetree/bindings/spmi/spmi.txt         | 41 ----------
+ .../devicetree/bindings/spmi/spmi.yaml        | 75 +++++++++++++++++++
+ 4 files changed, 78 insertions(+), 44 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
+ create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
+
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+index fffc8fde3302..79367a43b27d 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+@@ -37,7 +37,7 @@ Required properties:
+                    or generalized "qcom,spmi-pmic".
+ - reg:             Specifies the SPMI USID slave address for this device.
+                    For more information see:
+-                   Documentation/devicetree/bindings/spmi/spmi.txt
++                   Documentation/devicetree/bindings/spmi/spmi.yaml
  
-+config DWMAC_INTEL_PLAT
-+	tristate "Intel dwmac support"
-+	depends on OF && COMMON_CLK
-+	depends on STMMAC_ETH
-+	help
-+	  Support for ethernet controllers on Intel SoCs
-+
-+	  This selects the Intel platform specific glue layer support for
-+	  the stmmac device driver. This driver is used for the Intel Keem Bay
-+	  SoC.
- endif
+ Required properties for peripheral child nodes:
+ - compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
+diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+index e16b9b5afc70..ca645e21fe47 100644
+--- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
++++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
+@@ -7,8 +7,8 @@ devices to control a single SPMI master.
+ The PMIC Arbiter can also act as an interrupt controller, providing interrupts
+ to slave devices.
  
- config DWMAC_INTEL
-diff --git a/drivers/net/ethernet/stmicro/stmmac/Makefile b/drivers/net/ethernet/stmicro/stmmac/Makefile
-index 295615a..24e6145 100644
---- a/drivers/net/ethernet/stmicro/stmmac/Makefile
-+++ b/drivers/net/ethernet/stmicro/stmmac/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_DWMAC_STM32)	+= dwmac-stm32.o
- obj-$(CONFIG_DWMAC_SUNXI)	+= dwmac-sunxi.o
- obj-$(CONFIG_DWMAC_SUN8I)	+= dwmac-sun8i.o
- obj-$(CONFIG_DWMAC_DWC_QOS_ETH)	+= dwmac-dwc-qos-eth.o
-+obj-$(CONFIG_DWMAC_INTEL_PLAT)	+= dwmac-intel-plat.o
- obj-$(CONFIG_DWMAC_GENERIC)	+= dwmac-generic.o
- obj-$(CONFIG_DWMAC_IMX8)	+= dwmac-imx.o
- stmmac-platform-objs:= stmmac_platform.o
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
+-See spmi.txt for the generic SPMI controller binding requirements for child
+-nodes.
++See Documentation/devicetree/bindings/spmi/spmi.yaml for the generic SPMI
++controller binding requirements for child nodes.
+ 
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
+ generic interrupt controller binding documentation.
+diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
+deleted file mode 100644
+index 4bb10d161a27..000000000000
+--- a/Documentation/devicetree/bindings/spmi/spmi.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-System Power Management Interface (SPMI) Controller
+-
+-This document defines a generic set of bindings for use by SPMI controllers.  A
+-controller is modelled in device tree as a node with zero or more child nodes,
+-each representing a unique slave on the bus.
+-
+-Required properties:
+-- #address-cells : must be set to 2
+-- #size-cells : must be set to 0
+-
+-Child nodes:
+-
+-An SPMI controller node can contain zero or more child nodes representing slave
+-devices on the bus.  Child 'reg' properties are specified as an address, type
+-pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
+-SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
+-These are the identifiers "statically assigned by the system integrator", as
+-per the SPMI spec.
+-
+-Each child node must have one and only one 'reg' entry of type SPMI_USID.
+-
+-#include <dt-bindings/spmi/spmi.h>
+-
+-	spmi@.. {
+-		compatible = "...";
+-		reg = <...>;
+-
+-		#address-cells = <2>;
+-		#size-cells = <0>;
+-
+-		child@0 {
+-			compatible = "...";
+-			reg = <0 SPMI_USID>;
+-		};
+-
+-		child@7 {
+-			compatible = "...";
+-			reg = <7 SPMI_USID
+-			       3 SPMI_GSID>;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
 new file mode 100644
-index 00000000..ccac7bf
+index 000000000000..0e54978245b9
 --- /dev/null
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
-@@ -0,0 +1,191 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Intel DWMAC platform driver
-+ *
-+ * Copyright(C) 2020 Intel Corporation
-+ */
++++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spmi/spmi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/ethtool.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/stmmac.h>
++title: System Power Management Interface (SPMI) Controller
 +
-+#include "stmmac.h"
-+#include "stmmac_platform.h"
++maintainers:
++  - Josh Cartwright <joshc@codeaurora.org>
 +
-+struct intel_dwmac {
-+	struct device *dev;
-+	struct clk *tx_clk;
-+	const struct intel_dwmac_data *data;
-+};
++description: |
++  The System Power Management (SPMI) controller is a 2-wire bus defined
++  by the MIPI Alliance for power management control to be used on SoC designs.
 +
-+struct intel_dwmac_data {
-+	void (*fix_mac_speed)(void *priv, unsigned int speed);
-+	unsigned long ptp_ref_clk_rate;
-+	unsigned long tx_clk_rate;
-+	bool tx_clk_en;
-+};
++  SPMI controllers are modelled in device tree using a generic set of
++  bindings defined here, plus any bus controller specific properties, if
++  needed.
 +
-+static void kmb_eth_fix_mac_speed(void *priv, unsigned int speed)
-+{
-+	struct intel_dwmac *dwmac = priv;
-+	unsigned long rate;
-+	int ret;
++  Each SPMI controller has zero or more child nodes (up to 16 ones), each
++  one representing an unique slave at the bus.
 +
-+	rate = clk_get_rate(dwmac->tx_clk);
++properties:
++  $nodename:
++    pattern: "spmi@.*"
 +
-+	switch (speed) {
-+	case SPEED_1000:
-+		rate = 125000000;
-+		break;
++  reg:
++    maxItems: 1
 +
-+	case SPEED_100:
-+		rate = 25000000;
-+		break;
++  "#address-cells":
++    const: 2
 +
-+	case SPEED_10:
-+		rate = 2500000;
-+		break;
++  "#size-cells":
++    const: 0
 +
-+	default:
-+		dev_err(dwmac->dev, "Invalid speed\n");
-+		break;
-+	}
++patternProperties:
++  ".*@([0-9]|1[0-5])$":
++    description: up to 16 child PMIC nodes
++    type: object
 +
-+	ret = clk_set_rate(dwmac->tx_clk, rate);
-+	if (ret)
-+		dev_err(dwmac->dev, "Failed to configure tx clock rate\n");
-+}
++    properties:
++      reg:
++        minItems: 1
++        maxItems: 2
++        items:
++          - minimum: 0
++            maximum: 0xf
++          - enum: [ 0 ]
++            description: |
++              0 means user ID address. 1 is reserved for group ID address.
 +
-+static const struct intel_dwmac_data kmb_data = {
-+	.fix_mac_speed = kmb_eth_fix_mac_speed,
-+	.ptp_ref_clk_rate = 200000000,
-+	.tx_clk_rate = 125000000,
-+	.tx_clk_en = true,
-+};
++    required:
++      - reg
 +
-+static const struct of_device_id intel_eth_plat_match[] = {
-+	{ .compatible = "intel,keembay-dwmac", .data = &kmb_data },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, intel_eth_plat_match);
++required:
++  - reg
 +
-+static int intel_eth_plat_probe(struct platform_device *pdev)
-+{
-+	struct net_device *ndev = platform_get_drvdata(pdev);
-+	struct stmmac_priv *priv = netdev_priv(ndev);
-+	struct plat_stmmacenet_data *plat_dat;
-+	struct stmmac_resources stmmac_res;
-+	const struct of_device_id *match;
-+	struct intel_dwmac *dwmac;
-+	unsigned long rate;
-+	int ret;
++examples:
++  - |
++    #include <dt-bindings/spmi/spmi.h>
 +
-+	plat_dat = priv->plat;
-+	ret = stmmac_get_platform_resources(pdev, &stmmac_res);
-+	if (ret)
-+		return ret;
++    spmi@0 {
++      reg = <0 0>;
 +
-+	plat_dat = stmmac_probe_config_dt(pdev, &stmmac_res.mac);
-+	if (IS_ERR(plat_dat)) {
-+		dev_err(&pdev->dev, "dt configuration failed\n");
-+		return PTR_ERR(plat_dat);
-+	}
++      #address-cells = <2>;
++      #size-cells = <0>;
 +
-+	dwmac = devm_kzalloc(&pdev->dev, sizeof(*dwmac), GFP_KERNEL);
-+	if (!dwmac) {
-+		ret = -ENOMEM;
-+		goto err_remove_config_dt;
-+	}
++      child@0 {
++        reg = <0 SPMI_USID>;
++      };
 +
-+	dwmac->dev = &pdev->dev;
-+	dwmac->tx_clk = NULL;
-+
-+	match = of_match_device(intel_eth_plat_match, &pdev->dev);
-+	if (match && match->data) {
-+		dwmac->data = (const struct intel_dwmac_data *)match->data;
-+
-+		if (dwmac->data->fix_mac_speed)
-+			plat_dat->fix_mac_speed = dwmac->data->fix_mac_speed;
-+
-+		/* Enable TX clock */
-+		if (dwmac->data->tx_clk_en) {
-+			dwmac->tx_clk = devm_clk_get(&pdev->dev, "tx_clk");
-+			if (IS_ERR(dwmac->tx_clk))
-+				goto err_remove_config_dt;
-+
-+			clk_prepare_enable(dwmac->tx_clk);
-+
-+			/* Check and configure TX clock rate */
-+			rate = clk_get_rate(dwmac->tx_clk);
-+			if (dwmac->data->tx_clk_rate &&
-+			    rate != dwmac->data->tx_clk_rate) {
-+				rate = dwmac->data->tx_clk_rate;
-+				ret = clk_set_rate(dwmac->tx_clk, rate);
-+				if (ret) {
-+					dev_err(&pdev->dev,
-+						"Failed to set tx_clk\n");
-+					return ret;
-+				}
-+			}
-+		}
-+
-+		/* Check and configure PTP ref clock rate */
-+		rate = clk_get_rate(plat_dat->clk_ptp_ref);
-+		if (dwmac->data->ptp_ref_clk_rate &&
-+		    rate != dwmac->data->ptp_ref_clk_rate) {
-+			rate = dwmac->data->ptp_ref_clk_rate;
-+			ret = clk_set_rate(plat_dat->clk_ptp_ref, rate);
-+			if (ret) {
-+				dev_err(&pdev->dev,
-+					"Failed to set clk_ptp_ref\n");
-+				return ret;
-+			}
-+		}
-+	}
-+
-+	plat_dat->bsp_priv = dwmac;
-+
-+	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
-+	if (ret) {
-+		if (dwmac->tx_clk)
-+			clk_disable_unprepare(dwmac->tx_clk);
-+
-+		goto err_remove_config_dt;
-+	}
-+
-+	return 0;
-+
-+err_remove_config_dt:
-+	stmmac_remove_config_dt(pdev, plat_dat);
-+
-+	return ret;
-+}
-+
-+static int intel_eth_plat_remove(struct platform_device *pdev)
-+{
-+	struct intel_dwmac *dwmac = get_stmmac_bsp_priv(&pdev->dev);
-+	int ret;
-+
-+	ret = stmmac_pltfr_remove(pdev);
-+
-+	if (dwmac->tx_clk)
-+		clk_disable_unprepare(dwmac->tx_clk);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver intel_eth_plat_driver = {
-+	.probe  = intel_eth_plat_probe,
-+	.remove = intel_eth_plat_remove,
-+	.driver = {
-+		.name		= "intel-eth-plat",
-+		.pm		= &stmmac_pltfr_pm_ops,
-+		.of_match_table = intel_eth_plat_match,
-+	},
-+};
-+module_platform_driver(intel_eth_plat_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Intel DWMAC platform driver");
++      child@7 {
++        reg = <7 SPMI_USID>;
++      };
++    };
 -- 
-1.9.1
+2.26.2
+
 
