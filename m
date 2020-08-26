@@ -2,186 +2,104 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DDCC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE6AC433E5
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF7F20707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191F82087D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2/+JFzv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="qpMLC0/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbgHZLyQ (ORCPT
+        id S1729454AbgHZMDQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:54:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729145AbgHZLuo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 07:50:44 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D475EC061786
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 04:50:43 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u128so848170pfb.6
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 04:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qBfSxqGewdmgqv+MqirStMARwcP9jOnx8CudDAuj8N4=;
-        b=j2/+JFzvW/o4MtYwgPJgGB1/hmO3WTaD7uyivV4STDRbE42T5q8F2+3AG7rYqbHT9F
-         2Y+tksDrhYQlmhLtQeI7i2RYvhqyRkIYftTEyAeGjMtUszGvxvWoIyTDr5wZ6R1aCViA
-         eAn4cmOYkSC8phQ36CSGhyXaw0/jTGzroxer8E2Ll1T+5hd3HGwTpESFosrS7WywfsLa
-         +wCpXdszE3bKqU5WDO4DAyizF0XO9NLE5l/xcySKN8rPceXSCcfbp060BXJwRPPgIwht
-         lw7C+a8b4AvrR1h8jLBKhC38gdM4fi2WTw/tLfgX4YKp50xtH9HB09VDl17iII9RDPhZ
-         I2gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qBfSxqGewdmgqv+MqirStMARwcP9jOnx8CudDAuj8N4=;
-        b=AC0NvWcR8S0B3bc85YAv6pY5ZXqeP0h4yFb9q4b3txX5RiyYQ53s56pQn7NmAwsLoI
-         delmYdHRXdG5JVlZH7NBZEx1JT9CONiDIF8PN1jzXMNBMwd5Y+RnSBJtxHTvvk10jqQc
-         6M/D62w8BLD0QDz+o1P8lYkveIg4HjyOQTzdpn2I/dWYrKI+7Eoal83CaKUAfQYBhWHp
-         ui9DT4lUjvwLiF1RICR5pUbYkjzKY0v8YkfkF7/GlWO5Irf9dBY5CwUR820TAEA/cjCX
-         pBu9983iQQq2joN23V86jL3y47QBeSLpT9Z/G2HJZ5SkFeRTua8eXQr7dFutuKbmYkIS
-         ykRw==
-X-Gm-Message-State: AOAM5315KgW/qawXnrbyABr08P/TKSqUqVxPJk057KlJnIZ6yBi0QIr0
-        j/LeHGPo6htGcaAaEigpOVrFGw==
-X-Google-Smtp-Source: ABdhPJwvl+y6ZWGao7YMxGBN1XA7sn0sxPJqCHEifmy40XejHezA8W66zOzhmYS0St1ioo8tqsrhvA==
-X-Received: by 2002:a63:354:: with SMTP id 81mr3180046pgd.216.1598442643293;
-        Wed, 26 Aug 2020 04:50:43 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id j1sm3083230pfg.6.2020.08.26.04.50.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 04:50:42 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: opp: Allow opp-supported-hw to contain multiple versions
-Date:   Wed, 26 Aug 2020 17:20:28 +0530
-Message-Id: <552554ad2e77cc7fe2098d9f2807d0ec8c0de23a.1598442485.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <cover.1598442485.git.viresh.kumar@linaro.org>
-References: <cover.1598442485.git.viresh.kumar@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 26 Aug 2020 08:03:16 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:17356 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729504AbgHZMDL (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:03:11 -0400
+IronPort-SDR: URNFkK02/qKTkzCsexIPWXqr730J11mIkL6vCp38Rb5cL7k6xEmB8bpMpYfB4oytzBZNXCj6X9
+ FfXuWPXinXBwsWuEwieQqEzcE1nise8DbX0DJbKXkbZRTR7cigohPRZ72OOD4jjQ7kO980p9Io
+ m7kj4KGZFxaugVTUD5tXtZt+x85KSKOMhSYySgdEegg7LYvOWkCcIygbrbIykvMjG4jbqQPjJP
+ QnEDcJjskS5A7d8nuRs5K0n7i52ryWY3d9VI25K6g40QnKiARRMOoZuKvqiBex81oICWfcc6tP
+ iro=
+X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
+   d="scan'208";a="13607754"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 26 Aug 2020 14:03:08 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 26 Aug 2020 14:03:08 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 26 Aug 2020 14:03:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598443388; x=1629979388;
+  h=from:to:cc:subject:date:message-id;
+  bh=w5WmpfTmC7AUFRQxsIbP8PaB8d2cw3oNSZ0fBWcQoSg=;
+  b=qpMLC0/vBhzJXsDuHEzgh2z7CTIzVoLQ9OYqOZD+EoeU6SaafneL4ESt
+   CgaJgyknDyIxeH9F+YC8bY4VeQAChXtslz94wRvXYljrNtrW+qR80Yut9
+   756Hm5FmJseCGdnxNrftZ1of69nTHb5qqzRGtRLEOc1STv92c9FySVE/e
+   QYyc7rlX5j7M+QhXR2wU9y+jxcNs5CA+MsmcORh1ubu5UEIhGTZoJ8xGD
+   LLxbHbwAWUaLhNc+/pGLf+5/DdWFTm3VI+JlGCXg1pqavWyen8H7dr8f8
+   ESfChHkrEfXD87N14Yf+xuhW0XQpdwxps/H+AizOz3tjs5HeAiOl/ap98
+   Q==;
+IronPort-SDR: 6fD0atj3+mV3gr/f5F2lITSzQKoLxCP8yKXDkCMBjXFMWXCEnoZZv6t6lZa6j5HCxCNnhBfn4v
+ 86mPI2jUovz0aWN1E1UWXy7JEAaIIaTJ71G1pDkEwtfckEApJwZWGuDbg8RXczFusLi53g81KV
+ ORI5AB1YceMkIQ0WuphRFHIqY0PzZ1UWC/1bV43+xS5rNRPA5edSWoahfXrsBEikoWBUYjQ0b6
+ Rdc94g1gJs3tplRUazGZQlhS7Gw0AYw565NP48uJHhbDec64BOt4U3BuwgCSBwjKZenYcFeGOV
+ Sb4=
+X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
+   d="scan'208";a="13607753"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 26 Aug 2020 14:03:08 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 44BE2280065;
+        Wed, 26 Aug 2020 14:03:08 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH] of: skip disabled CPU nodes
+Date:   Wed, 26 Aug 2020 14:02:54 +0200
+Message-Id: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-A single list of versions for a hierarchy of hardware levels is not
-sufficient in some cases. For example, if the hardware version has two
-levels, i.e. X.Y and we want an OPP to support only version 2.1 and 1.2,
-we will set the property as:
+Allow disabling CPU nodes using status = "disabled".
 
-	opp-supported-hw = <0x00000003 0x00000003>;
+This allows a bootloader to change the number of available CPUs (for
+example when a common DTS is used for SoC variants with different numbers
+of cores) without deleting the nodes altogether (which may require
+additional fixups where the CPU nodes are referenced, e.g. a cooling
+map).
 
-What this also does is enable hardware versions 2.2 and 1.1, which we
-don't want.
-
-Extend the property to accept multiple versions, so we can define the
-property as:
-
-	opp-supported-hw = <0x00000002 0x00000001>, <0x00000001 0x00000002>;
-
-While at it, also reword the property description.
-
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- Documentation/devicetree/bindings/opp/opp.txt | 53 +++++++++++--------
- 1 file changed, 32 insertions(+), 21 deletions(-)
+ drivers/of/base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 9d16d417e9be..9847dfeeffcb 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -154,25 +154,27 @@ properties.
- - opp-suspend: Marks the OPP to be used during device suspend. If multiple OPPs
-   in the table have this, the OPP with highest opp-hz will be used.
- 
--- opp-supported-hw: This enables us to select only a subset of OPPs from the
--  larger OPP table, based on what version of the hardware we are running on. We
--  still can't have multiple nodes with the same opp-hz value in OPP table.
--
--  It's a user defined array containing a hierarchy of hardware version numbers,
--  supported by the OPP. For example: a platform with hierarchy of three levels
--  of versions (A, B and C), this field should be like <X Y Z>, where X
--  corresponds to Version hierarchy A, Y corresponds to version hierarchy B and Z
--  corresponds to version hierarchy C.
--
--  Each level of hierarchy is represented by a 32 bit value, and so there can be
--  only 32 different supported version per hierarchy. i.e. 1 bit per version. A
--  value of 0xFFFFFFFF will enable the OPP for all versions for that hierarchy
--  level. And a value of 0x00000000 will disable the OPP completely, and so we
--  never want that to happen.
--
--  If 32 values aren't sufficient for a version hierarchy, than that version
--  hierarchy can be contained in multiple 32 bit values. i.e. <X Y Z1 Z2> in the
--  above example, Z1 & Z2 refer to the version hierarchy Z.
-+- opp-supported-hw: This property allows a platform to enable only a subset of
-+  the OPPs from the larger set present in the OPP table, based on the current
-+  version of the hardware (already known to the operating system).
-+
-+  Each block present in the array of blocks in this property, represents a
-+  sub-group of hardware versions supported by the OPP. i.e. <sub-group A>,
-+  <sub-group B>, etc. The OPP will be enabled if _any_ of these sub-groups match
-+  the hardware's version.
-+
-+  Each sub-group is a platform defined array representing the hierarchy of
-+  hardware versions supported by the platform. For a platform with three
-+  hierarchical levels of version (X.Y.Z), this field shall look like
-+
-+  opp-supported-hw = <X1 Y1 Z1>, <X2 Y2 Z2>, <X3 Y3 Z3>.
-+
-+  Each level (eg. X1) in version hierarchy is represented by a 32 bit value, one
-+  bit per version and so there can be maximum 32 versions per level. Logical AND
-+  (&) operation is performed for each level with the hardware's level version
-+  and a non-zero output for _all_ the levels in a sub-group means the OPP is
-+  supported by hardware. A value of 0xFFFFFFFF for each level in the sub-group
-+  will enable the OPP for all versions for the hardware.
- 
- - status: Marks the node enabled/disabled.
- 
-@@ -503,7 +505,6 @@ Example 5: opp-supported-hw
- 			 */
- 			opp-supported-hw = <0xF 0xFFFFFFFF 0xFFFFFFFF>
- 			opp-hz = /bits/ 64 <600000000>;
--			opp-microvolt = <915000 900000 925000>;
- 			...
- 		};
- 
-@@ -516,7 +517,17 @@ Example 5: opp-supported-hw
- 			 */
- 			opp-supported-hw = <0x20 0xff0000ff 0x0000f4f0>
- 			opp-hz = /bits/ 64 <800000000>;
--			opp-microvolt = <915000 900000 925000>;
-+			...
-+		};
-+
-+		opp-900000000 {
-+			/*
-+			 * Supports:
-+			 * - All cuts and substrate where process version is 0x2.
-+			 * - All cuts and process where substrate version is 0x2.
-+			 */
-+			opp-supported-hw = <0xFFFFFFFF 0xFFFFFFFF 0x02>, <0xFFFFFFFF 0x01 0xFFFFFFFF>
-+			opp-hz = /bits/ 64 <900000000>;
- 			...
- 		};
- 	};
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index ea44fea99813..d547e9deced1 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -796,6 +796,8 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
+ 		of_node_put(node);
+ 	}
+ 	for (; next; next = next->sibling) {
++		if (!__of_device_is_available(next))
++			continue;
+ 		if (!(of_node_name_eq(next, "cpu") ||
+ 		      __of_node_is_type(next, "cpu")))
+ 			continue;
 -- 
-2.25.0.rc1.19.g042ed3e048af
+2.17.1
 
