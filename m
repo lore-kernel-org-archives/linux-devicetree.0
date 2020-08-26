@@ -2,66 +2,268 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30582C433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954E4C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC212080C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75B332080C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUM4b+AK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHZQH0 (ORCPT
+        id S1726988AbgHZQK3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:07:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53144 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726763AbgHZQHY (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:07:24 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kAxxD-00By1C-Em; Wed, 26 Aug 2020 18:07:15 +0200
-Date:   Wed, 26 Aug 2020 18:07:15 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Lukasz Stelmach' <l.stelmach@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
- Driver
-Message-ID: <20200826160715.GV2403519@lunn.ch>
-References: <20200825184413.GA2693@kozik-lap>
- <CGME20200826145929eucas1p1367c260edb8fa003869de1da527039c0@eucas1p1.samsung.com>
- <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
- <1efebb42c30a4c40bf91649d83d60e1c@AcuMS.aculab.com>
+        Wed, 26 Aug 2020 12:10:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgHZQKV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 12:10:21 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669C5C061574;
+        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mt12so1099750pjb.4;
+        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
+        b=GUM4b+AKt4DXs9Czm1/g7FEUizlZoYNy2a13HKf6jY4MB/UtxnZis4YdlNbgnv0gng
+         VLgyepIPIP+r3HqOxtcXfRJOT8V7yK3/geJJFC4lH9ZkeKrvKSRo5tgNGS1jFwqbuW4w
+         mIYO6h8SNnsvEq+7tnBZVzNICRpRqO4mKjRfclvaEicY3IT/MBm3Z25ahf5To6Qy9Dmj
+         ZXGlgdmZQb9uwS8VglWPRo+Do6XZl7+U0fqkBKz93N3/oH+S5dRF8ZiefspOZswDrGuS
+         Mc0OEGPL7xKO0zfmXYaD3yZoZ6uzDWFsuFt4Wq1bCmA6r0pmVK6yEsL7oNTZ5wWtIr+R
+         NFqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
+        b=VnYecQZjoyBVoCq5b3vJP0ay4g+m/hMjpLpZgnyJDGc0GVI6vfglsIUIKibhjBVPm+
+         HiOxAsM9k7DA699NNnOEGyMo5wsRt8/9wJvHztIsVbHDARhl+d9ENaI5TEsn66xjrohl
+         R7ATO2rHPoxgDmRGhfc78GKRihIbqsINY6yYLJw+OdtxdK/0sMnXC8AZK2ZL3T7TADKw
+         SayIMgUZS28o9tuB+IOb1c1H1Xpu+IgcYxvRta77l6Q7Qj4XVjngHbzrT2FG4wIZ/JwI
+         uG2atwhEQG1F+0XbyFcrakHUd4rbPLYOou+8lxdpNUrNcpCtEgoftRYBArF+4GogjG9Q
+         VIkQ==
+X-Gm-Message-State: AOAM532S9DQOmPWmlewJTC2Ye/JS/LpbxmXURcuJJbySLHRIri72jaUD
+        NUYsUjM/0Gh+2JcuO97eKbAdh8BBAHV0bl+SuhA=
+X-Google-Smtp-Source: ABdhPJxjUO7auQGz1uE0L/pbKqExRjpwrx9ZKnA6VZu1uXt4iuNvtzNdZeMz+Ss+KiwIbV4Sfv0XzdnBKKO4+yfbwcQ=
+X-Received: by 2002:a17:902:407:: with SMTP id 7mr12502214ple.167.1598458219927;
+ Wed, 26 Aug 2020 09:10:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1efebb42c30a4c40bf91649d83d60e1c@AcuMS.aculab.com>
+References: <20200825124711.11455-1-nish.malpani25@gmail.com> <20200825124711.11455-2-nish.malpani25@gmail.com>
+In-Reply-To: <20200825124711.11455-2-nish.malpani25@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 26 Aug 2020 19:10:03 +0300
+Message-ID: <CAHp75VfHFo41S=Bhs2MB6Te6VAn+yCteys6XcYgciNZu9VppJg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] iio: gyro: adxrs290: Add triggered buffer support
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
+        darius.berghe@analog.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-> (I can't imagine SPI being fast enough to be useful for ethernet...)
+On Tue, Aug 25, 2020 at 4:11 PM Nishant Malpani
+<nish.malpani25@gmail.com> wrote:
+>
+> Provide a way for continuous data capture by setting up buffer support. The
+> data ready signal exposed at the SYNC pin of the ADXRS290 is exploited as
+> a hardware interrupt which triggers to fill the buffer.
+>
+> Triggered buffer setup was tested with both hardware trigger (DATA_RDY) and
+> software triggers (sysfs-trig & hrtimer).
 
-There are plenty of IoT things which only need a few kbit/s.
+...
 
-A VoIP phone can probably get by with 128Kbps, which a 50Mbps SPI bus
-has no problem to provide, etc.
+> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
+> +{
+> +       struct adxrs290_state *st = iio_priv(indio_dev);
+> +       int val, ret;
+> +
+> +       mutex_lock(&st->lock);
+> +
+> +       if (st->mode == mode) {
 
-      Andrew
+> +               ret = 0;
+
+Can be done outside of mutex.
+
+> +               goto done;
+> +       }
+> +
+
+> +       val = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
+> +       if (val < 0) {
+> +               ret = val;
+> +               goto done;
+> +       }
+
+Consider other way around
+ ret = ...
+ ...
+ val = ret;
+
+> +       switch (mode) {
+> +       case ADXRS290_MODE_STANDBY:
+> +               val &= ~ADXRS290_MEASUREMENT;
+> +               break;
+> +       case ADXRS290_MODE_MEASUREMENT:
+> +               val |= ADXRS290_MEASUREMENT;
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               goto done;
+> +       }
+> +
+> +       ret = adxrs290_spi_write_reg(st->spi,
+> +                                    ADXRS290_REG_POWER_CTL,
+> +                                    val);
+> +       if (ret < 0) {
+> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
+> +               goto done;
+> +       }
+> +
+> +       /* update cached mode */
+> +       st->mode = mode;
+> +
+> +done:
+> +       mutex_unlock(&st->lock);
+> +       return ret;
+> +}
+
+...
+
+> +                               goto err_release;
+>
+> -                       return IIO_VAL_INT;
+> +                       ret = IIO_VAL_INT;
+> +                       break;
+>                 default:
+> -                       return -EINVAL;
+> +                       ret = -EINVAL;
+> +                       break;
+>                 }
+
+> +err_release:
+
+I didn't get the purpose of this. Wasn't the break statement enough?
+
+> +               iio_device_release_direct_mode(indio_dev);
+> +               return ret;
+>         case IIO_CHAN_INFO_SCALE:
+>                 switch (chan->type) {
+>                 case IIO_ANGL_VEL:
+
+...
+
+> +                       goto err_release;
+
+Ditto.
+
+> +               }
+> +
+>                 /* caching the updated state of the high-pass filter */
+>                 st->hpf_3db_freq_idx = hpf_idx;
+>                 /* retrieving the current state of the low-pass filter */
+>                 lpf_idx = st->lpf_3db_freq_idx;
+> -               return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
+> +               ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
+> +               break;
+> +
+> +       default:
+> +               ret = -EINVAL;
+> +               break;
+>         }
+>
+> -       return -EINVAL;
+> +err_release:
+> +       iio_device_release_direct_mode(indio_dev);
+> +       return ret;
+>  }
+
+...
+
+> +       val = (state ? ADXRS290_SYNC(ADXRS290_DATA_RDY_OUT) : 0);
+
+Purpose of outer parentheses?
+
+...
+
+> +static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
+> +{
+> +       struct adxrs290_state *st = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       if (!st->spi->irq) {
+> +               dev_info(&st->spi->dev, "no irq, using polling\n");
+> +               return 0;
+> +       }
+> +
+> +       st->dready_trig = devm_iio_trigger_alloc(&st->spi->dev,
+> +                                                "%s-dev%d",
+> +                                                indio_dev->name,
+> +                                                indio_dev->id);
+> +       if (!st->dready_trig)
+> +               return -ENOMEM;
+> +
+> +       st->dready_trig->dev.parent = &st->spi->dev;
+> +       st->dready_trig->ops = &adxrs290_trigger_ops;
+> +       iio_trigger_set_drvdata(st->dready_trig, indio_dev);
+> +
+> +       ret = devm_request_irq(&st->spi->dev, st->spi->irq,
+> +                              &iio_trigger_generic_data_rdy_poll,
+> +                              IRQF_ONESHOT,
+> +                              "adxrs290_irq", st->dready_trig);
+> +       if (ret < 0) {
+
+> +               dev_err(&st->spi->dev, "request irq %d failed\n", st->spi->irq);
+> +               return ret;
+
+return dev_err_probe(...);
+
+> +       }
+> +
+> +       ret = devm_iio_trigger_register(&st->spi->dev, st->dready_trig);
+> +       if (ret) {
+
+> +               dev_err(&st->spi->dev, "iio trigger register failed\n");
+> +               return ret;
+
+return dev_err_probe(...);
+
+> +       }
+> +
+> +       indio_dev->trig = iio_trigger_get(st->dready_trig);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +       ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> +                                             &iio_pollfunc_store_time,
+> +                                             &adxrs290_trigger_handler, NULL);
+> +       if (ret < 0) {
+
+> +               dev_err(&spi->dev, "iio triggered buffer setup failed\n");
+> +               return ret;
+
+return dev_err_probe(...);
+
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
