@@ -2,130 +2,89 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45795C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42671C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8572075E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 191CE21775
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598450729;
-	bh=YkzcWB73ePr3Oil75zS5HXqhh0BUssf4jCPt3WQXWv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DwX+5X0leyY3SNshFFbjifEYUzcbtkzrSM0V/7BwpHFHeKbdPk+jjx0N6LTMF7v0a
-	 kwakJxVZBNJp7mVZcDzzUqHiBwwp5vOJB6Hy0flBUX+CVKsKg6YJ/1/G8ftogPskUU
-	 WD2XuuJ236WO49Ww08vjvv9OMaDu2IM/OFpCbP7g=
+	s=default; t=1598450980;
+	bh=tFCjOr0R190PpkARyCST3lICzYxM/ZthkVfxCLXvO3U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CFqsZceKqbiDDvqsPQALRYTyjU/7yaYSvzAn0MM/CHysQXTJs9nhFoGlj6LgOp511
+	 4emEI3W3kA8zBaQuZeo4RDDJVgA2TXj6VFKtKi/l3k6A/T7VFnXPK+KG5+YbWCF0B9
+	 rSUvwLk515CNkN978ksb3Hb9OoA6s8VfIurWS3ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgHZOF2 (ORCPT
+        id S1727001AbgHZOJj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38164 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 10:09:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZOF1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:05:27 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726999AbgHZOJi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:09:38 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1633208E4;
-        Wed, 26 Aug 2020 13:58:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14B672177B;
+        Wed, 26 Aug 2020 14:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598450336;
-        bh=YkzcWB73ePr3Oil75zS5HXqhh0BUssf4jCPt3WQXWv0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AyWGoc8NK5xXU2LyoXkTZSSzMY+framiCGojSBWhjv8qiK67iwx/uPDC3FdRr4wnE
-         MJ+tACUhGnG5HhmyBQ9W/nmL+VDnGRo6rdOT6uM35/3qXJwn9YXwD8Y3GacSeXxv9W
-         gZG8SbjwpzcintC9fQPvyolV9akUUy4BQXgmyauQ=
-Date:   Wed, 26 Aug 2020 15:58:51 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>, linuxarm@huawei.com,
-        Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org,
-        John Stultz <john.stultz@linaro.org>, mauro.chehab@huawei.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] dtbs: hikey970: add wifi support
-Message-ID: <20200826155851.72219d24@coco.lan>
-In-Reply-To: <f055afe8-1888-48a4-4a4f-0ea031d1942c@arm.com>
-References: <b22e5799fe16a6902f95a8bd3f0f41f5a260c1ad.1598421453.git.mchehab+huawei@kernel.org>
-        <f055afe8-1888-48a4-4a4f-0ea031d1942c@arm.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        s=default; t=1598450978;
+        bh=tFCjOr0R190PpkARyCST3lICzYxM/ZthkVfxCLXvO3U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iXopgi9PAVg0rrLF6wEKxQewKaaUQDYBze+2jEaVk3n/xv5J5iZPg1oo+H/0nE+hc
+         KIKTV3/yGeCT7/HvF/J1fb2gV8lgEbgzBUkr1M4TMcV96LCqPWZ9wlViOwyWc76+M6
+         r+c8g+Lw0+uu2f7K6K2iUb1xLLhkIGlP63ci6O6Y=
+Received: by mail-ot1-f50.google.com with SMTP id i11so1580248otr.5;
+        Wed, 26 Aug 2020 07:09:38 -0700 (PDT)
+X-Gm-Message-State: AOAM530rVZz0VwL5d+lzp4fVJKrrANga4zkcBXFaa150wVo8btuE6gsU
+        KCuBM62kD5QmYy0GrMbJfaCtEMXYy6ISuEntJw==
+X-Google-Smtp-Source: ABdhPJxb7HPcDBydxGstFvQOelSqMG94Ig9YQ9BwLO3iFb/F7xuuVOY2fu9j0ePFE7T0hzpHztUfdayGVmXN8L1pIJk=
+X-Received: by 2002:a9d:7f84:: with SMTP id t4mr10340661otp.192.1598450977458;
+ Wed, 26 Aug 2020 07:09:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200820052827.2642164-1-ikjn@chromium.org> <20200826085450.508556-1-ikjn@chromium.org>
+In-Reply-To: <20200826085450.508556-1-ikjn@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 26 Aug 2020 08:09:26 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLVe2yg8RdSZprV00xu0X32Tk69t_jC1Td-TF+z1BYheA@mail.gmail.com>
+Message-ID: <CAL_JsqLVe2yg8RdSZprV00xu0X32Tk69t_jC1Td-TF+z1BYheA@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: spi: Convert spi-mtk-nor to json-schema
+To:     Ikjoon Jang <ikjn@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bayi Cheng <bayi.cheng@mediatek.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Wed, 26 Aug 2020 13:41:49 +0100
-Robin Murphy <robin.murphy@arm.com> escreveu:
+On Wed, Aug 26, 2020 at 2:54 AM Ikjoon Jang <ikjn@chromium.org> wrote:
+>
+> Convert Mediatek ARM SOC's serial NOR flash controller binding
+> to json-schema format.
+>
+> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> ---
+> v2: remove unnecessary quotes, set interrupts as required,
+>     add unevaluatedProperties:false
+> ---
+>  .../bindings/spi/mediatek,spi-mtk-nor.yaml    | 85 +++++++++++++++++++
+>  .../devicetree/bindings/spi/spi-mtk-nor.txt   | 47 ----------
+>  2 files changed, 85 insertions(+), 47 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
 
-> On 2020-08-26 06:57, Mauro Carvalho Chehab wrote:
-> > The dwmmc2 is used on Hikey 970 for WiFi support. The
-> > hi3670.dtsi adds it, but with status="disabled".
-> > 
-> > For WiFi to work,it needs to be enabled. While here, add
-> > the missing properties:
-> > 
-> > 	#address-cells = <0x1>;
-> > 	#size-cells = <0x0>;
-> > 
-> > and add
-> > 	ti,non-removable
-> > 
-> > To DT properties, as the WiFi support is on a non-removable slot.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >   arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts | 5 +++++
-> >   1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-> > index f218acceec0b..a2b0d2a1d09d 100644
-> > --- a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-> > +++ b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
-> > @@ -402,6 +402,7 @@ &sd_clk_cfg_func
-> >   
-> >   &dwmmc2 { /* WIFI */
-> >   	bus-width = <0x4>;
-> > +	ti,non-removable;  
-> 
-> Why? This property is only defined for OMAP HSMMC controllers, which 
-> this isn't, and you've already got the proper generic property right 
-> there below. Plus in terms of Linux it will have zero effect, since it's 
-> only parsed by the omap_hsmmc driver anyway.
-> 
-> >   	non-removable;
-> >   	broken-cd;
-> >   	cap-power-off-card;
-> > @@ -409,8 +410,12 @@ &dwmmc2 { /* WIFI */
-> >   	pinctrl-0 = <&sdio_pmx_func
-> >   		     &sdio_clk_cfg_func  
-> >   		     &sdio_cfg_func>;  
-> > +	status = "ok";  
-> 
-> Have you noticed the context 6 lines below?
-> 
-> > +
-> >   	/* WL_EN */
-> >   	vmmc-supply = <&wlan_en>;
-> > +	#address-cells = <0x1>;
-> > +	#size-cells = <0x0>;  
-> 
-> These are already present in hi3670.dtsi. AFAICS Wifi support was merged 
-> 18 months ago :/
-
-My mistake! It seems that I need more caffeine today.
-I wrote this patch for an older Kernel version (4.19). 
-
-I ended porting it to 5.8, with also required another patch,
-due to a regression between Kernel 5.7 and 5.8:
-
-	https://lore.kernel.org/lkml/f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org/
-
-Thanks,
-Mauro
+Reviewed-by: Rob Herring <robh@kernel.org>
