@@ -2,73 +2,183 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774A3C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 18:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBC4C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 18:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56DA622BEF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 18:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EA15208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 18:39:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="T8E4InEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgHZSik (ORCPT
+        id S1726995AbgHZSj2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:38:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:50130 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbgHZSiT (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:38:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B68A113E;
-        Wed, 26 Aug 2020 11:38:19 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.195.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D28A63F71F;
-        Wed, 26 Aug 2020 11:38:17 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: [PATCH 3/6] ARM: dts: broadcom: Fix SP804 node
-Date:   Wed, 26 Aug 2020 19:38:01 +0100
-Message-Id: <20200826183805.19369-4-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826183805.19369-1-andre.przywara@arm.com>
-References: <20200826183805.19369-1-andre.przywara@arm.com>
+        Wed, 26 Aug 2020 14:39:28 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:56834 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726753AbgHZSj1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:39:27 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598467166; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To:
+ Subject: From: Sender; bh=q+XvvfuKUIwhEAgsca/TePOG2B1+EPWz6HL4VPktJps=;
+ b=T8E4InEQoubjHATLjMTvXw1xI3jze9V5Z1lsH8CuuA42EcsPd8Np/TP8VzLvSnOQrAXLuPlb
+ tqQJ7jDXzskEfsf+CJzOZ7gk3Wlp/HyALmgKf+66A9C25CvOYYBPy/JUOaTCNSNOeLDXFF8R
+ 8GXUdwVFALM0zaSwgrBou/EBglg=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f46ac5137ae730e33e75cc0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 18:39:13
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4CE93C43391; Wed, 26 Aug 2020 18:39:12 +0000 (UTC)
+Received: from [192.168.1.134] (unknown [172.98.141.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id ACF60C433CA;
+        Wed, 26 Aug 2020 18:39:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org ACF60C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+Subject: Re: [RESEND PATCH v1 2/4] dt-bindings: power: reset: Add alternate
+ reboot mode format
+To:     Rob Herring <robh@kernel.org>, ebiggers@google.com,
+        samitolvanen@google.com
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-pm@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>
+References: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
+ <1597776856-12014-3-git-send-email-eberman@codeaurora.org>
+ <20200825212521.GA1346433@bogus>
+Message-ID: <a77491b3-3917-8380-cf94-a4e3ccbbf22c@codeaurora.org>
+Date:   Wed, 26 Aug 2020 14:39:08 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.1
+MIME-Version: 1.0
+In-Reply-To: <20200825212521.GA1346433@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The DT binding for SP804 requires to have an "arm,primecell" compatible
-string.
-Add this string so that the Linux primecell bus driver picks the device
-up and activates the clock.
+On 8/25/2020 5:25 PM, Rob Herring wrote:
+> On Tue, Aug 18, 2020 at 11:54:14AM -0700, Elliot Berman wrote:
+>> Current reboot-mode device tree schema does not support reboot commands
+>> with spaces in them [1]. Add an optional new node "reboot-mode-names"
+>> and "reboot-mode-magic" which add an array of strings and u32s,
+>> respectively which would permit any string in this framework.
+> 
+> Kind of a weak justification. The intent was for the names to be a key,
+> not a multi word description which your example seems to be. Is
+> "dm-verity device corrupted" something Android has already standardized
+> on?
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- arch/arm/boot/dts/bcm-nsp.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
++Eric/Sami to comment further
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 0346ea621f0f..1333ef8be0a2 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -368,7 +368,7 @@
- 		};
- 
- 		ccbtimer0: timer@34000 {
--			compatible = "arm,sp804";
-+			compatible = "arm,sp804", "arm,primecell";
- 			reg = <0x34000 0x1000>;
- 			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.17.1
+I wonder if you're thinking it's better to change the kernel_restart in 
+dm-verity-target.c?
 
+Alternatively, I could respin so that spaces in the reboot cmd is 
+replaced with "-" in reboot_mode_notify(). This way, there is no need to 
+change dm-verity driver or change devicetree schema. i.e.:
+
+@@ -44,9 +44,13 @@ static int reboot_mode_notify(struct notifier_block 
+*this,
+  {
+         struct reboot_mode_driver *reboot;
+         unsigned int magic;
++       char *reboot_cmd;
++
++       reboot_cmd = kstrdup(cmd, GFP_KERNEL);
++       strreplace(reboot_cmd, ' ', '-');
+
+         reboot = container_of(this, struct reboot_mode_driver, 
+reboot_notifier);
+-       magic = get_reboot_mode_magic(reboot, cmd);
++       magic = get_reboot_mode_magic(reboot, reboot_cmd);
+         if (magic)
+                 reboot->write(reboot, magic);
+
+> 
+>>
+>> [1]:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-verity-target.c?h=v5.5#n255
+>>
+>> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/power/reset/reboot-mode.yaml    | 17 +++++++++++++++++
+>>   1 file changed, 17 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+>> index a6c9102..4ea6b33 100644
+>> --- a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+>> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
+>> @@ -19,6 +19,9 @@ description: |
+>>     the bootloader what to do when the system reboots, and should be named
+>>     as mode-xxx = <magic> (xxx is mode name, magic should be a non-zero value).
+>>   
+>> +  reboot-mode-magic and reboot-mode-names may be used in addition/instead of
+>> +  mode-xxx style.
+> 
+> It should be either/or in my opinion, not both.
+
+OK, I can fix in the next patch.
+
+> 
+>> +
+>>     For example, modes common Android platform are:
+>>       - normal: Normal reboot mode, system reboot with command "reboot".
+>>       - recovery: Android Recovery mode, it is a mode to format the device or update a new image.
+>> @@ -32,6 +35,14 @@ properties:
+>>         description: |
+>>           Default value to set on a reboot if no command was provided.
+>>   
+>> +  reboot-mode-names:
+>> +    $ref: /schemas/types.yaml#/definitions/string-array
+>> +    description: List of reboot commands, paired with reboot-mode-magic by index
+>> +
+>> +  reboot-mode-magic:
+> 
+> 'reboot-modes' would align with normal patterns.
+
+Ditto
+
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    description: List of reboot magic, paired with reboot-mode-names by index
+>> +
+>>   patternProperties:
+>>     "^mode-.*$":
+>>       $ref: /schemas/types.yaml#/definitions/uint32
+>> @@ -44,4 +55,10 @@ examples:
+>>         mode-bootloader = <2>;
+>>         mode-loader = <3>;
+>>       };
+>> +
+>> +  - |
+>> +    reboot-mode {
+>> +      reboot-mode-names = "normal", "bootloader", "dm-verity device corrupted";
+>> +      reboot-mode-magic = <0x0>, <0x1>, <0xf>;
+>> +    };
+>>   ...
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
