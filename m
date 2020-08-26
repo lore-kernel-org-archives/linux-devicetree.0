@@ -2,151 +2,95 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9350C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16162C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F19C20825
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3B82071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:39:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zsEhFUdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgHZINK (ORCPT
+        id S1727030AbgHZIjs (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:13:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgHZINI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 04:13:08 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07089C061574
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 01:13:08 -0700 (PDT)
-Received: from erbse.hi.pengutronix.de ([2001:67c:670:100:9e5c:8eff:fece:cdfe])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <bst@pengutronix.de>)
-        id 1kAqYL-0003oO-OE; Wed, 26 Aug 2020 10:13:05 +0200
-Subject: Re: [PATCH 2/3] dt-bindings: rtc: add chargeable flag for rx8130
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>,
-        Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org,
-        Arnaud Ebalard <arno@natisbad.org>,
-        Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
-References: <20200415163701.21989-1-bst@pengutronix.de>
- <20200415163701.21989-2-bst@pengutronix.de>
- <20200415185609.GP34509@piout.net>
- <3d1ecd35-fe37-02e7-74d8-3f37c2197173@pengutronix.de>
- <a492b6a0-b41c-a088-3ba1-f1448a074b34@pengutronix.de>
- <20200825153248.GH2389103@piout.net>
-From:   Bastian Krause <bst@pengutronix.de>
-Message-ID: <98fa7181-3ebe-d7c3-cfac-fee841c81e15@pengutronix.de>
-Date:   Wed, 26 Aug 2020 10:13:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 04:39:48 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:45576 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgHZIjr (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 04:39:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1598431187; x=1629967187;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7UilEZX6N8UMOqcK1xuBM/B+isb72YwMNC9fKVfrEnA=;
+  b=zsEhFUdr9+rOag4hWOj+KIR0ALAsZBd+5nHzq7lhPGWvWEPMrzWoWHIA
+   FGvZdpDGb3GpBpvaWE2Qte5M+woMeNxVIlA8EDF6KSC6tzshfv3kPfi3f
+   yeWrku+FJm16WDa3AHrkHZ37AiUX19sihoP/BF2x0yilZ4SzyoKZGrcBR
+   rHCMQNCKvsFJ2bSZn5D5WrbCnTj1SpnnFNYfERR3OkCh6y0axAlfHjDh7
+   FCGbWOubXBq8khsit6NLRDxOhx5yGGAtUm8J/iPikpPmFQcmRKq0pk1Xy
+   ea4quKfbMhl0BcJPckhxaf1THD73DF0s5RdQyFyMXTrR03ArP+t4Ti51X
+   w==;
+IronPort-SDR: /ak6Bdori/ksMhZGMPrXEVlRlQ/ZLY3EK6queoxzRhw8wbAFevdjjGfGOvWV7/JfBgXj3T8Vdm
+ BrDj21ifUkPm7wte3Oe9Z4ur0MYBXi5Zu6F/6RYITPAVbmPNbf6sPezF8BEvt3zq8lkAtmSSWp
+ XvyWy76sCxvd7lSJQzDwmTMi37ksxqNSAKLJz883Kw5Jr/rEh48ahWZAAoHQJvr8WOPYyqFEbu
+ rzqBQUmo3y/rNNAqDEg8oRUMtNDDy4+K/QKzG+fmnUn6lgGY99WIWeMbPOSdm339RhwhUY/BwG
+ umI=
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="89395507"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2020 01:39:46 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Wed, 26 Aug 2020 01:39:45 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Wed, 26 Aug 2020 01:38:57 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+Subject: [PATCH] arm64: dts: sparx5: Fix Sparx5 SDHCI node name
+Date:   Wed, 26 Aug 2020 10:39:24 +0200
+Message-ID: <20200826083924.20116-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200825153248.GH2389103@piout.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:9e5c:8eff:fece:cdfe
-X-SA-Exim-Mail-From: bst@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+This patch corrects the SDHCI node name to conform with the devicetree
+specification ("mmc0@600800000" => "mmc@600800000").
 
-On 8/25/20 5:32 PM, Alexandre Belloni wrote:
-> Hi,
-> 
-> On 24/08/2020 15:32:22+0200, Bastian Krause wrote:
->> On 8/24/20 1:31 PM, Bastian Krause wrote:
->>>
->>> On 4/15/20 8:56 PM, Alexandre Belloni wrote:
->>>> On 15/04/2020 18:37:00+0200, Bastian Krause wrote:
->>>>> Signed-off-by: Bastian Krause <bst@pengutronix.de>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/rtc/rtc-ds1307.txt | 3 +++
->>>>>  1 file changed, 3 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
->>>>> index 66f0a31ae9ce..987a0c9e0cd7 100644
->>>>> --- a/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
->>>>> +++ b/Documentation/devicetree/bindings/rtc/rtc-ds1307.txt
->>>>> @@ -34,6 +34,9 @@ Optional properties:
->>>>>  - trickle-diode-disable : ds1339, ds1340 and ds 1388 only
->>>>>  	Do not use internal trickle charger diode
->>>>>  	Should be given if internal trickle charger diode should be disabled
->>>>> +- aux-voltage-chargeable: rx8130 only
->>>>> +	Epsons's rx8130 supports a backup battery/supercap.
->>>>> +	This flag tells	whether the battery/supercap is chargeable or not.
->>>>>  
->>>>
->>>> I think we should make that a generic property and this should supersede
->>>> trickle-diode-disable which is a bit wonky as I would prefer the default
->>>> to be disabled instead of enabled with the current semantics.
->>>
->>> Alright, I think I know how to transform the RTC drivers.
->>>
->>> One question about the DTs though:
->>>
->>> This means we should remove "trickle-diode-disable" from all upstream
->>> DTs and add "aux-voltage-chargeable" to all upstream DTs that use a RTC
->>> compatible whose driver care in their probe function for
->>> "trickle-diode-disable", right?
->>
->> Sorry, forget that.
->>
->> Here's the situation:
->>
->> Currently there is a switch to explicitly disable charging, so the
->> default is to charge. We cannot introduce another boolean switch to turn
->> that the other way around, because that would change the default and
->> break backwards compatibility.
->>
->> The only way I can think of is to introduce "aux-voltage-chargeable" not
->> as a boolean switch but as an integer, without any default. If this
->> property is not available, the drivers should simply do what they did
->> prior to this change (look for the legacy trickle-diode-disable, use the
->> default they used before).
->>
->> Are you okay with that?
->>
-> 
-> I agree boolean should be avoided in RTC drivers because we need a way
-> to express "don't change this value".
+Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+---
+ arch/arm64/boot/dts/microchip/sparx5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alright.
+diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+index a79c5bb10ab2..d477fcb57e64 100644
+--- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
++++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
+@@ -152,7 +152,7 @@ timer1: timer@600105000 {
+ 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
 
->> Some more context:
->>
->> I originally tried to add a chargeable flag for rx8130. Prior to this
->> patch, there was no need to set "trickle-diode-disable" for this,
->> because the driver did not pass the chargeable flag to the RTC. With the
->> patch the default would have been to charge as long as
->> "trickle-diode-disable" is not there. So there's a change in behavior.
->>
-> 
-> Yes, IIRC, my point was simply to move the documentation for
-> aux-voltage-chargeable to the generice rtc binding documentation,
-> Documentation/devicetree/bindings/rtc/rtc.yaml
-> 
-> For now, you sould keep support for trickle-diode-disable but it has to be
-> superseded by aux-voltage-chargeable if present. Is that more clear?
-
-Yes, thanks for the clarification.
-
-Should I set the deprecated flag for trickle-diode-disable in the
-dt-binding yaml?
-
-Regards,
-Bastian
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+-		sdhci0: mmc0@600800000 {
++		sdhci0: mmc@600800000 {
+ 			compatible = "microchip,dw-sparx5-sdhci";
+ 			status = "disabled";
+ 			reg = <0x6 0x00800000 0x1000>;
+--
+2.27.0
