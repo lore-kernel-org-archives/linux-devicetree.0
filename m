@@ -2,44 +2,45 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D9BC433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41CCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 801A62067C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64322067C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="CXrvnvMs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="UcllnfKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgHZJwX (ORCPT
+        id S1728121AbgHZJwZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:52:23 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:11244 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgHZJwU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 05:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598435537;
+        Wed, 26 Aug 2020 05:52:25 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:18383 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728327AbgHZJwY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 05:52:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598435538;
         s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=F/c9iaxZixYGzGo5s+iEIuFcmUCvaL5Q1xK1gdH/2pQ=;
-        b=CXrvnvMsa5Sr8yVBvB03YgKPIgU1Qn8VJLpZKnG69ncEe/2npG/827xbFG4qZfDyGA
-        KAWylIyWsA8Uqc61dKYYTke6qqwH9p+RhajR3K+FFPQq43OnVJYA0FkyXwxhFJW42TAi
-        vcd9vvY919XSAiLqNxy+XEvY1Nyf3A09uAM4W3/QnSlP3kabhCCyur53kn/Gx0lzv/xv
-        owyrJVwokUG6cx/BSPVcN/rU/C1pn5GNU/wUty3fjVPks4dwOXeCWv4qOF8ePTsM6Zpp
-        jUgSHoIWv2XknBAUZ9eKbyH7Rn9Ze4C7abgIXnytOrmJ+HI36YZfE3/3289p/YE/j2c9
-        j2RQ==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=O63GLG7sddoCYObzLYc9FbVF3AO3J5EaI5KdyvqBGk8=;
+        b=UcllnfKq1yVNS7T32C7+t0P7KJpcoMypmucocKm2PgWg9wPTUTQ0R0vN1pbvl8NWyg
+        vgh3gzv84fGeCjLxluYRJsUkvbAZAcku9UYa8dbGuXZruOI1o2O2//u8rp0PncLmIfI6
+        WxLDv7Ho8Md99afp4MGARbYgVt40T1C6bQckTGJwtav3EWRuD4INtHM0+YkI2TSVZ60Z
+        lEY1UcxFmBz42xEVJmjDY4nxip+WysZYLKX+yTujBG3NCNSVeySKFZDTx+1uh2MqNxxK
+        oGIZm/X1gCN+9j58IJ+gAJNUsSBkyoQxWqpZszwesIFjpOeu/NWHBPLOJSmAPBbQwr40
+        +3Wg==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4W6NYn8D"
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7Q9qGl6U
+        with ESMTPSA id g0b6c1w7Q9qIl6W
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Wed, 26 Aug 2020 11:52:16 +0200 (CEST)
+        Wed, 26 Aug 2020 11:52:18 +0200 (CEST)
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -49,10 +50,12 @@ Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>,
         devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH v2 0/2] ASoC: qcom: common: Parse auxiliary devices from device tree
-Date:   Wed, 26 Aug 2020 11:51:39 +0200
-Message-Id: <20200826095141.94017-1-stephan@gerhold.net>
+Subject: [PATCH v2 2/2] ASoC: qcom: common: Parse auxiliary devices from device tree
+Date:   Wed, 26 Aug 2020 11:51:41 +0200
+Message-Id: <20200826095141.94017-3-stephan@gerhold.net>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826095141.94017-1-stephan@gerhold.net>
+References: <20200826095141.94017-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
@@ -66,27 +69,45 @@ Examples for this are auxiliary devices such as analog amplifiers
 or codecs.
 
 The ASoC core provides a way to probe these components by adding
-them to snd_soc_card->aux_dev.
+them to snd_soc_card->aux_dev. We can use the snd_soc_of_parse_aux_devs()
+function to parse them from the device tree.
 
-This patch set allows specifying them in the device tree through
-a new "aux-devs" property.
+As an example for this, some MSM8916 smartphones have an analog
+speaker amplifier connected to the HPHR output. With the new property
+this can be modelled as follows:
 
-v1: https://lore.kernel.org/linux-arm-msm/20200819091533.2334-1-stephan@gerhold.net/
-Changes in v2:
-  - Fix value type in device tree bindings:
-    aux-devs should be array of phandles without any arguments, so change
-    <phandles with arguments> -> <array of phandles>
+	speaker-amp: audio-amplifier {
+		compatible = "simple-audio-amplifier";
+		enable-gpios = <&msmgpio 114 GPIO_ACTIVE_HIGH>;
+		sound-name-prefix = "Speaker Amp";
+	};
 
-Stephan Gerhold (2):
-  ASoC: dt-bindings: qcom: Document "aux-devs" property
-  ASoC: qcom: common: Parse auxiliary devices from device tree
+	&sound {
+		aux-devs = <&speaker_amp>;
+		audio-routing = "Speaker Amp IN", "HPHR";
+	};
 
- .../devicetree/bindings/sound/qcom,apq8016-sbc.txt        | 7 +++++++
- Documentation/devicetree/bindings/sound/qcom,apq8096.txt  | 8 ++++++++
- Documentation/devicetree/bindings/sound/qcom,sdm845.txt   | 8 ++++++++
- sound/soc/qcom/common.c                                   | 4 ++++
- 4 files changed, 27 insertions(+)
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ sound/soc/qcom/common.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index 5194d90ddb96..fe6e778c31c0 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -39,6 +39,10 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			return ret;
+ 	}
+ 
++	ret = snd_soc_of_parse_aux_devs(card, "aux-devs");
++	if (ret)
++		return ret;
++
+ 	/* Populate links */
+ 	num_links = of_get_child_count(dev->of_node);
+ 
 -- 
 2.28.0
 
