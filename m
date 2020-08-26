@@ -2,177 +2,244 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937D0C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6782BC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD602224D
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598452822;
-	bh=kSOZjgsKoINzoi95AcLDM3iSpV9pQwpFhCwaD8Qr76Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wMz8jwkx5hYUX6LfJPt3+8Mols6GBoAqAJxWuqVJD83UdCC3vzDBTW4fclrCvqE8v
-	 kcCjG9clo3fjkj2aiutdWx1wbANjBoRlUafRyU8vZQzwARl49P19QsX3IPVPucWUjY
-	 rRQA+AZ5DazShFSrbtJ4EXgBrFLNcIzF5bdlImBI=
+	by mail.kernel.org (Postfix) with ESMTP id 45D4E208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="k4m5mEJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHZOkV (ORCPT
+        id S1726905AbgHZOoi (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726125AbgHZOkU (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:40:20 -0400
-Received: from earth.universe (unknown [95.33.152.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3565E214F1;
-        Wed, 26 Aug 2020 14:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598452819;
-        bh=kSOZjgsKoINzoi95AcLDM3iSpV9pQwpFhCwaD8Qr76Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hbMrgJPOgg7sIpnTXuip5BVUq4csu3DUDLz1ft+2iiUovoI5VVxYGzGZN3CRgzF91
-         wlKVf4VboPu7tE6QZBD6JdoEhOUiGX5QU15irvJwd8wgYLubiwDKokxysFyi9kmkAy
-         HwqtnBbdp2+00Q9Kdl+DdgYHwInQmfyIm5bJLS+w=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 96D353C0C82; Wed, 26 Aug 2020 16:40:17 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 16:40:17 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Heidelberg <david@ixit.cz>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Bruce E . Robertson" <bruce.e.robertson@intel.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jonghwa Lee <jonghwa3.lee@samsung.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinay Simha BN <simhavcs@gmail.com>,
-        linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v3 00/10] Summit SMB3xx driver & device-tree
-Message-ID: <20200826144017.nolqvzu2exchmdn2@earth.universe>
-References: <20200813213409.24222-1-digetx@gmail.com>
+        Wed, 26 Aug 2020 10:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbgHZOod (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 10:44:33 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62CDC061757
+        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 07:44:32 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id d27so1538315qtg.4
+        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 07:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=3fltz4Tid80yvbd7ycd5CEvXCm5Dl/pplKlQTmdAxKA=;
+        b=k4m5mEJBWpHKc8UCyiMSoWpLFbB9PLsFXQSse1GeHDwA4DKW/bxLFf2oq06iweP+iL
+         M8bgXdl0A9155UGa8Nz8VJmE6L39gWW8oVIXtrtnNW2XbaFdQ7/KhobmLnk55ujnHV/2
+         tPPob3cH4BlQEISinoXdsc01CEIIJiQYM7T+gkUDqRjYhkY6CbBd83M1+SskyHHbWLvL
+         rHtzPGZUMHG7eDyNL2Q4ZV/nAiZIzogvhqr+a2Knoik0r52ut2ISFzGOCWsps3sZCmxq
+         fBsjIPcK+lwVA+ap0kK3kVNC6i6d4qEdXhZRr9MSKdg1iPVBdKJXwariY86XZf+E2JPH
+         +9mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=3fltz4Tid80yvbd7ycd5CEvXCm5Dl/pplKlQTmdAxKA=;
+        b=Wj93pWhbd17AWkidywyOaJHDqDYod9BHYzHmD/BMyjRxGVB7C+tvefMJv1SsTAKBu7
+         63+07bjw1OKQ/GBexuhUoS7DSNOhIFhk5ASOQ1Svu+XgrJ6jptAGesHTCLbAThhiXZF2
+         RutBvnWgcHRze3K7wrUIfaipiYBpom5Gz5fJbbggnt3vqC6zUqNOlUQO757Q0u/0m/V9
+         STR3aj7ERTqEjIkKTVeW+QrtLesPZn/d1mEZ9NNLSwD+TltUw62UUD9IKdMBHd3FhhFT
+         VaGkxlJZfuCk3UjMT86rx4GfjLAsrzm828c3Tm6ltYDN4SvUP82n4b71ftI1SW+pTbwh
+         wxlA==
+X-Gm-Message-State: AOAM530oieuR56u5N4FcZfp9dtziqcHxBiCvM0QzfmXixhvPF2A7z7fW
+        Y00+uoaxp2C758DRssAmo0OW7w==
+X-Google-Smtp-Source: ABdhPJzCRDv2m2NsfRzSYdU3punl1WmSuoZIWY3X6Qrw3w/UZAKmzNkoM0/3I601SkHanbswK7RLyw==
+X-Received: by 2002:ac8:33a1:: with SMTP id c30mr10693591qtb.156.1598453071797;
+        Wed, 26 Aug 2020 07:44:31 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id a203sm1862906qkg.30.2020.08.26.07.44.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:44:31 -0700 (PDT)
+Message-ID: <aade022eeea9d9196774d0f21cbdaa118de8f885.camel@ndufresne.ca>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Dave Airlie <airlied@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liuyao An <anliuyao@huawei.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 26 Aug 2020 10:44:28 -0400
+In-Reply-To: <20200825133025.13f047f0@coco.lan>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+         <20200819152120.GA106437@ravnborg.org>
+         <20200819153045.GA18469@pendragon.ideasonboard.com>
+         <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
+         <20200820090326.3f400a15@coco.lan>
+         <20200820100205.GA5962@pendragon.ideasonboard.com>
+         <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
+         <20200825133025.13f047f0@coco.lan>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nrlaoi7slsg5rmx7"
-Content-Disposition: inline
-In-Reply-To: <20200813213409.24222-1-digetx@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Le mardi 25 août 2020 à 13:30 +0200, Mauro Carvalho Chehab a écrit :
+> Em Tue, 25 Aug 2020 05:29:29 +1000
+> Dave Airlie <airlied@gmail.com> escreveu:
+> 
+> > On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
+> > <laurent.pinchart@ideasonboard.com> wrote:
+> > > Hi Mauro,
+> > > 
+> > > On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote:  
+> > > > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu:  
+> > > > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote:  
+> > > > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:  
+> > > > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:  
+> > > > > > > > This patch series port the out-of-tree driver for Hikey 970 (which
+> > > > > > > > should also support Hikey 960) from the official 96boards tree:
+> > > > > > > > 
+> > > > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> > > > > > > > 
+> > > > > > > > Based on his history, this driver seems to be originally written
+> > > > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The original
+> > > > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
+> > > > > > > > implementation for FB dev API.
+> > > > > > > > 
+> > > > > > > > As I need to preserve the original history (with has patches from
+> > > > > > > > both HiSilicon and from Linaro),  I'm starting from the original
+> > > > > > > > patch applied there. The remaining patches are incremental,
+> > > > > > > > and port this driver to work with upstream Kernel.
+> > > > > > > >  
+> > > > > ...  
+> > > > > > > > - Due to legal reasons, I need to preserve the authorship of
+> > > > > > > >   each one responsbile for each patch. So, I need to start from
+> > > > > > > >   the original patch from Kernel 4.4;  
+> > > > > ...  
+> > > > > > > I do acknowledge you need to preserve history and all -
+> > > > > > > but this patchset is not easy to review.  
+> > > > > > 
+> > > > > > Why do we need to preserve history ? Adding relevant Signed-off-by and
+> > > > > > Co-developed-by should be enough, shouldn't it ? Having a public branch
+> > > > > > that contains the history is useful if anyone is interested, but I don't
+> > > > > > think it's required in mainline.  
+> > > > > 
+> > > > > Yea. I concur with Laurent here. I'm not sure what legal reasoning you
+> > > > > have on this but preserving the "absolute" history here is actively
+> > > > > detrimental for review and understanding of the patch set.
+> > > > > 
+> > > > > Preserving Authorship, Signed-off-by lines and adding Co-developed-by
+> > > > > lines should be sufficient to provide both atribution credit and DCO
+> > > > > history.  
+> > > > 
+> > > > I'm not convinced that, from legal standpoint, folding things would
+> > > > be enough. See, there are at least 3 legal systems involved here
+> > > > among the different patch authors:
+> > > > 
+> > > >       - civil law;
+> > > >       - common law;
+> > > >       - customary law + common law.
+> > > > 
+> > > > Merging stuff altogether from different law systems can be problematic,
+> > > > and trying to discuss this with experienced IP property lawyers will
+> > > > for sure take a lot of time and efforts. I also bet that different
+> > > > lawyers will have different opinions, because laws are subject to
+> > > > interpretation. With that matter I'm not aware of any court rules
+> > > > with regards to folded patches. So, it sounds to me that folding
+> > > > patches is something that has yet to be proofed in courts around
+> > > > the globe.
+> > > > 
+> > > > At least for US legal system, it sounds that the Country of
+> > > > origin of a patch is relevant, as they have a concept of
+> > > > "national technology" that can be subject to export regulations.
+> > > > 
+> > > > From my side, I really prefer to play safe and stay out of any such
+> > > > legal discussions.  
+> > > 
+> > > Let's be serious for a moment. If you think there are legal issues in
+> > > taking GPL-v2.0-only patches and squashing them while retaining
+> > > authorship information through tags, the Linux kernel if *full* of that.
+> > > You also routinely modify patches that you commit to the media subsystem
+> > > to fix "small issues".
+> > > 
+> > > The country of origin argument makes no sense either, the kernel code
+> > > base if full of code coming from pretty much all country on the planet.
+> > > 
+> > > Keeping the patches separate make this hard to review. Please squash
+> > > them.  
+> > 
+> > I'm inclined to agree with Laurent here.
+> > 
+> > Patches submitted as GPL-v2 with DCO lines and author names/companies
+> > should be fine to be squashed and rearranged,
+> > as long as the DCO and Authorship is kept somewhere in the new patch
+> > that is applied.
+> > 
+> > Review is more important here.
+> 
+> Sorry, but I can't agree that review is more important than to be able
+> to properly indicate copyrights in a valid way at the legal systems that
+> it would apply ;-)
 
---nrlaoi7slsg5rmx7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regardless of the "review-ability", our users distribute the Linux
+Kernel as a whole, so who contributed which specific line of code is
+already lost in a way. All we see in the distribution if a list of
+copyright holder and licenses. In this context, the per patches
+ownership have no legal implication. My two, non lawyer cents.
 
-Hi,
+> 
+> In any case, there's an easy way to make the code easy to review:
+> I can write the patches against staging (where it is OK to submit
+> preserving the history) and then add a final patch moving it out
+> of staging.
+> 
+> You can then just review the last patch, as it will contain the
+> entire code on it.
+> 
+> Another alternative, as I'm already doing with Sam, is for me to
+> submit the folded code as a reply to 00/xx. You can then just 
+> review the final code, without concerning about how the code reached
+> there.
+> 
+> From review point of the view, this will be the same as reviewing
+> a folded patch, but, from legal standpoint, the entire copyright
+> chain will be preserved.
+> 
+> Thanks,
+> Mauro
 
-I queued patches 1-8 (so everything besides the DTS changes). I
-would like to see some more cleanups and will send a separate
-patchset for them in a jiffy. Please test them, since I do not
-have the hardware.
-
--- Sebastian
-
-On Fri, Aug 14, 2020 at 12:33:59AM +0300, Dmitry Osipenko wrote:
-> We gathered existing patches, fixed and improved what we could and
-> final result is an working charging driver with device-tree support
-> for Nexus 7.
->=20
-> At this moment charging works with:
->  - Nexus 7 2012 (grouper and tilapia)
->  - Nexus 7 2013 (flo and deb)
->  - ... and there are more devices equipped with these chargers.
->=20
-> Changelog:
->=20
-> v3: - The uint32 type now isn't specified for standard units in the SMB
->       DT binding because standard units already have a type.
->       Thanks to Rob Herring for the suggestion!
->=20
->     - The battery binding changes are rebased on top of the new battery.y=
-aml
->=20
->     - The new battery temperature DT properties now have shorter names
->       and use <min max> format. Thanks to Rob Herring for the suggestion!
->=20
->     - Added new patch that adds SMB charger node to the new Nexus 7 2012
->       device-tree which has been merged into v5.9 kernel.
->=20
-> v2: - Addressed v1 review comments from Rob Herring and Sebastian Reichel
->       by moving out common battery properties from the charger node into =
-the
->       battery-cell node.
->=20
->     - power_supply_register() of the SMB driver converted to resource-man=
-aged
->       API variant.
->=20
->     - Improved DT property names of the SMB binding by making them to fol=
-low
->       the generic power-supply naming scheme (-microvolts at the end, etc=
-).
->=20
-> David Heidelberg (7):
->   dt-bindings: power: supply: Add device-tree binding for Summit SMB3xx
->   power: supply: smb347-charger: Use resource-managed API
->   power: supply: smb347-charger: Implement device-tree support
->   power: supply: smb347-charger: Support SMB345 and SMB358
->   power: supply: smb347-charger: Remove virtual smb347-battery
->   ARM: dts: qcom: apq8064-nexus7: Add SMB345 battery charger
->   ARM: tegra: nexus7: Add SMB347 battery charger
->=20
-> Dmitry Osipenko (3):
->   dt-bindings: battery: Add temperature properties
->   power: supply: Support battery temperature device-tree properties
->   power: supply: smb347-charger: Replace mutex with IRQ disable/enable
->=20
->  .../bindings/power/supply/battery.yaml        |  24 +
->  .../power/supply/summit,smb347-charger.yaml   | 152 +++++
->  .../boot/dts/qcom-apq8064-asus-nexus7-flo.dts |  24 +
->  .../tegra30-asus-nexus7-grouper-common.dtsi   |  24 +-
->  drivers/power/supply/Kconfig                  |   6 +-
->  drivers/power/supply/power_supply_core.c      |  19 +
->  drivers/power/supply/smb347-charger.c         | 565 +++++++++---------
->  .../dt-bindings/power/summit,smb347-charger.h |  19 +
->  include/linux/power_supply.h                  |   6 +
->  9 files changed, 568 insertions(+), 271 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/summit=
-,smb347-charger.yaml
->  create mode 100644 include/dt-bindings/power/summit,smb347-charger.h
->=20
-> --=20
-> 2.27.0
->=20
-
---nrlaoi7slsg5rmx7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9GdEIACgkQ2O7X88g7
-+ppOHhAApWb5+TGOBlDwodu7HLrx3L067TxMJB7uIWhYAdsxn5X1d6O7CWViJTz4
-itwiGPD1DjDngpQvk5KPttLBjk1z8zcvg3obV2Z1GX9ekyBR19eOyDGfuTDt7c0k
-BfcaQ3fsefLcfZxad016XavYVbMeOHoRYEK+ett6U4KypUdCr7cxiGF537vfzmqz
-D5tCvx5URgD7+hklWjV50MOA3W+V9hr51p+0ERVqSHWUZOBB+pB+F48U+3pX9Tjw
-dcs5Yo54+KDRS5G0ZfRGoq++h4c+ypn+jkGt6rgEBaUTQbzRQAfXUVSVHhDi3Stw
-h8gg8t0IG8r4CHZlDkcmOGNLFz/6tXyfktc5OSWJf7+Prof+UVlnhR/116ixEYHw
-krkSaGCGz2U/+4DzsZpaVmihm8ysgY1qkP0Ey6/tvWuTNGQTCmipNDWD+MMTWBHN
-NZEV4PfT71H1Ko4+fiOHTMC8iKy83FLgsgfZAs2qtlpCuw3aFjYRU+uBSCZuP2aF
-kv1AqJ27tInH4nzxkHhgciCxZ96zoCP4vDch2Mdd1kDhJjBVCDeQZuMxzfjNh8RE
-sz1LGmqfaLDCMo6sPlroLtuhG+Jh5e3nCrgKC4Z4E7DbBnpv2yoh3fvqFPiZjg0c
-C7eVJa6RcNymMMity+VsrnfafBx+HPDg5W/FHBh4N5nSQecMdd4=
-=iD6g
------END PGP SIGNATURE-----
-
---nrlaoi7slsg5rmx7--
