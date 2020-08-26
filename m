@@ -2,95 +2,124 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16162C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2831C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3B82071E
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8450620707
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 08:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zsEhFUdr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="lDku1tLi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgHZIjs (ORCPT
+        id S1727790AbgHZIl2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:39:48 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:45576 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgHZIjr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 04:39:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1598431187; x=1629967187;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7UilEZX6N8UMOqcK1xuBM/B+isb72YwMNC9fKVfrEnA=;
-  b=zsEhFUdr9+rOag4hWOj+KIR0ALAsZBd+5nHzq7lhPGWvWEPMrzWoWHIA
-   FGvZdpDGb3GpBpvaWE2Qte5M+woMeNxVIlA8EDF6KSC6tzshfv3kPfi3f
-   yeWrku+FJm16WDa3AHrkHZ37AiUX19sihoP/BF2x0yilZ4SzyoKZGrcBR
-   rHCMQNCKvsFJ2bSZn5D5WrbCnTj1SpnnFNYfERR3OkCh6y0axAlfHjDh7
-   FCGbWOubXBq8khsit6NLRDxOhx5yGGAtUm8J/iPikpPmFQcmRKq0pk1Xy
-   ea4quKfbMhl0BcJPckhxaf1THD73DF0s5RdQyFyMXTrR03ArP+t4Ti51X
-   w==;
-IronPort-SDR: /ak6Bdori/ksMhZGMPrXEVlRlQ/ZLY3EK6queoxzRhw8wbAFevdjjGfGOvWV7/JfBgXj3T8Vdm
- BrDj21ifUkPm7wte3Oe9Z4ur0MYBXi5Zu6F/6RYITPAVbmPNbf6sPezF8BEvt3zq8lkAtmSSWp
- XvyWy76sCxvd7lSJQzDwmTMi37ksxqNSAKLJz883Kw5Jr/rEh48ahWZAAoHQJvr8WOPYyqFEbu
- rzqBQUmo3y/rNNAqDEg8oRUMtNDDy4+K/QKzG+fmnUn6lgGY99WIWeMbPOSdm339RhwhUY/BwG
- umI=
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="89395507"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 26 Aug 2020 01:39:46 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Wed, 26 Aug 2020 01:39:45 -0700
-Received: from soft-dev15.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Wed, 26 Aug 2020 01:38:57 -0700
-From:   Lars Povlsen <lars.povlsen@microchip.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-CC:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>
-Subject: [PATCH] arm64: dts: sparx5: Fix Sparx5 SDHCI node name
-Date:   Wed, 26 Aug 2020 10:39:24 +0200
-Message-ID: <20200826083924.20116-1-lars.povlsen@microchip.com>
-X-Mailer: git-send-email 2.27.0
+        Wed, 26 Aug 2020 04:41:28 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:16638 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbgHZIlW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 04:41:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598431280;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=MzchAeja0jhJdsQle33hb0rxs0PfxumQcdXnX+NQdaU=;
+        b=lDku1tLiDOx+k9RlcEHcgMuVTVWN01vUXwptskb62e3ekrOkmZ326PZQwZ6yTaRVkG
+        BbU46f+qh+dYg8MR7qfLcyJpGCmScPPl4GWr63BX4uqAAkX09xPirmILmcrsemub30nZ
+        sG7FUaVolt6zvhvvghcCY8uSGoo/Vmt71trw/JoQ4celiba/ETmSBb/YLwGeOh5Z23eq
+        yUveRSDSHfCzhlpKKkzqBibYQxejJOsJ0IvzRZefSVlNfMGcEq3oQqlTDrgxLvpto8O0
+        KbaTtp/Sdwulu1OIEJclM2rKZTUSv1aiDdNmdf5cInRcwNIRJVqbjUmAUm2De6z5XR0E
+        eOMQ==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/Fboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7Q8fJkcs
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Aug 2020 10:41:19 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 10:41:18 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/2] ASoC: dt-bindings: qcom: Document "aux-devs" property
+Message-ID: <20200826084118.GB869@gerhold.net>
+References: <20200819091533.2334-1-stephan@gerhold.net>
+ <20200819091533.2334-2-stephan@gerhold.net>
+ <20200825215253.GA1397515@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825215253.GA1397515@bogus>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This patch corrects the SDHCI node name to conform with the devicetree
-specification ("mmc0@600800000" => "mmc@600800000").
+On Tue, Aug 25, 2020 at 03:52:53PM -0600, Rob Herring wrote:
+> On Wed, Aug 19, 2020 at 11:15:32AM +0200, Stephan Gerhold wrote:
+> > In some cases we need to probe additional audio components that do
+> > not appear as part of the DAI links specified in the device tree.
+> > Examples for this are auxiliary devices such as analog amplifiers
+> > or codecs.
+> > 
+> > To make them work they need to be added as part of "aux-devs"
+> > and connected to some other audio component using the audio routes
+> > configurable using "(qcom,)audio-routing".
+> > 
+> > Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> > ---
+> >  .../devicetree/bindings/sound/qcom,apq8016-sbc.txt        | 7 +++++++
+> >  Documentation/devicetree/bindings/sound/qcom,apq8096.txt  | 8 ++++++++
+> >  Documentation/devicetree/bindings/sound/qcom,sdm845.txt   | 8 ++++++++
+> >  3 files changed, 23 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt b/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+> > index 84b28dbe9f15..23998262a0a7 100644
+> > --- a/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+> > +++ b/Documentation/devicetree/bindings/sound/qcom,apq8016-sbc.txt
+> > @@ -34,6 +34,13 @@ Required properties:
+> >  			  * DMIC
+> >  			  * Ext Spk
+> >  
+> > +Optional properties:
+> > +
+> > +- aux-devs		: A list of phandles for auxiliary devices (e.g. analog
+> > +			  amplifiers) that do not appear directly within the DAI
+> > +			  links. Should be connected to another audio component
+> > +			  using "qcom,audio-routing".
+> > +
+> >  Dai-link subnode properties and subnodes:
+> >  
+> >  Required dai-link subnodes:
+> > diff --git a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+> > index c814e867850f..248df5056fec 100644
+> > --- a/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+> > +++ b/Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+> > @@ -55,6 +55,14 @@ This binding describes the APQ8096 sound card, which uses qdsp for audio.
+> >  	Value type: <stringlist>
+> >  	Definition: The user-visible name of this sound card.
+> >  
+> > +- aux-devs
+> > +	Usage: optional
+> > +	Value type: <phandles with arguments>
+> 
+> How do you know how many arguments? It either has to be fixed or needs a 
+> #.*cells in the phandles. For the latter, you'd need to come up with a 
+> common binding.
+> 
 
-Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
----
- arch/arm64/boot/dts/microchip/sparx5.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Actually the phandle should not have any arguments, seems like I just
+copied this from some other entry. Will fix this, thank you!
 
-diff --git a/arch/arm64/boot/dts/microchip/sparx5.dtsi b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-index a79c5bb10ab2..d477fcb57e64 100644
---- a/arch/arm64/boot/dts/microchip/sparx5.dtsi
-+++ b/arch/arm64/boot/dts/microchip/sparx5.dtsi
-@@ -152,7 +152,7 @@ timer1: timer@600105000 {
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-
--		sdhci0: mmc0@600800000 {
-+		sdhci0: mmc@600800000 {
- 			compatible = "microchip,dw-sparx5-sdhci";
- 			status = "disabled";
- 			reg = <0x6 0x00800000 0x1000>;
---
-2.27.0
+Stephan
