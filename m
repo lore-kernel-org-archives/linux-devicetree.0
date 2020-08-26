@@ -2,99 +2,152 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060B3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4448C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D6A2080C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:17:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sEkgpyOr"
+	by mail.kernel.org (Postfix) with ESMTP id AD708208E4
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbgHZNRK (ORCPT
+        id S1730215AbgHZNR7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:17:10 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45324 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730129AbgHZNRF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 09:17:05 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QDGlLS034449;
-        Wed, 26 Aug 2020 08:16:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598447807;
-        bh=I2y7x5TfP+XQoFfPfeGVzKGAa51/z67/vDnnlsbdYKw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=sEkgpyOrGXjZ9nFBeoWPHS4Hmfqe1cTYXONeX634nKKm07rxK+Xv2EBQRvKihm0xm
-         38KAY7w7uuvP2prv01xaXzk4FbcphT4oZyq/MU++IaNHrpc+P1F7KdJSQ+pU33YDnO
-         n+MDJLaAIdhsZc+KygEZbKcMC7xY1+LpB9V/lGz0=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QDGlHE037906
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 08:16:47 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
- Aug 2020 08:16:46 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 26 Aug 2020 08:16:46 -0500
-Received: from deskari.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QDGhbi078101;
-        Wed, 26 Aug 2020 08:16:45 -0500
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 2/2] arm64: dts: ti: am654-base-board: fix clock node name
-Date:   Wed, 26 Aug 2020 16:16:37 +0300
-Message-ID: <20200826131637.421327-2-tomi.valkeinen@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200826131637.421327-1-tomi.valkeinen@ti.com>
-References: <20200826131637.421327-1-tomi.valkeinen@ti.com>
+        Wed, 26 Aug 2020 09:17:59 -0400
+Received: from mga12.intel.com ([192.55.52.136]:47151 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729177AbgHZNR6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:17:58 -0400
+IronPort-SDR: ZoOB5hJk7KLfdKYc9i0y7KO2Z+ES4/ZjgowHdwFYHwICQBZ9ZF0IEZlknRCanSUFxnhD8x6X8B
+ s2fUIJWRKk9A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="135837102"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="135837102"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 06:17:57 -0700
+IronPort-SDR: 0P2TVeZbS8m05UNvqj6oRcf8cenXLRUTWHeZm+g4yNkYJ6gsUkpi1UNf0OVEUvlB97V/ftgL4V
+ fhgdwX9f66Dw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="403062174"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 26 Aug 2020 06:17:54 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 26 Aug 2020 16:17:53 +0300
+Date:   Wed, 26 Aug 2020 16:17:53 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tobias Schramm <t.schramm@manjaro.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/4] usb: typec: Add
+ typec_port_register_altmodes_from_fwnode()
+Message-ID: <20200826131753.GB813478@kuha.fi.intel.com>
+References: <20200714113617.10470-1-hdegoede@redhat.com>
+ <20200714113617.10470-3-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200714113617.10470-3-hdegoede@redhat.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The fixed clock for OV5640 is named 'clock' which is a very generic name
-and easily leads to conflicts. I encountered this with a similarly named
-fixed-clock node in k3-am654-evm-tc358876.dtso, which then overrode the
-OV5640 fixed clock, causing OV5640 not to work when tc358876 overlay had
-been loaded.
+On Tue, Jul 14, 2020 at 01:36:15PM +0200, Hans de Goede wrote:
+> This can be used by Type-C controller drivers which use a standard
+> usb-connector fwnode, with altmodes sub-node, to describe the available
+> altmodes.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/usb/typec/class.c | 56 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/usb/typec.h |  7 +++++
+>  2 files changed, 63 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index c9234748537a..47de2b2e3d54 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -1607,6 +1607,62 @@ typec_port_register_altmode(struct typec_port *port,
+>  }
+>  EXPORT_SYMBOL_GPL(typec_port_register_altmode);
+>  
+> +void typec_port_register_altmodes_from_fwnode(struct typec_port *port,
+> +	const struct typec_altmode_ops *ops, void *drvdata,
+> +	struct typec_altmode **altmodes, size_t n,
+> +	struct fwnode_handle *fwnode)
 
-Rename the node to 'fixed-clock-ov5640'.
+That last fwnode parameter should not be needed. The port device
+should have the alternate mode nodes under it as child nodes. That is,
+unless I'm missing (or forgetting) something?
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +{
+> +	struct fwnode_handle *altmodes_node, *child;
+> +	struct typec_altmode_desc desc;
+> +	struct typec_altmode *alt;
+> +	size_t index = 0;
+> +	u32 svid, vdo;
+> +	int ret;
+> +
+> +	altmodes_node = fwnode_get_named_child_node(fwnode, "altmodes");
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index 611e66207010..99b32038a453 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -55,7 +55,7 @@ sw6 {
- 		};
- 	};
- 
--	clk_ov5640_fixed: clock {
-+	clk_ov5640_fixed: fixed-clock-ov5640 {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <24000000>;
+So this would be:
+
+        altmodes_node = fwnode_get_named_child_node(port->dev.fwnode, "altmodes");
+
+> +	if (!altmodes_node)
+> +		return;
+> +
+> +	child = NULL;
+> +	while ((child = fwnode_get_next_child_node(altmodes_node, child))) {
+> +		ret = fwnode_property_read_u32(child, "svid", &svid);
+> +		if (ret) {
+> +			dev_err(&port->dev, "Error reading svid for altmode %s\n",
+> +				fwnode_get_name(child));
+> +			continue;
+> +		}
+> +
+> +		ret = fwnode_property_read_u32(child, "vdo", &vdo);
+> +		if (ret) {
+> +			dev_err(&port->dev, "Error reading vdo for altmode %s\n",
+> +				fwnode_get_name(child));
+> +			continue;
+> +		}
+> +
+> +		if (index >= n) {
+> +			dev_err(&port->dev, "Error not enough space for altmode %s\n",
+> +				fwnode_get_name(child));
+> +			continue;
+> +		}
+> +
+> +		desc.svid = svid;
+> +		desc.vdo = vdo;
+> +		desc.mode = index + 1;
+> +		alt = typec_port_register_altmode(port, &desc);
+> +		if (IS_ERR(alt)) {
+> +			dev_err(&port->dev, "Error registering altmode %s\n",
+> +				fwnode_get_name(child));
+> +			continue;
+> +		}
+> +
+> +		alt->ops = ops;
+> +		typec_altmode_set_drvdata(alt, drvdata);
+> +		altmodes[index] = alt;
+> +		index++;
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(typec_port_register_altmodes_from_fwnode);
+> +
+>  /**
+>   * typec_register_port - Register a USB Type-C Port
+>   * @parent: Parent device
+
+thanks,
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+heikki
