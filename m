@@ -2,138 +2,134 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A66C433E1
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219BBC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 17:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 130A12080C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598460776;
-	bh=BomWlpD0mGAvpFUVz/brmOr64Y92gFzTpqDzQk4KDxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0IC9W3841g0zQ3rcxOOCJDdCF81gQ6HQmIgnheyRPOna9iHdVXsq5J2F8jS9d868n
-	 UjUH/g2+Xu+Ngk02X5SUhjt9UrmYMEpiPIucbEw9kXwbGjEDuv6mjLlCJ/2/Y9TswL
-	 fos7RmH08VotGiOMzWQmnQQrxSlEHLiollJyfCRE=
+	by mail.kernel.org (Postfix) with ESMTP id F248C20737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 17:12:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8qHUgT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgHZQwz (ORCPT
+        id S1726854AbgHZRMl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:52:55 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:45048 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgHZQww (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 12:52:52 -0400
-Received: by mail-ej1-f66.google.com with SMTP id bo3so3788527ejb.11;
-        Wed, 26 Aug 2020 09:52:50 -0700 (PDT)
+        Wed, 26 Aug 2020 13:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgHZRMk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 13:12:40 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3F4C061574;
+        Wed, 26 Aug 2020 10:12:40 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t9so1299707pfq.8;
+        Wed, 26 Aug 2020 10:12:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pWsykbGqpNMPIeS7QNwd3DXqT62rEDsUA7ZuK6mgUe0=;
+        b=P8qHUgT/f8YdQmri0xIKdziJ9BrKLY8EfuwXZP+P4eJFebIj1t77notUk34Cj2fsDz
+         +RGw/2XWJZ4uriB+kRhgSapQjqCiKIzRv4ZiXg08MVw2OY8RwEep7vDFRpCZqjaFbMWQ
+         J5Eyuo6ttyknfG1Bvc8/+d7lgInTRE75WVJE5E9ieWf09+G2lzeb9ietAY3XWJRSYW9b
+         lHyjl8NvMBY7y09OfeA/kw9bsY6yrU4xnGPkqFipGV2hcIOAxEimXoT+tXUf8itkTWbw
+         nvfIituZBRqHF58AL9l8UONAO8kOujGjvPeyrKeAb3ViUDE0ae5xIYOE++8uPd7F1bOL
+         EyoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f3SjKHg0rc/Hi94wKGeK4sTEIeweZxxU2pp3miD2U7w=;
-        b=fw7+bH7AiRhwXjq5tfTImHCJPfa+iMv2NbgB0cFIh1y8lFXKapBDUFm5fXQNsJGlJj
-         5DXxGyaezcySLqGq8GHC8LJLLaqbE6C/aeCXfXka5mYXJ1QGn2VRKPuSZdUj3M6SXRF6
-         W1TBlka4AXnyAX74NdyrDDdgZuUn6hNrwO8xfKNBQEhdqvE7QTXDqJdocBsW3hPmVP6b
-         MMGEE2p2VxiAO7kgtGOBwCSl9ZzTN0vlra+xY/dxBjwtyISYXgUiAovTDrORcrHDU/GV
-         6mR3S+5Ct4w7Fx4tcjt4QXFl6jh1bwj4u6fpwmViuqJTfhxzez6jd2bULogNxJC316Qj
-         PkTA==
-X-Gm-Message-State: AOAM531Kyf8RS73pCksdr2lqiLQ2R+Ek5GFFOh/rK7OAph9jtFsHtOK2
-        2efYRXJnX9pIy1U7qUE9Lqk=
-X-Google-Smtp-Source: ABdhPJx8z7paHiBU5Vqit+UaxQDuL7FcpAQaf80dIweI/Cw+HnrnkKZ/d1NlwB9sHxh0qTew9unJQQ==
-X-Received: by 2002:a17:906:b09a:: with SMTP id x26mr2766990ejy.162.1598460769603;
-        Wed, 26 Aug 2020 09:52:49 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id d2sm2656101ejm.19.2020.08.26.09.52.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Aug 2020 09:52:49 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 18:52:46 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com
-Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
- Driver
-Message-ID: <20200826165246.GA29212@kozik-lap>
-References: <20200825184413.GA2693@kozik-lap>
- <CGME20200826145929eucas1p1367c260edb8fa003869de1da527039c0@eucas1p1.samsung.com>
- <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
- <20200826164533.GC31748@kozik-lap>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pWsykbGqpNMPIeS7QNwd3DXqT62rEDsUA7ZuK6mgUe0=;
+        b=oVMCvB81VjwhJz9oZnarlxXwOuslzCdVlhS1h6Cs+WceczK4cRzlNmTnm2fTC6iFtd
+         Vvs3/PKEg2tfM4TLfHMQ9DaH185SFp9rDVJCNPnja+704RDMbEUhCK7VaxrDJCpoCIsQ
+         5LdPYZlhvGOgayel2694l85l/UmRqISRkrcEwbTXGITfesYaESV9yrbjR/yF1K0iOJiF
+         xoZ+7nh57y9gyJTbSOk5972CkLm4/VKCEsO0tWeCz/w+h4p2ENR8EiDkKItwgAcmJShU
+         Lc3MUKjFw5HEPaS4S0MRa7isHr05OAGz1nMn6ZCbeGwwuhGxwqB7kmtlJ2xO6WPmcgO7
+         EMcg==
+X-Gm-Message-State: AOAM5308xbwDWUqwCb3er8yOz4fQLwrmb3tE7ehRUMJCcbCBLvDjVSJB
+        rzS5NJjOHAKX5njEfRYwogh7Ovxkd08=
+X-Google-Smtp-Source: ABdhPJzt+yaCKzMdYl1Uj7hSMNvSFk2qRYcVY1aIh0m33TdWEHtaHj8uxb3pEdTD3pOEXLiaDY/JKQ==
+X-Received: by 2002:a62:52d6:: with SMTP id g205mr13357990pfb.144.1598461959475;
+        Wed, 26 Aug 2020 10:12:39 -0700 (PDT)
+Received: from localhost.localdomain (cpe-172-112-234-200.socal.res.rr.com. [172.112.234.200])
+        by smtp.gmail.com with ESMTPSA id z10sm1957870pjt.30.2020.08.26.10.12.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 10:12:39 -0700 (PDT)
+From:   lindsey.stanpoor@gmail.com
+To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org, heiko@sntech.de,
+        balbi@kernel.org, cnemo@tutanota.com
+Subject: [PATCH 3/4] arm64: dts: rockchip: rk3328 usb3 controller node
+Date:   Wed, 26 Aug 2020 10:12:29 -0700
+Message-Id: <20200826171230.17041-1-lindsey.stanpoor@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826170623.15469-1-travelvia@airmail.cc>
+References: <20200826170623.15469-1-travelvia@airmail.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200826164533.GC31748@kozik-lap>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 06:45:33PM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Aug 26, 2020 at 04:59:09PM +0200, Lukasz Stelmach wrote:
- > >> +#include <linux/of.h>
-> > >> +#endif
-> > >> +#include <linux/crc32.h>
-> > >> +#include <linux/etherdevice.h>
-> > >> +#include <linux/ethtool.h>
-> > >> +#include <linux/gpio/consumer.h>
-> > >> +#include <linux/init.h>
-> > >> +#include <linux/io.h>
-> > >> +#include <linux/kmod.h>
-> > >> +#include <linux/mii.h>
-> > >> +#include <linux/module.h>
-> > >> +#include <linux/netdevice.h>
-> > >> +#include <linux/platform_device.h>
-> > >> +#include <linux/sched.h>
-> > >> +#include <linux/spi/spi.h>
-> > >> +#include <linux/timer.h>
-> > >> +#include <linux/uaccess.h>
-> > >> +#include <linux/usb.h>
-> > >> +#include <linux/version.h>
-> > >> +#include <linux/workqueue.h>
-> > >
-> > > All of these should be removed except the headers used directly in this
-> > > header.
-> > >
-> > 
-> > This is "private" header file included in all ax88796c_*.c files and
-> > these are headers required in them. It seems more conveninet to have
-> > them all listed in one place. What is the reason to do otherwise?
-> 
-> Because:
-> 1. The header is included in other files (more than one) so each other
-> compilation unit will include all these headers, while not all of them
-> need. This has a performance penalty during preprocessing.
-> 
-> 2. You will loose the track which headers are needed, which are not. We
-> tend to keep it local, which means each compilation unit includes stuff
-> it needs. This helps removing obsolete includes later.
-> 
-> 3. Otherwise you could make one header, including all headers of Linux,
-> and then include this one header in each of C files. One to rule them
-> all.
+From: Cameron Nemo <cnemo@tutanota.com>
 
-... and I got one more:
+RK3328 SoCs have one USB 3.0 OTG controller which uses DWC_USB3
+core's general architecture. It can act as static xHCI host
+controller, static device controller, USB 3.0/2.0 OTG basing
+on ID of USB3.0 PHY.
 
-4. Drivers sometimes get reused, extended or they parts got reused. If
-a header includes more stuff, it simply will pollute all other units
-trying to reuse it... making the re-usage difficult. This is less likely
-reason, I mean, quite imaginary for this particular driver.
+Signed-off-by: William Wu <william.wu@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Cameron Nemo <cnemo@tutanota.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 27 ++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-I don't expect pieces of this driver to be reused... but who knows. Many
-times in the past in the kernel there was a huge work rewriting headers
-in many files, because something was including something else and we
-wanted to decouple these things.  Therefore following the pattern -
-include stuff you explicitly use - helps in every case.
-
-Best regards,
-Krzysztof
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index bbdb19a3e85d..27e86bf06d3e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -983,6 +983,33 @@ usb_host0_ohci: usb@ff5d0000 {
+ 		status = "disabled";
+ 	};
+ 
++	usbdrd3: usb@ff600000 {
++		compatible = "rockchip,rk3328-dwc3";
++		clocks = <&cru SCLK_USB3OTG_REF>, <&cru SCLK_USB3OTG_SUSPEND>,
++			 <&cru ACLK_USB3OTG>;
++		clock-names = "ref_clk", "suspend_clk",
++			      "bus_clk";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		status = "disabled";
++
++		usbdrd_dwc3: dwc3@ff600000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0xff600000 0x0 0x100000>;
++			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
++			dr_mode = "otg";
++			phy_type = "utmi_wide";
++			snps,dis_enblslpm_quirk;
++			snps,dis-u2-freeclk-exists-quirk;
++			snps,dis_u2_susphy_quirk;
++			snps,dis_u3_susphy_quirk;
++			snps,dis-del-phy-power-chg-quirk;
++			snps,dis-tx-ipgap-linecheck-quirk;
++			status = "disabled";
++		};
++	};
++
+ 	gic: interrupt-controller@ff811000 {
+ 		compatible = "arm,gic-400";
+ 		#interrupt-cells = <3>;
+-- 
+2.28.0
 
