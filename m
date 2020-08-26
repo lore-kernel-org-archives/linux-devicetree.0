@@ -2,101 +2,106 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4F7C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7FC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF5820707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:32:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598423577;
-	bh=tlmi1dXDnwffZjtMmqckGcLrR8NIpwc3mBYPK75NtQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZYXc67sUr49olNe0GGkDu7A9nx2CYBdjLUJABBdglookAJ2ssKQeQ06BaIRtyVMIZ
-	 7XquoVDY0REi/fw1g3BU4Y3wKVQSujltlll3PWihqABhQrrywAELojX0IymlHOVrvv
-	 0bEwrYuJ762t9EBr53KPKPmTg5aA19QfHCEH13c8=
+	by mail.kernel.org (Postfix) with ESMTP id 260D320707
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:34:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BStScc7S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726014AbgHZGcw (ORCPT
+        id S1726202AbgHZGeT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:32:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgHZGcv (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:32:51 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2070620707;
-        Wed, 26 Aug 2020 06:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598423571;
-        bh=tlmi1dXDnwffZjtMmqckGcLrR8NIpwc3mBYPK75NtQc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aO+yIuBS6V6tG2ZgXpu76vXf7CjrchXrcfFtHilQ/ixmTi/qAs4uVsF3b+VHxWg4K
-         woRVhTPjqkMpI3uM18tj2FXD0PkCDlhdefR9/Spqna3399ooBCwwkS9XflrLCCOzbf
-         NdXDFvVMSVUaOe5VuJIpFvNpV9W3NEO4R1oLIacQ=
-Date:   Wed, 26 Aug 2020 12:02:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
-Message-ID: <20200826063246.GW2639@vkoul-mobl>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-2-vkoul@kernel.org>
- <20200824174009.GA2948650@bogus>
- <20200825145131.GS2639@vkoul-mobl>
+        Wed, 26 Aug 2020 02:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbgHZGeT (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 02:34:19 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8AD2C061574;
+        Tue, 25 Aug 2020 23:34:18 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id m22so1023548ljj.5;
+        Tue, 25 Aug 2020 23:34:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lgWQaoUOmck1zKDSkfP/KU2pBuaR71IA8RK6LfmWfiU=;
+        b=BStScc7SEeJUXWtFIaOczGlfItuM9LUgot65Loa+CmcdSSPsyajCEedCUQudaWZm9z
+         2TzbozcX2s/U8pizJdFJ+iQHlu/IhWgEvwKuCgyC/MTXQeXCEY9o8LLux0T3CdD3AtA7
+         tn14pPv210JrLNqMSWzcgvPTGInmDCtX8eZLXqXRf084qdVH4xCMb2EOnB8WKBLC3VRG
+         FRkDG01aQbahppWVUqjzkW/AhJzBAulb4Z/WFkm+l3/BZX4cpFEVGo6mwDXX/OOz+YAe
+         ACwf6a462wehrJUZoFH9LB6jP6Fab5BbOOGEV3pyp5UTLFeayZmjFIssirme/7grvq3y
+         Rxlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lgWQaoUOmck1zKDSkfP/KU2pBuaR71IA8RK6LfmWfiU=;
+        b=Qfm57taGOyea3w6577o3CZYagCbbZPg7ZpnDklL5R5Qzlbm3vgQe+d3o2X8I1tyZLu
+         VuwZrNrTW/YmJpSz4wgh865BCqs2KeUKcEyK3JMnHUAH7XUAbHb2H/TZFxgWBcUIr2Ud
+         4nt+4bi9KC/WXeF86G0uvRtrva8I5rq/DuX9KtOa38i//Khmi3d8CFHccMZnPve0tcu0
+         yq/ieTMW/G72sAvNBVbIbcrQbZUdU+GvjXUaUZXhYPmPoFs57FclcLN9PlJdj6eA+H36
+         rcC8SdFmsD6oREuwbyLgPglDHf1bZfIw4utuux17/bvvUYFrE5c+/aGyuvg5HV8F5dHF
+         0rNg==
+X-Gm-Message-State: AOAM532Orx5Jx7Nj660Uso8BzBA3nvzMFHBmfuT1F0VvTeeV/7UZoTJ0
+        gT0ZRD1SICELQvpbjmI3mKstGHgyTpE=
+X-Google-Smtp-Source: ABdhPJzPxuktg7pPrBXmouq95t70LJMDgatsUj53Twb1MRVQoKDhxeCz9r165MKz6Y5g35tPP6YkBw==
+X-Received: by 2002:a05:651c:88:: with SMTP id 8mr6808046ljq.277.1598423656911;
+        Tue, 25 Aug 2020 23:34:16 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id q5sm315641lfn.92.2020.08.25.23.34.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 23:34:16 -0700 (PDT)
+Subject: Re: [PATCH v1 2/6] power: supply: Add battery gauge driver for Acer
+ Iconia Tab A500
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-3-digetx@gmail.com>
+ <20200824140718.apoavlny6hlkm2ql@earth.universe>
+ <31ec6865-4a33-bde8-73a6-20c188ec2ee7@gmail.com>
+ <20200824213859.6o3q5i2kvtk44lqi@earth.universe>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <bc5e828c-67ce-0c9e-e8e7-19a532145cfa@gmail.com>
+Date:   Wed, 26 Aug 2020 09:34:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825145131.GS2639@vkoul-mobl>
+In-Reply-To: <20200824213859.6o3q5i2kvtk44lqi@earth.universe>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25-08-20, 20:21, Vinod Koul wrote:
-> Hey Rob,
+25.08.2020 00:38, Sebastian Reichel пишет:
+> Hi,
+...
+>> Hello, Sebastian! The battery isn't hot-swappable on A500, but it also
+>> should be okay to always re-read the serialno. I'll consider removing
+>> the caching in the v2, thanks.
 > 
-> On 24-08-20, 11:40, Rob Herring wrote:
-> > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
-> > > Add devicetree binding documentation for GPI DMA controller
-> > > implemented on Qualcomm SoCs
-> > > 
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
-> > >  1 file changed, 87 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
-> > > 
-> > 
-> > 
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> > 
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-> > 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
-> 
-> Okay updating dt-schema I do see this, now the question is what is this
-> and what does it mean ;-) I am not sure I comprehend the error message.
-> I see this for all the new properties I added as required for this
-> device node
+> I assumed it would be hot-swappable because of a500_battery_get_presence().
+> If it's not hot-swappable, the caching is fine.
 
-Okay I think I have figured it out, I need to provide ref to
-/schemas/types.yaml#definitions/uint32 for this to work, which does
-makes sense to me.
+The battery could be disconnected from the motherboard, but this
+requires to have device disassembled.
 
-  qcom,max-num-gpii:
-    $ref: /schemas/types.yaml#definitions/uint32
-    maxItems: 1
-    description:
-      Number of GPII instances
+Okay, I'll keep the caching.
 
-Looks good to schema tool
- 
--- 
-~Vinod
+Thanks!
