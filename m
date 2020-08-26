@@ -2,219 +2,182 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F20C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4CFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0468120738
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E41207CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:56:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyCFzgkN"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y1O0o25r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHZVmZ (ORCPT
+        id S1726765AbgHZV4Q (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:42:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZVmZ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 17:42:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D80C061574;
-        Wed, 26 Aug 2020 14:42:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id d11so4824348ejt.13;
-        Wed, 26 Aug 2020 14:42:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qkQL+Dz21LFiMHXtvS7buva83SIiDacIGRIi5LVRWg8=;
-        b=PyCFzgkN4OSai9YlhJND550USk3u7FaciC9YgUIZvY0Dh8d5TA0I24RDsNx6i7gQIt
-         43S8wVNDsP9AW3izt9SO0uBb+igdIKuhEB9S9recizqdcc9vwij9FM3ShhZkWckO1N14
-         SR+MdGCz0v1X9nSFShTSMQ3QQmsRDPyW5OiIze0AIfebwEKaTXtdGSftF99HKtHuv+Lm
-         xnspvSP0TAOxJb57VIv4Z1fnzrve8CwGT/gdAxHVPtPo2dKgtPUHss9jeXI34ynG/B2Z
-         5WVyjXhHSfTi6KpxG7FK4HNBW2et8UQeEkghOGdMDQbhZfvIgKymf42g1MrUo2IcMTXz
-         m/bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qkQL+Dz21LFiMHXtvS7buva83SIiDacIGRIi5LVRWg8=;
-        b=QcDaZSsBDpkvJiM0aDNctydEWXKpoF8AXMt2dt1GZhlcRUmofGQ/SZVcXgmXIhheyP
-         4sKCF5Vc/yqewR/XkHr8/N/nyO73+c20RjntF3vxqs/NGhgPHvns9K0Gk4isbUpuX3Qd
-         5689aFECNyF4pOeKTj1IKZGge/J2QRCymyDX/NCtxXRECYDPSYMh6/kk8rxpjYRw07wz
-         ACd/saql6fA4yf2n9L69WXxnKN/UPuh68cae9NJiveb+7KXe2qQwZwMRhyZAZZTuPedk
-         phL+UuHP7LCvB086BDWuXOdEynsBCzRzx7zQDIOTxNXOMUJwbQ/9YeoGrNX2RxdXglH6
-         O0VQ==
-X-Gm-Message-State: AOAM530AHDpFDK0EstjrkacQ6WmIFCC8Tz/YrUKYM0d4B3f87E0F1Dsx
-        OuH1oqMPFeoh/cIiJ2X1Lpo=
-X-Google-Smtp-Source: ABdhPJwDStQ0rjD3Lur2BK6467nAxbWULaSG6srrhmhkiq7NgIt/9VvkrfTyfXgZXbN5LfIVRGWiBA==
-X-Received: by 2002:a17:906:2349:: with SMTP id m9mr17411173eja.425.1598478143345;
-        Wed, 26 Aug 2020 14:42:23 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id ci27sm173363ejc.23.2020.08.26.14.42.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 14:42:22 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 00:42:20 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
- SIRQ controller binding
-Message-ID: <20200826214220.GA2444747@BV030612LT>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
- <20200825220913.GA1423455@bogus>
+        Wed, 26 Aug 2020 17:56:16 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52204 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHZV4Q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 17:56:16 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QLu8uo042177;
+        Wed, 26 Aug 2020 16:56:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598478968;
+        bh=dQZ0Q9XvUZXYwld+PELH7Qf4PN7CZlITbMVyyKwxzbU=;
+        h=Subject:To:References:CC:From:Date:In-Reply-To;
+        b=Y1O0o25rMSxs3MC9UHRZc6aNRYBYb8johsSyqxN6O5Zej9Ot9XFzSl4W2PKKZeaJB
+         GTRBQofnFFdejVqmQPNSf6bxuKqlCLLzEJnyAnP+OlTSoe3unt/+E+SavkZ4SPUGIX
+         TPpgabyvpxC35ayYehxOKcaZqewv89SjMjVvksbo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QLu85b005105
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 16:56:08 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
+ Aug 2020 16:56:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 26 Aug 2020 16:56:08 -0500
+Received: from [10.250.32.245] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QLu7Pj129319;
+        Wed, 26 Aug 2020 16:56:07 -0500
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200817070009.4631-1-krzk@kernel.org>
+ <CGME20200824103713epcas1p4ae0d5d821fd468163ec5948dd59d0d15@epcas1p4.samsung.com>
+ <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
+ <b6ec12af-5573-ce86-9f6b-16fcbc36b1a3@samsung.com>
+CC:     "Menon, Nishanth" <nm@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <065f3979-f8c3-9233-4411-6f34f605a05a@ti.com>
+Date:   Wed, 26 Aug 2020 16:56:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825220913.GA1423455@bogus>
+In-Reply-To: <b6ec12af-5573-ce86-9f6b-16fcbc36b1a3@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Chanwoo,
 
-Thanks for the review!
-
-On Tue, Aug 25, 2020 at 04:09:13PM -0600, Rob Herring wrote:
-> On Wed, Aug 19, 2020 at 07:37:56PM +0300, Cristian Ciocaltea wrote:
-> > Actions Semi Owl SoCs SIRQ interrupt controller is found in S500, S700
-> > and S900 SoCs and provides support for handling up to 3 external
-> > interrupt lines.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > ---
-> > Changes in v5:
-> >  - Updated controller description statements both in the commit message
-> >    and the binding doc
-> > 
-> >  .../actions,owl-sirq.yaml                     | 68 +++++++++++++++++++
-> >  1 file changed, 68 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > new file mode 100644
-> > index 000000000000..cf9b7a514e4e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > @@ -0,0 +1,68 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/actions,owl-sirq.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Actions Semi Owl SoCs SIRQ interrupt controller
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +  - Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > +
-> > +description: |
-> > +  This interrupt controller is found in the Actions Semi Owl SoCs (S500, S700
-> > +  and S900) and provides support for handling up to 3 external interrupt lines.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - enum:
-> > +          - actions,s500-sirq
-> > +          - actions,s700-sirq
-> > +          - actions,s900-sirq
-> > +        - const: actions,owl-sirq
-> > +      - const: actions,owl-sirq
+On 8/24/20 6:28 AM, Chanwoo Choi wrote:
+> Hi,
 > 
-> This should be dropped. You should always have the SoC specific 
-> compatible.
-
-Sure, I will get rid of the 'owl-sirq' compatible.
-
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  '#interrupt-cells':
-> > +    const: 2
-> > +    description:
-> > +      The first cell is the input IRQ number, between 0 and 2, while the second
-> > +      cell is the trigger type as defined in interrupt.txt in this directory.
-> > +
-> > +  'actions,ext-interrupts':
-> > +    description: |
-> > +      Contains the GIC SPI IRQ numbers mapped to the external interrupt
-> > +      lines. They shall be specified sequentially from output 0 to 2.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    minItems: 3
-> > +    maxItems: 3
+> On 8/24/20 7:36 PM, Ramuthevar, Vadivel MuruganX wrote:
+>> Hi,
+>>
+>>  Thank you for the patches and optimized the code as well.
+>>  I have applied your patches and tested, it's working fine
+>>  with few minor changes as per Intel's LGM board.
 > 
-> Can't you use 'interrupts' here?
+> Thanks for the test.
+> 
+>>
+>>  can I send the patches along with patches or we need to wait until
+>>  your patch get merge?
+>>
+>>  Please suggest to me go further, Thanks!
+> 
+> I applied these patches. You better to send your patches
+> based on extcon-next. Thanks.
 
-This was actually my initial idea, but it might confuse the users since
-this is not following the parent controller IRQ specs, i.e. the trigger
-type is set internally by the SIRQ driver, it's not taken from DT.
+I am not sure what happened, but the $id and $schema got morphed in the patch
+on linux-next, 000ce2ad3c96 ("dt-bindings: extcon: ptn5150: Convert binding to
+DT schema"), when compared to Krzysztof's original patch.
 
-Please see the DTS sample bellow where both devices are on the same
-level and have GIC as interrupt parent. The 'interrupts' property
-in the sirq node looks incomplete now. That is why I decided to use
-a custom name for it, although I'm not sure it's the most relevant one,
-I am open to any other suggestion.
+This is causing dtbs_check to fail in general on linux-next,
+  UPD     include/config/kernel.release
+  CHKDT   Documentation/devicetree/bindings/processed-schema-examples.json
+Traceback (most recent call last):
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+774, in resolve_from_url
+    document = self.store[url]
+  File "/home/suman/.local/lib/python3.6/site-packages/jsonschema/_utils.py",
+line 22, in __getitem__
+    return self.store[self.normalize(uri)]
+KeyError:
+'https://protect2.fireeye.com/url?k=59835ffc-05905d01-59822c67-0cc47a336902-306bd2691e458c36&q=1&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23'
 
-i2c0: i2c@b0170000 {
-  [...]
-  interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-  [...]
-};
+During handling of the above exception, another exception occurred:
 
-sirq: interrupt-controller@b01b0200 {
-  [...]
-  interrupt-controller;
-  #interrupt-cells = <2>;
-  interrupts = <13>, /* SIRQ0 */
-               <14>, /* SIRQ1 */
-               <15>; /* SIRQ2 */
-};
+Traceback (most recent call last):
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+777, in resolve_from_url
+    document = self.resolve_remote(url)
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+860, in resolve_remote
+    result = requests.get(uri).json()
+  File "/usr/lib/python3/dist-packages/requests/models.py", line 892, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/usr/lib/python3/dist-packages/simplejson/__init__.py", line 518, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3/dist-packages/simplejson/decoder.py", line 370, in decode
+    obj, end = self.raw_decode(s)
+  File "/usr/lib/python3/dist-packages/simplejson/decoder.py", line 400, in
+raw_decode
+    return self.scan_once(s, idx=_w(s, idx).end())
+simplejson.errors.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 
-Regards,
-Cristi
+During handling of the above exception, another exception occurred:
 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupt-controller
-> > +  - '#interrupt-cells'
-> > +  - 'actions,ext-interrupts'
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    sirq: interrupt-controller@b01b0200 {
-> > +      compatible = "actions,s500-sirq", "actions,owl-sirq";
-> > +      reg = <0xb01b0200 0x4>;
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <2>;
-> > +      actions,ext-interrupts = <13>, /* SIRQ0 */
-> > +                               <14>, /* SIRQ1 */
-> > +                               <15>; /* SIRQ2 */
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.28.0
-> > 
+Traceback (most recent call last):
+  File "/home/suman/.local/bin/dt-doc-validate", line 67, in <module>
+    ret = check_doc(f)
+  File "/home/suman/.local/bin/dt-doc-validate", line 33, in check_doc
+    for error in sorted(dtschema.DTValidator.iter_schema_errors(testtree),
+key=lambda e: e.linecol):
+  File "/home/suman/.local/lib/python3.6/site-packages/dtschema/lib.py", line
+663, in iter_schema_errors
+    meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+779, in resolve_from_url
+    raise exceptions.RefResolutionError(exc)
+jsonschema.exceptions.RefResolutionError: Expecting value: line 1 column 1 (char 0)
+Documentation/devicetree/bindings/Makefile:52: recipe for target
+'Documentation/devicetree/bindings/processed-schema-examples.json' failed
+make[1]: *** [Documentation/devicetree/bindings/processed-schema-examples.json]
+Error 123
+Makefile:1366: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+regards
+Suman
+
+> 
+>>
+>> On 17/8/2020 2:59 pm, Krzysztof Kozlowski wrote:
+>>> Hi,
+>>>
+>>> Changes since v1:
+>>> 1. Mutex unlock fix in patch 8/13.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>>
+>>
+> 
+> 
+
