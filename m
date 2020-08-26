@@ -2,172 +2,204 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA64AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE26EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C2D2083B
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A53AF2076C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:59:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="qyh/NyGg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="udlUbH21"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHZG67 (ORCPT
+        id S1726240AbgHZG7S (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:58:59 -0400
-Received: from mail-eopbgr1410120.outbound.protection.outlook.com ([40.107.141.120]:7776
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbgHZG65 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:58:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z5gyUhC3pC3pnKmMQsonjLbwxw6x8Eob5j8+wjk7z/nqeKD/Qv1Dwznmbq/v1T2zQ/PH0ZUem8BOR4e+jUST5Szx+7PmAxEIEM0RxUv9OyqJbp1sb6w8O+d2aDgzO24578RTE7LkhVQt/wCyGJzmdI3jeGVdbNe3Tjd4zWDjgvDRIgEpkgsPVKqrM4umIfbyG5HmtJDEOx4vuxsp6DWPuodTHIOijopQVtKNDr/Dqzqbakqx8UNEpJIkBh/rkKWrW5QMqsi+/hONmUTjKVTD1AbX7MitSXQBAX9mPwxFLqz2otQo7rNggEZGtUjkHa4nCE6IRG8K0RB8M0M9kiQ6Sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LvkAmPcijhIlxIlmaTUVh/j2xltJNDNyDiMLhSSt6zM=;
- b=UJeINnWt7E7IhKnEkagayT90evNyICgdaY5aeSygXW6gDF7RxWzf78v+eBsseyDxzJZrjf3d3UvFpoT9xzR5AH3KdXt7wGyIuvmygvEm+l2LfrTOeAYLhItmDTnbVfdetPt//Qk2hCCYK8WCFG1QgCzqi9NzM2AeESGoITSE8PTKAZ95q2tfyG83WPsO/CqKiuruziqyprvVLRoc4J/jGTXnjTbfbgx98M0Hou9sHDCVKKrRaMTXuH8K/t8fnvrSwpQlGJnx/9Y0+H2IRM1oUgwEKRLFJ/jYXvhQbtznfEeonTmlNLyFpeFo6VP34UqQ7METEX+Dwu1xNr/+0Ydi7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+        Wed, 26 Aug 2020 02:59:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgHZG7R (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 02:59:17 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB99C061574
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 23:59:17 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g14so1081318iom.0
+        for <devicetree@vger.kernel.org>; Tue, 25 Aug 2020 23:59:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LvkAmPcijhIlxIlmaTUVh/j2xltJNDNyDiMLhSSt6zM=;
- b=qyh/NyGgz9fDBkhwmZvLsmJuvG5fyBKM+P1FaDh7x9AnxhS4jpONgQ6EAaJjbOVYHcqSb+vl2M8ED+GKE8pVihvSsKx53zHXIgj3q/NdCvydQxUQltSNMIfXdJ3ZrxdMDqjhHiNeQeCdrL0YzagGQEkxp8fC6AdlcGuJb741oIE=
-Received: from TYBPR01MB5309.jpnprd01.prod.outlook.com
- (2603:1096:404:8025::15) by TYXPR01MB1774.jpnprd01.prod.outlook.com
- (2603:1096:403:e::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 26 Aug
- 2020 06:58:51 +0000
-Received: from TYBPR01MB5309.jpnprd01.prod.outlook.com
- ([fe80::c141:37ba:af8c:b2ee]) by TYBPR01MB5309.jpnprd01.prod.outlook.com
- ([fe80::c141:37ba:af8c:b2ee%7]) with mapi id 15.20.3305.026; Wed, 26 Aug 2020
- 06:58:51 +0000
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Rob Herring <robh@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v2 1/3] dt-bindings: display: bridge: lvds-codec: Document
- vcc-supply property
-Thread-Topic: [PATCH v2 1/3] dt-bindings: display: bridge: lvds-codec:
- Document vcc-supply property
-Thread-Index: AQHWbyoRJ5YsTeOuoUOFPAjubrX+m6lH96UAgACHhvA=
-Date:   Wed, 26 Aug 2020 06:58:50 +0000
-Message-ID: <TYBPR01MB5309756E7E19EF34562FAB5E86540@TYBPR01MB5309.jpnprd01.prod.outlook.com>
-References: <20200810152219.6254-1-biju.das.jz@bp.renesas.com>
- <20200810152219.6254-2-biju.das.jz@bp.renesas.com>
- <20200824230458.GA3489164@bogus>
-In-Reply-To: <20200824230458.GA3489164@bogus>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=bp.renesas.com;
-x-originating-ip: [109.154.85.152]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 43cd9966-65ff-42c8-b2c3-08d8498d7d13
-x-ms-traffictypediagnostic: TYXPR01MB1774:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYXPR01MB1774D8040FFE05705D98D4CD86540@TYXPR01MB1774.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZZJvEMqMpOZn1MwbsUgVb7vXmo+5J7NxozBypCR7eTgCzBTgSiDFw0+F5f/A9Af2QU2rWJth3lmOozbQ0xn6UblZgSZHSectKWjO8ZiBW8GrbU8sKnpg0VUXZlfB3HbY1ra64vKEl94T/+wkOBEvZN4v4iWJE0kZNKdgtTjH0AlKzik6pk5MhIkOzxv0Ou2+YkPqpFG5hc7tO7KLVPRocL2T/JUgy7aTYqnq4TNlTn6CxaHG3KCyO8sYliwdsTHO+jRcMvtSFMueoDvLWgQeO3bQRLEzlnaMpigjlNpyQkY3cIr0Cf6YcLWOAdccLYlmcJJXrsAIp78gesmOm0m0pdynUbIusD3XbiU/BSvm3ORD/7R7DJDEjmoeaq4DrKBuT3+QSMA6HPNRAAPR1TxkQQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5309.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(366004)(346002)(39860400002)(6506007)(86362001)(4326008)(66556008)(26005)(66946007)(66446008)(64756008)(5660300002)(2906002)(66476007)(76116006)(71200400001)(8936002)(55016002)(316002)(7696005)(33656002)(7416002)(9686003)(54906003)(8676002)(110136005)(186003)(52536014)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: aIBq/B9gm3ErzsmQL5zCWVKUDfCIqT4S/1BGeHCtT2o/dVsZTyxMt49eJw27bWizkSxZi8XpCZJkN/bDXPPIpQnQEWp35j0tOfKZ5ZxXiXE7ypnI5qMBlyDd0XOkWXZIQ1zMuAzK1q7otXWF1/iJJDnX+BhNowyxDT+7QnDuZ+PfrllQcE+yRfWYDO95GldrhmBWMY6oM2euNUxLDSuGRS/U4KFOuFH8rg4oyISJvno/Dm8mFFDiC9KXQ3k6MewtrINnZF8pImnQkLitZjb+ssUolzRmpOzsaupfzPIFe6s4g93snFgsn44i9uawwFfZ6oF4+e8azVfycppO+qCCSqtJj1HdnuGKy6dtj2pAhkQnGuQJ4Hk6IPnnQ+WwcApQ7VwQm6Ro0PpNoKtEZXKtHw+fOq74NwkSxh4RMb22kPHdDceP96le8D2pem5AAeT1VAPR9Bdh3HJijHh83qqU32ZIMD3xPjCvb+cZhEOSc9NFn8A61RucBKhwdhFx1P1YuuWwSMn3rh6WAp5kSRg0BdLFFKhv9gija0353ZSzEqiCpzWNunsQ2I2CJTZ7Cab6Q8nNp6yunkL+Pgqbeaeolw1wwXB5TxvsS2PrJVVQhIjXw7X8NoTdEP08TOOXaNcq2Ks9yc5AjfowDnNDpIqq2A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5W54dbi9xuzQewRPXXisG46NqBrr4vTY04zUmdJ/TW8=;
+        b=udlUbH21qtM29U72EX2h0lnsaXCwTn+3FwhOYs7DNyn30Vx1Hnb3P7+iJnPF5uIjRN
+         qU+oZQK3kPvTkMM7RnXo8dVdv8tznzRDLpET1c9X++laZw9PX9GwMgPfmhShdeNS1kxi
+         GkIQy8yxsu9GkkMC+2FiixGszy4gwrNgsV3vC9LpSSDJQY4GOLUHkv/nV4dzWcMW48HI
+         eGcGbr1jF4GKxQHTY5L0Cmyk2GDu3dTlZXrw3/s79WmJCYFtq1NxTMFltt/U2by4P2JQ
+         XTQQ9OuTF3GunpvJeiPzdnNhHrkqVPxaouwST+hpn1BDYWVcsUkhBQx0IpNHhCmKrTxy
+         5FSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5W54dbi9xuzQewRPXXisG46NqBrr4vTY04zUmdJ/TW8=;
+        b=YWwW1L+Ojqs3vd5/FJcpmmWbE/sI2H32G5Boje2ncpKw4yK1McM7I7rbSteVeP1Ds9
+         NYRWHN27gG4Ee8eZKPFhItVmCLsjQyGDZM+WjeJ84STgTtpLzEjbL28Eyoo3MeC5pCO2
+         86KW1X/MWD7wLqamNnKGN6X+U51lSrIVDcjGJvZ8OCTbdeV87gwTFPQZ8VqJfrVZx5IA
+         XHHevHila2vm08iuqg7lOWHArQDzxacU+IQVy8JXCJEZwDNQ+w5DHQYTW5X/4xSK4aoD
+         +c0ON3kecR3VVKGevNdvfsq5aZMy4R1nSwgPspOIzSSB9uJrHBL2aXcJAFPVLM87a1AF
+         e/Pw==
+X-Gm-Message-State: AOAM531RAWoywLrI+k5sLG+aadZ34mTMYdjPxfBZywMvA515O1jjjigW
+        mOPns5tl6iDf4F5SOsUN5HqeKuD3WknH034ac+Y=
+X-Google-Smtp-Source: ABdhPJwLl3E/brPRmlOHAidAvPuLhWdu3BOsLBo3HAWnMr79ZmjXo8vEaO4jGTW/UTRy2yWL/4VLi6XYpay6FvAXwKI=
+X-Received: by 2002:a02:838e:: with SMTP id z14mr14301738jag.84.1598425156916;
+ Tue, 25 Aug 2020 23:59:16 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5309.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 43cd9966-65ff-42c8-b2c3-08d8498d7d13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2020 06:58:50.9349
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QEoeP67DWHxSc9b5d2ncIrgloUseQV/14VwhDcyv/B8esZoszVmuq8gp+2QgC1caF4SAqTleagwRb5tEqwJtMw1mhRSLI1I31rOtus5+G+w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYXPR01MB1774
+References: <20200820121323.564-1-linux.amoon@gmail.com> <20200820121323.564-2-linux.amoon@gmail.com>
+ <7hlfi9xgch.fsf@baylibre.com> <CANAwSgTZ23jFPAO46vRg1Dx_Bzi=4Bg6KHE0ozLQGky4p_fgKQ@mail.gmail.com>
+ <CANAwSgQLnqDnuQvLv4cvaeTPeBW=H_g5F2aaNue_hb4nKLdovg@mail.gmail.com>
+ <f7e6ce5f-02b0-065b-ffcf-2826159f926a@baylibre.com> <1j7dto3ylq.fsf@starbuckisacylon.baylibre.com>
+ <CANAwSgQ1Miu73hfdK+cgL3howpekn2xj_5qwGasQZwtQpSGj5Q@mail.gmail.com> <1j4koq4x38.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1j4koq4x38.fsf@starbuckisacylon.baylibre.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Wed, 26 Aug 2020 12:29:04 +0530
+Message-ID: <CANAwSgTWnHXRFRUrbdCph+eBxL2PNXe6Q4aTXxEU32i7dGS=dw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: meson-g12b-odroid-n2: Enable RTC
+ controller node
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Christian Hewitt <christianshewitt@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Rob,
+hi Jerome
 
-Thanks for the feedback.
-
-> Subject: Re: [PATCH v2 1/3] dt-bindings: display: bridge: lvds-codec:
-> Document vcc-supply property
+On Tue, 25 Aug 2020 at 20:00, Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> On Mon, Aug 10, 2020 at 04:22:17PM +0100, Biju Das wrote:
-> > Document optional vcc-supply property that may be used as VCC source.
-> >
-> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> > New patch Ref: Ref:https://patchwork.kernel.org/patch/11705819/
-> > ---
-> >  .../devicetree/bindings/display/bridge/lvds-codec.yaml         | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> > b/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> > index 68951d56ebba..3248be31eceb 100644
-> > --- a/Documentation/devicetree/bindings/display/bridge/lvds-codec.yaml
-> > +++ b/Documentation/devicetree/bindings/display/bridge/lvds-
-> codec.yaml
-> > @@ -79,6 +79,9 @@ properties:
-> >        The GPIO used to control the power down line of this device.
-> >      maxItems: 1
-> >
-> > +  vcc-supply:
-> > +    maxItems: 1
 >
-> Probably should be 'power-supply' to align with the 'simple' panels.
-> That's also to signify there's only 1 supply. Using 'vcc' would encourage
-> adding 'vdd-supply', 'vddio-supply', etc. A second supply I'll NAK becaus=
-e at
-> that point it's not a simple bridge with no configuration (it's arguably =
-already
-> there).
+> On Tue 25 Aug 2020 at 11:01, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> > Hi Jerome
+> >
+> > On Mon, 24 Aug 2020 at 20:00, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> >>
+> >>
+> >> On Mon 24 Aug 2020 at 15:50, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> >>
+> >> > On 24/08/2020 15:41, Anand Moon wrote:
+> >> >> hi All,
+> >> >>
+> >> >> On Fri, 21 Aug 2020 at 10:13, Anand Moon <linux.amoon@gmail.com> wrote:
+> >> >>>
+> >> >>> Hi Kevin,
+> >> >>>
+> >> >>> Thanks for your review comments.
+> >> >>>
+> >> >>> On Fri, 21 Aug 2020 at 01:03, Kevin Hilman <khilman@baylibre.com> wrote:
+> >> >>>>
+> >> >>>> Anand Moon <linux.amoon@gmail.com> writes:
+> >> >>>>
+> >> >>>>> Enable RTC PCF8563 node on Odroid-N2 SBC, In order to
+> >> >>>>> support the RTC wakealarm feature for suspend and resume.
+> >> >>>>> Also assign an alias to the pcf8563 to rtc0 and meson-vrtc to rtc1
+> >> >>>>> timer device to prevent it being assigned to /dev/rtc0
+> >> >>>>> which disto userspace tools assume is a clock device.
+> >> >>>>>
+> >> >>>>> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> >> >>>>> Cc: Kevin Hilman <khilman@baylibre.com>
+> >> >>>>> Suggested-by: Christian Hewitt <christianshewitt@gmail.com>
+> >> >>>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> >> >>>>> ---
+> >> >>>>> Changes V3
+> >> >>>>> --Drop the INI GPIOAO.BIT7 pinctrl.
+> >> >>>>
+> >> >>>> Why did you drop this GPIO?  Isn't this the GPIO that the RTC uses to
+> >> >>>> wakeup the system?  If so, this should be included as part of this
+> >> >>>> patch.
+> >> >>>>
+> >> >>>> It probably still works because the bootloader configures this GPIO as
+> >> >>>> input, but the kernel should not rely on the booloader for that, so
+> >> >>>> please include as part of this patch.
+> >> >>>>
+> >> >>>
+> >> >>> Ok I will figure out the correct pinctrl need for this settings.
+> >> >>> looking into the Odroid N2 schematics.
+> >> >>>
+> >> >>
+> >> >> I am trying to map the RTC INT pinctrl, ie RTC INT GPIOAO.BIT7.
+> >> >
+> >> >
+> >> > Simply add:
+> >> >
+> >> > interrupt-parent = <&gpio_intc>;
+> >> > interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
+> >> >
+> >> > to reflect the interrupt connection.
+> >
+> > I have tried this setting, but it is not working.
+> >
+> > [alarm@archl-on2e ~]$ dmesg| grep rtc
+> > [    5.378002] meson-vrtc ff8000a8.rtc: registered as rtc1
+> > [    5.942307] rtc-pcf8563 0-0051: pcf8563_write_block_data: err=-110
+> > addr=0e, data=03
+> > [    5.942316] rtc-pcf8563 0-0051: pcf8563_probe: write error
+> > [    5.945983] rtc-pcf8563: probe of 0-0051 failed with error -5
+> >
+>
+> -110 is timeout ... either you i2c bus is broken and you device is not
+> at 0x51. In both case, it has nothing to do with the interrupt configuration
+>
+I have check the I2C bus on the device for rtc and it return correctly.
 
-Yes, I am ok with 'power-supply', since LVDS CODEC driver is  generic and a=
-lso to align with terminology used in generic 'simple' panels.
+$ sudo i2cdetect -l
+i2c-1   i2c             DesignWare HDMI                         I2C adapter
+i2c-0   i2c             Meson I2C adapter                       I2C adapter
+$
+$ sudo i2cdetect -y -r 0
+     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
+00:          -- -- -- -- -- -- -- -- -- -- -- -- --
+10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+20: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+30: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+40: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+50: -- UU -- -- -- -- -- -- -- -- -- -- -- -- -- --
+60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+70: -- -- -- -- -- -- -- --
 
-In our case this Receiver converts LVDS signals to RGB signals and fed this=
- signal to simple panel.
-On the receiver part, We need to supply  power to TTL output,  PLL and LVDS=
- input. It all derived from the single power source.
+> >
+> >> >
+> >> > No need to setup pinctrl here since the GPIO input is always connected
+> >> > to the gpio irq generator whatever pinctrl mode is set.
+> >>
+> >> It is actually better to setup pinctrl. Yes the irq controller can work
+> >> whatever the pin setup but if an output function is active it can mess with
+> >> what the irq controller gets.
+> >>
+> >> Think about applying/removing bias if necessary too.
+> >>
+> >
+> > Ok, I am trying to add a new pinctrl configuration for
+> > TSIN_A_DIN0 //  TDMB_FS // TDMB_SLV_FS
+> > But it's still not working at my end.
+>
+> Either you are quite confused when it comes to pinctrl or I am.
 
-Laurent, Please share you opinion on this.
+Basically I dont want to keep repeating silly mistakes.
 
-Cheers,
-Biju
+> TSIN and TDM have nothing to do with an i2c RTC.
 
+Yes I understand this clearly, that's why I have dropped the
+RTC INT gpio pinctrl settings.Without this setting RTC driver
+works fine and their is no issue rtcwakeup during suspend
+and resume in my testing.
 
-
-
-Renesas Electronics Europe GmbH, Geschaeftsfuehrer/President: Carsten Jauch=
-, Sitz der Gesellschaft/Registered office: Duesseldorf, Arcadiastrasse 10, =
-40472 Duesseldorf, Germany, Handelsregister/Commercial Register: Duesseldor=
-f, HRB 3708 USt-IDNr./Tax identification no.: DE 119353406 WEEE-Reg.-Nr./WE=
-EE reg. no.: DE 14978647
+-Anand
