@@ -7,56 +7,58 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B8AC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 060B3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 975C6208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D6A2080C
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fsu4jy/5"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sEkgpyOr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgHZNQy (ORCPT
+        id S1730174AbgHZNRK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:16:54 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:58518 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729177AbgHZNQx (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 09:16:53 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QDGjXe084113;
-        Wed, 26 Aug 2020 08:16:45 -0500
+        Wed, 26 Aug 2020 09:17:10 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45324 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730129AbgHZNRF (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 09:17:05 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QDGlLS034449;
+        Wed, 26 Aug 2020 08:16:47 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598447805;
-        bh=hx8TyK/5iRvZIFNBIvKT49YRgzRIACowgQgBnrryKbM=;
-        h=From:To:CC:Subject:Date;
-        b=fsu4jy/5/DkB8S15ww1V3+e5ac1EF2kLWj83eKAarrpBnKOFv/PArnZFVpE4iSabC
-         PrKlFdTNSI2vXoV18TF2Ke33+MCBB7sCPVbRxlTA4A3VVCqEaFWTeVI9kFzM8pI0zb
-         ulIvb7dK6Cji8UpnWPeNmolMphwN7tzR1afFbLiQ=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QDGj2r009885
+        s=ti-com-17Q1; t=1598447807;
+        bh=I2y7x5TfP+XQoFfPfeGVzKGAa51/z67/vDnnlsbdYKw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=sEkgpyOrGXjZ9nFBeoWPHS4Hmfqe1cTYXONeX634nKKm07rxK+Xv2EBQRvKihm0xm
+         38KAY7w7uuvP2prv01xaXzk4FbcphT4oZyq/MU++IaNHrpc+P1F7KdJSQ+pU33YDnO
+         n+MDJLaAIdhsZc+KygEZbKcMC7xY1+LpB9V/lGz0=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QDGlHE037906
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 08:16:45 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 26 Aug 2020 08:16:47 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
- Aug 2020 08:16:44 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ Aug 2020 08:16:46 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 26 Aug 2020 08:16:44 -0500
+ Frontend Transport; Wed, 26 Aug 2020 08:16:46 -0500
 Received: from deskari.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QDGhbh078101;
-        Wed, 26 Aug 2020 08:16:43 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QDGhbi078101;
+        Wed, 26 Aug 2020 08:16:45 -0500
 From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
 To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>
 CC:     Rob Herring <robh+dt@kernel.org>,
         Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 1/2] arm64: dts: ti: k3-am65: mark dss as dma-coherent
-Date:   Wed, 26 Aug 2020 16:16:36 +0300
-Message-ID: <20200826131637.421327-1-tomi.valkeinen@ti.com>
+Subject: [PATCH 2/2] arm64: dts: ti: am654-base-board: fix clock node name
+Date:   Wed, 26 Aug 2020 16:16:37 +0300
+Message-ID: <20200826131637.421327-2-tomi.valkeinen@ti.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200826131637.421327-1-tomi.valkeinen@ti.com>
+References: <20200826131637.421327-1-tomi.valkeinen@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -66,27 +68,32 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-DSS is IO coherent on AM65, so we can mark it as such with
-'dma-coherent' property in the DT file.
+The fixed clock for OV5640 is named 'clock' which is a very generic name
+and easily leads to conflicts. I encountered this with a similarly named
+fixed-clock node in k3-am654-evm-tc358876.dtso, which then overrode the
+OV5640 fixed clock, causing OV5640 not to work when tc358876 overlay had
+been loaded.
+
+Rename the node to 'fixed-clock-ov5640'.
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 9edfae5944f7..efd3f18f4be3 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -847,6 +847,8 @@ dss: dss@04a00000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 611e66207010..99b32038a453 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -55,7 +55,7 @@ sw6 {
+ 		};
+ 	};
  
- 		status = "disabled";
- 
-+		dma-coherent;
-+
- 		dss_ports: ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+-	clk_ov5640_fixed: clock {
++	clk_ov5640_fixed: fixed-clock-ov5640 {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <24000000>;
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
