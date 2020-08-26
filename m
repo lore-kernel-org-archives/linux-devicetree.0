@@ -2,244 +2,161 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6782BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DDEC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D4E208E4
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AE792078D
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 14:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="k4m5mEJB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5lUnHIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbgHZOoi (ORCPT
+        id S1726719AbgHZOro (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
+        Wed, 26 Aug 2020 10:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726806AbgHZOod (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 10:44:33 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62CDC061757
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 07:44:32 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so1538315qtg.4
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 07:44:32 -0700 (PDT)
+        with ESMTP id S1726700AbgHZOrn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 10:47:43 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1822EC061574;
+        Wed, 26 Aug 2020 07:47:43 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id y65so1560114qtd.2;
+        Wed, 26 Aug 2020 07:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=3fltz4Tid80yvbd7ycd5CEvXCm5Dl/pplKlQTmdAxKA=;
-        b=k4m5mEJBWpHKc8UCyiMSoWpLFbB9PLsFXQSse1GeHDwA4DKW/bxLFf2oq06iweP+iL
-         M8bgXdl0A9155UGa8Nz8VJmE6L39gWW8oVIXtrtnNW2XbaFdQ7/KhobmLnk55ujnHV/2
-         tPPob3cH4BlQEISinoXdsc01CEIIJiQYM7T+gkUDqRjYhkY6CbBd83M1+SskyHHbWLvL
-         rHtzPGZUMHG7eDyNL2Q4ZV/nAiZIzogvhqr+a2Knoik0r52ut2ISFzGOCWsps3sZCmxq
-         fBsjIPcK+lwVA+ap0kK3kVNC6i6d4qEdXhZRr9MSKdg1iPVBdKJXwariY86XZf+E2JPH
-         +9mw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Xc2Hb9o/7Ud3w/FXjCQl5Yr4FI/SfE6ovQyC4Jq0IVE=;
+        b=M5lUnHIQ/AgrRdVc1DXk/Fxye2VdpNklMkr+fsPbADxxVl54//+QmKmArjsaO7IrB/
+         HMGrDSSGc3BvHkRXktG1Ojo+AYwqkIMoI2SoPtLx2GuCT0KV5pnsWA4Doe8Ibic6xb4q
+         x117qeHQsGHMqLOT8uyto49hfN9quRZPOq1E9rJe7rRCsfou8pctxrXL7Ma6kOk5hjJS
+         nF3Dcp2bEbWmv141bj1O7K2HghTbqAgauFbctEBVpRr6JhRD/g69T9/0kSQp5ipIW+Z9
+         JICDu0HU859q7Kk7zNEt2bTTPdC9r7qsgfqIf7XWCsv+FEwHqhDb2tpOl14nEiviuAWF
+         O0KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=3fltz4Tid80yvbd7ycd5CEvXCm5Dl/pplKlQTmdAxKA=;
-        b=Wj93pWhbd17AWkidywyOaJHDqDYod9BHYzHmD/BMyjRxGVB7C+tvefMJv1SsTAKBu7
-         63+07bjw1OKQ/GBexuhUoS7DSNOhIFhk5ASOQ1Svu+XgrJ6jptAGesHTCLbAThhiXZF2
-         RutBvnWgcHRze3K7wrUIfaipiYBpom5Gz5fJbbggnt3vqC6zUqNOlUQO757Q0u/0m/V9
-         STR3aj7ERTqEjIkKTVeW+QrtLesPZn/d1mEZ9NNLSwD+TltUw62UUD9IKdMBHd3FhhFT
-         VaGkxlJZfuCk3UjMT86rx4GfjLAsrzm828c3Tm6ltYDN4SvUP82n4b71ftI1SW+pTbwh
-         wxlA==
-X-Gm-Message-State: AOAM530oieuR56u5N4FcZfp9dtziqcHxBiCvM0QzfmXixhvPF2A7z7fW
-        Y00+uoaxp2C758DRssAmo0OW7w==
-X-Google-Smtp-Source: ABdhPJzCRDv2m2NsfRzSYdU3punl1WmSuoZIWY3X6Qrw3w/UZAKmzNkoM0/3I601SkHanbswK7RLyw==
-X-Received: by 2002:ac8:33a1:: with SMTP id c30mr10693591qtb.156.1598453071797;
-        Wed, 26 Aug 2020 07:44:31 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id a203sm1862906qkg.30.2020.08.26.07.44.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 07:44:31 -0700 (PDT)
-Message-ID: <aade022eeea9d9196774d0f21cbdaa118de8f885.camel@ndufresne.ca>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Dave Airlie <airlied@gmail.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liuyao An <anliuyao@huawei.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Wed, 26 Aug 2020 10:44:28 -0400
-In-Reply-To: <20200825133025.13f047f0@coco.lan>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
-         <20200819152120.GA106437@ravnborg.org>
-         <20200819153045.GA18469@pendragon.ideasonboard.com>
-         <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
-         <20200820090326.3f400a15@coco.lan>
-         <20200820100205.GA5962@pendragon.ideasonboard.com>
-         <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
-         <20200825133025.13f047f0@coco.lan>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xc2Hb9o/7Ud3w/FXjCQl5Yr4FI/SfE6ovQyC4Jq0IVE=;
+        b=WpP1eTDtDxRLGq0fVT9F3V7GuPOhYDCrtOGVuCAmEzp3KyFn0j8/noevovUlxUV9Fb
+         HUWj12kRZmo6TDeWCYt2iLtd4VxVQ4omM9ZMsU0aikXZSPb6Ctic/sFhjoNbhzuQgU/B
+         C3bJENqrHF2t49MkpD6TaapTpko/CgEzAfLu9+tHDoB3T4fFFl8KbeG9j6D9q7FHW6w+
+         WUB0hIjyiztI3CEpZy/fPLAZZTpe6KQKsxkxgHQzBqs3oWLT2nlp46TrDCto5laW67b8
+         TfQJUHmfjO6vRZ2fjpM4UCsZTDBlVwlAqlo+peH5uglmKEpAAfS48FHrXUvCtdi/H8LZ
+         4pNQ==
+X-Gm-Message-State: AOAM5336kPPlHdI0Fi6wkqys3V2/kh/DsMLYZdOUyJll7nphSDzQlNNW
+        PRWSpJOps83LU8tVPIm4RTPCh0zALTyspA==
+X-Google-Smtp-Source: ABdhPJyT5a9WePwjGlwmbnuS5NX7RQ8zzM7hSEpnNk6/4mOkh8NTEaP5HnVV5RKaGcDjhOpsyAO3ag==
+X-Received: by 2002:ac8:4f4b:: with SMTP id i11mr13930514qtw.379.1598453262096;
+        Wed, 26 Aug 2020 07:47:42 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id o187sm1807312qkf.14.2020.08.26.07.47.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 07:47:41 -0700 (PDT)
+Subject: Re: (EXT) Re: [PATCH] of: skip disabled CPU nodes
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
+ <4dd06b79-1402-d7cf-9676-1f9a9526da12@gmail.com>
+ <9eb72c6561333661599411e49072928385629999.camel@ew.tq-group.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ac64852a-7f2a-6005-f914-268670cd4f95@gmail.com>
+Date:   Wed, 26 Aug 2020 09:47:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <9eb72c6561333661599411e49072928385629999.camel@ew.tq-group.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Le mardi 25 août 2020 à 13:30 +0200, Mauro Carvalho Chehab a écrit :
-> Em Tue, 25 Aug 2020 05:29:29 +1000
-> Dave Airlie <airlied@gmail.com> escreveu:
-> 
-> > On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > > Hi Mauro,
-> > > 
-> > > On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote:  
-> > > > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu:  
-> > > > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote:  
-> > > > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:  
-> > > > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:  
-> > > > > > > > This patch series port the out-of-tree driver for Hikey 970 (which
-> > > > > > > > should also support Hikey 960) from the official 96boards tree:
-> > > > > > > > 
-> > > > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > > > > > > > 
-> > > > > > > > Based on his history, this driver seems to be originally written
-> > > > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The original
-> > > > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
-> > > > > > > > implementation for FB dev API.
-> > > > > > > > 
-> > > > > > > > As I need to preserve the original history (with has patches from
-> > > > > > > > both HiSilicon and from Linaro),  I'm starting from the original
-> > > > > > > > patch applied there. The remaining patches are incremental,
-> > > > > > > > and port this driver to work with upstream Kernel.
-> > > > > > > >  
-> > > > > ...  
-> > > > > > > > - Due to legal reasons, I need to preserve the authorship of
-> > > > > > > >   each one responsbile for each patch. So, I need to start from
-> > > > > > > >   the original patch from Kernel 4.4;  
-> > > > > ...  
-> > > > > > > I do acknowledge you need to preserve history and all -
-> > > > > > > but this patchset is not easy to review.  
-> > > > > > 
-> > > > > > Why do we need to preserve history ? Adding relevant Signed-off-by and
-> > > > > > Co-developed-by should be enough, shouldn't it ? Having a public branch
-> > > > > > that contains the history is useful if anyone is interested, but I don't
-> > > > > > think it's required in mainline.  
-> > > > > 
-> > > > > Yea. I concur with Laurent here. I'm not sure what legal reasoning you
-> > > > > have on this but preserving the "absolute" history here is actively
-> > > > > detrimental for review and understanding of the patch set.
-> > > > > 
-> > > > > Preserving Authorship, Signed-off-by lines and adding Co-developed-by
-> > > > > lines should be sufficient to provide both atribution credit and DCO
-> > > > > history.  
-> > > > 
-> > > > I'm not convinced that, from legal standpoint, folding things would
-> > > > be enough. See, there are at least 3 legal systems involved here
-> > > > among the different patch authors:
-> > > > 
-> > > >       - civil law;
-> > > >       - common law;
-> > > >       - customary law + common law.
-> > > > 
-> > > > Merging stuff altogether from different law systems can be problematic,
-> > > > and trying to discuss this with experienced IP property lawyers will
-> > > > for sure take a lot of time and efforts. I also bet that different
-> > > > lawyers will have different opinions, because laws are subject to
-> > > > interpretation. With that matter I'm not aware of any court rules
-> > > > with regards to folded patches. So, it sounds to me that folding
-> > > > patches is something that has yet to be proofed in courts around
-> > > > the globe.
-> > > > 
-> > > > At least for US legal system, it sounds that the Country of
-> > > > origin of a patch is relevant, as they have a concept of
-> > > > "national technology" that can be subject to export regulations.
-> > > > 
-> > > > From my side, I really prefer to play safe and stay out of any such
-> > > > legal discussions.  
-> > > 
-> > > Let's be serious for a moment. If you think there are legal issues in
-> > > taking GPL-v2.0-only patches and squashing them while retaining
-> > > authorship information through tags, the Linux kernel if *full* of that.
-> > > You also routinely modify patches that you commit to the media subsystem
-> > > to fix "small issues".
-> > > 
-> > > The country of origin argument makes no sense either, the kernel code
-> > > base if full of code coming from pretty much all country on the planet.
-> > > 
-> > > Keeping the patches separate make this hard to review. Please squash
-> > > them.  
-> > 
-> > I'm inclined to agree with Laurent here.
-> > 
-> > Patches submitted as GPL-v2 with DCO lines and author names/companies
-> > should be fine to be squashed and rearranged,
-> > as long as the DCO and Authorship is kept somewhere in the new patch
-> > that is applied.
-> > 
-> > Review is more important here.
-> 
-> Sorry, but I can't agree that review is more important than to be able
-> to properly indicate copyrights in a valid way at the legal systems that
-> it would apply ;-)
+Hi Rob,
 
-Regardless of the "review-ability", our users distribute the Linux
-Kernel as a whole, so who contributed which specific line of code is
-already lost in a way. All we see in the distribution if a list of
-copyright holder and licenses. In this context, the per patches
-ownership have no legal implication. My two, non lawyer cents.
+On 2020-08-26 08:54, Matthias Schiffer wrote:
+> On Wed, 2020-08-26 at 08:01 -0500, Frank Rowand wrote:
+>> On 2020-08-26 07:02, Matthias Schiffer wrote:
+>>> Allow disabling CPU nodes using status = "disabled".
+>>>
+>>> This allows a bootloader to change the number of available CPUs
+>>> (for
+>>> example when a common DTS is used for SoC variants with different
+>>> numbers
+>>> of cores) without deleting the nodes altogether (which may require
+>>> additional fixups where the CPU nodes are referenced, e.g. a
+>>> cooling
+>>> map).
+>>>
+>>> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+>>>>
+>>> ---
+>>>  drivers/of/base.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>> index ea44fea99813..d547e9deced1 100644
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -796,6 +796,8 @@ struct device_node *of_get_next_cpu_node(struct
+>>> device_node *prev)
+>>>  		of_node_put(node);
+>>>  	}
+>>>  	for (; next; next = next->sibling) {
+>>> +		if (!__of_device_is_available(next))
+>>> +			continue;
+>>>  		if (!(of_node_name_eq(next, "cpu") ||
+>>>  		      __of_node_is_type(next, "cpu")))
+>>>  			continue;
+>>>
+>>
+>> The original implementation of of_get_next_cpu_node() had
+>> that check, but status disabled for cpu nodes has different
+>> semantics than other nodes, and the check broke some systems.
+>> The check was removed by c961cb3be906 "of: Fix cpu node
+>> iterator to not ignore disabled cpu nodes".
+>>
+>> It would be useful to document that difference in the
+>> header comment of of_get_next_cpu_node().
+>>
+>> -Frank
+> 
+> Hmm, I see. This difference in behaviour is quite unfortunate, as I'm
+> currently looking for a way to *really* disable a CPU core.
+> 
+> In arch/arm64/boot/dts/freescale/imx8mn.dtsi (and other variants of the
+> i.MX8M), there are 4 CPU nodes for the full-featured quad-core version.
+> The reduced single- and dual-core versions are currently handled in
+> NXP's U-Boot fork by deleting the additional nodes.
+> 
+> Not doing so causes the kernel to hang for a while when trying to
+> online the non-existent cores during boot (at least in linux-imx 5.4 -
+> I have not checked a more recent mainline kernel yet), but the deletion
+> is non-trivial to do without leaving dangling phandle references.
+
+Any thoughts on implementing another universal property that means
+something like "the hardware described by this node does not exist
+or is so broken that you better not use it".
+
+Matthias, if Rob thinks that is a good idea, then you should start
+with a new proposal that is also sent to
+devicetree-spec@vger.kernel.org <devicetree-spec@vger.kernel.org>
+
+-Frank
 
 > 
-> In any case, there's an easy way to make the code easy to review:
-> I can write the patches against staging (where it is OK to submit
-> preserving the history) and then add a final patch moving it out
-> of staging.
+> Kind regards,
+> Matthias
 > 
-> You can then just review the last patch, as it will contain the
-> entire code on it.
-> 
-> Another alternative, as I'm already doing with Sam, is for me to
-> submit the folded code as a reply to 00/xx. You can then just 
-> review the final code, without concerning about how the code reached
-> there.
-> 
-> From review point of the view, this will be the same as reviewing
-> a folded patch, but, from legal standpoint, the entire copyright
-> chain will be preserved.
-> 
-> Thanks,
-> Mauro
 
