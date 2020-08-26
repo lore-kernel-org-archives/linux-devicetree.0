@@ -2,106 +2,155 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC7FC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CA3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 260D320707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:34:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BStScc7S"
+	by mail.kernel.org (Postfix) with ESMTP id 43EC0206FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598424420;
+	bh=hVffajsF2+XdKaXPf34BPboBIlD4e9nfaQNS/KKUDNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZsOZxqdILjn1elG6KA3eOk3i4r2pnq1JXdCVQfVlyLO/jP8JcC4spgd+KXNq0mdDh
+	 TC/9ZXgHU7P6t+MiFtH9/lmI0EBzL8YAroHLcx9EjVdIqgIffaZv+gdsP87Ndh4jH3
+	 FH8JWuU7z6Pn1e8fKD0vPT5OAaBxCVQkV01or7Qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgHZGeT (ORCPT
+        id S1726739AbgHZGqw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbgHZGeT (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 02:34:19 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8AD2C061574;
-        Tue, 25 Aug 2020 23:34:18 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id m22so1023548ljj.5;
-        Tue, 25 Aug 2020 23:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lgWQaoUOmck1zKDSkfP/KU2pBuaR71IA8RK6LfmWfiU=;
-        b=BStScc7SEeJUXWtFIaOczGlfItuM9LUgot65Loa+CmcdSSPsyajCEedCUQudaWZm9z
-         2TzbozcX2s/U8pizJdFJ+iQHlu/IhWgEvwKuCgyC/MTXQeXCEY9o8LLux0T3CdD3AtA7
-         tn14pPv210JrLNqMSWzcgvPTGInmDCtX8eZLXqXRf084qdVH4xCMb2EOnB8WKBLC3VRG
-         FRkDG01aQbahppWVUqjzkW/AhJzBAulb4Z/WFkm+l3/BZX4cpFEVGo6mwDXX/OOz+YAe
-         ACwf6a462wehrJUZoFH9LB6jP6Fab5BbOOGEV3pyp5UTLFeayZmjFIssirme/7grvq3y
-         Rxlw==
+        Wed, 26 Aug 2020 02:46:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37673 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgHZGqv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 02:46:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x9so618599wmi.2;
+        Tue, 25 Aug 2020 23:46:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lgWQaoUOmck1zKDSkfP/KU2pBuaR71IA8RK6LfmWfiU=;
-        b=Qfm57taGOyea3w6577o3CZYagCbbZPg7ZpnDklL5R5Qzlbm3vgQe+d3o2X8I1tyZLu
-         VuwZrNrTW/YmJpSz4wgh865BCqs2KeUKcEyK3JMnHUAH7XUAbHb2H/TZFxgWBcUIr2Ud
-         4nt+4bi9KC/WXeF86G0uvRtrva8I5rq/DuX9KtOa38i//Khmi3d8CFHccMZnPve0tcu0
-         yq/ieTMW/G72sAvNBVbIbcrQbZUdU+GvjXUaUZXhYPmPoFs57FclcLN9PlJdj6eA+H36
-         rcC8SdFmsD6oREuwbyLgPglDHf1bZfIw4utuux17/bvvUYFrE5c+/aGyuvg5HV8F5dHF
-         0rNg==
-X-Gm-Message-State: AOAM532Orx5Jx7Nj660Uso8BzBA3nvzMFHBmfuT1F0VvTeeV/7UZoTJ0
-        gT0ZRD1SICELQvpbjmI3mKstGHgyTpE=
-X-Google-Smtp-Source: ABdhPJzPxuktg7pPrBXmouq95t70LJMDgatsUj53Twb1MRVQoKDhxeCz9r165MKz6Y5g35tPP6YkBw==
-X-Received: by 2002:a05:651c:88:: with SMTP id 8mr6808046ljq.277.1598423656911;
-        Tue, 25 Aug 2020 23:34:16 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id q5sm315641lfn.92.2020.08.25.23.34.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 23:34:16 -0700 (PDT)
-Subject: Re: [PATCH v1 2/6] power: supply: Add battery gauge driver for Acer
- Iconia Tab A500
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-3-digetx@gmail.com>
- <20200824140718.apoavlny6hlkm2ql@earth.universe>
- <31ec6865-4a33-bde8-73a6-20c188ec2ee7@gmail.com>
- <20200824213859.6o3q5i2kvtk44lqi@earth.universe>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <bc5e828c-67ce-0c9e-e8e7-19a532145cfa@gmail.com>
-Date:   Wed, 26 Aug 2020 09:34:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=woDwpwEGnSTSc4kljToA4r5StN2rkeplc2dBRDufFZA=;
+        b=axwIzwdJXwjZsXIrMW6pOdz/Fl6s46kYixkoGoQQN/7r9Q/vxadPrX3i+bebYsbCiu
+         F4qZsZvN95U99837oYJKDflwgzafkp8BGFvkifvpW9oEhMLE333cpq/DJ6shNJJfSU5K
+         fnmuUSViSObLp0Ewaib3nIfSmb8PtCnnfdI5BujC6YtDd+HCiTYKVXGRsyhEHO+jm7pY
+         zQmoJVHnBmZRFKyutbDAAbYCLy1mkWk3CT00a6x0Cu1r3oCwcCfSknTc66vPeMBdwA5U
+         nLq76H0aID+17EaVGxsDpqxCaKdydyCQWRbilU7I08vj/SVRvwa1e2WoBzJMws98UpK1
+         2LPQ==
+X-Gm-Message-State: AOAM531ug6AshDEqLNSwI/selChhVUmSRNzRglZTYEfaWpy+w8gqY/Fn
+        x7ybN70ny7ur9SgYvotdq0ZJbNX2crg=
+X-Google-Smtp-Source: ABdhPJwwnq5+FT5AJu3knzHTD/+s17qG77/RpFqNYzEjYg24N/OVflA007W8XbHJWMrOxuCfflZj9Q==
+X-Received: by 2002:a7b:cf13:: with SMTP id l19mr5238783wmg.115.1598424408857;
+        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
+Received: from pi3 ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id g17sm3402102wrr.28.2020.08.25.23.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 08:46:45 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
+Message-ID: <20200826064645.GA12103@pi3>
+References: <20200825185152.GC2693@kozik-lap>
+ <CGME20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9@eucas1p2.samsung.com>
+ <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200824213859.6o3q5i2kvtk44lqi@earth.universe>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-25.08.2020 00:38, Sebastian Reichel пишет:
-> Hi,
-...
->> Hello, Sebastian! The battery isn't hot-swappable on A500, but it also
->> should be okay to always re-read the serialno. I'll consider removing
->> the caching in the v2, thanks.
+On Wed, Aug 26, 2020 at 07:11:18AM +0200, Lukasz Stelmach wrote:
+> It was <2020-08-25 wto 20:51>, when Krzysztof Kozlowski wrote:
+> > On Tue, Aug 25, 2020 at 07:03:11PM +0200, Łukasz Stelmach wrote:
+> >> Enable ax88796c driver for the ethernet chip on Exynos3250-based
+> >> ARTIK5 boards.
+> >> 
+> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> >> ---
+> >>  arch/arm/configs/exynos_defconfig   | 2 ++
+> >>  arch/arm/configs/multi_v7_defconfig | 2 ++
+> >>  2 files changed, 4 insertions(+)
+> >> 
+> >> Please DO NOT merge before these two
+> >
+> > Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
+> > it does not change anything except automated systems booting these
+> > defconfigs... The boards might be broken by DT.
 > 
-> I assumed it would be hot-swappable because of a500_battery_get_presence().
-> If it's not hot-swappable, the caching is fine.
+> I was told, to ask for deferred merge of defconfig and it makes sense to
+> me. DT won't break anything if the driver isn't compiled. However, I can
+> see that you have a word you may decide about DT too. My point is to
+> wait until spi-s3c64xx patches are merged and not to break ARTIK5
+> boards.
 
-The battery could be disconnected from the motherboard, but this
-requires to have device disassembled.
+The config is chosen and adjusted by each person, during build. Merging
+defconfig does not necessarily affect them. However merging DT affects -
+you cannot disable it without source code modification.
 
-Okay, I'll keep the caching.
+Anyway, no problem for me with waiting with defconfig.
 
-Thanks!
+Best regards,
+Krzysztof
+
+
+> 
+> >> 
+> >>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung.com/
+> >>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung.com/
+> >> 
+> >> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+> >> index 6e8b5ff0859c..82480b2bf545 100644
+> >> --- a/arch/arm/configs/exynos_defconfig
+> >> +++ b/arch/arm/configs/exynos_defconfig
+> >> @@ -107,6 +107,8 @@ CONFIG_MD=y
+> >>  CONFIG_BLK_DEV_DM=y
+> >>  CONFIG_DM_CRYPT=m
+> >>  CONFIG_NETDEVICES=y
+> >> +CONFIG_NET_VENDOR_ASIX=y
+> >> +CONFIG_SPI_AX88796C=y
+> >>  CONFIG_SMSC911X=y
+> >>  CONFIG_USB_RTL8150=m
+> >>  CONFIG_USB_RTL8152=y
+> >> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> >> index e9e76e32f10f..a8b4e95d4148 100644
+> >> --- a/arch/arm/configs/multi_v7_defconfig
+> >> +++ b/arch/arm/configs/multi_v7_defconfig
+> >> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=y
+> >>  CONFIG_SATA_MV=y
+> >>  CONFIG_SATA_RCAR=y
+> >>  CONFIG_NETDEVICES=y
+> >> +CONFIG_NET_VENDOR_ASIX=y
+> >> +CONFIG_SPI_AX88796C=m
+> >>  CONFIG_VIRTIO_NET=y
+> >>  CONFIG_B53_SPI_DRIVER=m
+> >>  CONFIG_B53_MDIO_DRIVER=m
+> >> -- 
+> >> 2.26.2
+> >> 
+> >
+> >
+> 
+> -- 
+> Łukasz Stelmach
+> Samsung R&D Institute Poland
+> Samsung Electronics
+
+
