@@ -1,101 +1,159 @@
-Return-Path: <SRS0=0cLU=CD=vger.kernel.org=devicetree-owner@kernel.org>
+Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B730CC433E1
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 23:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC142C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 00:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912342075E
-	for <linux-devicetree@archiver.kernel.org>; Tue, 25 Aug 2020 23:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E8420737
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 00:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="F2FHh4Zi";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="zu6N0Nk/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgHYXoL (ORCPT
+        id S1726570AbgHZAkj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:44:11 -0400
-Received: from anchovy3.45ru.net.au ([203.30.46.155]:46166 "EHLO
-        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgHYXoK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 19:44:10 -0400
-Received: (qmail 18469 invoked by uid 5089); 25 Aug 2020 23:44:07 -0000
-Received: by simscan 1.2.0 ppid: 18331, pid: 18332, t: 0.0840s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?192.168.0.22?) (preid@electromag.com.au@203.59.235.95)
-  by anchovy2.45ru.net.au with ESMTPA; 25 Aug 2020 23:44:06 -0000
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-To:     Wolfram Sang <wsa@the-dreams.de>, Codrin.Ciubotariu@microchip.com,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
-        thomas.petazzoni@bootlin.com
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
- <20191021202044.GB3607@kunai>
- <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
- <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
- <20191024150726.GA1120@kunai>
- <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
- <20200825132846.GA1753@kunai>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <8deeae50-2d67-d728-7afd-1b8f1b7a927e@electromag.com.au>
-Date:   Wed, 26 Aug 2020 07:44:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 20:40:39 -0400
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:54535 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgHZAkh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Aug 2020 20:40:37 -0400
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 83A82E60B4;
+        Tue, 25 Aug 2020 20:40:34 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=R38hy58NZguIzIB9enm7bZvIUNQ=; b=F2FHh4
+        Zix2x8/ePEPoiQ4+VAfaBmBf7Dt0gCB7u7LX4hDqrgSDXeKWPcDBDGLZQ9BI5fg8
+        oGyvmV2iacqbOCIO2/dZX9X37NovyS1VZYGFJevrn1N9PRKA6ys9Qw7ZjS2S2+h6
+        JwDnC9EJB49UUHlxlzGgDYZD/tkaH+O0bdpVE=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 73CA6E60B3;
+        Tue, 25 Aug 2020 20:40:34 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=TjNHRHC5qBTiwlE/Aup4dYhZf5RtZhcLykydKNMKpsQ=; b=zu6N0Nk/ZK5kpOdkNXcautMvx2kRiXGoYjlOuiUndwL5SJBR+rX6/mLCh8nZ8OkEikaEfPmubmLyI7ZVXSueo/v/pns8+Jt2tWO2W27c/QWRpPS0P8Bb1OWrpv1kbs97Jmj438LelsCsqfqBwI6fDYS9TIzfuOz4ndRxJv1F9is=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 9D191E60AF;
+        Tue, 25 Aug 2020 20:40:31 -0400 (EDT)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id C91A12DA0521;
+        Tue, 25 Aug 2020 20:40:29 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 20:40:29 -0400 (EDT)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Rob Herring <robh@kernel.org>
+cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+        Laura Nixon <laura.nixon@team.mipi.org>,
+        Robert Gough <robert.gough@intel.com>,
+        Matthew Schnoor <matthew.schnoor@intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: MIPI I3C Host Controller
+ Interface
+In-Reply-To: <CAL_JsqKJByNNwgP34_=G3bdVaZiM1OCUY94N1pTRzgNvqHjcWw@mail.gmail.com>
+Message-ID: <nycvar.YSQ.7.78.906.2008252015280.1479@knanqh.ubzr>
+References: <20200819031723.1398378-1-nico@fluxnic.net> <20200819031723.1398378-2-nico@fluxnic.net> <20200825212932.GA1360264@bogus> <nycvar.YSQ.7.78.906.2008251732430.1479@knanqh.ubzr> <CAL_JsqKJByNNwgP34_=G3bdVaZiM1OCUY94N1pTRzgNvqHjcWw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825132846.GA1753@kunai>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: BEF9EDF6-E734-11EA-9B56-843F439F7C89-78420484!pb-smtp21.pobox.com
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 25/08/2020 21:28, Wolfram Sang wrote:
-> Hi Phil,
+On Tue, 25 Aug 2020, Rob Herring wrote:
+
+> On Tue, Aug 25, 2020 at 4:02 PM Nicolas Pitre <nico@fluxnic.net> wrote:
 > 
-> yes, this thread is old but a similar issue came up again...
+> > Currently there are very few implementations. One of them lives in an
+> > FPGA and the example below is actually the DT entry I use for it. I'm
+> > guessing specific vendor implementations will have their own tweaks
+> > eventually, such as clock sources and whatnot.
 > 
-> On Fri, Oct 25, 2019 at 09:14:00AM +0800, Phil Reid wrote:
+> Yes, exactly. And bugs too.
+
+Obviously.  ;-)
+
+> > But that is outside of
+> > the spec (actually the spec defines a register area for eventual vendor
+> > specific usage). But I have no visibility into that and of course the
+> > code has no provision for that yet either.
+> >
+> > So I imagine there will be something like this in dts files eventually:
+> >
+> >         compatibvle = "intel,foobar_soc_i3c_hci", "mipi-i3c-hci";
+> >
+> > Is that what you mean?
 > 
->>>
->>>> So at the beginning of a new transfer, we should check if SDA (or SCL?)
->>>> is low and, if it's true, only then we should try recover the bus.
->>>
->>> Yes, this is the proper time to do it. Remember, I2C does not define a
->>> timeout.
->>>
->>
->> FYI: Just a single poll at the start of the transfer, for it being low, will cause problems with multi-master buses.
->> Bus recovery should be attempted after a timeout when trying to communicate, even thou i2c doesn't define a timeout.
->>
->> I'm trying to fix the designware drivers handling of this at the moment.
+> Yes. Even your FPGA is tied to some implementation...
+
+It is, but so far it's self-discoverable.
+
+> > > Also, which version of the spec does this compatible correspond to?
+> >
+> > All of them.
+> >
+> > > Or are there not HCI differences in the spec versions you mention in
+> > > the cover letter?
+> >
+> > The hardware is self advertising per the spec. So there is no need to
+> > carry such distinction in the DT compatible. Even vendor extensions are
+> > tagged with MIPI vendor IDs in the hardware directly.
 > 
-> I wonder what you ended up with? You are right, a single poll is not
-> enough. It only might be if one applies the new "single-master" binding
-> for a given bus. If that is not present, my best idea so far is to poll
-> SDA for the time defined in adapter->timeout and if it is all low, then
-> initiate a recovery.
+> Oh good, folks are learning. :)
 > 
+> Is the vendor ID (and revision) discoverable even if no vendor
+> extensions?
 
-On my todo list still.
+Yes. It's even in the very first 32-bit word from the register space. 
+Here's the relevant code:
 
-Our system eventually recovers at the moment and the multi-master bus
-doesn't contain anything that's time critical to our systems operation.
+#define HCI_VERSION                     0x00    /* HCI Version (in BCD) */
+
+[...]
+
+        /* Validate HCI hardware version */
+        regval = reg_read(HCI_VERSION);
+        hci->version_major = (regval >> 8) & 0xf;
+        hci->version_minor = (regval >> 4) & 0xf;
+        hci->revision = regval & 0xf;
+        NOTE("HCI v%u.%u r%02u",
+             hci->version_major, hci->version_minor, hci->revision);
+        /* known versions */
+        switch (regval & ~0xf) {
+        case 0x100:     /* version 1.0 */
+        case 0x110:     /* version 1.1 */
+        case 0x200:     /* version 2.0 */
+                break;
+        default:
+                ERR("unsupported HCI version");
+                return -EPROTONOSUPPORT;
+        }
+
+Then there is a register that provides the relative offset to another 
+register area where "extended attributes" are to be found. Those 
+attributes are also spec defined. One of the standard attributes 
+contains the MIPI vendor ID, the vendor version ID and vendor product 
+ID. And then there is a range of attributes which are vendor defined. 
+That's where specific stuff like fancy clock controls would be located 
+and vendor specific tweaks to be applied. But so far 
+everything can be predicated on hardware-provided data.
+
+> If so, then I'm more comfortable with "mipi-i3c-hci" on it's own. The 
+> exception will be if there's setup needed to discover the h/w which 
+> seems likely. In that case, we should probably do compatible strings 
+> based on VID/PID like PCI, USB, etc. No need to define that now I 
+> guess, but please add some sort of summary of the above about the 
+> discoverability of the HCI implementer and features.
+
+OK.
 
 
--- 
-Regards
-Phil Reid
-
-ElectroMagnetic Imaging Technology Pty Ltd
-Development of Geophysical Instrumentation & Software
-www.electromag.com.au
-
-3 The Avenue, Midland WA 6056, AUSTRALIA
-Ph: +61 8 9250 8100
-Fax: +61 8 9250 7100
-Email: preid@electromag.com.au
+Nicolas
