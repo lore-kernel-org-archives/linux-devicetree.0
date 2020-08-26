@@ -2,707 +2,400 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA14EC433E3
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 20:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A81C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 20:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75CEB207BC
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 20:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7432078A
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 20:44:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ibcc3Eln"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTfbGcog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHZUnh (ORCPT
+        id S1726851AbgHZUoP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:43:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        Wed, 26 Aug 2020 16:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727022AbgHZUne (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 16:43:34 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A16C061574;
-        Wed, 26 Aug 2020 13:43:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hFfyH3MmY6mSDAKFibjrh1vheYKMB1rP6EHZIrmrc+s=; b=ibcc3Eln87vxTPmUtWle3RgjkT
-        uQGkUuV1lgbOr6QdwZ6PB9DyUet5w21wZZjwex0xucNOLFgTiKJJSIW9pg2U/QNSJKYAnokevB6JL
-        BaAzVcQv/aM/XqHXFyIuybIs1GCBDoHx3rQsMcywUqPCG/Du6ibUB+l6GIRbikN9ZZbg=;
-Received: from p200300ccff0d72001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0d:7200:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kB2GQ-00012b-07; Wed, 26 Aug 2020 22:43:22 +0200
-Received: from andi by aktux with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kB2GP-0001Ko-LO; Wed, 26 Aug 2020 22:43:21 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        andreas@kemnade.info, Anson.Huang@nxp.com,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        michael@walle.cc, rjones@gateworks.com, leoyang.li@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
-        letux-kernel@openphoenux.org
-Subject: [PATCH v2 2/2] ARM: dts: imx: add devicetree for Tolino Shine 2 HD
-Date:   Wed, 26 Aug 2020 22:42:51 +0200
-Message-Id: <20200826204251.5082-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200826204251.5082-1-andreas@kemnade.info>
-References: <20200826204251.5082-1-andreas@kemnade.info>
+        with ESMTP id S1726765AbgHZUoO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 16:44:14 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E35C061574;
+        Wed, 26 Aug 2020 13:44:14 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id i10so1742371pgk.1;
+        Wed, 26 Aug 2020 13:44:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c6xYxHtdPsMmTmyT83g4v0jl89gNS4O1vCIlVcxSXgQ=;
+        b=iTfbGcogI4rYLaTVdlbbQwGenz4DtvqFVz0pADP0e339WNaNU0otoHsomapXaCSbtH
+         9KgGWhHRAuVuG4HfamVp9Dom8ziYQ8uGROMVvWt1TFRugZarpcK5opVXnS8nHzsCvbM4
+         SgoZrD/rdTjtsOYcjN9b04DDZiGgsJb/89aAuoHO18dwnNZ2OKBTXlhspBNW5TeEQI1V
+         UhwEG7aBC6AHcTAgl5vUb6CSBMGExxEc4uuenRL6u2SMiyhrRngS7YydqvdiluaJzkBZ
+         Rd0Du5Bmo06M6jN7HdriHuJPTSKs4Q0M/+J8Fw4oGVr+I97oA0UVemxFcT9FmsN/QS/u
+         Qy6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=c6xYxHtdPsMmTmyT83g4v0jl89gNS4O1vCIlVcxSXgQ=;
+        b=h/RLiItUjZDrRoQrzZl6qxoyIBDL2MKyi8DZ+RjibVN1OEHJW5qQP2PsiJtr0a9CFc
+         n+kAHEwnHtESDdAN/YTxJKN2u8NDJVffxZdktwiE0NpzMfGRIJ4gq/L7fYcMshyHQcE6
+         LD4CRLF1puEtnUvHUMkge2NbfETnwLwtCQtnPxB6swu8CLbaWC+IW+il2ZyOScFcdSmP
+         o1S6XbhIHN7D2VRANavU0KyruHrYdP0n99a2QByMr2o2WwDg2KnyydUivpVzEdfqnhe/
+         LXOP3QRKdkTQ+OFIkKhhqVtGzBxz8L1v+O5jpJ8L34289NkHkUK13ga3vxYn1ROskr4j
+         00Cg==
+X-Gm-Message-State: AOAM530u1kCjeWHjbQ/HNdohAOL/AvbInWafgzk02xDaf6xieS70F0ie
+        cISZBbjMLS6tUhg6jRyOXWj8ITxQx6Q=
+X-Google-Smtp-Source: ABdhPJxIrs9lvA/269YmsVqIX7mJ0RJ5+/Mk4r0hPR8n948ydo+k+lpJdpYtKu3JFTtoIkvC9sJEYQ==
+X-Received: by 2002:a65:48c1:: with SMTP id o1mr11235341pgs.83.1598474653071;
+        Wed, 26 Aug 2020 13:44:13 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id in12sm2812142pjb.29.2020.08.26.13.44.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 13:44:12 -0700 (PDT)
+Subject: Re: [PATCH 1/2] usb typec: mt6360: Add support for mt6360 Type-C
+ driver
+To:     cy_huang <u0084500@gmail.com>, gregkh@linuxfoundation.org,
+        robh+dt@kernel.org, matthias.bgg@gmail.com,
+        heikki.krogerus@linux.intel.com
+Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1598440602-8648-1-git-send-email-u0084500@gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
+ RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
+ nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
+ 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
+ gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
+ IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
+ kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
+ VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
+ jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
+ BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
+ ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
+ CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
+ nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
+ hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
+ c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
+ 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
+ GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
+ sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
+ Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
+ HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
+ BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
+ l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
+ 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
+ pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
+ J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
+ pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
+ 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
+ ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
+ I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
+ nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
+ HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
+ JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
+ J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
+ cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
+ wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
+ hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
+ nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
+ QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
+ trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
+ WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
+ HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <a7d1a5d9-97e9-bcf6-23f4-2c4be356913f@roeck-us.net>
+Date:   Wed, 26 Aug 2020 13:44:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <1598440602-8648-1-git-send-email-u0084500@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This adds a devicetree for the Tolino Shine 2 HD Ebook reader. It is based
-on boards marked with "37NB-E60QF0+4A2". It is equipped with an i.MX6SL
-SoC.
+On 8/26/20 4:16 AM, cy_huang wrote:
+> From: ChiYuan Huang <cy_huang@richtek.com>
+> 
+> Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+> It works with Type-C Port Controller Manager to provide USB PD
+> and USB Type-C functionalities.
+> 
+> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> ---
+>  drivers/usb/typec/tcpm/Kconfig        |   8 ++
+>  drivers/usb/typec/tcpm/Makefile       |   1 +
+>  drivers/usb/typec/tcpm/tcpci_mt6360.c | 212 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 221 insertions(+)
+>  create mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
+> 
+> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+> index fa3f393..58a64e1 100644
+> --- a/drivers/usb/typec/tcpm/Kconfig
+> +++ b/drivers/usb/typec/tcpm/Kconfig
+> @@ -27,6 +27,14 @@ config TYPEC_RT1711H
+>  	  Type-C Port Controller Manager to provide USB PD and USB
+>  	  Type-C functionalities.
+>  
+> +config TYPEC_MT6360
+> +	tristate "Mediatek MT6360 Type-C driver"
+> +	depends on MFD_MT6360
+> +	help
+> +	  Mediatek MT6360 is a multi-functional IC that includes
+> +	  USB Type-C. It works with Type-C Port Controller Manager
+> +	  to provide USB PD and USB Type-C functionalities.
+> +
+>  endif # TYPEC_TCPCI
+>  
+>  config TYPEC_FUSB302
+> diff --git a/drivers/usb/typec/tcpm/Makefile b/drivers/usb/typec/tcpm/Makefile
+> index a5ff6c8..7592ccb 100644
+> --- a/drivers/usb/typec/tcpm/Makefile
+> +++ b/drivers/usb/typec/tcpm/Makefile
+> @@ -5,3 +5,4 @@ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
+>  typec_wcove-y			:= wcove.o
+>  obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
+>  obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
+> +obj-$(CONFIG_TYPEC_MT6360)	+= tcpci_mt6360.o
+> diff --git a/drivers/usb/typec/tcpm/tcpci_mt6360.c b/drivers/usb/typec/tcpm/tcpci_mt6360.c
+> new file mode 100644
+> index 00000000..6a28193
+> --- /dev/null
+> +++ b/drivers/usb/typec/tcpm/tcpci_mt6360.c
+> @@ -0,0 +1,212 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +//
+> +// Copyright (C) 2020 MediaTek Inc.
+> +//
+> +// Author: ChiYuan Huang <cy_huang@richtek.com>
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/usb/tcpm.h>
 
-Expected to work:
-- Buttons
-- Wifi
-- Touchscreen
-- LED
-- uSD
-- USB
-- RTC
+Is that needed ?
 
-Not working due to missing drivers:
-- Backlight (requires NTXEC driver)
-- EPD
+> +
+> +#include "tcpci.h"
+> +
+> +#define MT6360_REG_VCONNCTRL1	0x8C
+> +#define MT6360_REG_MODECTRL2	0x8F
+> +#define MT6360_REG_SWRESET	0xA0
+> +#define MT6360_REG_DEBCTRL1	0xA1
+> +#define MT6360_REG_DRPCTRL1	0xA2
+> +#define MT6360_REG_DRPCTRL2	0xA3
+> +#define MT6360_REG_I2CTORST	0xBF
+> +#define MT6360_REG_RXCTRL2	0xCF
+> +#define MT6360_REG_CTDCTRL2	0xEC
+> +
+> +/* MT6360_REG_VCONNCTRL1 */
+> +#define MT6360_VCONNCL_ENABLE	BIT(0)
+> +/* MT6360_REG_RXCTRL2 */
+> +#define MT6360_OPEN40M_ENABLE	BIT(7)
+> +/* MT6360_REG_CTDCTRL2 */
+> +#define MT6360_RPONESHOT_ENABLE	BIT(6)
+> +
+> +struct mt6360_tcpc_info {
+> +	struct tcpci_data tdata;
+> +	struct tcpci *tcpci;
+> +	struct device *dev;
+> +	int irq;
+> +};
+> +
+> +static inline int mt6360_tcpc_read16(struct regmap *regmap,
+> +				     unsigned int reg, u16 *val)
+> +{
+> +	return regmap_raw_read(regmap, reg, val, sizeof(u16));
+> +}
+> +
+> +static inline int mt6360_tcpc_write16(struct regmap *regmap,
+> +				      unsigned int reg, u16 val)
+> +{
+> +	return regmap_raw_write(regmap, reg, &val, sizeof(u16));
+> +}
+> +
+> +static int mt6360_tcpc_init(struct tcpci *tcpci, struct tcpci_data *tdata)
+> +{
+> +	struct regmap *regmap = tdata->regmap;
+> +	int ret;
+> +
+> +	ret = regmap_write(regmap, MT6360_REG_SWRESET, 0x01);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* after reset command, wait 1~2ms to wait IC action */
+> +	usleep_range(1000, 2000);
+> +
+> +	/* write all alert to masked */
+> +	ret = mt6360_tcpc_write16(regmap, TCPC_ALERT_MASK, 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* config I2C timeout reset enable , and timeout to 200ms */
+> +	ret = regmap_write(regmap, MT6360_REG_I2CTORST, 0x8F);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* config CC Detect Debounce : 26.7*val us */
+> +	ret = regmap_write(regmap, MT6360_REG_DEBCTRL1, 0x10);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* DRP Toggle Cycle : 51.2 + 6.4*val ms */
+> +	ret = regmap_write(regmap, MT6360_REG_DRPCTRL1, 4);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* DRP Duyt Ctrl : dcSRC: /1024 */
+> +	ret = mt6360_tcpc_write16(regmap, MT6360_REG_DRPCTRL2, 330);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable VCONN Current Limit function */
+> +	ret = regmap_update_bits(regmap, MT6360_REG_VCONNCTRL1, MT6360_VCONNCL_ENABLE,
+> +				 MT6360_VCONNCL_ENABLE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable cc open 40ms when pmic send vsysuv signal */
+> +	ret = regmap_update_bits(regmap, MT6360_REG_RXCTRL2, MT6360_OPEN40M_ENABLE,
+> +				 MT6360_OPEN40M_ENABLE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable Rpdet oneshot detection */
+> +	ret = regmap_update_bits(regmap, MT6360_REG_CTDCTRL2, MT6360_RPONESHOT_ENABLE,
+> +				 MT6360_RPONESHOT_ENABLE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Set shipping mode off, AUTOIDLE on */
+> +	return regmap_write(regmap, MT6360_REG_MODECTRL2, 0x7A);
+> +}
+> +
+> +static irqreturn_t mt6360_irq(int irq, void *dev_id)
+> +{
+> +	struct mt6360_tcpc_info *mti = dev_id;
+> +
+> +	return tcpci_irq(mti->tcpci);
+> +}
+> +
+> +static int mt6360_tcpc_probe(struct platform_device *pdev)
+> +{
+> +	struct mt6360_tcpc_info *mti;
+> +	int ret;
+> +
+> +	mti = devm_kzalloc(&pdev->dev, sizeof(*mti), GFP_KERNEL);
+> +	if (!mti)
+> +		return -ENOMEM;
+> +
+> +	mti->dev = &pdev->dev;
+> +
+> +	mti->tdata.regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!mti->tdata.regmap) {
+> +		dev_err(&pdev->dev, "Failed to get parent regmap\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	mti->irq = platform_get_irq_byname(pdev, "PD_IRQB");
+> +	if (mti->irq < 0) {
+> +		dev_err(&pdev->dev, "Failed to get PD_IRQB irq\n");
+> +		return mti->irq;
+> +	}
+> +
+> +	mti->tdata.init = mt6360_tcpc_init;
+> +	mti->tcpci = tcpci_register_port(&pdev->dev, &mti->tdata);
+> +	if (IS_ERR_OR_NULL(mti->tcpci)) {
+> +		dev_err(&pdev->dev, "Failed to register tcpci port\n");
+> +		return PTR_ERR(mti->tcpci);
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(mti->dev, mti->irq, NULL, mt6360_irq, IRQF_ONESHOT,
+> +					dev_name(&pdev->dev), mti);
+> +	if (ret) {
+> +		dev_err(mti->dev, "Failed to register irq\n");
+> +		tcpci_unregister_port(mti->tcpci);
+> +		return ret;
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, true);
+> +	platform_set_drvdata(pdev, mti);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mt6360_tcpc_remove(struct platform_device *pdev)
+> +{
+> +	struct mt6360_tcpc_info *mti = platform_get_drvdata(pdev);
+> +
+> +	tcpci_unregister_port(mti->tcpci);
 
-Not working due to unknown reasons:
-- deep sleep (echo standby >/sys/power/state works),
-  wakeup fails when imx_gpc_pre_suspend(true) was called.
+That leaves interrupts enabled, which might be racy
+because interrupts are still enabled here.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-Changes in v2:
-- better comments about internals
-- avoid confusion about polarity of wifi enable pin
-- newline cleanup
+Guenter
 
- arch/arm/boot/dts/Makefile                   |   1 +
- arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts | 588 +++++++++++++++++++
- 2 files changed, 589 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e6a1cac0bfc7..c65fa3852246 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -581,6 +581,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6qp-zii-rdu2.dtb
- dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
-+	imx6sl-tolino-shine2hd.dtb \
- 	imx6sl-tolino-shine3.dtb \
- 	imx6sl-warp.dtb
- dtb-$(CONFIG_SOC_IMX6SLL) += \
-diff --git a/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts b/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
-new file mode 100644
-index 000000000000..caa279608803
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
-@@ -0,0 +1,588 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device tree for the Tolino Shine 2 HD ebook reader
-+ *
-+ * Name on mainboard is: 37NB-E60QF0+4A2 or 37NB-E60QF0+4A3
-+ * Serials start with: E60QF2
-+ *
-+ * Copyright 2020 Andreas Kemnade
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "imx6sl.dtsi"
-+
-+/ {
-+	model = "Tolino Shine 2 HD";
-+	compatible = "kobo,tolino-shine2hd", "fsl,imx6sl";
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	gpio_keys: gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
-+
-+		cover {
-+			label = "Cover";
-+			gpios = <&gpio5 12 GPIO_ACTIVE_LOW>;
-+			linux,code = <SW_LID>;
-+			linux,input-type = <EV_SW>;
-+			wakeup-source;
-+		};
-+
-+		fl {
-+			label = "Frontlight";
-+			gpios = <&gpio3 26 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_BRIGHTNESS_CYCLE>;
-+		};
-+
-+		home {
-+			label = "Home";
-+			gpios = <&gpio3 25 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_HOME>;
-+		};
-+
-+		power {
-+			label = "Power";
-+			gpios = <&gpio5 8 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	leds: leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_led>;
-+
-+		on {
-+			label = "tolinoshine2hd:white:on";
-+			gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
-+			linux,default-trigger = "timer";
-+		};
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	reg_wifi: regulator-wifi {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_power>;
-+		regulator-name = "SD3_SPWR";
-+		regulator-min-microvolt = <3000000>;
-+		regulator-max-microvolt = <3000000>;
-+		gpio = <&gpio4 29 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_reset>;
-+		post-power-on-delay-ms = <20>;
-+		reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default","sleep";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	pinctrl-1 = <&pinctrl_i2c1_sleep>;
-+	status = "okay";
-+
-+	/* TODO: embedded controller at 0x43 (driver missing) */
-+
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default","sleep";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	pinctrl-1 = <&pinctrl_i2c2_sleep>;
-+	clock-frequency = <100000>;
-+	status = "okay";
-+
-+	zforce: touchscreen@50 {
-+		compatible = "neonode,zforce";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_zforce>;
-+		reg = <0x50>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
-+		vdd-supply = <&ldo1_reg>;
-+		reset-gpios = <&gpio5 9 GPIO_ACTIVE_LOW>;
-+		x-size = <1072>;
-+		y-size = <1448>;
-+	};
-+
-+	/* TODO: TPS65185 PMIC for E Ink at 0x68 */
-+
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	clock-frequency = <400000>;
-+	status = "okay";
-+
-+	ricoh619: pmic@32 {
-+		compatible = "ricoh,rc5t619";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ricoh_gpio>;
-+		reg = <0x32>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+		system-power-controller;
-+
-+		regulators {
-+			dcdc1_reg: DCDC1 {
-+				regulator-name = "DCDC1";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-max-microvolt = <900000>;
-+					regulator-suspend-min-microvolt = <900000>;
-+				};
-+			};
-+
-+			/* Core3_3V3 */
-+			dcdc2_reg: DCDC2 {
-+				regulator-name = "DCDC2";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-max-microvolt = <3100000>;
-+					regulator-suspend-min-microvolt = <3100000>;
-+				};
-+			};
-+
-+			dcdc3_reg: DCDC3 {
-+				regulator-name = "DCDC3";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-max-microvolt = <1140000>;
-+					regulator-suspend-min-microvolt = <1140000>;
-+				};
-+			};
-+
-+			/* Core4_1V2 */
-+			dcdc4_reg: DCDC4 {
-+				regulator-name = "DCDC4";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-max-microvolt = <1140000>;
-+					regulator-suspend-min-microvolt = <1140000>;
-+				};
-+			};
-+
-+			/* Core4_1V8 */
-+			dcdc5_reg: DCDC5 {
-+				regulator-name = "DCDC5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-max-microvolt = <1700000>;
-+					regulator-suspend-min-microvolt = <1700000>;
-+				};
-+			};
-+
-+			/* IR_3V3 */
-+			ldo1_reg: LDO1  {
-+				regulator-name = "LDO1";
-+				regulator-boot-on;
-+			};
-+
-+			/* Core1_3V3 */
-+			ldo2_reg: LDO2  {
-+				regulator-name = "LDO2";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-max-microvolt = <3000000>;
-+					regulator-suspend-min-microvolt = <3000000>;
-+				};
-+			};
-+
-+			/* Core5_1V2 */
-+			ldo3_reg: LDO3  {
-+				regulator-name = "LDO3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo4_reg: LDO4 {
-+				regulator-name = "LDO4";
-+				regulator-boot-on;
-+			};
-+
-+			/* SPD_3V3 */
-+			ldo5_reg: LDO5 {
-+				regulator-name = "LDO5";
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			/* DDR_0V6 */
-+			ldo6_reg: LDO6 {
-+				regulator-name = "LDO6";
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			/* VDD_PWM */
-+			ldo7_reg: LDO7 {
-+				regulator-name = "LDO7";
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			/* ldo_1v8 */
-+			ldo8_reg: LDO8 {
-+				regulator-name = "LDO8";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo9_reg: LDO9 {
-+				regulator-name = "LDO9";
-+				regulator-boot-on;
-+			};
-+
-+			ldo10_reg: LDO10 {
-+				regulator-name = "LDO10";
-+				regulator-boot-on;
-+			};
-+
-+			ldortc1_reg: LDORTC1  {
-+				regulator-name = "LDORTC1";
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_gpio_keys: gpio-keysgrp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD1_DAT1__GPIO5_IO08  0x17059
-+			MX6SL_PAD_SD1_DAT4__GPIO5_IO12  0x17059
-+			MX6SL_PAD_KEY_COL1__GPIO3_IO26  0x17059
-+			MX6SL_PAD_KEY_ROW0__GPIO3_IO25  0x17059
-+		>;
-+	};
-+
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX6SL_PAD_LCD_DAT0__GPIO2_IO20	0x79
-+			MX6SL_PAD_LCD_DAT1__GPIO2_IO21	0x79
-+			MX6SL_PAD_LCD_DAT2__GPIO2_IO22	0x79
-+			MX6SL_PAD_LCD_DAT3__GPIO2_IO23	0x79
-+			MX6SL_PAD_LCD_DAT4__GPIO2_IO24	0x79
-+			MX6SL_PAD_LCD_DAT5__GPIO2_IO25	0x79
-+			MX6SL_PAD_LCD_DAT6__GPIO2_IO26	0x79
-+			MX6SL_PAD_LCD_DAT7__GPIO2_IO27	0x79
-+			MX6SL_PAD_LCD_DAT8__GPIO2_IO28	0x79
-+			MX6SL_PAD_LCD_DAT9__GPIO2_IO29	0x79
-+			MX6SL_PAD_LCD_DAT10__GPIO2_IO30	0x79
-+			MX6SL_PAD_LCD_DAT11__GPIO2_IO31	0x79
-+			MX6SL_PAD_LCD_DAT12__GPIO3_IO00	0x79
-+			MX6SL_PAD_LCD_DAT13__GPIO3_IO01	0x79
-+			MX6SL_PAD_LCD_DAT14__GPIO3_IO02	0x79
-+			MX6SL_PAD_LCD_DAT15__GPIO3_IO03	0x79
-+			MX6SL_PAD_LCD_DAT16__GPIO3_IO04	0x79
-+			MX6SL_PAD_LCD_DAT17__GPIO3_IO05	0x79
-+			MX6SL_PAD_LCD_DAT18__GPIO3_IO06	0x79
-+			MX6SL_PAD_LCD_DAT19__GPIO3_IO07	0x79
-+			MX6SL_PAD_LCD_DAT20__GPIO3_IO08	0x79
-+			MX6SL_PAD_LCD_DAT21__GPIO3_IO09	0x79
-+			MX6SL_PAD_LCD_DAT22__GPIO3_IO10	0x79
-+			MX6SL_PAD_LCD_DAT23__GPIO3_IO11	0x79
-+			MX6SL_PAD_LCD_CLK__GPIO2_IO15		0x79
-+			MX6SL_PAD_LCD_ENABLE__GPIO2_IO16	0x79
-+			MX6SL_PAD_LCD_HSYNC__GPIO2_IO17	0x79
-+			MX6SL_PAD_LCD_VSYNC__GPIO2_IO18	0x79
-+			MX6SL_PAD_LCD_RESET__GPIO2_IO19	0x79
-+			MX6SL_PAD_KEY_COL3__GPIO3_IO30		0x79
-+			MX6SL_PAD_KEY_ROW7__GPIO4_IO07		0x79
-+			MX6SL_PAD_ECSPI2_MOSI__GPIO4_IO13	0x79
-+			MX6SL_PAD_KEY_COL5__GPIO4_IO02		0x79
-+			MX6SL_PAD_KEY_ROW6__GPIO4_IO05		0x79
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6SL_PAD_I2C1_SCL__I2C1_SCL	 0x4001f8b1
-+			MX6SL_PAD_I2C1_SDA__I2C1_SDA	 0x4001f8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c1_sleep: i2c1grp-sleep {
-+		fsl,pins = <
-+			MX6SL_PAD_I2C1_SCL__I2C1_SCL	 0x400108b1
-+			MX6SL_PAD_I2C1_SDA__I2C1_SDA	 0x400108b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6SL_PAD_I2C2_SCL__I2C2_SCL	 0x4001f8b1
-+			MX6SL_PAD_I2C2_SDA__I2C2_SDA	 0x4001f8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2_sleep: i2c2grp-sleep {
-+		fsl,pins = <
-+			MX6SL_PAD_I2C2_SCL__I2C2_SCL	 0x400108b1
-+			MX6SL_PAD_I2C2_SDA__I2C2_SDA	 0x400108b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6SL_PAD_REF_CLK_24M__I2C3_SCL  0x4001f8b1
-+			MX6SL_PAD_REF_CLK_32K__I2C3_SDA  0x4001f8b1
-+		>;
-+	};
-+
-+	pinctrl_led: ledgrp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD1_DAT2__GPIO5_IO13 0x17059
-+		>;
-+	};
-+
-+	pinctrl_ricoh_gpio: ricoh_gpiogrp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD1_CLK__GPIO5_IO15	0x1b8b1 /* ricoh619 chg */
-+			MX6SL_PAD_SD1_DAT0__GPIO5_IO11	0x1b8b1 /* ricoh619 irq */
-+			MX6SL_PAD_KEY_COL2__GPIO3_IO28	0x1b8b1 /* ricoh619 bat_low_int */
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6SL_PAD_UART1_TXD__UART1_TX_DATA 0x1b0b1
-+			MX6SL_PAD_UART1_RXD__UART1_TX_DATA 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX6SL_PAD_EPDC_PWRCOM__USB_OTG1_ID 0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6SL_PAD_SD2_CLK__SD2_CLK		0x13059
-+			MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x17059
-+			MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x17059
-+			MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x17059
-+			MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x17059
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp-100mhz {
-+		fsl,pins = <
-+			MX6SL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+			MX6SL_PAD_SD2_CLK__SD2_CLK		0x130b9
-+			MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x170b9
-+			MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x170b9
-+			MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x170b9
-+			MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp-200mhz {
-+		fsl,pins = <
-+			MX6SL_PAD_SD2_CMD__SD2_CMD		0x170f9
-+			MX6SL_PAD_SD2_CLK__SD2_CLK		0x130f9
-+			MX6SL_PAD_SD2_DAT0__SD2_DATA0		0x170f9
-+			MX6SL_PAD_SD2_DAT1__SD2_DATA1		0x170f9
-+			MX6SL_PAD_SD2_DAT2__SD2_DATA2		0x170f9
-+			MX6SL_PAD_SD2_DAT3__SD2_DATA3		0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_sleep: usdhc2grp-sleep {
-+		fsl,pins = <
-+			MX6SL_PAD_SD2_CMD__GPIO5_IO04		0x100f9
-+			MX6SL_PAD_SD2_CLK__GPIO5_IO05		0x100f9
-+			MX6SL_PAD_SD2_DAT0__GPIO5_IO01		0x100f9
-+			MX6SL_PAD_SD2_DAT1__GPIO4_IO30		0x100f9
-+			MX6SL_PAD_SD2_DAT2__GPIO5_IO03		0x100f9
-+			MX6SL_PAD_SD2_DAT3__GPIO4_IO28		0x100f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD3_CMD__SD3_CMD	0x11059
-+			MX6SL_PAD_SD3_CLK__SD3_CLK	0x11059
-+			MX6SL_PAD_SD3_DAT0__SD3_DATA0	0x11059
-+			MX6SL_PAD_SD3_DAT1__SD3_DATA1	0x11059
-+			MX6SL_PAD_SD3_DAT2__SD3_DATA2	0x11059
-+			MX6SL_PAD_SD3_DAT3__SD3_DATA3	0x11059
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
-+		fsl,pins = <
-+			MX6SL_PAD_SD3_CMD__SD3_CMD	0x170b9
-+			MX6SL_PAD_SD3_CLK__SD3_CLK	0x170b9
-+			MX6SL_PAD_SD3_DAT0__SD3_DATA0	0x170b9
-+			MX6SL_PAD_SD3_DAT1__SD3_DATA1	0x170b9
-+			MX6SL_PAD_SD3_DAT2__SD3_DATA2	0x170b9
-+			MX6SL_PAD_SD3_DAT3__SD3_DATA3	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
-+		fsl,pins = <
-+			MX6SL_PAD_SD3_CMD__SD3_CMD	0x170f9
-+			MX6SL_PAD_SD3_CLK__SD3_CLK	0x170f9
-+			MX6SL_PAD_SD3_DAT0__SD3_DATA0	0x170f9
-+			MX6SL_PAD_SD3_DAT1__SD3_DATA1	0x170f9
-+			MX6SL_PAD_SD3_DAT2__SD3_DATA2	0x170f9
-+			MX6SL_PAD_SD3_DAT3__SD3_DATA3	0x170f9
-+		>;
-+	};
-+
-+	pinctrl_usdhc3_sleep: usdhc3grp-sleep {
-+		fsl,pins = <
-+			MX6SL_PAD_SD3_CMD__GPIO5_IO21	0x100c1
-+			MX6SL_PAD_SD3_CLK__GPIO5_IO18	0x100c1
-+			MX6SL_PAD_SD3_DAT0__GPIO5_IO19	0x100c1
-+			MX6SL_PAD_SD3_DAT1__GPIO5_IO20	0x100c1
-+			MX6SL_PAD_SD3_DAT2__GPIO5_IO16	0x100c1
-+			MX6SL_PAD_SD3_DAT3__GPIO5_IO17	0x100c1
-+		>;
-+	};
-+
-+	pinctrl_wifi_power: wifi-powergrp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD2_DAT6__GPIO4_IO29	0x10059	/* WIFI_3V3_ON */
-+		>;
-+	};
-+
-+	pinctrl_wifi_reset: wifi-resetgrp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD2_DAT7__GPIO5_IO00	0x10059	/* WIFI_RST */
-+		>;
-+	};
-+
-+	pinctrl_zforce: zforcegrp {
-+		fsl,pins = <
-+			MX6SL_PAD_SD1_DAT3__GPIO5_IO06		0x17059 /* TP_INT */
-+			MX6SL_PAD_SD1_DAT5__GPIO5_IO09		0x10059 /* TP_RST */
-+		>;
-+	};
-+};
-+
-+&reg_vdd1p1 {
-+	vin-supply = <&dcdc2_reg>;
-+};
-+
-+&reg_vdd2p5 {
-+	vin-supply = <&dcdc2_reg>;
-+};
-+
-+&reg_arm {
-+	vin-supply = <&dcdc3_reg>;
-+};
-+
-+&reg_soc {
-+	vin-supply = <&dcdc1_reg>;
-+};
-+
-+&reg_pu {
-+	vin-supply = <&dcdc1_reg>;
-+};
-+
-+&snvs_rtc {
-+	/*
-+	 * We are using the RTC in the PMIC, but this one is not disabled
-+	 * in imx6sl.dtsi.
-+	 */
-+	status = "disabled";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-+	pinctrl-3 = <&pinctrl_usdhc2_sleep>;
-+	non-removable;
-+	status = "okay";
-+
-+	/* internal uSD card */
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
-+	pinctrl-3 = <&pinctrl_usdhc3_sleep>;
-+	vmmc-supply = <&reg_wifi>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	cap-power-off-card;
-+	non-removable;
-+	status = "okay";
-+
-+	/*
-+	 * 37NB-E60QF0+4A2: CyberTan WC121 (BCM43362) SDIO WiFi
-+	 * 37NB-E60QF0+4A3: RTL8189F SDIO WiFi
-+	 */
-+};
-+
-+&usbotg1 {
-+	pinctrl-names = "default";
-+	disable-over-current;
-+	srp-disable;
-+	hnp-disable;
-+	adp-disable;
-+	status = "okay";
-+};
--- 
-2.20.1
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused mt6360_tcpc_suspend(struct device *dev)
+> +{
+> +	struct mt6360_tcpc_info *mti = dev_get_drvdata(dev);> +
+> +	if (device_may_wakeup(dev))
+> +		enable_irq_wake(mti->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused mt6360_tcpc_resume(struct device *dev)
+> +{
+> +	struct mt6360_tcpc_info *mti = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev))
+> +		disable_irq_wake(mti->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(mt6360_tcpc_pm_ops, mt6360_tcpc_suspend, mt6360_tcpc_resume);
+> +
+> +static const struct of_device_id __maybe_unused mt6360_tcpc_of_id[] = {
+> +	{ .compatible = "mediatek,mt6360-tcpc", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, mt6360_tcpc_of_id);
+> +
+> +static struct platform_driver mt6360_tcpc_driver = {
+> +	.driver = {
+> +		.name = "mt6360-tcpc",
+> +		.pm = &mt6360_tcpc_pm_ops,
+> +		.of_match_table = mt6360_tcpc_of_id,
+> +	},
+> +	.probe = mt6360_tcpc_probe,
+> +	.remove = mt6360_tcpc_remove,
+> +};
+> +module_platform_driver(mt6360_tcpc_driver);
+> +
+> +MODULE_AUTHOR("ChiYuan Huang <cy_huang@richtek.com>");
+> +MODULE_DESCRIPTION("MT6360 USB Type-C Port Controller Interface Driver");
+> +MODULE_LICENSE("GPL v2");
+> 
 
