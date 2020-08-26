@@ -2,120 +2,154 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E4BC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE60AC433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 538BC20707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25D920707
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 13:02:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHJVO8Qm"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="rD/I6SIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbgHZNCL (ORCPT
+        id S1730160AbgHZNCS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:02:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730145AbgHZNBv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 09:01:51 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533B7C061574;
-        Wed, 26 Aug 2020 06:01:51 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id n18so1281230qtw.0;
-        Wed, 26 Aug 2020 06:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qMvYEDeiSbnOhgtPNg0miqtr2M/qecacoqZoySra/pk=;
-        b=XHJVO8QmzjKKjmw/EYpEKsONJyfpKooco0CE3OGx6Jf4IYBu74HKWmTq6SWo78ns6V
-         q0K9g7nBr/UGfsippnFYhWPotRmAKAairvquUJX3mHojRVuCdUQb7syN4eka094pQRhd
-         pqlq440OIekHL9GFTLFU2vcei5c6bxo3jXSdZq2jEG9HDoSr8pGiWEeHU7dCu4/NVUKh
-         WI+C8NCq36ExWLNuNcL2S+yzIPwm49m2inXaRU56CHw1hmyYLEnvfPH8OiQP5qTM+qg+
-         nUamudlTnGEYH+UwYN68tpjv96LTgNkTdIiMeCFyRiGu8L/FQp05ledRJiTniOV/7oPR
-         bS/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qMvYEDeiSbnOhgtPNg0miqtr2M/qecacoqZoySra/pk=;
-        b=KN2JRGy7VmyHv6L8jf1GY2FxnN+HPRObTmU0sFiSTGkW2KT1X5Hi6CBkKlrIR+PQDE
-         Da88XNKe+x1rRFnlGHaY5LuraoepxKTPy82UILhhmYY8KY4kSBGCu866pE2g9fJQVUdR
-         yVVbrOgRXRPdyehXF8I+oUMH1ppKrZMBLG8tjNdK5T1C3vSxtORagFmYktpdU18XhxHr
-         AnnLcWkxraCoamCkscf6vETj6lYg3UHFgQw7aYFTEZYXuVKV21iKHa6imf9PrsOUjtgW
-         7YwPiKyS83hHzlE7cQlkLS7eKPjVOB/IzaBxxE7U3AKhWl1VlYu1jr9QkrWFmLD07OZ3
-         4HGA==
-X-Gm-Message-State: AOAM533jqh+yADXz99lk2saBR/b4khGC9tr5Ku2YPU32jfQ+mHYlCs3p
-        AUYo9HEcG/biwGvT8VLoA9ZOv4u8TO4K0A==
-X-Google-Smtp-Source: ABdhPJwxHfbMHpa7HkpnJcjx55MDVEdhI/f1ua38mzX3T0BYfZiUsPS8SvJmKdr+rCOig8/RJhreOw==
-X-Received: by 2002:ac8:60c5:: with SMTP id i5mr14285987qtm.268.1598446910606;
-        Wed, 26 Aug 2020 06:01:50 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id x88sm1971364qtd.1.2020.08.26.06.01.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 06:01:49 -0700 (PDT)
-Subject: Re: [PATCH] of: skip disabled CPU nodes
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <4dd06b79-1402-d7cf-9676-1f9a9526da12@gmail.com>
-Date:   Wed, 26 Aug 2020 08:01:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 26 Aug 2020 09:02:18 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:8470 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730099AbgHZNCI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 09:02:08 -0400
+X-UUID: f8140fc064ba44e9b42d3d5d93a22512-20200826
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=CxyzFCyyAUAD9dzrQYeXJkejylJ8fCzMCpGiZ2fc9dM=;
+        b=rD/I6SIHcSYN6197sgB1VsqSANMyY0y/y8dYpJzbXw7kLFL9rjbezDlLxCwacem6eNILCkF8fs9RK+n4ny36CH2VZ7p9jGw9ZZTZ3zX493U4jYv4WuX2xreFZ0hEQWWk5UVaEiWwyy2lto31jQu66sw3I4Ea3u+PG63coxxevZg=;
+X-UUID: f8140fc064ba44e9b42d3d5d93a22512-20200826
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <hector.yuan@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 273996754; Wed, 26 Aug 2020 21:02:03 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 26 Aug 2020 21:01:59 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 26 Aug 2020 21:01:59 +0800
+From:   Hector Yuan <hector.yuan@mediatek.com>
+To:     <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>
+CC:     <wsd_upstream@mediatek.com>, <hector.yuan@mediatek.com>
+Subject: [PATCH v3 2/2] dt-bindings: cpufreq: add bindings for MediaTek cpufreq HW
+Date:   Wed, 26 Aug 2020 21:01:53 +0800
+Message-ID: <1598446913-24325-3-git-send-email-hector.yuan@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1598446913-24325-1-git-send-email-hector.yuan@mediatek.com>
+References: <1598446913-24325-1-git-send-email-hector.yuan@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 2020-08-26 07:02, Matthias Schiffer wrote:
-> Allow disabling CPU nodes using status = "disabled".
-> 
-> This allows a bootloader to change the number of available CPUs (for
-> example when a common DTS is used for SoC variants with different numbers
-> of cores) without deleting the nodes altogether (which may require
-> additional fixups where the CPU nodes are referenced, e.g. a cooling
-> map).
-> 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  drivers/of/base.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ea44fea99813..d547e9deced1 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -796,6 +796,8 @@ struct device_node *of_get_next_cpu_node(struct device_node *prev)
->  		of_node_put(node);
->  	}
->  	for (; next; next = next->sibling) {
-> +		if (!__of_device_is_available(next))
-> +			continue;
->  		if (!(of_node_name_eq(next, "cpu") ||
->  		      __of_node_is_type(next, "cpu")))
->  			continue;
-> 
+RnJvbTogIkhlY3Rvci5ZdWFuIiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KDQpBZGQgZGV2
+aWNldHJlZSBiaW5kaW5ncyBmb3IgTWVkaWFUZWsgSFcgZHJpdmVyLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBIZWN0b3IuWXVhbiA8aGVjdG9yLnl1YW5AbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2JpbmRp
+bmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sICAgICAgfCAgMTQxICsrKysrKysr
+KysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE0MSBpbnNlcnRpb25zKCspDQogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jcHVmcmVxL2Nw
+dWZyZXEtbWVkaWF0ZWstaHcueWFtbA0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55YW1sIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEvY3B1ZnJlcS1tZWRpYXRlay1ody55
+YW1sDQpuZXcgZmlsZSBtb2RlIDEwMDY0NA0KaW5kZXggMDAwMDAwMC4uNWJlNTg2Nw0KLS0tIC9k
+ZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2NwdWZyZXEv
+Y3B1ZnJlcS1tZWRpYXRlay1ody55YW1sDQpAQCAtMCwwICsxLDE0MSBAQA0KKyMgU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KKyVZQU1MIDEu
+Mg0KKy0tLQ0KKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvY3B1ZnJlcS9jcHVm
+cmVxLW1lZGlhdGVrLWh3LnlhbWwjDQorJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21l
+dGEtc2NoZW1hcy9jb3JlLnlhbWwjDQorDQordGl0bGU6IE1lZGlhVGVrJ3MgQ1BVRlJFUSBCaW5k
+aW5ncw0KKw0KK21haW50YWluZXJzOg0KKyAgLSBIZWN0b3IgWXVhbiA8aGVjdG9yLnl1YW5AbWVk
+aWF0ZWsuY29tPg0KKw0KK2Rlc2NyaXB0aW9uOg0KKyAgQ1BVRlJFUSBIVyBpcyBhIGhhcmR3YXJl
+IGVuZ2luZSB1c2VkIGJ5IE1lZGlhVGVrDQorICBTb0NzIHRvIG1hbmFnZSBmcmVxdWVuY3kgaW4g
+aGFyZHdhcmUuIEl0IGlzIGNhcGFibGUgb2YgY29udHJvbGxpbmcgZnJlcXVlbmN5DQorICBmb3Ig
+bXVsdGlwbGUgY2x1c3RlcnMuDQorDQorcHJvcGVydGllczoNCisgIGNvbXBhdGlibGU6DQorICAg
+IGNvbnN0OiBtZWRpYXRlayxjcHVmcmVxLWh3DQorDQorICByZWc6DQorICAgIG1pbkl0ZW1zOiAx
+DQorICAgIG1heEl0ZW1zOiAyDQorICAgIGRlc2NyaXB0aW9uOiB8DQorICAgICAgQWRkcmVzc2Vz
+IGFuZCBzaXplcyBmb3IgdGhlIG1lbW9yeSBvZiB0aGUgSFcgYmFzZXMgaW4gZWFjaCBmcmVxdWVu
+Y3kgZG9tYWluLg0KKw0KKyAgcmVnLW5hbWVzOg0KKyAgICBpdGVtczoNCisgICAgICAtIGNvbnN0
+OiAiZnJlcS1kb21haW4wIg0KKyAgICAgIC0gY29uc3Q6ICJmcmVxLWRvbWFpbjEiDQorICAgIGRl
+c2NyaXB0aW9uOiB8DQorICAgICAgRnJlcXVlbmN5IGRvbWFpbiBuYW1lLiBpLmUuDQorICAgICAg
+ImZyZXEtZG9tYWluMCIsICJmcmVxLWRvbWFpbjEiLg0KKw0KKyAgIiNmcmVxLWRvbWFpbi1jZWxs
+cyI6DQorICAgIGNvbnN0OiAxDQorICAgIGRlc2NyaXB0aW9uOiB8DQorICAgICAgTnVtYmVyIG9m
+IGNlbGxzIGluIGEgZnJlcWVuY3kgZG9tYWluIHNwZWNpZmllci4NCisNCisgIG10ay1mcmVxLWRv
+bWFpbjoNCisgICAgbWF4SXRlbXM6IDENCisgICAgZGVzY3JpcHRpb246IHwNCisgICAgICBEZWZp
+bmUgdGhpcyBjcHUgYmVsb25ncyB0byB3aGljaCBmcmVxdWVuY3kgZG9tYWluLiBpLmUuDQorICAg
+ICAgY3B1MC0zIGJlbG9uZyB0byBmcmVxdWVuY3kgZG9tYWluMCwNCisgICAgICBjcHU0LTYgYmVs
+b25nIHRvIGZyZXF1ZW5jeSBkb21haW4xLg0KKw0KK3JlcXVpcmVkOg0KKyAgLSBjb21wYXRpYmxl
+DQorICAtIHJlZw0KKyAgLSByZWctbmFtZXMNCisgIC0gIiNmcmVxLWRvbWFpbi1jZWxscyINCisN
+CitleGFtcGxlczoNCisgIC0gfA0KKyAgICBjcHVzIHsNCisgICAgICAgICAgICAjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsNCisgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwwPjsNCisNCisgICAgICAg
+ICAgICBjcHUwOiBjcHVAMCB7DQorICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gImNwdSI7
+DQorICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTUiOw0KKyAgICAg
+ICAgICAgICAgICBlbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKyAgICAgICAgICAgICAgICBtdGst
+ZnJlcS1kb21haW4gPSA8JmNwdWZyZXFfaHcgMD47DQorICAgICAgICAgICAgICAgIHJlZyA9IDww
+eDAwMD47DQorICAgICAgICAgICAgfTsNCisNCisgICAgICAgICAgICBjcHUxOiBjcHVAMSB7DQor
+ICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gImNwdSI7DQorICAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTUiOw0KKyAgICAgICAgICAgICAgICBlbmFibGUtbWV0
+aG9kID0gInBzY2kiOw0KKyAgICAgICAgICAgICAgICBtdGstZnJlcS1kb21haW4gPSA8JmNwdWZy
+ZXFfaHcgMD47DQorICAgICAgICAgICAgICAgIHJlZyA9IDwweDEwMD47DQorICAgICAgICAgICAg
+fTsNCisNCisgICAgICAgICAgICBjcHUyOiBjcHVAMiB7DQorICAgICAgICAgICAgICAgIGRldmlj
+ZV90eXBlID0gImNwdSI7DQorICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLGNvcnRl
+eC1hNTUiOw0KKyAgICAgICAgICAgICAgICBlbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKyAgICAg
+ICAgICAgICAgICBtdGstZnJlcS1kb21haW4gPSA8JmNwdWZyZXFfaHcgMD47DQorICAgICAgICAg
+ICAgICAgIHJlZyA9IDwweDIwMD47DQorICAgICAgICAgICAgfTsNCisNCisgICAgICAgICAgICBj
+cHUzOiBjcHVAMyB7DQorICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gImNwdSI7DQorICAg
+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTUiOw0KKyAgICAgICAgICAg
+ICAgICBlbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKyAgICAgICAgICAgICAgICBtdGstZnJlcS1k
+b21haW4gPSA8JmNwdWZyZXFfaHcgMD47DQorICAgICAgICAgICAgICAgIHJlZyA9IDwweDMwMD47
+DQorICAgICAgICAgICAgfTsNCisNCisgICAgICAgICAgICBjcHU0OiBjcHVANCB7DQorICAgICAg
+ICAgICAgICAgIGRldmljZV90eXBlID0gImNwdSI7DQorICAgICAgICAgICAgICAgIGNvbXBhdGli
+bGUgPSAiYXJtLGNvcnRleC1hNTUiOw0KKyAgICAgICAgICAgICAgICBlbmFibGUtbWV0aG9kID0g
+InBzY2kiOw0KKyAgICAgICAgICAgICAgICBtdGstZnJlcS1kb21haW4gPSA8JmNwdWZyZXFfaHcg
+MT47DQorICAgICAgICAgICAgICAgIHJlZyA9IDwweDQwMD47DQorICAgICAgICAgICAgfTsNCisN
+CisgICAgICAgICAgICBjcHU1OiBjcHVANSB7DQorICAgICAgICAgICAgICAgIGRldmljZV90eXBl
+ID0gImNwdSI7DQorICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNTUi
+Ow0KKyAgICAgICAgICAgICAgICBlbmFibGUtbWV0aG9kID0gInBzY2kiOw0KKyAgICAgICAgICAg
+ICAgICBtdGstZnJlcS1kb21haW4gPSA8JmNwdWZyZXFfaHcgMT47DQorICAgICAgICAgICAgICAg
+IHJlZyA9IDwweDUwMD47DQorICAgICAgICAgICAgfTsNCisNCisgICAgICAgICAgICBjcHU2OiBj
+cHVANiB7DQorICAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gImNwdSI7DQorICAgICAgICAg
+ICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNzUiOw0KKyAgICAgICAgICAgICAgICBl
+bmFibGUtbWV0aG9kID0gInBzY2kiOw0KKyAgICAgICAgICAgICAgICBtdGstZnJlcS1kb21haW4g
+PSA8JmNwdWZyZXFfaHcgMT47DQorICAgICAgICAgICAgICAgIHJlZyA9IDwweDYwMD47DQorICAg
+ICAgICAgICAgfTsNCisNCisgICAgICAgICAgICBjcHU3OiBjcHVANyB7DQorICAgICAgICAgICAg
+ICAgIGRldmljZV90eXBlID0gImNwdSI7DQorICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+YXJtLGNvcnRleC1hNzUiOw0KKyAgICAgICAgICAgICAgICBlbmFibGUtbWV0aG9kID0gInBzY2ki
+Ow0KKyAgICAgICAgICAgICAgICBtdGstZnJlcS1kb21haW4gPSA8JmNwdWZyZXFfaHcgMT47DQor
+ICAgICAgICAgICAgICAgIHJlZyA9IDwweDcwMD47DQorICAgICAgICAgICAgfTsNCisgICAgfTsN
+CisNCisgICAgLyogLi4uICovDQorDQorICAgIHNvYyB7DQorICAgICAgICAjYWRkcmVzcy1jZWxs
+cyA9IDwyPjsNCisgICAgICAgICNzaXplLWNlbGxzID0gPDI+Ow0KKw0KKyAgICAgICAgY3B1ZnJl
+cV9odzogY3B1ZnJlcUAxMWJjMDAgew0KKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0
+ZWssY3B1ZnJlcS1odyI7DQorICAgICAgICAgICAgcmVnID0gPDAgMHgxMWJjMTAgMCAweDhjPiwN
+CisgICAgICAgICAgICAgICA8MCAweDExYmNhMCAwIDB4OGM+Ow0KKyAgICAgICAgICAgIHJlZy1u
+YW1lcyA9ICJmcmVxLWRvbWFpbjAiLCAiZnJlcS1kb21haW4xIjsNCisgICAgICAgICAgICAjZnJl
+cS1kb21haW4tY2VsbHMgPSA8MT47DQorICAgICAgICB9Ow0KKyAgICB9Ow0KKw0KKw0KKw0KKw0K
+LS0gDQoxLjcuOS41DQo=
 
-The original implementation of of_get_next_cpu_node() had
-that check, but status disabled for cpu nodes has different
-semantics than other nodes, and the check broke some systems.
-The check was removed by c961cb3be906 "of: Fix cpu node
-iterator to not ignore disabled cpu nodes".
-
-It would be useful to document that difference in the
-header comment of of_get_next_cpu_node().
-
--Frank
