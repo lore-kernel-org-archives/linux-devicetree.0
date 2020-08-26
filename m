@@ -2,118 +2,117 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB058C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 07:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12907C433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 07:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 881CD20707
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 07:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF63A20707
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 07:50:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ufuncYV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHZHqi convert rfc822-to-8bit (ORCPT
+        id S1726432AbgHZHuq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbgHZHqi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 03:46:38 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C5CCC061574
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 00:46:38 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAq8T-00014I-FH; Wed, 26 Aug 2020 09:46:21 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAq8S-0003zE-FX; Wed, 26 Aug 2020 09:46:20 +0200
-Message-ID: <6a4757e808c2201dc212d1ccf63310b3fd5b2268.camel@pengutronix.de>
-Subject: Re: [PATCH v2 11/17] clk: imx: Add blk_ctrl combo driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>, Rob Herring <robh@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>, devicetree@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Wed, 26 Aug 2020 09:46:20 +0200
-In-Reply-To: <20200825183009.olarh5ewkljeh35d@fsr-ub1664-175>
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
-         <1597406966-13740-12-git-send-email-abel.vesa@nxp.com>
-         <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
-         <20200825112421.eut7gx3i4eirhnfw@fsr-ub1664-175>
-         <8e8e33386eea12036bb17529b4d578704bf735d1.camel@pengutronix.de>
-         <20200825183009.olarh5ewkljeh35d@fsr-ub1664-175>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 26 Aug 2020 03:50:46 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:40363 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726609AbgHZHuq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 03:50:46 -0400
+X-UUID: e038ea77c6164426b7e0dcc7dbc249b4-20200826
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Mk/MVFxbDJOWelnRC4EXaAkQpD5FL2twqZna26deVKk=;
+        b=ufuncYV3CLwCGbQpoQ1rVUNCns+zAv3Xfcdpdd6QgYAZ75j9bBS40tLHOv/6GFyQIBAI7JJlrDXZwc7TzeoL+0idAQDTd0aZ03UejjSW9Sf4LQlsRvl2lOrKvI0HRHOMbL6R0Os287gdPjDuJbg0RPk6mwdAYDDlkurYHNe2sxc=;
+X-UUID: e038ea77c6164426b7e0dcc7dbc249b4-20200826
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <mark-pk.tsai@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 399286582; Wed, 26 Aug 2020 15:50:41 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 26 Aug 2020 15:50:39 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 26 Aug 2020 15:50:39 +0800
+From:   Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+To:     <robh@kernel.org>, Mark-PK Tsai <mark-pk.tsai@mediatek.com>
+CC:     <alix.wu@mediatek.com>, <daniel@0x0f.com>,
+        <devicetree@vger.kernel.org>, <jason@lakedaemon.net>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
+        <maz@kernel.org>, <tglx@linutronix.de>, <yj.chiang@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-bindings: interrupt-controller: Add MStar interrupt controller
+Date:   Wed, 26 Aug 2020 15:50:38 +0800
+Message-ID: <20200826075038.29594-1-mark-pk.tsai@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200825214842.GA1367012@bogus>
+References: <20200825214842.GA1367012@bogus>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 48D8998B49AFCB554C615D0F530C314DC0D9E5DDAA8310EBB8E99AA9277A48302000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, 2020-08-25 at 21:30 +0300, Abel Vesa wrote:
-[...]
-> > 	if (assert)
-> > 		pm_runtime_get_sync();
-> > 	spin_lock_irqsave();
-> > 	/* ... */
-> > 	spin_unlock_irqrestore();
-> > 	if (assert && asserted_before)
-> > 		pm_runtime_put();
-> > 
-> 
-> On a second thought this doesn't work because, for the first assertion,
-> the runtime put will never be called, if the asserted_before does not count
-> the current assertion.
+RnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCg0KPj4gKw0KPj4gKyAgIiNpbnRl
+cnJ1cHQtY2VsbHMiOg0KPj4gKyAgICBjb25zdDogMw0KPj4gKyAgICBkZXNjcmlwdGlvbjogfA0K
+Pj4gKyAgICAgIFVzZSB0aGUgc2FtZSBmb3JtYXQgYXMgc3BlY2lmaWVkIGJ5IEdJQyBpbiBhcm0s
+Z2ljLnlhbWwuDQo+DQo+VGhhdCdzIG9kZC4gWW91IGhhdmUgdGhlIHNhbWUgU1BJIGFuZCBQUEkg
+c3R1ZmY/DQo+DQoNCk5vLCBidXQgSSBqdXN0IHdhbnQgdG8ga2VlcCB0aGUgZm9ybWF0IHNhbWUg
+YXMgYXJtLGdpYywgYW5kIGxldCB0aGUNCmRyaXZlciBieXBhc3MgMXN0IGFuZCAzcmQgY2VsbCB0
+byB0aGUgcGFyZW50IEdJQy4NClRoZSBtc3QtaW50YyBkcml2ZXIgdHJhbnNsYXRlIHRoZSBpbnRl
+cnJ1cHQgbnVtYmVyIGluIDJuZCBjZWxsIHRvIHRoZQ0KaW50ZXJydXB0IG9uIHRoZSBwYXJlbnQg
+R0lDLg0KDQo+PiArDQo+PiArICByZWc6DQo+PiArICAgIGRlc2NyaXB0aW9uOiB8DQo+PiArICAg
+ICAgUGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBtc3RhciBpbnRlcnJ1cHQgY29udHJvbGxl
+cg0KPj4gKyAgICAgIHJlZ2lzdGVycyBhbmQgbGVuZ3RoIG9mIG1lbW9yeSBtYXBwZWQgcmVnaW9u
+Lg0KPg0KPkRyb3AgdGhpcy4gVGhhdCdzIGV2ZXJ5ICdyZWcnIHByb3BlcnR5Lg0KPg0KPj4gKyAg
+ICBtaW5JdGVtczogMQ0KPg0KPm1heEl0ZW1zIGlzIG1vcmUgbG9naWNhbC4NCj4NCj4+ICsNCj4+
+ICsgIG1zdGFyLGlycXMtbWFwLXJhbmdlOg0KPj4gKyAgICBkZXNjcmlwdGlvbjogfA0KPj4gKyAg
+ICAgIFRoZSByYW5nZSBvZiBwYXJlbnQgaW50ZXJydXB0IGNvbnRyb2xsZXIncyBpbnRlcnJ1cHQg
+bGluZXMNCj4+ICsgICAgICB0aGF0IGFyZSBoYXJkd2lyZWQgdG8gbXN0YXIgaW50ZXJydXB0IGNv
+bnRyb2xsZXIuDQo+DQo+SXMgdGhpcyA8c3RhcnQgc2l6ZT4gb3IgPHN0YXJ0IGVuZD4/DQo+DQoN
+CjxzdGFydCBlbmQ+Lg0KSSB3aWxsIGFkZCB0aGlzIGluIHRoZSBkZXNjcmlwdGlvbi4NCg0KPlJl
+YWxseSwgdGhpcyBzaG91bGQganVzdCB1c2UgJ2ludGVycnVwdHMnIGV2ZW4gdGhvdWdoIHRoYXQn
+cyBhIGJpdCANCj52ZXJib3NlLiBPciBiZSBpbXBsaWVkIGJ5IHRoZSBjb21wYXRpYmxlIHN0cmlu
+Zy4gV2hhdCdzIHRoZSBtYXhpbXVtIA0KPm51bWJlciBvZiBwYXJlbnQgaW50ZXJydXB0cz8NCj4N
+Cj5JbiBhbnkgY2FzZSwgd2UgcmVhbGx5IG5lZWQgdG8gc3RvcCBoYXZpbmcgdmVuZG9yIHNwZWNp
+ZmljIHByb3BlcnRpZXMgDQo+Zm9yIHRoaXMuDQoNCldlIHVzZSA2NCBpbnRlcnJ1cHRzIHBlciBp
+bnRlcnJ1cHQgY29udHJvbGxlci4NCkFzIHlvdSBtZW50aW9ucywgaWYgd2UgdXNlIHRoZSBzdGFu
+ZGFyZCBwcm9wZXJ0eSAnaW50ZXJydXB0cycsDQp0aGVuIHdlIG5lZWQgdG8gcHV0IDY0IGludGVy
+cnVwdCBwcm9wZXJ0eSBpbiB0aGUgaW50ZXJydXB0DQpjb250cm9sbGVyIG5vZGUsIGFuZCBpdCB3
+aWxsIGJlIGhhcmQgdG8gdW5kZXJzdGFuZC4NClNvIEkgc3VwcG9zZSB3ZSBuZWVkIGFuIHZlbmRv
+ciBzcGVjaWZpYyBwcm9wZXJ0eSBoZXJlLg0KDQo+DQo+PiArICAgICRyZWY6IC9zY2hlbWFzL3R5
+cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMi1tYXRyaXgNCj4+ICsgICAgaXRlbXM6DQo+PiAr
+ICAgICAgbWluSXRlbXM6IDINCj4+ICsgICAgICBtYXhJdGVtczogMg0KPj4gKw0KPj4gKyAgbXN0
+YXIsaW50Yy1uby1lb2k6DQo+PiArICAgIGRlc2NyaXB0aW9uOiB8DQo+DQo+RG9uJ3QgbmVlZCAn
+fCcgaWYgdGhlcmUncyBubyBmb3JtYXR0aW5nLg0KPg0KPj4gKyAgICAgIE1hcmsgdGhpcyBjb250
+cm9sbGVyIGhhcyBubyBFbmQgT2YgSW50ZXJydXB0KEVPSSkgaW1wbGVtZW50YXRpb24uDQo+PiAr
+ICAgICAgVGhpcyBpcyBhIGVtcHR5LCBib29sZWFuIHByb3BlcnR5Lg0KPg0KPllvdSBjYW4gZHJv
+cCB0aGlzIGxpbmUuIFRoZSBzY2hlbWEgc2F5cyB0aGlzLg0KPg0KPj4gKyAgICB0eXBlOiBib29s
+ZWFuDQo+PiArDQo+PiArcmVxdWlyZWQ6DQo+PiArICAtIGNvbXBhdGlibGUNCj4+ICsgIC0gcmVn
+DQo+PiArICAtIG1zdGFyLGlycXMtbWFwLXJhbmdlDQo+PiArDQo+PiArYWRkaXRpb25hbFByb3Bl
+cnRpZXM6IGZhbHNlDQo+PiArDQo+PiArZXhhbXBsZXM6DQo+PiArICAtIHwNCj4+ICsgICAgbXN0
+X2ludGMwOiBpbnRlcnJ1cHQtY29udHJvbGxlckAxZjIwMzJkMCB7DQo+PiArICAgICAgY29tcGF0
+aWJsZSA9ICJtc3Rhcixtc3QtaW50YyIsICJtZWRpYXRlayxtdDU4eHgtaW50YyI7DQo+PiArICAg
+ICAgaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+PiArICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwz
+PjsNCj4+ICsgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+ICsgICAgICAjc2l6ZS1jZWxs
+cyA9IDwxPjsNCj4+ICsgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZnaWM+Ow0KPj4gKyAgICAg
+IHJlZyA9IDwweDFmMjAzMmQwIDB4MzA+Ow0KPj4gKyAgICAgIG1zdGFyLGlycXMtbWFwLXJhbmdl
+ID0gPDAgNjM+Ow0KPg0KPklzIDAgYSBQUEkgb3IgU1BJPyBUaGlzIHByb3BlcnR5IGlzIG1ha2lu
+ZyBzb21lIGFzc3VtcHRpb24gYW5kIHdvdWxkbid0IA0KPmJlIGFibGUgdG8gc3VwcG9ydCBib3Ro
+IHR5cGVzIG9yIGFub3RoZXIgcGFyZW50IGludGVycnVwdCBjb250cm9sbGVyLg0KPg0KDQowIGlz
+IHRoZSBpbnRlcnJ1cHQgbnVtYmVyIG9mIHRoZSBwYXJlbnQgaW50ZXJydXB0IGNvbnRyb2xsZXIu
+DQpUaGVyZSdzIG5vIFNQSSBhbmQgUFBJIHN0dWZmIGluIG1zdC1pbnRjLCBpdCB3aWxsIGJ5cGFz
+cyB0aGUNCjFzdCBjZWxsIHRvIHBhcmVudCBjb250cm9sbGVyLg0KDQplLmcuIFRoZSBkZXZpY2Ug
+bm9kZSBhcyBmb2xsb3dpbmcgd2lsbCBwb2ludCB0byBHSUMgU1BJIDMxDQooInZhbHVlIGluIDJu
+ZCBjZWxsIiArICJzdGFydCBpbiBpcnFzLW1hcC1yYW5nZSIpLg0KCXVzYjogew0KCQlpbnRlcnJ1
+cHQtcGFyZW50ID0gPCZtdGtfaW50YzA+Ow0KCQlpbnRlcnJ1cHRzID0gPDB4MCAzMSAweDQ+Ow0K
+CQkuLi4NCgl9Ow0KDQo+PiArICAgIH07DQo+PiArLi4uDQo+PiAtLSANCj4+IDIuMTguMA==
 
-I'm not sure I follow. The first assert will increment device usage
-0 -> 1, all others asserts will just temporarily increment and decrement
-1 -> 2 -> 1. Isn't this just missing one
-	if (!assert && !asserted_after)
-		pm_runtime_put()
-to do the last deassert 1 -> 0 transition?
-
-> If it counts the current assertion, then every assertion
-> will end with runtime put. None of these options work here.
->
-> How about the following:
->
-> 	if (assert && !test_and_set_bit(1, &drvdata->rst_hws[id].asserted))     
-> 		pm_runtime_get_sync(rcdev->dev);                                
->                                                                         
-> 	spin_lock_irqsave(&drvdata->lock, flags);                               
->                                                                         
-> 	reg = readl(reg_addr);                                                  
-> 	if (assert)                                                             
-> 		writel(reg & ~(mask << shift), reg_addr);                       
-> 	else                                                                    
-> 		writel(reg | (mask << shift), reg_addr);                        
->                                                                         
-> 	spin_unlock_irqrestore(&drvdata->lock, flags);                          
->                                                                         
-> 	if (!assert && test_and_clear_bit(1, &drvdata->rst_hws[id].asserted))   
-> 		pm_runtime_put(rcdev->dev);                                     
->                                                                         
-> This would only call the get_sync/put once for each reset bit.
-
-Yes, that should work. I think it is a much better idea, no more looping
-through the entire reset control array.
-
-regards
-Philipp
