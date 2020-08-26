@@ -2,268 +2,275 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954E4C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA69C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B332080C
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 722742075E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 16:13:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUM4b+AK"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="RaeWOASS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgHZQK3 (ORCPT
+        id S1726718AbgHZQNT (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:10:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHZQKV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 12:10:21 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669C5C061574;
-        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mt12so1099750pjb.4;
-        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
+        Wed, 26 Aug 2020 12:13:19 -0400
+Received: from mail-eopbgr760071.outbound.protection.outlook.com ([40.107.76.71]:21838
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726851AbgHZQNM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:13:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YH5U9guYDf/hwuMDVkm6RJHkzkz8dmmZfD6gBVeJJkD8iaO17CVwe2lpjlLVHG32zmZFdevVPNZLaELg+LpB3az7edOofabqIcwvJIaNKZ8bRu59DTMOKGdR6WSij4PBilNbguEXQIiC034ZOz5NH2Ugojbmpxu7IT5FbD3sYmuT0TrczOBWLdW73vdh4Oh2YLVcT35gyf0yhDSHIhyKvQw/UKQRk0F/k7f2/u3qxTqIZUPbMZ2VlIYrodk/YB9yswYrUt26r8exjfZcIPJ64qd1tHGORIs4K3j+6p+JcXB2cpnv0D/42/36mLwBtIQ1UCj3Np1JHcQ+jTacibbWBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+MjQ7Hl/NKOY4hkjvlL6c0AoBoaWrBzf0OHRiOxcYIM=;
+ b=L0glli7dmiBSslria/7CLneSON6HXEKKdMPDw2PoGWQyGSf777kR6ZEP0hgHRjQWzyLa4li3gd1zJB1eTAmu/YPfFng+aQmE6POYs4SZ0SGUdVyTyUyZb/mR6BX1CTppFFHdOP1l4QD6Bto9tSe+tD/VNZY6D3kNVKIFOs0sf4TwxM03v71k4W5ozV6nPtnnilAtH4Tx0jiwEnZFEp4pWiCLeoMElemYDA7XLJ314pY3nhKXmcyvah3z3wEpMi4smBPti+TsB26/mQs6nx49XF5TZOiQjtzChcPpOaY0klbg1h0EsWv65nHjqXyvJGQerEq9kcFahOjaN6U5h0xQMQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
-        b=GUM4b+AKt4DXs9Czm1/g7FEUizlZoYNy2a13HKf6jY4MB/UtxnZis4YdlNbgnv0gng
-         VLgyepIPIP+r3HqOxtcXfRJOT8V7yK3/geJJFC4lH9ZkeKrvKSRo5tgNGS1jFwqbuW4w
-         mIYO6h8SNnsvEq+7tnBZVzNICRpRqO4mKjRfclvaEicY3IT/MBm3Z25ahf5To6Qy9Dmj
-         ZXGlgdmZQb9uwS8VglWPRo+Do6XZl7+U0fqkBKz93N3/oH+S5dRF8ZiefspOZswDrGuS
-         Mc0OEGPL7xKO0zfmXYaD3yZoZ6uzDWFsuFt4Wq1bCmA6r0pmVK6yEsL7oNTZ5wWtIr+R
-         NFqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
-        b=VnYecQZjoyBVoCq5b3vJP0ay4g+m/hMjpLpZgnyJDGc0GVI6vfglsIUIKibhjBVPm+
-         HiOxAsM9k7DA699NNnOEGyMo5wsRt8/9wJvHztIsVbHDARhl+d9ENaI5TEsn66xjrohl
-         R7ATO2rHPoxgDmRGhfc78GKRihIbqsINY6yYLJw+OdtxdK/0sMnXC8AZK2ZL3T7TADKw
-         SayIMgUZS28o9tuB+IOb1c1H1Xpu+IgcYxvRta77l6Q7Qj4XVjngHbzrT2FG4wIZ/JwI
-         uG2atwhEQG1F+0XbyFcrakHUd4rbPLYOou+8lxdpNUrNcpCtEgoftRYBArF+4GogjG9Q
-         VIkQ==
-X-Gm-Message-State: AOAM532S9DQOmPWmlewJTC2Ye/JS/LpbxmXURcuJJbySLHRIri72jaUD
-        NUYsUjM/0Gh+2JcuO97eKbAdh8BBAHV0bl+SuhA=
-X-Google-Smtp-Source: ABdhPJxjUO7auQGz1uE0L/pbKqExRjpwrx9ZKnA6VZu1uXt4iuNvtzNdZeMz+Ss+KiwIbV4Sfv0XzdnBKKO4+yfbwcQ=
-X-Received: by 2002:a17:902:407:: with SMTP id 7mr12502214ple.167.1598458219927;
- Wed, 26 Aug 2020 09:10:19 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+MjQ7Hl/NKOY4hkjvlL6c0AoBoaWrBzf0OHRiOxcYIM=;
+ b=RaeWOASSOY950w73QaOHqkIe1enrI9ePfMmarLpKq/IAtgSchohzVq0hhnwJX5YhZJaHUdBMwPO+cL2go8Pl2mpHY4krrciw1Xx0Pp5xvEN/JIrw8W9Yfeev9crtn4fOh8K9P55I8wEVOcFTQcVUSpXLQ5BvMpK+Yh6X4GOGCJo=
+Received: from BL0PR05CA0018.namprd05.prod.outlook.com (2603:10b6:208:91::28)
+ by SN6PR02MB4909.namprd02.prod.outlook.com (2603:10b6:805:9a::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 26 Aug
+ 2020 16:13:09 +0000
+Received: from BL2NAM02FT025.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:91:cafe::22) by BL0PR05CA0018.outlook.office365.com
+ (2603:10b6:208:91::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend
+ Transport; Wed, 26 Aug 2020 16:13:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT025.mail.protection.outlook.com (10.152.77.151) with Microsoft SMTP
+ Server id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 16:13:09
+ +0000
+Received: from [149.199.38.66] (port=58602 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1kAy2Q-0006Zz-9R; Wed, 26 Aug 2020 09:12:38 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1kAy2v-0008BQ-83; Wed, 26 Aug 2020 09:13:09 -0700
+Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1kAy2t-0008B0-RR; Wed, 26 Aug 2020 09:13:07 -0700
+From:   Ben Levinsky <ben.levinsky@xilinx.com>
+To:     stefano.stabellini@xilinx.com, michals@xilinx.com
+Cc:     devicetree@vger.kernel.org, mathieu.poirier@linaro.org,
+        emooring@xilinx.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jliang@xilinx.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        michael.auchter@ni.com
+Subject: [PATCH v9 4/5] dt-bindings: remoteproc: Add documentation for ZynqMP R5 rproc bindings
+Date:   Wed, 26 Aug 2020 09:13:06 -0700
+Message-Id: <20200826161307.1064-5-ben.levinsky@xilinx.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200826161307.1064-1-ben.levinsky@xilinx.com>
+References: <20200826161307.1064-1-ben.levinsky@xilinx.com>
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-References: <20200825124711.11455-1-nish.malpani25@gmail.com> <20200825124711.11455-2-nish.malpani25@gmail.com>
-In-Reply-To: <20200825124711.11455-2-nish.malpani25@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 26 Aug 2020 19:10:03 +0300
-Message-ID: <CAHp75VfHFo41S=Bhs2MB6Te6VAn+yCteys6XcYgciNZu9VppJg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] iio: gyro: adxrs290: Add triggered buffer support
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        darius.berghe@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 496428ec-4b4c-4b0a-6afd-08d849daecb6
+X-MS-TrafficTypeDiagnostic: SN6PR02MB4909:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB4909829FC365B5596C7AAF33B5540@SN6PR02MB4909.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8+jFcBx2h22jv9R1RG4NR6l6bk8KKg55JrDAvP45PT4FUAzAJCnKchPEOj7Nt7XvZWRyTZcVXVLkZsD5w+o4xhDoc+34Ff3eJjcj48iXTu9FOiuge0/2EVbsGsTGiPpO9vdCvqbW9YKEE1inm+3I7OIwAsvSCheQmCoA5TBMGzQBrUaogabUMcU4R8BDYIDE0IZVnXKAuXjqZn41MT0zip+N/uRDlB5iOykkngP/UrrFLKY3v8U6Y4yznX9zvLxCL1yY9zeA96keHX7AhG50syIlBLMpxc2KB5uO5rzIqPLNRcnOpAS0MV0Bv+QJJBrwu73Np5gkC0LTIH1SIMeKmZLPled5dh6pTo8wBNeBCAtFuVgs/FvzMw/oYWpcOeNIDsjK92eTnluETz8KTYldJvZ1zSrI1obVCHm8bl10sElf0J3HhBP4UjkQlv6bhnRLWPTVRD+sDsxF+GvlAL1W18Yq8C2cg8OzKPFmcxfGVeI=
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(39860400002)(376002)(346002)(396003)(136003)(46966005)(83380400001)(1076003)(2906002)(5660300002)(36756003)(44832011)(478600001)(4326008)(426003)(47076004)(6636002)(70586007)(356005)(81166007)(70206006)(82740400003)(2616005)(82310400002)(8936002)(26005)(316002)(336012)(9786002)(8676002)(186003)(7696005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 16:13:09.5911
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 496428ec-4b4c-4b0a-6afd-08d849daecb6
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT025.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB4909
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:11 PM Nishant Malpani
-<nish.malpani25@gmail.com> wrote:
->
-> Provide a way for continuous data capture by setting up buffer support. The
-> data ready signal exposed at the SYNC pin of the ADXRS290 is exploited as
-> a hardware interrupt which triggers to fill the buffer.
->
-> Triggered buffer setup was tested with both hardware trigger (DATA_RDY) and
-> software triggers (sysfs-trig & hrtimer).
+Add binding for ZynqMP R5 OpenAMP.
 
-...
+Represent the RPU domain resources in one device node. Each RPU
+processor is a subnode of the top RPU domain node.
 
-> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int val, ret;
-> +
-> +       mutex_lock(&st->lock);
-> +
-> +       if (st->mode == mode) {
+Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
+Signed-off-by: Jason Wu <j.wu@xilinx.com>
+Signed-off-by: Wendy Liang <jliang@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+v3:
+- update zynqmp_r5 yaml parsing to not raise warnings for extra
+  information in children of R5 node. The warning "node has a unit
+  name, but no reg or ranges property" will still be raised though 
+  as this particular node is needed to describe the
+  '#address-cells' and '#size-cells' information.
+v4::
+- remove warning '/example-0/rpu@ff9a0000/r5@0: 
+  node has a unit name, but no reg or ranges property'
+  by adding reg to r5 node.
+v5:
+- update device tree sample and yaml parsing to not raise any warnings
+- description for memory-region in yaml parsing
+- compatible string in yaml parsing for TCM
+v6:
+- remove coupling TCM nodes with remoteproc 
+- remove mailbox as it is optional not needed
+v7:
+- change lockstep-mode to xlnx,cluster-mode
+v9:
+- show example IPC nodes and tcm bank nodes
+---
+ .../xilinx,zynqmp-r5-remoteproc.yaml          | 113 ++++++++++++++++++
+ 1 file changed, 113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
 
-> +               ret = 0;
-
-Can be done outside of mutex.
-
-> +               goto done;
-> +       }
-> +
-
-> +       val = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
-> +       if (val < 0) {
-> +               ret = val;
-> +               goto done;
-> +       }
-
-Consider other way around
- ret = ...
- ...
- val = ret;
-
-> +       switch (mode) {
-> +       case ADXRS290_MODE_STANDBY:
-> +               val &= ~ADXRS290_MEASUREMENT;
-> +               break;
-> +       case ADXRS290_MODE_MEASUREMENT:
-> +               val |= ADXRS290_MEASUREMENT;
-> +               break;
-> +       default:
-> +               ret = -EINVAL;
-> +               goto done;
-> +       }
-> +
-> +       ret = adxrs290_spi_write_reg(st->spi,
-> +                                    ADXRS290_REG_POWER_CTL,
-> +                                    val);
-> +       if (ret < 0) {
-> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
-> +               goto done;
-> +       }
-> +
-> +       /* update cached mode */
-> +       st->mode = mode;
-> +
-> +done:
-> +       mutex_unlock(&st->lock);
-> +       return ret;
-> +}
-
-...
-
-> +                               goto err_release;
->
-> -                       return IIO_VAL_INT;
-> +                       ret = IIO_VAL_INT;
-> +                       break;
->                 default:
-> -                       return -EINVAL;
-> +                       ret = -EINVAL;
-> +                       break;
->                 }
-
-> +err_release:
-
-I didn't get the purpose of this. Wasn't the break statement enough?
-
-> +               iio_device_release_direct_mode(indio_dev);
-> +               return ret;
->         case IIO_CHAN_INFO_SCALE:
->                 switch (chan->type) {
->                 case IIO_ANGL_VEL:
-
-...
-
-> +                       goto err_release;
-
-Ditto.
-
-> +               }
-> +
->                 /* caching the updated state of the high-pass filter */
->                 st->hpf_3db_freq_idx = hpf_idx;
->                 /* retrieving the current state of the low-pass filter */
->                 lpf_idx = st->lpf_3db_freq_idx;
-> -               return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               break;
-> +
-> +       default:
-> +               ret = -EINVAL;
-> +               break;
->         }
->
-> -       return -EINVAL;
-> +err_release:
-> +       iio_device_release_direct_mode(indio_dev);
-> +       return ret;
->  }
-
-...
-
-> +       val = (state ? ADXRS290_SYNC(ADXRS290_DATA_RDY_OUT) : 0);
-
-Purpose of outer parentheses?
-
-...
-
-> +static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int ret;
-> +
-> +       if (!st->spi->irq) {
-> +               dev_info(&st->spi->dev, "no irq, using polling\n");
-> +               return 0;
-> +       }
-> +
-> +       st->dready_trig = devm_iio_trigger_alloc(&st->spi->dev,
-> +                                                "%s-dev%d",
-> +                                                indio_dev->name,
-> +                                                indio_dev->id);
-> +       if (!st->dready_trig)
-> +               return -ENOMEM;
-> +
-> +       st->dready_trig->dev.parent = &st->spi->dev;
-> +       st->dready_trig->ops = &adxrs290_trigger_ops;
-> +       iio_trigger_set_drvdata(st->dready_trig, indio_dev);
-> +
-> +       ret = devm_request_irq(&st->spi->dev, st->spi->irq,
-> +                              &iio_trigger_generic_data_rdy_poll,
-> +                              IRQF_ONESHOT,
-> +                              "adxrs290_irq", st->dready_trig);
-> +       if (ret < 0) {
-
-> +               dev_err(&st->spi->dev, "request irq %d failed\n", st->spi->irq);
-> +               return ret;
-
-return dev_err_probe(...);
-
-> +       }
-> +
-> +       ret = devm_iio_trigger_register(&st->spi->dev, st->dready_trig);
-> +       if (ret) {
-
-> +               dev_err(&st->spi->dev, "iio trigger register failed\n");
-> +               return ret;
-
-return dev_err_probe(...);
-
-> +       }
-> +
-> +       indio_dev->trig = iio_trigger_get(st->dready_trig);
-> +
-> +       return 0;
-> +}
-
-...
-
-> +       ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> +                                             &iio_pollfunc_store_time,
-> +                                             &adxrs290_trigger_handler, NULL);
-> +       if (ret < 0) {
-
-> +               dev_err(&spi->dev, "iio triggered buffer setup failed\n");
-> +               return ret;
-
-return dev_err_probe(...);
-
-> +       }
-
+diff --git a/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+new file mode 100644
+index 000000000000..f4a28831af6c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml
+@@ -0,0 +1,113 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/remoteproc/xilinx,zynqmp-r5-remoteproc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Xilinx R5 remote processor controller bindings
++
++description:
++  This document defines the binding for the remoteproc component that loads and
++  boots firmwares on the Xilinx Zynqmp and Versal family chipset.
++
++  Note that the Linux has global addressing view of the R5-related memory (TCM)
++  so the absolute address ranges are provided in TCM reg's.
++maintainers:
++  - Ed Mooring <ed.mooring@xilinx.com>
++  - Ben Levinsky <ben.levinsky@xilinx.com>
++
++properties:
++  compatible:
++    const: "xlnx,zynqmp-r5-remoteproc-1.0"
++
++  lockstep-mode:
++    description:
++      R5 core configuration (split is 0 or lock-step and 1)
++    maxItems: 1
++
++  interrupts:
++    description:
++      Interrupt mapping for remoteproc IPI. It is required if the
++      user uses the remoteproc driver with the RPMsg kernel driver.
++    maxItems: 6
++
++  memory-region:
++    description:
++      collection of memory carveouts used for elf-loading and inter-processor
++      communication.
++    maxItems: 4
++    minItems: 4
++  pnode-id:
++    maxItems: 1
++  mboxes:
++    maxItems: 2
++  mbox-names:
++    maxItems: 2
++
++examples:
++  - |
++     reserved-memory {
++          #address-cells = <1>;
++          #size-cells = <1>;
++          ranges;
++          elf_load: rproc@3ed000000 {
++               no-map;
++               reg = <0x3ed00000 0x40000>;
++          };
++     };
++     rpu {
++          compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
++          #address-cells = <1>;
++          #size-cells = <1>;
++          ranges;
++          lockstep-mode = <0>;
++          r5_0 {
++               ranges;
++               #address-cells = <1>;
++               #size-cells = <1>;
++               memory-region = <&elf_load>;
++               pnode-id = <0x7>;
++          };
++     };
++
++     /*
++      * Below nodes are required if using TCM to load R5 firmware
++      * if not, then either do not provide nodes are label as disabled in
++      * status property
++      */
++     tcm_0a@0 {
++         reg = <0x0 0xffe00000 0x0 0x10000>;
++         pnode-id = <0xf>;
++         no-map;
++         status = "okay";
++     };
++     tcm_1a@0 {
++         reg = <0x0 0xffe20000 0x0 0x10000>;
++         pnode-id = <0x10>;
++         no-map;
++         status = "okay";
++     };
++
++     /*
++      * Below nodes are required for IPC, as Xilinx Kernel
++      * can potentially have other applications that use CMA
++      * and conflict from hardware design. With that in mind,
++      * explicitly state the address spaces for the IPC remoteproc
++      * mechanisms.
++      *
++      * If IPC not required and only elf-loading then these are not needed.
++      */
++     rpu0vdev0vring0: rpu0vdev0vring0@3ed40000 {
++         no-map;
++         reg = <0x0 0x3ed40000 0x0 0x4000>;
++     };
++     rpu0vdev0vring1: rpu0vdev0vring1@3ed44000 {
++         no-map;
++         reg = <0x0 0x3ed44000 0x0 0x4000>;
++     };
++     rpu0vdev0buffer: rpu0vdev0buffer@3ed48000 {
++         no-map;
++         reg = <0x0 0x3ed48000 0x0 0x100000>;
++     };
++
++...
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
