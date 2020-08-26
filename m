@@ -2,225 +2,92 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E58DC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E560C433DF
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD87207F7
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598415395;
-	bh=9mwZBrs2Apei4nVXemBIp81fg2KqLJnfuW4TFPpznb0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=s1kTC3TvIui3XXBRS29vwEXYn6+9CLf6KNRJXlHBJnLRT+iawg9MRrXs/oUrtMrgv
-	 4pXmk1T250jfNTzG1TSICqk2zcdUOIi4vS3GJR91wp64E24r5CNnAjgEap/bIqk2Ss
-	 Dym/JVudrjtBentd9SF8QrVVVM3eeDfzjgQeOrHg=
+	by mail.kernel.org (Postfix) with ESMTP id 7619B2071E
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 04:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726040AbgHZEQc (ORCPT
+        id S1725764AbgHZEfc (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 00:35:32 -0400
+Received: from mga18.intel.com ([134.134.136.126]:38861 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgHZEQc (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:16:32 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48B9920707;
-        Wed, 26 Aug 2020 04:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598415391;
-        bh=9mwZBrs2Apei4nVXemBIp81fg2KqLJnfuW4TFPpznb0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CYIOC1oKVD8HwmrvQzY8jzONbJZQ/nz7DmztHCjJyBfo8PNv4YyBcSBTBTZ956P7I
-         fgm4gH8D6QvQyUSRJw/A+dMQoJ966IeMM7B1xpnKwnsPlhgnpXFaTQF/f/tfEQZujb
-         w8kKjDUpMgg5uUEjq5DatJM4UNgDjSWadiHB3l6Y=
-Date:   Wed, 26 Aug 2020 06:16:26 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Josh Cartwright <joshc@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
-Message-ID: <20200826061150.3eb96ab3@coco.lan>
-In-Reply-To: <20200819230812.GB2090217@bogus>
-References: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
-        <20200819230812.GB2090217@bogus>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1725267AbgHZEfb (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 00:35:31 -0400
+IronPort-SDR: dtdM38uslWRZ4LBkutHLksPaFoxB9wZN31doZSPR6g6mdXaWOEJNVufpz0yhOedZOrqiu2nDIb
+ Z8UFljrdmUsA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="143897913"
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="143897913"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 21:35:31 -0700
+IronPort-SDR: gvW+fa0XopgGj4m5A7PsAdai2br24l96G+A6pa6m2O7YebGOXSereuYQmdbZjDhJy3UKu4lk+5
+ 6vSuqpqA6Tsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="373260389"
+Received: from vgjayaku-ilbpg7.png.intel.com ([10.88.227.96])
+  by orsmga001.jf.intel.com with ESMTP; 25 Aug 2020 21:35:28 -0700
+From:   vineetha.g.jaya.kumaran@intel.com
+To:     davem@davemloft.net, kuba@kernel.org, mcoquelin.stm32@gmail.com,
+        robh+dt@kernel.org
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        weifeng.voon@intel.com, hock.leong.kweh@intel.com,
+        boon.leong.ong@intel.com, lakshmi.bai.raja.subramanian@intel.com
+Subject: [PATCH v3 0/2]  Add Ethernet support for Intel Keem Bay SoC
+Date:   Wed, 26 Aug 2020 12:33:40 +0800
+Message-Id: <1598416422-30796-1-git-send-email-vineetha.g.jaya.kumaran@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Em Wed, 19 Aug 2020 17:08:12 -0600
-Rob Herring <robh@kernel.org> escreveu:
+From: "Vineetha G. Jaya Kumaran" <vineetha.g.jaya.kumaran@intel.com>
 
-> Need to also define 'reg' constraints as defined by the bus:
-> 
-> properties:
->   reg:
->     minItems: 1
->     maxItems: 2  #??? Not sure about this. Is it 1 SPMI_USID and 1 \
-> SPMI_GSID entry at most?
+Hello,
 
+This patch set enables support for Ethernet on the Intel Keem Bay SoC.
+The first patch contains the required Device Tree bindings documentation, 
+while the second patch adds the Intel platform glue layer for the stmmac
+device driver.
 
-Each child have just one user ID (SPMI_USID). The group ID (SPMI_GSID) is an 
-optional feature. From what I know, only one group ID is allowed at most.
-So, maxItems: 2 makes sense.
+This driver was tested on the Keem Bay evaluation module board.
 
+Thank you.
 
->     items:
->       items:
->         - minimum: 0
->           maximum: 0xf
->         - enum: [ 0, 1 ]
+Best regards,
+Vineetha
 
-If I use both maxItems:2 and the above, the example produces the following
-error:
+Changes since v2:
+-Add a select in DT documentation to avoid matching with all nodes containing 'snps,dwmac'
+-Rebased to 5.9-rc1
 
-	/devel/v4l/temp/Documentation/devicetree/bindings/spmi/spmi.example.dt.yaml: spmi@0: child@7:reg: Additional items are not allowed ([3, 1] was unexpected)
+Changes since v1:
+-Removed clocks maxItems property from DT bindings documentation
+-Removed phy compatible strings from DT bindings documentation
 
-(full DT file enclosed)
+Rusaimi Amira Ruslan (1):
+  net: stmmac: Add dwmac-intel-plat for GBE driver
 
-This seems to be some bug at the parsing logic, which seems to be refusing
-to accept both "items" and "maxItems".
+Vineetha G. Jaya Kumaran (1):
+  dt-bindings: net: Add bindings for Intel Keem Bay
 
--
+ .../devicetree/bindings/net/intel,dwmac-plat.yaml  | 130 ++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  10 ++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ .../net/ethernet/stmicro/stmmac/dwmac-intel-plat.c | 191 +++++++++++++++++++++
+ 4 files changed, 332 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/intel,dwmac-plat.yaml
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-intel-plat.c
 
-That's said, looking at the code[1], only SPMI_USID is currently supported:
-
-		err = of_property_read_u32_array(node, "reg", reg, 2);
-		if (err) {
-			dev_err(&ctrl->dev,
-				"node %pOF err (%d) does not have 'reg' property\n",
-				node, err);
-			continue;
-		}
-
-		if (reg[1] != SPMI_USID) {
-			dev_err(&ctrl->dev,
-				"node %pOF contains unsupported 'reg' entry\n",
-				node);
-			continue;
-		}
-
-		if (reg[0] >= SPMI_MAX_SLAVE_ID) {
-			dev_err(&ctrl->dev, "invalid usid on node %pOF\n", node);
-			continue;
-		}
-
-So, for now, using SPMI_GSID will fail.
-
-[1] drivers/spmi/spmi.c
-
-So, I'm inclined to define reg property as:
-
-    properties:
-      reg:
-        minItems: 1
-        maxItems: 2
-        items:
-          - minimum: 0
-            maximum: 0xf
-          - enum: [ 0 ]
-            description: |
-              0 means user ID address. 1 is reserved for group ID address.
-
-And drop the group ID from the example. I'll send such version as a
-second version of this patch.
-
-Thanks,
-Mauro
-
-
-# SPDX-License-Identifier: GPL-2.0
-%YAML 1.2
----
-$id: http://devicetree.org/schemas/spmi/spmi.yaml#
-$schema: http://devicetree.org/meta-schemas/core.yaml#
-
-title: System Power Management Interface (SPMI) Controller
-
-maintainers:
-  - Josh Cartwright <joshc@codeaurora.org>
-
-description: |
-  The System Power Management (SPMI) controller is a 2-wire bus defined
-  by the MIPI Alliance for power management control to be used on SoC designs.
-
-  SPMI controllers are modelled in device tree using a generic set of
-  bindings defined here, plus any bus controller specific properties, if
-  needed.
-
-  Each SPMI controller has zero or more child nodes (up to 16 ones), each
-  one representing an unique slave at the bus.
-
-properties:
-  $nodename:
-    pattern: "spmi@.*"
-
-  reg:
-    maxItems: 1
-
-  "#address-cells":
-    const: 2
-
-  "#size-cells":
-    const: 0
-
-patternProperties:
-  ".*@([0-9]|1[0-5])$":
-    description: up to 16 child PMIC nodes
-    type: object
-
-    properties:
-      reg:
-        minItems: 1
-        maxItems: 2
-        items:
-          - minimum: 0
-            maximum: 0xf
-          - enum: [ 0, 1 ]
-
-    required:
-      - reg
-
-required:
-  - reg
-
-examples:
-  - |
-    #include <dt-bindings/spmi/spmi.h>
-
-    spmi@0 {
-      reg = <0 0>;
-
-      #address-cells = <2>;
-      #size-cells = <0>;
-
-      child@0 {
-        reg = <0 SPMI_USID>;
-      };
-
-      child@7 {
-        reg = <7 SPMI_USID>,
-              <3 SPMI_GSID>;
-      };
-    };
-
-
-
+-- 
+1.9.1
 
