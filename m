@@ -2,155 +2,272 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63CA3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E21C433E3
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43EC0206FA
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598424420;
-	bh=hVffajsF2+XdKaXPf34BPboBIlD4e9nfaQNS/KKUDNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZsOZxqdILjn1elG6KA3eOk3i4r2pnq1JXdCVQfVlyLO/jP8JcC4spgd+KXNq0mdDh
-	 TC/9ZXgHU7P6t+MiFtH9/lmI0EBzL8YAroHLcx9EjVdIqgIffaZv+gdsP87Ndh4jH3
-	 FH8JWuU7z6Pn1e8fKD0vPT5OAaBxCVQkV01or7Qw=
+	by mail.kernel.org (Postfix) with ESMTP id D2EBE206FA
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 06:52:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JvLFDBMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHZGqw convert rfc822-to-8bit (ORCPT
+        id S1726040AbgHZGwJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:46:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37673 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgHZGqv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 02:46:51 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x9so618599wmi.2;
-        Tue, 25 Aug 2020 23:46:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=woDwpwEGnSTSc4kljToA4r5StN2rkeplc2dBRDufFZA=;
-        b=axwIzwdJXwjZsXIrMW6pOdz/Fl6s46kYixkoGoQQN/7r9Q/vxadPrX3i+bebYsbCiu
-         F4qZsZvN95U99837oYJKDflwgzafkp8BGFvkifvpW9oEhMLE333cpq/DJ6shNJJfSU5K
-         fnmuUSViSObLp0Ewaib3nIfSmb8PtCnnfdI5BujC6YtDd+HCiTYKVXGRsyhEHO+jm7pY
-         zQmoJVHnBmZRFKyutbDAAbYCLy1mkWk3CT00a6x0Cu1r3oCwcCfSknTc66vPeMBdwA5U
-         nLq76H0aID+17EaVGxsDpqxCaKdydyCQWRbilU7I08vj/SVRvwa1e2WoBzJMws98UpK1
-         2LPQ==
-X-Gm-Message-State: AOAM531ug6AshDEqLNSwI/selChhVUmSRNzRglZTYEfaWpy+w8gqY/Fn
-        x7ybN70ny7ur9SgYvotdq0ZJbNX2crg=
-X-Google-Smtp-Source: ABdhPJwwnq5+FT5AJu3knzHTD/+s17qG77/RpFqNYzEjYg24N/OVflA007W8XbHJWMrOxuCfflZj9Q==
-X-Received: by 2002:a7b:cf13:: with SMTP id l19mr5238783wmg.115.1598424408857;
-        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id g17sm3402102wrr.28.2020.08.25.23.46.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 08:46:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com
-Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
-Message-ID: <20200826064645.GA12103@pi3>
-References: <20200825185152.GC2693@kozik-lap>
- <CGME20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9@eucas1p2.samsung.com>
- <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
+        Wed, 26 Aug 2020 02:52:09 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:60067 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgHZGwJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 02:52:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1598424730; x=1629960730;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SI8j6m6I3e4k4zKG9EdeKsk+0HOf3F01qwpYDXe2Ni8=;
+  b=JvLFDBMUmqKUWkf4z89/Ilh5tld5H6qt9DdnMKTBIqH7QhImXUKgTTel
+   X6p/LraFfxkVCDCyPridQTlGmLWyWJgNydCQ7c8KmqiAHee2yYrcWaqFu
+   /ImLGXgUI3C95MA9pL8xO3W+StW+t43KQ8RulyojmnkmoNtmnxjknGVk7
+   +cnyKldDMDmOO9UhE6wm+hVKavyTiu1UcuAhNsH4QAAcUBR3o1tow/eaK
+   Ow4c18dro/1zYPtLz/UmE/ibwq2DF0KYqqpd5xxcSqHXbLP+Pm2eMi+oG
+   RV679jj2lcPhnImO2lYKtlAzw+q7kjrj56tGzB7G5Ve68PA+YmOSZQY9U
+   g==;
+IronPort-SDR: +BTtOBHd/Av6g0eiPDp5dgkPCHQaItVSWDbEGQ+TT7pi9LjMsDRQ50bowlH2BrDkwYeh2+2z+6
+ 7YgMqraxOGPeohFzOPWihOYjbeqDcG+evqUeKwn5IPUVhOS3AZzZ9M/9YKkDFQPocc15OoJxto
+ SkwTkPH5I9A3VS7akiQDASYkQyow0jXA2SfxKclcmI5I4HNa3RzOJS+dpjbe4MbEQwWnoGZZlA
+ 0MMSmo+isnknb6r+Y0fa2p2qwFWmVYhsFGyGMqljisDMpRklo2bYlQlmOwi/y+WAQcIqUqkUnj
+ ut0=
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="88565025"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2020 23:52:08 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 23:51:18 -0700
+Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 25 Aug 2020 23:51:54 -0700
+From:   Eugen Hristev <eugen.hristev@microchip.com>
+To:     <robh+dt@kernel.org>, <sakari.ailus@iki.fi>,
+        <linux-media@vger.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH v3 1/3] dt-bindings: media: atmel: csi2dc: add bindings for microchip csi2dc
+Date:   Wed, 26 Aug 2020 09:51:40 +0300
+Message-ID: <20200826065142.205000-1-eugen.hristev@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 07:11:18AM +0200, Lukasz Stelmach wrote:
-> It was <2020-08-25 wto 20:51>, when Krzysztof Kozlowski wrote:
-> > On Tue, Aug 25, 2020 at 07:03:11PM +0200, Łukasz Stelmach wrote:
-> >> Enable ax88796c driver for the ethernet chip on Exynos3250-based
-> >> ARTIK5 boards.
-> >> 
-> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> >> ---
-> >>  arch/arm/configs/exynos_defconfig   | 2 ++
-> >>  arch/arm/configs/multi_v7_defconfig | 2 ++
-> >>  2 files changed, 4 insertions(+)
-> >> 
-> >> Please DO NOT merge before these two
-> >
-> > Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
-> > it does not change anything except automated systems booting these
-> > defconfigs... The boards might be broken by DT.
-> 
-> I was told, to ask for deferred merge of defconfig and it makes sense to
-> me. DT won't break anything if the driver isn't compiled. However, I can
-> see that you have a word you may decide about DT too. My point is to
-> wait until spi-s3c64xx patches are merged and not to break ARTIK5
-> boards.
+Add bindings documentation for Microchip CSI2 Demultiplexer controller.
 
-The config is chosen and adjusted by each person, during build. Merging
-defconfig does not necessarily affect them. However merging DT affects -
-you cannot disable it without source code modification.
+CSI2DC is a demultiplexer from Synopsys IDI interface specification to
+parallel interface connection or direct memory access.
 
-Anyway, no problem for me with waiting with defconfig.
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+Changes in v3:
+- Removed some text from description, as it was explained in the schema
+- fixed other things as per Rob's review
+- moved some text inside the schema, like the clock description
 
-Best regards,
-Krzysztof
+Changes in v2:
+- fixed warnings reported by dt_binding_check
 
+ .../bindings/media/microchip,csi2dc.yaml      | 174 ++++++++++++++++++
+ 1 file changed, 174 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
 
-> 
-> >> 
-> >>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung.com/
-> >>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung.com/
-> >> 
-> >> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-> >> index 6e8b5ff0859c..82480b2bf545 100644
-> >> --- a/arch/arm/configs/exynos_defconfig
-> >> +++ b/arch/arm/configs/exynos_defconfig
-> >> @@ -107,6 +107,8 @@ CONFIG_MD=y
-> >>  CONFIG_BLK_DEV_DM=y
-> >>  CONFIG_DM_CRYPT=m
-> >>  CONFIG_NETDEVICES=y
-> >> +CONFIG_NET_VENDOR_ASIX=y
-> >> +CONFIG_SPI_AX88796C=y
-> >>  CONFIG_SMSC911X=y
-> >>  CONFIG_USB_RTL8150=m
-> >>  CONFIG_USB_RTL8152=y
-> >> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> >> index e9e76e32f10f..a8b4e95d4148 100644
-> >> --- a/arch/arm/configs/multi_v7_defconfig
-> >> +++ b/arch/arm/configs/multi_v7_defconfig
-> >> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=y
-> >>  CONFIG_SATA_MV=y
-> >>  CONFIG_SATA_RCAR=y
-> >>  CONFIG_NETDEVICES=y
-> >> +CONFIG_NET_VENDOR_ASIX=y
-> >> +CONFIG_SPI_AX88796C=m
-> >>  CONFIG_VIRTIO_NET=y
-> >>  CONFIG_B53_SPI_DRIVER=m
-> >>  CONFIG_B53_MDIO_DRIVER=m
-> >> -- 
-> >> 2.26.2
-> >> 
-> >
-> >
-> 
-> -- 
-> Łukasz Stelmach
-> Samsung R&D Institute Poland
-> Samsung Electronics
-
+diff --git a/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml b/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+new file mode 100644
+index 000000000000..b4c1b8800a3b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+@@ -0,0 +1,174 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/microchip,csi2dc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip CSI2 Demux Controller (CSI2DC)
++
++maintainers:
++  - Eugen Hristev <eugen.hristev@microchip.com>
++
++description:
++  CSI2DC - Camera Serial Interface 2 Demux Controller
++
++  CSI2DC is a hardware block that receives incoming data from an IDI interface
++  and filters packets based on their data type and virtual channel identifier,
++  then converts the byte stream into a cross clock domain to a pixel stream
++  to a parallel interface that can be read by a sensor controller.
++
++  CSI2DC provides two pipes, one video pipe and one data pipe. Video pipe
++  is connected to a sensor controller and the data pipe is accessible
++  as a DMA slave port to a DMA controller.
++
++  CSI2DC supports a single 'port' node as a source pad with Synopsys 32-bit
++  IDI interface. The connected endpoint must be a IDI interface compatible
++  device (like Synopsys CSI2HOST) , that can provide 32-bit IDI interface
++  connection as sink pad.
++  For media entity and endpoints please refer to the bindings defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++  For Synopsys IDI interface please refer to
++  Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
++
++  CSI2DC supports one 'port' node as sink pad with parallel interface. This is
++  called video pipe.
++  This port has an 'endpoint' can then be used as a source pad for another
++  controller (next in pipeline).
++  Please refer to the bindings defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++  CSI2DC also supports direct access to the data through AHB, via DMA channel,
++  called data pipe.
++  Because of this, the sink 'port' child node (second) is not mandatory.
++  If the sink 'port' child node is missing, only data pipe is available.
++
++properties:
++  compatible:
++    const: microchip,sama7g5-csi2dc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    description:
++      CSI2DC must have two clocks to function correctly. One clock is the
++      peripheral clock for the inside functionality of the hardware block.
++      This is named 'pclk'. The second clock must be the cross domain clock,
++      in which CSI2DC will perform clock crossing. This clock must be fed
++      by the next controller in pipeline, which usually is a sensor controller.
++      Normally this clock should be given by this sensor controller who
++      is also a clock source. This clock is named 'scck', sensor controller clock.
++    items:
++      - const: pclk
++      - const: scck
++
++  microchip,clk-gated:
++    type: boolean
++    description:
++      If present, indicates that the clock is gated.
++      Otherwise, the clock is free-running.
++
++  microchip,inter-line-delay:
++    allOf:
++    - $ref: /schemas/types.yaml#/definitions/uint32
++    - minimum: 1
++    - maximum: 16
++    default: 16
++    description:
++      Indicates how many clock cycles should be introduced between each line.
++
++  port@0:
++    type: object
++    description:
++      Input port node, single endpoint describing the input pad.
++
++    properties:
++      reg:
++        const: 0
++
++      endpoint:
++        type: object
++
++        properties:
++          remote-endpoint: true
++
++        required:
++          - remote-endpoint
++
++        additionalProperties: false
++
++    additionalProperties: false
++
++  port@1:
++    type: object
++    description:
++      Output port node, single endpoint, describing the output pad.
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++      reg:
++        const: 1
++
++    patternProperties:
++      "^endpoint@[0-3]$":
++        type: object
++
++        properties:
++          reg:
++            enum: [0, 1, 2, 3]
++            description: virtual channel for the endpoint
++
++          remote-endpoint: true
++
++        required:
++          - remote-endpoint
++          - reg
++
++        additionalProperties: false
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - port@0
++
++examples:
++  - |
++    csi2dc@e1404000 {
++        compatible = "microchip,sama7g5-csi2dc";
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <0xe1404000 0x500>;
++        clocks = <&pclk>, <&scck>;
++        clock-names = "pclk", "scck";
++
++        port@0 {
++               reg = <0>; /* must be 0, first child port */
++               csi2dc_in: endpoint { /* input from IDI interface */
++                     remote-endpoint = <&csi2host_out>;
++               };
++        };
++
++        port@1 {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                reg = <1>; /* must be 1, second child port */
++                csi2dc_out: endpoint@2 {
++                        reg = <2>;  /* virtual channel identifier */
++                        remote-endpoint = <&xisc_in>; /* output to sensor controller */
++                };
++        };
++    };
++
++...
+-- 
+2.25.1
 
