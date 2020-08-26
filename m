@@ -2,182 +2,336 @@ Return-Path: <SRS0=1b9y=CE=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4CFC433DF
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4380FC433E1
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1E41207CD
-	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y1O0o25r"
+	by mail.kernel.org (Postfix) with ESMTP id 0646D207CD
+	for <linux-devicetree@archiver.kernel.org>; Wed, 26 Aug 2020 21:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598479174;
+	bh=BrP5+luDzcaKbNl9TP+ZZA+bkFzfPAFW3jQvvE+kl9E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hHvPYzjGgbZdwL/nwlp1LcHNgffNtFmgmgwSp5gFQIZBhFib30/pODdESrA1TJTOH
+	 QE6LD9Gm2q8qgBFfdR6CrSCxlRaZrPooSlJhGg6HIYvE1syByvRgqzATTK5kD/2qFF
+	 AQn4DU86T/bVqSSxhDeWKTHdYLpdMH7i3VRqX5Kw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgHZV4Q (ORCPT
+        id S1726798AbgHZV7d (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:56:16 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52204 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZV4Q (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 17:56:16 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QLu8uo042177;
-        Wed, 26 Aug 2020 16:56:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598478968;
-        bh=dQZ0Q9XvUZXYwld+PELH7Qf4PN7CZlITbMVyyKwxzbU=;
-        h=Subject:To:References:CC:From:Date:In-Reply-To;
-        b=Y1O0o25rMSxs3MC9UHRZc6aNRYBYb8johsSyqxN6O5Zej9Ot9XFzSl4W2PKKZeaJB
-         GTRBQofnFFdejVqmQPNSf6bxuKqlCLLzEJnyAnP+OlTSoe3unt/+E+SavkZ4SPUGIX
-         TPpgabyvpxC35ayYehxOKcaZqewv89SjMjVvksbo=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QLu85b005105
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 16:56:08 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
- Aug 2020 16:56:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 26 Aug 2020 16:56:08 -0500
-Received: from [10.250.32.245] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QLu7Pj129319;
-        Wed, 26 Aug 2020 16:56:07 -0500
-Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
-To:     Chanwoo Choi <cw00.choi@samsung.com>,
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200817070009.4631-1-krzk@kernel.org>
- <CGME20200824103713epcas1p4ae0d5d821fd468163ec5948dd59d0d15@epcas1p4.samsung.com>
- <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
- <b6ec12af-5573-ce86-9f6b-16fcbc36b1a3@samsung.com>
-CC:     "Menon, Nishanth" <nm@ti.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <065f3979-f8c3-9233-4411-6f34f605a05a@ti.com>
-Date:   Wed, 26 Aug 2020 16:56:01 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 26 Aug 2020 17:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbgHZV7a (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:59:30 -0400
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B48AB207CD;
+        Wed, 26 Aug 2020 21:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598479169;
+        bh=BrP5+luDzcaKbNl9TP+ZZA+bkFzfPAFW3jQvvE+kl9E=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cZtq4Si/mXrq5gsupDzVsBJpK1JfTk75Q/lxyLqDBUf8fosENOFHvvRVL9e5Z/tov
+         XaaPdfS2OV6qY6AwLe/mAhnlllf7jMrL1cIHAB4Ott205xJwWmmTSKn8OhwfHmZTYH
+         BaWC+Ngu4Y1auOPKMx0vtQKlmnfeA10n8me7A154=
+Received: by mail-ej1-f45.google.com with SMTP id d26so4968020ejr.1;
+        Wed, 26 Aug 2020 14:59:28 -0700 (PDT)
+X-Gm-Message-State: AOAM531pBZtkU6BYkPG1oRXNC2DetSQ4d6H1xqyzLZxDQdE7UFpRPhBf
+        Cpb/WgicPKoN8G8hLZIApD27Tg+jzobFvCxZmg==
+X-Google-Smtp-Source: ABdhPJy6EZRoJAW/N3n2yX5Xeg201W/2e0zB+iCU5WqtwgRqX6a7/Zh/oip57VtbnC0hJ5vx+Vs4NHXZ/39zaoaHIbw=
+X-Received: by 2002:a17:906:3a41:: with SMTP id a1mr17670334ejf.260.1598479167274;
+ Wed, 26 Aug 2020 14:59:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b6ec12af-5573-ce86-9f6b-16fcbc36b1a3@samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1597289564-17030-1-git-send-email-neal.liu@mediatek.com>
+ <1597289564-17030-3-git-send-email-neal.liu@mediatek.com> <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
+ <1597636953.3394.7.camel@mtkswgap22> <CAAOTY__7gmvp+U+xD12KJkxuya=CkD8xV67S3pfC60gyfajQiA@mail.gmail.com>
+ <1597718679.5704.3.camel@mtkswgap22> <1597731644.12680.2.camel@mtkswgap22> <1598435993.17926.5.camel@mtkswgap22>
+In-Reply-To: <1598435993.17926.5.camel@mtkswgap22>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Thu, 27 Aug 2020 05:59:15 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9BJES3sqz4aO-eKJ1zDWTzsuyOkA0xLxy8wf2ZOyJCfQ@mail.gmail.com>
+Message-ID: <CAAOTY_9BJES3sqz4aO-eKJ1zDWTzsuyOkA0xLxy8wf2ZOyJCfQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] soc: mediatek: add mt6779 devapc driver
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+Hi, Neal:
 
-On 8/24/20 6:28 AM, Chanwoo Choi wrote:
-> Hi,
-> 
-> On 8/24/20 7:36 PM, Ramuthevar, Vadivel MuruganX wrote:
->> Hi,
->>
->>  Thank you for the patches and optimized the code as well.
->>  I have applied your patches and tested, it's working fine
->>  with few minor changes as per Intel's LGM board.
-> 
-> Thanks for the test.
-> 
->>
->>  can I send the patches along with patches or we need to wait until
->>  your patch get merge?
->>
->>  Please suggest to me go further, Thanks!
-> 
-> I applied these patches. You better to send your patches
-> based on extcon-next. Thanks.
+Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8826=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=885:59=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Chun-Kuang,
+>
+> On Tue, 2020-08-18 at 14:20 +0800, Neal Liu wrote:
+> > Hi Chun-Kuang,
+> >
+> > On Tue, 2020-08-18 at 10:44 +0800, Neal Liu wrote:
+> > > Hi Chun-Kuang,
+> > >
+> > > On Mon, 2020-08-17 at 23:13 +0800, Chun-Kuang Hu wrote:
+> > > > Hi, Neal:
+> > > >
+> > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=881=
+7=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8812:02=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > > > >
+> > > > > Hi Chun-Kuang,
+> > > > >
+> > > > > On Sat, 2020-08-15 at 11:03 +0800, Chun-Kuang Hu wrote:
+> > > > > > Hi, Neal:
+> > > > > >
+> > > > > > Neal Liu <neal.liu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=8813=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8811:33=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > > > > > >
+> > > > > > > MediaTek bus fabric provides TrustZone security support and d=
+ata
+> > > > > > > protection to prevent slaves from being accessed by unexpecte=
+d
+> > > > > > > masters.
+> > > > > > > The security violation is logged and sent to the processor fo=
+r
+> > > > > > > further analysis or countermeasures.
+> > > > > > >
+> > > > > > > Any occurrence of security violation would raise an interrupt=
+, and
+> > > > > > > it will be handled by mtk-devapc driver. The violation
+> > > > > > > information is printed in order to find the murderer.
+> > > > > > >
+> > > > > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > > > > > ---
+> > > > > >
+> > > > > > [snip]
+> > > > > >
+> > > > > > > +/*
+> > > > > > > + * devapc_violation_irq - the devapc Interrupt Service Routi=
+ne (ISR) will dump
+> > > > > > > + *                        violation information including wh=
+ich master violates
+> > > > > > > + *                        access slave.
+> > > > > > > + */
+> > > > > > > +static irqreturn_t devapc_violation_irq(int irq_number,
+> > > > > > > +                                       struct mtk_devapc_con=
+text *ctx)
+> > > > > > > +{
+> > > > > > > +       /*
+> > > > > > > +        * Mask slave's irq before clearing vio status.
+> > > > > > > +        * Must do it to avoid nested interrupt and prevent
+> > > > > > > +        * unexpected behavior.
+> > > > > > > +        */
+> > > > > > > +       mask_module_irq(ctx, true);
+> > > > > >
+> > > > > > I still don't understand why nested interrupt happen. If two CP=
+U
+> > > > > > process different devapc interrupt at the same time, mask inter=
+rupt
+> > > > > > could not prevent these two CPU to sync vio dbg at the same tim=
+e. As I
+> > > > > > know, in ARM CPU, only CPU0 process irq handler, and all devapc
+> > > > > > interrupt has the same priority, so why nested interrupt happen=
+? Could
+> > > > > > you explain more detail about how nested interrupt happen?
+> > > > >
+> > > > > If there is another violation happened before previous violation =
+is
+> > > > > fully handled, nested interrupt would happen.
+> > > > >
+> > > > > Let's me take an example:
+> > > > > vio A happen
+> > > > > enter A ISR
+> > > > > ...             vio B happen
+> > > > > finish A ISR    enter B ISR
+> > > > >                 ...
+> > > > >                 finish B ISR
+> > > > >
+> > > > > We mask all module's irq to avoid nested interrupt.
+> > > >
+> > > > This is not 'nested' interrupt. After A ISR is finished, B ISR happ=
+en.
+> > > > So A ISR and B ISR are consecutive interrupt, not nested interrupt.
+> > > > To compare mask irq and no mask irq, Let's consider this situation:
+> > > >
+> > > > 1. 1000 consecutive violation happen, the time period between two
+> > > > violation is 0.01 ms, so the total time is 10ms. (In 10ms, 1000
+> > > > violation happen)
+> > > > 2. One ISR handle time is 1 ms, so in one ISR handler, 100 violatio=
+n happen.
+> > > >
+> > > > For mask irq solution, 10 ISR handler is trigger. For no mask irq
+> > > > solution, 11 ISR handler is trigger.
+> > > > I think these two solution have similar result, and no mask irq
+> > > > solution print more information (If these 1000 violation is trigger=
+ by
+> > > > 20 different driver, no mask solution may show one more driver than
+> > > > mask solution)
+> > > > So I think it's not necessary to mask irq in irq handler.
+> > > >
+> > >
+> > > No, my example is B ISR is entered before A ISR finished.
+> > > Why this is not nested?
+> > > vio A happen
+> > > enter A ISR
+> > > ...             vio B happen
+> > > ...         enter B ISR
+> > > finish A ISR
+> > >                 ...
+> > >             ...
+> > >                 finish B ISR
+> > >
+> >
+> > I have some misunderstanding about how ARM CPU & GIC works. I'll confir=
+m
+> > it and get back to you. Please ignore previous mail thread.
+> > Thanks !
+>
+> Yes, you are right. There is only 1 CPU (CPU0) will process irq handler
+> in ARM CPU. Nested interrupt will never happen.
+> The reason why I have misunderstanding is that Mediatek has some
+> customization about irq handling for ARM CPUs. But it would not applied
+> in upstream kernel.
+>
+> Let remove mask/unmask module irq during ISR. The diff would be:
+>
+> diff --git a/drivers/soc/mediatek/mtk-devapc.c
+> b/drivers/soc/mediatek/mtk-devapc.c
+> index 5189b3f4d63f..0ba61d742e0e 100644
+> --- a/drivers/soc/mediatek/mtk-devapc.c
+> +++ b/drivers/soc/mediatek/mtk-devapc.c
+> @@ -183,24 +183,10 @@ static void devapc_extract_vio_dbg(struct
+> mtk_devapc_context *ctx)
+>  static irqreturn_t devapc_violation_irq(int irq_number,
+>                                         struct mtk_devapc_context *ctx)
+>  {
+> -       /*
+> -        * Mask slave's irq before clearing vio status.
+> -        * Must do it to avoid nested interrupt and prevent
+> -        * unexpected behavior.
+> -        */
+> -       mask_module_irq(ctx, true);
+> -
+>         while (devapc_sync_vio_dbg(ctx))
+>                 devapc_extract_vio_dbg(ctx);
+>
+> -       /*
+> -        * Ensure that violation info are written
+> -        * before further operations
+> -        */
+> -       smp_mb();
+> -
+>         clear_vio_status(ctx);
+> -       mask_module_irq(ctx, false);
+>
+>         return IRQ_HANDLED;
+>  }
+>
+> Is that okay for you?
 
-I am not sure what happened, but the $id and $schema got morphed in the patch
-on linux-next, 000ce2ad3c96 ("dt-bindings: extcon: ptn5150: Convert binding to
-DT schema"), when compared to Krzysztof's original patch.
+Looks good to me.
 
-This is causing dtbs_check to fail in general on linux-next,
-  UPD     include/config/kernel.release
-  CHKDT   Documentation/devicetree/bindings/processed-schema-examples.json
-Traceback (most recent call last):
-  File
-"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
-774, in resolve_from_url
-    document = self.store[url]
-  File "/home/suman/.local/lib/python3.6/site-packages/jsonschema/_utils.py",
-line 22, in __getitem__
-    return self.store[self.normalize(uri)]
-KeyError:
-'https://protect2.fireeye.com/url?k=59835ffc-05905d01-59822c67-0cc47a336902-306bd2691e458c36&q=1&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23'
+Regards,
+Chun-Kuang.
 
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File
-"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
-777, in resolve_from_url
-    document = self.resolve_remote(url)
-  File
-"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
-860, in resolve_remote
-    result = requests.get(uri).json()
-  File "/usr/lib/python3/dist-packages/requests/models.py", line 892, in json
-    return complexjson.loads(self.text, **kwargs)
-  File "/usr/lib/python3/dist-packages/simplejson/__init__.py", line 518, in loads
-    return _default_decoder.decode(s)
-  File "/usr/lib/python3/dist-packages/simplejson/decoder.py", line 370, in decode
-    obj, end = self.raw_decode(s)
-  File "/usr/lib/python3/dist-packages/simplejson/decoder.py", line 400, in
-raw_decode
-    return self.scan_once(s, idx=_w(s, idx).end())
-simplejson.errors.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/suman/.local/bin/dt-doc-validate", line 67, in <module>
-    ret = check_doc(f)
-  File "/home/suman/.local/bin/dt-doc-validate", line 33, in check_doc
-    for error in sorted(dtschema.DTValidator.iter_schema_errors(testtree),
-key=lambda e: e.linecol):
-  File "/home/suman/.local/lib/python3.6/site-packages/dtschema/lib.py", line
-663, in iter_schema_errors
-    meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
-  File
-"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
-779, in resolve_from_url
-    raise exceptions.RefResolutionError(exc)
-jsonschema.exceptions.RefResolutionError: Expecting value: line 1 column 1 (char 0)
-Documentation/devicetree/bindings/Makefile:52: recipe for target
-'Documentation/devicetree/bindings/processed-schema-examples.json' failed
-make[1]: *** [Documentation/devicetree/bindings/processed-schema-examples.json]
-Error 123
-Makefile:1366: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-regards
-Suman
-
-> 
->>
->> On 17/8/2020 2:59 pm, Krzysztof Kozlowski wrote:
->>> Hi,
->>>
->>> Changes since v1:
->>> 1. Mutex unlock fix in patch 8/13.
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>
->>
-> 
-> 
-
+> Thanks !
+>
+> >
+> > > > >
+> > > > > >
+> > > > > > > +
+> > > > > > > +       while (devapc_sync_vio_dbg(ctx))
+> > > > > > > +               devapc_extract_vio_dbg(ctx);
+> > > > > > > +
+> > > > > > > +       /*
+> > > > > > > +        * Ensure that violation info are written
+> > > > > > > +        * before further operations
+> > > > > > > +        */
+> > > > > > > +       smp_mb();
+> > > > > > > +
+> > > > > > > +       clear_vio_status(ctx);
+> > > > > > > +       mask_module_irq(ctx, false);
+> > > > > > > +
+> > > > > > > +       return IRQ_HANDLED;
+> > > > > > > +}
+> > > > > > > +
+> > > > > >
+> > > > > > [snip]
+> > > > > >
+> > > > > > > +
+> > > > > > > +static int mtk_devapc_remove(struct platform_device *pdev)
+> > > > > > > +{
+> > > > > > > +       struct mtk_devapc_context *ctx =3D platform_get_drvda=
+ta(pdev);
+> > > > > > > +
+> > > > > > > +       stop_devapc(ctx);
+> > > > > > > +
+> > > > > > > +       if (ctx->infra_clk)
+> > > > > >
+> > > > > > This always true.
+> > > > >
+> > > > > Does it mean that remove function would be called only if probe f=
+unction
+> > > > > is returned successfully?
+> > > >
+> > > > Yes.
+> > > >
+> > > > > Is there any chance this function would be called directly?
+> > > >
+> > > > No.
+> > > >
+> > > > Regards,
+> > > > Chun-Kuang.
+> > > >
+> > > > >
+> > > > > >
+> > > > > > Regards,
+> > > > > > Chun-Kuang.
+> > > > > >
+> > > > > > > +               clk_disable_unprepare(ctx->infra_clk);
+> > > > > > > +
+> > > > > > > +       return 0;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static struct platform_driver mtk_devapc_driver =3D {
+> > > > > > > +       .probe =3D mtk_devapc_probe,
+> > > > > > > +       .remove =3D mtk_devapc_remove,
+> > > > > > > +       .driver =3D {
+> > > > > > > +               .name =3D KBUILD_MODNAME,
+> > > > > > > +               .of_match_table =3D mtk_devapc_dt_match,
+> > > > > > > +       },
+> > > > > > > +};
+> > > > > > > +
+> > > > > > > +module_platform_driver(mtk_devapc_driver);
+> > > > > > > +
+> > > > > > > +MODULE_DESCRIPTION("Mediatek Device APC Driver");
+> > > > > > > +MODULE_AUTHOR("Neal Liu <neal.liu@mediatek.com>");
+> > > > > > > +MODULE_LICENSE("GPL");
+> > > > > > > --
+> > > > > > > 1.7.9.5
+> > > > > > > _______________________________________________
+> > > > > > > Linux-mediatek mailing list
+> > > > > > > Linux-mediatek@lists.infradead.org
+> > > > > > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> > > > >
+> > >
+> > >
+> >
+> >
+>
