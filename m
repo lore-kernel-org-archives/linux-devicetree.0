@@ -2,152 +2,108 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3483C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296B1C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBB452078A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:05:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598537150;
-	bh=1Q7icZS15ds10bV/JJK72QK64oZ3hVx5Gs5UoRmJ98Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eyKV5uXpGeQ/YFe9NJIr76vEu6s7u4YnnE7BCZfhOdeo+/jCY70h5InV3AOBe+9qV
-	 TFo8iqXhuS7mWmVtyR5ygReyytgRSyCK57XmOiq9VJCjQtp4oGWUzLuhe9MJs0hDUg
-	 lw9jzBUAxa5RAF0PTjrs8bq5WM4ehIwyib/R1UNo=
+	by mail.kernel.org (Postfix) with ESMTP id 043672087D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:31:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWBEgGPw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728007AbgH0OFs (ORCPT
+        id S1727990AbgH0O0v (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgH0OFj (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:05:39 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1C5322BEB;
-        Thu, 27 Aug 2020 14:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598537073;
-        bh=1Q7icZS15ds10bV/JJK72QK64oZ3hVx5Gs5UoRmJ98Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tl+yRPpvVOC0YrftA4sgCJVWFb/LkR2nLxpNX/VePMfSIVcRbEGhau8fsoeZ/d0OI
-         xZVlxtTFY0i9XDknPddK0qCJFqCIZIVnM5Jy8AdvN+sYQySrA7Gyqi1qPPd0cpud5u
-         A+WpomofAz4jpRAwffXZ2g9Nlh3BGC56idJL5K74=
-Received: by mail-oi1-f176.google.com with SMTP id u24so4683389oic.7;
-        Thu, 27 Aug 2020 07:04:33 -0700 (PDT)
-X-Gm-Message-State: AOAM532y2h6usRQxL5jap9cB06BgUtqUreMOzehGtv0elTye4BBOOhZ8
-        Cp/nc3r64PSAj4oZfD9CHL1abLAc0Pa+uze9tQ==
-X-Google-Smtp-Source: ABdhPJySPH2tJLgDSKWk2U/55xGLS0GwXwFCXhvqFf81XQitZVSXlRxK+ZH8toMGrmTkit0oRI8rP5SnLYAKkUAuRpc=
-X-Received: by 2002:aca:e1d6:: with SMTP id y205mr7123657oig.152.1598537073171;
- Thu, 27 Aug 2020 07:04:33 -0700 (PDT)
+        Thu, 27 Aug 2020 10:26:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727993AbgH0O0f (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 10:26:35 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9142CC06121B;
+        Thu, 27 Aug 2020 07:15:28 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id u1so5068416edi.4;
+        Thu, 27 Aug 2020 07:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NXkLLdStZAp/ZkgGou+K3F4imj0vfXH+Hp3m3xXWcro=;
+        b=MWBEgGPw8K6mkTY5BsXwDG/tkAjCutG31ed3J4GGXW64ymyLGydPe5Y+l849kuTZL6
+         yv84qalw1kG2lf823+h65AY4/B9+NSJY481zea/luna/GIkP0oPfmhFJn/8keppiM8HL
+         /SU0jHblLyZ6Fdb2IXT2VWwSI1VqCq4c/opm/cTdpwosuw4J1RGDXrwcpv1HHQci5LJJ
+         L1kcIGvLFSYC8PXfNMj+9hz0zT2sAos9PBYkcQU0K/b0JWfRf/H1E6qpHc0kZMYFCkgQ
+         SQC6ndi9zdcpr+n2uqrG+rN5p/AlMePr1/S/lLgE+JHjac1tRZlNrHZdP+7SstWj8Y0h
+         i14w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NXkLLdStZAp/ZkgGou+K3F4imj0vfXH+Hp3m3xXWcro=;
+        b=VOFIH7BUGkMYOi9stquBflk04DoViY9QegEYo/4amKCMW2uG+8rt3VCwrSvACvtQUO
+         KHmWU0prCHzqKWc/CO5kk904rDMJRM+AyXsjjbsrvTkFO858xywSEHzHsf4YcTInu3dJ
+         uLafhg7zYoA6B3jWDrVyeNxj92TdbqnGkVb/KQBhYmnrv1P8u4TV4eajjCw5VE2aQfJM
+         SS+vZ8JxFBktKgnr5CPUq+xUSzdOLCCifB+3zutvN37EWGSlo19YerY9ThSelJeLWYae
+         ttecVha57YVQCIVvk/p2oXZrqvmdA4JMt+E0mFXLRW0surZ7Xe9dv0bGJzOiPqzLrAD2
+         jvHA==
+X-Gm-Message-State: AOAM5306j13rnhjQ+FAicpcSjLFhHersIo7EguJkfAB/xQ8msoVWk2Ne
+        GoVnTVTX+h/CzQ6lX9IgnM8=
+X-Google-Smtp-Source: ABdhPJwr1Ohh7U+k+NbwwlGg9XlS6X9acHkKu4ucrrjGVFuW8d6WFhqWj8pq3Nfa8c8Ce6BBYEZeNQ==
+X-Received: by 2002:a50:9d8a:: with SMTP id w10mr19602085ede.16.1598537723356;
+        Thu, 27 Aug 2020 07:15:23 -0700 (PDT)
+Received: from BV030612LT ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id d17sm1575988edr.78.2020.08.27.07.15.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 07:15:22 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 17:15:20 +0300
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     Peter Korsgaard <peter@korsgaard.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/4] arm: dts: owl-s500: Add RoseapplePi
+Message-ID: <20200827141520.GD2451538@BV030612LT>
+References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
+ <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
+ <87v9h4y4dj.fsf@dell.be.48ers.dk>
 MIME-Version: 1.0
-References: <20200824084712.2526079-1-vkoul@kernel.org> <20200824084712.2526079-2-vkoul@kernel.org>
- <20200824174009.GA2948650@bogus> <20200825145131.GS2639@vkoul-mobl>
- <20200826063246.GW2639@vkoul-mobl> <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
- <20200827045053.GG2639@vkoul-mobl>
-In-Reply-To: <20200827045053.GG2639@vkoul-mobl>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 27 Aug 2020 08:04:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJw0q4QLGr+Akaxm8YUnLMnUtgJdO5uMqJF7yKuSrX_YA@mail.gmail.com>
-Message-ID: <CAL_JsqJw0q4QLGr+Akaxm8YUnLMnUtgJdO5uMqJF7yKuSrX_YA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9h4y4dj.fsf@dell.be.48ers.dk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:50 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 26-08-20, 08:35, Rob Herring wrote:
-> > On Wed, Aug 26, 2020 at 12:32 AM Vinod Koul <vkoul@kernel.org> wrote:
-> > >
-> > > On 25-08-20, 20:21, Vinod Koul wrote:
-> > > > Hey Rob,
-> > > >
-> > > > On 24-08-20, 11:40, Rob Herring wrote:
-> > > > > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
-> > > > > > Add devicetree binding documentation for GPI DMA controller
-> > > > > > implemented on Qualcomm SoCs
-> > > > > >
-> > > > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++=
-++++++++
-> > > > > >  1 file changed, 87 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-=
-gpi.yaml
-> > > > > >
-> > > > >
-> > > > >
-> > > > > My bot found errors running 'make dt_binding_check' on your patch=
-:
-> > > > >
-> > > > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindi=
-ngs/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ri=
-ng transfer size compare to channel transfer ring. Event ring length =3D ev=
--factor * transfer ring size', 'maxItems': 1} is not valid under any of the=
- given schemas (Possible causes of the failure):
-> > > > >     /builds/robherring/linux-dt-review/Documentation/devicetree/b=
-indings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required p=
-roperty
-> > > >
-> > > > Okay updating dt-schema I do see this, now the question is what is =
-this
-> > > > and what does it mean ;-) I am not sure I comprehend the error mess=
-age.
-> > > > I see this for all the new properties I added as required for this
-> > > > device node
-> > >
-> > > Okay I think I have figured it out, I need to provide ref to
-> > > /schemas/types.yaml#definitions/uint32 for this to work, which does
-> > > makes sense to me.
-> > >
-> > >   qcom,max-num-gpii:
-> > >     $ref: /schemas/types.yaml#definitions/uint32
-> > >     maxItems: 1
-> >
-> > uint32 is always 1 item, so drop. Is there a max value you can define?
->
-> Sorry not sure I follow, to clarify you mean drop uint32, if so which
-> type to use u8? I can use u8 as max wont be beyond 255.
+Hi Peter,
 
-maxItems applies to arrays. A uint32 is not an array, so drop 'maxItems'.
+Thanks for the review!
 
->
-> Yes I will define min as well max values too.
->
-> > Otherwise, up to 2^32 - 1 is valid.
->
-> I see one more warning given by your bot which I am able to reproduce as
-> well:
-> Documentation/devicetree/bindings/dma/qcom,gpi.example.dt.yaml: example-0=
-: dma-controller@800000:reg:0: [0, 8388608, 0, 393216] is too long
->
-> So to fix this I added the #address-cells and #size-cells
->
->         #address-cells =3D <2>;
->         #size-cells =3D <2>;
->         reg =3D <0x0 0x00800000 0x0 0x60000>;
->
-> But I am getting the warning, what am I doing incorrect
+On Thu, Aug 27, 2020 at 08:44:40AM +0200, Peter Korsgaard wrote:
+> >>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
+> 
+>  > Add a Device Tree for the RoseapplePi SBC.
+>  > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+> 
+> Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
+> 
+> On a related note: There is now an owl-mmc driver for the s900. From a
+> quick look at the datasheet it looks compatible with the controller on
+> the s500. Did you have a look at hooking that up?
 
-The cell sizes for reg come from the parent node. The default for
-examples is 1 cell each. The easiest thing to do is change reg to
-'<0x00800000 0x60000>'. Otherwise, you'd need to define a parent bus
-node.
+Yes, please see:
+https://lore.kernel.org/lkml/cover.1593124368.git.cristian.ciocaltea@gmail.com/
 
-Rob
+The clock related patches have been already applied to v5.9 and
+hopefully the pinctrl driver will follow in v5.10.
+
+> -- 
+> Bye, Peter Korsgaard
+
+Regards,
+Cristi
