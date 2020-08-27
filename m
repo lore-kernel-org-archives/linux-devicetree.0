@@ -2,113 +2,120 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E026C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111DCC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F094E20714
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF56820714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FrpUZP/y"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RGPVxSi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726873AbgH0TaZ (ORCPT
+        id S1726947AbgH0Tad (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 15:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48742 "EHLO
+        Thu, 27 Aug 2020 15:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgH0TaY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 15:30:24 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2806EC061235
-        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 12:30:23 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l23so5912488edv.11
-        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 12:30:23 -0700 (PDT)
+        with ESMTP id S1726299AbgH0Taa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 15:30:30 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1C97C061264
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 12:30:29 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x143so4277997pfc.4
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 12:30:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V0nv7wQoHFBDfCKea743Tg8u0187UBuuLmeycLCt9IE=;
-        b=FrpUZP/youjPCtKM9LqQKI6rWq/hmeX+PYpwaZCE58MOs9aULbEOUD4Iz6rJOV9v86
-         kzMmDQCn52Ev45YGSetnAY0Zm7bYPpoVb1ZDDxrGQ7IVOnwAt/v/76ct3LJCAOm0LjYs
-         t+lHPbwV5vlIeg3D3P29PjAeS807e1JZrOYtTkXUIScqDeAk1oZKWXnMuL9lQYTsQRg7
-         Qs17+Og1AY2RfXqoDXhpDyjUr+UD5+p4KKOtLn3B9ZubRDpXluQW5i2GTfFHaCUFIV6T
-         Plx3KsGr4Ctbdrr2snVE0YWdOkp0m/vKoxw1hDKbo4gpWES/+w0F4NRMcoYvSSomc6ny
-         X83w==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=jbkAfuhZAKMTavUGq6kzae8BdLlY/pw7F8TdORnXsqQ=;
+        b=RGPVxSi9400bcoNYxMs9hsfmQ4rchGqtdHPGG1HmzfnO/mDEdAuT5tnT9cnXgHUnky
+         TVm59Zd6m8r3qRLSdXB4SkR6JL22i1ikeXaD9WMwU1P1CzwLXRnhMhX603ZL+Y0cxYSe
+         TfSsX5C/0ae+pAAAQobQNbrfGMxlLm8VNVb94=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V0nv7wQoHFBDfCKea743Tg8u0187UBuuLmeycLCt9IE=;
-        b=rsDr4JiwOZpilHu/bp/kcdankm5jAGpqYqo4NBk2Jmydr9E6Y877B6CVUWSiNdCv6a
-         mbdkkg2YGcWopxyzgr2Qef0k0T69jgbswwDu9SO9QkSDc7xJzjVP3a+UrV8E/l0Yupa/
-         OF7+Gzrh4j6pbWkn1pX6abuqUGwm0QTifZc6yLi7ozXC05V9l+OIZs8BxEWtY7vuP+FW
-         z7G37KD77TBC2zbENm8BUWgUKVg4TKPX87CSbfnBR9MS0qZ140fQGSeYUvy2YGVNh5CZ
-         1pVkrRFBzEQ3+mI7TLVQaBECrnls6OMzJzxB6RqLROHzxVh9HGPm/xmURwkIUO5I2Gby
-         dXaw==
-X-Gm-Message-State: AOAM531nSpEfHHjWazSKLTGVz+4LXjC8YJG7i7zU4xFzjpHdbrJjSgNO
-        FW1yOpo8Q+oWvwnSwoxQXJmgi4Ru1sPPtSm5f0YMAA==
-X-Google-Smtp-Source: ABdhPJxrUFTaTtdB3uET/8l/a6XdYU2SNVMC86F8LwhWn6NZzuQLhDwt1HrAbXd+AGqTmGHN1IUW2aCKfRrjVA8PDWU=
-X-Received: by 2002:a50:d809:: with SMTP id o9mr20639212edj.12.1598556621415;
- Thu, 27 Aug 2020 12:30:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
-In-Reply-To: <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Thu, 27 Aug 2020 21:30:10 +0200
-Message-ID: <CAMpxmJWv=hTgbMLSVFm=C_5qSpo=BvOByW=B+BEEzTPswXfZzQ@mail.gmail.com>
-Subject: Re: [PATCH 6/9] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vinod Koul <vkoul@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        dmaengine <dmaengine@vger.kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=jbkAfuhZAKMTavUGq6kzae8BdLlY/pw7F8TdORnXsqQ=;
+        b=sWs7c94wrhHNGU+CqcxM/upAlp8/r2Lmjkk6sa4v1EUvbNqLTPBCNG3r6H7r8IKD49
+         7wha17SuYiBU3mBeZxXEcJ5IHTvFgorcRg63BXI90cNxTNrbbdJfYp6rdqVDxJgOXuky
+         YR4r8IlS20lrwBvZvCrkoDdaoX5+B+YKledIXDaczhdsVuIp8mu4vMgjvzkPlmeXK0Dy
+         Kqaktt4cfUjBlwpWJ81do2stR6RWGT1oc2LfYtNRhOHTcBMw0UXXC4K9njElMbgUIv8o
+         8WxQQhvlSKyy3UVw2ZXb+3ioGGG5fjCqSvuY1i6n6TcjJBdFbiUJp7BATVU7ur6W0ET9
+         AvAA==
+X-Gm-Message-State: AOAM532WKl2Fx/7vrWJp7N2DJ9Ln6I+N8dEeUHszsHSs1dJ12C4sXBsv
+        KDzXCw86FkblR8yLs7MZ/qF6jLJWU4PhzSAO
+X-Google-Smtp-Source: ABdhPJwCOi62uMlXfcPonmuVECt3/Iv2jH+EgupKyrvs9JK9fe/kDGN2+VGdJJMTP/OzZaxkjeSwnA==
+X-Received: by 2002:a05:6a00:228f:: with SMTP id f15mr18055805pfe.222.1598556628896;
+        Thu, 27 Aug 2020 12:30:28 -0700 (PDT)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id f13sm3633868pfd.215.2020.08.27.12.30.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 12:30:28 -0700 (PDT)
+Subject: Re: [PATCH 0/5] qspi binding and DTS fixes
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Kamal Dasu <kdasu.kdev@gmail.com>,
+        "maintainer:BROADCOM SPI DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        open list <linux-kernel@vger.kernel.org>
+References: <20200827181842.1000451-1-f.fainelli@gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <5afe8762-c0a3-ff10-5946-0eb2e7ddc0e5@broadcom.com>
+Date:   Thu, 27 Aug 2020 12:30:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200827181842.1000451-1-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-CA
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 6:40 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> Hi Linus and Bartosz,
->
-> On Mon, Jul 13, 2020 at 10:35 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
-> > relevant dt-bindings.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> Gentle ping.
->
-> Cheers,
-> Prabhakar
+Patch series looks good.
 
-This doesn't apply on top of v5.9-rc1.
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 
-Bart
+On 2020-08-27 11:18 a.m., Florian Fainelli wrote:
+> Hi all,
+>
+> This patch series fixes incorrectly defined compatible strings for the
+> Broadcom QSPI controller which resulted in the strings not being
+> ordered from most to least compatible.
+>
+> We will need to apply some changes to the spi-bcm-qspi.c driver in
+> the future to assume no revision register exist, and these patches
+> are a preliminary step towards that goal.
+>
+> Florian Fainelli (5):
+>   dt-bindings: spi: Fix spi-bcm-qspi compatible ordering
+>   ARM: dts: bcm: HR2: Fixed QSPI compatible string
+>   ARM: dts: NSP: Fixed QSPI compatible string
+>   ARM: dts: BCM5301X: Fixed QSPI compatible string
+>   arm64: dts: ns2: Fixed QSPI compatible string
+>
+>  .../bindings/spi/brcm,spi-bcm-qspi.txt           | 16 ++++++++--------
+>  arch/arm/boot/dts/bcm-hr2.dtsi                   |  2 +-
+>  arch/arm/boot/dts/bcm-nsp.dtsi                   |  2 +-
+>  arch/arm/boot/dts/bcm5301x.dtsi                  |  2 +-
+>  arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi |  2 +-
+>  5 files changed, 12 insertions(+), 12 deletions(-)
+>
+
