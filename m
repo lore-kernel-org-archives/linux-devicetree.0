@@ -2,100 +2,106 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790F5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9F3C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C7222BEA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3A722B4D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgF1uQ8h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="un7kjnEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726250AbgH0QZ6 (ORCPT
+        id S1728074AbgH0QkP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48168 "EHLO
+        Thu, 27 Aug 2020 12:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726200AbgH0QZ5 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 12:25:57 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F93C061264;
-        Thu, 27 Aug 2020 09:25:55 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id x143so3909086pfc.4;
-        Thu, 27 Aug 2020 09:25:55 -0700 (PDT)
+        with ESMTP id S1728027AbgH0QkN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 12:40:13 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4432BC061264;
+        Thu, 27 Aug 2020 09:40:13 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id x2so3289974ybf.12;
+        Thu, 27 Aug 2020 09:40:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1HTBOiQwFo90quHJ+LNDvRWLBbY5CwhPJGAyaR2M3rE=;
-        b=fgF1uQ8hk7szifJefmtG8YlLyBYbkFuO5D/fHJE2YABdNu3+qUvqRVor2R/kkHTHzZ
-         aXLP27TSWWCRxjRwMZ2HAXGsVwd9iNkYXeN2k48SvF1xyUSoIZS3CljhbHJisqBK8yxa
-         /4BTfA9urApZfXgXY0w75iGJHNRhMximsnQYC7muiV1V3GTU551YrjxM6Zm4nX9cmbSc
-         BGleHLu7btgvDx4kfN4c8jtnpSA8vz5zsMS6Wj3pE+IxekWhsxnbm5jfw9ytgN36mTYs
-         2eE8de0svmHfEk1xbeXZX1MwTMWSgis53LshKnenZlf0DgTkHPO8tLqvMJgKUNixO49k
-         YquA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WYSs0Dku1zdRA2KBaI0ZluOi6UmY5Y9GrXFeF+fDRFw=;
+        b=un7kjnEQ+aqsO+z8jtw8rj5enqEblNxAaBGnKPz5YF1M/H5UYX4IB2itVqzx4F9M+A
+         4Iw61Lgg+T2/csniC5jvZ46vzCXwe+6ucpfL//IIr2N4fzxId6yxup8IcTBmIH9J1wxH
+         xmgaggsssg9MRIaVUt4/uLPzY6xuiGzR9l3f6wTubw05+rhnAtN3ucwXRVkyO/E+iL2c
+         Jv+81bmqvmke2b2srFFNR6de7skjpZkTrzLADYU47UvUFd5kFw73lM1gHC3O60ILOWxW
+         I4ZCr2cSWmKOElAxgXNe3UVqleDnJSO5F8AP+wHoBbyarZgklem/skA1eZo7nJRMkMI8
+         wO1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1HTBOiQwFo90quHJ+LNDvRWLBbY5CwhPJGAyaR2M3rE=;
-        b=FbPK4j83bLjkKQpMBWwCoRNgAA8GJuf8DNKFDh7gW+STmdHy1OO0BlXuPtyzcETwjV
-         4LVkDKDO+co8byJD5aQBMKkVk65ACIUXfZ1TaoZ4t3zvhkpz5o9V0Jb05qzie+JTYba8
-         xXJ6ZgXT8iTxtv7y5zW4LuaJoYFApQU18i48fwlvkKzhWK36kICtqkx1ca6yxYu7/Rc5
-         lbmVLcS356W3MbXvc/lyZzZ3812jZchrCIG0YkWHn+imrHDmo7yBft3SXqoQmxg7c0tr
-         gkdMFTWeLpb6GivXOaWVWyxy3HrLdaVIoPrrkgXlJMrt/NlpELPCktCOMoAiCSZgr2ca
-         JFxA==
-X-Gm-Message-State: AOAM5310AJtAdxNHIzhupQRpIoqBNUIJFNJynBgTiREyCPkoMxm5ht9c
-        +aYkrOHmeK25Jr+bIRRxB/A=
-X-Google-Smtp-Source: ABdhPJzLm5ON71Oba+P4rBOhH2xDiarke+2hUWZAUpL5C2qgl29GPkob3YbUsPKsFduHMYJgE9YvMA==
-X-Received: by 2002:a17:902:9349:: with SMTP id g9mr17114212plp.313.1598545554571;
-        Thu, 27 Aug 2020 09:25:54 -0700 (PDT)
-Received: from hoboy (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id n72sm3490767pfd.93.2020.08.27.09.25.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 09:25:53 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:25:51 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Kurt Kanzenbach <kurt@linutronix.de>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-Message-ID: <20200827162551.GB13292@hoboy>
-References: <20200820081118.10105-1-kurt@linutronix.de>
- <20200820081118.10105-6-kurt@linutronix.de>
- <20200824225615.jtikfwyrxa7vxiq2@skbuf>
- <878se3133y.fsf@kurt>
- <20200825093830.r2zlpowtmhgwm6rz@skbuf>
- <871rjv123q.fsf@kurt>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WYSs0Dku1zdRA2KBaI0ZluOi6UmY5Y9GrXFeF+fDRFw=;
+        b=LknddWT94iGwy0TUuCFh4aLqFIfCjoDmqKnHuHRzAe3mBhxYE3N6pyN+K+hCo1ayhi
+         GISOETSch4gSBSmQfx2ezhAqfv72V4vOx4lhUehDRAbgmmhvFg/y39Uwb6xu/HQf/b1W
+         Xmmg3a7dXIydDk3QosNJBQrWfhv6K2Ohx4clTluOWNXf72cQcDUwVWjTC0aDV5Xn5Bf/
+         g3gA4O29cVgNrnEwz7+5Hm23SFCbqnp9gjo1wlEADOrIQwkLSti03udpArwC96EhBLsP
+         Oer5G2WVSiwYQWWUkGaP+Oe+ZAPtoQdQvITRhweqsgwL4NQyP8cpNPtawYeTwiwEHHPh
+         TIdA==
+X-Gm-Message-State: AOAM530j74d+cEuCNcQqM+Xpqex1b3UPzFhssKPkriQiZ4qFaFR8W1Pm
+        FkRB+bTBL1O6UYjXUI11MSyKhNqjiUnx7te1ntZ3ebl1odM=
+X-Google-Smtp-Source: ABdhPJxrvVPIJbZVxMNdYQbfcSKbpYNpnY4WH7M5vvvn2G4XY4Uv7BI34VoTls0DSRQbKIiloMf4ZMzXPy4YgYSJnGI=
+X-Received: by 2002:a25:2f4d:: with SMTP id v74mr28209467ybv.401.1598546412501;
+ Thu, 27 Aug 2020 09:40:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871rjv123q.fsf@kurt>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 27 Aug 2020 17:39:46 +0100
+Message-ID: <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
+Subject: Re: [PATCH 6/9] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:55:37AM +0200, Kurt Kanzenbach wrote:
-> 
-> I get your point. But how to do it? We would need a timer based on the
-> PTP clock in the switch.
+Hi Linus and Bartosz,
 
-Can't you use an hrtimer based on CLOCK_MONOTONIC?
+On Mon, Jul 13, 2020 at 10:35 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
+> relevant dt-bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+Gentle ping.
 
-I would expect the driver to work based solely on the device's clock.
-
-Thanks,
-Richard
+Cheers,
+Prabhakar
