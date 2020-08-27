@@ -2,117 +2,99 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531F3C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C488C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9DF2078A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 190A62078A
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvkxLG6V"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eYKih+B0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726098AbgH0Exa (ORCPT
+        id S1725909AbgH0E6m (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:53:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbgH0Exa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 00:53:30 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71D9C0612AC;
-        Wed, 26 Aug 2020 21:53:29 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so4899468ljg.13;
-        Wed, 26 Aug 2020 21:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=VfXaV7Ot1lSa8F3M4QFP11oTUsc4RIqW2P8Ni4Vvi3k=;
-        b=FvkxLG6VoVE/W3qV25+mpcUx9KGnCIvR9cP/DI027OQMSjUTJEkVEbt92cLK5SDbD/
-         UHVM7mQ1gtqhqmeWcDi2vlQu3y2J1l55ULb5ZhYN7DhI4JOhkbBnctK8pZtuZnM9Xrmt
-         XFch2KrE2+H1Y7FusDDB3OFlVjLgjrP5c84HeM2HBqusfABp0rXpCQovfA5jHHBX5mHO
-         fK091Eda4unJsViWrCCsz8Qky7f+3j8DhaUqZIkviewBvvO3n3Z8gSm9f78FYkbDyy+2
-         5fnqOHa3/Z/bAYmuyudcPtft0cYUL+s70Uy1N6RetNVUBXteUKi1mgpoShreNI4GylzU
-         WZkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=VfXaV7Ot1lSa8F3M4QFP11oTUsc4RIqW2P8Ni4Vvi3k=;
-        b=fdy8LA7y/YjsVzCw5n1hErRb++u7y+Ecc8AUjJXQ674in8Dk3c9wtT68bRkMSDuTzM
-         UWFKyOT4GNa0beYPIA0WP4KqkKlv+vhoHKhPRyweVNCNn3Y9nnSN+g5RKFbg4tEywrsf
-         jTN4b0BgOFo1mDNb0YBcgvPcsqYsxDfVmTzJjm5+6YaIzldV7R+mbZPy8BsoDPX/NNz4
-         gNYjwTDDQvcRE7VhYq3+8kAiX6Hx7+ZCCTNKOkrEN15wFkS4uarckujBstxgFX+yr6qI
-         vw40LazgXZ6VrB0E1k0VaPycbIl0QTwAWUm+7MohPRf0vsAZh0i2QAOVBM4aCwXAvGzq
-         gvkw==
-X-Gm-Message-State: AOAM530m/hOfLCSfD1c05RdeeV3gA5RQ28Pe5mS3pLDsj0hd8xg585+M
-        16oAjS7vosyE+vThngUTRP+e05wcl+H0M5F8V0Y=
-X-Google-Smtp-Source: ABdhPJxiPd+z3Woi/CPVydxc4d5ALoYsOisEmeXn0aWdBmXlvi+FNKeUs3Edy9XlM9OaPmTX7nko4vme/6vJqKBA4u0=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr9113859ljb.283.1598504008139;
- Wed, 26 Aug 2020 21:53:28 -0700 (PDT)
+        Thu, 27 Aug 2020 00:58:42 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43886 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgH0E6m (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 00:58:42 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07R4wdjW005348;
+        Wed, 26 Aug 2020 23:58:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598504319;
+        bh=2alI/XzzQeGgZh4pS7eqwKRSfJnwDMvvtZgpsxYLy/Y=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=eYKih+B0f5OXySU+PIaw20A+9MNbs6b6Pe6s+m2V62UdRa3kXCgLWApakEJ5FXEA/
+         zxMb0E5b0KtJfqUFQ7+1ZFPE9Vu53Ekpr44YePU6qzBBvh/N49bIWN4fxLsygxOx78
+         n1evNzYKezfEFYnrYZKUnDXbsYZP+NsaJmrkMuFk=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07R4wd5H128448
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 23:58:39 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
+ Aug 2020 23:58:39 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 26 Aug 2020 23:58:39 -0500
+Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07R4waNM013060;
+        Wed, 26 Aug 2020 23:58:37 -0500
+Subject: Re: [PATCH v2 0/8] Add C66x & C71x DSP nodes on J721E SoCs
+To:     Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200825172145.13186-1-s-anna@ti.com>
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+Message-ID: <1fc9eb3f-d56c-5d3e-ecf7-f30711051995@ti.com>
+Date:   Thu, 27 Aug 2020 10:28:36 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <1598498732-25194-1-git-send-email-u0084500@gmail.com>
- <1598498732-25194-3-git-send-email-u0084500@gmail.com> <b9c73699-bd84-52f7-e42d-a482036e78e0@roeck-us.net>
-In-Reply-To: <b9c73699-bd84-52f7-e42d-a482036e78e0@roeck-us.net>
-From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
-Date:   Thu, 27 Aug 2020 12:53:16 +0800
-Message-ID: <CADiBU3-PyA-BKLuSSQpWXj9_up8yWbDsSVxeqUEEkEqn9syRbw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] usb typec: mt6360: Prevent the race condition
- during module remove
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200825172145.13186-1-s-anna@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2020=E5=B9=B48=E6=9C=8827=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8811:34=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> On 8/26/20 8:25 PM, cy_huang wrote:
-> > From: ChiYuan Huang <cy_huang@richtek.com>
-> >
-> > Prevent the race condition from interrupt and tcpci port unregister
-> > during module remove.
-> >
-> > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
->
-> Please squash with the first patch of the series.
-Done, squash into the first one and resend the patch. Thx.
->
-> Thanks,
-> Guenter
->
-> > ---
-> >  drivers/usb/typec/tcpm/tcpci_mt6360.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/usb/typec/tcpm/tcpci_mt6360.c b/drivers/usb/typec/=
-tcpm/tcpci_mt6360.c
-> > index 6a28193..a381b5d 100644
-> > --- a/drivers/usb/typec/tcpm/tcpci_mt6360.c
-> > +++ b/drivers/usb/typec/tcpm/tcpci_mt6360.c
-> > @@ -164,6 +164,7 @@ static int mt6360_tcpc_remove(struct platform_devic=
-e *pdev)
-> >  {
-> >       struct mt6360_tcpc_info *mti =3D platform_get_drvdata(pdev);
-> >
-> > +     disable_irq(mti->irq);
-> >       tcpci_unregister_port(mti->tcpci);
-> >       return 0;
-> >  }
-> >
->
+
+
+On 25/08/20 10:51 pm, Suman Anna wrote:
+> Hi Nishanth,
+> 
+> The following is a revised version of the series [1] that adds the base
+> dt nodes for the 2 C66x and 1 C71x DSP remote processors present in MAIN
+> domain on J721E SoCs, and the required nodes to boot these successfully
+> on J721E EVM board. It addresses the cleanup comments from you.
+> 
+> The patches are based on top of the pending ABI 3.0 pull-request [2] and
+> I have used your temporary staging branch [3] as the baseline.
+> 
+> Main changes in v2:
+> - Patch 1 is new, and moves all the mailbox dts nodes from the common
+>   board dts file to the k3-j721e-som-p0.dtsi file
+> - Patches 3 & 6 are reworked to add the mboxes properties directly
+>   in the k3-j721e-som-p0.dtsi file
+> - Patches 4 & 8 are rebased versions to sit on top of the modified
+>   mailbox addition patches
+> - Patches 2, 5 and 8 are unchanged
+
+
+FWIW, Series
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+
+Thanks and regards,
+Lokesh
+
