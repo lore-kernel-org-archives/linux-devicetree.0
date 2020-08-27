@@ -2,113 +2,105 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D86EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB9CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4E12087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E16F72177B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dB9WcXqW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LKH3WJd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgH0RRV (ORCPT
+        id S1727909AbgH0RV3 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:17:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgH0RRV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 13:17:21 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39DFC061264;
-        Thu, 27 Aug 2020 10:17:20 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c8so5595195edn.8;
-        Thu, 27 Aug 2020 10:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=rMb9LJxrcGiTyNyXwwyZ6syio89Yz2hnJzYevmI52VE=;
-        b=dB9WcXqWXys8obmbtsB0NyXuam4s3n3sqAJ2FO6MZJziZgF/U2ynJXCnc9PrqpC5lz
-         btmeqnTmPPM68itNNSwrCzFE0WnEs1uvNCT8xwHVWmboUN09RG6elHINBAOcw3iqNTa1
-         n2IyTmgJeFz/2cRfLv1X9kY/jnySuyrnFe4ani1nQ2Cob+Ksaky6eWsAb7mfnN6kbTLv
-         76Tj9XOg2XfiNGpT0y61jIITf20G9IwvOcUKhDQ+mVtQbgcxrx8Ivb4zli+1UqJ1tlxN
-         fVuQo1vgNqeA2yCN5zQo0tOx1qmSFcQZRKDAewJTcchnXH4rI3r37SbDhXgs/cSGGYr0
-         BGDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:references:date
-         :in-reply-to:message-id:user-agent:mime-version;
-        bh=rMb9LJxrcGiTyNyXwwyZ6syio89Yz2hnJzYevmI52VE=;
-        b=pmGylB5IH3qV90drfTtjSzlU17+tec8ZYy3Mx1hWqdZpqZ+T0LAYRvSB1yl0J66+z9
-         WVZqVi8oBxYBAZs+fRfF0b2jy0zROvny73jaYDVUBcew6hTUp+47CwXSwCXyQIBojiiL
-         /yurd7B2n116huy90g3JPVIaAE4pmdXSQbgv0cZK8mgxWVj2wZLynRoSaQk4bzDQX2VO
-         BGH/ItO7nO8fbxwcgu4IlF9FEr00OsGwTs9vLo5C2tTHH0/t16kfEzOrm8RfQ6G5qTfH
-         ne2HptaaQNlzFCXexnTN4n7d5ep7YGejwhDmLjmmiF1HaQjUC5CVGNTPMljJX9YI6svs
-         9WwQ==
-X-Gm-Message-State: AOAM533uO6w/CzbUn+RLL5YgJIQlhG2jliip0+s5biibn/uBxP+aJ3Uu
-        2QAmeKiH1CRjTZQHxgIKzk0=
-X-Google-Smtp-Source: ABdhPJwcBvHTnG9Xg7kXrNUUX+KbvFG59tNLBgd8D/deEo5TMVFE72bHs1NgF1Ey6p8ITpDfcQmxLQ==
-X-Received: by 2002:aa7:c596:: with SMTP id g22mr21145561edq.109.1598548639333;
-        Thu, 27 Aug 2020 10:17:19 -0700 (PDT)
-Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
-        by smtp.gmail.com with ESMTPSA id v13sm2336389ejq.59.2020.08.27.10.17.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 10:17:18 -0700 (PDT)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
-        (envelope-from <peter@korsgaard.com>)
-        id 1kBLWX-0007qi-IQ; Thu, 27 Aug 2020 19:17:17 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] arm: dts: owl-s500: Add RoseapplePi
-References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
-        <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
-        <87v9h4y4dj.fsf@dell.be.48ers.dk>
-        <20200827141520.GD2451538@BV030612LT>
-Date:   Thu, 27 Aug 2020 19:17:17 +0200
-In-Reply-To: <20200827141520.GD2451538@BV030612LT> (Cristian Ciocaltea's
-        message of "Thu, 27 Aug 2020 17:15:20 +0300")
-Message-ID: <87r1rsxb36.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 27 Aug 2020 13:21:29 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:3040 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbgH0RV1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 13:21:27 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f47eb1d0003>; Thu, 27 Aug 2020 10:19:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Aug 2020 10:21:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 10:21:27 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 17:21:24 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 27 Aug 2020 17:21:24 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.186]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f47eb930003>; Thu, 27 Aug 2020 10:21:23 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <robh+dt@kernel.org>
+CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: [PATCH v7 1/7] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
+Date:   Thu, 27 Aug 2020 10:20:55 -0700
+Message-ID: <1598548861-32373-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598548861-32373-1-git-send-email-skomatineni@nvidia.com>
+References: <1598548861-32373-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598548765; bh=wT4t2/nhx1LSbE4eS4U3X4HmPpfUMZEMwHW/3RtHINo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=LKH3WJd8eFo50jU9kbDJx9Ow1JpuitJY8Yl5l6RX2baVuYhox0b1oFwv+V3TjpPhN
+         fBh4Fq3ahl2Gx/f99Qfxrgk4rZ9qqVsIBbM5uyGfs58hJr1Vagj/QcVX7WphjwVoX0
+         2Ja9syQfTAV44S5o/6iCFue4Q7jnijjRhuZa1DJ2Zj+Df1rOp1XDOYiCNLe6OTwhFM
+         JPsEI9Ew0N27GaNVMI2y/sEIavWHoaHCKDf61bx42Vbk82spAr0/kRtVaBaWCdyYHZ
+         NnKvrgUjlMSw0/rPUlvna4hfBkiGehaD1ZAZTgvFuLHZO+NURq2jqPHQgi33+Efdiz
+         SzKHmFL/c2rlw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
+commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
 
- > Hi Peter,
- > Thanks for the review!
+SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra210 from the
+beginning of Tegra210 support in the driver.
 
- > On Thu, Aug 27, 2020 at 08:44:40AM +0200, Peter Korsgaard wrote:
- >> >>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
- >> 
- >> > Add a Device Tree for the RoseapplePi SBC.
- >> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
- >> 
- >> Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
- >> 
- >> On a related note: There is now an owl-mmc driver for the s900. From a
- >> quick look at the datasheet it looks compatible with the controller on
- >> the s500. Did you have a look at hooking that up?
+Tegra210 SDMMC hardware by default uses timeout clock (TMCLK)
+instead of SDCLK and this quirk should not be set.
 
- > Yes, please see:
- > https://lore.kernel.org/lkml/cover.1593124368.git.cristian.ciocaltea@gmail.com/
+So, this patch remove this quirk for Tegra210.
 
- > The clock related patches have been already applied to v5.9 and
- > hopefully the pinctrl driver will follow in v5.10.
+Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+Cc: stable <stable@vger.kernel.org> # 5.4
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Cool, I must have missed that series Great, thanks!
-
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 0a3f9d0..2be3511 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -1418,7 +1418,6 @@ static const struct sdhci_ops tegra210_sdhci_ops = {
+ 
+ static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
+ 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
+-		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
+ 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
+ 		  SDHCI_QUIRK_NO_HISPD_BIT |
+ 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
 -- 
-Bye, Peter Korsgaard
+2.7.4
+
