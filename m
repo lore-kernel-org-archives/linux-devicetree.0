@@ -2,118 +2,179 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92608C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C6EC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7041220825
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED31207F7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2ANz293E";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8gB+5a03"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8XIF+kh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgH0KMj (ORCPT
+        id S1727823AbgH0KOP (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46034 "EHLO
+        Thu, 27 Aug 2020 06:14:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728523AbgH0KMi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 06:12:38 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFD3C061264;
-        Thu, 27 Aug 2020 03:12:38 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598523151;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TylHLzYobByIM/E/ha4ZGNETDJPDDGQ31gNBIO1Nims=;
-        b=2ANz293EXHRZf+hOSNPOpA+xqKlaBemYHCWXnXRHQtEApefVdeotdbukovXsc1dcJNN7yS
-        EGy8Ij/V/HcN48GhbZPPChEZo7PhgAkyhr9udT/k2URYu0HzMSyhIBlJ2jYmm9spgIkp3D
-        Gnc1Si+9rJc+9W7NDeSV/DvOk8lNASFZdoHLEnlO6gFDz6zuXx8rSwKN1JyHUpjEVqZPIu
-        dyRtsOMtMcwOaEDH1q8dhWxQBh2JW+/Uy7NXAhPx5OWnYyEg3Rto89txcVOzc8CFveTDZQ
-        3vBbn7eC+RHySWT2ngQSkR/E79FyyTJb06cNKdvSumymweSve0ezyDLXL/pjCA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598523151;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TylHLzYobByIM/E/ha4ZGNETDJPDDGQ31gNBIO1Nims=;
-        b=8gB+5a03RZ1bDn3um/eccY3cTlQQlyFougrd//k26fxUjW8BPXTxOlTu7at199j5WBJ1GL
-        XyejErM+cEwslMCg==
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <878se2txp0.fsf@intel.com>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200822143922.frjtog4mcyaegtyg@skbuf> <87imd8zi8z.fsf@kurt> <87y2m3txox.fsf@intel.com> <875z9712qd.fsf@kurt> <878se2txp0.fsf@intel.com>
-Date:   Thu, 27 Aug 2020 12:12:29 +0200
-Message-ID: <87zh6gcs8i.fsf@kurt>
+        with ESMTP id S1726938AbgH0KOP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 06:14:15 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DCCC061264;
+        Thu, 27 Aug 2020 03:14:15 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so4824874wrw.1;
+        Thu, 27 Aug 2020 03:14:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tJ2qBYy1J9smz6qD4q0DxxYWxBNZOLm22YIjuTjWy58=;
+        b=T8XIF+khS4jpM77nipAtN+a/XOqeLm8xxGRePhStxNqWXy8Gu4z4Zb1CfJOCXvI7en
+         qWVVlK5OZtOsctcmy5ojT08hByjmpmKQ3PbiuCXftsjw4oUEQmJ5oM+Dity207FYBjbl
+         1ZmoVCpQ7/mK6ocozChiIBfAluWAUwssRcKDO/eGvb6dmK0FRssyLyeMs3Y0SXiKhz0+
+         SzG+d5dYoBNxNuomF0+q9ZnuINlQXZFEWOMrGh1TjF0kfJFgu0XGTcb4mtiXQusMIKJu
+         UcRNJxNXbnGHfl+Ei631aBDn0Oj1oKLj64V6DAkELJ5TbWutoqWIjVjcQgoVF2Y2Rj35
+         cPrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tJ2qBYy1J9smz6qD4q0DxxYWxBNZOLm22YIjuTjWy58=;
+        b=GCbZJs83+Yk5JXXHMh9JR9Kk6daxJjMQZhLzOTgwQUp5BsJvggNsNZOKQf75NQUytv
+         KA+XgKOcF5QEJRjOQBDsSAYv0b6Q++a+K/NkdMJ3loPQIqmnqvKAQ0ZrJkCTIgTjR7cG
+         X8okxKQvGupsGl0LG/cxxXk4gRmzDBq5YCTHS3V5drKU9p8IEjhjMLFkNEXggm5DpDyo
+         UTZDcLAgc83/yg9qrlEoygxPywqZtfbrEbe1SrJdk7uNGi/Neajlw5QaTBs05DspLeRj
+         oVFU2Jfou8FmrxCjzVUZlvAzNaLW95KgSRmbjpHM7FJOpV2uUz7beu2mm9RbWZvx1R+6
+         qDSg==
+X-Gm-Message-State: AOAM531LTucqoRpQAILn5zT/Ssw5VCFnn7JP4p1j0ccuza4VE7Ku+MpC
+        jOsdVKNRX64m+Phj2yWEJE0=
+X-Google-Smtp-Source: ABdhPJzoaFIsQ+ZYOs5pL6W9QlfgL20KwUOQGWj00SwcVaCQQLHNo9AfR5mkWRaX9EBKsqRQguNZmg==
+X-Received: by 2002:adf:8401:: with SMTP id 1mr19272710wrf.274.1598523253871;
+        Thu, 27 Aug 2020 03:14:13 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.119.187])
+        by smtp.gmail.com with ESMTPSA id b204sm4736840wmd.34.2020.08.27.03.14.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:14:13 -0700 (PDT)
+Subject: Re: [PATCH v21 4/4] arm64: dts: mt8183: add scp node
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Eddie Huang <eddie.huang@mediatek.com>,
+        Erin Lo <erin.lo@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <20191112110330.179649-1-pihsun@chromium.org>
+ <20191112110330.179649-5-pihsun@chromium.org>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <2abf8fdd-7b7c-73b0-beea-9c9ac56869dc@gmail.com>
+Date:   Thu, 27 Aug 2020 12:14:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+In-Reply-To: <20191112110330.179649-5-pihsun@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
 
-Hi Vinicius,
 
-On Tue Aug 25 2020, Vinicius Costa Gomes wrote:
-> Hi Kurt,
->
-> Kurt Kanzenbach <kurt@linutronix.de> writes:
->
->> I think so. As Vladimir pointed out, the driver should setup an identity
->> mapping which I already did by default.
->>
->> Can you point me your patch?
->
-> Just sent it for consideration:
->
-> http://patchwork.ozlabs.org/project/netdev/patch/20200825174404.2727633-1-vinicius.gomes@intel.com/
+On 12/11/2019 12:03, Pi-Hsun Shih wrote:
+> From: Eddie Huang <eddie.huang@mediatek.com>
+> 
+> Add scp node to mt8183 and mt8183-evb
+> 
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+> Signed-off-by: Eddie Huang <eddie.huang@mediatek.com>
 
-Thank you. That looks good. So the driver just has to deal with queues
-and I can setup an identity mapping in the hellcreek code.
+Sorry I somehow oversaw this. Next time please don't doubt to ping me.
 
-I see the patch is already merged, otherwise I'd have acked it.
+Bjorn, do I understand correctly that you don't send emails to the list 
+informing of the inclusion of a patch/series in your tree?
 
-Thanks,
-Kurt
+Anyway applied now to v5.9-next/dts64 :)
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks!
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9Hhw0ACgkQeSpbgcuY
-8KZxlQ//VnPK/fJDCN6AoLIuOxTPO4KJyOCEw2Z/APHbpN4kCgW5emjqfrFRE7EW
-Ef8aYVtZnNW/0RNeCED6rzVn7yHm3QJnhazhs9CElWA2OyBGQJnDU6Kc/DYXom9R
-QyYTq3WECDooq7F6Dfwf11Cc2FxXrUOrXlSrfcAZudW7IhCEbpW8D2L7cXy3gPrc
-PyK36LXC7Vnr7D6Tlus5blG1MgfpDYF+iGebwpx1VVYePAqAXBOxr9NaRugWSnUH
-luwSNhiG+uzEYVSOd5qtb2j8yGrvbHHtELIqMoSkMWCaPg5LVJtqcLZBrTq4IWSb
-IF0mXJAeA1nrEWoe7qpesK7rrO1XLc2sU25MaCDXwlZUpzdmjp51nB5m9POSXNaK
-/zzuWCqwEc6acXY77kL13nfBWB4gmjdRNFi9ot6O/jxGkRR9KHYlVxl2z5etuK6J
-/12Sp4RNpCiAULgfnEDwVifPd1duV1M5QMxTk8pZpkBVG+QBA6uBI78adY1gpZ2/
-XuQxsOtv1t9ViZ09uxHk8Aoi1CAcJmWCS6Vj04FLx3dkiaYNd6qn13ktiaxs1uWz
-DMdorPlf0zTAEEhVeoNQNbgwesM5t9Bcn5+8/KaqRf+8Qd1FeHJn8GBLHBHZlW+p
-H6RLoPk7PHMezKX7xYc5kgO3XHyJ7+oCpKVtLjhslH2eVZeH2qA=
-=qWWN
------END PGP SIGNATURE-----
---=-=-=--
+> ---
+> Changes from v20 ... v14:
+>   - No change.
+> 
+> Changes from v13:
+>   - Change the size of the cfg register region.
+> 
+> Changes from v12 ... v10:
+>   - No change.
+> 
+> Changes from v9:
+>   - Remove extra reserve-memory-vpu_share node.
+> 
+> Changes from v8:
+>   - New patch.
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8183-evb.dts | 11 +++++++++++
+>   arch/arm64/boot/dts/mediatek/mt8183.dtsi    | 12 ++++++++++++
+>   2 files changed, 23 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> index 1fb195c683c3..ddb7a7ac9655 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> @@ -24,6 +24,17 @@ memory@40000000 {
+>   	chosen {
+>   		stdout-path = "serial0:921600n8";
+>   	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +		scp_mem_reserved: scp_mem_region {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0 0x50000000 0 0x2900000>;
+> +			no-map;
+> +		};
+> +	};
+>   };
+>   
+>   &auxadc {
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> index 10b32471bc7b..e582f5e6691d 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> @@ -269,6 +269,18 @@ pwrap: pwrap@1000d000 {
+>   			clock-names = "spi", "wrap";
+>   		};
+>   
+> +		scp: scp@10500000 {
+> +			compatible = "mediatek,mt8183-scp";
+> +			reg = <0 0x10500000 0 0x80000>,
+> +			      <0 0x105c0000 0 0x19080>;
+> +			reg-names = "sram", "cfg";
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> +			clock-names = "main";
+> +			memory-region = <&scp_mem_reserved>;
+> +			status = "disabled";
+> +		};
+> +
+>   		systimer: timer@10017000 {
+>   			compatible = "mediatek,mt8183-timer",
+>   				     "mediatek,mt6765-timer";
+> 
