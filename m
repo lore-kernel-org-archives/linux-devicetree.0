@@ -2,106 +2,136 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7642C433EA
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 03:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AF0C433E4
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55BC221E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 03:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1968206D8
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:27:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WXqhA+Re"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JWGdadun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgH0DvD (ORCPT
+        id S1725847AbgH0E1D (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 23:51:03 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18240 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgH0Duc (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 23:50:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f472d790002>; Wed, 26 Aug 2020 20:50:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 26 Aug 2020 20:50:31 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 26 Aug 2020 20:50:31 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
- 2020 03:50:28 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 27 Aug 2020 03:50:28 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.174.186]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f472d840000>; Wed, 26 Aug 2020 20:50:28 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v6 2/7] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
-Date:   Wed, 26 Aug 2020 20:49:56 -0700
-Message-ID: <1598500201-5987-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598500201-5987-1-git-send-email-skomatineni@nvidia.com>
-References: <1598500201-5987-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Thu, 27 Aug 2020 00:27:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48460 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbgH0E05 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 00:26:57 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77605C0612B0
+        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 21:26:57 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mw10so1943281pjb.2
+        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 21:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bn7ZvG4ybcooDrNm25U4C10jlmrGjFdQ/FaC/rxAetw=;
+        b=JWGdadunye66WMfXu1P4p7JU12j51p8o/dw5xBp05k4WBlQSeSFjHzokSYn55bVV3o
+         J4tcFBW+K0k9bbB0ds4GyUbQ9KAjULJVcytETxzcrQeP3yifDm/M/suCNnYmsgY5Qzlv
+         bYLOwZvhvgDdXRldn4DmRvNGzykpHvQF1muP3pcCByHjEYtEHbeJDDqUjNpus61Fowov
+         JyoN9QhOtYitibsWLrqe+FQ9q4BVoMTkmiVKZ/RQ8BzwYqbwxbkzyx1YBIYj6oYH/uoi
+         E6OZ9hPBdCD4DEyRV0Y3/EiRxpSeNBUdMXvmYIiHxOPHTWp3rcwr9/3wHDVTWkLGz5kb
+         6DjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bn7ZvG4ybcooDrNm25U4C10jlmrGjFdQ/FaC/rxAetw=;
+        b=lTJcmDLcKFGWLlyYTXYt25OepkQStwYz/MJegaN5fSPfbIBr0h5GwnfVylQPWUvcxI
+         0D5fYtJ3IX2jIR05ZarIMeo100IRET8yTY3+SAf0WWoUgkoIHpRHBE8f02f1o93ytSib
+         m+tRM0UZkmCPwdAgQRDoSVR5JBQ22nQbesS+hNHT/u6LKAVrqdsOBgzE53J9iMqR0ZQq
+         yYiLGwiBmj9QgX9RBVDb5zcac2ZffdQCQcT2+8/1ncEaBlaXuAzrbIVBUurYmWhorTDm
+         hzj+XnfnYcxNnRGrMWL9bNhsyqwkK/cg3CRl3qEEi090e5+UPcHFnKFQE4fTIhpbf1UI
+         ys5w==
+X-Gm-Message-State: AOAM531qbUmWMMayCCs9RQKom6Xt4TPXlZCpaSb/8lxuP+witjdPzNsi
+        j/MznylzGRZ5N6xki9Je3b4FUw==
+X-Google-Smtp-Source: ABdhPJynFu/KaCKX/yeZQJO1i0iZEbs8inUUMkKE06wJFLYUgtfBDrVZ4/4+/uHiY6WLXxuxzu5BQQ==
+X-Received: by 2002:a17:90a:f593:: with SMTP id ct19mr9163811pjb.36.1598502416374;
+        Wed, 26 Aug 2020 21:26:56 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id nu14sm631975pjb.19.2020.08.26.21.26.54
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 21:26:55 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 09:56:53 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Hector Yuan <hector.yuan@mediatek.com>
+Cc:     linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org,
+        wsd_upstream@mediatek.com
+Subject: Re: [PATCH v2 1/2] cpufreq: mediatek-hw: Add support for Mediatek
+ cpufreq HW driver
+Message-ID: <20200827042653.5ttsxnjjhpslmrcv@vireshk-i7>
+References: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
+ <1597302475-15484-2-git-send-email-hector.yuan@mediatek.com>
+ <20200824100619.o6uwnlsaxdgc3l7r@vireshk-i7>
+ <1598446624.24220.10.camel@mtkswgap22>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598500217; bh=mXqaDHZAnjiA2FC3TMHhwQF8i9i1LflPE/o4KLabvD8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=WXqhA+Ren3FQTe1vEUBmQnWuk6aV8sEnLj1CRZ1pqraL4VQN/rIniSGWckHDBCyBb
-         MPv2VCWEFiU+HoUedCAGozqo/UCNe41bHBPpwNfLa/XxMg5AJJHbvHyYQy9jxSx/G3
-         Pk1Quo8ZgoOeKYMEPQ9n08wYbUw4rR8cy2b82lcrYP30wg221BErunJA/2dmrHQ7OU
-         1AVEtMGDpjbyNcw+ECXxyGAiG3vCnw8JpcpiTAkQlsXZzcaUo5i1HmONONjeN533wP
-         YKpV8bh/xYeHOa9jsTYdstUA0D7vxTPpebI3L3WLwHatAxbx88fFVX+aNtKnVSrhtC
-         4/7/3DSYKAsdA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598446624.24220.10.camel@mtkswgap22>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-commit 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
+On 26-08-20, 20:57, Hector Yuan wrote:
+> On Mon, 2020-08-24 at 15:36 +0530, Viresh Kumar wrote:
+> > On 13-08-20, 15:07, Hector Yuan wrote:
+> > >  CONFIG_ARM_ALLWINNER_SUN50I_CPUFREQ_NVMEM=m
+> > >  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
+> > > +CONFIG_ARM_MEDIATEK_CPUFREQ_HW=m
+> > 
+> > What about a 'default m' in Kconfig itself ?
+> > OK, will update in V3.
 
-SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra186 from the
-beginning of its support in driver.
+Hector, you need to remove (or not add) the right bracket (>) before the
+beginning of your lines. This makes it incredibly difficult to read.
 
-Tegra186 SDMMC hardware by default uses timeout clock (TMCLK) instead
-of SDCLK and this quirk should not be set.
+> > > +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> > > +		data = readl_relaxed(base + (i * LUT_ROW_SIZE));
+> > > +		freq = FIELD_GET(LUT_FREQ, data) * 1000;
+> > > +		volt = FIELD_GET(LUT_VOLT, data);
+> > > +		if (freq != prev_freq) {
+> > > +			table[i].frequency = freq;
+> > > +			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
+> > 
+> > Why are you adding OPPs here and rather why using OPP specific stuff
+> > at all in the driver ?
+> > yes, the opp information is read from CPU HW engine.Then add it to the CPU dev OPP one by one.  
 
-So, this patch remove this quirk for Tegra186.
+I asked a different question, why are you adding OPPs ? You don't need the OPPs
+at all in my opinion. You can just create the frequency table and that's it.
 
-Fixes: 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
-Cc: stable <stable@vger.kernel.org> # 5.4
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/mmc/host/sdhci-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
+> > > +	for_each_possible_cpu(cpu) {
+> > > +		cpu_np = of_cpu_device_node_get(cpu);
+> > > +		if (!cpu_np)
+> > > +			continue;
+> > > +
+> > > +		ret = of_parse_phandle_with_args(cpu_np, "mtk,freq-domain",
+> > 
+> > Where are bindings of this node and how does this look ?
+> > Can refer to the same patch series, I split it to another patch.Each cpu will be group into one frequency domain for the CPU DVFS. 
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 2be3511..31ed321 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1455,7 +1455,6 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
- 
- static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+That binding only defines "mediatek,cpufreq-hw" and not "mtk,freq-domain".
+
 -- 
-2.7.4
-
+viresh
