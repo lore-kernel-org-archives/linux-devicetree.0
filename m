@@ -2,71 +2,93 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F36C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1FCC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A8B422B40
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E11E2075B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:28:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LrlfVkCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgH0JXP (ORCPT
+        id S1728303AbgH0J2f (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:23:15 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:42866 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbgH0JXM (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:23:12 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BA2D0200B27;
-        Thu, 27 Aug 2020 11:23:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9386B20004A;
-        Thu, 27 Aug 2020 11:23:07 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5EE33402D2;
-        Thu, 27 Aug 2020 11:23:03 +0200 (CEST)
-From:   Qiang Zhao <qiang.zhao@nxp.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        robh+dt@kernel.org
-Cc:     linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: lx2160a: Add "no-watchdog" property to pcf2127
-Date:   Thu, 27 Aug 2020 17:14:41 +0800
-Message-Id: <20200827091441.12972-3-qiang.zhao@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827091441.12972-1-qiang.zhao@nxp.com>
-References: <20200827091441.12972-1-qiang.zhao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 27 Aug 2020 05:28:35 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:35805 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728401AbgH0J2e (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:28:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598520514; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=zVYq2PzZHW22lNU+KVi4IO8QWzdS+OdIZj/XtAHJAlQ=; b=LrlfVkCDTJL7PDkCGiAr3rdNfD3/JSFJB3ucma7iqOazU0Cjus0bZCeEqL6b01aqeSOaCRwl
+ yEH2NhqUlzo4u3F3HiLDOW3yZPLYR6U+CmVoJrtEcya/jqIvM85ZfwUPh+0SFuYN5d+XphJL
+ J/gz70vNJBcKQO9Y4KBJjbYXopc=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f477cc27ea9bd2909359d37 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 09:28:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A69FCC433B1; Thu, 27 Aug 2020 09:28:33 +0000 (UTC)
+Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3539CC43395;
+        Thu, 27 Aug 2020 09:28:27 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3539CC43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
+From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     V Sujith Kumar Reddy <vsujithk@codeaurora.org>,
+        Srinivasa Rao <srivasam@codeaurora.org>
+Subject: [PATCH v2 1/5] ASoC: Add sc7180-lpass binding header hdmi define
+Date:   Thu, 27 Aug 2020 14:58:11 +0530
+Message-Id: <1598520495-21741-1-git-send-email-srivasam@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Zhao Qiang <qiang.zhao@nxp.com>
+From: V Sujith Kumar Reddy <vsujithk@codeaurora.org>
 
-pcf2127 on lx2160a are not used as watchdog.
+Add header defining hdmi dai-id for SC7180 lpass soc
+in dt bindings.
 
-Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+Signed-off-by: Srinivasa Rao <srivasam@codeaurora.org>
+Signed-off-by: V Sujith Kumar Reddy <vsujithk@codeaurora.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 1 +
+ include/dt-bindings/sound/sc7180-lpass.h | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index 2ec43c6..4d14c91 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -149,6 +149,7 @@
- 		reg = <0x51>;
- 		// IRQ10_B
- 		interrupts = <0 150 0x4>;
-+		no-watchdog;
- 	};
- };
+diff --git a/include/dt-bindings/sound/sc7180-lpass.h b/include/dt-bindings/sound/sc7180-lpass.h
+index 7d988f6..0b4991e 100644
+--- a/include/dt-bindings/sound/sc7180-lpass.h
++++ b/include/dt-bindings/sound/sc7180-lpass.h
+@@ -4,6 +4,7 @@
+ 
+ #define MI2S_PRIMARY	0
+ #define MI2S_SECONDARY	1
++#define HDMI	2
+ 
+ #define LPASS_MCLK0	0
  
 -- 
-2.7.4
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
