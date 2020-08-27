@@ -2,159 +2,98 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A35C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16929C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0110920825
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F16207F7
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="I4k2p0VK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgH0Jye (ORCPT
+        id S1728648AbgH0J75 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 05:54:34 -0400
-Received: from mga18.intel.com ([134.134.136.126]:16855 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726157AbgH0Jyd (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 05:54:33 -0400
-IronPort-SDR: 6EwFLcfDa5CTaAAAoeSmLGZM+7jAd3C26xcXhdrNTckPT3UkVvFRCjpqc5SdFA3a00UkencRMv
- O8aQQsooodjg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144131056"
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="144131056"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 02:54:32 -0700
-IronPort-SDR: zzFZZKfiIYitmUmayPFZKycyu6m5slei8hD8mOAqFMwUJjwnmBW+VS3KvVoctozMoVYE2ERCii
- 5ywYwjjnQX8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,359,1592895600"; 
-   d="scan'208";a="295672250"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 27 Aug 2020 02:54:32 -0700
-Received: from [10.255.146.64] (mreddy3x-MOBL.gar.corp.intel.com [10.255.146.64])
-        by linux.intel.com (Postfix) with ESMTP id ABFFA5806C6;
-        Thu, 27 Aug 2020 02:54:29 -0700 (PDT)
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
- <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
- <20200825112107.GN2639@vkoul-mobl>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
-Date:   Thu, 27 Aug 2020 17:54:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200825112107.GN2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Thu, 27 Aug 2020 05:59:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:54249 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728666AbgH0J74 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 05:59:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598522395; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=+B5wb6/5W73FKeRbPz+9O5/FmXiWurQF800ttHrQ3mQ=; b=I4k2p0VK7qA2DGADLFszBkNa40YOhoDdZaZ77lBQdUI7HCWy3nkbdkhu7RXfcqC4cxUt8t37
+ Kp+tgPrG3/YrX+SOrkufjEZmsnyVRVwf6lwAAqRAayBBM2fILL2Hug3DnBoM5gbi9fsfmBLV
+ rKi3kE847B1jzcLBEeJaLfL+m9Q=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f47841b7ea9bd29093d5130 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 09:59:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 30CA3C4339C; Thu, 27 Aug 2020 09:59:55 +0000 (UTC)
+Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AF61C433C6;
+        Thu, 27 Aug 2020 09:59:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3AF61C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
+From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+Subject: [PATCH 0/5] Qualcomm's lpass-hdmi ASoC driver to support audio over dp port
+Date:   Thu, 27 Aug 2020 15:29:38 +0530
+Message-Id: <1598522378-28963-1-git-send-email-srivasam@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Vinod,
-Thanks for the review comments.
+These patches are to support audio over DP port on Qualcomm's SC7180 LPASS Asoc.
+It includes machine driver, cpu driver, platform driver updates for HDMI path support, 
+device tree documention, lpass variant structure optimization and configuration changes.
+These patches depends on the DP patch series 
+https://patchwork.kernel.org/project/dri-devel/list/?series=332029
 
-On 8/25/2020 7:21 PM, Vinod Koul wrote:
-> On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
->
->>>> +
->>>> +            intel,chans:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +              description:
->>>> +                 The channels included on this port. Format is channel start
->>>> +                 number and how many channels on this port.
->>> Why does this need to be in DT? This all seems like it can be in the dma
->>> cells for each client.
->> (*ABC)
->> Yes. We need this.
->> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
->> channels. and the logical channel mapping for the peripherals also differ
->> b/w old and new SOCs.
->>
->> Because of this hardware limitation we are trying to configure the total
->> channels and port-channel mapping dynamically from device tree.
->>
->> based on port name we are trying to configure the default values for
->> different peripherals(ports).
->> Example: burst length is not same for all ports, so using port name to do
->> default configurations.
-> Sorry that does not make sense to me, why not specify the values to be
-> used here instead of defining your own name scheme!
-OK. Agreed. I will remove port name from DT and only use intel,chans
->
-> Only older soc it should create 16 channels and new 22 (hint this is hw
-> description so perfectly okay to specify in DT or in using driver_data
-> and compatible for each version
->
->>>> +
->>>> +          required:
->>>> +            - reg
->>>> +            - intel,name
->>>> +            - intel,chans
->>>> +
->>>> +
->>>> + ldma-channels:
->>>> +    type: object
->>>> +    description:
->>>> +       This sub-node must contain a sub-node for each DMA channel.
->>>> +    properties:
->>>> +      '#address-cells':
->>>> +        const: 1
->>>> +      '#size-cells':
->>>> +        const: 0
->>>> +
->>>> +    patternProperties:
->>>> +      "^ldma-channels@[0-15]+$":
->>>> +          type: object
->>>> +
->>>> +          properties:
->>>> +            reg:
->>>> +              items:
->>>> +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
->>>> +              description:
->>>> +                 Which channel this node refers to.
->>>> +
->>>> +            intel,desc_num:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32
->>>> +              description:
->>>> +                 Per channel maximum descriptor number. The max value is 255.
->>>> +
->>>> +            intel,hdr-mode:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +              description:
->>>> +                 The first parameter is header mode size, the second
->>>> +                 parameter is checksum enable or disable. If enabled,
->>>> +                 header mode size is ignored. If disabled, header mode
->>>> +                 size must be provided.
->>>> +
->>>> +            intel,hw-desc:
->>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->>>> +              description:
->>>> +                 Per channel dma hardware descriptor configuration.
->>>> +                 The first parameter is descriptor physical address and the
->>>> +                 second parameter hardware descriptor number.
->>> Again, this all seems like per client information for dma cells.
->>   Ok, if we move all these attributes to 'dmas' then 'dma-channels' child
->> node is not needed in dtsi.
->> #dma-cells number i am already using 7. If we move all these attributes to
->> 'dmas' then integer cells will increase.
->>
->> Is there any limitation in using a number of integer cells & as determined
->> by the #dma-cells property?
-> No I dont think there is but it needs to make sense :-)
-OK.
->
+V Sujith Kumar Reddy (5):
+  ASoC: Add sc7180-lpass binding header hdmi define
+  ASoC: dt-bindings: Add dt binding for lpass hdmi
+  ASoC: qcom: Add support for lpass hdmi driver
+  ASoC: qcom: Add support for audio over DP
+  ASoC: qcom: Optimise lpass variant structure
+
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  |  51 +-
+ include/dt-bindings/sound/sc7180-lpass.h           |   1 +
+ sound/soc/qcom/Kconfig                             |   5 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/lpass-apq8016.c                     |  25 +-
+ sound/soc/qcom/lpass-cpu.c                         |  92 ++-
+ sound/soc/qcom/lpass-hdmi.c                        | 685 +++++++++++++++++++++
+ sound/soc/qcom/lpass-hdmi.h                        | 129 ++++
+ sound/soc/qcom/lpass-ipq806x.c                     |  25 +-
+ sound/soc/qcom/lpass-lpaif-reg.h                   |  51 +-
+ sound/soc/qcom/lpass-platform.c                    | 287 +++++++--
+ sound/soc/qcom/lpass-sc7180.c                      | 147 ++++-
+ sound/soc/qcom/lpass.h                             | 123 +++-
+ 13 files changed, 1472 insertions(+), 151 deletions(-)
+ create mode 100644 sound/soc/qcom/lpass-hdmi.c
+ create mode 100644 sound/soc/qcom/lpass-hdmi.h
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
