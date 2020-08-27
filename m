@@ -2,163 +2,264 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353F0C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99095C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0071C22BF3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7316F22BF5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="koMVclXN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QiWdsakV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fKkwMSCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgH0K3P (ORCPT
+        id S1728292AbgH0K3x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:29:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48624 "EHLO
+        Thu, 27 Aug 2020 06:29:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbgH0K3O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 06:29:14 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9968DC061264;
-        Thu, 27 Aug 2020 03:29:13 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598524150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ylDEcuXb8kBIJ352QnMfKDeXNRHGJSmhAa9T1jd3480=;
-        b=koMVclXN+CAiq+v5k56S/JPdQbfFLcL25OOQmXkP5zHH06QnPXgpD5GzU7hgX86h8zgl71
-        c10Oja++upjYNLX37RQZU6XAHxM1RSc737u92340+4t/O82WxYZEuNtMlZofSvK9h+fcm2
-        Cnc/iXE61RrL7AV9+Gkr5TmQtk/hFImmGvqJwlNZYzAIt0F1ci1qTXT03ksU80SVVuGkgh
-        KVhR0KaQuNuK0n4oNA53w3bpHMUdLhWj+/DPw3PYCmGa9TacgcPyoUgEVKwe059U0ZTXHL
-        rxyynZVrzKEhav6/kkMapikhQALGwc6+kJHz9jMlUJ+7SKGaRnVoqbmog4PCgA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598524150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ylDEcuXb8kBIJ352QnMfKDeXNRHGJSmhAa9T1jd3480=;
-        b=QiWdsakVvLqWoVqXoiIoNOW0OTyAj0qiQTL31YIKMHvACzmbh5qboHSG99hRmC4KBmBG3H
-        QjWTFDChvj5GxBBw==
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org, Vladimir Oltean <olteanv@gmail.com>
-Subject: Re: [PATCH v3 2/8] net: dsa: Add DSA driver for Hirschmann Hellcreek switches
-In-Reply-To: <87h7sqzsr0.fsf@kurt>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-3-kurt@linutronix.de> <20200824224450.GK2403519@lunn.ch> <87eenv14bt.fsf@kurt> <20200825135615.GR2588906@lunn.ch> <87h7sqzsr0.fsf@kurt>
-Date:   Thu, 27 Aug 2020 12:29:09 +0200
-Message-ID: <87v9h4crgq.fsf@kurt>
+        with ESMTP id S1728228AbgH0K3w (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 06:29:52 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA9F8C061232
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 03:29:51 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id t7so3992962otp.0
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 03:29:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
+        b=fKkwMSCT3+pj22gsTIywq7R4LB1He2LTSACwbCTdIGXidzMgQfHh+U6FSnM8xecppd
+         QbXBqCxhAsd24Zw+4HglaCDRXu6RFTP2NAQgwkA/Ipe/S4qcfzbCDRpQJMhf3j420AC1
+         7T9kCyCWVet5iClQ592TiqqC6sAFi5/3YYlm8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
+        b=EBu4RmoEiG45JOOnVamcAfhF+GlmtIlgpBDlJIX4mzVGuopR97M8IgZxErUSqrXXMz
+         czLioWZcEuB/rQaMjkT44oyjj9xnnG/TnsbSzSLbI50t5ne5glSMRMI3+kI4SZMsyXeE
+         eFmPU0/l9q+6PqJMYLdRVvjCRuHduTkMF3H1H692T0wDqSgyafoJm11YZESDrfp6VR3V
+         3cmZ8ri1EmoC4fz3ItuGDPpNYhqp7B35z2xZCpg5gb2/rfjBRJMQ7Skita+kAC+DnbAa
+         pCKcf3O81ZReUIQY6QHyyzTUtXthWTdiJbAQLv+9ehaqnzcDn/OzdCEZpxTiArqjtwHb
+         sk2w==
+X-Gm-Message-State: AOAM532nPobrjAGkW0W93pQpuO0JQcmciADtai8qxnyhXpoM9+67xGqX
+        IaEWCpuqVk4fPF4rm5S3e63I1AJLANhyHA==
+X-Google-Smtp-Source: ABdhPJy85qEVmr1uRtgXlB/dUdUt8C3KZY8H80mctwYeHzjpoqNmLJ6ZR101uIX2VtvsaJPsWYot0A==
+X-Received: by 2002:a9d:6e1:: with SMTP id 88mr12581465otx.178.1598524189858;
+        Thu, 27 Aug 2020 03:29:49 -0700 (PDT)
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
+        by smtp.gmail.com with ESMTPSA id s11sm370034otg.43.2020.08.27.03.29.48
+        for <devicetree@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
+Received: by mail-ot1-f43.google.com with SMTP id e23so3196282otk.7
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
+X-Received: by 2002:a9d:5f0c:: with SMTP id f12mr12086496oti.141.1598524187719;
+ Thu, 27 Aug 2020 03:29:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+References: <20200821103608.2310097-1-acourbot@chromium.org>
+ <20200821103608.2310097-10-acourbot@chromium.org> <02eaeace-22dd-02ea-7162-90200fe1cffe@gmail.com>
+ <CAPBb6MWZRKpg-rs7X_j3tqqsYHy=NkEMN1NdZwPS9zo-0whTJw@mail.gmail.com> <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
+In-Reply-To: <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Thu, 27 Aug 2020 19:29:35 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
+Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
+Subject: Re: [PATCH v4 09/17] arm64: dts: mt8183: add encoder node
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hi Matthias,
 
-Hi Andrew,
-
-On Tue Aug 25 2020, Kurt Kanzenbach wrote:
-> On Tue Aug 25 2020, Andrew Lunn wrote:
->> I agree with the check here. The question is about the compatible
->> string. Should there be a more specific compatible string as well as
->> the generic one?
->>
->> There have been a few discussions about how the Marvell DSA driver
->> does its compatible string. The compatible string tells you where to
->> find the ID register, not what value to expect in the ID register. The
->> ID register can currently be in one of three different locations. Do
->> all current and future Hellcreak devices have the same value for
->> HR_MODID_C?  If not, now is a good time to add a more specific
->> compatible string to tell you where to find the ID register.
->>
->>> My plan was to extend this when I have access to other
->>> revisions. There will be a SPI variant as well. But, I didn't want to
->>> implement it without the ability to test it.
->>
->> Does the SPI variant use the same value for HR_MODID_C?  Maybe you
->> need a different compatible, maybe not, depending on how the driver is
->> structured.
->>
->> The compatible string is part of the ABI. So thinking about it a bit
->> now can make things easier later. I just want to make sure you have
->> thought about this.
+On Thu, Aug 27, 2020 at 7:23 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
 >
-> I totally agree. The Marvell solution seems to work. For all current
-> devices the module ID is located at 0x00. Depending on the chip ID the
-> different properties can be configured later. The SPI variant will have
-> a different module ID. Anyhow, I'll ask how this will be handled for
-> future devices and in general.
+> Hi Alexandre,
+>
+> On 27/08/2020 12:10, Alexandre Courbot wrote:
+> > On Thu, Aug 27, 2020 at 7:03 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> >>
+> >>
+> >>
+> >> On 21/08/2020 12:36, Alexandre Courbot wrote:
+> >>> Now that the MT8183 encoder driver is ready, add its DT node. Also pull
+> >>> the iommu and scp ones, which the encoder depends upon.
+> >>
+> >> Please don't do that. Instead of pulling in other DT nodes, it would be handy to
+> >> get a reference of the series this is based on.
+> >>
+> >> Let me try to hunt them down now :)
+> >
+> > Sorry, I'm not sure to understand - do you mean each node should come
+> > with its own patch? Or that all the code should be merged before
+> > sending these nodes? The rest of this series should land into the
+> > media tree soon, if you prefer I can resend this patch separately once
+> > that happens.
+> >
+>
+> What I'm talking about is the case when you send a series that's based on
+> another one and the latter is not yet accepted in Torvalds tree. In that case it
+> helps to point to the series you expect to be included as well.
+>
+> In this case the SCP series was merged long time ago, but I missed the DTS
+> change. It would have been good if you would have added that information in your
+> series, instead of directly pulling in the SCP node.
 
-After further discussion, we cannot use the Marvell solution.
+Sorry about that, actually I was not even aware of this patch (or
+maybe I just forgot about it due to its date).
 
-So, the module id doesn't help us in determining anything about the
-hardware. The module id can be arbitrarily chosen. A lot of the features
-of the switch IP core are compile time options and cannot be read back
-via registers. The hardware integrator can chose which features are
-used, the precision of the get of the day for the ptp clock, the module
-id, the port speed, additional debug options and so on.
+>
+> For the iommu node: I understand that there was never a patch adding the node
+> (at least I wasn't able to find one). So I'd prefer to have it send as a
+> separate patch of this series.
+>
+> Regarding this series now. If you want just resend the two DTS patches (iommu
+> and vcodec_enc) once the rest of this series got accpeted. If for any other
+> reason you have to send a v5, then feel free to include both in v5.
 
-All of this depends on how the IP core is integrated into the hardware
-most likely an FPGA. My suggestion for now is to use different
-compatible strings. Currently two variants exists:
+Absolutely. I will wait until the patches land into the media tree and
+send you two DT-only patches.
 
- * An evaluation platform based on a Cyclone V based DE1 board from
-   Terasic
- * The kairos chip (via SPI) which I mentioned in the cover letter
+Thanks for the explanation!
 
-More variants are about to come with more ports, etc.
-
-So, we would need different strings to distinguish between them. Proposal:
-
- * "hirschmann,hellcreek-de1soc-r1"
- * "hirschmann,hellcreek-ksp-rbrb-trsrr-r208"
-
-And create some form of platform_data with:
-
- * module id
- * amount of ports
- * port speed
- * qbv support
- * ...
-
-Any thoughts on this?
-
-Thanks,
-Kurt
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9HivUACgkQeSpbgcuY
-8KZDoRAAn8U0YLdMeQYNQ9v+H2lycyG7o1HFy0msUWMLnDspR7j7KnPymgy6Y6y4
-kdYNL6rtrER7YE30uNoJ7qKJNcni7nfgFbGJExfDRSQMKllYffIchrUub97gQ9bY
-4ow/08ccFu1hARsowMSpIQrOAq3hhdkzjdlFoZx/OL0KDm4Yfdoef2Bx7Xbpu5rf
-KO7I1LilT3uaqjCDAW7a2QZ9tK1pCKPgv5J78s0S1P12u706ty1PFfUlmg8ADLi9
-HIhbnRa47RrK9bW83XtNDwKxXUywCf5beu5THm/FNJo71/O0pdgHPAVhj+HDIP8x
-L5Q0uy4e3L1EwueCjb7dKM63U+0b2sVFnXOSmcdaajy96RrGAG6DiXNWD+9CDeDF
-KP4fB8QoAQo9jRJ4ip5+86zj+qCwBk528iHQnKzJLkcTv82qdA/x1xiJ6c2VXdNN
-Hz2iF8/NJonF2qtGmDuP5pvFC8KUcDvxLRrqKAeTSu4XjqFX6+EMdQKewIr9Qfcr
-Kgfr3/z87f4htgC/9BXQNd+aGuiknb2XKVAFlmMghqA+JLVUT+gKYN4PEg4fiHQd
-JJvPn8PxFMAaPLCh/yJ3dTDpyYQ0AX8wmxksv+r0xoOskXSCvXwdbFKXdThqAWfT
-6Z30N9ta93i/o1oR9YlQmgL0APh0BaOJkHzNUvlbgeq0vYKhLMU=
-=KkKb
------END PGP SIGNATURE-----
---=-=-=--
+>
+> Hope I explained myself now :)
+>
+> Regards,
+> Matthias
+>
+> >>
+> >> Regards,
+> >> Matthias
+> >>
+> >>>
+> >>> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+> >>> ---
+> >>>    arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 10 ++++++
+> >>>    .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 12 +++++++
+> >>>    arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 36 +++++++++++++++++++
+> >>>    3 files changed, 58 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> >>> index ae405bd8f06b..9e77b420eee8 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+> >>> @@ -25,6 +25,16 @@ memory@40000000 {
+> >>>        chosen {
+> >>>                stdout-path = "serial0:921600n8";
+> >>>        };
+> >>> +     reserved-memory {
+> >>> +             #address-cells = <2>;
+> >>> +             #size-cells = <2>;
+> >>> +             ranges;
+> >>> +             scp_mem_reserved: scp_mem_region {
+> >>> +                     compatible = "shared-dma-pool";
+> >>> +                     reg = <0 0x50000000 0 0x2900000>;
+> >>> +                     no-map;
+> >>> +             };
+> >>> +     };
+> >>>    };
+> >>>
+> >>>    &auxadc {
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> >>> index f0a070535b34..3c763be658da 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
+> >>> @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
+> >>>                regulator-max-microvolt = <3300000>;
+> >>>        };
+> >>>
+> >>> +     reserved_memory: reserved-memory {
+> >>> +             #address-cells = <2>;
+> >>> +             #size-cells = <2>;
+> >>> +             ranges;
+> >>> +
+> >>> +             scp_mem_reserved: scp_mem_region {
+> >>> +                     compatible = "shared-dma-pool";
+> >>> +                     reg = <0 0x50000000 0 0x2900000>;
+> >>> +                     no-map;
+> >>> +             };
+> >>> +     };
+> >>> +
+> >>>        max98357a: codec0 {
+> >>>                compatible = "maxim,max98357a";
+> >>>                sdmode-gpios = <&pio 175 0>;
+> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> index 102105871db2..8f77eea6df27 100644
+> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> >>> @@ -8,6 +8,7 @@
+> >>>    #include <dt-bindings/clock/mt8183-clk.h>
+> >>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >>>    #include <dt-bindings/interrupt-controller/irq.h>
+> >>> +#include <dt-bindings/memory/mt8183-larb-port.h>
+> >>>    #include <dt-bindings/reset-controller/mt8183-resets.h>
+> >>>    #include <dt-bindings/phy/phy.h>
+> >>>    #include "mt8183-pinfunc.h"
+> >>> @@ -339,6 +340,25 @@ pwrap: pwrap@1000d000 {
+> >>>                        clock-names = "spi", "wrap";
+> >>>                };
+> >>>
+> >>> +             iommu: iommu@10205000 {
+> >>> +                     compatible = "mediatek,mt8183-m4u";
+> >>> +                     reg = <0 0x10205000 0 0x1000>;
+> >>> +                     interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>;
+> >>> +                     #iommu-cells = <1>;
+> >>> +             };
+> >>> +
+> >>> +             scp: scp@10500000 {
+> >>> +                     compatible = "mediatek,mt8183-scp";
+> >>> +                     reg = <0 0x10500000 0 0x80000>,
+> >>> +                           <0 0x105c0000 0 0x19080>;
+> >>> +                     reg-names = "sram", "cfg";
+> >>> +                     interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> >>> +                     clocks = <&infracfg CLK_INFRA_SCPSYS>;
+> >>> +                     clock-names = "main";
+> >>> +                     memory-region = <&scp_mem_reserved>;
+> >>> +                     status = "disabled";
+> >>> +             };
+> >>> +
+> >>>                systimer: timer@10017000 {
+> >>>                        compatible = "mediatek,mt8183-timer",
+> >>>                                     "mediatek,mt6765-timer";
+> >>> @@ -772,6 +792,22 @@ vencsys: syscon@17000000 {
+> >>>                        #clock-cells = <1>;
+> >>>                };
+> >>>
+> >>> +             vcodec_enc: vcodec@17020000 {
+> >>> +                     compatible = "mediatek,mt8183-vcodec-enc";
+> >>> +                     reg = <0 0x17020000 0 0x1000>;
+> >>> +                     interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>;
+> >>> +                     iommus = <&iommu M4U_PORT_VENC_REC>,
+> >>> +                              <&iommu M4U_PORT_VENC_BSDMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_RD_COMV>,
+> >>> +                              <&iommu M4U_PORT_VENC_CUR_LUMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_CUR_CHROMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_REF_LUMA>,
+> >>> +                              <&iommu M4U_PORT_VENC_REF_CHROMA>;
+> >>> +                     mediatek,scp = <&scp>;
+> >>> +                     clocks = <&vencsys CLK_VENC_VENC>;
+> >>> +                     clock-names = "MT_CG_VENC";
+> >>> +             };
+> >>> +
+> >>>                ipu_conn: syscon@19000000 {
+> >>>                        compatible = "mediatek,mt8183-ipu_conn", "syscon";
+> >>>                        reg = <0 0x19000000 0 0x1000>;
+> >>>
