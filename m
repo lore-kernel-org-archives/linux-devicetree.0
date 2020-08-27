@@ -2,112 +2,113 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4F4C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D86EC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C877C2087C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4E12087E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 17:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxRhj1E5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dB9WcXqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgH0RP3 (ORCPT
+        id S1726858AbgH0RRV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 13:15:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55986 "EHLO
+        Thu, 27 Aug 2020 13:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbgH0RP2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 13:15:28 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9742AC061264;
-        Thu, 27 Aug 2020 10:15:28 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id y134so3372809yby.2;
-        Thu, 27 Aug 2020 10:15:28 -0700 (PDT)
+        with ESMTP id S1726157AbgH0RRV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 13:17:21 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39DFC061264;
+        Thu, 27 Aug 2020 10:17:20 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id c8so5595195edn.8;
+        Thu, 27 Aug 2020 10:17:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sIZhYAthYWBYdLdFxX62quaSDkTNt7lcxiX/jTX8QP0=;
-        b=UxRhj1E5yWHmK02wVOz5+lpu2UXiBVT2ExRCRprxxH1S4VAKxqdO31TP6ZpqARUlWO
-         vwPD+1LblYV2iK3wmfEDOKH/E5ZTWY6ydGbcMxvQadznmQIGU6CHA0dfBHTC7eN8f8He
-         7A7yyzMnGwaOS1UvpgrILEQD9gg9JlGFxcQ57SBngIrEapInjNk46HGBRfo+d+FiPKwa
-         teLPniL0duptKZinnbwqAFtwwPOSkZwCprfirnyIqNJ5UltaaKsC2y3HDX26vaTuMWXb
-         Cpi8lLlOvSa7K2odaQpDx4415Xhp8pYUFQEjAhJrXBzgLdbHLfMW3V9QfNXdJ7ufcgWi
-         xf3w==
+        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=rMb9LJxrcGiTyNyXwwyZ6syio89Yz2hnJzYevmI52VE=;
+        b=dB9WcXqWXys8obmbtsB0NyXuam4s3n3sqAJ2FO6MZJziZgF/U2ynJXCnc9PrqpC5lz
+         btmeqnTmPPM68itNNSwrCzFE0WnEs1uvNCT8xwHVWmboUN09RG6elHINBAOcw3iqNTa1
+         n2IyTmgJeFz/2cRfLv1X9kY/jnySuyrnFe4ani1nQ2Cob+Ksaky6eWsAb7mfnN6kbTLv
+         76Tj9XOg2XfiNGpT0y61jIITf20G9IwvOcUKhDQ+mVtQbgcxrx8Ivb4zli+1UqJ1tlxN
+         fVuQo1vgNqeA2yCN5zQo0tOx1qmSFcQZRKDAewJTcchnXH4rI3r37SbDhXgs/cSGGYr0
+         BGDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sIZhYAthYWBYdLdFxX62quaSDkTNt7lcxiX/jTX8QP0=;
-        b=bhKptUunvL3Fz3FG6teXImsNxSAkkKMxQFXUNLhMcCzBrYd/Te0lD4w2U048HfdXii
-         NSjZIMdpb4dPOsOoxyb5/WubYM6YrsEHAj7WBhoAaMcoXm5kKbBN5XE/SumC66OWbpwG
-         M4pV8JakgmlGKaW3wiUHHwuLOmQ20zcUpvsbFw6iWA7KLTZYwKHCqytmuXdUx+XQQNr2
-         IR/CkAIXk5OtYogfopJwqOHpOLt202MYhjC0YwY0vNV5E9N6eVAAMmG3MbRj/LG2iAew
-         6Bv6bMAa44/YWa8imoius6IXg6Dkoie7bZTjNSreNq3JnzuoDU1RmkU90nMP1+MFDuiM
-         MKpA==
-X-Gm-Message-State: AOAM532vnOuUUzihm8CchfcmaQ2qzdkCUQbiDi7NqGHtsWwlfcYd5XnB
-        FTFsUYWVs5Kc3QK2j3+rfuOT9kFL2zgRH4Il9go=
-X-Google-Smtp-Source: ABdhPJz3x0ltioowCpoW9IFahNqovv85mHc+kMeq8iX9slmaAJEwJxGArTLcXBn+w17+vkNbqQZ20FE/b1rvCTEF6pw=
-X-Received: by 2002:a25:2a58:: with SMTP id q85mr32915263ybq.518.1598548527955;
- Thu, 27 Aug 2020 10:15:27 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:references:date
+         :in-reply-to:message-id:user-agent:mime-version;
+        bh=rMb9LJxrcGiTyNyXwwyZ6syio89Yz2hnJzYevmI52VE=;
+        b=pmGylB5IH3qV90drfTtjSzlU17+tec8ZYy3Mx1hWqdZpqZ+T0LAYRvSB1yl0J66+z9
+         WVZqVi8oBxYBAZs+fRfF0b2jy0zROvny73jaYDVUBcew6hTUp+47CwXSwCXyQIBojiiL
+         /yurd7B2n116huy90g3JPVIaAE4pmdXSQbgv0cZK8mgxWVj2wZLynRoSaQk4bzDQX2VO
+         BGH/ItO7nO8fbxwcgu4IlF9FEr00OsGwTs9vLo5C2tTHH0/t16kfEzOrm8RfQ6G5qTfH
+         ne2HptaaQNlzFCXexnTN4n7d5ep7YGejwhDmLjmmiF1HaQjUC5CVGNTPMljJX9YI6svs
+         9WwQ==
+X-Gm-Message-State: AOAM533uO6w/CzbUn+RLL5YgJIQlhG2jliip0+s5biibn/uBxP+aJ3Uu
+        2QAmeKiH1CRjTZQHxgIKzk0=
+X-Google-Smtp-Source: ABdhPJwcBvHTnG9Xg7kXrNUUX+KbvFG59tNLBgd8D/deEo5TMVFE72bHs1NgF1Ey6p8ITpDfcQmxLQ==
+X-Received: by 2002:aa7:c596:: with SMTP id g22mr21145561edq.109.1598548639333;
+        Thu, 27 Aug 2020 10:17:19 -0700 (PDT)
+Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
+        by smtp.gmail.com with ESMTPSA id v13sm2336389ejq.59.2020.08.27.10.17.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Aug 2020 10:17:18 -0700 (PDT)
+Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
+        (envelope-from <peter@korsgaard.com>)
+        id 1kBLWX-0007qi-IQ; Thu, 27 Aug 2020 19:17:17 +0200
+From:   Peter Korsgaard <peter@korsgaard.com>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 4/4] arm: dts: owl-s500: Add RoseapplePi
+References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
+        <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
+        <87v9h4y4dj.fsf@dell.be.48ers.dk>
+        <20200827141520.GD2451538@BV030612LT>
+Date:   Thu, 27 Aug 2020 19:17:17 +0200
+In-Reply-To: <20200827141520.GD2451538@BV030612LT> (Cristian Ciocaltea's
+        message of "Thu, 27 Aug 2020 17:15:20 +0300")
+Message-ID: <87r1rsxb36.fsf@dell.be.48ers.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <1594919915-5225-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1594919915-5225-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <1594919915-5225-9-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 27 Aug 2020 18:15:02 +0100
-Message-ID: <CA+V-a8t-HHWeo4zwnTuyZHnhc8u_aXqt_KZHr1trnXQB15Jj6A@mail.gmail.com>
-Subject: Re: [PATCH 08/20] dt-bindings: usb: usb-xhci: Document r8a774e1 support
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Niklas <niklas.soderlund@ragnatech.se>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-ide@vger.kernel.org,
-        dmaengine <dmaengine@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        alsa-devel <alsa-devel@alsa-project.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Greg,
+>>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
 
-On Thu, Jul 16, 2020 at 6:19 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Document r8a774e1 xhci support. The driver will use the fallback
-> compatible string "renesas,rcar-gen3-xhci", therefore no driver
-> change is needed.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-Gentle ping.
+ > Hi Peter,
+ > Thanks for the review!
 
-Cheers,
-Prabhakar
+ > On Thu, Aug 27, 2020 at 08:44:40AM +0200, Peter Korsgaard wrote:
+ >> >>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
+ >> 
+ >> > Add a Device Tree for the RoseapplePi SBC.
+ >> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+ >> 
+ >> Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
+ >> 
+ >> On a related note: There is now an owl-mmc driver for the s900. From a
+ >> quick look at the datasheet it looks compatible with the controller on
+ >> the s500. Did you have a look at hooking that up?
+
+ > Yes, please see:
+ > https://lore.kernel.org/lkml/cover.1593124368.git.cristian.ciocaltea@gmail.com/
+
+ > The clock related patches have been already applied to v5.9 and
+ > hopefully the pinctrl driver will follow in v5.10.
+
+Cool, I must have missed that series Great, thanks!
+
+-- 
+Bye, Peter Korsgaard
