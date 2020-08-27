@@ -2,52 +2,235 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAE8C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 20:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8610BC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 21:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F44820786
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 20:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1B22084C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 21:07:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tMbOvipi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgH0USH (ORCPT
+        id S1726798AbgH0VHt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 16:18:07 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:56898 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726120AbgH0USC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 16:18:02 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kBOLO-00C9YJ-1u; Thu, 27 Aug 2020 22:17:58 +0200
-Date:   Thu, 27 Aug 2020 22:17:58 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     f.fainelli@gmail.com, hkallweit1@gmail.com, davem@davemloft.net,
-        robh@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH net-next v3 1/2] dt-bindings: net: dp83822: Add TI
- dp83822 phy
-Message-ID: <20200827201758.GY2403519@lunn.ch>
-References: <20200827134509.23854-1-dmurphy@ti.com>
- <20200827134509.23854-2-dmurphy@ti.com>
+        Thu, 27 Aug 2020 17:07:49 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53710 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgH0VHs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 17:07:48 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07RL7kW9085385;
+        Thu, 27 Aug 2020 16:07:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598562466;
+        bh=orOymVe73TBSkWAYk73bDZMOSqPRJVCgZxMk1N12HM4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tMbOvipiJAoNYEyyAUvoNpvDYzLS8ljsdiRBT9LmbJscw69BQCWYlnChd0RMXc+5j
+         Iqwby4p+0kJqZMx7K1xDG+7UnAUAdM+Ld/qTuSYynC+q/N7xb3B1E/9O1X29LfSp4r
+         i4zjQjRSS80J/CM3NPffNutZmNEfLtSsqMiy+ZXQ=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07RL7kXd060964
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Aug 2020 16:07:46 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
+ Aug 2020 16:07:46 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 27 Aug 2020 16:07:46 -0500
+Received: from [10.250.66.180] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07RL7j3I073126;
+        Thu, 27 Aug 2020 16:07:45 -0500
+Subject: Re: [EXTERNAL] Re: [PATCH v1 1/2] dt-bindings: power: Add the bq256xx
+ dt bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     <sre@kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmurphy@ti.com>
+References: <20200817191723.22416-1-r-rivera-matos@ti.com>
+ <20200817191723.22416-2-r-rivera-matos@ti.com>
+ <20200818164305.GB3586878@bogus>
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Message-ID: <cf979e7d-2108-8bef-77af-25e152a80173@ti.com>
+Date:   Thu, 27 Aug 2020 16:07:45 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827134509.23854-2-dmurphy@ti.com>
+In-Reply-To: <20200818164305.GB3586878@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 08:45:08AM -0500, Dan Murphy wrote:
-> Add a dt binding for the TI dp83822 ethernet phy device.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Rob
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+On 8/18/20 11:43 AM, Rob Herring wrote:
+> On Mon, Aug 17, 2020 at 02:17:22PM -0500, Ricardo Rivera-Matos wrote:
+>> Add the bindings for the bq256xx series of battery charging ICs.
+>>
+>> Datasheets:
+>> - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+>> - https://www.ti.com/lit/ds/symlink/bq25619.pdf
+>>
+>> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+>> ---
+>>   .../bindings/power/supply/bq256xx.yaml        | 99 +++++++++++++++++++
+>>   1 file changed, 99 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/bq256xx.yaml b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+>> new file mode 100644
+>> index 000000000000..67db4ba9fdb6
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/bq256xx.yaml
+>> @@ -0,0 +1,99 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+>> +# Copyright (C) 2020 Texas Instruments Incorporated
+>> +%YAML 1.2
+>> +---
+>> +$id: "http://devicetree.org/schemas/power/supply/bq256xx.yaml#"
+>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>> +
+>> +title: TI bq256xx Switch Mode Buck Charger
+>> +
+>> +maintainers:
+>> +  - Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+>> +
+>> +description: |
+>> +  The bq256xx devices are a family of highly-integrated battery charge
+>> +  management and system power management ICs for single cell Li-ion and Li-
+>> +  polymer batteries.
+>> +
+>> +  Datasheets:
+>> +    - https://www.ti.com/lit/ds/symlink/bq25600.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25601.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25600d.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25601d.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25611d.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25618.pdf
+>> +    - https://www.ti.com/lit/ds/symlink/bq25619.pdf
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - ti,bq25600
+>> +      - ti,bq25601
+>> +      - ti,bq25600d
+>> +      - ti,bq25601d
+>> +      - ti,bq25611d
+>> +      - ti,bq25618
+>> +      - ti,bq25619
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  ti,watchdog-timer:
+> Poorly named since we have 'ti,watchdog-timers' already and is
+> completely different.
+ACK, will use ti,watchdog-timeout-ms  instead
+>
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: |
+>> +      Watchdog timer in milli seconds. 0 (default) disables the watchdog
+> If you have units, then you should use standard unit suffix.
+ACK
+>
+>> +    minimum: 0
+>> +    maximum: 160000
+>> +    enum: [ 0, 40000, 80000, 160000]
+>> +
+>> +  input-voltage-limit-microvolt:
+>> +    description: |
+>> +       Minimum input voltage limit in micro volts with a 100000 micro volt step
+>> +    minimum: 3900000
+>> +    maximum: 5400000
+>> +
+>> +  input-current-limit-microamp:
+>> +    description: |
+>> +       Maximum input current limit in micro amps with a 100000 micro amp step
+>> +    minimum: 100000
+>> +    maximum: 3200000
+> Aren't these properties of the battery, not the charger?
+These are input current and voltage limit for the charger, not the battery
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+> monitored-battery not required?
+ACK
+>
+> Add:
+>
+> additionalProperties: false
+additionalProperties: false or unevaluatedProperties: false
+>
+>
+>> +
+>> +examples:
+>> +  - |
+>> +    bat: battery {
+>> +      compatible = "simple-battery";
+>> +      constant-charge-current-max-microamp = <2040000>;
+>> +      constant-charge-voltage-max-microvolt = <4352000>;
+>> +      precharge-current-microamp = <180000>;
+>> +      termination-current-microamp = <180000>;
+>> +    };
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    i2c0 {
+> i2c {
+ACK
+>
+>> +      pinctrl-names = "default";
+>> +      pinctrl-0 = <&i2c2_pins>;
+> Not relevant to the example.
+ACK
+>
+>> +
+>> +      status = "okay";
+> Don't show status in examples.
+ACK
+>
+>> +      clock-frequency = <400000>;
+>> +
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      bq25601@6b {
+> charger@6b
+ACK
+>
+>> +        compatible = "ti,bq25601";
+>> +        reg = <0x6b>;
+>> +        monitored-battery = <&bat>;
+>> +
+>> +        interrupt-parent = <&gpio1>;
+>> +        interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+>> +        watchdog-timer = <40000>;
+>> +
+>> +        input-voltage-limit-microvolt = <4500000>;
+>> +        input-current-limit-microamp = <2400000>;
+>> +       };
+>> +    };
+>> +...
+>> -- 
+>> 2.28.0
+>>
+Ricardo
