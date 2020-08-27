@@ -2,121 +2,94 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F232C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3E3C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACB020786
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0C822BEB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:21:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crDap6mO"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="a7EE7PAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgH0HLZ (ORCPT
+        id S1728015AbgH0HVe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:11:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgH0HLY (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 03:11:24 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D610C061264;
-        Thu, 27 Aug 2020 00:11:24 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y2so5251200ljc.1;
-        Thu, 27 Aug 2020 00:11:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Nv57Gn1eKFngv8s/vSw/Btf+G9R1mZ77PltJIm2hCKI=;
-        b=crDap6mOKZrR9ZAtjqKwuhuwWvD9xNLGT8q+sm69RRILe0fG9BkjV+7z0DZ127asDo
-         I+jEutBlwKivDNRYRbrGNS/OqE+tcpehypYt15HUhqc2Kjr7Y1OukJc8fcpJnUpQ2WOh
-         Dha8PJ14CUJGcZNonjI7mLJZVzAp9qOi39Cdrq5+DZ1Fv2v4QyP7va94M9rrogworQaC
-         0SJXA3ZT22RqBUuEUM+8IZqjPOLxlVfBCVQ8Sb6qktu2lK0dfk15e8RrPKWBpWVW6eL9
-         P8gH2vpUjlpKXaGVoT08tvMnBDWyerZBD7A+LvO1/xiF7WA8g8bRemf27ZBqYN+JDM7R
-         HhcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Nv57Gn1eKFngv8s/vSw/Btf+G9R1mZ77PltJIm2hCKI=;
-        b=D+RYzdnDYZJvuB3lM36HHmstQkAUnyt60tN4quPIx5LcaTa0Z/g1+Nm6YasayobHqC
-         d9TFdMh4a5mUJv1pF1ehxosTzfK90e1g+/qbwp2wAsEPP2yuss9SCa8+LexkyhIxctXm
-         6xfGBLpWbWzajmcEsk9Wq9tKbYHRUhhIphUAIGFHLUFSljTVqGhwWn+Utcx7Z/AF0tyI
-         h0l15NKp7cO3Az5jBXwHgqrOAUeJKE9ikOn8KNsCpNlvWeKpugtJjFmxTEyCWENFwlQg
-         YrNfv2f+h5n3BpX+/tTZOeQMbe+gGzP838+9ZRywkjyWGyfdHTdKDfLDNWZKUTJWd/eV
-         KdqA==
-X-Gm-Message-State: AOAM5313AvtHONJTEXo/mmD8DkrXFNFkz4435YVEhwZqhW7YtDIM1J1C
-        4W87HhDUyblky5DUYS4iaXAV+PG2Uv5AQKzc9xHnmjE5IHeMQw==
-X-Google-Smtp-Source: ABdhPJzvJAEB9d5r9zidPaU9W1O7zcbNFi6NXmIb7tdkFFR+S/4m355fVHEQ2ZvkrN/Z08JyvffpgZG4T1Axqa0ooPg=
-X-Received: by 2002:a2e:9b08:: with SMTP id u8mr8377257lji.208.1598512282738;
- Thu, 27 Aug 2020 00:11:22 -0700 (PDT)
+        Thu, 27 Aug 2020 03:21:34 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:47824 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726851AbgH0HVc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 03:21:32 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07R7HHh7017753;
+        Thu, 27 Aug 2020 09:21:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=er4Ixrwfv9fQtVwv3DRVGw1gJfakQBAKllzYQn9OtiM=;
+ b=a7EE7PAbll3c14ASBRIA+wF9bjVb1pnKUnvURwGJPoYW1D/UmRufs//ZJ3TW9RwpVSss
+ zw+qNQfqpeau7nChrzJAmh/LNiS2VMk6cMwYWhy4pnnYpWC0aNRg7Em1zXaZuEG3qA+O
+ 3cGmb2aiDw0wDsw0VNJ7+fg+fEDz+2UnLK6/N7syIDZk9/6CKsUUaBVlWnL5MRSp/6qt
+ Xk7sMg6eaEBdC7aFbDZYhHZq2S2NNx9d+cIZD1Okxip5JsDc6sL8pK2AMCSi7NiXby17
+ xniCOBKz3zLGvmt+uTZYftAyOzfS0JEmxhvDsSiRLTLnY46WfpnI4EtNcDecWmF/Zq+6 ew== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 332t8fy7b5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 09:21:18 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DE1E100034;
+        Thu, 27 Aug 2020 09:21:18 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 07B43212648;
+        Thu, 27 Aug 2020 09:21:18 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug 2020 09:21:17
+ +0200
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Rob Herring <robh@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 0/3] ARM: stm32: add DT properties for remote proc synchronisation
+Date:   Thu, 27 Aug 2020 09:20:58 +0200
+Message-ID: <20200827072101.26588-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1598503859-29620-1-git-send-email-u0084500@gmail.com> <20200827070010.GD813478@kuha.fi.intel.com>
-In-Reply-To: <20200827070010.GD813478@kuha.fi.intel.com>
-From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
-Date:   Thu, 27 Aug 2020 15:11:11 +0800
-Message-ID: <CADiBU3-GFkjA8p_tOkF-YcJf69K=Z48oDpme-rWWH3kEj=eaDA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] usb typec: mt6360: Add support for mt6360 Type-C driver
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, Guenter Roeck <linux@roeck-us.net>,
-        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_02:2020-08-27,2020-08-27 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Heikki Krogerus <heikki.krogerus@linux.intel.com> =E6=96=BC 2020=E5=B9=B48=
-=E6=9C=8827=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:00=E5=AF=AB=E9=
-=81=93=EF=BC=9A
->
-> On Thu, Aug 27, 2020 at 12:50:58PM +0800, cy_huang wrote:
-> > From: ChiYuan Huang <cy_huang@richtek.com>
-> >
-> > Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
-> > It works with Type-C Port Controller Manager to provide USB PD
-> > and USB Type-C functionalities.
-> >
-> > Add fix to Prevent the race condition from interrupt and tcpci port unr=
-egister
-> > during module remove.
->
-> You merged two patches from v2 together, so that really makes this
-> v3. Where is the changelog?
+This series implements the DT part associated to the commit 9276536f455b3
+("remoteproc: stm32: Parse syscon that will manage M4 synchronisation")
 
-changelog
-Add fix to Prevent the race condition from interrupt and tcpci port unregis=
-ter
-during module remove.
+Arnaud Pouliquen (3):
+  dt-bindings: arm: stm32: Add compatible for syscon tamp node
+  dt-bindings: remoteproc: stm32_rproc: update for firmware
+    synchronization
+  ARM: dts: stm32: update stm32mp151 for remote proc synchronization
+    support
 
-Do I need to resent the real V3 and mark the first patch for the
-commit log like as below text?
+ .../bindings/arm/stm32/st,stm32-syscon.yaml   |  1 +
+ .../bindings/remoteproc/st,stm32-rproc.yaml   | 19 +++++++++++++++++++
+ arch/arm/boot/dts/stm32mp151.dtsi             |  7 +++++++
+ 3 files changed, 27 insertions(+)
 
-Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
-It works with Type-C Port Controller Manager to provide USB PD
-and USB Type-C functionalities.
+-- 
+2.17.1
 
-V1 -> V2
-1. Add fix to Prevent the race condition from interrupt and tcpci port
-unregister
-during module remove.
-
-V2 -> V3
-1. Merge V2 change into the first patch.
-
-
-If yes, I can use this way to resend patch v3 for the readability.
->
-> thanks,
->
-> --
-> heikki
