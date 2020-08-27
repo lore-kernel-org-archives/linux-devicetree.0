@@ -2,206 +2,121 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E272C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F232C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9C4C20786
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ACB020786
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 07:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="mBNBSYeh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crDap6mO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgH0HKy (ORCPT
+        id S1727963AbgH0HLZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 03:10:54 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:10903 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726123AbgH0HKx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 03:10:53 -0400
-IronPort-SDR: yAinwcX2cCEO4+JYSsZAnSZVow9K+EXg/qtccYjOqFlUOYwjBluXiuaF5k6R3gzN/UWnL/iT3q
- 1tWWpqDqP3H/E6TQwPaLvIYxUWlRdNvn8PtmRJmAuDZbiZKqpl/XiYlW3SXMztmf70DDsldCJy
- AKaJLLgFycV4BtoZo3k6Bi55JWYJb/KG0zv4F1+KZdVL7k4wnmc7SZqBtVLmy3RNJ4OBmlLqj/
- uf5pM1htVu93wf0DSyhcUKS/FEEhamH1NWitWsa2dCDdjYEqOlO+ysuJPlg2+OgpDmXG18j3xH
- vTU=
-X-IronPort-AV: E=Sophos;i="5.76,358,1592863200"; 
-   d="scan'208";a="13618338"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 27 Aug 2020 09:10:51 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 27 Aug 2020 09:10:51 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 27 Aug 2020 09:10:51 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598512251; x=1630048251;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xXOxLC3BdznWqny8YpTk2yIBPWxEpNFBh+biUoffHDg=;
-  b=mBNBSYehf6JlNJ+DNKrJaGTAMOINbNY6mKPhVIazjkYz5Qk4PfcVoPk0
-   PW3itPEBk+NnmALVubX8lzd4QvxzYFT9WZiDUCySZm4uCzwFndAYWmTth
-   DCh5tYZ5/io+ogrLYyWt5Eh1oT//vEZmrmqk8+vC5wJ7Z1+0ds/L9i+BA
-   OqaBAV0fRpr0uUAErhO7HSeKq9AYXKAq+ehVuMaC21wSq5FLq+dq/39Ti
-   mqtRwbdrfNKMEbP16PvpNc9wwJ3XC4u044F+wxMSi0YAkvGYLrkc/3Iw3
-   GgqT2fuRvxXG9hVZJdNdByAM/9zewqpVjeWzu9nFlOupkk4DCKqEbmnrg
-   Q==;
-IronPort-SDR: B3DP9B8sACzyKKNq8PJO6mVfwl6O1xOuyAK969Yp/M9eXYNY9qDNQY/BPr6oKzlU86TnMAGOzV
- oIMBvIQusk7FbAc6hQllYYiBZYFquLQFYDIzKQDSiOFBzKxFQIvwQH40zf7/jLn4+0ms9iZuP3
- vPDpzWUYxi5emb8zRPzNKL3pCBD6/NgQC8kXzVmevZ2J3RAxRHFb6VvTPQfrWoDQFleNfA4OWl
- mOchBpVBTta/JR/4+/PJi9eCW7q6uPMcCELtCZCebcl2B1V85HXedTI8FMz9mwH7BkLX/7opV/
- Ris=
-X-IronPort-AV: E=Sophos;i="5.76,358,1592863200"; 
-   d="scan'208";a="13618337"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 27 Aug 2020 09:10:51 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 54249280065;
-        Thu, 27 Aug 2020 09:10:51 +0200 (CEST)
-Message-ID: <d7dc1017818e935acf9ba838080bcc3c11b30888.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH] of: skip disabled CPU nodes
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Date:   Thu, 27 Aug 2020 09:10:49 +0200
-In-Reply-To: <CAL_Jsq+1LsTBdVaODVfmB0eme2jMpNL4VgKk-OM7rQWyyF0Jbw@mail.gmail.com>
-References: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
-         <4dd06b79-1402-d7cf-9676-1f9a9526da12@gmail.com>
-         <9eb72c6561333661599411e49072928385629999.camel@ew.tq-group.com>
-         <ac64852a-7f2a-6005-f914-268670cd4f95@gmail.com>
-         <CAL_Jsq+1LsTBdVaODVfmB0eme2jMpNL4VgKk-OM7rQWyyF0Jbw@mail.gmail.com>
+        Thu, 27 Aug 2020 03:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgH0HLY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 03:11:24 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D610C061264;
+        Thu, 27 Aug 2020 00:11:24 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y2so5251200ljc.1;
+        Thu, 27 Aug 2020 00:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Nv57Gn1eKFngv8s/vSw/Btf+G9R1mZ77PltJIm2hCKI=;
+        b=crDap6mOKZrR9ZAtjqKwuhuwWvD9xNLGT8q+sm69RRILe0fG9BkjV+7z0DZ127asDo
+         I+jEutBlwKivDNRYRbrGNS/OqE+tcpehypYt15HUhqc2Kjr7Y1OukJc8fcpJnUpQ2WOh
+         Dha8PJ14CUJGcZNonjI7mLJZVzAp9qOi39Cdrq5+DZ1Fv2v4QyP7va94M9rrogworQaC
+         0SJXA3ZT22RqBUuEUM+8IZqjPOLxlVfBCVQ8Sb6qktu2lK0dfk15e8RrPKWBpWVW6eL9
+         P8gH2vpUjlpKXaGVoT08tvMnBDWyerZBD7A+LvO1/xiF7WA8g8bRemf27ZBqYN+JDM7R
+         HhcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Nv57Gn1eKFngv8s/vSw/Btf+G9R1mZ77PltJIm2hCKI=;
+        b=D+RYzdnDYZJvuB3lM36HHmstQkAUnyt60tN4quPIx5LcaTa0Z/g1+Nm6YasayobHqC
+         d9TFdMh4a5mUJv1pF1ehxosTzfK90e1g+/qbwp2wAsEPP2yuss9SCa8+LexkyhIxctXm
+         6xfGBLpWbWzajmcEsk9Wq9tKbYHRUhhIphUAIGFHLUFSljTVqGhwWn+Utcx7Z/AF0tyI
+         h0l15NKp7cO3Az5jBXwHgqrOAUeJKE9ikOn8KNsCpNlvWeKpugtJjFmxTEyCWENFwlQg
+         YrNfv2f+h5n3BpX+/tTZOeQMbe+gGzP838+9ZRywkjyWGyfdHTdKDfLDNWZKUTJWd/eV
+         KdqA==
+X-Gm-Message-State: AOAM5313AvtHONJTEXo/mmD8DkrXFNFkz4435YVEhwZqhW7YtDIM1J1C
+        4W87HhDUyblky5DUYS4iaXAV+PG2Uv5AQKzc9xHnmjE5IHeMQw==
+X-Google-Smtp-Source: ABdhPJzvJAEB9d5r9zidPaU9W1O7zcbNFi6NXmIb7tdkFFR+S/4m355fVHEQ2ZvkrN/Z08JyvffpgZG4T1Axqa0ooPg=
+X-Received: by 2002:a2e:9b08:: with SMTP id u8mr8377257lji.208.1598512282738;
+ Thu, 27 Aug 2020 00:11:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <1598503859-29620-1-git-send-email-u0084500@gmail.com> <20200827070010.GD813478@kuha.fi.intel.com>
+In-Reply-To: <20200827070010.GD813478@kuha.fi.intel.com>
+From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
+Date:   Thu, 27 Aug 2020 15:11:11 +0800
+Message-ID: <CADiBU3-GFkjA8p_tOkF-YcJf69K=Z48oDpme-rWWH3kEj=eaDA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] usb typec: mt6360: Add support for mt6360 Type-C driver
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        matthias.bgg@gmail.com, Guenter Roeck <linux@roeck-us.net>,
+        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, 2020-08-26 at 13:26 -0600, Rob Herring wrote:
-> On Wed, Aug 26, 2020 at 8:47 AM Frank Rowand <frowand.list@gmail.com>
-> wrote:
-> > 
-> > Hi Rob,
-> > 
-> > On 2020-08-26 08:54, Matthias Schiffer wrote:
-> > > On Wed, 2020-08-26 at 08:01 -0500, Frank Rowand wrote:
-> > > > On 2020-08-26 07:02, Matthias Schiffer wrote:
-> > > > > Allow disabling CPU nodes using status = "disabled".
-> > > > > 
-> > > > > This allows a bootloader to change the number of available
-> > > > > CPUs
-> > > > > (for
-> > > > > example when a common DTS is used for SoC variants with
-> > > > > different
-> > > > > numbers
-> > > > > of cores) without deleting the nodes altogether (which may
-> > > > > require
-> > > > > additional fixups where the CPU nodes are referenced, e.g. a
-> > > > > cooling
-> > > > > map).
-> > > > > 
-> > > > > Signed-off-by: Matthias Schiffer <
-> > > > > matthias.schiffer@ew.tq-group.com
-> > > > > > 
-> > > > > 
-> > > > > ---
-> > > > >  drivers/of/base.c | 2 ++
-> > > > >  1 file changed, 2 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > > > > index ea44fea99813..d547e9deced1 100644
-> > > > > --- a/drivers/of/base.c
-> > > > > +++ b/drivers/of/base.c
-> > > > > @@ -796,6 +796,8 @@ struct device_node
-> > > > > *of_get_next_cpu_node(struct
-> > > > > device_node *prev)
-> > > > >             of_node_put(node);
-> > > > >     }
-> > > > >     for (; next; next = next->sibling) {
-> > > > > +           if (!__of_device_is_available(next))
-> > > > > +                   continue;
-> > > > >             if (!(of_node_name_eq(next, "cpu") ||
-> > > > >                   __of_node_is_type(next, "cpu")))
-> > > > >                     continue;
-> > > > > 
-> > > > 
-> > > > The original implementation of of_get_next_cpu_node() had
-> > > > that check, but status disabled for cpu nodes has different
-> > > > semantics than other nodes, and the check broke some systems.
-> > > > The check was removed by c961cb3be906 "of: Fix cpu node
-> > > > iterator to not ignore disabled cpu nodes".
-> > > > 
-> > > > It would be useful to document that difference in the
-> > > > header comment of of_get_next_cpu_node().
-> > > > 
-> > > > -Frank
-> > > 
-> > > Hmm, I see. This difference in behaviour is quite unfortunate, as
-> > > I'm
-> > > currently looking for a way to *really* disable a CPU core.
-> > > 
-> > > In arch/arm64/boot/dts/freescale/imx8mn.dtsi (and other variants
-> > > of the
-> > > i.MX8M), there are 4 CPU nodes for the full-featured quad-core
-> > > version.
-> > > The reduced single- and dual-core versions are currently handled
-> > > in
-> > > NXP's U-Boot fork by deleting the additional nodes.
-> > > 
-> > > Not doing so causes the kernel to hang for a while when trying to
-> > > online the non-existent cores during boot (at least in linux-imx
-> > > 5.4 -
-> > > I have not checked a more recent mainline kernel yet), but the
-> > > deletion
-> > > is non-trivial to do without leaving dangling phandle references.
-> > 
-> > Any thoughts on implementing another universal property that means
-> > something like "the hardware described by this node does not exist
-> > or is so broken that you better not use it".
-> 
-> There's a couple of options:
-> 
-> The DT spec defines 'fail' value for status. We could use that
-> instead
-> of 'disabled'.
-> 
-> The spec behavior with cpu 'disabled' is only on PPC AFAIK. On
-> arm/arm64 (probably riscv now too) we've never followed it where we
-> online 'disabled' CPUs. So we could just make the check conditional
-> on
-> !IS_ENABLED(CONFIG_PPC). This would need some spec update.
+Heikki Krogerus <heikki.krogerus@linux.intel.com> =E6=96=BC 2020=E5=B9=B48=
+=E6=9C=8827=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:00=E5=AF=AB=E9=
+=81=93=EF=BC=9A
+>
+> On Thu, Aug 27, 2020 at 12:50:58PM +0800, cy_huang wrote:
+> > From: ChiYuan Huang <cy_huang@richtek.com>
+> >
+> > Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+> > It works with Type-C Port Controller Manager to provide USB PD
+> > and USB Type-C functionalities.
+> >
+> > Add fix to Prevent the race condition from interrupt and tcpci port unr=
+egister
+> > during module remove.
+>
+> You merged two patches from v2 together, so that really makes this
+> v3. Where is the changelog?
 
-On ARM(64), the "disabled" status on CPUs doesn't have any effect. I
-assume this changed with the mentioned commit c961cb3be906 "of: Fix cpu
-node iterator to not ignore disabled cpu nodes", as reverting it gives
-me the desired behaviour of considering the disabled CPUs non-existent.
+changelog
+Add fix to Prevent the race condition from interrupt and tcpci port unregis=
+ter
+during module remove.
 
-So it seems that we already changed the interpretation in a non-
-compatible way once (back in v4.20), and somehow PPC has yet another
-different behaviour?
+Do I need to resent the real V3 and mark the first patch for the
+commit log like as below text?
 
-How do we get out of this mess? Is going back to the v4.19 logic for
-non-PPC platforms an acceptable regression fix, or would this be
-considered another breaking change?
+Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+It works with Type-C Port Controller Manager to provide USB PD
+and USB Type-C functionalities.
+
+V1 -> V2
+1. Add fix to Prevent the race condition from interrupt and tcpci port
+unregister
+during module remove.
+
+V2 -> V3
+1. Merge V2 change into the first patch.
 
 
-
-> 
-> > Matthias, if Rob thinks that is a good idea, then you should start
-> > with a new proposal that is also sent to
-> > devicetree-spec@vger.kernel.org <devicetree-spec@vger.kernel.org>
-> > 
-> > -Frank
-> > 
-> > > 
-> > > Kind regards,
-> > > Matthias
-> > > 
-
+If yes, I can use this way to resend patch v3 for the readability.
+>
+> thanks,
+>
+> --
+> heikki
