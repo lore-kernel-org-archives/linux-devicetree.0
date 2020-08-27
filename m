@@ -2,106 +2,113 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2707EC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:41:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E458C433E3
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFA7F2087C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0973222BEA
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 16:52:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O/LX6jW3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExhD/2mN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgH0Qlg (ORCPT
+        id S1726924AbgH0Qwm (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 12:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50626 "EHLO
+        Thu, 27 Aug 2020 12:52:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgH0Qle (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 12:41:34 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E761EC061264;
-        Thu, 27 Aug 2020 09:41:33 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so3752598pgh.6;
-        Thu, 27 Aug 2020 09:41:33 -0700 (PDT)
+        with ESMTP id S1726009AbgH0Qwm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 12:52:42 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7D9BC061264;
+        Thu, 27 Aug 2020 09:52:41 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id u6so3339511ybf.1;
+        Thu, 27 Aug 2020 09:52:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bliB1023sdj3aVwTJNlYRjd1ewQEAeyLSLCuQayJAjY=;
-        b=O/LX6jW3Q1owUemH+ORqZxREhcmC4Tf9sc59qQUxz1eV6D1PEexrtS7HKA9gDAAwN/
-         6ZjPIAANWXCGdm/GhZKZ5Y34UVp2agMfpeHcQrSegriMLj3RxUxQTpqQjtAcascxW5z/
-         UaDYdM8dNMbL7RycsDJVxvNGtnPq5QG2GTKLeCVc+JphNoz2c6Ev7slanxLt2Brz5LeZ
-         y3uedDiM9SWIEBPjhtKaJuJ8t0tU6ZV618y3qNN6N2x+pfAPw4Tqb4tRktEjhaQqtinP
-         WhXgJt1e6rWMKe5S2dNIMomtIWAVFYWqXSrkubOm5Nt+S3OMvZ1z1S0ghGRIWxQkwCyF
-         8yCA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=v+eVxBfBAprEoX5lLsx5hIWnMBJGynUOeo5uh014b8M=;
+        b=ExhD/2mNuu7QZdIY5cch/qOJMBWfnT4mnJMCA4ivXYVpIesCxQrVTOct6XrITaUdqW
+         zI0D1zbSlVZENk+1rZwlfnZHnygNc+D8lg+Ea4hNY2GbpmmnCSmlD/28uI1V1SdBlXau
+         Omd8VC0AVp+dRJ96EWawlmPCep3Yah+/Wt8J1OQlw8JS1cSalpCf6RSRx4NvjJ4UyFYJ
+         9CFaro1gpjQLQZ7ozt2kz/rnFrRUHkczgBtK/LvMC5EDcm9f0vyg4qvlVTyv5vLEr+K8
+         PDQkA8WXJP5C3Fqx63+KDiV2NZOrrzkYU13nBUs+9OkxCfov/ysC4COJW9vo8SYii+Jx
+         RMKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bliB1023sdj3aVwTJNlYRjd1ewQEAeyLSLCuQayJAjY=;
-        b=sxPBFhsQYZCmRN4sg5/4M5++dy9recofmFOf7dGKjC/73Za9sL6tWcrfnqhXoq8Ohl
-         BbPFyHsijJ73N5E4VQ/U+dDfD0kTwu1c0JxdV8N2nFC98CaIk0/zG5TGprxrYIoNSGBi
-         t2BdaG36GMcrJewztj7MfFJYv9DKQKfUn8UoW64oyWuyxw7d8J6IvvCEbndmkAgbT7PF
-         VphiUCfNplJtigPGwt2DVqTrg8oUaIfyWiDjo/ByLhcX7WRPFJ4xeVizUHeBGTyq6GoM
-         yB/nqQnS98vbPc7Z7YvQ2VXPq0dr80l8xHw8ukxfES2j466C/l0GIzXAZNZ63k1494Ta
-         FbLg==
-X-Gm-Message-State: AOAM531He9JmoLalw/Gi+qRPOjxABvOng9LpVC5VBQh/kJ+a4EMRnZP4
-        +B/44fYmWjxZVcz79PJaEXKNqjNxCaE=
-X-Google-Smtp-Source: ABdhPJzxsq/DfBtHgBlz3wlVDsTjBSAiejy26z59L26K47Ecf5fOnNwebJGKqFdOnEwaXfRIPFwAvw==
-X-Received: by 2002:a63:1521:: with SMTP id v33mr11635537pgl.374.1598546493237;
-        Thu, 27 Aug 2020 09:41:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a200sm3356631pfd.182.2020.08.27.09.41.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 27 Aug 2020 09:41:32 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:41:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     cy_huang <u0084500@gmail.com>
-Cc:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, heikki.krogerus@linux.intel.com,
-        cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] usb typec: mt6360: Rename driver/Kconfig/Makefile
- from mt6360 to mt636x
-Message-ID: <20200827164131.GA86149@roeck-us.net>
-References: <1598527137-6915-1-git-send-email-u0084500@gmail.com>
- <1598527137-6915-2-git-send-email-u0084500@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=v+eVxBfBAprEoX5lLsx5hIWnMBJGynUOeo5uh014b8M=;
+        b=eeNYfbITkoNabZAgVXrpF6HkTfrdS+38eL9Zyp5WkjoX4ED2tESIi8Gc4WY6YJ5gRw
+         bNURWxuoOYCCzvVs94WFYL687/kJzo885X1HbYwmby8COA06wRp7WfTkX/pOwVqK9GlM
+         lE0OjXFTHsVpTGcZWnXt24pZLxx4XNdTSqFvVbrpfqCI0gQxT+YKGcJUkzotMVn9GyB2
+         tdRXViAjd4oJC6GZXfQxp1mf2OFpD7NcTP7aKlKG38LSMq04QDxJJP9WJKUqVsLTiD0D
+         X5gOfuLZ4vVq0oxB0PZcpXglBbpjE9tbE+KsoW2GDWXa0nOf/TK3+PM2XxTv3Y+g+Dar
+         pAWg==
+X-Gm-Message-State: AOAM533Wdo3KsQJleUqJrgxQ4S2JOq/TxP/4qpgeThqkx4EH28gpKdyE
+        1aKz8VctPvPVTj9gM9S9WfvpfzNPORwOmUHulyw=
+X-Google-Smtp-Source: ABdhPJzWnbAjrzxUkZhdpNb2pCrtHNzhLuZPuwpgMSMn67x3fMFvwz8SPKnNKf4Cg4KNXX+P3L0zcQWqDZA/oMNp76c=
+X-Received: by 2002:a25:8149:: with SMTP id j9mr31166464ybm.214.1598547161204;
+ Thu, 27 Aug 2020 09:52:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598527137-6915-2-git-send-email-u0084500@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1594811350-14066-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1594811350-14066-3-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 27 Aug 2020 17:52:15 +0100
+Message-ID: <CA+V-a8vwhtTWjaoXkfMBjKx90WkcoejD5ryPkXnQNEbtgnJGXQ@mail.gmail.com>
+Subject: Re: [PATCH 02/20] dt-bindings: thermal: rcar-gen3-thermal: Add
+ r8a774e1 support
+To:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Niklas <niklas.soderlund@ragnatech.se>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-can@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 07:18:56PM +0800, cy_huang wrote:
-> From: ChiYuan Huang <cy_huang@richtek.com>
-> 
-> 1. Rename file form tcpci_mt6360.c to tcpci_mt636x.c
-> 2. Rename internal function from mt6360 to mt636x, except the register
-> definition.
-> 3. Change Kconfig/Makefile from MT6360 to MT636X.
-> 
-> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+Hi Zhang,Daniel,Amit,
+
+On Wed, Jul 15, 2020 at 12:09 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Document RZ/G2H (R8A774E1) SoC bindings.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  drivers/usb/typec/tcpm/Kconfig        |   6 +-
->  drivers/usb/typec/tcpm/Makefile       |   2 +-
->  drivers/usb/typec/tcpm/tcpci_mt6360.c | 212 ----------------------------------
->  drivers/usb/typec/tcpm/tcpci_mt636x.c | 212 ++++++++++++++++++++++++++++++++++
->  4 files changed, 216 insertions(+), 216 deletions(-)
->  delete mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
->  create mode 100644 drivers/usb/typec/tcpm/tcpci_mt636x.c
+>  Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+Gentle ping.
 
-Maybe Heikki is ok with this change, but I am not, for the reasons
-mentioned before. So I won't approve this patch. Note that, either
-case, it should be merged with the first patch.
-
-Guenter
+Cheers,
+Prabhakar
