@@ -3,96 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453C1C433E2
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 22:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47570C433E6
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 23:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CEAD20848
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 22:58:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3F720848
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 23:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y8WUm2uD"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JZopFKZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgH0W6f (ORCPT
+        id S1727993AbgH0Xgw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 18:58:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726972AbgH0W6f (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 18:58:35 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD819C06121B
-        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 15:58:34 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t23so8309815ljc.3
-        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 15:58:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oCzQ+/wqUikD+aAl1YCGu3tQueIna1hb5C2fVP7BNbI=;
-        b=Y8WUm2uDoCL7HpKSQPP7HHTEM/UxNU6XPbQU7wOQD0rYehdyN0NcZxd89TVTeL8/tQ
-         O6knIodyMnqPlNkhEcEgJMS0NswYyXYpAX5SZ9oh7sWc6eJXKK/1Ui2SZLbpuGhzlEL5
-         Lfz2Lqb6wwCfI+qbzGRoJlAv/NdYlII4qR2a+BQrH2qMksXam9K2Nb4EpBO9kGLTJyzL
-         puWHKvjt4HX1ZQ5PDXBFdwD96dhbzvOdNU5kFTP08+PLNzCnsi/V84ilmmHZ1mOnLFoC
-         SIjewu3Vovoni2EMSZSYka8Jy3EjJj+19aZwx9YJKgeHTEIa9jHEqb3gr3J2YUya8gsp
-         AxbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oCzQ+/wqUikD+aAl1YCGu3tQueIna1hb5C2fVP7BNbI=;
-        b=dSU2sPARAcQktpVdtJILNHMOJaFLtq5+nFSyPhMbdAXCKaQ61XttumhfLRYSdbLFUZ
-         bv36i9kWhehY3FnergtfPe1LuagVM5fi4D23ZF9xyb8QPGs7gWXAODlk3OT9W/yLEpR0
-         oBc8UM3k7D3axJYfLY44wD33cbOvLXQBzDe0nbRQZXlRjquN9Dq3aPtsDf26RxB4SeTY
-         T35S6svQepD/4oH1WBqMLlMWbUjOuqQps/RKpz48+QuGhPOHDDZI3v0BW/cw5gxWinZL
-         mWiSnQlb5kK8hZiybgn4kY1NWvJfOlMeA+5NoDQ/oZaBPw+WeqqRottPK/s5VhTWCaol
-         YM4g==
-X-Gm-Message-State: AOAM531kq6zAgpmUAglVptX9Pt44fsfgO1K4q7ZiWZTpLJnC01vncaAN
-        Sc/rrR91MN13Wn3/Qxmm0WKLgT7b/BYxhjr6xgeRbg==
-X-Google-Smtp-Source: ABdhPJz1AxU61I8U3K9H6NnKFR2hKoTTR/TjK+UC3pD/9X+pK6Kc4nN8lO1KSarHy0CMR1IU4DoNa1V7WmiMy5TpZW4=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr11119691ljb.283.1598569113336;
- Thu, 27 Aug 2020 15:58:33 -0700 (PDT)
+        Thu, 27 Aug 2020 19:36:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34194 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726289AbgH0Xgw (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 19:36:52 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RNWC2V192638;
+        Thu, 27 Aug 2020 19:35:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
+ cc : subject : in-reply-to : date : message-id : mime-version :
+ content-type; s=pp1; bh=ZhmffRqPwMKAcgI8ZwOQVjkCRCQfNxZmt8Ua2z01y/4=;
+ b=JZopFKZqVba31aKfx/hEFt0zjCGRJG9ZUzSrGTuvXMVdgWP86CwZqwLM2Bpvp/GnM2IW
+ bSf3BZsshooZMLM8VAePnhPWXR2H5SJO/KfEPbserZQkkR1ROber1pgH71/E+3gwuP9U
+ p5uVZrqgQK/ymr4NNsAnMJ0CxQTZmHfkTimydKz4JTSHG2tWI9EgeKnFbLL/966tH+Iz
+ DQjo+6BblDZIWABiOIOytPWynBWHd+xzIxlbeQ1N4yCtiy0cvJZ4zZI205RjjrXOWxJp
+ GaeEWrqstbfWrkMznkYOFr5iKvXgW6U5VW9vxcXVpJTCrRlRxYAWhox8DA0kPAVSv7kM QQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336pa88bh5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 19:35:54 -0400
+Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07RNWgFs193728;
+        Thu, 27 Aug 2020 19:35:53 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 336pa88bgw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 19:35:53 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07RNSg89023892;
+        Thu, 27 Aug 2020 23:35:52 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03wdc.us.ibm.com with ESMTP id 332utrdqyu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 27 Aug 2020 23:35:52 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07RNZq1r57475482
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Aug 2020 23:35:52 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BFF1C6059;
+        Thu, 27 Aug 2020 23:35:52 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2B24C6057;
+        Thu, 27 Aug 2020 23:35:44 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.211.80.51])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 27 Aug 2020 23:35:44 +0000 (GMT)
+References: <20200819172134.11243-1-nramas@linux.microsoft.com>
+ <20200819172134.11243-2-nramas@linux.microsoft.com>
+User-agent: mu4e 1.4.10; emacs 27.1
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+Subject: Re: [PATCH v4 1/5] powerpc: Refactor kexec functions to move arch
+ independent code to IMA
+In-reply-to: <20200819172134.11243-2-nramas@linux.microsoft.com>
+Date:   Thu, 27 Aug 2020 20:35:41 -0300
+Message-ID: <875z938xwy.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <20200812195020.13568-1-dmurphy@ti.com> <20200812195020.13568-7-dmurphy@ti.com>
-In-Reply-To: <20200812195020.13568-7-dmurphy@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 00:58:22 +0200
-Message-ID: <CACRpkdY1pCcUONFhEXeyXa3f+JFB=Wg1nSB-qRJF5njM=L+CVw@mail.gmail.com>
-Subject: Re: [PATCH v33 6/6] ARM: dts: ste-href: Add reg property to the
- LP5521 channel nodes
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh@kernel.org>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <marek.behun@nic.cz>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-27_14:2020-08-27,2020-08-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=2 phishscore=0
+ lowpriorityscore=0 adultscore=0 priorityscore=1501 bulkscore=0
+ clxscore=1011 mlxlogscore=606 malwarescore=0 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008270174
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 9:50 PM Dan Murphy <dmurphy@ti.com> wrote:
 
-> Add the reg property to each channel node.  This update is
-> to accommodate the multicolor framework.  In addition to the
-> accommodation this allows the LEDs to be placed on any channel
-> and allow designs to skip channels as opposed to requiring
-> sequential order.
+Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+
+> The functions ima_get_kexec_buffer() and ima_free_kexec_buffer() that
+> handle carrying forward the IMA measurement logs on kexec for powerpc
+> do not have architecture specific code, but they are currently defined
+> for powerpc only.
 >
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> CC: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Move these functions to IMA subsystem so that it can be used for other
+> architectures as well. A later patch in this series will use these
+> functions for carrying forward the IMA measurement log for ARM64.
+>
+> Define FDT_PROP_IMA_KEXEC_BUFFER for the chosen node, namely
+> "linux,ima-kexec-buffer", that is added to the DTB to hold
+> the address and the size of the memory reserved to carry
+> the IMA measurement log.
+>
+> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+This patch removes two functions from arch/powerpc/kexec/ima.c, but adds
+four to security/integrity/ima/ima_kexec.c. The extra ones are
+get_addr_size_cells() and do_get_kexec_buffer(), which are being copied
+from the powerpc code but can't be removed yet because they're still
+used there by remove_ima_buffer() and setup_ima_buffer().
 
-I don't knof if I should just apply these two patches or if there are
-dependencies that need to go in first. I guess yes?
+On the next patch you remove the need for these functions in powerpc
+code and therefore delete them. This confused me at first, so I think it
+would be cleared if you put patch 2 first in the series and then on this
+patch you can simply move the four functions and delete them from
+arch/powerpc/kexec/ima.c.
 
-Yours,
-Linus Walleij
+If you prefer to keep the current order, it's worth mentioning on the
+commit log where get_addr_size_cells() and do_get_kexec_buffer() are
+coming from.
+
+Regardless:
+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
