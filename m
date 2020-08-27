@@ -2,102 +2,150 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA8CC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 01:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACB5C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 01:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53A2A2074A
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 01:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FB82087C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 01:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TTA3SJS1"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="fT+dW9P/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgH0BL6 (ORCPT
+        id S1726871AbgH0BuG (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Wed, 26 Aug 2020 21:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45724 "EHLO
+        Wed, 26 Aug 2020 21:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbgH0BL6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 21:11:58 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0ADC06179E;
-        Wed, 26 Aug 2020 18:11:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id g6so4500174ljn.11;
-        Wed, 26 Aug 2020 18:11:57 -0700 (PDT)
+        with ESMTP id S1726798AbgH0BuG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 26 Aug 2020 21:50:06 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C70EFC06134D
+        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 18:50:05 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e1so5365885ybk.14
+        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 18:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m/8pB8Sw21i7XQLubODjblLQyuDRrCYhn+Eq3ZDQVx0=;
-        b=TTA3SJS1N/caMZX9Nag1kHB/iT0fK4yOYmxP3aMRd75Z2BueqjS4WGzvX3hU8cgNYw
-         br9qLPus7nDMRlbM630MvGiWgR1tFlr7ZG7v8SNBu0iNMCvRVjwsOqIkMyz8/8fUKaIx
-         C6hGhspEoFOxM6rUY5ERS3UNGItKKusEBXK6LvtdJK9W/07KMy6mXl8uaaEVjKS4knsy
-         bXY4/ngTaCKfitIuKfJkwr4X4xSCDpUlXpf+EOUZN6EZwNhHrX7mHfgfrp4hX3TLmvib
-         E3oxNcnZGr5WYLHtA4bAkRY6e6wnO+UOegOwN9VrxZtijgjOT8pY3w02NPCumMMjc8BF
-         JhBg==
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=kI87pt4IL87WeMlhQ+cq6jv+hjTA9JuH40a82jlPo3k=;
+        b=fT+dW9P/B2jsQN6UzMCNYitt1FhkZ2EgLVRxO8SI73Y1MIl175TvZVJOkeJv9lKYS1
+         7j7v0LBE4pPOY3NjfW6igBChFc3bFulo5XuCcTVNGL6EGEj/jy1O3fS2KTtezXxdNy6d
+         4JgoLTvPWczkkgoEda/iQXFy8xIvKYGO2X9Tm/iu/qTwCPTOKjWrk0OoBWs/yAXNFvVW
+         luyC/lOKK26zqSoITqE2rn+7SfNFHjHOgAOaBWoX3wFdfZcADbdpqh/aFFZ0enNR/nMQ
+         QlXeMC7wmizyvNElsGqxvEopYaPtOY9pzv5nPsNasRj/3iVDas8cSQZBfiiFo/M2zSpO
+         1+iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m/8pB8Sw21i7XQLubODjblLQyuDRrCYhn+Eq3ZDQVx0=;
-        b=K5yngT98r+vREXxXPrOdi/O2dEdhF+/hh0jafnKIWoGgvU4xVC9zWi0zAQWZoVCm1W
-         E+2uouZH94MCE4AyVprcgLT2nz9pilUiX7aSaCNzOJ30G3LUBHn2fIe0udurtkbAhQ6u
-         mWeLlANMrfFeKp4Yp2NrrjJ3H8mJzTLmdV9Cmq//w7/g0N0XUi5XdGF1HrVGAx7IC+Lf
-         cT3xinf5nPE8+5CMSixYl1MnpVkPNv61cy7FzwUMV2QnmZKqJJqd5l9BpnMsE5PTvbry
-         QHdlO1lNGLCDfVocgJ9GV/VxdHNPNOH31/Mbv010MYyw5lxFSITSK+0gkeiarEZKZwt/
-         mjsA==
-X-Gm-Message-State: AOAM530Nzfdb4LEKUIU+kntjjnyt+t5WUuzXyu+YhMxv4f+nUTv4hkiy
-        8RmM1DwJvc2v48mfxTV0pXHTQAImlCJNexjJJDAtF3qtLqU=
-X-Google-Smtp-Source: ABdhPJydzD1WwH6+x47tyNqs5lJxZhmJOXy71zWRsrVhFlJb3UW8drng/iudHsH+0nuncrCwHunivBrN3aq1Cyaa5dk=
-X-Received: by 2002:a2e:2c0e:: with SMTP id s14mr8994396ljs.28.1598490716116;
- Wed, 26 Aug 2020 18:11:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598440602-8648-1-git-send-email-u0084500@gmail.com>
- <a7d1a5d9-97e9-bcf6-23f4-2c4be356913f@roeck-us.net> <CADiBU3_x5-P8A0erchFpWucX4_R8M01-CdOJv38FjrPGSn+55A@mail.gmail.com>
- <627dd188-9379-1179-432e-b53948052823@roeck-us.net>
-In-Reply-To: <627dd188-9379-1179-432e-b53948052823@roeck-us.net>
-From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
-Date:   Thu, 27 Aug 2020 09:11:44 +0800
-Message-ID: <CADiBU3_GX+BvxQCDkMtf70sXHnwFVNmBCJsrydROHjy5Lr9B4g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] usb typec: mt6360: Add support for mt6360 Type-C driver
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        matthias.bgg@gmail.com,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=kI87pt4IL87WeMlhQ+cq6jv+hjTA9JuH40a82jlPo3k=;
+        b=pdlP6cqLjIdOuylBjv/+Pf4SLsBaahWkwheASdJkQaEZTiXeQGc7PQMjvOKFp/tCyr
+         wCCytwXMm4qAjznHwOT/mMj7kUB0domI1rSWpfkStfJzeZ34YGF35CH+87/Qi1rinzlS
+         2DmZ546XEJTgZMHFYfeXxmC2EfTOy5vu5dfNMmEgbHZMloJf5tIakkhJrfmwMJQB+9ZI
+         SqhwmtnySpYAhoMl9a1JDY7nhRpQfln72TE6UkkTStZw/c2Aek6CFfGJov8YZe4BwjkA
+         CZ45anZLEIL6rgf7sOAGf9QzwBx68OEbdz8yd8CwX+aa53/dZNejNsBqWFYtpZso+JPx
+         Q1JA==
+X-Gm-Message-State: AOAM533V7eS/e871UiWN2RsdCXtFZ93wK2e0NiTwfqksmdEvPupfDxCb
+        rb3+9thh+rfkFDi0TzG4ci3w3GHEGALC
+X-Google-Smtp-Source: ABdhPJwa3pv3Hu/+UkZbQW3sc70xWqy/UBXE05JvwXvifOJWs+ZvIJGMacTjSpT/pEhrLHiVX/Z062RKwsuI
+X-Received: from nandos.syd.corp.google.com ([2401:fa00:9:14:725a:fff:fe46:72ab])
+ (user=amistry job=sendgmr) by 2002:a25:8b09:: with SMTP id
+ i9mr25344049ybl.149.1598493004751; Wed, 26 Aug 2020 18:50:04 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 11:49:52 +1000
+Message-Id: <20200827114934.v2.1.I6d12081e37d27ba7580a1af877727d882935787a@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v2] arm64: dts: mt8173-elm: Set GPU power regulator to always on
+From:   Anand K Mistry <amistry@google.com>
+To:     linux-mediatek@lists.infradead.org
+Cc:     djkurtz@chromium.org, Anand K Mistry <amistry@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2020=E5=B9=B48=E6=9C=8827=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=889:02=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On 8/26/20 5:59 PM, =E5=95=9F=E5=8E=9F=E9=BB=83 wrote:
-> [ ... ]
-> >>> +static int mt6360_tcpc_remove(struct platform_device *pdev)
-> >>> +{
-> >>> +     struct mt6360_tcpc_info *mti =3D platform_get_drvdata(pdev);
-> >>> +
-> >>> +     tcpci_unregister_port(mti->tcpci);
-> >>
-> >> That leaves interrupts enabled, which might be racy
-> >> because interrupts are still enabled here.
-> > M..., yes, it will cause the race condition during module remove.
-> > I'll add disable_irq before tcpci unregister to prevent it.
->
-> Or just set TCPC_ALERT_MASK to 0, as in tcpci.c.
-Both are right, Thx. I'll choose one.
+Keep the da9212 BUCKB always-on. This works around an issue on Elm/Hana
+devices where sometimes, the regulator is disabled before scpsys is
+suspended, causing the suspension of scpsys to fail.
 
-BTW, it seems enum typec_cc_status is used by tcpci.h.
-If I don't include tcpm.h, it will raise a warning during the compile time.
->
-> Guenter
+Usually, the GPU and scpsys are suspended by the runtime PM before the
+system is suspended, due to the GPU being idle. In this case, scpsys is
+suspended inline with the GPU suspend, which then disables the
+regulator. However, if the GPU is still active when system is suspended,
+GPU suspend occurs but defers suspending scpsys to the PM's noirq phase.
+Since GPU suspend disables the regulator, scpsys isn't powered and
+suspending it fails with the following error:
+[  523.773227] mtk-scpsys 10006000.scpsys: Failed to power off domain mfg_2d
+
+On resume, scpsys is resumed in the noirq phase. Since scpsys requires
+power from the regulator, which is still disabled at this point,
+attempting to turn it on will hang the CPU. A HW watchdog eventually
+reboots the system.
+
+The obvious solution would be to add a link to the regulator from scpsys
+in the devicetree. This would prevent the regulator from being disabled
+until scpsys is suspended. However, in the case where suspending scpsys
+is deferred to the noirq phase, disabling the regulator will fail since
+it is connected over I2C which requires IRQs to be enabled. Even in the
+usual case where scpsys is suspended inline with the GPU, PM will always
+attempt to resume scpsys in noirq. This will attempt to enable the
+regulator, which will also fail due to being unable to communicate over
+I2C.
+
+Since I2C can't be using with IRQs disabled, a workaround is to never
+turn off the regulator.
+
+Measuring power on the GPU rail on an Elm DVT device shows that the
+change in power usage is negligible. The two relavent cases are S0 with
+an idle GPU, and S3 (system suspended). Measurements taken using a debug
+board every 100ms for 1 minute.
+
+In S0 with an idle GPU, current behaviour with the regulator off:
+@@           NAME  COUNT  AVERAGE  STDDEV      MAX    MIN
+@@         gpu_mw    600     1.74    1.31     6.75   0.00
+... and with the regulator on, but no load:
+@@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
+@@         gpu_mw    600     1.68    1.25    7.13   0.00
+The difference being well within the margin of error.
+
+In S3, current behaviour with the regulator off:
+@@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
+@@         gpu_mw    600     0.94    0.74    3.25   0.00
+... and with the regulator on:
+@@           NAME  COUNT  AVERAGE  STDDEV     MAX     MIN
+@@         gpu_mw    600     0.83    0.66    3.25    0.00
+
+Signed-off-by: Anand K Mistry <amistry@google.com>
+
+---
+
+Changes in v2:
+- Remove CHROMIUM from subject line
+- Correct device in subject line (8183 -> 8173)
+- Grammar/clarity changes in description
+
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+index a5a12b2599a4..1294f27b21c1 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+@@ -304,6 +304,7 @@ da9211_vgpu_reg: BUCKB {
+ 				regulator-min-microamp  = <2000000>;
+ 				regulator-max-microamp  = <3000000>;
+ 				regulator-ramp-delay = <10000>;
++				regulator-always-on;
+ 			};
+ 		};
+ 	};
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
