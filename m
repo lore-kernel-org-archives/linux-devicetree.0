@@ -2,118 +2,290 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB586C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 08:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89132C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD9022B4D
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 08:58:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gnl17B6Q"
+	by mail.kernel.org (Postfix) with ESMTP id 5BE6420738
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 09:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgH0I6O (ORCPT
+        id S1728046AbgH0JDH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 04:58:14 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:52835 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726882AbgH0I6N (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 04:58:13 -0400
-X-UUID: 002c42f5b3e746409b131c11eb235ba8-20200827
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=z4HtARY63qecmM+UTuwL38oHkQEk8xUNbn1/BUzTchw=;
-        b=gnl17B6QIji7Vk8I0qsLqDwLBR+kzjndRD6X2fZvthnuA0e3y6d3sYZmQLv0O6HvAcFkZzjaLlbZP56WErBUbdZ4IjfNtGGyXKtYTFTUOgGlmWblo/uPsv+80K3u2DC2AGSQJRN+yjXMQ8ayDgYqRCe9SsoHJVRrQQjRaGXAU+A=;
-X-UUID: 002c42f5b3e746409b131c11eb235ba8-20200827
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <hector.yuan@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 765371042; Thu, 27 Aug 2020 16:58:08 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 27 Aug 2020 16:58:04 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 27 Aug 2020 16:58:05 +0800
-Message-ID: <1598518685.4204.8.camel@mtkswgap22>
-Subject: Re: [PATCH v2 1/2] cpufreq: mediatek-hw: Add support for Mediatek
- cpufreq HW driver
-From:   Hector Yuan <hector.yuan@mediatek.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Olof Johansson" <olof@lixom.net>, <linux-kernel@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>
-Date:   Thu, 27 Aug 2020 16:58:05 +0800
-In-Reply-To: <20200827042653.5ttsxnjjhpslmrcv@vireshk-i7>
-References: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
-         <1597302475-15484-2-git-send-email-hector.yuan@mediatek.com>
-         <20200824100619.o6uwnlsaxdgc3l7r@vireshk-i7>
-         <1598446624.24220.10.camel@mtkswgap22>
-         <20200827042653.5ttsxnjjhpslmrcv@vireshk-i7>
+        Thu, 27 Aug 2020 05:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726266AbgH0JDG (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 05:03:06 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F066C061264
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 02:03:06 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kBDoC-0002xt-8J; Thu, 27 Aug 2020 11:03:00 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kBDoA-0006g5-NR; Thu, 27 Aug 2020 11:02:58 +0200
+Message-ID: <8d3045b22bf9524eba9dddf1ff470858d4b748be.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] usb: dwc3: Add driver for Xilinx platforms
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Manish Narani <manish.narani@xilinx.com>,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        michal.simek@xilinx.com, balbi@kernel.org
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com
+Date:   Thu, 27 Aug 2020 11:02:58 +0200
+In-Reply-To: <1598467441-124203-3-git-send-email-manish.narani@xilinx.com>
+References: <1598467441-124203-1-git-send-email-manish.narani@xilinx.com>
+         <1598467441-124203-3-git-send-email-manish.narani@xilinx.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: BD4260F00D8F1BF7AF40A81B24370BFC97A30A7B409831315CBF6869CF9669432000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: devicetree@vger.kernel.org
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTA4LTI3IGF0IDA5OjU2ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6DQo+
-IE9uIDI2LTA4LTIwLCAyMDo1NywgSGVjdG9yIFl1YW4gd3JvdGU6DQo+ID4gT24gTW9uLCAyMDIw
-LTA4LTI0IGF0IDE1OjM2ICswNTMwLCBWaXJlc2ggS3VtYXIgd3JvdGU6DQo+ID4gPiBPbiAxMy0w
-OC0yMCwgMTU6MDcsIEhlY3RvciBZdWFuIHdyb3RlOg0KPiA+ID4gPiAgQ09ORklHX0FSTV9BTExX
-SU5ORVJfU1VONTBJX0NQVUZSRVFfTlZNRU09bQ0KPiA+ID4gPiAgQ09ORklHX0FSTV9BUk1BREFf
-MzdYWF9DUFVGUkVRPXkNCj4gPiA+ID4gK0NPTkZJR19BUk1fTUVESUFURUtfQ1BVRlJFUV9IVz1t
-DQo+ID4gPiANCj4gPiA+IFdoYXQgYWJvdXQgYSAnZGVmYXVsdCBtJyBpbiBLY29uZmlnIGl0c2Vs
-ZiA/DQo+ID4gPiBPSywgd2lsbCB1cGRhdGUgaW4gVjMuDQo+IA0KPiBIZWN0b3IsIHlvdSBuZWVk
-IHRvIHJlbW92ZSAob3Igbm90IGFkZCkgdGhlIHJpZ2h0IGJyYWNrZXQgKD4pIGJlZm9yZSB0aGUN
-Cj4gYmVnaW5uaW5nIG9mIHlvdXIgbGluZXMuIFRoaXMgbWFrZXMgaXQgaW5jcmVkaWJseSBkaWZm
-aWN1bHQgdG8gcmVhZC4NCg0KT0ssIEkgZ2V0IGl0LiBTb3JyeSBmb3IgdGhlIGluY29udmVuaWVu
-Y2UuDQo+ID4gPiA+ICsJZm9yIChpID0gMDsgaSA8IExVVF9NQVhfRU5UUklFUzsgaSsrKSB7DQo+
-ID4gPiA+ICsJCWRhdGEgPSByZWFkbF9yZWxheGVkKGJhc2UgKyAoaSAqIExVVF9ST1dfU0laRSkp
-Ow0KPiA+ID4gPiArCQlmcmVxID0gRklFTERfR0VUKExVVF9GUkVRLCBkYXRhKSAqIDEwMDA7DQo+
-ID4gPiA+ICsJCXZvbHQgPSBGSUVMRF9HRVQoTFVUX1ZPTFQsIGRhdGEpOw0KPiA+ID4gPiArCQlp
-ZiAoZnJlcSAhPSBwcmV2X2ZyZXEpIHsNCj4gPiA+ID4gKwkJCXRhYmxlW2ldLmZyZXF1ZW5jeSA9
-IGZyZXE7DQo+ID4gPiA+ICsJCQlkZXZfcG1fb3BwX2FkZChjcHVfZGV2LCBmcmVxICogMTAwMCwg
-dm9sdCk7DQo+ID4gPiANCj4gPiA+IFdoeSBhcmUgeW91IGFkZGluZyBPUFBzIGhlcmUgYW5kIHJh
-dGhlciB3aHkgdXNpbmcgT1BQIHNwZWNpZmljIHN0dWZmDQo+ID4gPiBhdCBhbGwgaW4gdGhlIGRy
-aXZlciA/DQo+ID4gPiB5ZXMsIHRoZSBvcHAgaW5mb3JtYXRpb24gaXMgcmVhZCBmcm9tIENQVSBI
-VyBlbmdpbmUuVGhlbiBhZGQgaXQgdG8gdGhlIENQVSBkZXYgT1BQIG9uZSBieSBvbmUuICANCj4g
-DQo+IEkgYXNrZWQgYSBkaWZmZXJlbnQgcXVlc3Rpb24sIHdoeSBhcmUgeW91IGFkZGluZyBPUFBz
-ID8gWW91IGRvbid0IG5lZWQgdGhlIE9QUHMNCj4gYXQgYWxsIGluIG15IG9waW5pb24uIFlvdSBj
-YW4ganVzdCBjcmVhdGUgdGhlIGZyZXF1ZW5jeSB0YWJsZSBhbmQgdGhhdCdzIGl0Lg0KDQpJIGp1
-c3QgYWRkIE9QUCBpbmZvIHRvIE9QUCBmcmFtZXdvcmsgc28gdGhhdCBvdGhlcnMgbW9kdWxlcyBj
-YW4gZ2V0IGl0DQpmcm9tIE9QUCBmcmFtZXdvcmsuDQpCdXQgbGlrZSB5b3Ugc2FpZCwgSSBkb24n
-dCBuZWVkIGl0IGluIHRoaXMgZHJpdmVyLiBJIHdpbGwgcmVtb3ZlIHRoaXMNCmNvZGUgc2VnbWVu
-dCBpbiBWNC4NCkkgYWxyZWFkeSBzZW5kIFYzIHllc3RlcmRheSBidXQgbm90IGluY2x1ZGluZyB0
-aGlzIG1vZGlmaWNhdGlvbi4NCg0KPiA+ID4gPiArCWZvcl9lYWNoX3Bvc3NpYmxlX2NwdShjcHUp
-IHsNCj4gPiA+ID4gKwkJY3B1X25wID0gb2ZfY3B1X2RldmljZV9ub2RlX2dldChjcHUpOw0KPiA+
-ID4gPiArCQlpZiAoIWNwdV9ucCkNCj4gPiA+ID4gKwkJCWNvbnRpbnVlOw0KPiA+ID4gPiArDQo+
-ID4gPiA+ICsJCXJldCA9IG9mX3BhcnNlX3BoYW5kbGVfd2l0aF9hcmdzKGNwdV9ucCwgIm10ayxm
-cmVxLWRvbWFpbiIsDQo+ID4gPiANCj4gPiA+IFdoZXJlIGFyZSBiaW5kaW5ncyBvZiB0aGlzIG5v
-ZGUgYW5kIGhvdyBkb2VzIHRoaXMgbG9vayA/DQo+ID4gPiBDYW4gcmVmZXIgdG8gdGhlIHNhbWUg
-cGF0Y2ggc2VyaWVzLCBJIHNwbGl0IGl0IHRvIGFub3RoZXIgcGF0Y2guRWFjaCBjcHUgd2lsbCBi
-ZSBncm91cCBpbnRvIG9uZSBmcmVxdWVuY3kgZG9tYWluIGZvciB0aGUgQ1BVIERWRlMuIA0KPiAN
-Cj4gVGhhdCBiaW5kaW5nIG9ubHkgZGVmaW5lcyAibWVkaWF0ZWssY3B1ZnJlcS1odyIgYW5kIG5v
-dCAibXRrLGZyZXEtZG9tYWluIi4NCg0KUGxlYXNlIHJlZmVyIHRvIHRoZSBkdCBiaW5kaW5nIGlu
-IFYzLCB0aGFuayB5b3UuICAobGttbCBub3Qgc2hvdyB1cCB5ZXQsDQpzbyBJIHBvc3QgdGhlIGJl
-bG93IGxpbmsgaW5zdGVhZCkNCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJu
-ZWwvbXNnODMyNTkyLmh0bWwNCj4gDQoNCg==
+Hi Manish,
 
+On Thu, 2020-08-27 at 00:14 +0530, Manish Narani wrote:
+> Add a new driver for supporting Xilinx platforms. This driver handles
+> the USB 3.0 PHY initialization and PIPE control & reset operations for
+> ZynqMP platforms. This also handles the USB 2.0 PHY initialization and
+> reset operations for Versal platforms.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+[...]
+> +static int dwc3_xlnx_rst_assert(struct reset_control *rstc)
+> +{
+> +	unsigned long loop_time = msecs_to_jiffies(RST_TIMEOUT);
+> +	unsigned long timeout;
+> +
+> +	reset_control_assert(rstc);
+> +
+> +	/* wait until reset is asserted or timeout */
+> +	timeout = jiffies + loop_time;
+> +
+> +	while (!time_after_eq(jiffies, timeout)) {
+> +		if (reset_control_status(rstc) > 0)
+> +			return 0;
+> +
+> +		cpu_relax();
+> +	}
+> +
+> +	return -ETIMEDOUT;
+> +}
+
+I think this should be done in the reset controller driver instead.
+
+When reset_control_assert() is called with an exclusive reset control,
+the reset line should be already asserted when the function returns.
+
+> +
+> +static int dwc3_xlnx_rst_deassert(struct reset_control *rstc)
+> +{
+> +	unsigned long loop_time = msecs_to_jiffies(RST_TIMEOUT);
+> +	unsigned long timeout;
+> +
+> +	reset_control_deassert(rstc);
+> +
+> +	/* wait until reset is de-asserted or timeout */
+> +	timeout = jiffies + loop_time;
+> +	while (!time_after_eq(jiffies, timeout)) {
+> +		if (!reset_control_status(rstc))
+> +			return 0;
+> +
+> +		cpu_relax();
+> +	}
+> +
+> +	return -ETIMEDOUT;
+> +}
+
+Same as above, this belongs in the reset controller driver.
+
+> +static int dwc3_xlnx_init_versal(struct dwc3_xlnx *priv_data)
+> +{
+> +	struct device *dev = priv_data->dev;
+> +	int ret;
+> +
+> +	dwc3_xlnx_mask_phy_rst(priv_data, false);
+> +
+> +	/* Assert and De-assert reset */
+> +	ret = zynqmp_pm_reset_assert(VERSAL_USB_RESET_ID,
+> +				     PM_RESET_ACTION_ASSERT);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to assert Reset\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = zynqmp_pm_reset_assert(VERSAL_USB_RESET_ID,
+> +				     PM_RESET_ACTION_RELEASE);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to De-assert Reset\n");
+> +		return ret;
+> +	}
+> +
+> +	dwc3_xlnx_mask_phy_rst(priv_data, true);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dwc3_xlnx_init_zynqmp(struct dwc3_xlnx *priv_data)
+> +{
+> +	struct device *dev = priv_data->dev;
+> +	int ret;
+> +	u32 reg;
+> +
+> +	priv_data->crst = devm_reset_control_get(dev, "usb_crst");
+
+Please use devm_reset_control_get_exclusive() instead.
+
+> +	if (IS_ERR(priv_data->crst)) {
+> +		dev_err(dev, "failed to get %s reset signal\n", "usb_crst");
+
+Consider using dev_err_probe() to hide -EPROBE_DEFER error values.
+
+> +		ret = PTR_ERR(priv_data->crst);
+> +		goto err;
+> +	}
+> +
+> +	priv_data->hibrst = devm_reset_control_get(dev, "usb_hibrst");
+> +	if (IS_ERR(priv_data->hibrst)) {
+> +		dev_err(dev, "failed to get %s reset signal\n", "usb_hibrst");
+> +		ret = PTR_ERR(priv_data->hibrst);
+> +		goto err;
+> +	}
+> +
+> +	priv_data->apbrst = devm_reset_control_get(dev, "usb_apbrst");
+> +	if (IS_ERR(priv_data->apbrst)) {
+> +		dev_err(dev, "failed to get %s reset signal\n", "usb_apbrst");
+> +		ret = PTR_ERR(priv_data->apbrst);
+> +		goto err;
+> +	}
+
+Same as above for the other two reset controls.
+
+> +	priv_data->usb3_phy = devm_phy_get(dev, "usb3-phy");
+> +
+> +	ret = dwc3_xlnx_rst_assert(priv_data->crst);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%s: %d: Failed to assert reset\n",
+> +			__func__, __LINE__);
+> +		goto err;
+> +	}
+> +
+> +	ret = dwc3_xlnx_rst_assert(priv_data->hibrst);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%s: %d: Failed to assert reset\n",
+> +			__func__, __LINE__);
+> +		goto err;
+> +	}
+> +
+> +	ret = dwc3_xlnx_rst_assert(priv_data->apbrst);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%s: %d: Failed to assert reset\n",
+> +			__func__, __LINE__);
+> +		goto err;
+> +	}
+> +
+> +	ret = phy_init(priv_data->usb3_phy);
+> +	if (ret < 0) {
+> +		phy_exit(priv_data->usb3_phy);
+> +		goto err;
+> +	}
+> +
+> +	ret = dwc3_xlnx_rst_deassert(priv_data->apbrst);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%s: %d: Failed to release reset\n",
+> +			__func__, __LINE__);
+> +		goto err;
+> +	}
+> +
+> +	/* Set PIPE power present signal */
+> +	writel(PIPE_POWER_ON, priv_data->regs + PIPE_POWER_OFFSET);
+> +
+> +	/* Clear PIPE CLK signal */
+> +	writel(PIPE_CLK_OFF, priv_data->regs + PIPE_CLK_OFFSET);
+> +
+> +	ret = dwc3_xlnx_rst_deassert(priv_data->crst);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%s: %d: Failed to release reset\n",
+> +			__func__, __LINE__);
+> +		goto err;
+> +	}
+> +
+> +	ret = dwc3_xlnx_rst_deassert(priv_data->hibrst);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%s: %d: Failed to release reset\n",
+> +			__func__, __LINE__);
+> +		goto err;
+> +	}
+> +
+> +	ret = phy_power_on(priv_data->usb3_phy);
+> +	if (ret < 0) {
+> +		phy_exit(priv_data->usb3_phy);
+> +		goto err;
+> +	}
+> +
+> +	/*
+> +	 * This routes the usb dma traffic to go through CCI path instead
+> +	 * of reaching DDR directly. This traffic routing is needed to
+> +	 * make SMMU and CCI work with USB dma.
+> +	 */
+> +	if (of_dma_is_coherent(dev->of_node) || dev->iommu_group) {
+> +		reg = readl(priv_data->regs + XLNX_USB_COHERENCY);
+> +		reg |= XLNX_USB_COHERENCY_ENABLE;
+> +		writel(reg, priv_data->regs + XLNX_USB_COHERENCY);
+> +	}
+> +
+> +err:
+> +	return ret;
+> +}
+> +
+> +static int dwc3_xlnx_probe(struct platform_device *pdev)
+> +{
+> +	struct dwc3_xlnx	*priv_data;
+> +	struct device		*dev = &pdev->dev;
+> +	struct device_node	*np = dev->of_node;
+> +	struct resource		*res;
+> +	void __iomem		*regs;
+> +	int			ret;
+> +
+> +	priv_data = devm_kzalloc(dev, sizeof(*priv_data), GFP_KERNEL);
+> +	if (!priv_data)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(dev, "missing memory resource\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> +
+> +	/* Store the usb control regs into priv_data for further usage */
+> +	priv_data->regs = regs;
+> +
+> +	priv_data->dev = dev;
+> +
+> +	platform_set_drvdata(pdev, priv_data);
+> +
+> +	ret = clk_bulk_get_all(priv_data->dev, &priv_data->clks);
+
+Why not use devm_clk_bulk_get_all()?
+
+regards
+Philipp
