@@ -2,436 +2,247 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C91C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67816C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B2D2177B
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BA8B22B40
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U3lvgl0I"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XlQaLVnA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgH0PI0 (ORCPT
+        id S1727864AbgH0PG5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:08:26 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:39721 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728394AbgH0PHs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 11:07:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598540866; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=stfRl2CLE7q24T0s3N088SQkeoaAYJPK7AKpMrzidxA=;
- b=U3lvgl0IXPKkPiw9LkSIx2D8xquNZKdy0VNz4VBtcbGzM7iRC0P1mIH+fbpzhRmnVMDnV63i
- CFSCD34lacuc/EH6KJZxit+Tvjld266y8cQcYJqrHI1m9ejBlfTmRODleTl6DQDgim/IJpek
- 6+jt/UzRpCIcQjM5nt8MpbneA+k=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI1YmJiNiIsICJkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f47cc38630b177c4780df31 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 27 Aug 2020 15:07:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EF1C5C433C6; Thu, 27 Aug 2020 15:07:35 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: skakit)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA90DC433CB;
-        Thu, 27 Aug 2020 15:07:33 +0000 (UTC)
+        Thu, 27 Aug 2020 11:06:57 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18922 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgH0PEa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 11:04:30 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f47cb450001>; Thu, 27 Aug 2020 08:03:34 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 27 Aug 2020 08:04:17 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 08:04:17 -0700
+Received: from [10.2.174.186] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
+ 2020 15:04:16 +0000
+Subject: Re: [PATCH v6 7/7] sdhci: tegra: Add missing TMCLK for data timeout
+To:     Jon Hunter <jonathanh@nvidia.com>, <adrian.hunter@intel.com>,
+        <ulf.hansson@linaro.org>, <thierry.reding@gmail.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <1598500201-5987-1-git-send-email-skomatineni@nvidia.com>
+ <1598500201-5987-8-git-send-email-skomatineni@nvidia.com>
+ <93d0188b-c833-33b4-211e-b9293c4f3a1c@nvidia.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <3deac67c-bb1e-ef23-7dcc-8d4024203ab1@nvidia.com>
+Date:   Thu, 27 Aug 2020 08:03:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <93d0188b-c833-33b4-211e-b9293c4f3a1c@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 27 Aug 2020 20:37:33 +0530
-From:   skakit@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V3 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
- BT uart
-In-Reply-To: <20200826164011.GE486007@google.com>
-References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
- <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
- <20200821172215.GB486007@google.com>
- <e1738473c26de45b5c9c7c4d5963f32c@codeaurora.org>
- <20200825163820.GD486007@google.com>
- <10485f6a111c578f2e15dbcc0ceec66d@codeaurora.org>
- <20200826164011.GE486007@google.com>
-Message-ID: <7dd865bff20320c147706919b62788e4@codeaurora.org>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598540614; bh=DoTOabdYopsUxy9pThG/x9MurfIlwI7HTUiu8cCQwwY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=XlQaLVnA320/cdF58QoaOOm3uyXjuQO8XG4qcBlae1/h4o66sfrpaoFVAataUX953
+         l91yA0tOtieTaZ6/6JFb6XYXuuNpgoyBAXXdVehSz4SF9BUVzyPkI2VZuqPwKNpErv
+         Zds4wZ03jx103ddD78yf/Y2w7V593avKzNqZY2j7aJE6jalT49CE07sESPbSoSum34
+         gQ5DxapOF4nrLKXwR1wPtVu1h0AzaKHGk1cc9F40VZObRqrmxM9sFLtSpHhO1g98OS
+         Cpp+xYMD9DKBph8EEvT+VTLcjDiZ3p+NvRaw74YlyrMO+fE6WF4zbUnovGv4fiE8+H
+         N4kDqpLheY/Gw==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
 
-On 2020-08-26 22:10, Matthias Kaehlcke wrote:
-> Hi Satya,
-> 
-> On Wed, Aug 26, 2020 at 09:35:15PM +0530, skakit@codeaurora.org wrote:
->> Hi Matthias,
->> 
->> On 2020-08-25 22:08, Matthias Kaehlcke wrote:
->> > On Tue, Aug 25, 2020 at 06:42:28PM +0530, skakit@codeaurora.org wrote:
->> > > On 2020-08-21 22:52, Matthias Kaehlcke wrote:
->> > > > On Thu, Aug 20, 2020 at 07:21:06PM +0530, satya priya wrote:
->> > > > > Add sleep pin ctrl for BT uart, and also change the bias
->> > > > > configuration to match Bluetooth module.
->> > > > >
->> > > > > Signed-off-by: satya priya <skakit@codeaurora.org>
->> > > > > Reviewed-by: Akash Asthana <akashast@codeaurora.org>
->> > > > > ---
->> > > > > Changes in V2:
->> > > > >  - This patch adds sleep state for BT UART. Newly added in V2.
->> > > > >
->> > > > > Changes in V3:
->> > > > >  - Remove "output-high" for TX from both sleep and default states
->> > > > >    as it is not required. Configure pull-up for TX in sleep state.
->> > > > >
->> > > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54
->> > > > > +++++++++++++++++++++++++++------
->> > > > >  1 file changed, 45 insertions(+), 9 deletions(-)
->> > > > >
->> > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> > > > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> > > > > index d8b5507..806f626 100644
->> > > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> > > > > @@ -473,20 +473,20 @@
->> > > > >
->> > > > >  &qup_uart3_default {
->> > > > >  	pinconf-cts {
->> > > > > -		/*
->> > > > > -		 * Configure a pull-down on 38 (CTS) to match the pull of
->> > > > > -		 * the Bluetooth module.
->> > > > > -		 */
->> > > > > +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
->> > > > >  		pins = "gpio38";
->> > > > > -		bias-pull-down;
->> > > > > -		output-high;
->> > > > > +		bias-disable;
->> > > >
->> > > > I think it should be ok in functional terms, but I don't like the
->> > > > rationale
->> > > > and also doubt the change is really needed.
->> > > >
->> > > > If the pull is removed to match the Bluetooth module, then that sounds
->> > > > as
->> > > > if the signal was floating on the the BT side, which I think is not the
->> > > > case.
->> > > > Yes, according to the datasheet there is no pull when the BT controller
->> > > > is
->> > > > active, but then it drives the signal actively to either high or low.
->> > > > There
->> > > > seems to be no merit in 'matching' the Bluetooth side in this case, if
->> > > > the
->> > > > signal was really floating on the BT side we would definitely not want
->> > > > this.
->> > > >
->> > > > In a reply to v2 you said:
->> > > >
->> > > > > Recently on cherokee we worked with BT team and came to an agreement
->> > > > > to
->> > > > > keep no-pull from our side in order to not conflict with their pull in
->> > > > > any state.
->> > > >
->> > > > What are these conflicting pull states?
->> > > >
->> > > > The WCN3998 datasheet has a pull-down on RTS (WCN3998 side) in reset and
->> > > > boot mode, and no pull in active mode. In reset and boot mode the host
->> > > > config with a pull down would match, and no pull in active mode doesn't
->> > > > conflict with the pull-down on the host UART. My understanding is that
->> > > > the pinconf pulls are weak pulls, so as soon as the BT chip drives its
->> > > > RTS the pull on the host side shouldn't matter.
->> > > >
->> > >
->> > > yes, I agree with you, the pinconf pulls are weak. As this is driven
->> > > by BT
->> > > SoC (pull on HOST side shouldn't matter), we are not mentioning any
->> > > bias
->> > > configuration from our side and simply putting it as no-pull, just
->> > > to not
->> > > conflict in any case. It seems that the rationale mentioned is a bit
->> > > confusing i will change it to clearly specify why we are configuring
->> > > no-pull.
->> > >
->> > > > Is this change actually related with wakeup support? I have the
->> > > > impression
->> > > > that multiple things are conflated in this patch. If some of the changes
->> > > > are just fixing/improving other things they should be in a separate
->> > > > patch,
->> > > > which could be part of this series, otherwise it's really hard to
->> > > > distinguish between the pieces that are actually relevant for wakeup and
->> > > > the rest.
->> > > >
->> > > > Independently of whether the changes are done in a single or multiple
->> > > > patches, the commit log should include details on why the changes are
->> > > > necessary, especially when there are not explantatory comments in the
->> > > > DT/code itself (e.g. the removal of 'output-high', which seems correct
->> > > > to me, but no reason is given why it is done).
->> > > >
->> > >
->> > > This change is not related to wakeup support, I will make it a
->> > > separate
->> > > patch, will also mention the details in commit text.
->> > >
->> > > > >  	};
->> > > > >
->> > > > >  	pinconf-rts {
->> > > > > -		/* We'll drive 39 (RTS), so no pull */
->> > > > > +		/*
->> > > > > +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
->> > > > > +		 * floating pin which could mislead Bluetooth controller
->> > > > > +		 * with UART RFR state (READY/NOT_READY).
->> > > > > +		 */
->> > > > >  		pins = "gpio39";
->> > > > >  		drive-strength = <2>;
->> > > > > -		bias-disable;
->> > > > > +		bias-pull-down;
->> > > > >  	};
->> > > >
->> > > > [copy of my comment on v2]
->> > > >
->> > > > I'm a bit at a loss here, about two things:
->> > > >
->> > > > RTS is an output pin controlled by the UART. IIUC if the UART port is
->> > > > active
->> > > > and hardware flow control is enabled the RTS signal is either driven to
->> > > > high
->> > > > or low, but not floating.
->> > >
->> > > Yes, RTS is either driven high or low. HW flow control is always
->> > > enabled and
->> > > only turned off when RX FIFO is full. Whereas SW flow control is
->> > > controlled
->> > > by upper layers(serial core), also it can be enabled/disabled from
->> > > host by
->> > > calling set_mctrl.
->> >
->> > As far as I understand the above isn't entirely correct. HW flow control
->> > is not
->> > disabled when the RX FIFO is full, rather as part of HW flow control the
->> > hardware deasserts RTS when the FIFO is full. Software flow control
->> > isn't really
->> > relevant here, since it doesn't use RTS/CTS but uses transmission of
->> > special
->> > codes (XON/XOFF) over TX/RX.
->> 
->> Here by Software flow control i meant, we can control the flow from
->> SW(explained below).
-> 
-> Better don't use a term that already has well defined meaning in a
-> given context when you refer to something else.
-> 
+On 8/27/20 1:40 AM, Jon Hunter wrote:
+> On 27/08/2020 04:50, Sowjanya Komatineni wrote:
+>> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+>>
+>> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
+>> SDMMC hawdware for data timeout to achive better timeout than using
+>> SDCLK and using TMCLK is recommended.
+>>
+>> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
+>> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
+>> SDCLK for data timeout.
+>>
+>> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
+>> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
+>> is not recommended.
+>>
+>> So, this patch adds quirk NVQUIRK_HAS_TMCLK for SoC having separate
+>> timeout clock and keeps TMCLK enabled all the time.
+>>
+>> Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+>> Cc: stable <stable@vger.kernel.org> # 5.4
+>> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>   drivers/mmc/host/sdhci-tegra.c | 90 ++++++++++++++++++++++++++++++++++++++----
+>>   1 file changed, 82 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+>> index 31ed321..f69ca8d 100644
+>> --- a/drivers/mmc/host/sdhci-tegra.c
+>> +++ b/drivers/mmc/host/sdhci-tegra.c
+>> @@ -13,6 +13,7 @@
+>>   #include <linux/clk.h>
+>>   #include <linux/io.h>
+>>   #include <linux/of.h>
+>> +#include <linux/of_clk.h>
+>>   #include <linux/of_device.h>
+>>   #include <linux/pinctrl/consumer.h>
+>>   #include <linux/regulator/consumer.h>
+>> @@ -110,6 +111,12 @@
+>>   #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
+>>   #define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
+>>   
+>> +/*
+>> + * NVQUIRK_HAS_TMCLK is for SoC's having separate timeout clock for Tegra
+>> + * SDMMC hardware data timeout.
+>> + */
+>> +#define NVQUIRK_HAS_TMCLK				BIT(10)
+>> +
+>>   /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
+>>   #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
+>>   
+>> @@ -140,6 +147,7 @@ struct sdhci_tegra_autocal_offsets {
+>>   struct sdhci_tegra {
+>>   	const struct sdhci_tegra_soc_data *soc_data;
+>>   	struct gpio_desc *power_gpio;
+>> +	struct clk *tmclk;
+>>   	bool ddr_signaling;
+>>   	bool pad_calib_required;
+>>   	bool pad_control_available;
+>> @@ -1433,7 +1441,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
+>>   		    NVQUIRK_HAS_PADCALIB |
+>>   		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>>   		    NVQUIRK_ENABLE_SDR50 |
+>> -		    NVQUIRK_ENABLE_SDR104,
+>> +		    NVQUIRK_ENABLE_SDR104 |
+>> +		    NVQUIRK_HAS_TMCLK,
+>>   	.min_tap_delay = 106,
+>>   	.max_tap_delay = 185,
+>>   };
+>> @@ -1471,6 +1480,7 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
+>>   		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>>   		    NVQUIRK_ENABLE_SDR50 |
+>>   		    NVQUIRK_ENABLE_SDR104 |
+>> +		    NVQUIRK_HAS_TMCLK |
+>>   		    NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
+>>   	.min_tap_delay = 84,
+>>   	.max_tap_delay = 136,
+>> @@ -1483,7 +1493,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
+>>   		    NVQUIRK_HAS_PADCALIB |
+>>   		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
+>>   		    NVQUIRK_ENABLE_SDR50 |
+>> -		    NVQUIRK_ENABLE_SDR104,
+>> +		    NVQUIRK_ENABLE_SDR104 |
+>> +		    NVQUIRK_HAS_TMCLK,
+>>   	.min_tap_delay = 96,
+>>   	.max_tap_delay = 139,
+>>   };
+>> @@ -1611,15 +1622,76 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
+>>   		goto err_power_req;
+>>   	}
+>>   
+>> -	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
+>> -	if (IS_ERR(clk)) {
+>> -		rc = PTR_ERR(clk);
+>> +	/*
+>> +	 * Tegra210 and later has separate SDMMC_LEGACY_TM clock used for
+>> +	 * hardware data timeout clock and SW can choose TMCLK or SDCLK for
+>> +	 * hardware data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT
+>> +	 * of the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
+>> +	 *
+>> +	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
+>> +	 * 12Mhz TMCLK which is advertised in host capability register.
+>> +	 * With TMCLK of 12Mhz provides maximum data timeout period that can
+>> +	 * be achieved is 11s better than using SDCLK for data timeout.
+>> +	 *
+>> +	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
+>> +	 * supporting separate TMCLK.
+>> +	 *
+>> +	 * Old device tree has single sdhci clock. So with addition of TMCLK,
+>> +	 * retrieving sdhci clock by "sdhci" clock name based on number of
+>> +	 * clocks in sdhci device node.
+>> +	 */
+>> +
+>> +	if (of_clk_get_parent_count(pdev->dev.of_node) == 1) {
+>> +		if (soc_data->nvquirks & NVQUIRK_HAS_TMCLK)
+>> +			dev_warn(&pdev->dev,
+>> +				 "missing tmclk in the device tree\n");
+>> +
+>> +		clk = devm_clk_get(&pdev->dev, NULL);
+>> +		if (IS_ERR(clk)) {
+>> +			rc = PTR_ERR(clk);
+>>   
+>> -		if (rc != -EPROBE_DEFER)
+>> -			dev_err(&pdev->dev, "failed to get clock: %d\n", rc);
+>> +			if (rc != -EPROBE_DEFER)
+>> +				dev_err(&pdev->dev,
+>> +					"failed to get sdhci clock: %d\n", rc);
+>>   
+>> -		goto err_clk_get;
+>> +			goto err_power_req;
+>> +		}
+>> +	} else {
+>> +		if (soc_data->nvquirks & NVQUIRK_HAS_TMCLK) {
+>
+> I think that I would do the inverse of this ...
+>
+>     } else {
+>          if (!(soc_data->nvquirks & NVQUIRK_HAS_TMCLK)) {
+>                  dev_err(&pdev->dev, "Device has unexpected clocks!\n");
+>                  rc = -EINVAL;
+>                  goto_power_req;
+>          }
+>
+>          clk = devm_clk_get(&pdev->dev, "tmclk");
+>          ...
+>
+> If the device does not have a single clock, then we expect it to support
+> the tmclk. If this is not the case, then this is a bug.
+>
+> Cheers
+> Jon
 
-Okay.
+I don't see other drivers validating for unexpected device tree entries.
 
->> >
->> > > > Now lets assume I'm wrong with the above and RTS can be floating. We
->> > > > only want
->> > > > the BT SoC to send data when the host UART is ready to receive them,
->> > > > right?
->> > > > RTS is an active low signal, hence by configuring it as a pull-down the
->> > > > BT
->> > > > SoC can send data regardless of whether the host UART actually asserts
->> > > > RTS,
->> > > > so the host UART may not be ready to receive it. I would argue that if
->> > > > there
->> > > > is really such a thing as a floating RTS signal then it should have a
->> > > > pull-up,
->> > > > to prevent the BT SoC from sending data at any time.
->> > > >
->> > > > I'm not an expert in UART communication and pinconf, so it could be that
->> > > > I
->> > > > got something wrong, but as of now it seems to me that no pull is the
->> > > > correct
->> > > > config for RTS.
->> > > >
->> > > > >
->> > > > >  	pinconf-tx {
->> > > > > @@ -494,7 +494,43 @@
->> > > > >  		pins = "gpio40";
->> > > > >  		drive-strength = <2>;
->> > > > >  		bias-disable;
->> > > > > -		output-high;
->> > > > > +	};
->> > > > > +
->> > > > > +	pinconf-rx {
->> > > > > +		/*
->> > > > > +		 * Configure a pull-up on 41 (RX). This is needed to avoid
->> > > > > +		 * garbage data when the TX pin of the Bluetooth module is
->> > > > > +		 * in tri-state (module powered off or not driving the
->> > > > > +		 * signal yet).
->> > > > > +		 */
->> > > > > +		pins = "gpio41";
->> > > > > +		bias-pull-up;
->> > > > > +	};
->> > > > > +};
->> > > > > +
->> > > > > +&qup_uart3_sleep {
->> > > > > +	pinconf-cts {
->> > > > > +		/* Configure no-pull on 38 (CTS) to match Bluetooth module */
->> > > > > +		pins = "gpio38";
->> > > > > +		bias-disable;
->> > > > > +	};
->> > > > > +
->> > > > > +	pinconf-rts {
->> > > > > +		/*
->> > > > > +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
->> > > > > +		 * floating pin which could mislead Bluetooth controller
->> > > > > +		 * with UART RFR state (READY/NOT_READY).
->> > > > > +		 */
->> > > > > +		pins = "gpio39";
->> > > > > +		drive-strength = <2>;
->> >
->> > just noticed this: in the sleep config all pins are in GPIO config (see
->> > "arm64: dts: sc7180: Add wakeup support over UART RX" from this series)
->> > and by default they are inputs, hence the drive-strength here is
->> > pointless
->> > IIUC.
->> >
->> 
->> CTS and RX are inputs to the HOST whereas RTS and TX are outputs. We 
->> have
->> added drive-strength for output pins only as they are driven by 
->> UART(please
->> correct me if wrong).
-> 
-> True, RTS and TX are outputs in UART mode, however in sleep mode the 
-> pins
-> are (currently) configured as GPIOs and inputs (again, see "arm64: dts:
-> sc7180: Add wakeup support over UART RX" of this series), hence the
-> drive-strength attribute does nothing. If needed/preferred you can 
-> configure
-> the pins as outputs and specify the desired state instead of using 
-> pulls,
-> in that case specifying the drive strength can be useful.
-> 
+Also only for SoC with quirk HAS_TMCLK, we are retrieving TMCLK with 
+clock name and enabling it.
 
-Ok, will remove the drive-strength from sleep state.
+So for other SoC even if device tree has additional clock entry other 
+than sdhci driver don't use it and also dt-binding do not have any tmclk 
+entry for other SoC. So why would this be a bug?
 
->> > > > > +		bias-pull-down;
->> > > > > +	};
->> > > >
->> > > > I don't know all the details, but I have the impression that this is the
->> > > > relevant pull change for wakeup. From the title of the series I derive
->> > > > that the UART RX pin is used for signalling wakeup. A pull-down on RTS
->> > > > indicates the BT controller that it can always send data to wake up the
->> > > > host.
->> > > >
->> > > > I think RTS in default mode should remain with no-pull (the UART is
->> > > > driving
->> > > > the signal), and then change it to pull-down in sleep mode.
->> > > >
->> > > >
->> > >
->> > > As I understand from your previous comment, pinconf pulls are weak and
->> > > cannot override the pull of controller.
->> >
->> > I'm not sure this is an absolute truth. I think there may be cases where
->> > the driver has to increase its drive strength..
->> >
->> > > Although pull down is configured,
->> > > data will be received only if host controller is ready to accept it.
->> > > So, we
->> > > want to put RTS in pull-down state(known state) instead of leaving
->> > > it in
->> > > ambiguous state i.e, no-pull(high/low).
->> >
->> > I disgress. I'm pretty sure that you want RTS to be low to make sure
->> > that
->> > the BT SoC can wake up the system by sending whatever data it has to
->> > send.
->> > It won't do that if RTS is high (e.g. because that's its floating state
->> > at that time). I just tried configuring a pull-up (also a known
->> > non-ambiguous state), and Bluetooth wakeup doesn't work with that,
->> > supposedly because the BT SoC/UART will wait for its CTS signal to be
->> > low.
->> >
->> 
->> yes, you are right, we are keeping RTS low to make sure that BT SoC 
->> can
->> wakeup the system by sending bytes.
->> My intention here was to explain below case from your comment:
->> 
->> > > > RTS is an active low signal, hence by configuring it as a pull-down the
->> > > > BT
->> > > > SoC can send data regardless of whether the host UART actually asserts
->> > > > RTS,
->> > > > so the host UART may not be ready to receive it.
->> 
->> 1. By default our HW flow is enabled(since we are configuring 
->> pull-down on
->> RTS),and BT SoC can send data anytime.
->> 2. But there is a SW mechanism where we can control the flow from 
->> software.
->> In that case what ever is configured to UART_MANUAL_RFR(READY or 
->> NOT_READY)
->> will override the dtsi pinconf pull and the RTS/RFR line is pulled 
->> high when
->> HOST is not ready(while debugging the wake up issue we came across 
->> this).
-> 
-> This is generally correct while the system is running, but (with the 
-> current
-> pinconf) not when the system is suspended IIUC. When the system is in 
-> suspend
-> the function of the UART pins is changed to GPIO, hence the UART ceases 
-> to
-> control RTS.
-> 
-> Otherwise how do you explain that wakeup stops working when you 
-> configure
-> a pull-up instead of a pull-down? According to your comment the UART 
-> should
-> be driving the RTS depending on its readyness.
-> 
+Can you please correct if I misunderstood you comment?
 
-True, I was explaining about UART mode(active case) only, in reply to 
-your previous comment:
+Thanks
 
->> > > > I'm not an expert in UART communication and pinconf, so it could be that
->> > > > I
->> > > > got something wrong, but as of now it seems to me that no pull is the
->> > > > correct
->> > > > config for RTS.
->> > > >
+Sowjanya
 
-So, we can keep pull-down in Active case and in sleep state it is 
-mandatory to keep pull-down.
 
->> So, as far as i understand, even if pull-down is configured on RTS, BT 
->> SoC
->> can send data only when HOST is ready.
->> Can you please let me know which case you mean here, when you say "by
->> configuring it as a pull-down the BT SoC can send data regardless of 
->> whether
->> the host UART actually asserts RTS". Is there any case which we are 
->> missing
->> here?
-> 
-> I'm referring to the case where the system is suspended and the UART 
-> doesn't
-> control RTS (see above).
-> 
-> Thanks
-> 
-> Matthias
 
-Thanks,
-Satya Priya
