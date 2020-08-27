@@ -2,315 +2,438 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FBEC433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 13:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CEFC433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 13:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261AE22CB1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 13:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 194D922B40
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 13:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="tVNZ4tQV";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="pY+DtsVq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nc5nsMjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727950AbgH0Nka (ORCPT
+        id S1727995AbgH0Nre (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 09:40:30 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:15268 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728114AbgH0N3O (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 09:29:14 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07RDJwaJ014981;
-        Thu, 27 Aug 2020 06:29:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=AK+WGpUoNR7nO40iJKfuipo8O3Vq4Ysrs/T6PenhtNo=;
- b=tVNZ4tQVQGjkibAg7djRq9HiiLnbA2O1twa5pL6ycgt5EnTyQnJWz/6Ajrax+p7oeHbK
- r/TPBnCc91QTjeKGm5wT+gbS3d7C49/5JWuSkIobPKmRYHo2wMmYUJVLRJOiJqsEAyp+
- z9hJvHQ6UrKO3qp2t0eaKmFHT7nyKiANuKC0FTmEiNWHVF6lijxyeA2hLY1YDilkm/e4
- EhnTeoavNjFu63vvk08Iwnuvts3uIavnI3P6cuVOUt83FHu+8JUSfSDGM6Ty1PjnId5W
- kZUERAUGv+WqZAju3z7asdhVwKvjLDIAeFy/tITIHP8rp86MVOtGEQa4VHcRI0xbcsz7 Pg== 
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2175.outbound.protection.outlook.com [104.47.57.175])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 332xxxcnre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 06:29:05 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Esj/t4lpMt8egwkvI9xp1KSXu7R4msricfUKY6DSzKPUi5FMWLnJTJqHgUYl8xBYqlSkN144wLEe2Z5BzvOfdJ+RmTmvDNYM01UaplOVXrCkxsl7LnCUslNBG/7nqWRFu3Ag4WvwWbNU3pxcZWRnRR7+pZ6c6tZeOHOWWbKFDNFT6pNWSofzWdZSuK/XfEoB6hOw/vVBx6/KqyIWKrQVFMbFmfm4x+YgNPOj0H6dnSyuJhQ0QNcWydTTeS6mGAVB0/yLPBMzGOW5/ZExt4qMCZ2HO/Ivx8ydVntZBgCYIPQJ60WLPg1wW11rEJiDi25lQNomqkZTDsB/pP5exkcO9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AK+WGpUoNR7nO40iJKfuipo8O3Vq4Ysrs/T6PenhtNo=;
- b=V7Gq0ROM1sZp9hE8YqUnKnBT+EKV/MNoOgMvZ3jszCdppOdneRVwMc+M9CoNlFp/A1CFgOZDKkUYa6F5DxfpUZLzPS+4H197Iy9hoRsqbLvrbgyGqaD7P/6Kn3YukY7rQszdPtRTqQ1AEdGoGqS67VdzfUevnZSOffivQTejJj9iDI7l3Zb05k+qYrEeCyTnrFdEMWxL2Qpd99ikZ9B6cqi/q9VTXIEuISc8PfdgRRK7ErKwq9TI0QXuTxPL2lQyzZDSLyHT8RG1gEAmBObau/BBNund6sB8hj0UJQ3rnDGoMkJIUX//VvwFBnA2CaK9dJFlluG4o4J9+rlsyTe+Fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 199.43.4.23) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AK+WGpUoNR7nO40iJKfuipo8O3Vq4Ysrs/T6PenhtNo=;
- b=pY+DtsVqYnmcQejKleTPpS9lskuJd6PalgP8u26n/6wLY5/zkGuAITU4UBOY+DTgQamWIL6kXCMUSJoBr8cyanumQUWyXRB81Bf2EMwEVU6yfoWs4LhRPSrOKEqEzlebKyIUNhpne8lbczYAkElZtL50tBVlCG0Fx0rv0RLlgV8=
-Received: from DM5PR07CA0157.namprd07.prod.outlook.com (2603:10b6:3:ee::23) by
- SN4PR0701MB3663.namprd07.prod.outlook.com (2603:10b6:803:44::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Thu, 27 Aug
- 2020 13:29:03 +0000
-Received: from DM6NAM12FT012.eop-nam12.prod.protection.outlook.com
- (2603:10b6:3:ee:cafe::e0) by DM5PR07CA0157.outlook.office365.com
- (2603:10b6:3:ee::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Thu, 27 Aug 2020 13:29:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 199.43.4.23)
- smtp.mailfrom=cadence.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=pass action=none header.from=cadence.com;
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 199.43.4.23 as permitted sender) receiver=protection.outlook.com;
- client-ip=199.43.4.23; helo=rmmaillnx1.cadence.com;
-Received: from rmmaillnx1.cadence.com (199.43.4.23) by
- DM6NAM12FT012.mail.protection.outlook.com (10.13.179.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.19 via Frontend Transport; Thu, 27 Aug 2020 13:29:01 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 07RDSrRk001550
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 27 Aug 2020 09:29:00 -0400
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Thu, 27 Aug 2020 15:28:54 +0200
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Thu, 27 Aug 2020 15:28:54 +0200
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 07RDSrgS018754;
-        Thu, 27 Aug 2020 15:28:53 +0200
-Received: (from sjakhade@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 07RDSroG018753;
-        Thu, 27 Aug 2020 15:28:53 +0200
-From:   Swapnil Jakhade <sjakhade@cadence.com>
-To:     <vkoul@kernel.org>, <kishon@ti.com>, <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     <mparab@cadence.com>, <sjakhade@cadence.com>,
-        <yamonkar@cadence.com>, <tomi.valkeinen@ti.com>, <jsarha@ti.com>,
-        <nsekhar@ti.com>
-Subject: [PATCH v2 4/7] phy: cadence-torrent: Add separate regmap functions for torrent and DP
-Date:   Thu, 27 Aug 2020 15:28:49 +0200
-Message-ID: <1598534932-18693-5-git-send-email-sjakhade@cadence.com>
-X-Mailer: git-send-email 2.4.5
-In-Reply-To: <1598534932-18693-1-git-send-email-sjakhade@cadence.com>
-References: <1598534932-18693-1-git-send-email-sjakhade@cadence.com>
+        Thu, 27 Aug 2020 09:47:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728110AbgH0Nqs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 09:46:48 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31614C061264;
+        Thu, 27 Aug 2020 06:46:48 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m71so3550021pfd.1;
+        Thu, 27 Aug 2020 06:46:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=trl3ejZxIzsH2m05TMvOHIC113SXT6U//VHjhE8HmPo=;
+        b=Nc5nsMjj64/EXzj68L6FYaIJN7o6oh65oemNpKbD/M0QhWT/joMtIEIsqcZ2Do67kn
+         mqalmaTFng3effWg1XKkvg/tg4guRRsZ54wcN8ZtTUKL0YiLn4P2rkzOY2VW85ZqgmN4
+         VEQuNnlmY4Cb3v+PvCk5IPlasLTfx6+8zWl7WSex1ZUM0OQ6eh5M1vXmaicDY3fcZru9
+         ogUz5JO1y7vKmkGVYSPuJFJH8USGY4/UXDF6+g41zkicsAjjA322HeQ+wL0uCjR043Cp
+         zWC/Y5KeTPRkfguUtbFnYFbVaA8O51eBDFArc8owWwhWEGUfhOWCrOiicbWHipZKIc3Z
+         4yjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=trl3ejZxIzsH2m05TMvOHIC113SXT6U//VHjhE8HmPo=;
+        b=TJ16M0s0ZuBmzNdY4Qjy3xcsYcB0zh/xtosk2/2SCALKWaUqSNthvBCkNRWVt8bO3R
+         qJOjtN1WXKQPasqbf+YAPlov0N/xlJjUKz5vlrhfVTHa0tgmVrIw7mXg1RLHIBV/XkwS
+         TL/YIbVag3JJLxu5z8D+5asA9ipkee+QkdB3jHxMj36foLzOLN9OPZ4DsUu60+Ue/VEg
+         n00coKDRGgQlh4WKRx8So1pKMrtGV6MXau8XJCcjVg7a0wTIPnGu5paDfkCCNeJkGU2g
+         VmlFrlZE6ZVfnnOUml5px1A13UBhUBhbSiYO7kCJsx1ErBWZ3Qhi+7D/HC8Vuht9u6n8
+         Sk/Q==
+X-Gm-Message-State: AOAM532pHSv3tvHoEjjjdvjbscef+VcOXZ5JmUZoghcGyMsVIFk6aqVp
+        ce4HYvltehhtJp7AVJZVJuJL3Hm9Mxw=
+X-Google-Smtp-Source: ABdhPJxCpbfi2oMwHOJOE83v9J/BClUJcy3jXIiZgQeyNRJQgh2MrmwExBYvsQ+NCrky0WjpOi96Uw==
+X-Received: by 2002:a17:902:8f82:: with SMTP id z2mr1834609plo.177.1598536006820;
+        Thu, 27 Aug 2020 06:46:46 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z1sm3031165pff.178.2020.08.27.06.46.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Aug 2020 06:46:46 -0700 (PDT)
+Subject: Re: [PATCH v2 1/2] usb typec: mt6360: Add support for mt6360 Type-C
+ driver
+To:     =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        matthias.bgg@gmail.com,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1598503859-29620-1-git-send-email-u0084500@gmail.com>
+ <1598515415.21253.22.camel@mhfsdcap03>
+ <CADiBU3_CpOVTWM7JO78=DGw5J_dYNVUK=eH8ywQiMk2Gtk5Bsw@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <283c9452-996d-d1ce-90a0-28fbd55c291d@roeck-us.net>
+Date:   Thu, 27 Aug 2020 06:46:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: b2c01b95-2c78-49ba-856f-08d84a8d297e
-X-MS-TrafficTypeDiagnostic: SN4PR0701MB3663:
-X-Microsoft-Antispam-PRVS: <SN4PR0701MB36632F043BF3CC13E08990BDC5550@SN4PR0701MB3663.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:121;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZZDKP1Y9cM+rFrBli1mdtCNZteaJYRIx43e9pi7IBwt35WTkCaoD2frRUEFFsJqTGZiXZ+mgOOPMVOS8Vd7c37jsogj6TCk6mlm7lZF8uwpD7qGB6iQebsajsm9lQoqJL9dYMqVcBlRp9zsLmuEx9btMGyXwrU8qDu0cjNfHf4E/wi0T+mBoNFwtj8Scb34T86TRg93T3QaKzPlmbjbSwXx0wGxi8JjjnPR/Ilrv9u8GinxCNcE7mZ1Kpu9Ai5arJBhDyqId0C4RAoWuK6RvO1dhrpDKThGmvaYx///tZnVazw5kAV0RtVYKF5F+XnNiR5pLz2bJJ4SxlgpCmal/wAFIxSQdLaTaWEFacy7ayq1ai2kKc5Cjf+yyDrty7eoRorcOr4HU/HuDuADNq47fP+Yvxm77xp0K39csjLWbUv4=
-X-Forefront-Antispam-Report: CIP:199.43.4.23;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:rmmaillnx1.cadence.com;PTR:ErrorRetry;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(396003)(39860400002)(36092001)(46966005)(8676002)(8936002)(42186006)(426003)(54906003)(4326008)(316002)(2906002)(86362001)(110136005)(47076004)(81166007)(82740400003)(186003)(6666004)(70586007)(83380400001)(478600001)(26005)(2616005)(36756003)(70206006)(336012)(82310400002)(5660300002)(356005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Aug 2020 13:29:01.9237
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2c01b95-2c78-49ba-856f-08d84a8d297e
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.23];Helo=[rmmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM12FT012.eop-nam12.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0701MB3663
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_07:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 bulkscore=0
- adultscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 mlxscore=0 suspectscore=0
- malwarescore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008270101
+In-Reply-To: <CADiBU3_CpOVTWM7JO78=DGw5J_dYNVUK=eH8ywQiMk2Gtk5Bsw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Added separate functions for regmap initialization of torrent PHY
-generic registers and DP specific registers.
+On 8/27/20 4:32 AM, 啟原黃 wrote:
+> Chunfeng Yun <chunfeng.yun@mediatek.com> 於 2020年8月27日 週四 下午4:05寫道：
+>>
+>> On Thu, 2020-08-27 at 12:50 +0800, cy_huang wrote:
+>>> From: ChiYuan Huang <cy_huang@richtek.com>
+>>>
+>>> Mediatek MT6360 is a multi-functional IC that includes USB Type-C.
+>>> It works with Type-C Port Controller Manager to provide USB PD
+>>> and USB Type-C functionalities.
+>>>
+>>> Add fix to Prevent the race condition from interrupt and tcpci port unregister
+>>> during module remove.
+>>>
+>>> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+>>> ---
+>>>  drivers/usb/typec/tcpm/Kconfig        |   8 ++
+>>>  drivers/usb/typec/tcpm/Makefile       |   1 +
+>>>  drivers/usb/typec/tcpm/tcpci_mt6360.c | 213 ++++++++++++++++++++++++++++++++++
+>> Can you avoid using special SoC name in file name?
+>> It's not clear if you later support new SoC in the driver, e.g. mt63xx?
+> Okay, I will rename it to mt636x. From our SubPMIC generation,
+> currently, naming will be 6360/62/67, etc..
 
-Signed-off-by: Swapnil Jakhade <sjakhade@cadence.com>
----
- drivers/phy/cadence/phy-cadence-torrent.c | 99 +++++++++++++++--------
- 1 file changed, 66 insertions(+), 33 deletions(-)
+What if 6361 or 6365 or 6369 will require a different driver ?
+What if 6371 will, in the future, be supported by the same driver ?
+Or, for that matter, 7360 ? 6537 ?
 
-diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
-index ee633c8bf2d8..66ae5b749385 100644
---- a/drivers/phy/cadence/phy-cadence-torrent.c
-+++ b/drivers/phy/cadence/phy-cadence-torrent.c
-@@ -1584,7 +1584,24 @@ static struct regmap *cdns_regmap_init(struct device *dev, void __iomem *base,
- 	return devm_regmap_init(dev, NULL, ctx, config);
- }
- 
--static int cdns_regfield_init(struct cdns_torrent_phy *cdns_phy)
-+static int cdns_torrent_dp_regfield_init(struct cdns_torrent_phy *cdns_phy)
-+{
-+	struct device *dev = cdns_phy->dev;
-+	struct regmap_field *field;
-+	struct regmap *regmap;
-+
-+	regmap = cdns_phy->regmap_dptx_phy_reg;
-+	field = devm_regmap_field_alloc(dev, regmap, phy_reset_ctrl);
-+	if (IS_ERR(field)) {
-+		dev_err(dev, "PHY_RESET reg field init failed\n");
-+		return PTR_ERR(field);
-+	}
-+	cdns_phy->phy_reset_ctrl = field;
-+
-+	return 0;
-+}
-+
-+static int cdns_torrent_regfield_init(struct cdns_torrent_phy *cdns_phy)
- {
- 	struct device *dev = cdns_phy->dev;
- 	struct regmap_field *field;
-@@ -1614,28 +1631,44 @@ static int cdns_regfield_init(struct cdns_torrent_phy *cdns_phy)
- 	}
- 	cdns_phy->phy_pma_pll_raw_ctrl = field;
- 
--	regmap = cdns_phy->regmap_dptx_phy_reg;
--	field = devm_regmap_field_alloc(dev, regmap, phy_reset_ctrl);
--	if (IS_ERR(field)) {
--		dev_err(dev, "PHY_RESET reg field init failed\n");
--		return PTR_ERR(field);
-+	return 0;
-+}
-+
-+static int cdns_torrent_dp_regmap_init(struct cdns_torrent_phy *cdns_phy)
-+{
-+	void __iomem *base = cdns_phy->base;
-+	struct device *dev = cdns_phy->dev;
-+	struct regmap *regmap;
-+	u8 reg_offset_shift;
-+	u32 block_offset;
-+
-+	reg_offset_shift = cdns_phy->init_data->reg_offset_shift;
-+
-+	block_offset = TORRENT_DPTX_PHY_OFFSET;
-+	regmap = cdns_regmap_init(dev, base, block_offset,
-+				  reg_offset_shift,
-+				  &cdns_torrent_dptx_phy_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(dev, "Failed to init DPTX PHY regmap\n");
-+		return PTR_ERR(regmap);
- 	}
--	cdns_phy->phy_reset_ctrl = field;
-+	cdns_phy->regmap_dptx_phy_reg = regmap;
- 
- 	return 0;
- }
- 
--static int cdns_regmap_init_torrent_dp(struct cdns_torrent_phy *cdns_phy,
--				       void __iomem *sd_base,
--				       void __iomem *base,
--				       u8 block_offset_shift,
--				       u8 reg_offset_shift)
-+static int cdns_torrent_regmap_init(struct cdns_torrent_phy *cdns_phy)
- {
-+	void __iomem *sd_base = cdns_phy->sd_base;
-+	u8 block_offset_shift, reg_offset_shift;
- 	struct device *dev = cdns_phy->dev;
- 	struct regmap *regmap;
- 	u32 block_offset;
- 	int i;
- 
-+	block_offset_shift = cdns_phy->init_data->block_offset_shift;
-+	reg_offset_shift = cdns_phy->init_data->reg_offset_shift;
-+
- 	for (i = 0; i < MAX_NUM_LANES; i++) {
- 		block_offset = TORRENT_TX_LANE_CDB_OFFSET(i, block_offset_shift,
- 							  reg_offset_shift);
-@@ -1690,16 +1723,6 @@ static int cdns_regmap_init_torrent_dp(struct cdns_torrent_phy *cdns_phy,
- 	}
- 	cdns_phy->regmap_phy_pma_common_cdb = regmap;
- 
--	block_offset = TORRENT_DPTX_PHY_OFFSET;
--	regmap = cdns_regmap_init(dev, base, block_offset,
--				  reg_offset_shift,
--				  &cdns_torrent_dptx_phy_config);
--	if (IS_ERR(regmap)) {
--		dev_err(dev, "Failed to init DPTX PHY regmap\n");
--		return PTR_ERR(regmap);
--	}
--	cdns_phy->regmap_dptx_phy_reg = regmap;
--
- 	return 0;
- }
- 
-@@ -1712,6 +1735,7 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
- 	const struct cdns_torrent_data *data;
- 	struct device_node *child;
- 	int ret, subnodes, node = 0, i;
-+	u8 init_dp_regmap = 0;
- 
- 	/* Get init data for this PHY */
- 	data = of_device_get_match_data(dev);
-@@ -1749,6 +1773,14 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	ret = cdns_torrent_regmap_init(cdns_phy);
-+	if (ret)
-+		return ret;
-+
-+	ret = cdns_torrent_regfield_init(cdns_phy);
-+	if (ret)
-+		return ret;
-+
- 	for_each_available_child_of_node(dev->of_node, child) {
- 		struct phy *gphy;
- 
-@@ -1831,6 +1863,18 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
- 				goto put_child;
- 			}
- 
-+			if (!init_dp_regmap) {
-+				ret = cdns_torrent_dp_regmap_init(cdns_phy);
-+				if (ret)
-+					goto put_child;
-+
-+				ret = cdns_torrent_dp_regfield_init(cdns_phy);
-+				if (ret)
-+					goto put_child;
-+
-+				init_dp_regmap++;
-+			}
-+
- 			dev_info(dev, "%d lanes, max bit rate %d.%03d Gbps\n",
- 				 cdns_phy->phys[node].num_lanes,
- 				 cdns_phy->max_bit_rate / 1000,
-@@ -1849,17 +1893,6 @@ static int cdns_torrent_phy_probe(struct platform_device *pdev)
- 	}
- 	cdns_phy->nsubnodes = node;
- 
--	ret = cdns_regmap_init_torrent_dp(cdns_phy, cdns_phy->sd_base,
--					  cdns_phy->base,
--					  data->block_offset_shift,
--					  data->reg_offset_shift);
--	if (ret)
--		goto put_lnk_rst;
--
--	ret = cdns_regfield_init(cdns_phy);
--	if (ret)
--		goto put_lnk_rst;
--
- 	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
- 	if (IS_ERR(phy_provider)) {
- 		ret = PTR_ERR(phy_provider);
--- 
-2.26.1
+We usually try to avoid "x" in driver names because it can never be
+guaranteed that it will apply to x={0..9}. The current file name is
+just fine; it is customary to name drivers after the first chip they
+support.
+
+Guenter
+
+>>From our SOC roadmap, one generation can be used for one to two more years.
+> I think the name MT636x is enough.
+> For the next one, I can submit the patch to make it compatible with this driver.
+> Thanks for you comment.
+>>
+>>>  3 files changed, 222 insertions(+)
+>>>  create mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
+>>>
+>>> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+>>> index fa3f393..58a64e1 100644
+>>> --- a/drivers/usb/typec/tcpm/Kconfig
+>>> +++ b/drivers/usb/typec/tcpm/Kconfig
+>>> @@ -27,6 +27,14 @@ config TYPEC_RT1711H
+>>>         Type-C Port Controller Manager to provide USB PD and USB
+>>>         Type-C functionalities.
+>>>
+>>> +config TYPEC_MT6360
+>>> +     tristate "Mediatek MT6360 Type-C driver"
+>>> +     depends on MFD_MT6360
+>>> +     help
+>>> +       Mediatek MT6360 is a multi-functional IC that includes
+>>> +       USB Type-C. It works with Type-C Port Controller Manager
+>>> +       to provide USB PD and USB Type-C functionalities.
+>>> +
+>>>  endif # TYPEC_TCPCI
+>>>
+>>>  config TYPEC_FUSB302
+>>> diff --git a/drivers/usb/typec/tcpm/Makefile b/drivers/usb/typec/tcpm/Makefile
+>>> index a5ff6c8..7592ccb 100644
+>>> --- a/drivers/usb/typec/tcpm/Makefile
+>>> +++ b/drivers/usb/typec/tcpm/Makefile
+>>> @@ -5,3 +5,4 @@ obj-$(CONFIG_TYPEC_WCOVE)     += typec_wcove.o
+>>>  typec_wcove-y                        := wcove.o
+>>>  obj-$(CONFIG_TYPEC_TCPCI)    += tcpci.o
+>>>  obj-$(CONFIG_TYPEC_RT1711H)  += tcpci_rt1711h.o
+>>> +obj-$(CONFIG_TYPEC_MT6360)   += tcpci_mt6360.o
+>>> diff --git a/drivers/usb/typec/tcpm/tcpci_mt6360.c b/drivers/usb/typec/tcpm/tcpci_mt6360.c
+>>> new file mode 100644
+>>> index 00000000..a381b5d
+>>> --- /dev/null
+>>> +++ b/drivers/usb/typec/tcpm/tcpci_mt6360.c
+>>> @@ -0,0 +1,213 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>> +//
+>>> +// Copyright (C) 2020 MediaTek Inc.
+>>> +//
+>>> +// Author: ChiYuan Huang <cy_huang@richtek.com>
+>> Use /* */ except SPDX?
+> Yes, sure.
+>>
+>>> +
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/regmap.h>
+>>> +#include <linux/usb/tcpm.h>
+>>> +
+>>> +#include "tcpci.h"
+>>> +
+>>> +#define MT6360_REG_VCONNCTRL1        0x8C
+>>> +#define MT6360_REG_MODECTRL2 0x8F
+>>> +#define MT6360_REG_SWRESET   0xA0
+>>> +#define MT6360_REG_DEBCTRL1  0xA1
+>>> +#define MT6360_REG_DRPCTRL1  0xA2
+>>> +#define MT6360_REG_DRPCTRL2  0xA3
+>>> +#define MT6360_REG_I2CTORST  0xBF
+>>> +#define MT6360_REG_RXCTRL2   0xCF
+>>> +#define MT6360_REG_CTDCTRL2  0xEC
+>>> +
+>>> +/* MT6360_REG_VCONNCTRL1 */
+>>> +#define MT6360_VCONNCL_ENABLE        BIT(0)
+>>> +/* MT6360_REG_RXCTRL2 */
+>>> +#define MT6360_OPEN40M_ENABLE        BIT(7)
+>>> +/* MT6360_REG_CTDCTRL2 */
+>>> +#define MT6360_RPONESHOT_ENABLE      BIT(6)
+>>> +
+>>> +struct mt6360_tcpc_info {
+>>> +     struct tcpci_data tdata;
+>>> +     struct tcpci *tcpci;
+>>> +     struct device *dev;
+>>> +     int irq;
+>>> +};
+>>> +
+>>> +static inline int mt6360_tcpc_read16(struct regmap *regmap,
+>>> +                                  unsigned int reg, u16 *val)
+>>> +{
+>>> +     return regmap_raw_read(regmap, reg, val, sizeof(u16));
+>>> +}
+>>> +
+>>> +static inline int mt6360_tcpc_write16(struct regmap *regmap,
+>>> +                                   unsigned int reg, u16 val)
+>>> +{
+>>> +     return regmap_raw_write(regmap, reg, &val, sizeof(u16));
+>>> +}
+>>> +
+>>> +static int mt6360_tcpc_init(struct tcpci *tcpci, struct tcpci_data *tdata)
+>>> +{
+>>> +     struct regmap *regmap = tdata->regmap;
+>>> +     int ret;
+>>> +
+>>> +     ret = regmap_write(regmap, MT6360_REG_SWRESET, 0x01);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* after reset command, wait 1~2ms to wait IC action */
+>>> +     usleep_range(1000, 2000);
+>>> +
+>>> +     /* write all alert to masked */
+>>> +     ret = mt6360_tcpc_write16(regmap, TCPC_ALERT_MASK, 0);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* config I2C timeout reset enable , and timeout to 200ms */
+>>> +     ret = regmap_write(regmap, MT6360_REG_I2CTORST, 0x8F);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* config CC Detect Debounce : 26.7*val us */
+>>> +     ret = regmap_write(regmap, MT6360_REG_DEBCTRL1, 0x10);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* DRP Toggle Cycle : 51.2 + 6.4*val ms */
+>>> +     ret = regmap_write(regmap, MT6360_REG_DRPCTRL1, 4);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* DRP Duyt Ctrl : dcSRC: /1024 */
+>>> +     ret = mt6360_tcpc_write16(regmap, MT6360_REG_DRPCTRL2, 330);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* Enable VCONN Current Limit function */
+>>> +     ret = regmap_update_bits(regmap, MT6360_REG_VCONNCTRL1, MT6360_VCONNCL_ENABLE,
+>>> +                              MT6360_VCONNCL_ENABLE);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* Enable cc open 40ms when pmic send vsysuv signal */
+>>> +     ret = regmap_update_bits(regmap, MT6360_REG_RXCTRL2, MT6360_OPEN40M_ENABLE,
+>>> +                              MT6360_OPEN40M_ENABLE);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* Enable Rpdet oneshot detection */
+>>> +     ret = regmap_update_bits(regmap, MT6360_REG_CTDCTRL2, MT6360_RPONESHOT_ENABLE,
+>>> +                              MT6360_RPONESHOT_ENABLE);
+>>> +     if (ret)
+>>> +             return ret;
+>>> +
+>>> +     /* Set shipping mode off, AUTOIDLE on */
+>>> +     return regmap_write(regmap, MT6360_REG_MODECTRL2, 0x7A);
+>>> +}
+>>> +
+>>> +static irqreturn_t mt6360_irq(int irq, void *dev_id)
+>>> +{
+>>> +     struct mt6360_tcpc_info *mti = dev_id;
+>>> +
+>>> +     return tcpci_irq(mti->tcpci);
+>>> +}
+>>> +
+>>> +static int mt6360_tcpc_probe(struct platform_device *pdev)
+>>> +{
+>>> +     struct mt6360_tcpc_info *mti;
+>>> +     int ret;
+>>> +
+>>> +     mti = devm_kzalloc(&pdev->dev, sizeof(*mti), GFP_KERNEL);
+>>> +     if (!mti)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     mti->dev = &pdev->dev;
+>>> +
+>>> +     mti->tdata.regmap = dev_get_regmap(pdev->dev.parent, NULL);
+>>> +     if (!mti->tdata.regmap) {
+>>> +             dev_err(&pdev->dev, "Failed to get parent regmap\n");
+>>> +             return -ENODEV;
+>>> +     }
+>>> +
+>>> +     mti->irq = platform_get_irq_byname(pdev, "PD_IRQB");
+>>> +     if (mti->irq < 0) {
+>>> +             dev_err(&pdev->dev, "Failed to get PD_IRQB irq\n");
+>> No need add error log, platform_get_irq_byname will print it
+> I'll remove it in the next revision. Thanks
+>>
+>>> +             return mti->irq;
+>>> +     }
+>>> +
+>>> +     mti->tdata.init = mt6360_tcpc_init;
+>>> +     mti->tcpci = tcpci_register_port(&pdev->dev, &mti->tdata);
+>>> +     if (IS_ERR_OR_NULL(mti->tcpci)) {
+>> Use IS_ERR()? it seems not return NULL
+>>> +             dev_err(&pdev->dev, "Failed to register tcpci port\n");
+>>> +             return PTR_ERR(mti->tcpci);
+>> If return NULL, this may return 0?
+> Remove it later. you're right.
+>>
+>>> +     }
+>>> +
+>>> +     ret = devm_request_threaded_irq(mti->dev, mti->irq, NULL, mt6360_irq, IRQF_ONESHOT,
+>>> +                                     dev_name(&pdev->dev), mti);
+>>> +     if (ret) {
+>>> +             dev_err(mti->dev, "Failed to register irq\n");
+>>> +             tcpci_unregister_port(mti->tcpci);
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     device_init_wakeup(&pdev->dev, true);
+>>> +     platform_set_drvdata(pdev, mti);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int mt6360_tcpc_remove(struct platform_device *pdev)
+>>> +{
+>>> +     struct mt6360_tcpc_info *mti = platform_get_drvdata(pdev);
+>>> +
+>>> +     disable_irq(mti->irq);
+>> need sync?
+> Yes, sync must be considered to wait interrupt is really finished.
+> And disable_irq already the sync version.
+>>
+>>> +     tcpci_unregister_port(mti->tcpci);
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int __maybe_unused mt6360_tcpc_suspend(struct device *dev)
+>>> +{
+>>> +     struct mt6360_tcpc_info *mti = dev_get_drvdata(dev);
+>>> +
+>>> +     if (device_may_wakeup(dev))
+>>> +             enable_irq_wake(mti->irq);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int __maybe_unused mt6360_tcpc_resume(struct device *dev)
+>>> +{
+>>> +     struct mt6360_tcpc_info *mti = dev_get_drvdata(dev);
+>>> +
+>>> +     if (device_may_wakeup(dev))
+>>> +             disable_irq_wake(mti->irq);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static SIMPLE_DEV_PM_OPS(mt6360_tcpc_pm_ops, mt6360_tcpc_suspend, mt6360_tcpc_resume);
+>>> +
+>>> +static const struct of_device_id __maybe_unused mt6360_tcpc_of_id[] = {
+>>> +     { .compatible = "mediatek,mt6360-tcpc", },
+>>> +     {},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, mt6360_tcpc_of_id);
+>>> +
+>>> +static struct platform_driver mt6360_tcpc_driver = {
+>>> +     .driver = {
+>>> +             .name = "mt6360-tcpc",
+>>> +             .pm = &mt6360_tcpc_pm_ops,
+>>> +             .of_match_table = mt6360_tcpc_of_id,
+>>> +     },
+>>> +     .probe = mt6360_tcpc_probe,
+>>> +     .remove = mt6360_tcpc_remove,
+>>> +};
+>>> +module_platform_driver(mt6360_tcpc_driver);
+>>> +
+>>> +MODULE_AUTHOR("ChiYuan Huang <cy_huang@richtek.com>");
+>>> +MODULE_DESCRIPTION("MT6360 USB Type-C Port Controller Interface Driver");
+>>> +MODULE_LICENSE("GPL v2");
+>>
 
