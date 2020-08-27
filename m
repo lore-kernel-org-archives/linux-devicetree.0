@@ -2,264 +2,107 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99095C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6046CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7316F22BF5
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:29:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fKkwMSCT"
+	by mail.kernel.org (Postfix) with ESMTP id 374B72080C
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 10:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598524512;
+	bh=j53l6xpN5pfCrGpF8KAKqigp2K/D3ZSlNkM8qZH4iBM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AQMVW6RzhXQeB0GmXE/A6DClUnTLpgSBEubemlyei8GWNyYarEgXiV+UgZvt6/jJK
+	 gsuxOJDWFkdo7/ZfSV71Lba6zEvyESpK8xJN6oM54HXAxtHJyVLEeOUGLKIBvPAmkJ
+	 60kFwE3LkDdlVbpB6SxwtkfHWn7TVKmXquW5ntV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbgH0K3x (ORCPT
+        id S1728228AbgH0KfL (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 06:29:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48726 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728228AbgH0K3w (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 06:29:52 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA9F8C061232
-        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 03:29:51 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id t7so3992962otp.0
-        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 03:29:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
-        b=fKkwMSCT3+pj22gsTIywq7R4LB1He2LTSACwbCTdIGXidzMgQfHh+U6FSnM8xecppd
-         QbXBqCxhAsd24Zw+4HglaCDRXu6RFTP2NAQgwkA/Ipe/S4qcfzbCDRpQJMhf3j420AC1
-         7T9kCyCWVet5iClQ592TiqqC6sAFi5/3YYlm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VqVqosFrIbjcMckf+U3+gM0HZKqC0WuU3mUX+w73JZU=;
-        b=EBu4RmoEiG45JOOnVamcAfhF+GlmtIlgpBDlJIX4mzVGuopR97M8IgZxErUSqrXXMz
-         czLioWZcEuB/rQaMjkT44oyjj9xnnG/TnsbSzSLbI50t5ne5glSMRMI3+kI4SZMsyXeE
-         eFmPU0/l9q+6PqJMYLdRVvjCRuHduTkMF3H1H692T0wDqSgyafoJm11YZESDrfp6VR3V
-         3cmZ8ri1EmoC4fz3ItuGDPpNYhqp7B35z2xZCpg5gb2/rfjBRJMQ7Skita+kAC+DnbAa
-         pCKcf3O81ZReUIQY6QHyyzTUtXthWTdiJbAQLv+9ehaqnzcDn/OzdCEZpxTiArqjtwHb
-         sk2w==
-X-Gm-Message-State: AOAM532nPobrjAGkW0W93pQpuO0JQcmciADtai8qxnyhXpoM9+67xGqX
-        IaEWCpuqVk4fPF4rm5S3e63I1AJLANhyHA==
-X-Google-Smtp-Source: ABdhPJy85qEVmr1uRtgXlB/dUdUt8C3KZY8H80mctwYeHzjpoqNmLJ6ZR101uIX2VtvsaJPsWYot0A==
-X-Received: by 2002:a9d:6e1:: with SMTP id 88mr12581465otx.178.1598524189858;
-        Thu, 27 Aug 2020 03:29:49 -0700 (PDT)
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com. [209.85.210.43])
-        by smtp.gmail.com with ESMTPSA id s11sm370034otg.43.2020.08.27.03.29.48
-        for <devicetree@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
-Received: by mail-ot1-f43.google.com with SMTP id e23so3196282otk.7
-        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 03:29:48 -0700 (PDT)
-X-Received: by 2002:a9d:5f0c:: with SMTP id f12mr12086496oti.141.1598524187719;
- Thu, 27 Aug 2020 03:29:47 -0700 (PDT)
+        Thu, 27 Aug 2020 06:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbgH0KfJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 06:35:09 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D7AE2080C;
+        Thu, 27 Aug 2020 10:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598524508;
+        bh=j53l6xpN5pfCrGpF8KAKqigp2K/D3ZSlNkM8qZH4iBM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1QJbiyzNg3t5cOLZnLALBry05iDYnUfmlvxdMa+gNBq+poiejYDO/HotOcgm2kQrr
+         OCvUO1JJ0veZ52Vd9ETYHdmWCcvQp7Sgv9Q+8D/+HNX9Y+2VVnBweShMgDbzgzeKLu
+         OMBNP7tvMokoJgPZOtwj/knq9U5MtWlwARObRb+4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kBFFK-0076Gl-U5; Thu, 27 Aug 2020 11:35:07 +0100
 MIME-Version: 1.0
-References: <20200821103608.2310097-1-acourbot@chromium.org>
- <20200821103608.2310097-10-acourbot@chromium.org> <02eaeace-22dd-02ea-7162-90200fe1cffe@gmail.com>
- <CAPBb6MWZRKpg-rs7X_j3tqqsYHy=NkEMN1NdZwPS9zo-0whTJw@mail.gmail.com> <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
-In-Reply-To: <184d895c-239e-3f23-970e-6a9563235cd9@gmail.com>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Thu, 27 Aug 2020 19:29:35 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
-Message-ID: <CAPBb6MXrUNqWr=3KBPbJkXGmz=gL0aq_QuUQ5u_crR3yyDBvpw@mail.gmail.com>
-Subject: Re: [PATCH v4 09/17] arm64: dts: mt8183: add encoder node
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 27 Aug 2020 11:35:06 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
+ SIRQ controller binding
+In-Reply-To: <20200827100629.GA2451538@BV030612LT>
+References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
+ <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
+ <20200825220913.GA1423455@bogus> <20200826214220.GA2444747@BV030612LT>
+ <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
+ <20200827100629.GA2451538@BV030612LT>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: cristian.ciocaltea@gmail.com, robh@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, afaerber@suse.de, manivannan.sadhasivam@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Matthias,
+On 2020-08-27 11:06, Cristian Ciocaltea wrote:
+> On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
+>> On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
+>> <cristian.ciocaltea@gmail.com> wrote:
 
-On Thu, Aug 27, 2020 at 7:23 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
->
-> Hi Alexandre,
->
-> On 27/08/2020 12:10, Alexandre Courbot wrote:
-> > On Thu, Aug 27, 2020 at 7:03 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
-> >>
-> >>
-> >>
-> >> On 21/08/2020 12:36, Alexandre Courbot wrote:
-> >>> Now that the MT8183 encoder driver is ready, add its DT node. Also pull
-> >>> the iommu and scp ones, which the encoder depends upon.
-> >>
-> >> Please don't do that. Instead of pulling in other DT nodes, it would be handy to
-> >> get a reference of the series this is based on.
-> >>
-> >> Let me try to hunt them down now :)
-> >
-> > Sorry, I'm not sure to understand - do you mean each node should come
-> > with its own patch? Or that all the code should be merged before
-> > sending these nodes? The rest of this series should land into the
-> > media tree soon, if you prefer I can resend this patch separately once
-> > that happens.
-> >
->
-> What I'm talking about is the case when you send a series that's based on
-> another one and the latter is not yet accepted in Torvalds tree. In that case it
-> helps to point to the series you expect to be included as well.
->
-> In this case the SCP series was merged long time ago, but I missed the DTS
-> change. It would have been good if you would have added that information in your
-> series, instead of directly pulling in the SCP node.
+[...]
 
-Sorry about that, actually I was not even aware of this patch (or
-maybe I just forgot about it due to its date).
+>> Ultimately the GIC trigger type has to be
+>> something. Is it fixed or passed thru? If the latter, just use 0
+>> (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
+>> of translation of the trigger is pretty common.
+> 
+> Yes, as explained above, the SIRQ controller performs indeed the
+> translation of the incoming signal. So if I understand correctly, your
+> suggestion would be to use the following inside the sirq node:
+> 
+> interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
+>              [...]
 
->
-> For the iommu node: I understand that there was never a patch adding the node
-> (at least I wasn't able to find one). So I'd prefer to have it send as a
-> separate patch of this series.
->
-> Regarding this series now. If you want just resend the two DTS patches (iommu
-> and vcodec_enc) once the rest of this series got accpeted. If for any other
-> reason you have to send a v5, then feel free to include both in v5.
+Please don't. If you are describing a GIC interrupt, use a
+trigger that actually exists. Given that you have a 1:1
+mapping between input and output, just encode the output
+trigger that matches the input.
 
-Absolutely. I will wait until the patches land into the media tree and
-send you two DT-only patches.
-
-Thanks for the explanation!
-
->
-> Hope I explained myself now :)
->
-> Regards,
-> Matthias
->
-> >>
-> >> Regards,
-> >> Matthias
-> >>
-> >>>
-> >>> Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
-> >>> ---
-> >>>    arch/arm64/boot/dts/mediatek/mt8183-evb.dts   | 10 ++++++
-> >>>    .../arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 12 +++++++
-> >>>    arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 36 +++++++++++++++++++
-> >>>    3 files changed, 58 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >>> index ae405bd8f06b..9e77b420eee8 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-evb.dts
-> >>> @@ -25,6 +25,16 @@ memory@40000000 {
-> >>>        chosen {
-> >>>                stdout-path = "serial0:921600n8";
-> >>>        };
-> >>> +     reserved-memory {
-> >>> +             #address-cells = <2>;
-> >>> +             #size-cells = <2>;
-> >>> +             ranges;
-> >>> +             scp_mem_reserved: scp_mem_region {
-> >>> +                     compatible = "shared-dma-pool";
-> >>> +                     reg = <0 0x50000000 0 0x2900000>;
-> >>> +                     no-map;
-> >>> +             };
-> >>> +     };
-> >>>    };
-> >>>
-> >>>    &auxadc {
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> >>> index f0a070535b34..3c763be658da 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-> >>> @@ -90,6 +90,18 @@ pp3300_alw: regulator6 {
-> >>>                regulator-max-microvolt = <3300000>;
-> >>>        };
-> >>>
-> >>> +     reserved_memory: reserved-memory {
-> >>> +             #address-cells = <2>;
-> >>> +             #size-cells = <2>;
-> >>> +             ranges;
-> >>> +
-> >>> +             scp_mem_reserved: scp_mem_region {
-> >>> +                     compatible = "shared-dma-pool";
-> >>> +                     reg = <0 0x50000000 0 0x2900000>;
-> >>> +                     no-map;
-> >>> +             };
-> >>> +     };
-> >>> +
-> >>>        max98357a: codec0 {
-> >>>                compatible = "maxim,max98357a";
-> >>>                sdmode-gpios = <&pio 175 0>;
-> >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> >>> index 102105871db2..8f77eea6df27 100644
-> >>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> >>> @@ -8,6 +8,7 @@
-> >>>    #include <dt-bindings/clock/mt8183-clk.h>
-> >>>    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >>>    #include <dt-bindings/interrupt-controller/irq.h>
-> >>> +#include <dt-bindings/memory/mt8183-larb-port.h>
-> >>>    #include <dt-bindings/reset-controller/mt8183-resets.h>
-> >>>    #include <dt-bindings/phy/phy.h>
-> >>>    #include "mt8183-pinfunc.h"
-> >>> @@ -339,6 +340,25 @@ pwrap: pwrap@1000d000 {
-> >>>                        clock-names = "spi", "wrap";
-> >>>                };
-> >>>
-> >>> +             iommu: iommu@10205000 {
-> >>> +                     compatible = "mediatek,mt8183-m4u";
-> >>> +                     reg = <0 0x10205000 0 0x1000>;
-> >>> +                     interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>;
-> >>> +                     #iommu-cells = <1>;
-> >>> +             };
-> >>> +
-> >>> +             scp: scp@10500000 {
-> >>> +                     compatible = "mediatek,mt8183-scp";
-> >>> +                     reg = <0 0x10500000 0 0x80000>,
-> >>> +                           <0 0x105c0000 0 0x19080>;
-> >>> +                     reg-names = "sram", "cfg";
-> >>> +                     interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> >>> +                     clocks = <&infracfg CLK_INFRA_SCPSYS>;
-> >>> +                     clock-names = "main";
-> >>> +                     memory-region = <&scp_mem_reserved>;
-> >>> +                     status = "disabled";
-> >>> +             };
-> >>> +
-> >>>                systimer: timer@10017000 {
-> >>>                        compatible = "mediatek,mt8183-timer",
-> >>>                                     "mediatek,mt6765-timer";
-> >>> @@ -772,6 +792,22 @@ vencsys: syscon@17000000 {
-> >>>                        #clock-cells = <1>;
-> >>>                };
-> >>>
-> >>> +             vcodec_enc: vcodec@17020000 {
-> >>> +                     compatible = "mediatek,mt8183-vcodec-enc";
-> >>> +                     reg = <0 0x17020000 0 0x1000>;
-> >>> +                     interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_LOW>;
-> >>> +                     iommus = <&iommu M4U_PORT_VENC_REC>,
-> >>> +                              <&iommu M4U_PORT_VENC_BSDMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_RD_COMV>,
-> >>> +                              <&iommu M4U_PORT_VENC_CUR_LUMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_CUR_CHROMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_REF_LUMA>,
-> >>> +                              <&iommu M4U_PORT_VENC_REF_CHROMA>;
-> >>> +                     mediatek,scp = <&scp>;
-> >>> +                     clocks = <&vencsys CLK_VENC_VENC>;
-> >>> +                     clock-names = "MT_CG_VENC";
-> >>> +             };
-> >>> +
-> >>>                ipu_conn: syscon@19000000 {
-> >>>                        compatible = "mediatek,mt8183-ipu_conn", "syscon";
-> >>>                        reg = <0 0x19000000 0 0x1000>;
-> >>>
+         M.
+-- 
+Jazz is not dead. It just smells funny...
