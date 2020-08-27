@@ -2,173 +2,113 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB69C433E1
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 18:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E026C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222112087E
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 18:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F094E20714
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 19:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNz8+bhT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FrpUZP/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgH0SzC (ORCPT
+        id S1726873AbgH0TaZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 14:55:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43302 "EHLO
+        Thu, 27 Aug 2020 15:30:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgH0SzA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 14:55:00 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A4F1C061264;
-        Thu, 27 Aug 2020 11:55:00 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id d11so9024928ejt.13;
-        Thu, 27 Aug 2020 11:55:00 -0700 (PDT)
+        with ESMTP id S1726794AbgH0TaY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 15:30:24 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2806EC061235
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 12:30:23 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l23so5912488edv.11
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 12:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LHHKRlpGcLJvCKpegwxUOUmIDZhAqnwwqQX2kkQlM7s=;
-        b=QNz8+bhTuuSkmXiGILO4+og6Sl1O4SV5ipW6T/vNZSvL9MXrAJy7C07y5OxL0U3W9f
-         X8UpK761iwRZR/2m/xhmNila1tS7nUqofK1sHe1vm1aJC1wbIPL8/Q7/ZKwXB3zQOfNV
-         HYuz5T0vULxgCZKFHsQ9DdJ2NV1N4bjw656Z+TMM7bJ5Rf9Y5nNuOGtEKh5UmhP1G9vx
-         kP1YpVSFFvLoCgMDJVhU38/5hNmoA99DXrdSMFN1jYXJ1YFQcfDpOe8Vqh54/DzbPTfs
-         +dNgdhkFt23twviXTBwdovKxmBKjYj1LWkvhMkp1CxVx84UKdnRybvsaU2/XsM9R84Js
-         YO6w==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V0nv7wQoHFBDfCKea743Tg8u0187UBuuLmeycLCt9IE=;
+        b=FrpUZP/youjPCtKM9LqQKI6rWq/hmeX+PYpwaZCE58MOs9aULbEOUD4Iz6rJOV9v86
+         kzMmDQCn52Ev45YGSetnAY0Zm7bYPpoVb1ZDDxrGQ7IVOnwAt/v/76ct3LJCAOm0LjYs
+         t+lHPbwV5vlIeg3D3P29PjAeS807e1JZrOYtTkXUIScqDeAk1oZKWXnMuL9lQYTsQRg7
+         Qs17+Og1AY2RfXqoDXhpDyjUr+UD5+p4KKOtLn3B9ZubRDpXluQW5i2GTfFHaCUFIV6T
+         Plx3KsGr4Ctbdrr2snVE0YWdOkp0m/vKoxw1hDKbo4gpWES/+w0F4NRMcoYvSSomc6ny
+         X83w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LHHKRlpGcLJvCKpegwxUOUmIDZhAqnwwqQX2kkQlM7s=;
-        b=SQ2Dw0LBKAyJP0xlKIPy+n9N4PFMVf8eq2+MRqWuXkSLoY9f+61L74nA0KSOvb+2hl
-         y2KhuTHvjlGnUDsdgV/LxyH4ripSctTW1mtlC176s5T9ZyYozO8SXa4u/BrqyvOpb8cA
-         Qoakv4L+KlYKgqTnASXSEpNNn9rIusmRyJfahBET/d3fvDukYsq/vlT/gu86yn/1Wqwp
-         7nZg/lSO3mFw6wK6c978Sqq3iZOcZIQa4HeABjRT5KCapmMaWOyU55ziOx1IyQ30EyAs
-         HhpDDy2Isgodei/AaOjaB6jak5TUYP2RrI9EfGh9kw+gbld1/JZX0D/pGZg/GXsn7ebF
-         XP9g==
-X-Gm-Message-State: AOAM531eDEXms3SlM/PuMdd1TXivB/oEmQ1YbRZUXhqTQO7v0QMYPQ1x
-        efAIw2C+9UFtLuOkjjzWlZc=
-X-Google-Smtp-Source: ABdhPJzAisnvpJNwmg6E75pm+Dss0ilEJO1mrAtf34l/Azy1U3zXvkxujPh0hP3H2R4xka8Ms08ijg==
-X-Received: by 2002:a17:906:22d6:: with SMTP id q22mr14495824eja.242.1598554499144;
-        Thu, 27 Aug 2020 11:54:59 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id g11sm2100748edt.88.2020.08.27.11.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Aug 2020 11:54:58 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 21:54:56 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
- SIRQ controller binding
-Message-ID: <20200827185456.GA2475396@BV030612LT>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
- <20200825220913.GA1423455@bogus>
- <20200826214220.GA2444747@BV030612LT>
- <CAL_JsqLvXDFL6vFooPYLJ1QnZ7L756fNesXo-LW_scs9rV-zPA@mail.gmail.com>
- <20200827100629.GA2451538@BV030612LT>
- <64580e3b9acada6ff4ae9fdef02ac304@kernel.org>
- <20200827152428.GA2467154@BV030612LT>
- <7de137f820d5a3b7921bda0751509f85@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V0nv7wQoHFBDfCKea743Tg8u0187UBuuLmeycLCt9IE=;
+        b=rsDr4JiwOZpilHu/bp/kcdankm5jAGpqYqo4NBk2Jmydr9E6Y877B6CVUWSiNdCv6a
+         mbdkkg2YGcWopxyzgr2Qef0k0T69jgbswwDu9SO9QkSDc7xJzjVP3a+UrV8E/l0Yupa/
+         OF7+Gzrh4j6pbWkn1pX6abuqUGwm0QTifZc6yLi7ozXC05V9l+OIZs8BxEWtY7vuP+FW
+         z7G37KD77TBC2zbENm8BUWgUKVg4TKPX87CSbfnBR9MS0qZ140fQGSeYUvy2YGVNh5CZ
+         1pVkrRFBzEQ3+mI7TLVQaBECrnls6OMzJzxB6RqLROHzxVh9HGPm/xmURwkIUO5I2Gby
+         dXaw==
+X-Gm-Message-State: AOAM531nSpEfHHjWazSKLTGVz+4LXjC8YJG7i7zU4xFzjpHdbrJjSgNO
+        FW1yOpo8Q+oWvwnSwoxQXJmgi4Ru1sPPtSm5f0YMAA==
+X-Google-Smtp-Source: ABdhPJxrUFTaTtdB3uET/8l/a6XdYU2SNVMC86F8LwhWn6NZzuQLhDwt1HrAbXd+AGqTmGHN1IUW2aCKfRrjVA8PDWU=
+X-Received: by 2002:a50:d809:: with SMTP id o9mr20639212edj.12.1598556621415;
+ Thu, 27 Aug 2020 12:30:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7de137f820d5a3b7921bda0751509f85@kernel.org>
+References: <1594676120-5862-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <1594676120-5862-7-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
+In-Reply-To: <CA+V-a8tZAp_oTpG2MsdC47TtGP7=oM6CubCnjBoR6UhV4=opNg@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 27 Aug 2020 21:30:10 +0200
+Message-ID: <CAMpxmJWv=hTgbMLSVFm=C_5qSpo=BvOByW=B+BEEzTPswXfZzQ@mail.gmail.com>
+Subject: Re: [PATCH 6/9] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 04:42:04PM +0100, Marc Zyngier wrote:
-> Cristian,
-> 
-> On 2020-08-27 16:24, Cristian Ciocaltea wrote:
-> > Hi Marc,
-> > 
-> > On Thu, Aug 27, 2020 at 11:35:06AM +0100, Marc Zyngier wrote:
-> > > On 2020-08-27 11:06, Cristian Ciocaltea wrote:
-> > > > On Wed, Aug 26, 2020 at 04:48:38PM -0600, Rob Herring wrote:
-> > > > > On Wed, Aug 26, 2020 at 3:42 PM Cristian Ciocaltea
-> > > > > <cristian.ciocaltea@gmail.com> wrote:
-> > > 
-> > > [...]
-> > > 
-> > > > > Ultimately the GIC trigger type has to be
-> > > > > something. Is it fixed or passed thru? If the latter, just use 0
-> > > > > (IRQ_TYPE_NONE) if the GIC trigger mode is not fixed. Having some sort
-> > > > > of translation of the trigger is pretty common.
-> > > >
-> > > > Yes, as explained above, the SIRQ controller performs indeed the
-> > > > translation of the incoming signal. So if I understand correctly, your
-> > > > suggestion would be to use the following inside the sirq node:
-> > > >
-> > > > interrupts = <GIC_SPI 13 IRQ_TYPE_NONE>, /* SIRQ0 */
-> > > >              [...]
-> > > 
-> > > Please don't. If you are describing a GIC interrupt, use a
-> > > trigger that actually exists. Given that you have a 1:1
-> > > mapping between input and output, just encode the output
-> > > trigger that matches the input.
-> > 
-> > Understood, the only remark here is that internally, the driver will
-> > not use this information and instead will continue to rely on the input
-> > to properly set the trigger type for the output.
-> 
-> It's fine. The binding has to be consistent on its own, but
-> doesn't dictate the way the driver does thing.
-> 
-> > The question is if the driver should also emit a warning (or error?)
-> > when the trigger type supplied via DT doesn't match the expected value.
-> 
-> Rob will tell you that the kernel isn't a validation tool for broken
-> DTs. Shout if you want, but you are allowed to simply ignore the
-> output trigger for example
-> 
-> > If yes, we should also clarify what the user is supposed to provide in
-> > the controller node: the trigger type before the conversion (the input)
-> > or the one after the conversion (the output).
-> 
-> The output of a SIRQ should be compatible with the GIC input it is
-> attached to. You can have:
-> 
->         device (LEVEL_LOW) -> SIRQ (LEVEL_HIGH) -> GIC
-> 
-> but you can't have:
-> 
->         device (LEVEL_LOW) -> SIRQ (EDGE_RISING) -> GIC
-> 
-> because that's not an acceptable transformation for the SIRQ,
-> nor can you have:
-> 
->         device (EDGE_FALLING) -> SIRQ (EDGE_FALLING) -> GIC
-> 
-> because EDGE_FALLING isn't a valid input for the GIC.
-> 
-> In both of the invalid cases, you would be free to apply
-> which ever transformation actually makes sense, and shout
-> at the user if you want to help them debugging their turf.
-> The later part is definitely optional.
-> 
-> Hope this helps,
+On Thu, Aug 27, 2020 at 6:40 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+>
+> Hi Linus and Bartosz,
+>
+> On Mon, Jul 13, 2020 at 10:35 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> >
+> > Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
+> > relevant dt-bindings.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> Gentle ping.
+>
+> Cheers,
+> Prabhakar
 
-This certainly helps a lot, now I have a clear understanding of what is
-to be done next.
+This doesn't apply on top of v5.9-rc1.
 
->         M.
-> -- 
-> Jazz is not dead. It just smells funny...
-
-Many thanks for the detailed explanations,
-Cristi
+Bart
