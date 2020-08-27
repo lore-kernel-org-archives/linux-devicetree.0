@@ -2,96 +2,123 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EAF5C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 06:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6901CC433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 06:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B84222B47
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 06:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D60022B4D
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 06:51:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eig7GaE7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OMxdDhSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgH0Gos (ORCPT
+        id S1726826AbgH0Gv5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 02:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726266AbgH0Gor (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 02:44:47 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88357C061264;
-        Wed, 26 Aug 2020 23:44:46 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id si26so6120200ejb.12;
-        Wed, 26 Aug 2020 23:44:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version;
-        bh=5lZlEjBzHRbMaEVBrPh3+beD+zVE1nLzNB1myX762eI=;
-        b=Eig7GaE7XdtAk48TplK6uI32yfBA7+SXesz+kHeB7XZmBb+3DwCE5/M3VmSy8sYXWe
-         v1NEBt1cRDS4guAOYoKqZGD++lWBO1I8RKYLJ4MRV+HLW65pSYYRkIai7n6xWxTWVVVL
-         bnS6fZEu9DbCWXSYGc63CZxyzYKBwttSwLEjIDrMa+NZ8Mp/Qd7CJArFfeL1AJah468N
-         i9sxzoJqo3TJSiMAvvswZZyNoGk3tscjSQaACzfGn59u72K1bv0q5h1s/Uu16i5zUI6q
-         oXx1ihd5px0RTi3KVHJdAz5ATt7pkSIySTONx/Zi5cvVjA14XZl9g/Zz4p51Zms+zn1b
-         aQaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:references:date
-         :in-reply-to:message-id:user-agent:mime-version;
-        bh=5lZlEjBzHRbMaEVBrPh3+beD+zVE1nLzNB1myX762eI=;
-        b=TNX3vKLLeqFJj56Xs2CdIl6V2Q+ZY52FIrHLnsRxlg5KCns1YqbR7cJKjy7r1u/Fm7
-         RHDPKE9Q+m/wWcNIsuQ+bInRNkSQUe2FURGNvZI/x1K4o4UnCUJA7I1YMPmVytPCrMVl
-         cX7cRjyEoxB9twxF55xgkeFM5QnfUjxPako287BVtfJzWXZES3JyFminbXYkhI4ISWUa
-         6XoSWFLGnVFfpeEu9rfFsYP7KVDKgRScd24rsuFnm6mbKjKyjSI0icjy5k4UYKq/LD6u
-         whMx8smqJCg1HSgIJrYNk7BCSfkA6BKYe3VEQ6VqbYYhbPK/Chnb1NZ5oTYKbj1kwgxg
-         iikQ==
-X-Gm-Message-State: AOAM5332dEgVAsbNsIjH4PCQXQrBmNtdDwzGXnDgN40WqMyk/ogO1pPi
-        nH9tf6j80pcjfq4MQnQDj8I=
-X-Google-Smtp-Source: ABdhPJw5t5UbTv14Uj4GGZCXucqEXH1T/j2DVoME59kzRmfLL/U93OuLxcFPSpBov8Bart9NRig9cQ==
-X-Received: by 2002:a17:906:d8ca:: with SMTP id re10mr18729543ejb.382.1598510685222;
-        Wed, 26 Aug 2020 23:44:45 -0700 (PDT)
-Received: from dell.be.48ers.dk (d51A5BC31.access.telenet.be. [81.165.188.49])
-        by smtp.gmail.com with ESMTPSA id t21sm1048506ejr.62.2020.08.26.23.44.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 23:44:41 -0700 (PDT)
-Received: from peko by dell.be.48ers.dk with local (Exim 4.92)
-        (envelope-from <peter@korsgaard.com>)
-        id 1kBBeK-0002mM-CC; Thu, 27 Aug 2020 08:44:40 +0200
-From:   Peter Korsgaard <peter@korsgaard.com>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 4/4] arm: dts: owl-s500: Add RoseapplePi
-References: <cover.1592123160.git.cristian.ciocaltea@gmail.com>
-        <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
-Date:   Thu, 27 Aug 2020 08:44:40 +0200
-In-Reply-To: <2d12521d196e2c08a30aacd0ab20d93593f94707.1592123160.git.cristian.ciocaltea@gmail.com>
-        (Cristian Ciocaltea's message of "Mon, 15 Jun 2020 03:19:11 +0300")
-Message-ID: <87v9h4y4dj.fsf@dell.be.48ers.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 27 Aug 2020 02:51:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35346 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726123AbgH0Gv4 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 02:51:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07R6poCh055314;
+        Thu, 27 Aug 2020 01:51:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598511111;
+        bh=EZ4urYCDzsakd4EjKZOL9fkuGwP7G5Fa2CggJybcyuw=;
+        h=From:To:CC:Subject:Date;
+        b=OMxdDhSI49NlzXSChF9u+IUIg+cCmbccUF3D7cAzwsZWjbWM1Qz46Ik5YJBQh6viw
+         nnBg+8hJAHhOQUunGqfuYaPhSkuVvaMJ7QOh18eOoKBwv//Iv17SPp8qOEAM7rHA0W
+         DakhzooGS2OINEaC/OcQR6KsCPiZkIzXQ+hnf6CA=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07R6pokY011128
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 27 Aug 2020 01:51:50 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
+ Aug 2020 01:51:50 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 27 Aug 2020 01:51:50 -0500
+Received: from lokesh-ssd.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07R6pjof112178;
+        Thu, 27 Aug 2020 01:51:46 -0500
+From:   Lokesh Vutla <lokeshvutla@ti.com>
+To:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>
+Subject: [PATCH v2 0/4] arm64: Initial support for Texas Instrument's J7200 Platform
+Date:   Thu, 27 Aug 2020 12:21:40 +0530
+Message-ID: <20200827065144.17683-1-lokeshvutla@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
->>>>> "Cristian" == Cristian Ciocaltea <cristian.ciocaltea@gmail.com> writes:
+This series adds initial support for latest new SoC, J7200, from Texas Instruments.
 
- > Add a Device Tree for the RoseapplePi SBC.
- > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+The J7200 SoC is a part of the K3 Multicore SoC architecture platform.
+It is targeted for for automotive gateway, vehicle compute systems,
+Vehicle-to-Vehicle (V2V) and Vehicle-to-Everything (V2X) applications.
+The SoC aims to meet the complex processing needs of modern embedded products.
 
-Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
+See J7200 Technical Reference Manual (SPRUIU1, June 2020)
+for further details: https://www.ti.com/lit/pdf/spruiu1
 
-On a related note: There is now an owl-mmc driver for the s900. From a
-quick look at the datasheet it looks compatible with the controller on
-the s500. Did you have a look at hooking that up?
+Changes since v1:
+- Swapped Patch 1 and 2 as suggested by Nishanth.
+- Added description for each SoC in yaml bindings.
+
+Testing:
+- ./scripts/checkpatch --strict
+	- Few warningns about Line length exceeding 100 columns.
+	  But these are corresponding to comments
+- v8make dtbs_check
+- DT_SCHEMA_FLAGS="-u"
+  DT_SCHEMA_FILES="Documentation/devicetree/bindings/arm/ti/k3.yaml"
+  v8make dtbs_check
+- DT_SCHEMA_FLAGS="-u"
+  DT_SCHEMA_FILES="Documentation/devicetree/bindings/arm/ti/k3.yaml"
+  v8make dt_binding_check
+
+
+Lokesh Vutla (4):
+  dt-bindings: arm: ti: Convert K3 board/soc bindings to DT schema
+  dt-bindings: arm: ti: Add bindings for J7200 SoC
+  arm64: dts: ti: Add support for J7200 SoC
+  arm64: dts: ti: Add support for J7200 Common Processor Board
+
+ .../devicetree/bindings/arm/ti/k3.txt         |  26 ---
+ .../devicetree/bindings/arm/ti/k3.yaml        |  35 +++
+ MAINTAINERS                                   |   2 +-
+ arch/arm64/boot/dts/ti/Makefile               |   3 +-
+ .../dts/ti/k3-j7200-common-proc-board.dts     |  64 ++++++
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 199 ++++++++++++++++++
+ .../boot/dts/ti/k3-j7200-mcu-wakeup.dtsi      |  84 ++++++++
+ arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi   |  29 +++
+ arch/arm64/boot/dts/ti/k3-j7200.dtsi          | 165 +++++++++++++++
+ 9 files changed, 579 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/ti/k3.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/ti/k3.yaml
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j7200.dtsi
 
 -- 
-Bye, Peter Korsgaard
+2.28.0
+
