@@ -2,316 +2,116 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82748C433DF
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFF6C433DF
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA8C2080C
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65A0222B4E
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 15:19:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kqWOz9u1"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="F8l8Ojj/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TMmC2Mti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgH0PPG (ORCPT
+        id S1727814AbgH0PTg (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 11:15:06 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:13684 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgH0PPE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 11:15:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f47cde30000>; Thu, 27 Aug 2020 08:14:43 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 27 Aug 2020 08:14:57 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 27 Aug 2020 08:14:57 -0700
-Received: from [10.26.74.41] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 27 Aug
- 2020 15:14:53 +0000
-Subject: Re: [PATCH v6 7/7] sdhci: tegra: Add missing TMCLK for data timeout
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <1598500201-5987-1-git-send-email-skomatineni@nvidia.com>
- <1598500201-5987-8-git-send-email-skomatineni@nvidia.com>
- <93d0188b-c833-33b4-211e-b9293c4f3a1c@nvidia.com>
- <3deac67c-bb1e-ef23-7dcc-8d4024203ab1@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5ec4d869-f134-6e6d-6496-2410f271b196@nvidia.com>
-Date:   Thu, 27 Aug 2020 16:14:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 27 Aug 2020 11:19:36 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:33093 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726087AbgH0PTW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 11:19:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id ED74F13F4;
+        Thu, 27 Aug 2020 11:19:17 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Thu, 27 Aug 2020 11:19:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=RSXeFCAVyCX3aYLKYMbZeZXSxmS
+        Xwn7LT8+Wx3RjWNM=; b=F8l8Ojj/TBni6VehwfbAMamic7/vSaOKl9W9TvxXbrW
+        e4ejSCQ9KLMcnK/I0mLTuObu0fREP+CxjmF1mYNl7yS06CMy1KpPjZ2TlnR/JuRX
+        2t8W50rpAzn7rUN97jVHjoIG2UQii2X0aRSs6iS/2XzQXTHbqbH6U+uS7Jbx1k77
+        yWZEvEPYyCwfTTa8dOIsal4jv5qwyRN01D6QXLmqGUfcoa41IRxVI9g0ZnAcld8Z
+        WkC1QaGEQJSq6euvS+HTfHZMKzCgMoas15qg1G4UNPy0DF48zQx4yYybxG6VqIrR
+        qGgIbD102niACW1O9JMkbxvYRhHMEwGbOfldHKBxhDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=RSXeFC
+        AVyCX3aYLKYMbZeZXSxmSXwn7LT8+Wx3RjWNM=; b=TMmC2MtisUEs2n3TsVlool
+        qSh5Hb7qu6Cqn+vZ0sRyS7lRMj9IDL2eyeK3BgWuiBLb5p+L94ji9sCItqMFte49
+        UHqB/G0g9Qo2HLhJhTF4FxrO/AccnQF4Sq6y9dj/Br3+aKzeBaxn4RlHeMkHaLb/
+        QNwujHuojLpdLXHzmdFdJvLYdOkwfaqAwXyo2N0Niy1cCHZIn+8rb67PCMF64agt
+        rmVckLie86XWn6bbYB8Mfb32yNvQFGyVxzSjkXb+/sqfuWNod+42+Em/tKlZ+HlB
+        1xoUQTS9SfhwrGpKN2CXkQxxzBTggOm3o3F7AnWVa9PMEppaAHyQd0j164DJE+7Q
+        ==
+X-ME-Sender: <xms:9M5HX7WZa9MJa905TVKH1aLcR44o_72vl5e7CE7zBTQpSAGN4jcCUQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvgedgkeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:9M5HXzksu6H9NLU-JHpE44gvTZN1HLK8hg0nSDsMv-p_LtYsnOSlaQ>
+    <xmx:9M5HX3ZiWTAtHlbHOd0W_wztoEK37pGB9Ftz1nRWolT11nn7eEwKkw>
+    <xmx:9M5HX2VcMEImMZCM96eQHANOo-yedsRERAeDh6FQys9rrYlffrjZJg>
+    <xmx:9c5HX37UnQ4oOxPRjuIjQ-AQSVCndrkQ6_M4hxZwjhjNE5tstWiCgyxys8s>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DD7673280068;
+        Thu, 27 Aug 2020 11:19:15 -0400 (EDT)
+Date:   Thu, 27 Aug 2020 17:19:14 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, paul.kocialkowski@bootlin.com, mchehab@kernel.org,
+        robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/5] ARM: dts: sun8i: r40: Enable video decoder
+Message-ID: <20200827151914.copcle3xjn3ek6p4@gilmour.lan>
+References: <20200825173523.1289379-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-In-Reply-To: <3deac67c-bb1e-ef23-7dcc-8d4024203ab1@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598541283; bh=xVoI1WZkGHOqNohPt0+gex2ZSLXV6wVFwXRA9Hx8SBA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kqWOz9u1bINwK2K3lmHd1dbL57lLBYMMl2KAWX/leAhFGwUgBeggB/4LpX9LOp3GB
-         1ch2zDN1VNOgfcrod23at6YhLgpcU189s/eKCQnxAp0OL7LZ/iyRFqnxRAiiWElQpy
-         SXkYo0J+9p0qQB97snF103KCQgiKEKVTuzBX4t8WkkiYyipnBt3w4WmCYKwEeDkj/B
-         1WCa8UK2VDzym3noqz5Ztmf/X5NMGTdb5kBad/H+GYN7bQdwAsbFuFTMBhEK0xQ+kB
-         dXnpJRfWj4o3BmobrlLrhe39OTk8LhnG3ps7ATHEG6ouWd3JiemKJveHNtBsL1VR4b
-         VIed7kguBu50w==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="iuvgwm6rpxeewgp5"
+Content-Disposition: inline
+In-Reply-To: <20200825173523.1289379-1-jernej.skrabec@siol.net>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
 
-On 27/08/2020 16:03, Sowjanya Komatineni wrote:
->=20
-> On 8/27/20 1:40 AM, Jon Hunter wrote:
->> On 27/08/2020 04:50, Sowjanya Komatineni wrote:
->>> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
->>>
->>> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
->>> SDMMC hawdware for data timeout to achive better timeout than using
->>> SDCLK and using TMCLK is recommended.
->>>
->>> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
->>> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
->>> SDCLK for data timeout.
->>>
->>> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
->>> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
->>> is not recommended.
->>>
->>> So, this patch adds quirk NVQUIRK_HAS_TMCLK for SoC having separate
->>> timeout clock and keeps TMCLK enabled all the time.
->>>
->>> Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
->>> Cc: stable <stable@vger.kernel.org> # 5.4
->>> Tested-by: Jon Hunter <jonathanh@nvidia.com>
->>> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
->>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 drivers/mmc/host/sdhci-tegra.c | 90
->>> ++++++++++++++++++++++++++++++++++++++----
->>> =C2=A0 1 file changed, 82 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-tegra.c
->>> b/drivers/mmc/host/sdhci-tegra.c
->>> index 31ed321..f69ca8d 100644
->>> --- a/drivers/mmc/host/sdhci-tegra.c
->>> +++ b/drivers/mmc/host/sdhci-tegra.c
->>> @@ -13,6 +13,7 @@
->>> =C2=A0 #include <linux/clk.h>
->>> =C2=A0 #include <linux/io.h>
->>> =C2=A0 #include <linux/of.h>
->>> +#include <linux/of_clk.h>
->>> =C2=A0 #include <linux/of_device.h>
->>> =C2=A0 #include <linux/pinctrl/consumer.h>
->>> =C2=A0 #include <linux/regulator/consumer.h>
->>> @@ -110,6 +111,12 @@
->>> =C2=A0 #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(8)
->>> =C2=A0 #define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 BIT(9)
->>> =C2=A0 +/*
->>> + * NVQUIRK_HAS_TMCLK is for SoC's having separate timeout clock for
->>> Tegra
->>> + * SDMMC hardware data timeout.
->>> + */
->>> +#define NVQUIRK_HAS_TMCLK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(10)
->>> +
->>> =C2=A0 /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
->>> =C2=A0 #define SDHCI_TEGRA_CQE_BASE_ADDR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0xF000
->>> =C2=A0 @@ -140,6 +147,7 @@ struct sdhci_tegra_autocal_offsets {
->>> =C2=A0 struct sdhci_tegra {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct sdhci_tegra_soc_data *soc_d=
-ata;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct gpio_desc *power_gpio;
->>> +=C2=A0=C2=A0=C2=A0 struct clk *tmclk;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool ddr_signaling;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool pad_calib_required;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool pad_control_available;
->>> @@ -1433,7 +1441,8 @@ static const struct sdhci_tegra_soc_data
->>> soc_data_tegra210 =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_HAS_PADCALIB |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR50 |
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104 |
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_HAS_TMCLK,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .min_tap_delay =3D 106,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .max_tap_delay =3D 185,
->>> =C2=A0 };
->>> @@ -1471,6 +1480,7 @@ static const struct sdhci_tegra_soc_data
->>> soc_data_tegra186 =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR50 |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR104 |
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_HAS_TMCLK |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .min_tap_delay =3D 84,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .max_tap_delay =3D 136,
->>> @@ -1483,7 +1493,8 @@ static const struct sdhci_tegra_soc_data
->>> soc_data_tegra194 =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_HAS_PADCALIB |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 NVQUIRK_ENABLE_SDR50 |
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_ENABLE_SDR104 |
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NVQ=
-UIRK_HAS_TMCLK,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .min_tap_delay =3D 96,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .max_tap_delay =3D 139,
->>> =C2=A0 };
->>> @@ -1611,15 +1622,76 @@ static int sdhci_tegra_probe(struct
->>> platform_device *pdev)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_power_r=
-eq;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0 clk =3D devm_clk_get(mmc_dev(host->mmc), NUL=
-L);
->>> -=C2=A0=C2=A0=C2=A0 if (IS_ERR(clk)) {
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D PTR_ERR(clk);
->>> +=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Tegra210 and later has separate SDMMC_LEGAC=
-Y_TM clock used for
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * hardware data timeout clock and SW can choo=
-se TMCLK or SDCLK for
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * hardware data timeout through the bit USE_T=
-MCLK_FOR_DATA_TIMEOUT
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * of the register SDHCI_TEGRA_VENDOR_SYS_SW_C=
-TRL.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is s=
-et to 1 and SDMMC
->>> uses
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * 12Mhz TMCLK which is advertised in host cap=
-ability register.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * With TMCLK of 12Mhz provides maximum data t=
-imeout period that
->>> can
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * be achieved is 11s better than using SDCLK =
-for data timeout.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * So, TMCLK is set to 12Mhz and kept enabled =
-all the time on SoC's
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * supporting separate TMCLK.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 *
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * Old device tree has single sdhci clock. So =
-with addition of
->>> TMCLK,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * retrieving sdhci clock by "sdhci" clock nam=
-e based on number of
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 * clocks in sdhci device node.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (of_clk_get_parent_count(pdev->dev.of_node) =3D=
-=3D 1) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (soc_data->nvquirks & NV=
-QUIRK_HAS_TMCLK)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev=
-_warn(&pdev->dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 "missing tmclk in the device tree\n");
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk =3D devm_clk_get(&pdev-=
->dev, NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clk)) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rc =
-=3D PTR_ERR(clk);
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rc !=3D -EPROBE_=
-DEFER)
->>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev=
-_err(&pdev->dev, "failed to get clock: %d\n", rc);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if =
-(rc !=3D -EPROBE_DEFER)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 dev_err(&pdev->dev,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "failed to get sdhci clock: %=
-d\n", rc);
->>> =C2=A0 -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_clk_get;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
-o err_power_req;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> +=C2=A0=C2=A0=C2=A0 } else {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (soc_data->nvquirks & NV=
-QUIRK_HAS_TMCLK) {
->>
->> I think that I would do the inverse of this ...
->>
->> =C2=A0=C2=A0=C2=A0 } else {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!(soc_data->nvquirk=
-s & NVQUIRK_HAS_TMCLK)) {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&pdev->dev, "Device has unexpected clocks!=
-\n");
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 rc =3D -EINVAL;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 goto_power_req;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk =3D devm_clk_get(&p=
-dev->dev, "tmclk");
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ...
->>
->> If the device does not have a single clock, then we expect it to support
->> the tmclk. If this is not the case, then this is a bug.
->>
->> Cheers
->> Jon
->=20
-> I don't see other drivers validating for unexpected device tree entries.
->=20
-> Also only for SoC with quirk HAS_TMCLK, we are retrieving TMCLK with
-> clock name and enabling it.
->=20
-> So for other SoC even if device tree has additional clock entry other
-> than sdhci driver don't use it and also dt-binding do not have any tmclk
-> entry for other SoC. So why would this be a bug?
+--iuvgwm6rpxeewgp5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In the device tree binding doc, we say has two clocks for Tegra210,
-Tegra186 and Tegra194 and one clock for all other devices. So if we no
-there is more than 1 but the device does not have this quirk, then the
-device-tree does not reflect what is stated in the binding doc or the
-quirk is no populated as it should be. I feel that either case is a bug.
+On Tue, Aug 25, 2020 at 07:35:18PM +0200, Jernej Skrabec wrote:
+> Allwinner R40 SoC contains video engine very similar to that in A33.
+>=20
+> First two patches add system controller nodes and the rest of them
+> add support for Cedrus VPU.
+>=20
+> Please take a look.
 
-Now of course it could be possible for someone to add a 3rd clock for
-Tegra210 and we would not detect this but like you said we don't check
-all conditions. So yes we don't catch all cases, but the ones that matter.
+Applied all 5 patches, thanks
 
-Jon
+Maxime
 
---=20
-nvpublic
+--iuvgwm6rpxeewgp5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0fO8gAKCRDj7w1vZxhR
+xV5NAQDF9g6AIv8B7pmqugf0GI/8cUs9e7lyAcm+Rz+TGwFkWgD/VEcDH7+c5LKz
+fF+auOAaw4kec1ruj6+uGhxwKyBSYAU=
+=FNIg
+-----END PGP SIGNATURE-----
+
+--iuvgwm6rpxeewgp5--
