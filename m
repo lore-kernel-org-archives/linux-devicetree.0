@@ -2,155 +2,193 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4442C433E3
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA94C433E1
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAECF2054F
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 948A122BEB
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 14:54:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598540067;
+	bh=LzWZBpCw/l+Ix/GXPE6nae42Wme8sXfeIYoOLqaRLsQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=zFWT/9FSCdkSaC0/Qq0gVJuc5Rn3RhvoeqRAkFsCO+OSz16vuJjhBUXoj3o/dqR9d
+	 2N9dRZITotj8UIIcPmOw5FmbtR3MeAMV9MGVXrkM+3wYFSsBmmHgjzWysTLyjdZiwD
+	 nsNmYQ6sXlZnlVkNUrMQBJuYcIdYZAcjNxle0nXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgH0Oxf (ORCPT
+        id S1726322AbgH0NLt (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 10:53:35 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:3877 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728013AbgH0OxX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 10:53:23 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592838000"; 
-   d="scan'208";a="55482017"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 27 Aug 2020 23:53:22 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9829A40065C9;
-        Thu, 27 Aug 2020 23:53:20 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add cpuidle support for CA5x cores
-Date:   Thu, 27 Aug 2020 15:53:15 +0100
-Message-Id: <20200827145315.26261-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200827145315.26261-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200827145315.26261-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Thu, 27 Aug 2020 09:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727112AbgH0NKf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 09:10:35 -0400
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2095B207CD;
+        Thu, 27 Aug 2020 13:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598533367;
+        bh=LzWZBpCw/l+Ix/GXPE6nae42Wme8sXfeIYoOLqaRLsQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=y0Z196NIPvRRFED15YhQtorRsjOAL/5EHRTli8FDYNANC23zGBgTup+7OEOHNLZU6
+         yjR68sJL4gcNocA9V4maauV4CZLScAgY4aBIvQ56F73mQ0ZDQz2pwgAcE+d6Fjy4v6
+         tjj2go46yC/493h+pidRAT7l+Uzv/tpbV0gPSOx0=
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Roger Quadros <rogerq@ti.com>, Peter Chen <peter.chen@nxp.com>
+Cc:     Pawel Laszczak <pawell@cadence.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 3/3] usb: cdns3: Enable workaround for USB2.0 PHY Rx
+ compliance test PHY lockup
+In-Reply-To: <b083883d-b8c3-ee16-6b02-8987cade17ed@ti.com>
+References: <20200825120059.12436-1-rogerq@ti.com>
+ <20200825120059.12436-4-rogerq@ti.com>
+ <20200826031948.GA7646@b29397-desktop>
+ <DM6PR07MB5529A43AFDEB25993595DB59DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
+ <20200826071504.GA19661@b29397-desktop>
+ <DM6PR07MB5529EB2FB7E3380321191B44DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
+ <AM7PR04MB71576DF6C03387C7628DBE3A8B540@AM7PR04MB7157.eurprd04.prod.outlook.com>
+ <ab38721a-ef48-c6a7-aa33-3085ca7b8852@ti.com>
+ <20200827002339.GA17559@b29397-desktop>
+ <b083883d-b8c3-ee16-6b02-8987cade17ed@ti.com>
+Date:   Thu, 27 Aug 2020 16:02:39 +0300
+Message-ID: <87sgc8i6mo.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Enable cpuidle (core shutdown) support for RZ/G2H CA5x cores.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 30 +++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index 34fdb9a0c325..e5445ba99e84 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -127,6 +127,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU0>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			dynamic-power-coefficient = <854>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
-@@ -141,6 +142,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU1>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-@@ -154,6 +156,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU2>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_0>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-@@ -167,6 +170,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA57_CPU3>;
- 			next-level-cache = <&L2_CA57>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
- 			capacity-dmips-mhz = <1024>;
-@@ -180,6 +184,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU0>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			#cooling-cells = <2>;
- 			dynamic-power-coefficient = <277>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
-@@ -194,6 +199,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU1>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <535>;
-@@ -206,6 +212,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU2>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <535>;
-@@ -218,6 +225,7 @@
- 			power-domains = <&sysc R8A774E1_PD_CA53_CPU3>;
- 			next-level-cache = <&L2_CA53>;
- 			enable-method = "psci";
-+			cpu-idle-states = <&CPU_SLEEP_1>;
- 			clocks = <&cpg CPG_CORE R8A774E1_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
- 			capacity-dmips-mhz = <535>;
-@@ -236,6 +244,28 @@
- 			cache-unified;
- 			cache-level = <2>;
- 		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+
-+			CPU_SLEEP_0: cpu-sleep-0 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0010000>;
-+				local-timer-stop;
-+				entry-latency-us = <400>;
-+				exit-latency-us = <500>;
-+				min-residency-us = <4000>;
-+			};
-+
-+			CPU_SLEEP_1: cpu-sleep-1 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0010000>;
-+				local-timer-stop;
-+				entry-latency-us = <700>;
-+				exit-latency-us = <700>;
-+				min-residency-us = <5000>;
-+			};
-+		};
- 	};
- 
- 	extal_clk: extal {
--- 
-2.17.1
+Hi,
 
+Roger Quadros <rogerq@ti.com> writes:
+>>>>>>>>> From: Pawel Laszczak <pawell@cadence.com>
+>>>>>>>>>
+>>>>>>>>> USB2.0 PHY hangs in Rx Compliance test when the incoming packet
+>>>>>>>>> amplitude is varied below and above the Squelch Level of Receiver
+>>>>>>>>> during the active packet multiple times.
+>>>>>>>>>
+>>>>>>>>> Version 1 of the controller allows PHY to be reset when RX fail
+>>>>>>>>> condition is detected to work around the above issue. This feature
+>>>>>>>>> is disabled by default and needs to be enabled using a bit from
+>>>>>>>>> the newly added PHYRST_CFG register. This patch enables the worka=
+round.
+>>>>>>>>>
+>>>>>>>>> As there is no way to distinguish between the controller version
+>>>>>>>>> before the device controller is started we need to rely on a DT
+>>>>>>>>> property to decide when to apply the workaround.
+>>>>>>>>
+>>>>>>>> Pawel, it could know the controller version at cdns3_gadget_start,
+>>>>>>>> but the controller starts when it tries to bind gadget driver, at
+>>>>>>>> that time, it has already known the controller version.
+>>>>>>>>
+>>>>>>>> For me, the device controller starts is using USB_CONF.DEVEN (Devi=
+ce
+>>>>>>>> Enable) through usb_gadget_connect, I am not sure if it is the same
+>>>>>>>> with yours.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Yes in device mode driver knows controller version but this
+>>>>>>> workaround Must be enabled also in host mode. In host mode the
+>>>>>>> controller doesn't have access to device registers. The controller
+>>>>>>> version is placed in device register.
+>>>>>>>
+>>>>>>
+>>>>>> You may suggest your design team adding CHIP_VER register at global
+>>>>>> register region, it will easy the software engineer life.
+>>>>>>
+>>>>> >From what I read, this register is only enabling USB2 PHY reset
+>>>>>> software control, it needs for all chips with rev 0x0002450D, and the
+>>>>>> place you current change is only for 0x0002450D, right?
+>>>>>
+>>>>> Even I could say that this workaround should be enabled only for Spec=
+ific USB2
+>>>>> PHY  (only 0x0002450D)
+>>>>>
+>>>>> This bit should not have any impact for Cadence PHY but it can has Im=
+pact for third
+>>>>> party PHYs.
+>>>>>
+>>>>
+>>>> So, it is related to specific PHY, but enable this specific PHY reset =
+bit is at controller region, why don't
+>>>> put this enable bit at PHY region?
+>>>
+>>> I think this is related to Controller + PHY combination.
+>>> The fix for the issue is via a bit in the controller, so it needs to be=
+ managed by the
+>>> controller driver.
+>>>
+>>>>
+>>>> So, you use controller's device property to know this specific PHY, ca=
+n controller know this specific
+>>>> PHY dynamically?
+>>>
+>>> Still the PHY will have to tell the controller the enable that bit. How=
+ to do that?
+>>>
+>>> Adding a dt-property that vendors can used was the simplest option.
+>>>
+>>=20
+>> Ok, does all controllers with ver 0x0002450D need this fix? I just think
+>> if we introduce a flag stands for ver 0x0002450D in case this ver has
+>> other issues in future or just using phy reset enable property?
+>>=20
+>> Pawel & Roger, what's your opinion?
+>>=20
+> I think it is best to keep the flags specific to the issue rather than
+> a one flag for all issues with a specific version. This way you can
+> re-use the flag irrespective of IP version.
+
+I second that. Specially when some SoC-manufacturers may implement ECO
+fixes and not change IP revision.
+
+> But best case is that Cadence put a IP revision register in common area a=
+s you
+> have previously suggested so driver can automatically apply quirks to spe=
+cific
+> versions.
+
+little too late for that :-)
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9Hru8RHGJhbGJpQGtl
+cm5lbC5vcmcACgkQzL64meEamQY8xg//WHz2GcqK1+sGxk+5lOGCP/rWdOLo+WMg
+UgBC36W9zMY0Cchh0rRluRfliavEkvtnIF12d8aQSg1tpqWQ+Mu2S8QwWUJCleaa
+wO77Ocyg3PfAOjHWEnWBJxrOoplNwnza/3uoKVfpPeJrHlqzwH9ibhe7MKdYlO13
+tTEHyGXL2G9tTiiF4KhEC0Q9W86i4lYscTfu9BZaRD0GESrnN+6BkLnBQHG7Eo2R
+fmj0ydezud89ezWtMhfSEXnsxRsylP/Nho5Rrd3mKyY4kL6A07JlGTzsZ5RDQmkp
+6V9MAyvw2IEIe41swFNf3VChP95c7eHmSVXlu0vuoJC+nluTqfHdCSq8LU6G1TQT
+BobJOm8/gSLfgNUua41wOf2HSDg0tNOzQ1FBPwJvphcLfDRJ0ExVjY12poRsaYV8
+ZISZzXrHddMVLOh5f36FeUkzEOVHl4Q13H9CjqOg+ehfqeXaY+iX7i3mVMkfpmsO
+eGCm5UUXxkcyvvlvCFYIcUTiWQ10y+M5Oql/HR5grD2MVEkUbWZyRU56WKRYkYgL
+VsOJ+lHx09MAo7aH2twsq/lf/A5zeo9f9qA/fyV0ppfCJBqeQOzuLGODD5r0zVWG
+F+tOI4MEAJyuQ4bKBPfENenFSck5oonFWZBtpMKYBD3JlG6u53MUFEIrMGTyUnl8
++ZbqFHkObCI=
+=7clK
+-----END PGP SIGNATURE-----
+--=-=-=--
