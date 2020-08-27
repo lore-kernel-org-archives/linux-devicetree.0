@@ -2,136 +2,259 @@ Return-Path: <SRS0=DNiR=CF=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AF0C433E4
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B7EC433E5
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1968206D8
-	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E4222B4B
+	for <linux-devicetree@archiver.kernel.org>; Thu, 27 Aug 2020 04:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JWGdadun"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jCa/eH20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725847AbgH0E1D (ORCPT
+        id S1726157AbgH0EfY (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 00:27:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbgH0E05 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 00:26:57 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77605C0612B0
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 21:26:57 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mw10so1943281pjb.2
-        for <devicetree@vger.kernel.org>; Wed, 26 Aug 2020 21:26:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bn7ZvG4ybcooDrNm25U4C10jlmrGjFdQ/FaC/rxAetw=;
-        b=JWGdadunye66WMfXu1P4p7JU12j51p8o/dw5xBp05k4WBlQSeSFjHzokSYn55bVV3o
-         J4tcFBW+K0k9bbB0ds4GyUbQ9KAjULJVcytETxzcrQeP3yifDm/M/suCNnYmsgY5Qzlv
-         bYLOwZvhvgDdXRldn4DmRvNGzykpHvQF1muP3pcCByHjEYtEHbeJDDqUjNpus61Fowov
-         JyoN9QhOtYitibsWLrqe+FQ9q4BVoMTkmiVKZ/RQ8BzwYqbwxbkzyx1YBIYj6oYH/uoi
-         E6OZ9hPBdCD4DEyRV0Y3/EiRxpSeNBUdMXvmYIiHxOPHTWp3rcwr9/3wHDVTWkLGz5kb
-         6DjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bn7ZvG4ybcooDrNm25U4C10jlmrGjFdQ/FaC/rxAetw=;
-        b=lTJcmDLcKFGWLlyYTXYt25OepkQStwYz/MJegaN5fSPfbIBr0h5GwnfVylQPWUvcxI
-         0D5fYtJ3IX2jIR05ZarIMeo100IRET8yTY3+SAf0WWoUgkoIHpRHBE8f02f1o93ytSib
-         m+tRM0UZkmCPwdAgQRDoSVR5JBQ22nQbesS+hNHT/u6LKAVrqdsOBgzE53J9iMqR0ZQq
-         yYiLGwiBmj9QgX9RBVDb5zcac2ZffdQCQcT2+8/1ncEaBlaXuAzrbIVBUurYmWhorTDm
-         hzj+XnfnYcxNnRGrMWL9bNhsyqwkK/cg3CRl3qEEi090e5+UPcHFnKFQE4fTIhpbf1UI
-         ys5w==
-X-Gm-Message-State: AOAM531qbUmWMMayCCs9RQKom6Xt4TPXlZCpaSb/8lxuP+witjdPzNsi
-        j/MznylzGRZ5N6xki9Je3b4FUw==
-X-Google-Smtp-Source: ABdhPJynFu/KaCKX/yeZQJO1i0iZEbs8inUUMkKE06wJFLYUgtfBDrVZ4/4+/uHiY6WLXxuxzu5BQQ==
-X-Received: by 2002:a17:90a:f593:: with SMTP id ct19mr9163811pjb.36.1598502416374;
-        Wed, 26 Aug 2020 21:26:56 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id nu14sm631975pjb.19.2020.08.26.21.26.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 21:26:55 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 09:56:53 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Hector Yuan <hector.yuan@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v2 1/2] cpufreq: mediatek-hw: Add support for Mediatek
- cpufreq HW driver
-Message-ID: <20200827042653.5ttsxnjjhpslmrcv@vireshk-i7>
-References: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
- <1597302475-15484-2-git-send-email-hector.yuan@mediatek.com>
- <20200824100619.o6uwnlsaxdgc3l7r@vireshk-i7>
- <1598446624.24220.10.camel@mtkswgap22>
+        Thu, 27 Aug 2020 00:35:24 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:27400 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbgH0EfX (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 00:35:23 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200827043520epoutp01697ff86d438e96304930354697816121~vBe-eIT2R1817618176epoutp01K
+        for <devicetree@vger.kernel.org>; Thu, 27 Aug 2020 04:35:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200827043520epoutp01697ff86d438e96304930354697816121~vBe-eIT2R1817618176epoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598502920;
+        bh=wynkeJ2gZV5eNhHFGgSioBpWQoDnsmVxk8KLfHGKQ6A=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=jCa/eH20KD1XAhu0AFe30qCbuhhLrA7pyq4i5P20d5XF4bvqscpfxRU8W8HniRSOK
+         0NXMY/eFsKAFOZZoTDzqUSqcLOiPuCjKmVs6APQmDqFwIOj738fAjRYkuwckagJnaf
+         Uwel7EG5PROnxW04HJBZN5AIdMJoZEI0CFZ6liUg=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200827043519epcas1p392729327227b17aa7956bcab5699c7bf~vBe_ptMYh3020030200epcas1p3C;
+        Thu, 27 Aug 2020 04:35:19 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4BcVJj0MhtzMqYkn; Thu, 27 Aug
+        2020 04:35:17 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F8.41.19033.408374F5; Thu, 27 Aug 2020 13:35:16 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200827043516epcas1p4d8e42aa0019711fc3e52079c7548cde0~vBe7ubg4N1941719417epcas1p4p;
+        Thu, 27 Aug 2020 04:35:16 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200827043516epsmtrp2b45aace3bcbd5974e55f1fe0d55475a0~vBe7teMmA2463524635epsmtrp2E;
+        Thu, 27 Aug 2020 04:35:16 +0000 (GMT)
+X-AuditID: b6c32a36-159ff70000004a59-7a-5f4738047e9a
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1C.90.08382.408374F5; Thu, 27 Aug 2020 13:35:16 +0900 (KST)
+Received: from [10.113.111.64] (unknown [10.113.111.64]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200827043516epsmtip1b4add86ac8dacc6ccdf3ed8efd33ca8b~vBe7R5eSV1882518825epsmtip1y;
+        Thu, 27 Aug 2020 04:35:16 +0000 (GMT)
+Subject: Re: [PATCH 3/3] drm/vc4: hdmi: Add pixel bvb clock control
+To:     Stefan Wahren <stefan.wahren@i2se.com>, nsaenzjulienne@suse.de,
+        eric@anholt.net, maxime@cerno.tech
+Cc:     devicetree@vger.kernel.org, tim.gover@raspberrypi.com,
+        kdasu.kdev@gmail.com, sboyd@kernel.org, mturquette@baylibre.com,
+        dave.stevenson@raspberrypi.com, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, phil@raspberrypi.com,
+        robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>
+From:   Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Message-ID: <80749dcd-d4b2-68a1-f3ca-c19a120f6f7b@samsung.com>
+Date:   Thu, 27 Aug 2020 13:35:02 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598446624.24220.10.camel@mtkswgap22>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUxTZxTG8/be3rZuNZeC8Mq2rt4oBjegpRQvExACwk2QhM2ZBd3sGrhp
+        CaUtbVmcLK4YIcAQLaQ6ixSSiVWMw1FEIaJY+RDZYAZkjMH4EhdlUCbhIzDZWi7L+O93Tp7z
+        nvOcN4eLCJYwf26GxkjrNQo1gW1BGx8GioNQMlEuvlqzj7xxph0lZyq/Q8mqth422b/gwsjW
+        vD5AuuzFGNnUfwMl6ycH2ORfJb+zyb7mSxhp/u0mh/x2eQ2QTx4fIButdoz8fmgaI/Nb2jjk
+        2sAP7oKrgxg5YRkFMd7UKVcHRrkG8zmUdfQnjBru6cWoJusIh7o1JKPqa4swavSbThbluPw1
+        ld++glKlDbWAcnTnUvP1whT+kcxIFa1Ip/UiWpOmTc/QKKOIpEPyOLksXCwJkkSQewmRRpFF
+        RxHxB1OCEjLUbpuE6AuFOsedSlEYDERIdKRem2OkRSqtwRhF0Lp0tS5CF2xQZBlyNMrgNG3W
+        BxKxOFTmFn6eqaprWMV0j4THHQPn2CYwBosBjwvxMFhXuMTysAC/A+Bke1Qx2OLmVwCWXLjP
+        ZoJFALsmVrBiwF2vaLiSwORbAJxrWsOYYAbA6lc2xPOUNx4HLcsP2B72wVWwZ6WF4xEheAcC
+        z1curIswPAgulPyy3puPR8M8xxjwdEDxXfDuWLQnvQ1PhU1TLziMxAt2XXyGepiHR0Ln82Hg
+        YQR/F96euYQw7AeHnlWxPL0gXsGDeX+fZjE+46HdOcdh2Bu+7GzYYH84P9uCMWyA/Rdfokyx
+        CcCz5ooNkRTerylneYZD8EBY1xzCpHfAptXKjSG2wtmFEjazIT4sLBAwkgD43NTKZvht+PiM
+        fWMcCrrKH3LOgR3WTdasm+xYN9mx/t+4GqC1wJfWGbKUtEGiC9382fVg/QL2hN8BZTNzwU7A
+        4gIngFyE8OF7PYmTC/jpii9P0HqtXJ+jpg1OIHPv2oz4b0vTuk9IY5RLZKFSqZQMk4TLJBLC
+        jz8+JJILcKXCSGfStI7W/1fH4vL8TawK+/7EfuOV3k5ht7C4IOnjZE6EbeXEvXtvpM++09Pz
+        olt5Mrb06FGbvjH6o9qET3yTQ5eH/9n+ein3vb3blWVR6sTLq09tbyKBOlZa/SPL+dhby6Oq
+        kbFjd3mWgJKq8p27F9/iwp+P5+ZIOR8eNHfNdlv2u3adCpHFnv0qYl+FSdxtl+42V0c7HUXj
+        12xT8WpBQNLtP+zZrwtbPpv1sXk3kjPHCnae9i2ajjWlgilHzI+HS1Mb5WapczBDX7MkDFts
+        Ez3omGju+LQ315Kt+dOafeFIXvLWpflr45AQ+rUmaL2e3kzsK+id9NZ3GZNifr3+fsx0mW04
+        oJaXOUIdPnlgQk6gBpVCsgfRGxT/AoGOmrmKBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Ra0hTYRiA+XYuO65Wx2n0ZaYwM6lQs+sXhBiSngprkRAaZcsOaulcO9kd
+        MsMuc+WlrLm8VVoxs2xbc8uu81JmGtZyZpp2l9ZaZtIVqbkC/z287/Pw/ngpTPQU96FSZNtY
+        hUyaKiYFuLFe7BeMo+iEWYMtEFUfbcSRo+Qcjsoa2ghkHXKS6M7+JwA5LyhJZLZW40j3uoNA
+        A6oXBHpyvZhE+c9r+Ej9fRig9gdLkFFzgUSXu+wkyr7ZwEfDHVf/Bhc7SfSqsBdEeDFZziaS
+        cXZm8xlNbyvJdLc9IhmzpofPXOuax+i0R0imN+cej9FX7GOyG3/izDGDFjD6lj3MoM5PIowX
+        LNrEpqZsZxWh4RsEyVcMv0j5fb+d+o48IhP0QSWgKEjPhYbzUUogoER0HYDDz/IwJfD4O/eF
+        2lwD4Xa8YH0953bsAJoKXgGX40VHwsLvdwkXe9PJsDi/FHNJGN2EwVbdR8JdfAOwOt82YpF0
+        MBxS2XguFtLhcL++D7gu4HQgvNEX7sIJdBw0mxa6DU/YXPQGd7EHvQha3nWP3MXo+bBU/xJz
+        sz+sdRT/44mw600ZLw+INKNyzahEMyrRjErKAa4Fk1g5l5aUxoXJw2TsjhBOmsZlyJJCEtPT
+        dGDk8zOmm0Ct9nOIBfAoYAGQwsTeQs/2yASRcJN0125WkZ6gyEhlOQuYTOHiicLOrWfWi+gk
+        6TZ2C8vKWcX/LY/y8MnkhZQTjr1FsiCHrmTmmiUWrw9DlTXKg6qB/Bz1YsNWQWzJin6dpyRB
+        0OBTY9suy7H9FshVqytPSF7fjnmfQZR6P4+8GWyuivx1llk7cEAtuSJxsIFTaxd3D26Mzsqy
+        zy41H0tcWTicq4qxz25dEdTTHBNqivgUQLatGuubU+4hO1xQ98OqwKIKQ22TTXH2j7HpPYkn
+        C05J/NWX1p2W32r8Oj1oM95//P2cKv7qqG9Pp8WXma2XKwLjw+/ndjvr7i0/M+/l+Kka44IG
+        b8MN3/ihKSI6tMq/v6moZZnxd9mCayL7uJ0zk6KxCCU3Zv3X2C/NDze0x1kzU/IeH8paanyr
+        DgoQ41yyNGwGpuCkfwBtV1uTaAMAAA==
+X-CMS-MailID: 20200827043516epcas1p4d8e42aa0019711fc3e52079c7548cde0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d
+References: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
+        <CGME20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d@epcas1p3.samsung.com>
+        <20200821071045.24501-4-hoegeun.kwon@samsung.com>
+        <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 26-08-20, 20:57, Hector Yuan wrote:
-> On Mon, 2020-08-24 at 15:36 +0530, Viresh Kumar wrote:
-> > On 13-08-20, 15:07, Hector Yuan wrote:
-> > >  CONFIG_ARM_ALLWINNER_SUN50I_CPUFREQ_NVMEM=m
-> > >  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
-> > > +CONFIG_ARM_MEDIATEK_CPUFREQ_HW=m
-> > 
-> > What about a 'default m' in Kconfig itself ?
-> > OK, will update in V3.
+Hi Stefan,
 
-Hector, you need to remove (or not add) the right bracket (>) before the
-beginning of your lines. This makes it incredibly difficult to read.
+Thank you for your review.
 
-> > > +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> > > +		data = readl_relaxed(base + (i * LUT_ROW_SIZE));
-> > > +		freq = FIELD_GET(LUT_FREQ, data) * 1000;
-> > > +		volt = FIELD_GET(LUT_VOLT, data);
-> > > +		if (freq != prev_freq) {
-> > > +			table[i].frequency = freq;
-> > > +			dev_pm_opp_add(cpu_dev, freq * 1000, volt);
-> > 
-> > Why are you adding OPPs here and rather why using OPP specific stuff
-> > at all in the driver ?
-> > yes, the opp information is read from CPU HW engine.Then add it to the CPU dev OPP one by one.  
 
-I asked a different question, why are you adding OPPs ? You don't need the OPPs
-at all in my opinion. You can just create the frequency table and that's it.
+On 8/26/20 7:04 PM, Stefan Wahren wrote:
+> Hi Hoeguen,
+>
+> Am 21.08.20 um 09:10 schrieb Hoegeun Kwon:
+>> There is a problem that the output does not work at a resolution
+>> exceeding FHD. To solve this, we need to adjust the bvb clock at a
+>> resolution exceeding FHD.
+> this patch introduces a mandatory clock, please update
+> brcm,bcm2835-hdmi.yaml first.
+>
+> Is this clock physically available on BCM283x or only on BCM2711?
 
-> > > +	for_each_possible_cpu(cpu) {
-> > > +		cpu_np = of_cpu_device_node_get(cpu);
-> > > +		if (!cpu_np)
-> > > +			continue;
-> > > +
-> > > +		ret = of_parse_phandle_with_args(cpu_np, "mtk,freq-domain",
-> > 
-> > Where are bindings of this node and how does this look ?
-> > Can refer to the same patch series, I split it to another patch.Each cpu will be group into one frequency domain for the CPU DVFS. 
+As far as I know, BCM2711 raspberry pi 4 supports 4k,
 
-That binding only defines "mediatek,cpufreq-hw" and not "mtk,freq-domain".
+don't supported on pi 3 and pi 3+.
 
--- 
-viresh
+Since 4k is not supported in versions prior to Raspberry Pi 4,
+
+I don't think we need to modify the bvb clock.
+
+
+So I think it is better to update 'brcm,bcm2711-hdmi.yaml'
+
+instead of 'brcm,bcm2835-hdmi.yaml'.
+
+Please comment, what do you think?
+
+>
+> I'm a little bit afraid, this change could break with older firmware
+> versions on BCM283x.
+
+Tested it several times with libdrm modetest.
+
+I expect there will be no problem.
+
+
+Best regards,
+
+Hoegeun
+
+>
+> Best regards
+> Stefan
+>
+>> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+>> ---
+>>   drivers/gpu/drm/vc4/vc4_hdmi.c | 25 +++++++++++++++++++++++++
+>>   drivers/gpu/drm/vc4/vc4_hdmi.h |  1 +
+>>   2 files changed, 26 insertions(+)
+>>
+>> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+>> index 95ec5eedea39..eb3192d1fd86 100644
+>> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+>> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+>> @@ -80,6 +80,7 @@
+>>   # define VC4_HD_M_ENABLE			BIT(0)
+>>   
+>>   #define CEC_CLOCK_FREQ 40000
+>> +#define VC4_HSM_MID_CLOCK 149985000
+>>   
+>>   static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+>>   {
+>> @@ -380,6 +381,7 @@ static void vc4_hdmi_encoder_post_crtc_powerdown(struct drm_encoder *encoder)
+>>   	HDMI_WRITE(HDMI_VID_CTL,
+>>   		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+>>   
+>> +	clk_disable_unprepare(vc4_hdmi->pixel_bvb_clock);
+>>   	clk_disable_unprepare(vc4_hdmi->hsm_clock);
+>>   	clk_disable_unprepare(vc4_hdmi->pixel_clock);
+>>   
+>> @@ -638,6 +640,23 @@ static void vc4_hdmi_encoder_pre_crtc_configure(struct drm_encoder *encoder)
+>>   		return;
+>>   	}
+>>   
+>> +	ret = clk_set_rate(vc4_hdmi->pixel_bvb_clock,
+>> +			(hsm_rate > VC4_HSM_MID_CLOCK ? 150000000 : 75000000));
+>> +	if (ret) {
+>> +		DRM_ERROR("Failed to set pixel bvb clock rate: %d\n", ret);
+>> +		clk_disable_unprepare(vc4_hdmi->hsm_clock);
+>> +		clk_disable_unprepare(vc4_hdmi->pixel_clock);
+>> +		return;
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(vc4_hdmi->pixel_bvb_clock);
+>> +	if (ret) {
+>> +		DRM_ERROR("Failed to turn on pixel bvb clock: %d\n", ret);
+>> +		clk_disable_unprepare(vc4_hdmi->hsm_clock);
+>> +		clk_disable_unprepare(vc4_hdmi->pixel_clock);
+>> +		return;
+>> +	}
+>> +
+>>   	if (vc4_hdmi->variant->reset)
+>>   		vc4_hdmi->variant->reset(vc4_hdmi);
+>>   
+>> @@ -1593,6 +1612,12 @@ static int vc5_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
+>>   		return PTR_ERR(vc4_hdmi->audio_clock);
+>>   	}
+>>   
+>> +	vc4_hdmi->pixel_bvb_clock = devm_clk_get(dev, "bvb");
+>> +	if (IS_ERR(vc4_hdmi->pixel_bvb_clock)) {
+>> +		DRM_ERROR("Failed to get pixel bvb clock\n");
+>> +		return PTR_ERR(vc4_hdmi->pixel_bvb_clock);
+>> +	}
+>> +
+>>   	vc4_hdmi->reset = devm_reset_control_get(dev, NULL);
+>>   	if (IS_ERR(vc4_hdmi->reset)) {
+>>   		DRM_ERROR("Failed to get HDMI reset line\n");
+>> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+>> index 0806c6d9f24e..63c6f8bddf1d 100644
+>> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
+>> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+>> @@ -147,6 +147,7 @@ struct vc4_hdmi {
+>>   	struct clk *pixel_clock;
+>>   	struct clk *hsm_clock;
+>>   	struct clk *audio_clock;
+>> +	struct clk *pixel_bvb_clock;
+>>   
+>>   	struct reset_control *reset;
+>>   
+>
