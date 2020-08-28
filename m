@@ -3,187 +3,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147B2C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22326C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C907A207DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:50:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pnpm4ey7"
+	by mail.kernel.org (Postfix) with ESMTP id E8911208C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:51:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598626277;
+	bh=tYgV+FBYe1Z6jN+MAv7hfYtP2hXvmNwxY+Gt1pXHABI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=i2aai1vTMeafE0KXutLpt8zom+tuGl2H6+B68wrAi814oBHPQumbqLIA9lWbrUkOU
+	 aTTX9OfWKWq0tUhkbYXuwX6brpf7fPJfQ/pqpBbUv7bPW4qtuT2opUNeNKUqstwcmX
+	 8zUrebvfzED1vNED58gUZpeuwac6KB5PqLM5n0fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgH1Oto (ORCPT
+        id S1726571AbgH1OvQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:49:44 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:60086 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgH1Oti (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 10:49:38 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200828144936euoutp02dc0c38a70cc302eb3d3409ee8c4dca42~vdgmewIv51256612566euoutp02E
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 14:49:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200828144936euoutp02dc0c38a70cc302eb3d3409ee8c4dca42~vdgmewIv51256612566euoutp02E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598626176;
-        bh=rnJHZDd3J2Cg79B07RVoEV7HxwE8uhmX3bSXaJNxqDs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pnpm4ey7TSKo/uhiM2rz4EYvwE7vHPTKFc2Q0m61F6qEDlZ9yAZfspJuUk7YoI0G6
-         LO936QYAvhpEfm1VbmXNNnpKwDrE9z2RoEAilyE96uB6pk/tFhLxvQsKpedZOXAH1T
-         d/qnIegvCOZDOyeg61HDf9pYy1ci8h+tgJRTxy+w=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200828144935eucas1p21bc6d076e38045d6b6e8590b1b889724~vdgmDisXY0200302003eucas1p2D;
-        Fri, 28 Aug 2020 14:49:35 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id C6.3D.06318.F79194F5; Fri, 28
-        Aug 2020 15:49:35 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200828144935eucas1p144aa5bfceb24dc26b5149a4bcd462a48~vdglnRCu41371413714eucas1p1-;
-        Fri, 28 Aug 2020 14:49:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200828144935eusmtrp1a5ca3fb1aa00dd2762742fb47b3cb456~vdglmZUdP0687706877eusmtrp1K;
-        Fri, 28 Aug 2020 14:49:35 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-5c-5f49197f0318
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7C.1B.06017.F79194F5; Fri, 28
-        Aug 2020 15:49:35 +0100 (BST)
-Received: from [106.210.123.115] (unknown [106.210.123.115]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200828144934eusmtip164aea37a1e5a1a68977a9bb8f8567f7e~vdgkZI_v01183611836eusmtip18;
-        Fri, 28 Aug 2020 14:49:34 +0000 (GMT)
-Subject: Re: [PATCH RFC v6 1/6] dt-bindings: exynos-bus: Add documentation
- for interconnect properties
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     Rob Herring <robh@kernel.org>, georgi.djakov@linaro.org
-Cc:     cw00.choi@samsung.com, krzk@kernel.org, devicetree@vger.kernel.org,
-        a.swigon@samsung.com, myungjoo.ham@samsung.com,
-        inki.dae@samsung.com, sw0312.kim@samsung.com,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Message-ID: <35d9d396-b553-a815-1f3b-1af4dc37a2ca@samsung.com>
-Date:   Fri, 28 Aug 2020 16:49:33 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <65af1a5c-8f8a-ef65-07f8-e0b3d04c336c@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+e3e3V2lyfVqelpRMgysyAf6xy3DzAomVERQZKW27KKSU9tV
-        SwkfvXPTzB7qDF8YipGu+cgsh4o1xJzQfJWvHqOYZBLzgSktt2vkf5/vOd/D9xw4JEaPCSVk
-        fGIKq0yUJ0gJZ7zl7aJxZ9aG8Gj/GWMQM1l2AzHPixuEzPDsdyFT3m0UMgNzMwRT1K4jmMLJ
-        Apzp79eKGN3XISFjantMMNa8bsQU9+sFzLPucREzmlNLMLbXrSKm+L6FCKVkuro7hGxs6DUh
-        m1QZBLLG6ixZflMdkll1m48Sp5z3nGcT4tNYpV/IWee4paKUZC19efynRZSN5l1ykRMJVBA8
-        Kn6P5yJnkqZqEZjuTot4MYugcbAM44UVwberVdi/kcJPPauNGgT63D4BL34hmO0dENldblQc
-        LL5QE3YmqADIe5OP7OxOBcPTkR+OQIy6jkGe5amjIaZCQFc54hjGqa1gelLjGF5PRUGzYVDA
-        e1yhp8SM29mJ2gs2VafDg1Ge8NFcLuB5C1xrLl1dNYeEhbdZPB8ATbVFxLMbTBmaVnkT9N5X
-        OxYC6hoC9atRES8KEEwaKhDvCoYx4++VNHIlYRs0tPnx5X2gtb0U2MtAucDItCu/gwsUthRh
-        fFkMt2/SvNsbluqKBDxLQGW24QVIqllzmWbNNZo112j+51YgvA55sqmcIpblAhPZS76cXMGl
-        Jsb6xiQpdGjl53r/GOZakX75XBeiSCRdJx4hwqNpoTyNS1d0ISAxqbs4rK83ihafl6dnsMqk
-        aGVqAst1oY0kLvUUB1ZZImkqVp7CXmDZZFb5rysgnSTZaHfa5uQEetcO75Izn49HeNLjA1qX
-        g5r+qY5bb465hl6RHJgJq52YV0aYvMjlw/hovv9FVfCw+nRnvTJ9z6hfpDbT4sNNyJLivfaF
-        xQx1eLzzsH2w4ldL9m9SlFaaT2wJrT32xePkYP38wqF206MYfYb4XmlZ5pGHqgdBPjne+lKx
-        FOfi5AHbMSUn/wvR+ny4bwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xu7r1kp7xBts+i1vcn9fKaLFxxnpW
-        i+tfnrNazD9yjtXiytf3bBbT925is5h0fwKLxfnzG9gtNj2+xmpxedccNovPvUcYLWac38dk
-        sfbIXXaL240r2Cz+79nBbjFj8ks2BwGPTas62TzuXNvD5nG/+ziTx+Yl9R59W1YxenzeJBfA
-        FqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8Xt6
-        ScEGoYq7716yNzB+4+ti5OSQEDCRmPTgJHMXIxeHkMBSRokV7/YzdTFyACWkJOa3KEHUCEv8
-        udbFBlHznlGi7/g7VpCEsECGxLJ9LxhBbDYBQ4neo31gtoiAtcTqG29YQBqYBVqYJb5OmsEE
-        0T2NSeJY70IWkCpeATuJTQtvsIPYLAKqEpeXLmcDsUUF4iQe9/5nhqgRlDg58wlYPaeAvcT/
-        7oNgNcwC6hJ/5l1ihrDFJW49mc8EYctLNG+dzTyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi
-        3PTcYiO94sTc4tK8dL3k/NxNjMC43nbs55YdjF3vgg8xCnAwKvHw3mDzjBdiTSwrrsw9xCjB
-        wawkwut09nScEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucDU05eSbyhqaG5haWhubG5sZmF
-        kjhvh8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGOZdvnHhyVU3kzdId3pL/tbQ0U/euK2ZP+LXv
-        Wmdn3NMcFf1d9/VusG76/PfKB8vb8x4Ifuh9JHK1VCHkjETDOrf1T8wZctNe5Kzu//965/9Z
-        fvdbUp3THl+canvvAHOfyHbF/f0Cfl5n7EW3T/aWmLS7/fRRzaclYXW9LAcLn4VKPY17l6Xe
-        q8RSnJFoqMVcVJwIAIbpuC0BAwAA
-X-CMS-MailID: 20200828144935eucas1p144aa5bfceb24dc26b5149a4bcd462a48
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200702163748eucas1p2cf7eab70bc072dea9a95183018b38ad3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200702163748eucas1p2cf7eab70bc072dea9a95183018b38ad3
-References: <20200702163724.2218-1-s.nawrocki@samsung.com>
-        <CGME20200702163748eucas1p2cf7eab70bc072dea9a95183018b38ad3@eucas1p2.samsung.com>
-        <20200702163724.2218-2-s.nawrocki@samsung.com>
-        <20200709210448.GA876103@bogus>
-        <65af1a5c-8f8a-ef65-07f8-e0b3d04c336c@samsung.com>
+        Fri, 28 Aug 2020 10:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726462AbgH1OvQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:51:16 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4417420848;
+        Fri, 28 Aug 2020 14:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598626275;
+        bh=tYgV+FBYe1Z6jN+MAv7hfYtP2hXvmNwxY+Gt1pXHABI=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Fm4UIVpPsATiFzzlVYRYNdoZ6ROoTuq4/1WSb1YxgMGinj0LSzfoqVLfypYTKOvTp
+         OSR265HcdMgWAFSS7sjBj5ZUfeEElwft/BRMMlE7/mQAFlJiMcBrYiAgI8yOv8dldQ
+         MNzAXpN0JGtgDwZiEHh/QTIlWr6DLobJ2OYTTsdI=
+Date:   Fri, 28 Aug 2020 15:50:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>, lgirdwood@gmail.com, perex@perex.cz,
+        robh@kernel.org, tiwai@suse.com
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20200828112855.10112-1-dmurphy@ti.com>
+References: <20200828112855.10112-1-dmurphy@ti.com>
+Subject: Re: [PATCH] ASoC: tlv320adcx140: Add digital mic channel enable routing
+Message-Id: <159862623263.40815.9298257186480426843.b4-ty@kernel.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 30.07.2020 14:28, Sylwester Nawrocki wrote:
-> On 09.07.2020 23:04, Rob Herring wrote:
->> On Thu, Jul 02, 2020 at 06:37:19PM +0200, Sylwester Nawrocki wrote:
->>> Add documentation for new optional properties in the exynos bus nodes:
->>> samsung,interconnect-parent, #interconnect-cells, bus-width.
->>> These properties allow to specify the SoC interconnect structure which
->>> then allows the interconnect consumer devices to request specific
->>> bandwidth requirements.
->>>
->>> Signed-off-by: Artur Świgoń <a.swigon@samsung.com>
->>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+On Fri, 28 Aug 2020 06:28:55 -0500, Dan Murphy wrote:
+> Add the audio routing map to enable the digital mic paths when the
+> analog mic paths are not enabled.
 
->>> --- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>> +++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->>> @@ -51,6 +51,13 @@ Optional properties only for parent bus device:
->>>  - exynos,saturation-ratio: the percentage value which is used to calibrate
->>>  			the performance count against total cycle count.
->>>  
->>> +Optional properties for interconnect functionality (QoS frequency constraints):
->>> +- samsung,interconnect-parent: phandle to the parent interconnect node; for
->>> +  passive devices should point to same node as the exynos,parent-bus property.
+Applied to
 
->> Adding vendor specific properties for a common binding defeats the 
->> point.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Actually we could do without any new property if we used existing interconnect
-consumers binding to specify linking between the provider nodes. I think those
-exynos-bus nodes could well be considered both the interconnect providers 
-and consumers. The example would then be something along the lines 
-(yes, I know the bus node naming needs to be fixed):
+Thanks!
 
-	soc {
-		bus_dmc: bus_dmc {
-			compatible = "samsung,exynos-bus";
-			/* ... */
-			samsung,data-clock-ratio = <4>;
-			#interconnect-cells = <0>;
-		};
+[1/1] ASoC: tlv320adcx140: Add digital mic channel enable routing
+      commit: ece2a74c5913d244e13c42c61ca2e162932fa3b4
 
-		bus_leftbus: bus_leftbus {
-			compatible = "samsung,exynos-bus";
-			/* ... */
-			interconnects = <&bus_leftbus &bus_dmc>;
-			#interconnect-cells = <0>;
-		};
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-		bus_display: bus_display {
-			compatible = "samsung,exynos-bus";
-			/* ... */
-			interconnects = <&bus_display &bus_leftbus>;
-			#interconnect-cells = <0>;
-		};
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-		&mixer {
-			compatible = "samsung,exynos4212-mixer";
-			interconnects = <&bus_display &bus_dmc>;
-			/* ... */
-		};
-	};
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-What do you think, Georgi, Rob?
-
--- 
-Regards
-Sylwester
+Thanks,
+Mark
