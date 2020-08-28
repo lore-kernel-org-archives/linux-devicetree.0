@@ -2,99 +2,89 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BFEC433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363DDC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAD4820C56
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598600645;
-	bh=v9mWH7zlHRqcHIGa1924zsThVWJeNyD5f15ay8z5SrA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YX+juIzihXy3tGluxMkqAKOFwPsZBzHIK174MdmAZhVIFxbWbT2L5uZQBIMHyWfNE
-	 1eLFSJ5XW3BDQBMw0EwS64pZB6nSg1Y7FE/9LuG0JpEHID4zOBs41frCJIcXwzn0wu
-	 Lxduj4xxeCVnj/3YtY78R89Eu3ncMaaSUhpctzSU=
+	by mail.kernel.org (Postfix) with ESMTP id 0EAE92078A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:50:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgH1HoB (ORCPT
+        id S1728499AbgH1Hu2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726566AbgH1HoB (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:44:01 -0400
-Received: from localhost.localdomain (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3868820776;
-        Fri, 28 Aug 2020 07:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598600640;
-        bh=v9mWH7zlHRqcHIGa1924zsThVWJeNyD5f15ay8z5SrA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=LL2aSIH6DgkNiVVSR+8x/62AO6u1WvctR5jlLT3RFhStipeSneP3vua7mU/tWDBxx
-         oFaEaYQCKyL9Pz6RjdxVVNNaHhFS0tkdwIkh3eeLcdBljsOiB7B19L0wvxVT9lsFgq
-         04+kLlX+3tkz2pLfRcYkViv0qIIRPzEEewNEMB6s=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Fri, 28 Aug 2020 03:50:28 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:56242 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726571AbgH1Hu2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:50:28 -0400
+X-IronPort-AV: E=Sophos;i="5.76,362,1592838000"; 
+   d="scan'208";a="55774010"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 28 Aug 2020 16:50:27 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 05EEA400E8CC;
+        Fri, 28 Aug 2020 16:50:24 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845-db845c: Fix hdmi nodes
-Date:   Fri, 28 Aug 2020 13:13:47 +0530
-Message-Id: <20200828074347.3788518-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH v2] dt-bindings: usb: renesas,usb-xhci: Document r8a774e1 support
+Date:   Fri, 28 Aug 2020 08:50:19 +0100
+Message-Id: <20200828075019.541-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-As per binding documentation, we should have dsi as node 0 and hdmi
-audio as node 1, so fix it
+Document r8a774e1 xhci support. The driver will use the fallback
+compatible string "renesas,rcar-gen3-xhci", therefore no driver
+change is needed.
 
-Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Fixes: aef9a119dfb9 ("arm64: dts: qcom: sdm845-db845c: Add hdmi bridge nodes")
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Hi All,
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index a2a98680ccf5..99d33955270e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -451,16 +451,16 @@ ports {
- 			port@0 {
- 				reg = <0>;
- 
--				lt9611_out: endpoint {
--					remote-endpoint = <&hdmi_con>;
-+				lt9611_a: endpoint {
-+					remote-endpoint = <&dsi0_out>;
- 				};
- 			};
- 
--			port@1 {
--				reg = <1>;
-+			port@2 {
-+				reg = <2>;
- 
--				lt9611_a: endpoint {
--					remote-endpoint = <&dsi0_out>;
-+				lt9611_out: endpoint {
-+					remote-endpoint = <&hdmi_con>;
- 				};
- 			};
- 		};
+This patch is part of series [1] (patch 08/20), rest of the patches
+have been queued/acked.
+
+[1] https://lkml.org/lkml/2020/7/16/890
+
+Cheers,
+Prabhakar
+
+v1->v2
+* Rebased the patch on 5.9-rc1 (Renesas devices were moved from usb-xhci.txt
+  renesas,usb-xhci.yaml)
+* Restored Ack's from Geert and Rob
+---
+ Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
+index add9f7b66da0..0f078bd0a3e5 100644
+--- a/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
++++ b/Documentation/devicetree/bindings/usb/renesas,usb-xhci.yaml
+@@ -30,6 +30,7 @@ properties:
+               - renesas,xhci-r8a774a1 # RZ/G2M
+               - renesas,xhci-r8a774b1 # RZ/G2N
+               - renesas,xhci-r8a774c0 # RZ/G2E
++              - renesas,xhci-r8a774e1 # RZ/G2H
+               - renesas,xhci-r8a7795  # R-Car H3
+               - renesas,xhci-r8a7796  # R-Car M3-W
+               - renesas,xhci-r8a77961 # R-Car M3-W+
 -- 
-2.26.2
+2.17.1
 
