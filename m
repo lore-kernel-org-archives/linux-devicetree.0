@@ -2,91 +2,179 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 431D9C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 22:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C8CC433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 22:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8D4207DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 22:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731C9205CB
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 22:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598652134;
-	bh=e8WQBPlCkBivRPGjGBkJlf+poxemX+YjK/mZw+QYWTk=;
+	s=default; t=1598652330;
+	bh=aitdIbpAnFb6/2uJBoQAsOYIPKKYlXuPzO6QzAqB+FE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=otvdC7WRZ+WIb6RU9mNduabUodRouyRJqg1vOiwfqRVyP3Akpz12DcDcCDe4R5/TW
-	 eTXIqioaT9J0xGlN9e0h0x2EmSyAas3aiXr+pSpPuA298cvkK8UUZdUJg2bJVoSVqw
-	 /PJd1pSvSSCvw4bI8sphdmP6mF4Q6VgKph7b1CHw=
+	b=znEa6R5+7fUWtKjq7Jqj7is/kYwDti2gbfF1OnfiBD0rzCUKZ7lWFGLHe22PiajsL
+	 wBdVg4wMR202D+GdUlhxJJHtfle1KArBRZhfSzsi3HO1TkPWJrWgGERYlkivTWjlGy
+	 jBYrIs3XuthDt9/unjhdk1mQwE5JhDFlYoKOUf3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgH1WCN (ORCPT
+        id S1726594AbgH1WFZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 18:02:13 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:42671 "EHLO
+        Fri, 28 Aug 2020 18:05:25 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:34300 "EHLO
         mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgH1WCM (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 18:02:12 -0400
-Received: by mail-il1-f195.google.com with SMTP id t13so1930721ile.9;
-        Fri, 28 Aug 2020 15:02:11 -0700 (PDT)
+        with ESMTP id S1726379AbgH1WFY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 18:05:24 -0400
+Received: by mail-il1-f195.google.com with SMTP id t4so1961452iln.1;
+        Fri, 28 Aug 2020 15:05:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=UGKaYAFNEum4FxcnIc0VNKqc+GCD23shQ5Sl4QgKedE=;
-        b=G1LFPOnXccp5nFbfjrcq93QyHtXgGxZEtyUZtW+63k8OkSlK1xKSXWHbLH6H5Vie23
-         XgLLgWqd0dOTIQn2fq1o0UMJZk6KC1jU3yT3LyRsl4aUcZkL2c2NgsmOGJaYKcUDq97G
-         oiQclYJYFZyD98sEjdVTNOexXP4OXZBc/sP7C5cCK1tjeNaTzZYtl0VFIe826vTDIq1e
-         ibnIRD6s2WG/zREzSzHQFajJlSXMKi2pu1t4gVThcTy2yjPKnBRE8SDzU9uurZzPPoTY
-         h7S0m9kgVerEzllnl+CNfJfAyv0QhBTS2O5CQ3I9DQQIwrNFhKXHBLu7MxMVzic863p+
-         M9tQ==
-X-Gm-Message-State: AOAM530AvjVYPs6dxVaQb/MFtoxRu9cY9VawjKGUpAtvY8fh6X6hPven
-        g/qTLfAzdz2oPSop5KuZ0A==
-X-Google-Smtp-Source: ABdhPJy80Wri053VxDekCxp86h0xBur5yJmFgB/e1RJzrt9LYBKuGx8Jia1ofN3PrJFtflwZYVVWew==
-X-Received: by 2002:a92:d8cb:: with SMTP id l11mr713537ilo.221.1598652129767;
-        Fri, 28 Aug 2020 15:02:09 -0700 (PDT)
+        bh=hEjjUFT83iNRg02ncmXB05CfgHtGJIWhaDk9gjoB/yw=;
+        b=OOilt4j1+KTw65U58gKzSPhkY50KfIrngoOMpxwsJSkNrFwRpnPucG0hfffWC3Qv7n
+         HlFgD5GFWhNG+39UYSXnXkcV4m0oUUHsCmcirnDwS9ZpmCZ9N+uMBVLDYym0N4QTme3l
+         GU69dZ/RaZWNpbdXN1/60dN/UB0wBYl20CanSa3Ow4Zm9+FE+eDsef72X6qOmdPg+OfD
+         PwlnZjRZJqkguWzZIj6AvCBfhs02WBVKwJgJ6LhNcRSt0VdDxf7HOCzuH1pea4oBzxxU
+         KmH/E+jc/yWaDGDqb6HMa1NZ1dhtdWdy1bUVv6EaPRX/6hFlhK+Q45+mgKzM8z7wFgBK
+         Uo4w==
+X-Gm-Message-State: AOAM533pnH4AdUJfiAmswB8MYGx0f1lSWzRSfNJnPgEqqiyeSYu5WJeY
+        4L1sxDmsXsQGpHXE9fIewTry5UC2kebT
+X-Google-Smtp-Source: ABdhPJxm/ppsdTb0g25vKmMiz/juduCbS2JSibG+yBa7cfosxhP0iu5fPruCrPy6GFCcFSyoZ/Y5fQ==
+X-Received: by 2002:a05:6e02:13c6:: with SMTP id v6mr804659ilj.87.1598652323060;
+        Fri, 28 Aug 2020 15:05:23 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id v11sm337285ili.66.2020.08.28.15.02.07
+        by smtp.gmail.com with ESMTPSA id q23sm238341ior.47.2020.08.28.15.05.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 15:02:09 -0700 (PDT)
-Received: (nullmailer pid 3482267 invoked by uid 1000);
-        Fri, 28 Aug 2020 22:02:07 -0000
-Date:   Fri, 28 Aug 2020 16:02:07 -0600
+        Fri, 28 Aug 2020 15:05:22 -0700 (PDT)
+Received: (nullmailer pid 3486516 invoked by uid 1000);
+        Fri, 28 Aug 2020 22:05:20 -0000
+Date:   Fri, 28 Aug 2020 16:05:20 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Chris Healy <cphealy@gmail.com>
-Cc:     gregkh@linuxfoundation.org, stable@vger.kernel.org,
-        maitysanchayan@gmail.com, linux-kernel@vger.kernel.org,
-        shawnguo@kernel.org, andrew.smirnov@gmail.com, stefan@agner.ch,
-        devicetree@vger.kernel.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org, festevam@gmail.com
-Subject: Re: [PATCH v4] dt-bindings: nvmem: Add syscon to Vybrid OCOTP driver
-Message-ID: <20200828220207.GA3482218@bogus>
-References: <20200825030406.373623-1-cphealy@gmail.com>
+To:     cy_huang <u0084500@gmail.com>
+Cc:     gregkh@linuxfoundation.org, matthias.bgg@gmail.com,
+        linux@roeck-us.net, heikki.krogerus@linux.intel.com,
+        cy_huang@richtek.com, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] usb typec: mt6360: Add MT6360 Type-C DT binding
+ documentation
+Message-ID: <20200828220520.GA3482472@bogus>
+References: <1598610636-4939-1-git-send-email-u0084500@gmail.com>
+ <1598610636-4939-2-git-send-email-u0084500@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825030406.373623-1-cphealy@gmail.com>
+In-Reply-To: <1598610636-4939-2-git-send-email-u0084500@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Mon, 24 Aug 2020 20:04:06 -0700, Chris Healy wrote:
-> From: Chris Healy <cphealy@gmail.com>
+On Fri, Aug 28, 2020 at 06:30:36PM +0800, cy_huang wrote:
+> From: ChiYuan Huang <cy_huang@richtek.com>
 > 
-> Add syscon compatibility with Vybrid OCOTP driver binding. This is
-> required to access the UID.
+> Add a devicetree binding documentation for the MT6360 Type-C driver.
 > 
-> Fixes: 623069946952 ("nvmem: Add DT binding documentation for Vybrid
-> OCOTP driver")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Chris Healy <cphealy@gmail.com>
+> usb typec: mt6360: Rename DT binding doument from mt6360 to mt636x
+> 
+> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
 > ---
-> Changes in v4:
->  - Point to the appropriate commit for the Fixes: line
->  - Update the Required Properties to add the "syscon" compatible
-> ---
->  Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../bindings/usb/mediatek,mt6360-tcpc.yaml         | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
+> new file mode 100644
+> index 00000000..9e8ab0d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/usb/mediatek,mt6360-tcpc.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Mediatek MT6360 Type-C Port Switch and Power Delivery controller DT bindings
+> +
+> +maintainers:
+> +  - ChiYuan Huang <cy_huang@richtek.com>
+> +
+> +description: |
+> +  Mediatek MT6360 is a multi-functional device. It integrates charger, ADC, flash, RGB indicators,
+> +  regulators (BUCKs/LDOs), and TypeC Port Switch with Power Delivery controller.
+> +  This document only describes MT6360 Type-C Port Switch and Power Delivery controller.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mediatek,mt6360-tcpc
+> +
+> +  interrupts-extended:
 
-Acked-by: Rob Herring <robh@kernel.org>
+Use 'interrupts'. The tooling will automatically support 
+'interrupts-extended'.
+
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: PD_IRQB
+> +
+> +patternProperties:
+> +  "connector":
+> +    type: object
+> +    $ref: ../connector/usb-connector.yaml#
+> +    description:
+> +      Properties for usb c connector.
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - interrupts-extended
+> +  - interrupt-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/usb/pd.h>
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        mt6360@34 {
+> +            compatible = "mediatek,mt6360";
+> +            reg = <0x34>;
+> +
+> +            tcpc {
+> +                compatible = "mediatek,mt6360-tcpc";
+> +                interrupts-extended = <&gpio26 3 IRQ_TYPE_LEVEL_LOW>;
+> +                interrupt-names = "PD_IRQB";
+> +
+> +                connector {
+
+Where's the data connections? The assumption of the binding is the USB 
+(2 and 3) connections come from the parent if there's no graph to the 
+USB controller(s).
+
+> +                        compatible = "usb-c-connector";
+> +                        label = "USB-C";
+> +                        data-role = "dual";
+> +                        power-role = "dual";
+> +                        try-power-role = "sink";
+> +                        source-pdos = <PDO_FIXED(5000, 1000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
+> +                        sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
+> +                        op-sink-microwatt = <10000000>;
+> +                };
+> +            };
+> +        };
+> +    };
+> +...
+> -- 
+> 2.7.4
+> 
