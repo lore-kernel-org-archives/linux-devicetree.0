@@ -2,171 +2,108 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C99C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4683C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E03C20848
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F5F208C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598624334;
+	bh=leHLGjg8aOzdRJPBC4ekk4kQDiYmjF+OUvMLO0aEJMM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=td5Zh6In/Wg4tPf1XvjyBuIZVtwG0styM2+6wKoD8iyd88GbiJJCBpKUdAUQJyEW/
+	 RaON4Njwe0A6lq0RbsIgjSnfY37E31Maj3S9mL0zbPooIsHy9iNU0NseFGz12A3/51
+	 /B43ZbIV6hHRoMJWvxqdl1ThRuJY84Z2f7CMuxM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725985AbgH1OSZ (ORCPT
+        id S1726912AbgH1OSx (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:18:25 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35862 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgH1OSV (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 10:18:21 -0400
-Received: by mail-oi1-f193.google.com with SMTP id b9so928413oiy.3;
-        Fri, 28 Aug 2020 07:18:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lBq+rTLiIUXKTOPJ3t+Pb18logS9N5SHMSukF4dmdzo=;
-        b=Suof/KMb7s0f3S7I2G8CtJqW8DY6+YS/sCimDdaZKdKStLneHAfzDAPpKWpLQk7CN9
-         H0Pb5ZqKZ9zRMDeSP+tjI+k3NGh/9QhUAd1lhdVeqU/MaZ/S8nXp4DI9cZ7HSMqds3dt
-         Yb/j8ofw88GowRQmQGbdTUwK+Swn/gxsdhM2v/WhHHAkb1TrqQjjx8e7lQJxCJYjcHEI
-         DmcKIqWL9SgOuylaGMNENFqg3ZWTfU9YF5bhArXB8Ko3oaoi3tmq2hs2W6z6hioyEuwM
-         SNU5bsS4OF/bhM/9IQHAzl4L+/GwC6A4qkYxEBkFYblGfMsOvR6fawrv3HdbaDkKwYwq
-         NaSg==
-X-Gm-Message-State: AOAM5337hXSFvLZKqyCmb6GWj65vr9KE9YSKvnV3sWUh/2a7M3ZjiZMy
-        gYM4RhI4j21h38ZnBWTrfpe2EAxK374l5KzVR7I=
-X-Google-Smtp-Source: ABdhPJzvoxPJuI8QBit61+jdNdzDe8hVbMe5fQAfx6sohY8OeIOX9NyqfufCvv6rprCk1eFhaiWbtxVIauRyrxVFkX0=
-X-Received: by 2002:a05:6808:575:: with SMTP id j21mr1096847oig.54.1598624300147;
- Fri, 28 Aug 2020 07:18:20 -0700 (PDT)
+        Fri, 28 Aug 2020 10:18:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725857AbgH1OSw (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 10:18:52 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C8D20848;
+        Fri, 28 Aug 2020 14:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598624332;
+        bh=leHLGjg8aOzdRJPBC4ekk4kQDiYmjF+OUvMLO0aEJMM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wKM/gEClCHdIWfiBdSgaynHkOvikRn9ZyW9iCvIffNgZ8+gvbzUJiXB2kU2JyQgUL
+         qPy2HGNe6q6QjT01Sj1aI9AmkW+OVKFadPKrNbojfqCtzk6QJEHHkNNivM4k53EGS1
+         z7XwkM2n4g0lF1YNQAf6QHvX1Nmlioqmfnitc92w=
+Date:   Fri, 28 Aug 2020 19:48:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v1 2/2] drm: bridge: add support for lontium LT9611UXC
+ bridge
+Message-ID: <20200828141848.GX2639@vkoul-mobl>
+References: <20200828120431.1636402-1-dmitry.baryshkov@linaro.org>
+ <20200828120431.1636402-3-dmitry.baryshkov@linaro.org>
 MIME-Version: 1.0
-References: <20200812202018.49046-1-alcooperx@gmail.com> <20200812202018.49046-2-alcooperx@gmail.com>
- <CACRpkdZVde024_CCwmKBY_zVzfcq7=A1+t=8nEe1ei8+_Le51A@mail.gmail.com>
-In-Reply-To: <CACRpkdZVde024_CCwmKBY_zVzfcq7=A1+t=8nEe1ei8+_Le51A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 28 Aug 2020 16:18:09 +0200
-Message-ID: <CAMuHMdUToD9C+KUm8r1EqGpjj7ztmWJJZON+Gn7XfFgybb-9NQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add support for Broadcom USB pin map driver
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828120431.1636402-3-dmitry.baryshkov@linaro.org>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Linus et al,
+On 28-08-20, 15:04, Dmitry Baryshkov wrote:
 
-On Fri, Aug 28, 2020 at 4:00 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Aug 12, 2020 at 10:20 PM Al Cooper <alcooperx@gmail.com> wrote:
-> > Add DT bindings for the Broadcom USB pin map driver. This driver allows
-> > some USB input and output signals to be mapped to any GPIO instead
-> > of the normal dedicated pins to/from the XHCI controller.
-> >
-> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> (...)
-> > +title: Broadcom USB pin map Controller Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Al Cooper <alcooperx@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +      items:
-> > +          - const: brcm,usb-pinmap
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +    description: Must be defined if any out-gpios are specified.
-> > +
-> > +  in-gpios:
-> > +    description: Array of one or more GPIO pins used for input signals.
-> > +
-> > +  in-names:
-> > +    description: Array of input signal names, one per gpio in in-gpios.
-> > +
-> > +  in-masks:
-> > +    description: Array of enable and mask pairs, one per gpio in-gpios.
-> > +
-> > +  out-gpios:
-> > +    description: Array of one or more GPIO pins used for output signals.
-> > +
-> > +  out-names:
-> > +    description: Array of output signal names, one per gpio in out-gpios.
-> > +
-> > +  out-masks:
-> > +    description: Array of enable, value, changed and clear masks, one
-> > +      per gpio in out-gpios.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    usb_pinmap: usb-pinmap@22000d0 {
-> > +        compatible = "brcm,usb-pinmap";
-> > +        reg = <0x22000d0 0x4>;
-> > +        in-gpios = <&gpio 18 0>, <&gpio 19 0>;
-> > +        in-names = "VBUS", "PWRFLT";
-> > +        in-masks = <0x8000 0x40000 0x10000 0x80000>;
-> > +        out-gpios = <&gpio 20 0>;
-> > +        out-names = "PWRON";
-> > +        out-masks = <0x20000 0x800000 0x400000 0x200000>;
-> > +        interrupts = <0x0 0xb2 0x4>;
-> > +    };
->
-> Wow look at that.
->
-> This looks very much like Geert's just invented GPIO aggregator.
-> But in hardware!
->
-> See:
-> drivers/gpio/gpio-aggregator.c
->
-> I think Geert is intending to add bindings to the aggregator, and
-> while I do think this should be its own driver (in drivers/usb) these
-> bindings and whatever Geert want to use for the aggregator
-> should certainly be the same.
+> +#define EDID_BLOCK_SIZE	128
+> +#define EDID_NUM_BLOCKS 2
 
-I don't intend to add any DT bindings to the GPIO Aggregator, as it's
-meant to be an "abstract base" driver.  Actual hardware blocks for which
-the GPIO Aggregator could be a suitable driver should have their own DT
-bindings, and their compatible values added to the GPIO Aggregator
-driver's match table.
+tab or space either one, not both ;)
 
-Anyway, DT bindings would just be a compatible value, and a gpios
-property.
+> +static struct mipi_dsi_device *lt9611uxc_attach_dsi(struct lt9611uxc *lt9611uxc,
+> +						 struct device_node *dsi_node)
 
-> Geert what do you think?
+Please align this with open parenthesis of preceding line (checkpatch
+with --strict option will check this)
 
-This USB pin map driver seems to map GPIO pins to USB pins, not other
-GPIO pins, so to me it looks like something different than the GPIO
-Aggregator: a hardware mux instead of a software mux.
+> +static int lt9611uxc_bridge_attach(struct drm_bridge *bridge,
+> +				enum drm_bridge_attach_flags flags)
+> +{
+> +	struct lt9611uxc *lt9611uxc = bridge_to_lt9611uxc(bridge);
+> +	int ret;
+> +
+> +	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
+> +		dev_err(lt9611uxc->dev, "Fix bridge driver to make connector optional!");
 
-BTW, at least on most Renesas SoCs, you can usually mux output functions
-to multiple pins at the same time, which could be considered mirroring,
-too.
+Can we support both modes as I have done in lt9611, that way once the
+conversion is done we can drop the init part and support conversion.
 
-Gr{oetje,eeting}s,
+I have patch for msm driver to set DRM_BRIDGE_ATTACH_NO_CONNECTOR, you
+can use that to test
 
-                        Geert
+> +static int lt9611uxc_hdmi_hw_params(struct device *dev, void *data,
+> +				 struct hdmi_codec_daifmt *fmt,
+> +				 struct hdmi_codec_params *hparms)
+> +{
+> +	/*
+> +	 * LT9611UXC will automatically detect rate and sample size, so no need
+> +	 * to setup anything here.
+> +	 */
+> +	return 0;
+> +}
+
+Do we need dummy function?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+~Vinod
