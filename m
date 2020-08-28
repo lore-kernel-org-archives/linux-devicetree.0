@@ -2,152 +2,121 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ABDC433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 04:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF09BC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 05:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70292080C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 04:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE4B208CA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 05:54:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="n5tCaxUD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6iZdECV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbgH1EXj (ORCPT
+        id S1726010AbgH1Fyd (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 00:23:39 -0400
-Received: from mail-eopbgr1300109.outbound.protection.outlook.com ([40.107.130.109]:23498
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725774AbgH1EXi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 00:23:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AXk1jBcyal0kryuHDU2ELg6OZRWBwepDI6SycnavA6OMvK4du9NXAZzRzEUwR2za/9wSEE2Py1gokqWzZDgQbAZyh0+qai0LxAqnHhzfKegrziot8IP2Jgg4eOoVNAfwufR8Die3Hb8DA47GaWPFLUn3XU5oPQLtSKu7XKu5QjNgB5pE4nvPehy9x0wsly3UMZKN/OlEJQGdZwKcFnIuEYFEa5OKzr7M605yUizjGxufCiWD9a9UDLQDOADEukapZf4ClouXbgBlZN1KA3aHpcokxgC9WGX3Wy9WYfLN8qzn/SRi/gbubnG6yqpNNcQBa7HNkrnOGRlrzm6RTtI3uw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hXuRTUxireoWx5kYnC7gjiklKcOOAY1qps5jYNqO7z8=;
- b=nr1F7+EcztnKvcP2EUdVpwigDf21AD6IxcOmSVLeg7ufzOlqFiFZMEFMyDQVyCjK2OsAqwAJH4kgO6M2zpwGQS5lQCgyI8DY6V45c47kzBgC9NgKC0MpzCh9ABpP9ETXKmyqTg4wFp5a+LOpUvIgOQXb1jJOyk9nShEg8bIzBPUuQBiLzfDs07/sB6jECzIt9xOcZUuyWX8DV68vThE6Ag8uHwDGdd8U+6w4RnsVnkUyhQh0wa9YA4zySpvaPB9YIaLlBItxZ7opRENQ/MR5NiEiCh4I9ZkCjKrs7kIH1O7yNz0Ek1ehy8f6P2OiV2CKFcw1tmNSixAYTWVm0SKjVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Fri, 28 Aug 2020 01:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725858AbgH1Fyc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 01:54:32 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C1EC061264;
+        Thu, 27 Aug 2020 22:54:32 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id e11so1006273ljn.6;
+        Thu, 27 Aug 2020 22:54:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hXuRTUxireoWx5kYnC7gjiklKcOOAY1qps5jYNqO7z8=;
- b=n5tCaxUDwXTzKSSroNXaKV2B1i4Pfzn9Qar21V8nuSuEtUwDwnnQXqUndEEF9VABvXj/+9sDoJKvsw4Mkn5N0EhGubawJX3QGBgM2hqx7g8au1M7LSPwwODhE0N28LxOPzOc+x6VfqXfpeh3h/8L0qP0YvuMXR9jN+vLSZHFLAQ=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TY2PR01MB2171.jpnprd01.prod.outlook.com (2603:1096:404:d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Fri, 28 Aug
- 2020 04:23:31 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3305.032; Fri, 28 Aug 2020
- 04:23:31 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: RE: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1
- support
-Thread-Topic: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1
- support
-Thread-Index: AQHWeszKwElZ4pDswkCEZ1j6DXZc7qlM8BsQ
-Date:   Fri, 28 Aug 2020 04:23:31 +0000
-Message-ID: <TY2PR01MB3692C481DF7758471C51873FD8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: bp.renesas.com; dkim=none (message not signed)
- header.d=none;bp.renesas.com; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [240f:60:5f3e:1:b16e:b7b1:d350:3c9a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 77a3e04c-f674-4981-3939-08d84b0a1f0b
-x-ms-traffictypediagnostic: TY2PR01MB2171:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB21710719DA3384F1BF64F8ADD8520@TY2PR01MB2171.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: m1s6tnT2iegZX034j0zc89q4PgsqiiKAhrVvBY586F1n7Pix2/u+I/GEaP+R3lQsTeIA5HGpWe7cqxh4cVymmGFU3Qma6uwWu50j4r5EJ9uXcr3xT+dOcmi1+NP9xABGSpzEQ3a3WgO2ZIxIKaGWeVl5t0pzoCD3AaEJ5YeMl474Ms5LPcBKCba0UxO0aVPyMppQ/V3PtwIM6skr/8gREAo6yw/qTpo5uK7furDRn/JR2ianN3jtrfnrk0H7gvUYv4aHjhDZwB6kLaWdps21Ag6785J6VD553sqUbnBlpMJ06RNed5ZBEQeR/QQdxY9wh1aDy6PwZ0aEaiuUSUNkQUNt/jaoqyperqxe7yEf92eab9uZ8P6q5nEXykr9ep9D
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(7696005)(55016002)(52536014)(4326008)(186003)(9686003)(86362001)(2906002)(33656002)(71200400001)(64756008)(66556008)(66476007)(66446008)(110136005)(8936002)(76116006)(6506007)(66946007)(478600001)(316002)(5660300002)(8676002)(7416002)(54906003)(142933001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: j76olSofpy7MUFo7xrQaZGtX1PKp1KbBdoKnYlfZ0fZydLBRPzsTd6EF4S00JlGzP9VDeV0K3mWHCBsFWGCdiXJvten4z3U82z4w4M4xpiIeJwrMSUPBejD6fQwKBFxJ1rXPxRD6PkB+PV751WXOufxEPWKxH8vO+clpyRlJpg6sxz/7Njcr0zp148MrBUdUz0V+x/a+k/3LQbyR67WA69AWWsGvYmuz000ayVEBJfMMY4/nKOMCMgQ8CsyRiER2mfB16XhaKZ7e4vkvmP1tIa/ijG7nvJk0Cmu51ddxbKOMp6nymh9p4InP0oJjhasyEYLTwGCT535HAjD6RB+Pf5ibnRo8IzzXaqwijykirB/V5154OZFZa0jEZmtRnUJdtC5oL9DIPNY4xbF8gYx0ngsEq+VGSGIkPhSYHb3wE9Fdvh+2q9GYNjK9CD8IWbzXEaKDAta7teoP/9SO5FIv7pBsLB+gdPuNyZLb4O8tGWlM08cgJNQT2gJ9ui4r21I7sBaHWRKNY2DeKpaEPKq8t4w3haEkpSW8QeZrTaE8j6/DyPkmTvfeBVGfuII82SjlKZ/PlbYjQhlbt+m+UAgybONXNqmtcoUnx9RvkzGixL+1dLnEuHsGY0KO6OJBs9M4d6tYG0lY+l75fPrbcCqxHckZLPvrD7O62s57W2miaagZhCBfdFBdrV8qvPZ/srqCtrtgHXIg+jOwDWaMr/oCFQ==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=M5X//ZshFwH0KFUFC07IKRMrNcpHsYLBwYNF7u93/jc=;
+        b=F6iZdECVa/kC5OREMqVO4E3qSsVlgWKNDTK8rq46y6mvBT8n0W1NYWRQqb7du7Fx9M
+         yDeuyYdz9peRTfxLOYbdSOOavxmHIQ3JYtMqq9N9xSGpdEPGNePDNHLxxaW79jOPw9rW
+         K+wQIWujkdKVzKm4QfKadr8CH79KcuM4+JFbt78igw+vbjzjO8rqaiGLfwDwPDhSLjUZ
+         DZfZmjj5SdRzzc17r3iHwjEKCP/Hjo87fElmJj5jFSL100xIAflQklK9F92nlrEk7+KE
+         EwriOUxhqRtsk0tPr+eAsnJe3TFJxj+IL/SNDq05FL9lLIa8PHYgBYx1NbI8UTVi715N
+         EhMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=M5X//ZshFwH0KFUFC07IKRMrNcpHsYLBwYNF7u93/jc=;
+        b=Jde+IinPG4arEy1VMXqj00YuQ2tEUtf+cfE0yhCFPfCWQsIBhNtS91fhmWGnlMrijO
+         or4GInDuhQgrjOelcb+5PbQwO8UDrGZmDXDmSA0W741+T8++NSgB4qjIvmr7vNY8VChN
+         DjHHXJEVcH0Qjo5F96pKWISUySnRihx/gXzjz+Zuy6jo37Uu/AbzzF3z/z8v5l7RaEO1
+         Gt+KWolyB6BtwGrrbWc9Sa/KktEttWxxFQj2n1q+r/u4AK3zUI3PNXA6Xis1TMr813As
+         yLcMAeJR6XA8Hv2GMMv7iE8Rn31V4/Mks09vQ1xJNHEYZRWLvneI4Xe/guINhyuiXEIo
+         /L5g==
+X-Gm-Message-State: AOAM532GIHFT0HBxSTXiYhQ0g3vOv8ZNxUkIp9D6CVUQXswxyQrKZZbK
+        vDuowGALj9BCQTvsNU+ZrZYHjbxc8CPo2Sk+4Hw=
+X-Google-Smtp-Source: ABdhPJwyIjGEyHiu5PklJExnAu2irMyZy92E3HWunXZk6nTyo4YZk5QUP6tuzmB3qWO18Rd/8O81zM+WhqbVxbAaCsI=
+X-Received: by 2002:a2e:a40f:: with SMTP id p15mr96315ljn.356.1598594068735;
+ Thu, 27 Aug 2020 22:54:28 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 77a3e04c-f674-4981-3939-08d84b0a1f0b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2020 04:23:31.4361
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /nacFlbikso9qW/XGNaPRpj59WGZzVMTjOcqm2WCqeQ5ey9m+NMo2rFV/3P/RTK9rBjl63C/1Sq4bH727CFw5852ZGXZOripkfUl5vBGswxVp8HXFv12tyscc77qIsqh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2171
+References: <1598527137-6915-1-git-send-email-u0084500@gmail.com>
+ <1598527137-6915-2-git-send-email-u0084500@gmail.com> <20200827164131.GA86149@roeck-us.net>
+In-Reply-To: <20200827164131.GA86149@roeck-us.net>
+From:   ChiYuan Huang <u0084500@gmail.com>
+Date:   Fri, 28 Aug 2020 13:54:16 +0800
+Message-ID: <CADiBU38oTZLR=EPSW=ANGZn8074FyQqb=WS5kyMvu_8_Ua=XaQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] usb typec: mt6360: Rename driver/Kconfig/Makefile
+ from mt6360 to mt636x
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        matthias.bgg@gmail.com,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Lad-san,
+Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2020=E5=B9=B48=E6=9C=8828=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=8812:41=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On Thu, Aug 27, 2020 at 07:18:56PM +0800, cy_huang wrote:
+> > From: ChiYuan Huang <cy_huang@richtek.com>
+> >
+> > 1. Rename file form tcpci_mt6360.c to tcpci_mt636x.c
+> > 2. Rename internal function from mt6360 to mt636x, except the register
+> > definition.
+> > 3. Change Kconfig/Makefile from MT6360 to MT636X.
+> >
+> > Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+> > ---
+> >  drivers/usb/typec/tcpm/Kconfig        |   6 +-
+> >  drivers/usb/typec/tcpm/Makefile       |   2 +-
+> >  drivers/usb/typec/tcpm/tcpci_mt6360.c | 212 --------------------------=
+--------
+> >  drivers/usb/typec/tcpm/tcpci_mt636x.c | 212 ++++++++++++++++++++++++++=
+++++++++
+> >  4 files changed, 216 insertions(+), 216 deletions(-)
+> >  delete mode 100644 drivers/usb/typec/tcpm/tcpci_mt6360.c
+> >  create mode 100644 drivers/usb/typec/tcpm/tcpci_mt636x.c
+>
+> Maybe Heikki is ok with this change, but I am not, for the reasons
+> mentioned before. So I won't approve this patch. Note that, either
+> case, it should be merged with the first patch.
 
-> From: Lad Prabhakar, Sent: Tuesday, August 25, 2020 7:45 PM
->=20
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->=20
-> Document RZ/G2H (R8A774E1) SoC bindings.
->=20
-> No driver change is needed due to the fallback compatible value
-> "renesas,pwm-rcar".
->=20
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.ren=
-esas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
+Yes, I agree with you opinion. use 636x,  the range is too large from
+0 to 9, it may not all be compatible.
+Even though it's also possible that the part number don't have the
+same function.
+So I'm going to remove the rename patch.
+Do I need to add a patch named "revert"? Or just remove it. I'm not
+sure which way is better.
 
-Thank you for the patch!
+It seems you all want the code change to be squashed into the first
+code. And the second one is the DT binding. Right?
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Best regards,
-Yoshihiro Shimoda
-
->  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
-> b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
-> index daadde9ff9c4..5407c11e92a4 100644
-> --- a/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml
-> @@ -20,6 +20,7 @@ properties:
->            - renesas,pwm-r8a774a1  # RZ/G2M
->            - renesas,pwm-r8a774b1  # RZ/G2N
->            - renesas,pwm-r8a774c0  # RZ/G2E
-> +          - renesas,pwm-r8a774e1  # RZ/G2H
->            - renesas,pwm-r8a7778   # R-Car M1A
->            - renesas,pwm-r8a7779   # R-Car H1
->            - renesas,pwm-r8a7790   # R-Car H2
-> --
-> 2.17.1
-
+>
+> Guenter
