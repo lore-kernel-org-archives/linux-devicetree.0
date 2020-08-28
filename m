@@ -2,116 +2,184 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553D0C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 12:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD9CC433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 12:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 285412100A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 12:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59B92078A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 12:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MDinm23R";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LEn1/3tw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cclCi496"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgH1McJ (ORCPT
+        id S1729298AbgH1Mmj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:32:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37498 "EHLO
+        Fri, 28 Aug 2020 08:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729376AbgH1Mb4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 08:31:56 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25CAC061264;
-        Fri, 28 Aug 2020 05:31:53 -0700 (PDT)
-From:   Kurt Kanzenbach <kurt@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598617902;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TUlOgQ1Ae4acAoCoTyQ5RZNzLvp1OcaWRYPRqm2zm+0=;
-        b=MDinm23RjqFHDWjquXIdL2By0xiohZ7K7A6BSr5Qj0v++Z8SYY5DsXSiJr0bjntayyY9Ep
-        OLXxXyYHrF2uYQIFMT4S4X43AOw7q/5OSFTPHr1Nl+wEBAT2qHr7o8+klDhvKeuX6vII/g
-        23rLljmvzjxSSmedJfpQZ0nXjfbxl3lTw6Xw7k11IrDYj8uCn/66G+xyivUnQXtSNzFbVl
-        aRViVbb2vingdypwXyhcOIVE2nVkjX64RyQDG7PEjZFaj7gpTR4Rgt67omq73CEHegb1nR
-        NcBv7m8b4Ba2zyrSpB7VHw3dFMqymDDJ1Cdv6xlQrTxtVbNA+VuxBS2U1N6J0w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598617902;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TUlOgQ1Ae4acAoCoTyQ5RZNzLvp1OcaWRYPRqm2zm+0=;
-        b=LEn1/3twlhtXTzSzQT891gPJZhOWTuiQ8IeEzhL+ZL91mJr3MOCQpk+sdvzL4wqAJpVYFq
-        1fXxkYsI8HfrfnDA==
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kamil Alkhouri <kamil.alkhouri@hs-offenburg.de>,
-        ilias.apalodimas@linaro.org
-Subject: Re: [PATCH v3 5/8] net: dsa: hellcreek: Add TAPRIO offloading support
-In-Reply-To: <20200827162551.GB13292@hoboy>
-References: <20200820081118.10105-1-kurt@linutronix.de> <20200820081118.10105-6-kurt@linutronix.de> <20200824225615.jtikfwyrxa7vxiq2@skbuf> <878se3133y.fsf@kurt> <20200825093830.r2zlpowtmhgwm6rz@skbuf> <871rjv123q.fsf@kurt> <20200827162551.GB13292@hoboy>
-Date:   Fri, 28 Aug 2020 14:31:41 +0200
-Message-ID: <875z930x5e.fsf@kurt>
+        with ESMTP id S1729403AbgH1Mlg (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 08:41:36 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03719C06121B
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 05:41:21 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y2so1156309ljc.1
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 05:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4UZ8ZlvTgZrHgyiPtvMsKPs/Vg0QBXcLrGYhEL5DGGo=;
+        b=cclCi496u2b4nzAtXD4psDYf7lxbZPKHmuhThRkQ12IsEpMklRrDHz7YIdPeW1SH4r
+         4ViExmoX7OsjB7ECKtkqEb4PMI9BUB3ZTcumKMX7motHQMCBLvBScPIYkcHQypp2uR+u
+         zvIX3znEalqkveDqbFpkCGT8gRSIv3lk38KyFoJahpVHAI4kDLm6psdRPktab7I0hwPr
+         Llxj36AGsBCEksBq9Ve5V6Tbj3TmAKp0Xs8z7ovtjDuNan6vPcFuoEJRwD8Q7x1XMVK+
+         /Btz/IghV5pqByo6o3K3j17bQPl8ORiSkMcmicU8XwpEthy/5zjY8t/45+AtwOZUCl0P
+         8b5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4UZ8ZlvTgZrHgyiPtvMsKPs/Vg0QBXcLrGYhEL5DGGo=;
+        b=VoXtc0c6T/q7V6hYaSCmjQd6Sv8VZP7k+NvetiYfnK0tiJ32wA0/qaJXs/hkFAQXGL
+         8ndrfPcG65FDUC3QvBdR/0pzRiDru2HSTmPToYvHMlm0esh5hQwYRZVe4k8vvcOmBPvL
+         bLNaVpi6scjOl86NFhQSxi+koXW690EHasp9Z8fzp+G0bXDRWz+29jOjnVafpgWmnsOb
+         ODgU9uMRxxvGYQylTiA7ikz9Vm/zNNw/W8FbO9YjdeLaQt+6y3WquHnBailJpL0fE8Gj
+         qiH71VJR0wQKg+TsLts0WPK2kmuqI17Mvvz3jIxboC/yNhzAGNMTUZOjSsQOj/sFY4uF
+         ujuw==
+X-Gm-Message-State: AOAM532SXCf/0G80FitWrCNqFhHdAqStCPLvL21XiTRpGwdf1IrSAf+j
+        lCpRJUnCJhXKU8JHUqAqri/5AhWEJ1kFytpe1oGnnA==
+X-Google-Smtp-Source: ABdhPJwKZAvun9Brh3aryP6kpA6aXrferW+axwJsWnMHgZZ89KP4fGj1jclyUW3/4IgmZOQKzqDxkugRI2Y4Pa1vsbc=
+X-Received: by 2002:a2e:4e09:: with SMTP id c9mr830659ljb.283.1598618476725;
+ Fri, 28 Aug 2020 05:41:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+References: <20200824122957.1392870-1-nobuhiro1.iwamatsu@toshiba.co.jp> <20200824122957.1392870-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+In-Reply-To: <20200824122957.1392870-3-nobuhiro1.iwamatsu@toshiba.co.jp>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 14:41:05 +0200
+Message-ID: <CACRpkdarxKSQOvoA4yvjFUkXmZR1OzHYfQRKqLR+8TQoV+oCyw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/8] pinctrl: visconti: Add Toshiba Visconti SoCs
+ pinctrl support
+To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, punit1.agrawal@toshiba.co.jp,
+        yuji2.ishikawa@toshiba.co.jp,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Marc Zyngier <maz@misterjones.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hi Nobuhiro!
 
-Hi Richard,
+Thanks for your patch. Some review comments below!
 
-On Thu Aug 27 2020, Richard Cochran wrote:
-> On Tue, Aug 25, 2020 at 11:55:37AM +0200, Kurt Kanzenbach wrote:
->>=20
->> I get your point. But how to do it? We would need a timer based on the
->> PTP clock in the switch.
+On Mon, Aug 24, 2020 at 2:30 PM Nobuhiro Iwamatsu
+<nobuhiro1.iwamatsu@toshiba.co.jp> wrote:
 >
-> Can't you use an hrtimer based on CLOCK_MONOTONIC?
-
-When the switch and the Linux machine aren't synchronized, we would
-calculate the difference between both systems and could arm the Linux
-timer based on CLOCK_MONOTONIC. Given the fact that we eight seconds, it
-would *probably* work when the ptp offset adjustments are in that range.
-
+> Add pinctrl support to Toshiba Visconti SoCs.
 >
-> I would expect the driver to work based solely on the device's clock.
+> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 
-Understood.
+> +config PINCTRL_VISCONTI
+> +       bool
+> +       select PINMUX
+> +       select GENERIC_PINCONF
+> +       select GENERIC_PINCTRL_GROUPS
+> +       select GENERIC_PINMUX_FUNCTIONS
 
-Thanks,
-Kurt
+Thanks for using generic stuff!
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> +#define SET_BIT(data, idx)     ((data) |= BIT(idx))
+> +#define CLR_BIT(data, idx)     ((data) &= ~BIT(idx))
 
------BEGIN PGP SIGNATURE-----
+Please do not reinvent things like this. Either open code
+it, and if you want optimizations (probably not relevant in
+this case) you would use:
 
-iQIzBAEBCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl9I+S0ACgkQeSpbgcuY
-8KaiQg//dbvqena9jGhjHZDELVtphJeIXHhq8fpQxNELNIkZcxfPV6Zr2sB+dzui
-Ss7Nlu06lZfM8It4/oaflPh2spvdJ841VyRx38brxDhQQCRx4IAZYOjFojxJV0+8
-q8j5AT6rkcUdfJA4GienyVf50t4DzEOfxlxuyDZQUXTJ08QXgmicS09huWL5D+vz
-HAFqxOSO9fxM04xEeRTfQqHnnMQOlXBsTJwTVEWc1AVzcFea/3W3rrZa2pcwyxoB
-NngpvX9N1oNqGXPq+Fyp/cA6CUd6Sn3ZA2L6dwz5rJcBiHN/gU1q6OopvoVuUA1q
-5JidK+BlgATk45ps1vBlXp3njo/pMHpjPrrU0VaD7N09Jq+R/D/9K5cibJSBxbva
-DuXOGIWJw+6QoXBW/75tKmVtdgNk5Gf9+PRdWlD3t++4Oof1tptVgOBhU/cnXH8X
-W+sA22oD1RdRf//lrG3wdwY4yXfzbA98oWEOLlN78Vx3/wZ2gFiaVMVEiJNfndTQ
-1PUjYpLilbURkg65o9CRk0cNQ8+nZaDbtbm+ygRh7RtufWeIz1Ozi3V1xP06Uv4T
-1tFdJTKSLzdLgbRIt7m9av1K/9rw+Aj4JzcTa2AcRC0SzpYgJhHlykXqZwAiY00W
-m9sofpfiaa7dKsG42l4K0rk3sI54zhjiwLuJXSEKZi6gDaVfoRE=
-=Z7BZ
------END PGP SIGNATURE-----
---=-=-=--
+#include <linux/bitmap.h>
+
+set_bit() and clear_bit() if you want atomic bit ops
+__set_bit() and __clear_bit() for nonatomic
+
+The upside to using these standard calls is that they will
+unfold into assembly optimizations for the architecture if
+possible.
+
+If you roll your own locking use the latter primitives.
+
+> +/* private data */
+> +struct visconti_pinctrl {
+> +       void __iomem *base;
+> +       struct device *dev;
+> +       struct pinctrl_dev *pctl;
+> +       struct pinctrl_desc pctl_desc;
+> +
+> +       const struct visconti_pinctrl_devdata  *devdata;
+> +
+> +       spinlock_t lock;
+
+At least add a comment to this lock to say what it is locking.
+
+> +                       /* update pudsel setting */
+> +                       val = readl(priv->base + pin->pudsel_offset);
+> +                       CLR_BIT(val, pin->pud_shift);
+> +                       val |= set_val << pin->pud_shift;
+
+I would just inline the &= operation but it is up to you.
+
+> +               case PIN_CONFIG_DRIVE_STRENGTH:
+> +                       arg = pinconf_to_config_argument(configs[i]);
+> +                       dev_dbg(priv->dev, "DRV_STR arg = %d\n", arg);
+> +                       switch (arg) {
+> +                       case 2:
+> +                       case 4:
+> +                       case 8:
+> +                       case 16:
+> +                       case 24:
+> +                       case 32:
+> +                               set_val = (arg / 2) - 1;
+
+This looks like you want to use
+
+set_val = DIV_ROUND_CLOSEST(arg, 2);
+
+Also add a comment on WHY you do this.
+
+> +                       /* update drive setting */
+> +                       val = readl(priv->base + pin->dsel_offset);
+> +                       val &= ~(GENMASK(3, 0) << pin->dsel_shift);
+
+Could this GENMASK be a #define so we know what it is?
+
+> +/* pinmnux */
+
+Spelling
+
+> +       /* update mux */
+> +       val = readl(priv->base + mux->offset);
+> +       val &= ~mux->mask;
+> +       val |= mux->val;
+
+So here you do things explicitly and in the other case with custom
+macros. I think this is better because it is easy to read.
+
+> +static int visconti_gpio_request_enable(struct pinctrl_dev *pctldev,
+> +                                     struct pinctrl_gpio_range *range,
+> +                                     unsigned int pin)
+
+Since you implement this, what GPIO driver are you using this with?
+
+Other than that it looks all right, also the plugin for SoC is nicely designed.
+
+Thanks!
+Linus Walleij
