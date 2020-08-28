@@ -2,102 +2,100 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5B5C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4075BC43461
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41F02075B
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAE62075B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:37:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iUJdiq08"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sGZldq27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbgH1Jbk (ORCPT
+        id S1728556AbgH1Jhw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:31:40 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57644 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728016AbgH1JbW (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:31:22 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S9RKLH005422;
-        Fri, 28 Aug 2020 11:30:46 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=GZcXYK4IQ/ttyWbgQ2w+8/AUl4mLyk/JntubDt8xpu4=;
- b=iUJdiq08j1aAdX0H//CuLIvKCyuHq+0qo06HR0veCNKqtfts+9GPogoz7knCy4K6H2Tn
- rII6qYVUpDXcqmuN2R0T010lAr8/3hIeUNaCs48mgCAMxjSkLcbuhj168DSlabMBrPB8
- UbzyAqIycsEyWw0NfqB9/v/EohNmJRNe8FH5aK9W+ZOqXrDx0eVzEEcGSxIAiWsM3sB5
- qtjPsBRjuo2xWipwyiMeUAbrQCZF+usgqdzZFm125aVg5bTXq9sbdTojV/8HiF6vfaDn
- HNQgrnRPXS4jTFLUciLAAyKgaiHN3j4tm6bvLLXALI28xEY5BaKPfDGmxatcXU+ux7Bz NQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 332t8g5mm2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 11:30:46 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 753D510002A;
-        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 547472AD2DE;
-        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
-Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
- 2020 11:30:37 +0200
-Subject: Re: [PATCH v7 3/3] ARM: dts: stm32: add initial support for
- stm32mp157-odyssey board
-To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <mani@kernel.org>, <a.fatoum@pengutronix.de>, <sam@ravnborg.org>,
-        <linus.walleij@linaro.org>, <arnd@arndb.de>, <broonie@kernel.org>,
-        <lkundrak@v3.sk>, <daniel@0x0f.com>,
-        <kuninori.morimoto.gx@renesas.com>, <allen.chen@ite.com.tw>,
-        <robh@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
- <20200809164450.289731-3-marcin.sloniewski@gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <8a95db7e-865a-db34-ae8a-b2fe3533ab8d@st.com>
-Date:   Fri, 28 Aug 2020 11:30:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 28 Aug 2020 05:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728876AbgH1Jht (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 05:37:49 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F89C061232
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 02:37:48 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w14so585748ljj.4
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 02:37:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H61KW0cO/8vC8auZZfnwBx0eRjehicYI06KTiTAxhPE=;
+        b=sGZldq27qtqQkS06o4Etfh2b3RBgWQ83/hREu2x5IPz+gxqzrUoI4b/0HYic8Ozd9o
+         O+Vrh60X2q1O2YD6tsYIU57c3aXZPkIDfoB5x5JLpUwb4QLlXsbc7cMjuNEQoWY0MzGx
+         swDdh83XnpzvM5vfFFlD3Xv7x4K3WwgzjiKb+yNQHjgxEQTEVCJ3vlDUlcsvFdaqpisu
+         fvtCa0rKsQ9h2gaJebRBy65s7TKGqlXH2e5jw0DVSxEPHiGFi9i8qSQh87Do5K7jdkL8
+         gF5nSuh8qIO5Mo9zCty+v4qqWH2d6GcvqoxvCi2vBvKuOAVpP1tOXnpVt0wcNmMvG27Q
+         6ddQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=H61KW0cO/8vC8auZZfnwBx0eRjehicYI06KTiTAxhPE=;
+        b=c6fsm3kd1zpEj/PQzdGpbMWID+rHm4SrGJgdEZDJX3tPf7dsOrvNUjdEkuMQyOLsxX
+         uh5S7S17VanSqdfHpkq4A+XUKVtcplJU47fCrfANZly0mxVNxKPJaVRJLkDwmqAiUF0J
+         m9COd8Q/jlmvewd3RQtUCXvXFhVpqtSioJf1WDutuBJYha1UMs3HHwPjIF8Ja6H+vVC9
+         P4Br5l4Pefjg0Xvv3e3I1Xv2u6AI4MCbb6A9KcivLqCHcSJBtV0XTeXhrzCVLXBM3uhf
+         1UCHFe81bsMoWYx1I99TzvctHXUiSEKDK/PJW+W3bceYwUGgS5tM7JoGQIY4XDU6SDK+
+         vCHA==
+X-Gm-Message-State: AOAM5326iEWnfFGCZ8fQ+P5PcnxoBAnhJGF8xXFXRR8VvtYY0aVJaD90
+        RiBZO1XvjPGVj3IBqmnf+0PhYFMZGTBbO9PfepjJww==
+X-Google-Smtp-Source: ABdhPJwNru2VlFUiB5J5tlfq4WYCIDhWoJlbw/HjYQx7ozhe4gph5iyDtDKkBmQY1aerEngIdqRZ4yFpIAXJzTu4SbY=
+X-Received: by 2002:a2e:b80b:: with SMTP id u11mr511080ljo.286.1598607467095;
+ Fri, 28 Aug 2020 02:37:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200809164450.289731-3-marcin.sloniewski@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-28_05:2020-08-28,2020-08-28 signatures=0
+References: <20200821111127.3771-1-geert+renesas@glider.be> <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
+In-Reply-To: <56474631-119b-d64b-3545-a14f800aaa61@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 11:37:36 +0200
+Message-ID: <CACRpkdb3ODnScRUkJYV8VswPfn6RhrSJK2YtoYLanS3MYjbJ2g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rza2-pinctrl: Fix pin
+ controller node name
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Marcin,
+On Fri, Aug 21, 2020 at 5:27 PM Sergei Shtylyov
+<sergei.shtylyov@gmail.com> wrote:
+> On 8/21/20 2:11 PM, Geert Uytterhoeven wrote:
+>
+> > According to Devicetree Specification v0.2 and later, Section "Generic
+> > Names Recommendation", the node name for a pin controller device node
+> > should be "pinctrl".
+>
+>    Ugh, what a lame name! :-(
+>    And they say DT should be OS agnostic...
 
-On 8/9/20 6:44 PM, Marcin Sloniewski wrote:
-> Add support for Seeed Studio's stm32mp157c odyssey board.
-> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
-> and carrier board with USB and ETH interfaces, SD card connector,
-> wifi and BT chip AP6236.
-> 
-> In this patch only basic kernel boot is supported and interfacing
-> SD card and on-board eMMC.
-> 
-> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
-> ---
+Ha ha. :D
 
-Series applied on stm32-next.
+The device tree standardization is driven with the bureaucratic ambition to
+be generic, predictable and non-personal. Mimicing the characteristic of
+the impersonal objects in life, such as the planets, or the plants.
 
-Regards
-Alex
+This is just an ambition, in reality the people doing it are Linux-heads.
 
+We (the DT community) try to be better people, we just fail regularly.
+That is OK, the important thing is to know one can and should do better.
+
+Yours,
+Linus Walleij
