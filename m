@@ -2,135 +2,99 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5749C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BFEC433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF91420C56
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:38:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kfy9bGLN"
+	by mail.kernel.org (Postfix) with ESMTP id AAD4820C56
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598600645;
+	bh=v9mWH7zlHRqcHIGa1924zsThVWJeNyD5f15ay8z5SrA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YX+juIzihXy3tGluxMkqAKOFwPsZBzHIK174MdmAZhVIFxbWbT2L5uZQBIMHyWfNE
+	 1eLFSJ5XW3BDQBMw0EwS64pZB6nSg1Y7FE/9LuG0JpEHID4zOBs41frCJIcXwzn0wu
+	 Lxduj4xxeCVnj/3YtY78R89Eu3ncMaaSUhpctzSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgH1HiF (ORCPT
+        id S1728094AbgH1HoB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:38:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48330 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbgH1HiE (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 03:38:04 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB1EDC061264;
-        Fri, 28 Aug 2020 00:38:03 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f26so227712ljc.8;
-        Fri, 28 Aug 2020 00:38:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=HMnnx9UgKJlPAys3nN74UUky5VP624uCT521MPgtXds=;
-        b=Kfy9bGLN/THrCEeDmaNxKGDbD4hZsShRhyR6OCuRPNsaRzSeb6wxRqomft6f9dk0vt
-         2UwmmejDrWyfrZrkIhH3BGBCB3Jk6W5wJ+SYi2Z/FF0p36YhmxIoMsyzLJ6iDEArLO93
-         Q07R6CWuqrHrDdr4EzsIaQGfbF63Wz9zs4CHyH/1S2c/N+j3LcLaD+m3UZ8yzap3eC81
-         DCm56g2RSAfXK9bm+spPmYxEiIw+TXNgNiO3TUntelSBTWSBN2vgIxdLsFDuTzGX/81l
-         Ax+3KaqsashQJppfEYfPKluwmSbV6Nd8HniO0AEihaWP0z3T9GczDGBCbAKqmN6KShGV
-         tg2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HMnnx9UgKJlPAys3nN74UUky5VP624uCT521MPgtXds=;
-        b=qzL371/4iRUDGbQV2d1wt87abmKAQkZ+2cPxaywZty1yKQ3Qy6X+H/NMlFCts0q8zj
-         3z8dBrQQq2igv2BL474eKY0w5DaplOd02Fpc4HGZUTMDNBP+6dOyaNK1Ju+z6q19Fax/
-         7dJ2/xKru34wkpjjlaRD3Hu9osEloxA+QuiTrsSnQJi1UXIyZYb0OokPt4yMrjNXzwcu
-         jq+lhdTf5GX9nOCNOCK+WLKyQ6q52dMKJ23CmntkxpqkdQiY/SkB/cH8R6klbsXKqMtd
-         OMdgSSdkbJEIzGYK8B2hEnPOv1tHqW/V1mGdnRqmZiUWZDsAOnP5gNbpHwnrceTLrXJf
-         Y90A==
-X-Gm-Message-State: AOAM531+q7n/E+bvacEH4XcsGEkE5UQ6GwpC+wQZkaKgTiPe5esl3/Hb
-        /koApcdqIAm/PB6ziOCX+sDWfX9iDiw=
-X-Google-Smtp-Source: ABdhPJx9/jSoTqJ9o/ncgb8+G2MsM8QW5/IDwmGMqTi9NzfCgJVhq4cgfg+CaSaPBoSW/Z3kcO17tg==
-X-Received: by 2002:a2e:9d19:: with SMTP id t25mr267324lji.222.1598600281652;
-        Fri, 28 Aug 2020 00:38:01 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id y13sm38967ljd.19.2020.08.28.00.38.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 00:38:00 -0700 (PDT)
-Subject: Re: [PATCH 3/3] ARM: tegra: Pass multiple versions in
- opp-supported-hw property
-To:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Fri, 28 Aug 2020 03:44:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726566AbgH1HoB (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 03:44:01 -0400
+Received: from localhost.localdomain (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3868820776;
+        Fri, 28 Aug 2020 07:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598600640;
+        bh=v9mWH7zlHRqcHIGa1924zsThVWJeNyD5f15ay8z5SrA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LL2aSIH6DgkNiVVSR+8x/62AO6u1WvctR5jlLT3RFhStipeSneP3vua7mU/tWDBxx
+         oFaEaYQCKyL9Pz6RjdxVVNNaHhFS0tkdwIkh3eeLcdBljsOiB7B19L0wvxVT9lsFgq
+         04+kLlX+3tkz2pLfRcYkViv0qIIRPzEEewNEMB6s=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1598442485.git.viresh.kumar@linaro.org>
- <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
-Date:   Fri, 28 Aug 2020 10:37:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845-db845c: Fix hdmi nodes
+Date:   Fri, 28 Aug 2020 13:13:47 +0530
+Message-Id: <20200828074347.3788518-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-26.08.2020 14:50, Viresh Kumar пишет:
-> We can now pass multiple versions in "opp-supported-hw" property, lets
-> do that and simplify the tables a bit.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> ---
-> Dmitry, I think there is further scope of simplifying stuff here by
-> using the opp-microvolt-<name> property and corresponding
-> dev_pm_opp_set_prop_name() call.
-> ---
->  .../boot/dts/tegra20-cpu-opp-microvolt.dtsi   |  36 -
->  arch/arm/boot/dts/tegra20-cpu-opp.dtsi        |  67 +-
->  .../boot/dts/tegra30-cpu-opp-microvolt.dtsi   | 512 ---------
->  arch/arm/boot/dts/tegra30-cpu-opp.dtsi        | 986 +++---------------
->  4 files changed, 149 insertions(+), 1452 deletions(-)
+As per binding documentation, we should have dsi as node 0 and hdmi
+audio as node 1, so fix it
 
-Hello, Viresh!
+Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Fixes: aef9a119dfb9 ("arm64: dts: qcom: sdm845-db845c: Add hdmi bridge nodes")
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Thank you very much! Very nice cleanup! I changed my OPP-gen tool to
-produce the new OPP format and then comapared the result to yours
-change, the result is matching.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+index a2a98680ccf5..99d33955270e 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
+@@ -451,16 +451,16 @@ ports {
+ 			port@0 {
+ 				reg = <0>;
+ 
+-				lt9611_out: endpoint {
+-					remote-endpoint = <&hdmi_con>;
++				lt9611_a: endpoint {
++					remote-endpoint = <&dsi0_out>;
+ 				};
+ 			};
+ 
+-			port@1 {
+-				reg = <1>;
++			port@2 {
++				reg = <2>;
+ 
+-				lt9611_a: endpoint {
+-					remote-endpoint = <&dsi0_out>;
++				lt9611_out: endpoint {
++					remote-endpoint = <&hdmi_con>;
+ 				};
+ 			};
+ 		};
+-- 
+2.26.2
 
-...
-> diff --git a/arch/arm/boot/dts/tegra30-cpu-opp.dtsi b/arch/arm/boot/dts/tegra30-cpu-opp.dtsi
-...
-> -		opp@1000000000,975,3,7 {
-> -			clock-latency-ns = <100000>;
-> -			opp-supported-hw = <0x08 0x0080>;
-> -			opp-hz = /bits/ 64 <1000000000>;
-> +			opp-supported-hw = <0x0F 0x0001>,
-> +				<0x01 0x0002>,
-> +				<0x01 0x0010>,
-> +				<0x01 0x0080>,
-> +				<0x01 0x0100>;
-> +			opp-hz = /bits/ 64 <475000000>;
->  		};
-
-The only very minor difference between my OPP-gen result and yours is
-that the above hunk has inconsistent single-column formatting, while all
-others are two-column.
-
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
