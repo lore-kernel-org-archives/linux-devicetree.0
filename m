@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139C5C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68891C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBF1F2080C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491B320872
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:13:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YvfSerXk"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aSHLmvQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgH1BNJ (ORCPT
+        id S1728269AbgH1BMB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:13:09 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15010 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728324AbgH1BMJ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 21:12:09 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4859bd0000>; Thu, 27 Aug 2020 18:11:25 -0700
+        Thu, 27 Aug 2020 21:12:01 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9885 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728223AbgH1BL7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 21:11:59 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4859640001>; Thu, 27 Aug 2020 18:09:56 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 27 Aug 2020 18:12:08 -0700
+  Thu, 27 Aug 2020 18:11:58 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 27 Aug 2020 18:12:08 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
- 2020 01:12:04 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 28 Aug 2020 01:12:04 +0000
+        by hqpgpgate102.nvidia.com on Thu, 27 Aug 2020 18:11:58 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
+ 2020 01:11:55 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 28 Aug 2020 01:11:55 +0000
 Received: from jckuo-lt.nvidia.com (Not Verified[10.19.101.4]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4859e20003>; Thu, 27 Aug 2020 18:12:04 -0700
+        id <B5f4859d80000>; Thu, 27 Aug 2020 18:11:54 -0700
 From:   JC Kuo <jckuo@nvidia.com>
 To:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
         <robh@kernel.org>, <jonathanh@nvidia.com>, <kishon@ti.com>
 CC:     <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <nkristam@nvidia.com>, JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH 05/12] phy: tegra: xusb: add sleepwalk and suspend/resume
-Date:   Fri, 28 Aug 2020 09:10:49 +0800
-Message-ID: <20200828011056.1067559-6-jckuo@nvidia.com>
+Subject: [PATCH 01/12] clk: tegra: Add PLLE HW power sequencer control
+Date:   Fri, 28 Aug 2020 09:10:45 +0800
+Message-ID: <20200828011056.1067559-2-jckuo@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200828011056.1067559-1-jckuo@nvidia.com>
 References: <20200828011056.1067559-1-jckuo@nvidia.com>
@@ -54,232 +54,135 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598577085; bh=kX0RwgveLiINhWbSkybtsDBLi2N6bZpxn7iuTnuZPAY=;
+        t=1598576996; bh=z9aKw1vyHrzjJiun8JEcoFXSJ50fQe9EfkdaKJIYd9U=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=YvfSerXkhclGj0RSn+rxvV6JPnNNZ2F643vhhpk66ZYWJPkFrXI1OGkApULndR0RM
-         9DJOtXRORudac/F/cfGL5urUG+RyRPv6ZCzaKLPqMUbkG3qbDlJkEJrNw6ITDnlAp5
-         cBSKTmGH7100W8RP1x+9f8ZpljGERKVKUuN6/LsqUkOaIKrP2Ije3AntxFsdfCe406
-         WYuwdRK9JSTznp46HLSK4ZKfwh5fLTjiCcRiEoRyqYoDM8k2KB4aKQpHD9cUF9VNXT
-         2wGXiCpVyvBZ3eoNlGOidR08X5O5MLDJQQcsYXgceBj/qNr/2/9hipKps9p1SnIEnm
-         M/DZNA8Mnm1Jw==
+        b=aSHLmvQRMK82RBen91xzSUpEy7rFZA38MPvC1aZnKNq9iXJQUtMjnRM42l5NpGIC4
+         QOx5d6guECBSf8yB8eApZnQotsjFgI6Frk/zjNV2Sh14G67N0Wfy5w9nDR9PylcIvn
+         8lusAPNOlP7P+lgmZaKMmMRiYuAAwjWh2AcplXDbkjy8buUzOS95JVJRhiWztXsNJG
+         hl2j2EOvpnZpcljZlehejJpMKci4heNnQhpEwGxZwTVP1xnXskZgTQ6fSOPWBBYAwz
+         DQOVHfDECKMQZwjs9mgJBC8aDaOOS6kSguEbW+/N7/I5uBcjHcpTt0R99+KVB5C+/Z
+         sYSHYPQ6poyhQ==
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-This commit adds sleepwalk/wake and suspend/resume interfaces
-to Tegra XUSB PHY driver.
+PLLE has a hardware power sequencer logic which is a state machine
+that can power on/off PLLE without any software intervention. The
+sequencer has two inputs, one from XUSB UPHY PLL and the other from
+SATA UPHY PLL. PLLE provides reference clock to XUSB and SATA UPHY
+PLLs. When both of the downstream PLLs are powered-off, PLLE hardware
+power sequencer will automatically power off PLLE for power saving.
 
-Tegra XUSB host controller driver makes use of sleepwalk functions
-to enable/disable sleepwalk circuit which is in always-on partition
-can respond to USB resume signals when controller is not powered.
-Sleepwalk can be enabled/disabled for any USB phy individually.
+XUSB and SATA UPHY PLLs also have their own hardware power sequencer
+logic. XUSB UPHY PLL is shared between XUSB SuperSpeed ports and PCIE
+controllers. The XUSB UPHY PLL hardware power sequencer has inputs
+from XUSB and PCIE. When all of the XUSB SuperSpeed ports and PCIE
+controllers are in low power state, XUSB UPHY PLL hardware power
+sequencer automatically power off PLL and flags idle to PLLE hardware
+power sequencer. Similar applies to SATA UPHY PLL.
 
-  - tegra_xusb_padctl_enable_phy_sleepwalk()
-  - tegra_xusb_padctl_disable_phy_sleepwalk()
+PLLE hardware power sequencer has to be enabled after both downstream
+sequencers are enabled.
 
-Tegra XUSB host controller driver makes use of wake functions to
-enable/disable/query wake circuit which is in always-on partition
-can wake system up when USB resume happens.
-Wake circuit can be enabled/disabled for any USB phy individually.
+This commit adds two helper functions:
+1. tegra210_plle_hw_sequence_start() for XUSB PADCTL driver to enable
+   PLLE hardware sequencer at proper time.
 
-  - tegra_xusb_padctl_enable_phy_wake()
-  - tegra_xusb_padctl_disable_phy_wake()
-  - tegra_xusb_padctl_remote_wake_detected()
-
-This commit also adds two system suspend stubs that can be used to
-save and restore XUSB PADCTL context during system suspend and
-resume.
-  - tegra_xusb_padctl_suspend_noirq()
-  - tegra_xusb_padctl_resume_noirq()
+2. tegra210_plle_hw_sequence_is_enabled() for XUSB PADCTL driver to
+   check whether PLLE hardware sequencer has been enabled or not.
 
 Signed-off-by: JC Kuo <jckuo@nvidia.com>
 ---
- drivers/phy/tegra/xusb.c       | 78 ++++++++++++++++++++++++++++++++++
- drivers/phy/tegra/xusb.h       | 13 ++++++
- include/linux/phy/tegra/xusb.h | 13 ++++++
- 3 files changed, 104 insertions(+)
+ drivers/clk/tegra/clk-tegra210.c | 51 ++++++++++++++++++++++++++++++++
+ include/linux/clk/tegra.h        |  2 ++
+ 2 files changed, 53 insertions(+)
 
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index 74abd67e3a31..3a1551c42c29 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -1274,10 +1274,36 @@ static int tegra_xusb_padctl_remove(struct platform=
-_device *pdev)
- 	return err;
- }
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra=
+210.c
+index 68cbb98af567..255de6c23c67 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -403,6 +403,14 @@ static unsigned long tegra210_input_freq[] =3D {
+ #define PLLRE_BASE_DEFAULT_MASK		0x1c000000
+ #define PLLRE_MISC0_WRITE_MASK		0x67ffffff
 =20
-+static int tegra_xusb_padctl_suspend_noirq(struct device *dev)
-+{
-+	struct tegra_xusb_padctl *padctl =3D dev_get_drvdata(dev);
++/* PLLE */
++#define PLLE_MISC_IDDQ_SW_CTRL		(1 << 14)
++#define PLLE_AUX_USE_LOCKDET		(1 << 3)
++#define PLLE_AUX_SS_SEQ_INCLUDE		(1 << 31)
++#define PLLE_AUX_ENABLE_SWCTL		(1 << 4)
++#define PLLE_AUX_SS_SWCTL		(1 << 6)
++#define PLLE_AUX_SEQ_ENABLE		(1 << 24)
 +
-+	if (padctl->soc && padctl->soc->ops && padctl->soc->ops->suspend_noirq)
-+		return padctl->soc->ops->suspend_noirq(padctl);
+ /* PLLX */
+ #define PLLX_USE_DYN_RAMP		1
+ #define PLLX_BASE_LOCK			(1 << 27)
+@@ -489,6 +497,49 @@ static unsigned long tegra210_input_freq[] =3D {
+ #define PLLU_MISC0_WRITE_MASK		0xbfffffff
+ #define PLLU_MISC1_WRITE_MASK		0x00000007
+=20
++bool tegra210_plle_hw_sequence_is_enabled(void)
++{
++	u32 val;
++
++	val =3D readl_relaxed(clk_base + PLLE_AUX);
++	if (val & PLLE_AUX_SEQ_ENABLE)
++		return true;
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(tegra210_plle_hw_sequence_is_enabled);
++
++int tegra210_plle_hw_sequence_start(void)
++{
++	u32 val;
++
++	if (tegra210_plle_hw_sequence_is_enabled())
++		return 0;
++
++	/* skip if PLLE is not enabled yet */
++	val =3D readl_relaxed(clk_base + PLLE_MISC0);
++	if (!(val & PLLE_MISC_LOCK))
++		return -EIO;
++
++	val &=3D ~PLLE_MISC_IDDQ_SW_CTRL;
++	writel_relaxed(val, clk_base + PLLE_MISC0);
++
++	val =3D readl_relaxed(clk_base + PLLE_AUX);
++	val |=3D (PLLE_AUX_USE_LOCKDET | PLLE_AUX_SS_SEQ_INCLUDE);
++	val &=3D ~(PLLE_AUX_ENABLE_SWCTL | PLLE_AUX_SS_SWCTL);
++	writel_relaxed(val, clk_base + PLLE_AUX);
++
++	fence_udelay(1, clk_base);
++
++	val |=3D PLLE_AUX_SEQ_ENABLE;
++	writel_relaxed(val, clk_base + PLLE_AUX);
++
++	fence_udelay(1, clk_base);
 +
 +	return 0;
 +}
++EXPORT_SYMBOL_GPL(tegra210_plle_hw_sequence_start);
 +
-+static int tegra_xusb_padctl_resume_noirq(struct device *dev)
-+{
-+	struct tegra_xusb_padctl *padctl =3D dev_get_drvdata(dev);
-+
-+	if (padctl->soc && padctl->soc->ops && padctl->soc->ops->resume_noirq)
-+		return padctl->soc->ops->resume_noirq(padctl);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops tegra_xusb_padctl_pm_ops =3D {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_xusb_padctl_suspend_noirq,
-+				      tegra_xusb_padctl_resume_noirq)
-+};
-+
- static struct platform_driver tegra_xusb_padctl_driver =3D {
- 	.driver =3D {
- 		.name =3D "tegra-xusb-padctl",
- 		.of_match_table =3D tegra_xusb_padctl_of_match,
-+		.pm =3D &tegra_xusb_padctl_pm_ops,
- 	},
- 	.probe =3D tegra_xusb_padctl_probe,
- 	.remove =3D tegra_xusb_padctl_remove,
-@@ -1344,6 +1370,58 @@ int tegra_xusb_padctl_hsic_set_idle(struct tegra_xus=
-b_padctl *padctl,
- }
- EXPORT_SYMBOL_GPL(tegra_xusb_padctl_hsic_set_idle);
-=20
-+int tegra_xusb_padctl_enable_phy_sleepwalk(struct tegra_xusb_padctl *padct=
-l,
-+					   struct phy *phy,
-+					   enum usb_device_speed speed)
-+{
-+	if (padctl->soc->ops->enable_phy_sleepwalk)
-+		return padctl->soc->ops->enable_phy_sleepwalk(padctl, phy,
-+							      speed);
-+
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(tegra_xusb_padctl_enable_phy_sleepwalk);
-+
-+int tegra_xusb_padctl_disable_phy_sleepwalk(struct tegra_xusb_padctl *padc=
-tl,
-+					    struct phy *phy)
-+{
-+	if (padctl->soc->ops->disable_phy_sleepwalk)
-+		return padctl->soc->ops->disable_phy_sleepwalk(padctl, phy);
-+
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(tegra_xusb_padctl_disable_phy_sleepwalk);
-+
-+int tegra_xusb_padctl_enable_phy_wake(struct tegra_xusb_padctl *padctl,
-+				      struct phy *phy)
-+{
-+	if (padctl->soc->ops->enable_phy_wake)
-+		return padctl->soc->ops->enable_phy_wake(padctl, phy);
-+
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(tegra_xusb_padctl_enable_phy_wake);
-+
-+int tegra_xusb_padctl_disable_phy_wake(struct tegra_xusb_padctl *padctl,
-+				       struct phy *phy)
-+{
-+	if (padctl->soc->ops->disable_phy_wake)
-+		return padctl->soc->ops->disable_phy_wake(padctl, phy);
-+
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(tegra_xusb_padctl_disable_phy_wake);
-+
-+int tegra_xusb_padctl_remote_wake_detected(struct tegra_xusb_padctl *padct=
-l,
-+					   struct phy *phy)
-+{
-+	if (padctl->soc->ops->remote_wake_detected)
-+		return padctl->soc->ops->remote_wake_detected(phy);
-+
-+	return -ENOTSUPP;
-+}
-+EXPORT_SYMBOL_GPL(tegra_xusb_padctl_remote_wake_detected);
-+
- int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padct=
-l,
- 					   unsigned int port, bool enable)
+ void tegra210_xusb_pll_hw_control_enable(void)
  {
-diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-index 485b692a3b15..c1c4ea3ce050 100644
---- a/drivers/phy/tegra/xusb.h
-+++ b/drivers/phy/tegra/xusb.h
-@@ -11,6 +11,7 @@
- #include <linux/mutex.h>
- #include <linux/workqueue.h>
+ 	u32 val;
+diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
+index 3f01d43f0598..7a6b29ca3040 100644
+--- a/include/linux/clk/tegra.h
++++ b/include/linux/clk/tegra.h
+@@ -123,6 +123,8 @@ static inline void tegra_cpu_clock_resume(void)
+ }
+ #endif
 =20
-+#include <linux/usb/ch9.h>
- #include <linux/usb/otg.h>
- #include <linux/usb/role.h>
-=20
-@@ -392,6 +393,8 @@ struct tegra_xusb_padctl_ops {
- 			 const struct tegra_xusb_padctl_soc *soc);
- 	void (*remove)(struct tegra_xusb_padctl *padctl);
-=20
-+	int (*suspend_noirq)(struct tegra_xusb_padctl *padctl);
-+	int (*resume_noirq)(struct tegra_xusb_padctl *padctl);
- 	int (*usb3_save_context)(struct tegra_xusb_padctl *padctl,
- 				 unsigned int index);
- 	int (*hsic_set_idle)(struct tegra_xusb_padctl *padctl,
-@@ -400,6 +403,16 @@ struct tegra_xusb_padctl_ops {
- 				    unsigned int index, bool enable);
- 	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
- 	int (*utmi_port_reset)(struct phy *phy);
-+	int (*enable_phy_sleepwalk)(struct tegra_xusb_padctl *padctl,
-+				    struct phy *phy,
-+				    enum usb_device_speed speed);
-+	int (*disable_phy_sleepwalk)(struct tegra_xusb_padctl *padctl,
-+				     struct phy *phy);
-+	int (*enable_phy_wake)(struct tegra_xusb_padctl *padctl,
-+			       struct phy *phy);
-+	int (*disable_phy_wake)(struct tegra_xusb_padctl *padctl,
-+				struct phy *phy);
-+	int (*remote_wake_detected)(struct phy *phy);
- };
-=20
- struct tegra_xusb_padctl_soc {
-diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.=
-h
-index 71d956935405..9621e69067e1 100644
---- a/include/linux/phy/tegra/xusb.h
-+++ b/include/linux/phy/tegra/xusb.h
-@@ -8,6 +8,7 @@
-=20
- struct tegra_xusb_padctl;
- struct device;
-+enum usb_device_speed;
-=20
- struct tegra_xusb_padctl *tegra_xusb_padctl_get(struct device *dev);
- void tegra_xusb_padctl_put(struct tegra_xusb_padctl *padctl);
-@@ -23,4 +24,16 @@ int tegra_xusb_padctl_set_vbus_override(struct tegra_xus=
-b_padctl *padctl,
- int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
- int tegra_xusb_padctl_get_usb3_companion(struct tegra_xusb_padctl *padctl,
- 					 unsigned int port);
-+int tegra_xusb_padctl_enable_phy_sleepwalk(struct tegra_xusb_padctl *padct=
-l,
-+					   struct phy *phy,
-+					   enum usb_device_speed speed);
-+int tegra_xusb_padctl_disable_phy_sleepwalk(struct tegra_xusb_padctl *padc=
-tl,
-+					   struct phy *phy);
-+int tegra_xusb_padctl_enable_phy_wake(struct tegra_xusb_padctl *padctl,
-+				      struct phy *phy);
-+int tegra_xusb_padctl_disable_phy_wake(struct tegra_xusb_padctl *padctl,
-+				       struct phy *phy);
-+int tegra_xusb_padctl_remote_wake_detected(struct tegra_xusb_padctl *padct=
-l,
-+					struct phy *phy);
-+
- #endif /* PHY_TEGRA_XUSB_H */
++extern int tegra210_plle_hw_sequence_start(void);
++extern bool tegra210_plle_hw_sequence_is_enabled(void);
+ extern void tegra210_xusb_pll_hw_control_enable(void);
+ extern void tegra210_xusb_pll_hw_sequence_start(void);
+ extern void tegra210_sata_pll_hw_control_enable(void);
 --=20
 2.25.1
 
