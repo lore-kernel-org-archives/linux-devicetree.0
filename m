@@ -2,172 +2,82 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1412CC433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D155C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1AA7208D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:25:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjYvfiUH"
+	by mail.kernel.org (Postfix) with ESMTP id 0C6ED208CA
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgH1JY7 (ORCPT
+        id S1728532AbgH1J2j (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:24:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728444AbgH1JYt (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 05:24:49 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C812BC06121B;
-        Fri, 28 Aug 2020 02:24:49 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q93so318965pjq.0;
-        Fri, 28 Aug 2020 02:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=htXOCVPrq8HdJeur07eO9bXCbnwDHC4OtbEI9rP9Tn4=;
-        b=ZjYvfiUHWn6qehl41HAVN9MqkMLYMd1N1f2XYzRGEsH4Fm4wlkCNW0vbRL7jFh0pRC
-         3EVL2pLNlBbx1ES7doz+uRkg63ku2FJvNDTRZy2bJcGWm51jN4SM2KJ1NlMoylEBA0tw
-         4Q0W4DDa4aji4Qy0KWMM1l0F9VzH7KiAkeuZqmX7+6yNKAUA5tH9mOqXPLUBcR+RLPRs
-         d+3Z4fFh5wLml/0GwHJualYTyRME93NCPdJARqL58hG3iXWgGltsHyLMDsgfrPDOi1oe
-         uQE6MCXJ8+Zvlmq/XCmNNRwAmSO0Ufja96aovK6Y3Sy8YZ/l6g4d772FZ+kwzvW8ZIkk
-         XKMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=htXOCVPrq8HdJeur07eO9bXCbnwDHC4OtbEI9rP9Tn4=;
-        b=UWX3+pg1Xdw9Er8nDk6UR9rm9QJjDOd21JUp++60AWbWjoXjro7zWuhbp+97yYnpWm
-         W/6qosKXHuuqwY7tOcpl/+saNP/VgH49ySRp7x4eztr2kL3PLk54CKfZ1ZUPGo0TAE2p
-         zCZUZHNmOR7bBVE/keLV8d+gqSv2+d6UmUMsld4Kh/Rn8owrnS4tAzClh4RkyAGEeDeg
-         UXJ0g7rwBa2X/1Y0bEIv8BL3TtBshfUAPTYKDSya3IfJ58yYFBpr9vQDlJwngUSGBdW6
-         qdWDOooq4UwuNksbL81NnZ0j1tjt3/BlllqYrdXqcYAq21mXjR6kTk+S7TJEFb4srINf
-         i/cQ==
-X-Gm-Message-State: AOAM531yIs1FYZKznID9Weq7+tMJA3zXhMPE7Vs+E/TrNDWQjbs3eFhu
-        2lRtqF41T1VEk5zS34rUciQ=
-X-Google-Smtp-Source: ABdhPJwmM74/2Z6OmFics2+KVisBB1kXdKlLOQYV835VuXBGe2zlkLUneUWcyioQm8nI52NOwQVmhw==
-X-Received: by 2002:a17:90a:1992:: with SMTP id 18mr441099pji.135.1598606689274;
-        Fri, 28 Aug 2020 02:24:49 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:46a:912:593d:4bfb:3bf8:35e0])
-        by smtp.gmail.com with ESMTPSA id n68sm813563pfn.145.2020.08.28.02.24.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 28 Aug 2020 02:24:48 -0700 (PDT)
-From:   cy_huang <u0084500@gmail.com>
-To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        matthias.bgg@gmail.com, linux@roeck-us.net,
-        heikki.krogerus@linux.intel.com
-Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/2] usb typec: mt6360: Add MT6360 Type-C DT binding documentation
-Date:   Fri, 28 Aug 2020 17:24:34 +0800
-Message-Id: <1598606674-32326-2-git-send-email-u0084500@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598606674-32326-1-git-send-email-u0084500@gmail.com>
-References: <1598606674-32326-1-git-send-email-u0084500@gmail.com>
+        Fri, 28 Aug 2020 05:28:39 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52700 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728016AbgH1J2h (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:28:37 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 33BACF005785721D2BAA;
+        Fri, 28 Aug 2020 17:28:34 +0800 (CST)
+Received: from [10.174.185.226] (10.174.185.226) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 28 Aug 2020 17:28:23 +0800
+Subject: Re: [PATCH v7 18/24] iommu/arm-smmu-v3: Add support for Hardware
+ Translation Table Update
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <linux-mm@kvack.org>
+CC:     <fenghua.yu@intel.com>, <kevin.tian@intel.com>,
+        <jacob.jun.pan@linux.intel.com>, <jgg@ziepe.ca>,
+        <catalin.marinas@arm.com>, <joro@8bytes.org>,
+        <robin.murphy@arm.com>, <hch@infradead.org>,
+        <zhangfei.gao@linaro.org>, <Jonathan.Cameron@huawei.com>,
+        <felix.kuehling@amd.com>, <xuzaibo@huawei.com>, <will@kernel.org>,
+        <christian.koenig@amd.com>, <baolu.lu@linux.intel.com>
+References: <20200519175502.2504091-1-jean-philippe@linaro.org>
+ <20200519175502.2504091-19-jean-philippe@linaro.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <472fdcf6-f306-60bc-5813-4ad421ee03f2@huawei.com>
+Date:   Fri, 28 Aug 2020 17:28:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200519175502.2504091-19-jean-philippe@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.185.226]
+X-CFilter-Loop: Reflected
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+On 2020/5/20 1:54, Jean-Philippe Brucker wrote:
+> @@ -4454,6 +4470,12 @@ static int arm_smmu_device_hw_probe(struct arm_smmu_device *smmu)
+>   			smmu->features |= ARM_SMMU_FEAT_E2H;
+>   	}
+>   
+> +	if (reg & (IDR0_HA | IDR0_HD)) {
+> +		smmu->features |= ARM_SMMU_FEAT_HA;
+> +		if (reg & IDR0_HD)
+> +			smmu->features |= ARM_SMMU_FEAT_HD;
+> +	}
+> +
 
-Add a devicetree binding documentation for the MT6360 Type-C driver.
+nitpick:
 
-usb typec: mt6360: Rename DT binding doument from mt6360 to mt636x
+As per the IORT spec (DEN0049D, 3.1.1.2 SMMUv3 node, Table 10), the
+"HTTU Override" flag of the SMMUv3 node can override the value in
+SMMU_IDR0.HTTU. You may want to check this bit before selecting the
+{HA,HD} features and shout if there is a mismatch between firmware and
+the SMMU implementation. Just like how ARM_SMMU_FEAT_COHERENCY is
+selected.
 
-Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
----
- .../bindings/usb/mediatek,mt6360-tcpc.yaml         | 73 ++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
-new file mode 100644
-index 00000000..9e8ab0d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mt6360-tcpc.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/usb/mediatek,mt6360-tcpc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Mediatek MT6360 Type-C Port Switch and Power Delivery controller DT bindings
-+
-+maintainers:
-+  - ChiYuan Huang <cy_huang@richtek.com>
-+
-+description: |
-+  Mediatek MT6360 is a multi-functional device. It integrates charger, ADC, flash, RGB indicators,
-+  regulators (BUCKs/LDOs), and TypeC Port Switch with Power Delivery controller.
-+  This document only describes MT6360 Type-C Port Switch and Power Delivery controller.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - mediatek,mt6360-tcpc
-+
-+  interrupts-extended:
-+    maxItems: 1
-+
-+  interrupt-names:
-+    items:
-+      - const: PD_IRQB
-+
-+patternProperties:
-+  "connector":
-+    type: object
-+    $ref: ../connector/usb-connector.yaml#
-+    description:
-+      Properties for usb c connector.
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - interrupts-extended
-+  - interrupt-names
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/usb/pd.h>
-+    i2c0 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        mt6360@34 {
-+            compatible = "mediatek,mt6360";
-+            reg = <0x34>;
-+
-+            tcpc {
-+                compatible = "mediatek,mt6360-tcpc";
-+                interrupts-extended = <&gpio26 3 IRQ_TYPE_LEVEL_LOW>;
-+                interrupt-names = "PD_IRQB";
-+
-+                connector {
-+                        compatible = "usb-c-connector";
-+                        label = "USB-C";
-+                        data-role = "dual";
-+                        power-role = "dual";
-+                        try-power-role = "sink";
-+                        source-pdos = <PDO_FIXED(5000, 1000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
-+                        sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP)>;
-+                        op-sink-microwatt = <10000000>;
-+                };
-+            };
-+        };
-+    };
-+...
--- 
-2.7.4
-
+Thanks,
+Zenghui
