@@ -2,79 +2,74 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39660C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072DBC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BECF2086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB4552073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LvoKCakW"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T11C7mph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgH1IoY (ORCPT
+        id S1728805AbgH1Ipa (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58566 "EHLO
+        Fri, 28 Aug 2020 04:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgH1IoO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 04:44:14 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE11C061233
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 01:44:13 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id z12so134819uam.12
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 01:44:13 -0700 (PDT)
+        with ESMTP id S1728745AbgH1Iov (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 04:44:51 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C66AC061237
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 01:44:51 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id t189so77375vka.10
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 01:44:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zeXlfnXZ4sTJswhwNtffWf0Y5RYZt7CDOEurreh9XAI=;
-        b=LvoKCakWRKLvx/0BHLE5JGzq92yOk3o/lHDjeCNYJRZW2x4PnX4osD+BUJKunyCUj2
-         /bqB9UVotpxVrZ5G923Rznp1fq4DzwoO4tD3hKWIMMQNSfyK3iXaOd14ozrYm5Ye5HCq
-         0Rzr3iNz8cf5rlznhBgAvVEGYCLwb4S4oXh7MRVdr9zhOVoLT4PZvIkIJuc4utbIjTcz
-         UqJF64cJ6Jk/hR8jwWu49mRJ8G2l8vDf+TK1xPJS06hCvHJZ7/rD3Laa0bSm+pCy/iJL
-         0Mb1WU+Xtn3sOlJLpNsl3jOqTIEXq6svmJo31r7nkA/4n6OYkyyD33PSoncLANEO2ydm
-         Em/w==
+        bh=i68K1oVW//N2+LJY/Znt9A9GXSvc2knY+uF5OLZlW3E=;
+        b=T11C7mphpjdwy94FR3QiUCw/s5gZrgGyEYLzUcAk2VBMcgtTsIiASblHRXVOWjTR8f
+         fSKqXBAkgf1x0Aawx9GdU41IiybGpPpfdoZ24viRcWevKccV7/LcywLkUf39qPSUIgHM
+         gs3BKu6/VuSar3C7KsUUdC7YkhhrLIOQuBKubp2UruUbOs/EryrB50B+emHFGs2JTcpL
+         VnPJw8ECgwjn62NENrOKdNdJnG69PlgCedXkB67QgRMqh5EHp/8AIAUYzOyGUVsoAk4o
+         QKcK/gsJaQdig0KI4JuE1N5YPUHbqVZcGeOdMXpK93TV0Xm1DzaetY5de3wKBWnGDfMQ
+         EuFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zeXlfnXZ4sTJswhwNtffWf0Y5RYZt7CDOEurreh9XAI=;
-        b=Nydv2LqiMWiWWwXMckKt1fs/ypxM776/Tsjfzj/OoDlL2l+4ThgXblFctrjHMGYB2W
-         79PWy1GmFoFQCvxFRmsB/qXBQ2YmsrlEve98S054X+HG6aX5bXK2fEpkHNUgA4m3wQ9/
-         6IdgHg+OPh1lgvBTQTQ/oYfip0C8gEaAI5U/pCOMG7iwyyGhkmlVFw9XG+eyxqsH22gx
-         faGXQtXGJW5QKcwfkEQAixCIpRZfKrMUZBUaAd8VIMlLk3pcM9Cn8cj5ramieerM5Of3
-         NX4aPnVPmWz4hcu6msks85tbOBXaB2NLYL3obiK8epLXMb62VJjSAE2rGil/XFsMmlpZ
-         mQKA==
-X-Gm-Message-State: AOAM531LoK6k7WszzwsXq4VELsWSbQG6X9QeRdKF09OjIZCJSruCxTtY
-        cGYofvmF1TS/Okl3nuKoG72EHQ6gpUOjyxgsubdQ6g==
-X-Google-Smtp-Source: ABdhPJxDXAOV/vb6si47r9ICjb8OmqVI+/7MJPxURFzZTGQqh0+TR5mXHiyTJTbQAY+DumtfmYUO31qltv4NzpdAdck=
-X-Received: by 2002:ab0:2848:: with SMTP id c8mr283199uaq.15.1598604253138;
- Fri, 28 Aug 2020 01:44:13 -0700 (PDT)
+        bh=i68K1oVW//N2+LJY/Znt9A9GXSvc2knY+uF5OLZlW3E=;
+        b=Sv8O10nbh0pnAezNi1oh5d+mW46E09nUorPfuFfKsO6ko1/IBEU8YEhmlTVsLXMviw
+         FBXkIqiCwsD0IQMCnSlRQkR2YAxbCSKU7vyEjUXU8TE0v6xLjAudt8RamFxxknrTa4+I
+         6QWBnkbeZZuYOytMPobDydtgcGopZSn1CYfAcJgb7jgB+cRDAVVzrcUoMtUfVmkU6ZW8
+         cH1yXeKdOMM/lR7Wzpwmlf0/LTpE22dj75BR0fP+V5/27yHWj9GP0xAuPYb4K5WIk1aa
+         VpqmgcKuixE43WRbfaRoimRWN47pYaDQdCvN6Ej0CNCXM8VoU7wnhUVacze88llZCYn5
+         xsog==
+X-Gm-Message-State: AOAM533M2dsxVZQG6/BHmEm+5SgCfgMRbSDuOKr7f4doNRhY/lZWMFlM
+        KrDFf7fFaSPjMddGYi39/oaeouz2qNoTyTA2uFADCA==
+X-Google-Smtp-Source: ABdhPJwyLUVJLFv8vKvkEYsSU7ILzcE5NWJavW5HwQPyZHyyUDM1gvnGVTI+2DM9xnyhEB7GbwL/uRVULNGsWzDFs6Y=
+X-Received: by 2002:a1f:2a48:: with SMTP id q69mr199169vkq.69.1598604290613;
+ Fri, 28 Aug 2020 01:44:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200814014346.6496-1-wenbin.mei@mediatek.com>
- <20200814014346.6496-3-wenbin.mei@mediatek.com> <CAPDyKFpt6-a+pkTXb2RZdx=yTONetugSCKbtSsRD2xQ3PRPhDQ@mail.gmail.com>
- <1dfc1938-f5e8-c4c8-57c7-d7b6c33dcb1d@gmail.com>
-In-Reply-To: <1dfc1938-f5e8-c4c8-57c7-d7b6c33dcb1d@gmail.com>
+References: <1598548861-32373-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1598548861-32373-1-git-send-email-skomatineni@nvidia.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 28 Aug 2020 10:43:34 +0200
-Message-ID: <CAPDyKFp+nFq11YcnNSe6sfDx-gkBHiYAjNE+r-OQ8HdrK1LBKw@mail.gmail.com>
-Subject: Re: [v5,2/3] arm64: dts: mt7622: add reset node for mmc device
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Wenbin Mei <wenbin.mei@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+Date:   Fri, 28 Aug 2020 10:44:12 +0200
+Message-ID: <CAPDyKFo+1XzHaS55jV3KsjkGA5a6A_NovLFrBw66Vg3xzTNkRQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/7] Fix timeout clock used by hardware data timeout
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
         "# 4.0+" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
@@ -82,32 +77,76 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Thu, 27 Aug 2020 at 10:23, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+On Thu, 27 Aug 2020 at 19:21, Sowjanya Komatineni
+<skomatineni@nvidia.com> wrote:
 >
+> Tegra210/Tegra186/Tegra194 has incorrectly enabled
+> SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK from the beginning of their support.
 >
+> Tegra210 and later SDMMC hardware default uses sdmmc_legacy_tm (TMCLK)
+> all the time for hardware data timeout instead of SDCLK and this TMCLK
+> need to be kept enabled by Tegra sdmmc driver.
 >
-> On 24/08/2020 11:50, Ulf Hansson wrote:
-> > On Fri, 14 Aug 2020 at 03:44, Wenbin Mei <wenbin.mei@mediatek.com> wrote:
-> >>
-> >> This commit adds reset node for mmc device.
-> >>
-> >> Cc: <stable@vger.kernel.org> # v5.4+
-> >> Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-> >> Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-> >> Tested-by: Frank Wunderlich <frank-w@public-files.de>
-> >
-> > I can pick this for my fixes branch, together with the other changes,
-> > however deferring that until Matthias acks it.
+> This series includes patches to fix this for Tegra210/Tegra186/Tegra194.
 >
-> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+> These patches need to be manually backported to 4.19.
 >
-> My understanding is, that this will land also in v5.9-rc[3,4], correct?
-
-Correct.
+> Will send patches for 4.19 backport separately.
+>
+> Delta between patch versions:
+> [v7]:   v7 has below change
+>         - v6 has implementation for retrieving tmclk irrespective of
+>           clocks order. But based in internal discussion with Thierry
+>           this is not required as typically order specified in DT
+>           bindings is the order validator want to see in DT.
+>
+> [v6]:   v5 is sent out mistakenly with incorrect patches.
+>         v6 includes proper patches addressing v4 feedback
+>         - updated dt-binding doc to be more clear
+>         - updated Tegra sdhci driver to retrieve sdhci and tmclk clocks
+>           based on no. of clocks in sdhci device node as old device trees
+>           do not use sdhci clock name and this allows proper clock retrival
+>           irrespective of sdhci and tmclk clocks order in device tree.
+>         - Added separate quirk for identifying SoC's supporting separate
+>           timeout clock to be more clear.
+>
+> [v5]:   Include below changes based on v4 feedback
+>         - updated dt-binding doc to be more clear
+>         - updated Tegra sdhci driver to retrieve sdhci and tmclk clocks
+>           based on no. of clocks in sdhci device node as old device trees
+>           do not use sdhci clock name and this allows proper clock retrival
+>           irrespective of sdhci and tmclk clocks order in device tree.
+>         - Added separate quirk for identifying SoC's supporting separate
+>           timeout clock to be more clear.
+>
+> [v4]:   Include additional dt-binding patch
+>
+> [v3]:   Same as v2 with fixes tag
+>
+> [v2]:   Includes minor fix
+>         - Patch-0006: parentheses around operand of '!'
+>
+> Sowjanya Komatineni (7):
+>   sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
+>   sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
+>   dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
+>   arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
+>   arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
+>   arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+>   sdhci: tegra: Add missing TMCLK for data timeout
+>
+>  .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 32 +++++++++++--
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 20 ++++----
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 15 +++---
+>  arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 20 ++++----
+>  drivers/mmc/host/sdhci-tegra.c                     | 55 ++++++++++++++++++++--
+>  5 files changed, 113 insertions(+), 29 deletions(-)
+>
+> --
+> 2.7.4
+>
 
 Applied for fixes, thanks!
-
-[...]
 
 Kind regards
 Uffe
