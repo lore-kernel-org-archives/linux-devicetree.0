@@ -2,168 +2,89 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5B7C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 21:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4033DC433E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 21:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40AC52080C
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 21:44:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="czTFxr9O"
+	by mail.kernel.org (Postfix) with ESMTP id 12B7F20838
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 21:50:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598651453;
+	bh=c0oFMsA1O5Pk2FIlsZnCdtv0QkCZMVnLi1aqyfLV4zA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dsnlPtSQEhyvOv1nDMowX7WdgM7C18enk2BwzVrpFceuCtiloBc23kbWbpjqZ056/
+	 DI5MIuAaL5CHfjkRLsXmmCLX667Q3ISvUJGMWlBdx+S5eXD++1aNp71lLqb5iHHlzx
+	 3dvZkEuSoG4yXjJnK96bJ9koJhapCnC0cy2c03QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgH1VoG (ORCPT
+        id S1726418AbgH1Vuw (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 17:44:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53922 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726338AbgH1VoF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 17:44:05 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SLXJFc093893;
-        Fri, 28 Aug 2020 17:43:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=tYYENsGw1bDKIf30hQvsz8tH9P7UHOVJ9I4qySJAdvo=;
- b=czTFxr9OHKMyTSCw3vi2NNj1JHKEBSTf6AXJFMyMtt9jxSkT3CSJPIwjp8QuphvNhWYx
- hJa7Gu3077orZ9UJZvAPVfjN2RST2e1az83XlX6Qr43pjdtMabSoUOsGMm/9PqdJpzyX
- dc7zX2xpZdOSVzH2xe0SD9gNAZflK2ePilS4UMTAVqK852qJKOZD10wsMXzP825gy/FG
- oDhiSz6h/OAV/1KD9PlEnO8kFn+7/zNgy5FFqrildEevguDEQb1TqWu+Yg+PSqUMeAmD
- RNsYJ8vyWMu9SHsj5ZqPmMNzqrrR0OODAnR29UkIPIhPgKlAIV28so385cKArVomfePj /w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3379aa12jf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 17:43:32 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SLevPr114707;
-        Fri, 28 Aug 2020 17:43:32 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3379aa12j4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 17:43:32 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SLbAt9012715;
-        Fri, 28 Aug 2020 21:43:30 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01wdc.us.ibm.com with ESMTP id 332uwb4x60-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 21:43:30 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SLhQ2660686768
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 21:43:26 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC3507805C;
-        Fri, 28 Aug 2020 21:43:29 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 49ADB7805F;
-        Fri, 28 Aug 2020 21:43:22 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.108.111])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 28 Aug 2020 21:43:21 +0000 (GMT)
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-6-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v4 5/5] arm64: Add IMA kexec buffer to DTB
-In-reply-to: <20200819172134.11243-6-nramas@linux.microsoft.com>
-Date:   Fri, 28 Aug 2020 18:43:19 -0300
-Message-ID: <8736468n0o.fsf@morokweng.localdomain>
+        Fri, 28 Aug 2020 17:50:52 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33912 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbgH1Vuv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 17:50:51 -0400
+Received: by mail-io1-f68.google.com with SMTP id w20so561803iom.1;
+        Fri, 28 Aug 2020 14:50:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0roQvlk2we8ViOmNkNlFjgs4mr1pn/4U547TOwbQwGs=;
+        b=DZZg7NJ+53iQW0JOPTDSiLzrc2w76KFlnEAnqMU8MVI6XXM1+ptGjaYOCbyR6mZv4A
+         I1BZ804GU6Z3j++6Mr45kBJ7GpbVpTQpsIMMv147sbVuu1LY/BZukbwjPhYa2YbkjEsw
+         oOFoeiEq6xggitJ09ZNWds7RWvXrz6YP9O/qaIm90yEswTsIxWlKvH9c7YkpI2jbmPfB
+         AuQZ+T9/hUpQhPOMACRG9FhUveBg064W+OVRo+Xkjnd/durH5wVedq6bbYV5PLovjG61
+         uqpqccOPRYqcTWoieiuV4KxsS/TS8E0B5p+Ahdx4BZ3ILne72VMfFKC1A84flU2W/2tf
+         XWdA==
+X-Gm-Message-State: AOAM532Ib/zRwgQot5CPLb7f6RlLGN4jD/TLt9XqCkOu0DNU5DyrgT3p
+        3DFMhWhS13WJo2WpSO/j+w==
+X-Google-Smtp-Source: ABdhPJzrJi7is5WkCexaCeFBszVQDb9yHUjlIsPgQHlrp3pBr97/6Ei066osxzBoBKHpBO/xjq6zoQ==
+X-Received: by 2002:a05:6638:a9a:: with SMTP id 26mr3111326jas.21.1598651450494;
+        Fri, 28 Aug 2020 14:50:50 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id p7sm289507ilj.56.2020.08.28.14.50.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 14:50:49 -0700 (PDT)
+Received: (nullmailer pid 3466509 invoked by uid 1000);
+        Fri, 28 Aug 2020 21:50:47 -0000
+Date:   Fri, 28 Aug 2020 15:50:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     robh+dt@kernel.org, u.kleine-koenig@pengutronix.de,
+        andriy.shevchenko@intel.com, rahul.tanwar.linux@gmail.com,
+        thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, qi-ming.wu@intel.com, songjun.Wu@intel.com,
+        cheol.yong.kim@intel.com, p.zabel@pengutronix.de,
+        linux-kernel@vger.kernel.org, rtanwar@maxlinear.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v11 1/2] Add DT bindings YAML schema for PWM fan
+ controller of LGM SoC
+Message-ID: <20200828215047.GA3466454@bogus>
+References: <cover.1598331849.git.rahul.tanwar@linux.intel.com>
+ <cb86a768550b592b5fc4713bd07689bf84ba044b.1598331849.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-28_18:2020-08-28,2020-08-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 malwarescore=0 lowpriorityscore=0 mlxscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 impostorscore=0
- clxscore=1015 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008280156
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb86a768550b592b5fc4713bd07689bf84ba044b.1598331849.git.rahul.tanwar@linux.intel.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
-
-> The address and size of the current kernel's IMA measurement log
-> need to be added to the device tree's IMA kexec buffer node for
-> the log to be carried over to the next kernel on the kexec call.
->
-> Add the IMA measurement log buffer properties to the device tree for
-> ARM64. Update CONFIG_KEXEC_FILE to select CONFIG_HAVE_IMA_KEXEC to
-> indicate that the IMA measurement log information is present in
-> the device tree.
->
-> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+On Tue, 25 Aug 2020 13:07:05 +0800, Rahul Tanwar wrote:
+> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
+> which is only used to control the fan attached to the system. This
+> PWM controller does not have any other consumer other than fan.
+> Add DT bindings documentation for this PWM fan controller.
+> 
+> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
 > ---
->  arch/arm64/Kconfig                     |  1 +
->  arch/arm64/kernel/machine_kexec_file.c | 11 +++++++++++
->  2 files changed, 12 insertions(+)
->
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 6d232837cbee..9f03c8245e5b 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1077,6 +1077,7 @@ config KEXEC
->  config KEXEC_FILE
->  	bool "kexec file based system call"
->  	select KEXEC_CORE
-> +	select HAVE_IMA_KEXEC
->  	help
->  	  This is new version of kexec system call. This system call is
->  	  file based and takes file descriptors as system call argument
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index 4c54723e7a04..8488f8e87d1a 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -153,6 +153,17 @@ static int setup_dtb(struct kimage *image,
->  				FDT_PROP_KASLR_SEED);
->  	}
->  
-> +	/* add ima-kexec-buffer */
-> +	if (image->arch.ima_buffer_size > 0) {
-> +
-> +		ret = fdt_appendprop_addrrange(dtb, 0, off,
-> +				FDT_PROP_IMA_KEXEC_BUFFER,
-> +				image->arch.ima_buffer_addr,
-> +				image->arch.ima_buffer_size);
-> +		if (ret)
-> +			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
-> +	}
-> +
->  	/* add rng-seed */
->  	if (rng_is_initialized()) {
->  		void *rng_seed;
+>  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+> 
 
-I believe you need to add a memory reservation to the dtb covering the
-IMA kexec buffer, otherwise nothing stops the new kernel from stomping
-over it. E.g., powerpc does:
-
-	ret = fdt_add_mem_rsv(fdt, image->arch.ima_buffer_addr,
-			      image->arch.ima_buffer_size);
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Reviewed-by: Rob Herring <robh@kernel.org>
