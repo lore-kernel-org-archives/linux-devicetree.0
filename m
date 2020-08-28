@@ -2,128 +2,139 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCB9C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC8EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2C920B80
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:19:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mXoKTmtB"
+	by mail.kernel.org (Postfix) with ESMTP id B02D52098B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598633341;
+	bh=Wwkz9ubdC4d89Hl6z0P8S1t5VHI9tjmoy/T0n7UH+bM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=raVUwYkXjh7cGISiDgpNziFw9nxPoUhbuqMhr221rEIcR2/e/XuuyU2oQ3Lc3P+d+
+	 oh97nBBjDFWN8Z6RK7AVzmm1R5kpvSL1GyDh46RpogtJZCTjxxdxEgwxH6mEM8Ij23
+	 mj74FAOdyykzwnI7djPoQB4KorzxT4xcfeEjuuao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbgH1QT5 (ORCPT
+        id S1726930AbgH1QtB (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgH1QTy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 12:19:54 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03D5C06121B
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 09:19:53 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id b2so1655896edw.5
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 09:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y9miOxm+aIgmI4U/EZeLaBrPMImCENn/aVpH1jwVAMM=;
-        b=mXoKTmtBEQaBLnbOaGgnDqEY21MoTjb4zLDwbfSPeu9T0RfXPnHTskn/ZTaGUKOzOo
-         cXbunuKwGz0pe1Ri4Su4Y/IV8L9Baeh8v70y8Q+HJmXP1ZQvHfPM4Lw/iw23jATefjMR
-         HpQJM6shS/3snq/Q+XjQW0FIv7i3HEtR0unH+YHsDHsQ2s6+0AgEfdPfy9fgnd0S1lQe
-         sj9+VBQxXHQwF4AXPh3pB6Byf6weRnbzqc/O83O/pKBzAFMzmgrPlL8u/Pk0WyJ7a7jv
-         d4noUTHi3Z7iKCDKLP4kF4mNg4XMukhWKLGw7u+T76YijHmnCk0b4upjuhigrDhzIsWm
-         HuvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y9miOxm+aIgmI4U/EZeLaBrPMImCENn/aVpH1jwVAMM=;
-        b=KC0kbMIjJpkzbObAzT7hb59ufq1MgLyvUgqkgm4D0uKo96RZpHbtBInrfD6geIcbYt
-         dAkUrHtlZRPRKIqlAjaFAwOoVl8U91jxL6yVH2PoBWPPVOwGnr4Gny1GLSR0gdL8Gy6/
-         PaUDuUzTbbm2hRIn29g+F9DNypiNDlTWEgUiUay/8jP3hwUJCZvVl+ZcKblinSYgBPuP
-         1eLG6qFWwgKRZzhwHhxJQWLh533kBbSAsij3rsxp+cnqkxwBQfSUK4ZGyWfPu3/jU5Tz
-         rQ5vXlbrSs2MyYPGFy1XqaZ6ilHT/7OBSAuG58X+I/qXfF38rH8NP/iVpF/pAm1DJ9B2
-         hZAw==
-X-Gm-Message-State: AOAM5328SUuyz6kyX9elO9WyT8j+4tlJvYX+GwEXFZRyTfpAAb6c/d/P
-        A7dhqA+0yXdFdiE4sv+rNzoBBzCH+ch5MVHcSCJj8w==
-X-Google-Smtp-Source: ABdhPJx3CC1M5iADxDSXg8vc1XdLze/rbzJvK5cKSC231pYOCXnpX4r3v9HiYpmN/HeAzqJPCVyqZVKgfCUhOi8Y3cQ=
-X-Received: by 2002:a05:6402:342:: with SMTP id r2mr2734843edw.353.1598631592180;
- Fri, 28 Aug 2020 09:19:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200828073024.32585-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200828073024.32585-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 28 Aug 2020 18:19:41 +0200
-Message-ID: <CAMpxmJXVU2hsaH_WpLKoUR==MuNObbBJ1zT+HPaJN8iOoQ0JXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 28 Aug 2020 12:49:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726436AbgH1QtA (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:49:00 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E51920848;
+        Fri, 28 Aug 2020 16:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598633340;
+        bh=Wwkz9ubdC4d89Hl6z0P8S1t5VHI9tjmoy/T0n7UH+bM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gkc/VRi2gUW3RgoERRpYudU0O5VRe+yQbUrx/D57d/pzQ7TjVGDdGDsXwbUvoWOrF
+         H6r6VK8WPq9W1m+Ewx9tDO0MWuoKRPbUjxwry4LF8wHXcXbwRt3P0QQ46ZZ8ws22/d
+         f4SRaz7RSIJ26cGHSv6TTjHfgZogZwaqBdC1oh9k=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 00/19] arm64: dts: imx8: Align pins and regulators with dtschema
+Date:   Fri, 28 Aug 2020 18:47:31 +0200
+Message-Id: <20200828164750.10377-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 9:30 AM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
-> relevant dt-bindings. R8A774E1 GPIO module is identical to R-Car Gen3
-> family.
->
-> No driver change is needed due to the fallback compatible value
-> "renesas,rcar-gen3-gpio".
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> Hi All,
->
-> This patch is part of series [1] (patch 6/9), rest of the patches have
-> been acked/queued.
->
-> [1] https://lkml.org/lkml/2020/7/13/1275
->
-> Cheers,
-> Prabhakar
->
-> v1->v2
-> * Rebased the patch on 5.9-rc1 (YAML conversion)
-> * Updated commit description
-> * Restored acks from Geert and Rob
-> ---
->  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-> index 3ad229307bd5..5026662e4508 100644
-> --- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-> @@ -37,6 +37,7 @@ properties:
->                - renesas,gpio-r8a774a1     # RZ/G2M
->                - renesas,gpio-r8a774b1     # RZ/G2N
->                - renesas,gpio-r8a774c0     # RZ/G2E
-> +              - renesas,gpio-r8a774e1     # RZ/G2H
->                - renesas,gpio-r8a7795      # R-Car H3
->                - renesas,gpio-r8a7796      # R-Car M3-W
->                - renesas,gpio-r8a77961     # R-Car M3-W+
-> --
-> 2.17.1
->
+Hi,
 
-Queued for v5.10, thanks!
+This is a v2 of my second batch of i.MX8 DTS and bindings cleanup. It's
+rebased on top of first batch [1] although it is independent.
 
-Bartosz
+1. For arm64/dts patches: to avoid any conflicts, better to apply
+   on top of [1].
+2. dt-bindings patches: independend, can be applied by Rob or subsystem
+   maintainers.
+
+
+Changes since v1:
+=================
+1. Address few comments - see individual patches.
+
+[1] https://lore.kernel.org/lkml/20200825193536.7332-1-krzk@kernel.org/
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (19):
+  dt-bindings: mfd: rohm,bd71847-pmic: Correct clock properties
+    requirements
+  dt-bindings: mtd: gpmi-nand: Fix matching of clocks on different SoCs
+  arm64: dts: imx8mm-beacon-kit: Add missing build through Makefile
+  arm64: dts: imx8mm-beacon-som: Align regulator names with schema
+  arm64: dts: imx8mm-beacon-som: Fix atmel,24c64 EEPROM compatible
+  arm64: dts: imx8mm-beacon: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mm-evk: Align regulator names with schema
+  arm64: dts: imx8mm-evk: Add 32.768 kHz clock to PMIC
+  arm64: dts: imx8mm-evk: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mm-ddr4-evk: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mn-ddr4-evk: Align regulator names with schema
+  arm64: dts: imx8mn-evk: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mq-evk: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mq-librem5-devkit: Align pin configuration group names
+    with schema
+  arm64: dts: imx8mq-phanbell: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mq-pico-pi: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mq-sr-som: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mq-hummingboard-pulse: Align pin configuration group
+    names with schema
+  arm64: dts: imx8qxp-colibri: Align pin configuration group names with
+    schema
+
+ .../bindings/mfd/rohm,bd71847-pmic.yaml       |  9 ++-
+ .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
+ arch/arm64/boot/dts/freescale/Makefile        |  1 +
+ .../freescale/imx8mm-beacon-baseboard.dtsi    |  8 +-
+ .../boot/dts/freescale/imx8mm-beacon-som.dtsi | 36 ++++-----
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts  | 40 +++++-----
+ .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 24 +++---
+ arch/arm64/boot/dts/freescale/imx8mn-evk.dtsi | 14 ++--
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  2 +-
+ .../freescale/imx8mq-hummingboard-pulse.dts   |  8 +-
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 12 +--
+ .../boot/dts/freescale/imx8mq-phanbell.dts    | 12 +--
+ .../boot/dts/freescale/imx8mq-pico-pi.dts     | 12 +--
+ .../boot/dts/freescale/imx8mq-sr-som.dtsi     |  4 +-
+ .../boot/dts/freescale/imx8qxp-colibri.dtsi   |  8 +-
+ 15 files changed, 161 insertions(+), 105 deletions(-)
+
+-- 
+2.17.1
+
