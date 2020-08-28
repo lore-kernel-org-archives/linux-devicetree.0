@@ -2,164 +2,102 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBE3C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 20:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E944C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 21:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61196207DA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 20:51:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OHEg8KIT"
+	by mail.kernel.org (Postfix) with ESMTP id 77D61208A9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 21:28:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598650134;
+	bh=rpIzo7G9UZBTkcxiVFy0Lzx+94REmDCnv4s1vxWhhGE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xgEyBzHnMog7us1HeSphSOenHQXhBqAEkbhJhit+KYr82Vh8gqf3iONKWfbRieup9
+	 LNrkHYC1ND0YchES+7LIJfdjPg/1c7x8F36cGMSDoaiWWVYToUuUUEQU6WNEsmb5CM
+	 vXIIFaokFH3Xo5RZwBa7kYYS+8tgZMP93lkKWiio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgH1UvH (ORCPT
+        id S1726859AbgH1V2x (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 16:51:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46820 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726033AbgH1UvF (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 16:51:05 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07SKWZ8d029115;
-        Fri, 28 Aug 2020 16:50:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=Ny7eNfWhtcq4Ar5c7KEMz0IptA0ExTcP1Tp3zXIUI3o=;
- b=OHEg8KITkuARJ/TpltkffH95tKQ/B5JQbeV5YBbX3V73zR20f5QyOgwD3nSG8aIMkKB7
- 4RXDNhR9mQNuVqa17HEA7RuyIafMfZFJ7/ETWs1LJqT8uYWsXHfY+2HDcNAZiUUehoKV
- DMsfLfJH9oLF/MKUMwS1dTPCOfgMuFAxy829J36MzijUfIfQ3rGT/Vb3239qc3qpwLJU
- 6D6tG+dZeiaIGWBk5UK0uwIw715HgeQSWzeQjICR2IBdJioABr1me1ECZCMMqZa0S2PB
- a602zbmobZrEyfrp7WSUKhiw/W1j1Sbd6inwNfZaKubZv0VUfzcWX1vvrJJKTykcuSu8 iA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3378hms2dk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 16:50:26 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07SKWqB5029504;
-        Fri, 28 Aug 2020 16:50:25 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3378hms2d0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 16:50:25 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07SKlBNH020665;
-        Fri, 28 Aug 2020 20:50:23 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01dal.us.ibm.com with ESMTP id 332utu9ujg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 20:50:23 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07SKoN4423462308
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 20:50:23 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CD23AE05C;
-        Fri, 28 Aug 2020 20:50:23 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91C44AE05F;
-        Fri, 28 Aug 2020 20:50:12 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.108.111])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 28 Aug 2020 20:50:12 +0000 (GMT)
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-5-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v4 4/5] arm64: Store IMA log information in kimage used
- for kexec
-In-reply-to: <20200819172134.11243-5-nramas@linux.microsoft.com>
-Date:   Fri, 28 Aug 2020 17:50:09 -0300
-Message-ID: <875z928pha.fsf@morokweng.localdomain>
+        Fri, 28 Aug 2020 17:28:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726338AbgH1V2x (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 17:28:53 -0400
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 931072098B;
+        Fri, 28 Aug 2020 21:28:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598650132;
+        bh=rpIzo7G9UZBTkcxiVFy0Lzx+94REmDCnv4s1vxWhhGE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=o0rdHkxrgG2ttKyfE76iKsdAIbNcYsTv3SdalC/0gcKlUTpRbxqvWU59mUozV7BnE
+         gpZrH6d7fMZL/RH62GoNvqzN0tO+G4VUGjIiI//J4LWopv1S1gTuqgKNA5NAXFAdWZ
+         /lRW/D5jcjdR/GUVhnlfJirA0z6DxZcs3RBpsz9U=
+Received: by mail-ot1-f42.google.com with SMTP id k20so478068otr.1;
+        Fri, 28 Aug 2020 14:28:52 -0700 (PDT)
+X-Gm-Message-State: AOAM531+FW2XNOCfxS44s61n7pDSxfBs2gfFoIIXxKWqkE5nYHjlIEHV
+        ScljbDpDkWG4+out58M0zUZbwU/7x2uOBe4fqA==
+X-Google-Smtp-Source: ABdhPJyhZma1htiqBCnZWu9fBkKp+z8GjxtNVqs55zAakywBxE0Jss6GAQ+/xSXgVBWoWixlxmG5ccrepr4X36NqBpo=
+X-Received: by 2002:a9d:32e5:: with SMTP id u92mr405224otb.107.1598650131822;
+ Fri, 28 Aug 2020 14:28:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-28_15:2020-08-28,2020-08-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- adultscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=999 phishscore=0 spamscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008280145
+References: <20200828130602.42203-1-andre.przywara@arm.com> <19c6a67e-48f0-c0b6-3653-32a5a1f09e07@gmail.com>
+In-Reply-To: <19c6a67e-48f0-c0b6-3653-32a5a1f09e07@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 28 Aug 2020 15:28:39 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKvcGAotS6xL7pu+wM8X33PLCQCuoaXYmWrA3j3OdoR5A@mail.gmail.com>
+Message-ID: <CAL_JsqKvcGAotS6xL7pu+wM8X33PLCQCuoaXYmWrA3j3OdoR5A@mail.gmail.com>
+Subject: Re: [PATCH 00/10] dt-bindings: Convert SP805 to Json-schema (and fix users)
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
-
-> Address and size of the buffer containing the IMA measurement log need
-> to be passed from the current kernel to the next kernel on kexec.
+On Fri, Aug 28, 2020 at 1:34 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 >
-> Add address and size fields to "struct kimage_arch" for ARM64 platform
-> to hold the address and size of the IMA measurement log buffer.
-> Define an architecture specific function for ARM64 namely
-> arch_ima_add_kexec_buffer() that will set the address and size of
-> the current kernel's IMA buffer to be passed to the next kernel on kexec.
+> On 8/28/20 6:05 AM, Andre Przywara wrote:
+> > This is an attempt to convert the SP805 watchdog DT binding to yaml.
+> > This is done in the first patch, the remaining nine fix some DT users.
+> >
+> > I couldn't test any of those DT files on actual machines, but tried
+> > to make the changes in a way that would be transparent to at least the
+> > Linux driver. The only other SP805 DT user I could find is U-Boot, which
+> > seems to only use a very minimal subset of the binding (just the first
+> > clock).
+> > I only tried to fix those DTs that were easily and reliably fixable.
+> > AFAICT, a missing primecell compatible string, for instance, would
+> > prevent the Linux driver from probing the device at all, so I didn't
+> > dare to touch those DTs at all. Missing clocks are equally fatal.
 >
-> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> What is the plan for merging this series? Should Rob pick up all changes
+> or since those are non critical changes, should we just leave it to the
+> SoC maintainers to pick up the changes in their tree?
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+I don't take .dts files. Either subarch maintainers can pick up
+individual patches or send a PR to SoC maintainers.
 
-IMHO this patch and the next one can be squashed together. Also, a minor
-comment below.
-
-> ---
->  arch/arm64/include/asm/ima.h           | 17 +++++++++++++++++
->  arch/arm64/include/asm/kexec.h         |  3 +++
->  arch/arm64/kernel/machine_kexec_file.c | 17 +++++++++++++++++
->  3 files changed, 37 insertions(+)
->  create mode 100644 arch/arm64/include/asm/ima.h
->
-> diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
-> new file mode 100644
-> index 000000000000..70ac39b74607
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/ima.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_ARCH_IMA_H
-> +#define _ASM_ARCH_IMA_H
-> +
-> +struct kimage;
-> +
-> +#ifdef CONFIG_IMA_KEXEC
-> +int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-> +			      size_t size);
-> +#else
-> +static inline int arch_ima_add_kexec_buffer(struct kimage *image,
-> +			unsigned long load_addr, size_t size)
-> +{
-> +	return 0;
-> +}
-
-There's no need to define arch_ima_add_kexec_buffer() if
-CONFIG_IMA_KEXEC isn't set because in that case, the code which calls
-this function in ima_add_kexec_buffer() won't be part of the build.
-
-> +#endif /* CONFIG_IMA_KEXEC */
-> +#endif /* _ASM_ARCH_IMA_H */
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Rob
