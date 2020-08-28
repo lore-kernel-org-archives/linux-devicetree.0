@@ -5,58 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C56C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34040C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B17920776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001E420848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FlaMflUy"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CbRzY0Ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgH1RIq (ORCPT
+        id S1726947AbgH1RJJ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:08:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52450 "EHLO
+        Fri, 28 Aug 2020 13:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbgH1RIk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 13:08:40 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04F7C061232
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 10:08:39 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u20so959352pfn.0
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 10:08:39 -0700 (PDT)
+        with ESMTP id S1726928AbgH1RJI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 13:09:08 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5C0C061264
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 10:09:08 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id i10so739867pgk.1
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 10:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=broadcom.com; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PkU2nF0bf0ig0+Ovi1RNPm0NnQeO/Bze0oV8LgroTYE=;
-        b=FlaMflUyvCPl7nmKSmqVyx6Fp4LG7GtqSIvahsbYOE8tnFPGVTgvfwBrW9oS3+OIQ8
-         +mUlu2HlXSoD4Gv/h7u6zvSrBKleUilbVdAykpjKAQOJIYnqVfC8z3G4T3gh+40DH41v
-         lbNyOqzy52GH/fPrAfaahdIdru8wmCcLcBHw8=
+        bh=fvMiQMV52wKOEkTpGVSpB7X3SeoYo75JG5xPWkqYPi4=;
+        b=CbRzY0Ca9hAnhGk6G1j7ey29t2XvK1sOOy2Rcmz7dHBdKIc4c3Dvd2fWXjb0Khc7jV
+         uRubCZ0L9ewUygrw1nKYy3PPkXxRQ529G8wAeoJpB1pM5hNBfT7W7h+3T5Tybm73nr/2
+         5jpFJSM7e+y+Cqvk1sel99tJ0Cq9drgZPRzvA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=PkU2nF0bf0ig0+Ovi1RNPm0NnQeO/Bze0oV8LgroTYE=;
-        b=nRNDRWs+QRQYw0M+PwXREC2ABMvgI04m+PI4YBmY6m2F2mo6LdAccAl3YxwAhE9sQ+
-         5f79ceiLxf+jbHAYW1/oeavaUiyy9PFAvY53PRSFbsR2mbKLctBq/plWKUGyAWpSDFzN
-         eUjgK0Jy6kqGpzfbrwkquqTnxAS9WcPQxrm/yz/xaHNwO2uZlJ/D3KNHbfp8pMzd0vsB
-         1Lwy9Kx8vsFXOo3Po+uLBhjgI2/sMr16jYD0cma8oYUn0IuDN+s7Xd13TT4yWMfWtsr5
-         Gkzoy/xic5QtAZrpLr9CG0ylD0zZa/G/KDoUHtQsxNw/mMuxGJILjACCvdstoMYWwmod
-         vh2Q==
-X-Gm-Message-State: AOAM533FKz5GwG+mu1Csu1gz30onoDvWIHxoD+eoQEAEtCIDXB6dhbaL
-        eADaUorMgYWm1zkzZnlwolPAww==
-X-Google-Smtp-Source: ABdhPJyC9MVX3M9/sT/W2e4w4F0egFyUIln5HdPBydtLKWawLwvZBjobhwHOOpnVbO9xgGI90ctb1g==
-X-Received: by 2002:a62:1706:: with SMTP id 6mr25921pfx.26.1598634518989;
-        Fri, 28 Aug 2020 10:08:38 -0700 (PDT)
+        bh=fvMiQMV52wKOEkTpGVSpB7X3SeoYo75JG5xPWkqYPi4=;
+        b=ZV0RADMmlwkwvNejrUEqCn9lu5IFYXlLGrCojIVdBxA1fov+OJmImPO6Q++3ByfHdP
+         02hYJ8bVbVTpdOHKcSHDP6XaqcufnbyGJgQFC+cB7pridRJJ8kVZzMHqRDgNTeovUZyN
+         Va0/dYngSKS3Zh2R31Dm+8Bki/y12xYnY4WS72YXG5MqlUMTDpASBfHJQ667ztW8x04e
+         S/R9iprG+kG+uH1NWPIep+8ZhI8zr1yB2bVredeq17EeheUpVRRJIdjPLaLCPXHr0GgK
+         7/7EN4O/EywalNRcCiw04fgWg48VzlJahO0/TZ6KNg9F0Zb7OL2yp6IqN9ji3yaNn4y/
+         EbwA==
+X-Gm-Message-State: AOAM532MhlzbNlUYGVzRtGwEX8GrM23L73eNvFmG0/3Rz1PMORIlvwzr
+        tWmuJ848/Hjgbybt2rAV4YDqtQ==
+X-Google-Smtp-Source: ABdhPJwxPSoNbou2DAEM+RiHTsFFGyTTNhIxXlmLEPikNxiq1HWpxuzAkInPzqbu3rd5ZyqN8tpg5A==
+X-Received: by 2002:a62:3583:: with SMTP id c125mr2028913pfa.1.1598634547231;
+        Fri, 28 Aug 2020 10:09:07 -0700 (PDT)
 Received: from [10.136.8.253] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id p17sm2251665pfn.147.2020.08.28.10.08.37
+        by smtp.gmail.com with ESMTPSA id f18sm25318pgv.84.2020.08.28.10.09.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Aug 2020 10:08:38 -0700 (PDT)
-Subject: Re: [PATCH 03/10] arm64: dts: broadcom: Fix SP805 clock-names
+        Fri, 28 Aug 2020 10:09:06 -0700 (PDT)
+Subject: Re: [PATCH 08/10] ARM: dts: Cygnus: Fix SP805 clocks
 To:     Andre Przywara <andre.przywara@arm.com>,
         Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 Cc:     Guenter Roeck <linux@roeck-us.net>,
@@ -68,14 +69,14 @@ Cc:     Guenter Roeck <linux@roeck-us.net>,
         Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com
 References: <20200828130602.42203-1-andre.przywara@arm.com>
- <20200828130602.42203-4-andre.przywara@arm.com>
+ <20200828130602.42203-9-andre.przywara@arm.com>
 From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <078843e4-37af-4178-72c8-5ace4d85727e@broadcom.com>
-Date:   Fri, 28 Aug 2020 10:08:36 -0700
+Message-ID: <0525ead5-ae53-e047-97fa-ac245846d605@broadcom.com>
+Date:   Fri, 28 Aug 2020 10:09:04 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200828130602.42203-4-andre.przywara@arm.com>
+In-Reply-To: <20200828130602.42203-9-andre.przywara@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,50 +87,37 @@ X-Mailing-List: devicetree@vger.kernel.org
 
 
 
-On 8/28/2020 6:05 AM, Andre Przywara wrote:
-> The SP805 binding sets the name for the actual watchdog clock to
-> "wdog_clk" (with an underscore).
+On 8/28/2020 6:06 AM, Andre Przywara wrote:
+> The SP805 DT binding requires two clocks to be specified, but the
+> Broadcom Cygnus DT currently only specifies one clock.
 > 
-> Change the name in the DTs for Broadcom platforms to match that. The
-> Linux and U-Boot driver use the *first* clock for this purpose anyway,
-> so it does not break anything.
+> In practice, Linux would pick a clock named "apb_pclk" for the bus
+> clock, and the Linux and U-Boot SP805 driver would use the first clock
+> to derive the actual watchdog counter frequency.
+> 
+> Since currently both are the very same clock, we can just double the
+> clock reference, and add the correct clock-names, to match the binding.
 > 
 > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > ---
->  arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi    | 2 +-
->  arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-> index 15f7b0ed3836..6a5fc55f0a4e 100644
-> --- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-> @@ -576,7 +576,7 @@
->  			reg = <0x66090000 0x1000>;
->  			interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&iprocslow>, <&iprocslow>;
-> -			clock-names = "wdogclk", "apb_pclk";
+> diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> index 35bdd0969f0a..dacaef2c14ca 100644
+> --- a/arch/arm/boot/dts/bcm-cygnus.dtsi
+> +++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+> @@ -234,8 +234,8 @@
+>  			compatible = "arm,sp805" , "arm,primecell";
+>  			reg = <0x18009000 0x1000>;
+>  			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks = <&axi81_clk>;
+> -			clock-names = "apb_pclk";
+> +			clocks = <&axi81_clk>, <&axi81_clk>;
 > +			clock-names = "wdog_clk", "apb_pclk";
 >  		};
 >  
->  		gpio_g: gpio@660a0000 {
-> diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-> index 0098dfdef96c..b425b12c3ed2 100644
-> --- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-> +++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-> @@ -438,7 +438,7 @@
->  			reg = <0x000c0000 0x1000>;
->  			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&hsls_25m_div2_clk>, <&hsls_div4_clk>;
-> -			clock-names = "wdogclk", "apb_pclk";
-> +			clock-names = "wdog_clk", "apb_pclk";
->  			timeout-sec = <60>;
->  		};
->  
+>  		gpio_ccm: gpio@1800a000 {
 > 
-
-Although not currently used in the driver, this indeed should be fixed
-to match DT documentation and be ready for future clock support in the
-driver (i.e., getting clock by name).
 
 Reviewed-by: Ray Jui <ray.jui@broadcom.com>
