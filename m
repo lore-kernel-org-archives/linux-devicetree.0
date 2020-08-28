@@ -2,175 +2,201 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51505C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96FCC433E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9DD207DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9409208D5
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="erDzSgH9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u7auesJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgH1BYP (ORCPT
+        id S1728272AbgH1Bfe (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:24:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4876 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726147AbgH1BYP (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 21:24:15 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S12TYY034870;
-        Thu, 27 Aug 2020 21:23:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=UI+j1uCJG7Wb83I1l3QGtcqSgXZaotktXn+rOHxEvok=;
- b=erDzSgH9xjB8ntUIuY7IGqF/cF38kn/Sd/nK9KkvNZiDx2aQx1SwB7MV2mS1esJyM3D9
- FuRwTwfNurd9kWJC46QHw0TIaEPSgolbvEBhvp8dRDyFnkjmRQE6DwtWoFo5i1/rmD7t
- C/LLE2Ql1nr4swRVGiW+UGHAX7KJVKXG949NDbeoGgIiulVg17w5171hTObXJuKNL5uu
- RA2P8EfwKQmxvhzB4p0UPcA1ogxnALhVOERKkiayxBhkN8gBvmmqaxjOzrW1zhLSm+qU
- ESK19zh6j112RK3hqlWc04ZdvN2KgIlP2yf+Njm/Obc4BoMbSwbzqwkL953rU24Ju8uH 2A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 336qb616r1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 21:23:35 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07S13JDW042310;
-        Thu, 27 Aug 2020 21:23:35 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 336qb616qt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 21:23:34 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07S1N83E007861;
-        Fri, 28 Aug 2020 01:23:34 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01wdc.us.ibm.com with ESMTP id 332uwaxbwb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 01:23:34 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07S1NXtU36045270
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 01:23:33 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E8337805F;
-        Fri, 28 Aug 2020 01:23:33 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C72997805C;
-        Fri, 28 Aug 2020 01:23:25 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.80.51])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 28 Aug 2020 01:23:25 +0000 (GMT)
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-2-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v4 1/5] powerpc: Refactor kexec functions to move arch
- independent code to IMA
-In-reply-to: <20200819172134.11243-2-nramas@linux.microsoft.com>
-Date:   Thu, 27 Aug 2020 22:23:23 -0300
-Message-ID: <87wo1j7ed0.fsf@morokweng.localdomain>
+        Thu, 27 Aug 2020 21:35:34 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:56151 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH1Bfd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 21:35:33 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200828013529epoutp0224530c805a5e5df79b8a2d4b8fb0c789~vSrQK11xu0670506705epoutp02C
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 01:35:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200828013529epoutp0224530c805a5e5df79b8a2d4b8fb0c789~vSrQK11xu0670506705epoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598578529;
+        bh=mfZS9t3mm4EcSIakzUimqKpFxitij5KZmxwTrUCgxhc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=u7auesJfbgAw2m+bpWAjU7aJ0vNeEXVLoQODJgIbfdZYitK/9443Vm9mvSgHDpS60
+         Tp0jhxn1pZayhKfqPXBXIP8hDz91LZkusCei/90IVBw4CidlBjnRTLtQISPwTWuh49
+         6TkIQDX/4v6le91qnI3r+yrFn5VOXyrpuQc3us5g=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200828013529epcas1p47231fba0fb8e3486082f079f17624411~vSrPXxycJ3008030080epcas1p4J;
+        Fri, 28 Aug 2020 01:35:29 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.153]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4Bd2Gh6nN0zMqYmD; Fri, 28 Aug
+        2020 01:35:24 +0000 (GMT)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4C.BE.29173.85F584F5; Fri, 28 Aug 2020 10:35:20 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200828013520epcas1p2bc32bd495a6427a36bc7e016dea98e27~vSrHIUnUo0309303093epcas1p2z;
+        Fri, 28 Aug 2020 01:35:20 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200828013520epsmtrp1aae0b48885e40c8b76c3a48da1087bfe~vSrHHRFUJ0208202082epsmtrp1S;
+        Fri, 28 Aug 2020 01:35:20 +0000 (GMT)
+X-AuditID: b6c32a37-9b7ff700000071f5-02-5f485f584a00
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EE.F2.08382.75F584F5; Fri, 28 Aug 2020 10:35:20 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200828013519epsmtip2cb4c7fb54f955a09e82cac16c65c1415~vSrG0NQaN0625906259epsmtip2I;
+        Fri, 28 Aug 2020 01:35:19 +0000 (GMT)
+Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
+ building OPP table
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
+Date:   Fri, 28 Aug 2020 10:47:46 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_14:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 suspectscore=2
- mlxlogscore=999 bulkscore=0 phishscore=0 adultscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008280003
+In-Reply-To: <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRmVeSWpSXmKPExsWy7bCmnm5EvEe8QdsSI4t3n56yWsw/co7V
+        YvXHx4wWV76+Z7OYvncTm0XLrEUsFmeb3rBbXN41h83ic+8RRovOL7PYLC6ecrW43biCzWLS
+        2qmMFq17j7Bb/Lu2kcXi5655LA4CHu9vtLJ77Jx1l93j0rk/zB6bVnWyedy5tofN4373cSaP
+        3uZ3bB59W1YxenzeJBfAGZVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeY
+        m2qr5OIToOuWmQP0hpJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0
+        L10vOT/XytDAwMgUqDAhO2Nx4ySmgvN8FR/udrE2ML7i7mLk5JAQMJFoe7CftYuRi0NIYAej
+        xMMt/UwgCSGBT4wSc7ZoQCS+MUq8/tPBDNNxccN0RojEXkaJ9ncXmSGc94wSTQv/sINUCQvE
+        SJyZt5EdJCEicIRZYnXncUaQBLPADEaJO3uUQWw2AS2J/S9usIHY/AKKEld/PAar4RWwk5j8
+        4xtYnEVAVeLa28tgN4kKhEmc3NYCVSMocXLmExYQm1PAVmLd/jUsEPPFJW49mc8EYctLNG+d
+        DXadhMB/Dompp38DNXMAOS4SGz87Q7wjLPHq+BZ2CFtK4mV/G5RdLbHy5BE2iN4ORokt+y+w
+        QiSMJfYvncwEModZQFNi/S59iLCixM7fc6F+5JN497WHFWIVr0RHmxBEibLE5Qd3mSBsSYnF
+        7Z1sExiVZiH5ZhaSD2Yh+WAWwrIFjCyrGMVSC4pz01OLDQuMkWN7EyM4iWuZ72Cc9vaD3iFG
+        Jg7GQ4wSHMxKIryvj7rHC/GmJFZWpRblxxeV5qQWH2I0BYbvRGYp0eR8YB7JK4k3NDUyNja2
+        MDE0MzU0VBLnfXhLIV5IID2xJDU7NbUgtQimj4mDU6qByYib2++EtvOLZX+/Vcxcq7R3blRs
+        I2vBnh2Zq6wFVLoSQ5O/CU+dsePmukmeb0NXrZQJirqRn1NouVb91d8ff4Imq9xgvTulzmLR
+        BEHlHbJvL7VZr4x737P4+eNglcSPAd8WMDaqGR05/3d1G/8/foZGl2T7+Xq1SbIzg00nqUgu
+        4nqeu/BipNfVCY92REqvnZR2UjOt8q7JXZZn/7fJMxREvln26s2WaKUEv0lme57KpHzOTir1
+        VCmsKZ0jd93GYMHVfblicmGGcmdSJk9OTdYJC+WV0J6TxZgWIdJ1bXa4q/7Ut0pzu9ND77L4
+        9u3Z5J2hImw46Yqhm8MEqcOma/gqWyU3M60wrzeK+HNIiaU4I9FQi7moOBEAfmno22sEAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsWy7bCSvG5EvEe8wZlOJot3n56yWsw/co7V
+        YvXHx4wWV76+Z7OYvncTm0XLrEUsFmeb3rBbXN41h83ic+8RRovOL7PYLC6ecrW43biCzWLS
+        2qmMFq17j7Bb/Lu2kcXi5655LA4CHu9vtLJ77Jx1l93j0rk/zB6bVnWyedy5tofN4373cSaP
+        3uZ3bB59W1YxenzeJBfAGcVlk5Kak1mWWqRvl8CVsbhxElPBeb6KD3e7WBsYX3F3MXJySAiY
+        SFzcMJ2xi5GLQ0hgN6PE9u3bmSESkhLTLh4FsjmAbGGJw4eLIWreMkpM2PkIrEZYIEbizLyN
+        7CAJEYFjzBKbTp9mAnGYBWYwSvzZAJEREpjDJHF0zjw2kBY2AS2J/S9ugNn8AooSV388ZgSx
+        eQXsJCb/+AYWZxFQlbj29jITiC0qECaxc8ljJogaQYmTM5+wgNicArYS6/avAbOZBdQl/sy7
+        xAxhi0vcejKfCcKWl2jeOpt5AqPwLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWGBYZ5qeV6
+        xYm5xaV56XrJ+bmbGMExraW5g3H7qg96hxiZOBgPMUpwMCuJ8L4+6h4vxJuSWFmVWpQfX1Sa
+        k1p8iFGag0VJnPdG4cI4IYH0xJLU7NTUgtQimCwTB6dUA1Ob1I9zPnO5j8zS4d637czuA4wW
+        5XOKmsoOZL5omCt+7cvyRcFzL5QavJoSuPdN3zn3rfl+zRKnGDh2xrk5lwtm/5itoSE26dJh
+        xVLZ/kVHF3Vf2yehcTF93ZNpDblPr642Wv/g+PZHtxoD2atnJlhZzvEO/BUsm7rSgttBYVWn
+        Y5tXfKPb+6tukrsqD1dttXmoUeBXMlFKdFPgvdbv6TN01wbdmVK5pUHPoXj3zGV3G/eukb/6
+        TD/6jv7JX/rGD761TH4nfT+Pf0nN9MnCTEs7mF4Gnt6gvJHn6dzIyU47LzDI/uBtEFhrnL49
+        b8VmWVvNY5/PtbZxvhRm1efxNP6tz1Qf9ftOu0RpSJuScbQSS3FGoqEWc1FxIgB9F1inWAMA
+        AA==
+X-CMS-MailID: 20200828013520epcas1p2bc32bd495a6427a36bc7e016dea98e27
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818
+References: <20200814000621.8415-1-digetx@gmail.com>
+        <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
+        <20200814000621.8415-14-digetx@gmail.com>
+        <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
+        <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi,
 
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+On 8/15/20 1:47 AM, Dmitry Osipenko wrote:
+> 14.08.2020 05:02, Chanwoo Choi пишет:
+>> Hi Dmitry,
+>>
+>> I add the minor comment. Except of some comments, it looks good to me.
+> 
+> Hello, Chanwoo! Thank you for the review!
+> 
+> ...
+>>> +struct tegra_devfreq_soc_data {
+>>> +	const char *mc_compatible;
+>>> +};
+>>> +
+>>> +static const struct tegra_devfreq_soc_data tegra30_soc = {
+>>> +	.mc_compatible = "nvidia,tegra30-mc",
+>>> +};
+>>> +
+>>> +static const struct tegra_devfreq_soc_data tegra124_soc = {
+>>> +	.mc_compatible = "nvidia,tegra124-mc",
+>>> +};
+> .
+>>> +	soc_data = of_device_get_match_data(&pdev->dev);
+>>
+>> I think that better to check whether 'soc_data' is not NULL.
+> 
+> It's a quite common misconception among kernel developers that
+> of_device_get_match_data() may "accidentally" return NULL, but it
+> couldn't if every driver's of_match[] entry has a non-NULL .data field
+> and because the OF-matching already happened at the driver's probe-time
+> [1], which is the case of this driver.
+> 
+> [1] https://elixir.bootlin.com/linux/v5.8/source/drivers/of/device.c#L189
+> 
+> Hence the NULL-checking is unnecessary.
+> 
+> When I first encountered the of_device_get_match_data(), I was also
+> thinking that adding the NULL-checks is a good idea, but later on
+> somebody pointed out to me (maybe Thierry) that it's unnecessary to do.
 
-> +/**
-> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> + * @addr:	On successful return, set to point to the buffer contents.
-> + * @size:	On successful return, set to the buffer size.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int ima_get_kexec_buffer(void **addr, size_t *size)
+OK. Thanks.
 
-I just noticed that this function is only called from within
-ima_kexec.c, so it can be made static.
+> 
+>>> +
+>>> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
+>>> +	if (IS_ERR(mc))
+>>> +		return PTR_ERR(mc);
+>>
+>> You better to add error log.
+> 
+> In practice we should get only -EPROBE_DEFER here ever. I'll consider
+> adding the message in the next revision, at least just for consistency.
 
-> +{
-> +	int ret, len;
-> +	unsigned long tmp_addr;
-> +	size_t tmp_size;
-> +	const void *prop;
-> +
-> +	prop = of_get_property(of_chosen, FDT_PROP_IMA_KEXEC_BUFFER, &len);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*addr = __va(tmp_addr);
-> +	*size = tmp_size;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ima_free_kexec_buffer - free memory used by the IMA buffer
-> + */
-> +int ima_free_kexec_buffer(void)
+In order to handle -EPROBE_DEFER, recommend the using of dev_err_probe().
 
-This one can be static as well.
-
-> +{
-> +	int ret;
-> +	unsigned long addr;
-> +	size_t size;
-> +	struct property *prop;
-> +
-> +	prop = of_find_property(of_chosen, FDT_PROP_IMA_KEXEC_BUFFER, NULL);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	ret = do_get_kexec_buffer(prop->value, prop->length, &addr, &size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = of_remove_property(of_chosen, prop);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return memblock_free(addr, size);
-> +
-> +}
-> +
->  #ifdef CONFIG_IMA_KEXEC
->  static int ima_dump_measurement_list(unsigned long *buffer_size, void **buffer,
->  				     unsigned long segment_size)
-
+(snip)
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
