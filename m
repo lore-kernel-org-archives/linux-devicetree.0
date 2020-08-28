@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8032C433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B3FC433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9AF020C56
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7587F2098B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598633351;
-	bh=98AU22xTYMCZ0QAZTXK9ChSrXEOj0TuIT22qgKEeDKo=;
+	s=default; t=1598633357;
+	bh=A+5+6JhdVbUJ9D0QMqSPAjM/5xlJh4wUHfgnQQlFXz0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AycyaTfOvWLd5IGwwLyqFAdiUoRcdaNl4Zrk8r3C9MvFHzGQIQ8fxde5JQi4ZdRy0
-	 G74nQrc6caj/jNQdXM7f1Mh7u3/61Snzgtl1ZvlcOuxEE4TIFrqt2FePLkfUZ7BYzi
-	 i/NL6eEU9s+wPvvHa56T7FL9cFFoJm0KiLIyvQkE=
+	b=AJ5e4Gnd/qfTPvLLSaDoMEpHgvLwNjpgcAzw3brhyDqZKgNcAqnJ5mR5axRFSO7S6
+	 HCAC0L/pkv3PaakJVlG832TfU9ioCQElpFQRqGPQ/VZro2fib0htuih+dsLuAaDuS4
+	 +wjKbYo7umEO46V54pPmSDpqBAqNBDHMUtvKsq7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgH1QtL (ORCPT
+        id S1727101AbgH1QtQ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
+        Fri, 28 Aug 2020 12:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgH1QtJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 12:49:09 -0400
+        id S1726436AbgH1QtN (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 12:49:13 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92822098B;
-        Fri, 28 Aug 2020 16:49:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0096E20E65;
+        Fri, 28 Aug 2020 16:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598633348;
-        bh=98AU22xTYMCZ0QAZTXK9ChSrXEOj0TuIT22qgKEeDKo=;
+        s=default; t=1598633352;
+        bh=A+5+6JhdVbUJ9D0QMqSPAjM/5xlJh4wUHfgnQQlFXz0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+/vJbN6iXqQNVME/w5zvRS3yUo/9L0rC5pX/zWzknm/6fbP93h1bn3NqmTmIgEWz
-         csYos3Uuk3GSUnVkCTg3eK9GOC7QHsuoqHOpkujRz6MrDCcLJvgVhgnlM8efHskEv8
-         XiZQr6wP7rk99B3/FaAZCoV9M9IkivQM9lh+HCI0=
+        b=wJbkCisAerDHvGAjlTy9lH6oKd6EbR+069Z9dDBNVcFNAHolzieGMclvIE9Z0ks0B
+         HYaYfc++NhBDB5QfzngxQ2Napm6OhvGhNMw/6lrkytQgR+aJy3K6rYqcLPyAIGV15L
+         AjRcxsShdQIXMT/nBioo5ZR7ZpjN242uNihKYULk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
@@ -55,9 +55,9 @@ To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 02/19] dt-bindings: mtd: gpmi-nand: Fix matching of clocks on different SoCs
-Date:   Fri, 28 Aug 2020 18:47:33 +0200
-Message-Id: <20200828164750.10377-3-krzk@kernel.org>
+Subject: [PATCH v2 03/19] arm64: dts: imx8mm-beacon-kit: Add missing build through Makefile
+Date:   Fri, 28 Aug 2020 18:47:34 +0200
+Message-Id: <20200828164750.10377-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200828164750.10377-1-krzk@kernel.org>
 References: <20200828164750.10377-1-krzk@kernel.org>
@@ -66,126 +66,26 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Driver requires different amount of clocks for different SoCs.  Describe
-these requirements properly to fix dtbs_check warnings like:
-
-    arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
+Add missing imx8mm-beacon-kit.dts object in Makefile so it will be build
+when building dtbs.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
 ---
+ arch/arm64/boot/dts/freescale/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes since v1:
-1. Do not require order of clocks (use pattern).
----
- .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
- 1 file changed, 61 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-index 28ff8c581837..e08e0a50929e 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-@@ -9,9 +9,6 @@ title: Freescale General-Purpose Media Interface (GPMI) binding
- maintainers:
-   - Han Xu <han.xu@nxp.com>
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index a39f0a1723e0..903c0eb61290 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-honeycomb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
  
--allOf:
--  - $ref: "nand-controller.yaml"
--
- description: |
-   The GPMI nand controller provides an interface to control the NAND
-   flash chips. The device tree may optionally contain sub-nodes
-@@ -58,22 +55,10 @@ properties:
-   clocks:
-     minItems: 1
-     maxItems: 5
--    items:
--      - description: SoC gpmi io clock
--      - description: SoC gpmi apb clock
--      - description: SoC gpmi bch clock
--      - description: SoC gpmi bch apb clock
--      - description: SoC per1 bch clock
- 
-   clock-names:
-     minItems: 1
-     maxItems: 5
--    items:
--      - const: gpmi_io
--      - const: gpmi_apb
--      - const: gpmi_bch
--      - const: gpmi_bch_apb
--      - const: per1_bch
- 
-   fsl,use-minimum-ecc:
-     type: boolean
-@@ -107,6 +92,67 @@ required:
- 
- unevaluatedProperties: false
- 
-+allOf:
-+  - $ref: "nand-controller.yaml"
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - fsl,imx23-gpmi-nand
-+              - fsl,imx28-gpmi-nand
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: SoC gpmi io clock
-+        clock-names:
-+          items:
-+            - const: gpmi_io
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - fsl,imx6q-gpmi-nand
-+              - fsl,imx6sx-gpmi-nand
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: SoC gpmi io clock
-+            - description: SoC gpmi apb clock
-+            - description: SoC gpmi bch clock
-+            - description: SoC gpmi bch apb clock
-+            - description: SoC per1 bch clock
-+        clock-names:
-+          items:
-+            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-+            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-+            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-+            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-+            - pattern: "^(gpmi_(io|apb|bch|bch_apb)|per1_bch)$"
-+
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: fsl,imx7d-gpmi-nand
-+    then:
-+      properties:
-+        clocks:
-+          items:
-+            - description: SoC gpmi io clock
-+            - description: SoC gpmi bch apb clock
-+        clock-names:
-+          minItems: 2
-+          maxItems: 2
-+          items:
-+            - pattern: "^gpmi_(io|bch_apb)$"
-+            - pattern: "^gpmi_(io|bch_apb)$"
-+
- examples:
-   - |
-     nand-controller@8000c000 {
++dtb-$(CONFIG_ARCH_MXC) += imx8mm-beacon-kit.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mn-evk.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mn-ddr4-evk.dtb
 -- 
 2.17.1
 
