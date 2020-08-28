@@ -2,167 +2,111 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EC7C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFED9C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B85F620825
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:38:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="XQR50PRz"
+	by mail.kernel.org (Postfix) with ESMTP id 8C6B520872
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598629480;
+	bh=88kJ/G7CWpX+LGOzEx33CLHVpu7kYOqIcbs+2c87R24=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=Gbk3bEAtnoJIWukhT+zLe3k8lXIR0zW5pUyrnW9UfcbpB/T236cO56oj8qtFbFlBf
+	 S8PRr70RY+TlV1+lcA/X1LsVruFiOKLWjEFgKYYdmc+HKTBPsgHoMtuS8EtmlZPNXi
+	 SHmw/uOi7xK3j6MqtIm6MhInmgPKmmVbAsGFRE3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbgH1Pi0 (ORCPT
+        id S1726033AbgH1Poj (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728104AbgH1PiI (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 11:38:08 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEDAC061264
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 08:38:07 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b18so1704480wrs.7
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 08:38:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zF4wjuq7NlXDCWxwqRlprq8+YIO3EP/prTKpLCQVawE=;
-        b=XQR50PRzIDXP7atHlwU9Y4qtYH28bhVuN+nc6jOAmcqiR2nOALvWYBMqVBfos581P7
-         XGuz8fAztk6pjkS4VSz1i+BrPic5yobLkfpI+3tqM0DZ+225Umxxb14UGnoxugMMwDYV
-         x+L4fm0kLLr7OwOHtl8k3RTEFMTZC5zlrXj/PfItUmfoa0XNfo8m1fX3TvKoIs/sF4Dm
-         ERf6IkH4uup+VWncdtaax3E7liZHFGEQq07Yl+ikmZwcm7SH86z5AYK4p+pOIWBgzfKY
-         oPh/N/V4D+w+z8aCU/f8HsXnQ03i+Y425UyDnihNH9AJ9fJSueAzXi8Uqx8LfCNf5Jrg
-         zGWg==
+        Fri, 28 Aug 2020 11:44:39 -0400
+Received: from mail-ej1-f48.google.com ([209.85.218.48]:36584 "EHLO
+        mail-ej1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbgH1Poh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 11:44:37 -0400
+Received: by mail-ej1-f48.google.com with SMTP id l2so2122873eji.3
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 08:44:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zF4wjuq7NlXDCWxwqRlprq8+YIO3EP/prTKpLCQVawE=;
-        b=g2aJ2eEAh3hS45FQEpDlSlnbc3Jp1IGIf8/PJGcYDDG6yXrUjCMRRCrzzMJI5EG5PK
-         fs2d4yp27PzJdjlgQ6wiJOJBqxAIMVEBGJjN+l6Xju5F8kphGYsLeiFknMCPL+e7Ziog
-         FW/C4Ahwj7wfvU/VaVH2fCY8T5ipnozkYis82xi80zeZgrA1vZYK98s0x4ZojZfqBpq2
-         aUzg/4kuYeKw3QfHTLWNS+pif3rfkIzbSr7w95MHsNeGC3KAI0YccF9qpDImN7Ox+k7j
-         U8HQXwL3ed3JFuOPrZKbzCR+/92VQbZVET0ap/zPZgeglGgsNi3W27f83npARhd83b5b
-         9tJw==
-X-Gm-Message-State: AOAM531fNpasPl9oL8K1i0W/M37lFyidtjnSC9lUVWdxQF8QuIP2sMem
-        rbU16L6TAP2Wl8KQjcmTiLS1XknFDhqFUcHnvJnWWQ==
-X-Google-Smtp-Source: ABdhPJxHuvA/mBiuIknMdmiA5hSVY4oW2N955fzVP5r0eRNvMn3H/kQnCuEvq9cPXPwP9snvFO3LG6RV314TaQhSdqo=
-X-Received: by 2002:a5d:43c7:: with SMTP id v7mr2146163wrr.27.1598629086231;
- Fri, 28 Aug 2020 08:38:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kPFFssSK0FB0b8xHaLwh78SxNX/7VnzwnzslGetfO38=;
+        b=DgQDaiow04QnGJVmNu212fh1JwZLjCCqOg0iFdeMLJeG7RbkClHi11lhJ9+7bexwkp
+         a03DD7reSLGpmeJt5DBRSDAMRKcwZsRo/6zIKUjqmVlhaDjpcVqNrs1hEdvYwkO7+vPB
+         CJBmvRpHCB2grPBstbwIsS1gncHBVYJP55gcHvkpCd7w+9NjwtlI8EPYx0MwErtPAcbt
+         abkzsWCutgu3jWP1vZx8BjOngg8pMYVxI6aOOll6Gnyhs8ggtlUWBJFh9rh/qZUfRBJU
+         E2/3gDjWsHFmrxit2FRlw6iw01JF8G8zmBJ3R/G0zB79qvFVFNkBejSc/VxFRO9VYV/z
+         h99w==
+X-Gm-Message-State: AOAM532WbNQ2/A7HLuAy4H3brr3klZsXGXnFUZT7Y2iH4B6NAbyZMcGI
+        +57Nff4V1uaOtFTKdz21x9UPDmdl/wJ3aw==
+X-Google-Smtp-Source: ABdhPJwlBIgg7Pcv1a48QyOYOjGuraP+JXawT7+eQ2ioaYlgUu5/bLt3ZRFjGTjWrOfOjd2heWB9AQ==
+X-Received: by 2002:a17:906:5796:: with SMTP id k22mr2594760ejq.77.1598629474886;
+        Fri, 28 Aug 2020 08:44:34 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id fx15sm1265236ejb.1.2020.08.28.08.44.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 28 Aug 2020 08:44:34 -0700 (PDT)
+Date:   Fri, 28 Aug 2020 17:44:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: dtschema v2020.08.1 json.decoder.JSONDecodeError error
+Message-ID: <20200828154432.GA24473@kozik-lap>
+References: <20200828095115.GA18030@pi3>
 MIME-Version: 1.0
-References: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
- <CGME20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d@epcas1p3.samsung.com>
- <20200821071045.24501-4-hoegeun.kwon@samsung.com> <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
- <80749dcd-d4b2-68a1-f3ca-c19a120f6f7b@samsung.com> <84c423e8-25a6-8f23-cc80-7a17ce03fd1d@i2se.com>
- <a19de8d5-2b01-cb62-38a2-b0732068025c@samsung.com> <a3231281-3bd0-e7c9-1bb0-f05848621e82@i2se.com>
- <20200828152510.jhhqvka6fmouozff@gilmour.lan>
-In-Reply-To: <20200828152510.jhhqvka6fmouozff@gilmour.lan>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Fri, 28 Aug 2020 16:37:50 +0100
-Message-ID: <CAPY8ntDeLOb+GvpLDX1BFrhtYyGQzJ01pWHiS30r-2ZUJTg8Gw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] drm/vc4: hdmi: Add pixel bvb clock control
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
-        Tim Gover <tim.gover@raspberrypi.com>, kdasu.kdev@gmail.com,
-        sboyd@kernel.org, mturquette@baylibre.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Phil Elwell <phil@raspberrypi.com>, robh+dt@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200828095115.GA18030@pi3>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi Maxime, Stefan, and Hoegeun
+On Fri, Aug 28, 2020 at 11:51:15AM +0200, Krzysztof Kozlowski wrote:
+> Hi Rob,
+> 
+> I am trying dt_bindings_check with on top of next-20200826 with dtschema
+> v2020.08.01 and got errors on all schemas:
+> 
+> =======
+> Traceback (most recent call last):
+>   File "/home/krzk/.local/lib/python3.5/site-packages/jsonschema/validators.py", line 777, in resolve_from_url
+>     document = self.resolve_remote(url)
+>   File "/home/krzk/.local/lib/python3.5/site-packages/jsonschema/validators.py", line 860, in resolve_remote
+>     result = requests.get(uri).json()
+>   File "/home/krzk/.local/lib/python3.5/site-packages/requests/models.py", line 897, in json
+>     return complexjson.loads(self.text, **kwargs)
+>   File "/usr/lib/python3.5/json/__init__.py", line 319, in loads
+>     return _default_decoder.decode(s)
+>   File "/usr/lib/python3.5/json/decoder.py", line 339, in decode
+>   DTEX    Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.example.dts
+>     obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+>   File "/usr/lib/python3.5/json/decoder.py", line 357, in raw_decode
+>     raise JSONDecodeError("Expecting value", s, err.value) from None
+> json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+> 
+> During handling of the above exception, another exception occurred:
+> 
+> Traceback (most recent call last):
+>   File "/home/krzk/.local/bin/dt-doc-validate", line 67, in <module>
+>     ret = check_doc(f)
+>   File "/home/krzk/.local/bin/dt-doc-validate", line 33, in check_doc
+>     for error in sorted(dtschema.DTValidator.iter_schema_errors(testtree), key=lambda e: e.linecol):
+>   File "/home/krzk/.local/lib/python3.5/site-packages/dtschema/lib.py", line 663, in iter_schema_errors
+>     meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
+>   File "/home/krzk/.local/lib/python3.5/site-packages/jsonschema/validators.py", line 779, in resolve_from_url
+>     raise exceptions.RefResolutionError(exc)
+> jsonschema.exceptions.RefResolutionError: Expecting value: line 1 column 1 (char 0)
+> =======
+> 
+> 
+> Python v3.5.2
+> Ubuntu 16.04
 
-On Fri, 28 Aug 2020 at 16:25, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> On Fri, Aug 28, 2020 at 02:45:49PM +0200, Stefan Wahren wrote:
-> > Am 28.08.20 um 08:30 schrieb Hoegeun Kwon:
-> > > On 8/27/20 6:49 PM, Stefan Wahren wrote:
-> > >> Am 27.08.20 um 06:35 schrieb Hoegeun Kwon:
-> > >>> Hi Stefan,
-> > >>>
-> > >>> Thank you for your review.
-> > >>>
-> > >>>
-> > >>> On 8/26/20 7:04 PM, Stefan Wahren wrote:
-> > >>>> Hi Hoeguen,
-> > >>>>
-> > >>>> Am 21.08.20 um 09:10 schrieb Hoegeun Kwon:
-> > >>>>> There is a problem that the output does not work at a resolution
-> > >>>>> exceeding FHD. To solve this, we need to adjust the bvb clock at a
-> > >>>>> resolution exceeding FHD.
-> > >>>> this patch introduces a mandatory clock, please update
-> > >>>> brcm,bcm2835-hdmi.yaml first.
-> > >>>>
-> > >>>> Is this clock physically available on BCM283x or only on BCM2711?
-> > >>> As far as I know, BCM2711 raspberry pi 4 supports 4k,
-> > >>>
-> > >>> don't supported on pi 3 and pi 3+.
-> > >>>
-> > >>> Since 4k is not supported in versions prior to Raspberry Pi 4,
-> > >>>
-> > >>> I don't think we need to modify the bvb clock.
-> > >>>
-> > >>>
-> > >>> So I think it is better to update 'brcm,bcm2711-hdmi.yaml'
-> > >>>
-> > >>> instead of 'brcm,bcm2835-hdmi.yaml'.
-> > >> You are correct please update only brcm,bcm2711-hdmi.yaml.
-> > >>
-> > >> My concern was that the function vc4_hdmi_encoder_pre_crtc_configure()
-> > >> is called on a non-bcm2711 platform or on a Raspberry Pi 4 with an older
-> > >> DTB. So making the BVB clock optional might be better?
-> > > You are right, if use old dtb, we have a problem with the hdmi driver.
-> > >
-> > > So how about modifying it like this?
-> > >
-> > > @@ -1614,8 +1614,8 @@ static int vc5_hdmi_init_resources(struct vc4_hdmi
-> > > *vc4_hdmi)
-> > >
-> > >          vc4_hdmi->pixel_bvb_clock = devm_clk_get(dev, "bvb");
-> > >          if (IS_ERR(vc4_hdmi->pixel_bvb_clock)) {
-> > > -               DRM_ERROR("Failed to get pixel bvb clock\n");
-> > > -               return PTR_ERR(vc4_hdmi->pixel_bvb_clock);
-> > > +               DRM_WARN("Failed to get pixel bvb clock\n");
-> > > +               vc4_hdmi->pixel_bvb_clock = NULL;
-> > >          }
-> >
-> > i think the better solution would be devm_clk_get_optional(), which
-> > return NULL in case the clock doesn't exist.
->
-> It's not really optional though. BCM2711 will require it in order to run
-> properly (as Hoegeun experienced), and the previous SoCs won't.
->
-> If we use clk_get_optional and that the DT is missing the clock on the
-> BCM2711, we will silently ignore it which doesn't sound great.
+I tried also on newer machine (Ubuntu 18.04, Python 3.6.9) - the same.
 
-Am I missing something here? (I know I missed this earlier)
-We're in vc5_hdmi_init_resources, which is inherently bcm2711 only.
-bcm283x will go through vc4_hdmi_init_resources.
+Best regards,
+Krzysztof
 
-As long as vc4_hdmi_init_resources has left vc4_hdmi->pixel_bvb_clock
-at NULL, then the clock framework will be happy to do a nop.
-
-For BCM2711 an old DT would have issues, but, as Maxime has stated, no
-binding or upstream DTB has been merged yet, so it can be made
-mandatory.
-Making it optional drops you back on whatever the firmware might have
-set it to, which may be sufficient for some resolutions but not
-others.
-
-  Dave
