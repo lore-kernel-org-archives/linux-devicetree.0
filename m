@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C3EC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57534C433E7
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18015207DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C2A2086A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:17:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgH1NME (ORCPT
+        id S1729480AbgH1NQ6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:12:04 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38783 "EHLO
+        Fri, 28 Aug 2020 09:16:58 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:58435 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729410AbgH1NLq (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 09:11:46 -0400
+        with ESMTP id S1729468AbgH1NLt (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 09:11:49 -0400
 X-Originating-IP: 90.89.180.255
 Received: from lhopital-XPS-13-9360.home (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
         (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPA id D7B93C0012;
-        Fri, 28 Aug 2020 13:11:42 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPA id 43DE9C001A;
+        Fri, 28 Aug 2020 13:11:46 +0000 (UTC)
 From:   =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
         <kevin.lhopital@bootlin.com>
 To:     linux-media@vger.kernel.org
@@ -34,9 +34,9 @@ Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com,
         =?UTF-8?q?K=C3=A9vin=20L=27h=C3=B4pital?= 
         <kevin.lhopital@bootlin.com>
-Subject: [PATCH v2 1/3] dt-bindings: media: i2c: Add documentation for ov8865
-Date:   Fri, 28 Aug 2020 15:11:32 +0200
-Message-Id: <20200828131134.12113-2-kevin.lhopital@bootlin.com>
+Subject: [PATCH v2 3/3] [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3: Enable OV8865 camera
+Date:   Fri, 28 Aug 2020 15:11:34 +0200
+Message-Id: <20200828131134.12113-4-kevin.lhopital@bootlin.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200828131134.12113-1-kevin.lhopital@bootlin.com>
 References: <20200828131134.12113-1-kevin.lhopital@bootlin.com>
@@ -48,185 +48,146 @@ Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Add a documentation for the sensor ov8865 from Omnivision.
+The Bananapi M3 supports a camera module which includes an
+OV8865 sensor connected via the parallel CSI interface and
+an OV8865 sensor connected via MIPI CSI-2.
+
+The I2C2 bus is shared by the two sensors as well as active-low
+reset signal but each sensor has it own shutdown line.
+
+The I2c address for the OV8865 is 0x36.
+
+The bus type is hardcoded to 4 due to the lack of available
+define usable in the device-tree.
 
 Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
 ---
- .../devicetree/bindings/media/i2c/ov8865.yaml | 165 ++++++++++++++++++
- 1 file changed, 165 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov8865.yaml
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 89 ++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov8865.yaml b/Documentation/devicetree/bindings/media/i2c/ov8865.yaml
-new file mode 100644
-index 000000000000..468ddfd48c7a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov8865.yaml
-@@ -0,0 +1,165 @@
-+# SPDX-License-Identifier: (GPL-2.0 0R BSD-2-Clause)
-+# Copyright (C) 2020 Kévin L'hôpital
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/i2c/ov8865.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+index 9d34eabba121..b5cba707fb9e 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+@@ -85,6 +85,38 @@
+ 		};
+ 	};
+ 
++	reg_ov8865_avdd: ov8865-avdd {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-avdd";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		vin-supply = <&reg_dldo4>;
++	};
 +
-+title: Omnivision OV8865 Sensor Device Tree Bindings
++	reg_ov8865_dovdd: ov8865-dovdd {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-dovdd";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		vin-supply = <&reg_dldo4>;
++	};
 +
-+maintainers:
-+  - Kévin L'hôpital <kevin.lhopital@bootlin.com>
++	reg_ov8865_afvdd: ov8865-afvdd {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-afvdd";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		vin-supply = <&reg_dldo4>;
++	};
 +
-+description: |-
-+  The Omnivision OV8865 is a image sensor that supports up to 3264x2448. It
-+  provides a 10 bits output format and a MIPI CSI2 interface (up to 4-lane).
-+  This chip is programmable through I2C.
++	reg_ov8865_vdd2: ov8865-vdd2 {
++		compatible = "regulator-fixed";
++		regulator-name = "ov8865-vdd2";
++		regulator-min-microvolt = <1200000>;
++		regulator-max-microvolt = <1200000>;
++		vin-supply = <&reg_eldo1>;
++	};
 +
-+properties:
-+  compatible:
-+    const: ovti,ov8865
+ 	reg_usb1_vbus: reg-usb1-vbus {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "usb1-vbus";
+@@ -115,10 +147,54 @@
+ 	cpu-supply = <&reg_dcdc3>;
+ };
+ 
++&csi {
++	status = "okay";
++};
 +
-+  reg:
-+    maxItems: 1
++&csi_in {
++	mipi_csi2_from_ov8865: endpoint {
++		remote-endpoint = <&ov8865_to_mipi_csi2>;
++		clock-lanes = <0>;
++		data-lanes = <1 2 3 4>;
++		bus-type = <4>;
++	};
++};
 +
-+  pinctrl-names:
-+    description:
-+      Default name for the ov8865 pinctrl.
+ &de {
+ 	status = "okay";
+ };
+ 
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pe_pins>;
++	status = "okay";
 +
-+  pinctrl-0:
-+    description:
-+      Pinctrl for the ov8865.
++	ov8865: camera@36 {
++		compatible = "ovti,ov8865";
++		reg = <0x36>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&csi_mclk_pin>;
++		clocks = <&ccu CLK_CSI_MCLK>;
++		clock-names ="xclk";
++		avdd-supply = <&reg_ov8865_avdd>;
++		dovdd-supply = <&reg_ov8865_dovdd>;
++		vdd2-supply = <&reg_ov8865_vdd2>;
++		afvdd-supply = <&reg_ov8865_afvdd>;
++		powerdown-gpios = <&pio 4 17 GPIO_ACTIVE_LOW>; /* PE17 */
++		reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
++		rotation = <180>;
 +
-+  clocks:
-+    maxItems: 1
++		port {
++			ov8865_to_mipi_csi2: endpoint {
++				remote-endpoint = <&mipi_csi2_from_ov8865>;
++				data-lanes = <1 2 3 4>;
++				clock-lanes = <0>;
++				bus-type = <4>; /* V4L2_FWNODE_BUS_TYPE_CSI2_DPHY */
++			};
++		};
++	};
++};
 +
-+  clock-names:
-+    description:
-+      Input clock name for the sensor.
+ &ehci0 {
+ 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+ 	status = "okay";
+@@ -327,11 +403,24 @@
+ 	regulator-name = "vcc-pd";
+ };
+ 
++&reg_dldo4 {
++	regulator-always-on;
++	regulator-min-microvolt = <2800000>;
++	regulator-max-microvolt = <2800000>;
++	regulator-name = "avdd-csi";
++};
 +
-+    items:
-+      - const: xclk
+ &reg_drivevbus {
+ 	regulator-name = "usb0-vbus";
+ 	status = "okay";
+ };
+ 
++&reg_eldo1 {
++	regulator-min-microvolt = <1200000>;
++	regulator-max-microvolt = <1200000>;
++	regulator-name = "dvdd-csi-r";
++};
 +
-+  avdd-supply:
-+    description:
-+      Definition of the regulator used as analog power supply.
-+
-+  dovdd-supply:
-+    description:
-+      Definition of the regulator used as interface power supply.
-+
-+  vdd2-supply:
-+    description:
-+      Definition of the regulator used as digital power supply
-+
-+  afvdd-supply:
-+    description:
-+      Definition of the regulator used as actuator power supply.
-+
-+  powerdown-gpios:
-+    description:
-+      reference to the GPIO connceted to the powerdown pin. This is an active
-+      low signal on the OV8865.
-+
-+  reset-gpios:
-+    description:
-+      Reference to the GPIO connected to the reset pin. This is an active low
-+      signal for the OV8865.
-+
-+  rotation:
-+    description:
-+      Position of the sensor, the valid values are 0 (sensor mounted upright)
-+      and 180 (sensor mounted upside down).
-+
-+  port:
-+    type: object
-+    additionalProperties: false
-+    description:
-+      A node containing an output port node with an endpoint definition as
-+      documented in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt
-+
-+    properties:
-+      endpoint:
-+        type: object
-+
-+        properties:
-+          data-lanes:
-+            description:
-+              The driver only supports four-lane operation.
-+            items:
-+              - const: 1
-+              - const: 2
-+              - const: 3
-+              - const: 4
-+
-+          clock-lanes:
-+            items:
-+              const: 0
-+
-+          bus-type:
-+            description:
-+              The driver only supports the MIPI CSI2
-+            items:
-+              const: 4
-+
-+        required:
-+          - data-lanes
-+          - clock-lanes
-+          - bus-type
-+
-+    required:
-+      - endpoint
-+
-+required:
-+  - compatible
-+  - reg
-+  - pinctrl-names
-+  - pinctrl-0
-+  - clocks
-+  - clock-names
-+  - avdd-supply
-+  - dovdd-supply
-+  - vdd2-supply
-+  - afvdd-supply
-+  - powerdown-gpios
-+  - reset-gpios
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun8i-a83t-ccu.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    i2c2 {
-+         #address-cells = <1>;
-+         #size-cells = <0>;
-+          ov8865: camera@36 {
-+                 compatible = "ovti,ov8865";
-+                 reg = <0x36>;
-+                 pinctrl-names = "default";
-+                 pinctrl-0 = <&csi_mclk_pin>; 
-+                 clocks = <&ccu CLK_CSI_MCLK>;
-+                 clock-names ="xclk";
-+                 avdd-supply = <&reg_ov8865_avdd>;
-+                 dovdd-supply = <&reg_ov8865_dovdd>;
-+                 vdd2-supply = <&reg_ov8865_vdd2>;
-+                 afvdd-supply = <&reg_ov8865_afvdd>;
-+                 powerdown-gpios = <&pio 4 17 GPIO_ACTIVE_LOW>; /* PE17 */
-+                 reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
-+                 rotation = <180>;
-+
-+                 port {
-+                      ov8865_to_mipi_csi2: endpoint {
-+                                 remote-endpoint = <&mipi_csi2_from_ov8865>;
-+                                 data-lanes = <1 2 3 4>;
-+                                 clock-lanes = <0>;
-+                                 bus-type = <4>; /* V4L2_FWNODE_BUS_TYPE_CSI2_DPHY */
-+                      };
-+                 };
-+           };
-+    };
-+
-+...
+ &reg_fldo1 {
+ 	regulator-min-microvolt = <1080000>;
+ 	regulator-max-microvolt = <1320000>;
 -- 
 2.17.1
 
