@@ -7,78 +7,85 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC43FC433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1640C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCD320825
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:01:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9508C20665
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:07:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgH1NAz (ORCPT
+        id S1729418AbgH1NHb (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:00:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729350AbgH1NAo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 09:00:44 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34852C061264
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 06:00:44 -0700 (PDT)
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <has@pengutronix.de>)
-        id 1kBdzh-0006LG-AF; Fri, 28 Aug 2020 15:00:37 +0200
-Received: from has by dude02.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <has@pengutronix.de>)
-        id 1kBdzf-0005JG-Ou; Fri, 28 Aug 2020 15:00:36 +0200
-From:   Holger Assmann <h.assmann@pengutronix.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Holger Assmann <h.assmann@pengutronix.de>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: stm32: lxa-mc1: enable DDR50 mode on eMMC
-Date:   Fri, 28 Aug 2020 15:00:02 +0200
-Message-Id: <20200828130002.1701-1-h.assmann@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: has@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: devicetree@vger.kernel.org
+        Fri, 28 Aug 2020 09:07:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:48718 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729414AbgH1NGX (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:06:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6342111B3;
+        Fri, 28 Aug 2020 06:06:17 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.195.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2DEF3F66B;
+        Fri, 28 Aug 2020 06:06:15 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH 03/10] arm64: dts: broadcom: Fix SP805 clock-names
+Date:   Fri, 28 Aug 2020 14:05:55 +0100
+Message-Id: <20200828130602.42203-4-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200828130602.42203-1-andre.przywara@arm.com>
+References: <20200828130602.42203-1-andre.przywara@arm.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+The SP805 binding sets the name for the actual watchdog clock to
+"wdog_clk" (with an underscore).
 
-The "eMMC high-speed DDR mode (3.3V I/O)" at 50MHz is supported on
-the eMMC-interface of the lxa-mc1. Set it in the device tree to
-benefit from the speed improvement.
+Change the name in the DTs for Broadcom platforms to match that. The
+Linux and U-Boot driver use the *first* clock for this purpose anyway,
+so it does not break anything.
 
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Signed-off-by: Holger Assmann <h.assmann@pengutronix.de>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi    | 2 +-
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-index b85025d00943..1e5333fd437f 100644
---- a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
-@@ -212,6 +212,7 @@
- 	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_b>;
- 	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_b>;
- 	bus-width = <8>;
-+	mmc-ddr-3_3v;
- 	no-1-8-v;
- 	no-sd;
- 	no-sdio;
+diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+index 15f7b0ed3836..6a5fc55f0a4e 100644
+--- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+@@ -576,7 +576,7 @@
+ 			reg = <0x66090000 0x1000>;
+ 			interrupts = <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&iprocslow>, <&iprocslow>;
+-			clock-names = "wdogclk", "apb_pclk";
++			clock-names = "wdog_clk", "apb_pclk";
+ 		};
+ 
+ 		gpio_g: gpio@660a0000 {
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index 0098dfdef96c..b425b12c3ed2 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -438,7 +438,7 @@
+ 			reg = <0x000c0000 0x1000>;
+ 			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&hsls_25m_div2_clk>, <&hsls_div4_clk>;
+-			clock-names = "wdogclk", "apb_pclk";
++			clock-names = "wdog_clk", "apb_pclk";
+ 			timeout-sec = <60>;
+ 		};
+ 
 -- 
-2.20.1
+2.17.1
 
