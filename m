@@ -2,91 +2,84 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505EBC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FE4C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1488F20707
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1252137B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 07:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgH1Hac (ORCPT
+        id S1728445AbgH1Hbl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 03:30:32 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:40396 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726500AbgH1Hac (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 03:30:32 -0400
-X-IronPort-AV: E=Sophos;i="5.76,362,1592838000"; 
-   d="scan'208";a="55771865"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 28 Aug 2020 16:30:30 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 692C441D8797;
-        Fri, 28 Aug 2020 16:30:28 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Fri, 28 Aug 2020 03:31:41 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:63101 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbgH1Hbl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 03:31:41 -0400
+X-Originating-IP: 90.89.180.255
+Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 2B49E24000C;
+        Fri, 28 Aug 2020 07:31:33 +0000 (UTC)
+Date:   Fri, 28 Aug 2020 09:31:33 +0200
+From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH v2] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
-Date:   Fri, 28 Aug 2020 08:30:24 +0100
-Message-Id: <20200828073024.32585-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 7/7] [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3:
+ Enable OV8865 camera
+Message-ID: <20200828093133.42dac9ad@lhopital-XPS-13-9360>
+In-Reply-To: <20200827153843.mjcnc5fiuxj3df3s@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        <20200821145935.20346-8-kevin.lhopital@bootlin.com>
+        <20200825144022.mwkcqaqny7l5bab4@gilmour.lan>
+        <20200826105834.0100d4a7@lhopital-XPS-13-9360>
+        <20200827153843.mjcnc5fiuxj3df3s@gilmour.lan>
+Organization: bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
-relevant dt-bindings. R8A774E1 GPIO module is identical to R-Car Gen3
-family.
+Hello,
+Le Thu, 27 Aug 2020 17:38:43 +0200,
+Maxime Ripard <maxime@cerno.tech> a écrit :
 
-No driver change is needed due to the fallback compatible value
-"renesas,rcar-gen3-gpio".
+> Hi,
+> 
+> On Wed, Aug 26, 2020 at 10:58:34AM +0200, Kévin L'hôpital wrote:
+> > > > +&ccu {
+> > > > +	assigned-clocks = <&ccu CLK_CSI_MCLK>;
+> > > > +	assigned-clock-parents = <&osc24M>;
+> > > > +	assigned-clock-rates = <24000000>;
+> > > > +};    
+> > > 
+> > > Why do you need to use assigned-clocks here?  
+> > 
+> > I could do it in the ov8865 node, does it sound good to you ?  
+> 
+> I mean, it depends on why you want to do it :)
+> 
+> If that's because the sensor expects a clock in a particular clock
+> range, then it should be enforced in the sensor driver itself.
+> 
+> Maxime
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Hi All,
-
-This patch is part of series [1] (patch 6/9), rest of the patches have
-been acked/queued.
-
-[1] https://lkml.org/lkml/2020/7/13/1275
-
-Cheers,
-Prabhakar
-
-v1->v2
-* Rebased the patch on 5.9-rc1 (YAML conversion)
-* Updated commit description
-* Restored acks from Geert and Rob
----
- Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-index 3ad229307bd5..5026662e4508 100644
---- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
-@@ -37,6 +37,7 @@ properties:
-               - renesas,gpio-r8a774a1     # RZ/G2M
-               - renesas,gpio-r8a774b1     # RZ/G2N
-               - renesas,gpio-r8a774c0     # RZ/G2E
-+              - renesas,gpio-r8a774e1     # RZ/G2H
-               - renesas,gpio-r8a7795      # R-Car H3
-               - renesas,gpio-r8a7796      # R-Car M3-W
-               - renesas,gpio-r8a77961     # R-Car M3-W+
+Yes I will put it in the sensor driver.
+Thanks for the answer.
+Kévin
 -- 
-2.17.1
-
+Kevin L'Hopital, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
