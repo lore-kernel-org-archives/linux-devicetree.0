@@ -2,105 +2,141 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E37C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 19:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EECC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 19:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94CE62073A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 19:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C462073A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 19:20:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725969AbgH1TTB (ORCPT
+        id S1726010AbgH1TT7 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 15:19:01 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:54142 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbgH1TTA (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 15:19:00 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 564DD80587;
-        Fri, 28 Aug 2020 21:18:53 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 21:18:51 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: bridge: Add documentation
- for LT9611UXC
-Message-ID: <20200828191851.GA668578@ravnborg.org>
-References: <20200828154906.1662611-1-dmitry.baryshkov@linaro.org>
- <20200828154906.1662611-2-dmitry.baryshkov@linaro.org>
+        Fri, 28 Aug 2020 15:19:59 -0400
+Received: from imap2.colo.codethink.co.uk ([78.40.148.184]:59298 "EHLO
+        imap2.colo.codethink.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725894AbgH1TT7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 15:19:59 -0400
+Received: from [188.210.212.0] (helo=[192.168.0.104])
+        by imap2.colo.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1kBjum-0007Bu-KM; Fri, 28 Aug 2020 20:19:56 +0100
+Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
+ <20200814100357.209340-2-thomas.preston@codethink.co.uk>
+ <CAHp75Vefo6djXk0x9OLiqJ=jZV8dkTEoPBRwBfcr41txfSGyRw@mail.gmail.com>
+From:   Thomas Preston <thomas.preston@codethink.co.uk>
+Message-ID: <f8368c71-33cf-46d7-d361-6c76cfb3b66e@codethink.co.uk>
+Date:   Fri, 28 Aug 2020 20:19:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828154906.1662611-2-dmitry.baryshkov@linaro.org>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=A5ZCwZeG c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8 a=VwQbUJbxAAAA:8 a=7gkXJVJtAAAA:8
-        a=gEfo2CItAAAA:8 a=ZGBseiDvtjnxr0SJbqMA:9 a=CjuIK1q_8ugA:10
-        a=cvBusfyB2V15izCimMoJ:22 a=AjGcO6oz07-iQ99wixmX:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=sptkURWiP4Gy88Gu7hUp:22
+In-Reply-To: <CAHp75Vefo6djXk0x9OLiqJ=jZV8dkTEoPBRwBfcr41txfSGyRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 06:49:04PM +0300, Dmitry Baryshkov wrote:
-> Lontium LT9611UXC is a DSI to HDMI bridge which supports 2 DSI ports
-> and I2S port as input and one HDMI port as output. The LT9611UXC chip is
-> handled by a separate driver, but the bindings used are fully compatible
-> with the LT9611 chip, so let's reuse the lt9611.yaml schema.
+Hey Andy, Linus,
+Thanks for looking at this.
+
+On 28/08/2020 11:09, Andy Shevchenko wrote:
+> On Fri, Aug 14, 2020 at 1:35 PM Thomas Preston
+> <thomas.preston@codethink.co.uk> wrote:
+>>
+>> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-We can apply this when the driver is ready.
-
-	Sam
-
-> ---
->  .../devicetree/bindings/display/bridge/lontium,lt9611.yaml   | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> I'm not sure it's correct. MPC23016 is an existing I²C IO expander.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-> index d60208359234..7a1c89b995e2 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-> +++ b/Documentation/devicetree/bindings/display/bridge/lontium,lt9611.yaml
-> @@ -4,18 +4,19 @@
->  $id: http://devicetree.org/schemas/display/bridge/lontium,lt9611.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->  
-> -title: Lontium LT9611 2 Port MIPI to HDMI Bridge
-> +title: Lontium LT9611(UXC) 2 Port MIPI to HDMI Bridge
->  
->  maintainers:
->    - Vinod Koul <vkoul@kernel.org>
->  
->  description: |
-> -  The LT9611 is a bridge device which converts DSI to HDMI
-> +  The LT9611 and LT9611UXC are bridge devices which convert DSI to HDMI
->  
->  properties:
->    compatible:
->      enum:
->        - lontium,lt9611
-> +      - lontium,lt9611uxc
->  
->    reg:
->      maxItems: 1
-> -- 
-> 2.28.0
+
+The MCP23016 device is not mentioned anywhere else in this driver. The 
+only place this string is used is in `struct regmap_config 
+mcp23x17_regmap` (another device). It seems to me that this is a typo 
+but I might be wrong.
+
+~/w/linux$ git grep -h compatible drivers/pinctrl/pinctrl-mcp23s08*
+                 .compatible = "microchip,mcp23008",
+                 .compatible = "microchip,mcp23017",
+                 .compatible = "microchip,mcp23018",
+                 .compatible = "mcp,mcp23008",
+                 .compatible = "mcp,mcp23017",
+                 .compatible = "microchip,mcp23s08",
+                 .compatible = "microchip,mcp23s17",
+                 .compatible = "microchip,mcp23s18",
+                 .compatible = "mcp,mcp23s08",
+                 .compatible = "mcp,mcp23s17",
+
+Also I don't have an MC23016, so I can't test configuration for it.
+
+>> - Fix precious range to include INTCAP{A,B}, which clear on read.
+>> - Fix precious range to include GPIOB, which clears on read.
+>> - Fix volatile range to include GPIOB, to fix debugfs registers
+>>    reporting different values than `gpioget gpiochip2 {0..15}`.
+> 
+> I'm wondering if you read all the datasheets before doing these changes.
+> MPC2308
+> MPC23016
+> MPC23017
+> ...
+> 
+
+I did not! I was only changing configuration for MCP23017 devices.
+What have I missed?
+
+For reference, I think you are referring to [0], [1], [2]. I'm familiar 
+with the last one.
+
+>> -static const struct regmap_range mcp23x16_volatile_range = {
+>> +static const struct regmap_range mcp23x17_volatile_range = {
+>>          .range_min = MCP_INTF << 1,
+>> -       .range_max = MCP_GPIO << 1,
+>> +       .range_max = (MCP_GPIO << 1) + 1,
+> 
+> This looks weird. Usually we do a mask or a bit based mask, like (1 << x) - 1.
+> 
+
+I don't think these are masks, they're addresses.
+
+I believe the author has doubled the register indexing using a 1 bit 
+shift, because the MCP23017 device is configured with sequential 
+addresses (IOCON.BANK = 0). On page 12 of the datasheet [2] this looks like:
+
+0x00 IODIRA, MCP_IODIR << 1
+0x01 IODIRB
+0x02 IPOLA,  MCP_IPOL << 1
+0x03 IPOLB
+...
+0x12 GPIOA,  MCP_GPIO << 1
+0x13 GPIOB
+
+This means you can read 16 bits from MCP_GPIO << 1 and get the register 
+values for both banks, or even use this for .range_min.
+
+However, this trick doesn't work for .range_max:
+
+	.range_max = MCP_GPIO << 1; /* 0x12 */
+
+But I think it needs to be 0x13 to include GPIOB. Now that I'm looking 
+into it, how does `mcp23x17_regmap.val_bits = 16` affect this? Perhaps 
+`MCP_GPIO << 1` is fine after all.
+
+I will whip up a v2 and test this. I'll split the changes across patches 
+and fix the typo last patch - in case you don't agree with me.
+
+Many thanks,
+Thomas
+
+[0] MCP23008 https://ww1.microchip.com/downloads/en/DeviceDoc/21919e.pdf
+[1] MCP23016 http://ww1.microchip.com/downloads/en/devicedoc/20090c.pdf
+[2] MCP23017 https://ww1.microchip.com/downloads/en/DeviceDoc/20001952C.pdf
