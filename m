@@ -2,123 +2,97 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BEADC433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 00:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E81B4C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 00:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC4720BED
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 00:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4034207DF
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 00:41:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JQignyW3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VS2y2vsi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgH1AZ6 (ORCPT
+        id S1727043AbgH1AlK (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 20:25:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29560 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727008AbgH1AZ6 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 20:25:58 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S02UdG071522;
-        Thu, 27 Aug 2020 20:25:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=references : from : to :
- cc : subject : in-reply-to : date : message-id : mime-version :
- content-type; s=pp1; bh=AKRlr9yzrlMX+oXYj4rWdBKCf/H4fqUfPXhXc7Hb7N0=;
- b=JQignyW3X0z1tE7o9coxmE26UND2CnEkeDsVm3SBrrrNxqaDCrjcJ/0ACPJjDaAt3B3o
- hQdggaz1tyxhH5e36+wtCdlrO0YB4jpN5u2/xIlcCL+qRxFh3EOsMC13Fgnzcmhrvz0K
- 6+gT/gUWSTBxsKE3l+ClQNTb/lrqVVGJswsovH+6bEx0P0Ljmh6xPnnLPOCuBlWeEUgp
- KT9K/M7BsTshTE5zevVRbrKWx1vpDSQZlDvwEJngcDpAl/wJX8opRPywTIVX199yW5Nt
- PbId+SS32DJ9r/X/MOWcKCXXcCU5EPZOOLV/Tan1W+ccMfXXF3ODQcPtEmnPJb9+UoVg BQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336nv9hxps-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 20:25:23 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07S0ONet142875;
-        Thu, 27 Aug 2020 20:25:22 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 336nv9hxpj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 27 Aug 2020 20:25:22 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07S0LmgR026137;
-        Fri, 28 Aug 2020 00:25:21 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma03dal.us.ibm.com with ESMTP id 332utu9hrs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Aug 2020 00:25:21 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07S0PHrs63439142
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Aug 2020 00:25:17 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 361C3BE04F;
-        Fri, 28 Aug 2020 00:25:20 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D069BBE053;
-        Fri, 28 Aug 2020 00:25:12 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.211.80.51])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri, 28 Aug 2020 00:25:12 +0000 (GMT)
-References: <20200819172134.11243-1-nramas@linux.microsoft.com>
- <20200819172134.11243-4-nramas@linux.microsoft.com>
-User-agent: mu4e 1.4.10; emacs 27.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
-        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
-        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
-Subject: Re: [PATCH v4 3/5] IMA: Refactor do_get_kexec_buffer() to call of_
- functions directly
-In-reply-to: <20200819172134.11243-4-nramas@linux.microsoft.com>
-Date:   Thu, 27 Aug 2020 21:25:10 -0300
-Message-ID: <87zh6f7h21.fsf@morokweng.localdomain>
+        Thu, 27 Aug 2020 20:41:10 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:56612 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbgH1AlK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 20:41:10 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07S0f5ew078371;
+        Thu, 27 Aug 2020 19:41:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598575265;
+        bh=gq9TpIit4AtNz03cUcNM1m1LIpdafovigMyFbu/xCHA=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=VS2y2vsilBfByaDVceeu8DhZgU1xGQOfH4mmvzsjg+N2oatxkfkyDeswwlk/3JU9c
+         iZfG4Lrdb5cWAuyHLp1JjC9UFFGL1oSfxLYkvYA5Y2fY13pkqerokYvDRZAiOGABJY
+         sPepWs/czyZBYMOvM4uEadPKfBzRjreXUrcXJD8A=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07S0f5Cp083861;
+        Thu, 27 Aug 2020 19:41:05 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 27
+ Aug 2020 19:41:05 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 27 Aug 2020 19:41:05 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07S0f5V6025971;
+        Thu, 27 Aug 2020 19:41:05 -0500
+Date:   Thu, 27 Aug 2020 19:41:05 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+CC:     Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Device Tree Mailing List <devicetree@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>, Suman Anna <s-anna@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: arm: ti: Convert K3 board/soc
+ bindings to DT schema
+Message-ID: <20200828004105.givypeu3vextefc6@akan>
+References: <20200827065144.17683-1-lokeshvutla@ti.com>
+ <20200827065144.17683-2-lokeshvutla@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-27_14:2020-08-27,2020-08-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 mlxlogscore=676 priorityscore=1501
- adultscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008270183
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200827065144.17683-2-lokeshvutla@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 12:21-20200827, Lokesh Vutla wrote:
+> Convert TI K3 Board/SoC bindings to DT schema format.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  .../devicetree/bindings/arm/ti/k3.txt         | 26 ----------------
+>  .../devicetree/bindings/arm/ti/k3.yaml        | 31 +++++++++++++++++++
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 32 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/ti/k3.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/ti/k3.yaml
 
-Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
 
-> do_get_kexec_buffer() calls another local function get_addr_size_cells()
-> to get the address and size of the IMA measurement log buffer stored in
-> the device tree. get_addr_size_cells() is small enough that it can be
-> merged into do_get_kexec_buffer() and a function call can be avoided.
->
-> Refactor do_get_kexec_buffer() to call of_ functions directly instead
-> of calling get_addr_size_cells() and remove get_addr_size_cells().
->
-> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Thanks for doing this, but I have a problem with dbs_check and dtbs
+W=2 build warnings on existing dts files that this exposes further..
+Do you mind pulling this patch out of this j7200 series ? I would
+rather us cleanup the warnings a bit as well, and deal with yaml
+conversion seperate from j7200 bindings?
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+We will need Rob's ack anyways, I would rather we look at things
+independently.
 
 -- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
