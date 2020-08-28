@@ -2,105 +2,60 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA4AC433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 12:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2261C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 047092086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 12:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pf4uaxGE"
+	by mail.kernel.org (Postfix) with ESMTP id B1F1B20848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgH1Mvk (ORCPT
+        id S1729324AbgH1NAk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 08:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40636 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729484AbgH1Mvf (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 08:51:35 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7ECC061232
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 05:51:34 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id h19so1138982ljg.13
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 05:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RSrvv0FJmitf6q9JxmYipGO4Y6PZy6cFkX1VzqR3xEU=;
-        b=Pf4uaxGE3D9QkcwZ3m7v40UpPYGsLMXlPXzxXdofFxgCOrudLrDJjKqDtapXdZT1me
-         U/qpgdyHur4b2ylpfOmLYfGRbbgioYR4DE8hUX9n3OD1PsJjx4bY6DfOPPLZ+nR7uoPR
-         t2fPwIQzvGmoNipg0tib+zvmAuyzH0asX7NHoXYzOS+c1S9GjWZHK3ZfK4tTEAShELZn
-         UQgYkmIIjXX9+QwSVHsgwAXyE2t1Y98bukfmK6CGzaKFvQbixk0LvK3eWs+XS6UxLeZr
-         H6WwkkQfXpaJarmhsieD/FOJieotOGDuhvpWyJnLOHQ5bvJH2PkEoyOghCRX7loqwBdo
-         Wlxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RSrvv0FJmitf6q9JxmYipGO4Y6PZy6cFkX1VzqR3xEU=;
-        b=q2fvxLFiTZe12UO5pTI5lpDIs7y9PcRaS5vuWJN93gbh9jGCDSSo+dJ30Pyc2YJaL7
-         vk6trP3xytGYiO9p6ZSixTNaF/fqmAlm0DTIOzsB7BoOm9JvkpqPSzNTXNhlLVGrPvAR
-         o2K1WHgMCGUL51DSCk2avgfVq/mkVsJlD+2C9oCHGWdZlYh6/8pw/txCtc13/IIbq6xH
-         hb9sraL8H8jrI6sHf6i/ziop3ktUdg/yzhxB7LN+bJvCc3g/zySyJZ4ibWSn0h7YiUOb
-         +B3eV6EIapUzgZKVPutYFU7gmXbYAiRADVqVtrqhs4orJhtPBaBNOkF5tuMrZ+TsUgSg
-         5+uQ==
-X-Gm-Message-State: AOAM533T4HBjWRIGJdxsrER6PBQRARhvIhH4LzNewrdi+71BWG3JgPuI
-        ETX9axu1OILqEE0j+qhrSTk+6FnVg4VYQmsDtxF73w==
-X-Google-Smtp-Source: ABdhPJzTyH+jeLvxiBsauaVxTH5hij7/x8BNA+Ly/857QQXdScYFOsf9kjoayIwSsdP0TIKRwlItOzGM4zkgBEGoiX8=
-X-Received: by 2002:a2e:b80b:: with SMTP id u11mr872506ljo.286.1598619091424;
- Fri, 28 Aug 2020 05:51:31 -0700 (PDT)
+        Fri, 28 Aug 2020 09:00:40 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:57956 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729306AbgH1NAh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 09:00:37 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kBdze-00CHCw-7p; Fri, 28 Aug 2020 15:00:34 +0200
+Date:   Fri, 28 Aug 2020 15:00:34 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] of: of_match_node: Make stub an inline function to avoid
+ W=1 warnings
+Message-ID: <20200828130034.GA2912863@lunn.ch>
+References: <20200828021939.2912798-1-andrew@lunn.ch>
 MIME-Version: 1.0
-References: <20200825193536.7332-1-krzk@kernel.org>
-In-Reply-To: <20200825193536.7332-1-krzk@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 14:51:20 +0200
-Message-ID: <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828021939.2912798-1-andrew@lunn.ch>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Fri, Aug 28, 2020 at 04:19:39AM +0200, Andrew Lunn wrote:
+> When building without CONFIG_OF and W=1, errors are given about unused
+> arrays of match data, because of_match_node is stubbed as a macro. The
+> compile does not see it takes parameters when not astub, so it
+> generates warnings about unused variables. Replace the stub with an
+> inline function to avoid these false warnings.
 
-> This is a v3 of cleanup of i.XM 8 bindings and DTSes.
+Hi Rob
 
-If you are going to be working a lot on Freescale SoC code going forward
-I wouldn't mind if you could add yourself as maintainer for the
-Freescale pin controller and GPIO at least, I already have high trust
-in you in general so if the Freescale maintainers also have that I think you
-should just sign up as maintainer. This makes it easier to do pull requests
-and things like that.
+So 0-day shows some people have worked around this with #ifdef
+CONFIG_OF around the match table.
 
-Yours,
-Linus Walleij
+I checked the object code for the file i'm interested in.  The
+optimiser has correctly throw away the match table and all code around
+it with the inline stub.
+
+Which do you prefer? This patch and i remove the #ifdef, or the old
+stub and if add #ifdef around the driver i'm getting warnings from?
+
+     Andrew
