@@ -2,90 +2,127 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A74EC433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0195C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43E1D20C56
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598602676;
-	bh=cdtmtPHYp3CjYJpBnBlTuVx703gKMayPV6/ZC2Y40Fo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qz+8rbu3wHzpYC+Z+9GUiWe+lGGmXbwTDuaedJ6kRErOfV3ch4Pg6B3QuhwNEOKiM
-	 c181KOpN6q+aBgVSAywXTjo7lHCKayNBYIWGW+uJwzk6tuSJ9DapwLg4PhXudHA1+u
-	 oJOVrx4Ky6DTAHt7GnLrXPBUk0EWyPK0Vl5WUFYk=
+	by mail.kernel.org (Postfix) with ESMTP id 9BBC220C56
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 08:30:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sdCwCAI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727971AbgH1IRz (ORCPT
+        id S1728274AbgH1Iab (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 04:17:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgH1IRx (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 04:17:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8CA20776;
-        Fri, 28 Aug 2020 08:17:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598602672;
-        bh=cdtmtPHYp3CjYJpBnBlTuVx703gKMayPV6/ZC2Y40Fo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zOr5x5dQ3VWc307vlfnfgGfQ4Ukqbm0MmUaZnTT+tm++6oFqFGoSg6PxfzogiLZ55
-         1Fea0UxYPqEBsOi8mdC7Ne+VecgN2NmSzmVe5jCi1JOi7sWNhMkE6CB/4Kg2bfgbtx
-         1yjZvCC9Sq/QDN6OJXfGwR169s2HvgPFMvnFvtYA=
-Date:   Fri, 28 Aug 2020 10:18:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mateusz Holenko <mholenko@antmicro.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
-        Karol Gugala <kgugala@antmicro.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Filip Kokosinski <fkokosinski@antmicro.com>,
-        Pawel Czarnecki <pczarnecki@internships.antmicro.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-kernel@vger.kernel.org, "Gabriel L. Somlo" <gsomlo@gmail.com>
-Subject: Re: [PATCH v10 5/5] drivers/tty/serial: add LiteUART driver
-Message-ID: <20200828081804.GB1007729@kroah.com>
-References: <20200812143324.2394375-0-mholenko@antmicro.com>
- <20200812143324.2394375-5-mholenko@antmicro.com>
+        Fri, 28 Aug 2020 04:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728269AbgH1Ia3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 04:30:29 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4BB5C061264;
+        Fri, 28 Aug 2020 01:30:28 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j15so276766lfg.7;
+        Fri, 28 Aug 2020 01:30:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LflMgJmibSpFeOHc4WL2YJ+POCyG0pEvbGVH5SBOv0E=;
+        b=sdCwCAI9GltezF0rEB2fLfVxKx/8qRdfoKbbiRoFKxvVCYIkR3/N1t+zeTEEbig46m
+         +Kyj/BDTYw6OGVtSPlqNjGOO+fv9AYhJPWBogZ4zZlmC2yxHp+dH2Ko7FVvt1wfQtAEJ
+         C3EGMetrjmTC/sV3gobl9IyF5UkoeKSYqq3m2hVHVbaEPYOGuzFFd5jgWMxslMdgQGer
+         9+UFDbyhkm+yhdM7yCy9ywuHycOSmJv+CRYhHhUfXf/FoN7mgRZ9eqL8dvW5VmgrW/Oe
+         mvL9YOYm9HUrthueMnVNdX9U8x9oc0gEqLz7mTAFACitArMxyd1dGhLSQEfC89ew0Qql
+         tX3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LflMgJmibSpFeOHc4WL2YJ+POCyG0pEvbGVH5SBOv0E=;
+        b=gCsHhKqohe0/MSCkH+0iFeWo2ANHY2pdneE5uK8GqO9Tbsr3R8wef5psDc4g5nwfjw
+         iWBRHA0dxxQ1wJjYX+iQ6MTPpz767pDdzSQJ5D6FA3wteboI8Y6GCoPQ8BRuLBmG0q1J
+         XEZABPxA14rT9Hx9lYY4EmV8HTtIyRd586HXQ+xv9FvGe46S7m6e8SPPXUsmAnJBKIXt
+         9bXGSt5Xxqu1oevArpUghSGEPU6lL1a5iq3sepx3G4bnsDEjzD6klEcpDjkPziULV1MC
+         /743Z72sx6etFDifID3tr4yBCdhkfFn2zTLxMLhjBbRDXYv0sOr84aD9nWSMXx0VyCku
+         Wyzw==
+X-Gm-Message-State: AOAM532+vJoP3yOfEk5DfzLdFC45gD4DMO8c6Xhh2QkH5Az26l5Qfts9
+        P/cM65bHlEosFoK17lVAsoKjO+Z91co=
+X-Google-Smtp-Source: ABdhPJzLnvqVFe/sNW/j+lmpEBM4x5/CZ5x6tV+zcsDznlhemeqh60v+eDDBRVDdroYZaI53iNUCkA==
+X-Received: by 2002:a19:24c2:: with SMTP id k185mr276673lfk.120.1598603426636;
+        Fri, 28 Aug 2020 01:30:26 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id h6sm130676lfc.84.2020.08.28.01.30.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Aug 2020 01:30:25 -0700 (PDT)
+Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
+ building OPP table
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>
+Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+References: <20200814000621.8415-1-digetx@gmail.com>
+ <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
+ <20200814000621.8415-14-digetx@gmail.com>
+ <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
+ <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
+ <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <a11d60af-3a67-6a76-57ae-7cb9bad13bed@gmail.com>
+Date:   Fri, 28 Aug 2020 11:30:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200812143324.2394375-5-mholenko@antmicro.com>
+In-Reply-To: <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 02:35:00PM +0200, Mateusz Holenko wrote:
-> From: Filip Kokosinski <fkokosinski@antmicro.com>
+28.08.2020 04:47, Chanwoo Choi пишет:
+> Hi,
+...
+>> Hence the NULL-checking is unnecessary.
+>>
+>> When I first encountered the of_device_get_match_data(), I was also
+>> thinking that adding the NULL-checks is a good idea, but later on
+>> somebody pointed out to me (maybe Thierry) that it's unnecessary to do.
 > 
-> This commit adds driver for the FPGA-based LiteUART serial controller
-> from LiteX SoC builder.
+> OK. Thanks.
 > 
-> The current implementation supports LiteUART configured
-> for 32 bit data width and 8 bit CSR bus width.
+>>
+>>>> +
+>>>> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
+>>>> +	if (IS_ERR(mc))
+>>>> +		return PTR_ERR(mc);
+>>>
+>>> You better to add error log.
+>>
+>> In practice we should get only -EPROBE_DEFER here ever. I'll consider
+>> adding the message in the next revision, at least just for consistency.
 > 
-> It does not support IRQ.
-> 
-> Signed-off-by: Filip Kokosinski <fkokosinski@antmicro.com>
-> Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> In order to handle -EPROBE_DEFER, recommend the using of dev_err_probe().
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hello, Chanwoo!
+
+Thank you for the suggestion! I wasn't aware about the dev_err_probe()
+until recently and will use this new helper in the v6!
+
+Thanks!
