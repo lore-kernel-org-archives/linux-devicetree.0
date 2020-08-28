@@ -2,144 +2,128 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49937C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCB9C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 191C1208C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2C920B80
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 16:19:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="J7Bf/zaG"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mXoKTmtB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726197AbgH1QDS (ORCPT
+        id S1726033AbgH1QT5 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 12:03:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42294 "EHLO
+        Fri, 28 Aug 2020 12:19:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726344AbgH1QDO (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 12:03:14 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98087C061264
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 09:03:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id kx11so708985pjb.5
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 09:03:14 -0700 (PDT)
+        with ESMTP id S1726379AbgH1QTy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 12:19:54 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A03D5C06121B
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 09:19:53 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b2so1655896edw.5
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 09:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KBuL7NXBea5SmTknXExQrO1gykZeM6lofEf67YE+asM=;
-        b=J7Bf/zaGzFYq6t3l7kF0zNYOs8fUKYCIsQFC/xoW3zbpklt/D7o8M7Lj6wwx7b5jwY
-         xpTO3H1pBWcQ8Pd65huZY71y7Y5QFmN1S3G5ErqLHo29pBxga8EMUpO4gX2i+SE264P8
-         ntp+IDhNvXd7g6Yl6JrMXizmy8fNudINVLkSA=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y9miOxm+aIgmI4U/EZeLaBrPMImCENn/aVpH1jwVAMM=;
+        b=mXoKTmtBEQaBLnbOaGgnDqEY21MoTjb4zLDwbfSPeu9T0RfXPnHTskn/ZTaGUKOzOo
+         cXbunuKwGz0pe1Ri4Su4Y/IV8L9Baeh8v70y8Q+HJmXP1ZQvHfPM4Lw/iw23jATefjMR
+         HpQJM6shS/3snq/Q+XjQW0FIv7i3HEtR0unH+YHsDHsQ2s6+0AgEfdPfy9fgnd0S1lQe
+         sj9+VBQxXHQwF4AXPh3pB6Byf6weRnbzqc/O83O/pKBzAFMzmgrPlL8u/Pk0WyJ7a7jv
+         d4noUTHi3Z7iKCDKLP4kF4mNg4XMukhWKLGw7u+T76YijHmnCk0b4upjuhigrDhzIsWm
+         HuvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KBuL7NXBea5SmTknXExQrO1gykZeM6lofEf67YE+asM=;
-        b=HoV2BcQ7krjyrzpwbpRIJDuhyilnxd9dKT3a55slGhjXq80FrAHmUQHMAzyCc17ZaD
-         ucSlF0xLQYbZECN9h+HwgMBDb1BFsxG1kDuvmnNo9BldeIUfkzF1yWyUCKodpOd2vFxa
-         0cFhK8HR3K9D0nRwslKljbgP2RhWArgXkOEocEk0r1meIK6i2lAqw84l5RQ0lWH4tEnO
-         6gj/LxsOYf/2n6daqbc0/N2MvryJ2bEbJw08WWhNiWnkKaOOwXjY7/uZmGLNT9pqL476
-         zeWezNxpNudD0X/+DIV1/R8hCN8QzT5niI8vhUBpA7E7mUGI09500flDoySgZ9qgFpja
-         2yag==
-X-Gm-Message-State: AOAM532vsdhQkRkZTRzun/JD9RHLvFbfQko9xkagDeheEQGqpa7Gepk4
-        1Ae7ZI3gS9RrmmU52/m6F8FwwA==
-X-Google-Smtp-Source: ABdhPJxROrQ2ZtBP4ViEMwf9AJHkiAkMddzBePTwjlFoqmlXIbqH2WofO8/rNQX4eqrucnXq+FcyLg==
-X-Received: by 2002:a17:90a:fb4e:: with SMTP id iq14mr1782331pjb.133.1598630593340;
-        Fri, 28 Aug 2020 09:03:13 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:8ce8:955b:ae1b:d6ef])
-        by smtp.gmail.com with ESMTPSA id a25sm2157212pfk.151.2020.08.28.09.03.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2020 09:03:12 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH] ARM: dts: imx6q-icore-ofcap10: Use 10.1" Ampire panel compatible
-Date:   Fri, 28 Aug 2020 21:33:02 +0530
-Message-Id: <20200828160302.329179-1-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y9miOxm+aIgmI4U/EZeLaBrPMImCENn/aVpH1jwVAMM=;
+        b=KC0kbMIjJpkzbObAzT7hb59ufq1MgLyvUgqkgm4D0uKo96RZpHbtBInrfD6geIcbYt
+         dAkUrHtlZRPRKIqlAjaFAwOoVl8U91jxL6yVH2PoBWPPVOwGnr4Gny1GLSR0gdL8Gy6/
+         PaUDuUzTbbm2hRIn29g+F9DNypiNDlTWEgUiUay/8jP3hwUJCZvVl+ZcKblinSYgBPuP
+         1eLG6qFWwgKRZzhwHhxJQWLh533kBbSAsij3rsxp+cnqkxwBQfSUK4ZGyWfPu3/jU5Tz
+         rQ5vXlbrSs2MyYPGFy1XqaZ6ilHT/7OBSAuG58X+I/qXfF38rH8NP/iVpF/pAm1DJ9B2
+         hZAw==
+X-Gm-Message-State: AOAM5328SUuyz6kyX9elO9WyT8j+4tlJvYX+GwEXFZRyTfpAAb6c/d/P
+        A7dhqA+0yXdFdiE4sv+rNzoBBzCH+ch5MVHcSCJj8w==
+X-Google-Smtp-Source: ABdhPJx3CC1M5iADxDSXg8vc1XdLze/rbzJvK5cKSC231pYOCXnpX4r3v9HiYpmN/HeAzqJPCVyqZVKgfCUhOi8Y3cQ=
+X-Received: by 2002:a05:6402:342:: with SMTP id r2mr2734843edw.353.1598631592180;
+ Fri, 28 Aug 2020 09:19:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200828073024.32585-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200828073024.32585-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Fri, 28 Aug 2020 18:19:41 +0200
+Message-ID: <CAMpxmJXVU2hsaH_WpLKoUR==MuNObbBJ1zT+HPaJN8iOoQ0JXQ@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: gpio: renesas,rcar-gpio: Add r8a774e1 support
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Adding display timings directly on device tree files make it difficult
-to maintain as a same copy of timings may exist on different files or
-panel-simple driver.
+On Fri, Aug 28, 2020 at 9:30 AM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> Document Renesas RZ/G2H (R8A774E1) GPIO blocks compatibility within the
+> relevant dt-bindings. R8A774E1 GPIO module is identical to R-Car Gen3
+> family.
+>
+> No driver change is needed due to the fallback compatible value
+> "renesas,rcar-gen3-gpio".
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> Hi All,
+>
+> This patch is part of series [1] (patch 6/9), rest of the patches have
+> been acked/queued.
+>
+> [1] https://lkml.org/lkml/2020/7/13/1275
+>
+> Cheers,
+> Prabhakar
+>
+> v1->v2
+> * Rebased the patch on 5.9-rc1 (YAML conversion)
+> * Updated commit description
+> * Restored acks from Geert and Rob
+> ---
+>  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> index 3ad229307bd5..5026662e4508 100644
+> --- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> @@ -37,6 +37,7 @@ properties:
+>                - renesas,gpio-r8a774a1     # RZ/G2M
+>                - renesas,gpio-r8a774b1     # RZ/G2N
+>                - renesas,gpio-r8a774c0     # RZ/G2E
+> +              - renesas,gpio-r8a774e1     # RZ/G2H
+>                - renesas,gpio-r8a7795      # R-Car H3
+>                - renesas,gpio-r8a7796      # R-Car M3-W
+>                - renesas,gpio-r8a77961     # R-Car M3-W+
+> --
+> 2.17.1
+>
 
-We have a panel-simple driver for this particular usage so supporting
-on this driver will help to use the same timings on any device tree
-files if the board mounted on a similar vendor display.
+Queued for v5.10, thanks!
 
-Engicam C.TOUCH OF 10.1" LCD board uses Ampire 10.1" TFT LCD and
-it has supported by panel-simple already, so simply use that binding.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Note:
-Panel patch in ML already,
-https://lkml.org/lkml/2020/8/28/685
-
- arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 28 +++++++++++++----------
- 1 file changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-index 81cc346dd149..02aca1e28ce3 100644
---- a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-@@ -12,6 +12,17 @@
- / {
- 	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 10.1 Kit";
- 	compatible = "engicam,imx6-icore", "fsl,imx6q";
-+
-+	panel {
-+		compatible = "ampire,am-1280800n3tzqw-t00h";
-+		backlight = <&backlight_lvds>;
-+
-+		port {
-+			panel_in: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
- };
- 
- &ldb {
-@@ -22,18 +33,11 @@ lvds-channel@0 {
- 		fsl,data-width = <24>;
- 		status = "okay";
- 
--		display-timings {
--			native-mode = <&timing0>;
--			timing0: timing0 {
--				clock-frequency = <60000000>;
--				hactive = <1280>;
--				vactive = <800>;
--				hback-porch = <40>;
--				hfront-porch = <40>;
--				vback-porch = <10>;
--				vfront-porch = <3>;
--				hsync-len = <80>;
--				vsync-len = <10>;
-+		port@4 {
-+			reg = <4>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in>;
- 			};
- 		};
- 	};
--- 
-2.25.1
-
+Bartosz
