@@ -2,368 +2,171 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5081AC433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C99C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C36D2086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E03C20848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgH1OMQ (ORCPT
+        id S1725985AbgH1OSZ (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:12:16 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:36013 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgH1OML (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 10:12:11 -0400
-X-Originating-IP: 93.29.109.196
-Received: from aptenodytes (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 186C7240007;
-        Fri, 28 Aug 2020 14:12:03 +0000 (UTC)
-Date:   Fri, 28 Aug 2020 16:12:03 +0200
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-Cc:     linux-media@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mripard@kernel.org, wens@csie.org,
-        yong.deng@magewell.com, mchehab+samsung@kernel.org,
-        p.zabel@pengutronix.de, sakari.ailus@linux.intel.com,
-        hans.verkuil@cisco.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH v2 0/4] Support of MIPI CSI-2 for A83T
-Message-ID: <20200828141203.GC6858@aptenodytes>
-References: <20200828131737.12483-1-kevin.lhopital@bootlin.com>
+        Fri, 28 Aug 2020 10:18:25 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35862 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbgH1OSV (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 10:18:21 -0400
+Received: by mail-oi1-f193.google.com with SMTP id b9so928413oiy.3;
+        Fri, 28 Aug 2020 07:18:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lBq+rTLiIUXKTOPJ3t+Pb18logS9N5SHMSukF4dmdzo=;
+        b=Suof/KMb7s0f3S7I2G8CtJqW8DY6+YS/sCimDdaZKdKStLneHAfzDAPpKWpLQk7CN9
+         H0Pb5ZqKZ9zRMDeSP+tjI+k3NGh/9QhUAd1lhdVeqU/MaZ/S8nXp4DI9cZ7HSMqds3dt
+         Yb/j8ofw88GowRQmQGbdTUwK+Swn/gxsdhM2v/WhHHAkb1TrqQjjx8e7lQJxCJYjcHEI
+         DmcKIqWL9SgOuylaGMNENFqg3ZWTfU9YF5bhArXB8Ko3oaoi3tmq2hs2W6z6hioyEuwM
+         SNU5bsS4OF/bhM/9IQHAzl4L+/GwC6A4qkYxEBkFYblGfMsOvR6fawrv3HdbaDkKwYwq
+         NaSg==
+X-Gm-Message-State: AOAM5337hXSFvLZKqyCmb6GWj65vr9KE9YSKvnV3sWUh/2a7M3ZjiZMy
+        gYM4RhI4j21h38ZnBWTrfpe2EAxK374l5KzVR7I=
+X-Google-Smtp-Source: ABdhPJzvoxPJuI8QBit61+jdNdzDe8hVbMe5fQAfx6sohY8OeIOX9NyqfufCvv6rprCk1eFhaiWbtxVIauRyrxVFkX0=
+X-Received: by 2002:a05:6808:575:: with SMTP id j21mr1096847oig.54.1598624300147;
+ Fri, 28 Aug 2020 07:18:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/dFl7e5Y0zcWrcPL"
-Content-Disposition: inline
-In-Reply-To: <20200828131737.12483-1-kevin.lhopital@bootlin.com>
+References: <20200812202018.49046-1-alcooperx@gmail.com> <20200812202018.49046-2-alcooperx@gmail.com>
+ <CACRpkdZVde024_CCwmKBY_zVzfcq7=A1+t=8nEe1ei8+_Le51A@mail.gmail.com>
+In-Reply-To: <CACRpkdZVde024_CCwmKBY_zVzfcq7=A1+t=8nEe1ei8+_Le51A@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 28 Aug 2020 16:18:09 +0200
+Message-ID: <CAMuHMdUToD9C+KUm8r1EqGpjj7ztmWJJZON+Gn7XfFgybb-9NQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add support for Broadcom USB pin map driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+Hi Linus et al,
 
---/dFl7e5Y0zcWrcPL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Aug 28, 2020 at 4:00 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Aug 12, 2020 at 10:20 PM Al Cooper <alcooperx@gmail.com> wrote:
+> > Add DT bindings for the Broadcom USB pin map driver. This driver allows
+> > some USB input and output signals to be mapped to any GPIO instead
+> > of the normal dedicated pins to/from the XHCI controller.
+> >
+> > Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> (...)
+> > +title: Broadcom USB pin map Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Al Cooper <alcooperx@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +      items:
+> > +          - const: brcm,usb-pinmap
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +    description: Must be defined if any out-gpios are specified.
+> > +
+> > +  in-gpios:
+> > +    description: Array of one or more GPIO pins used for input signals.
+> > +
+> > +  in-names:
+> > +    description: Array of input signal names, one per gpio in in-gpios.
+> > +
+> > +  in-masks:
+> > +    description: Array of enable and mask pairs, one per gpio in-gpios.
+> > +
+> > +  out-gpios:
+> > +    description: Array of one or more GPIO pins used for output signals.
+> > +
+> > +  out-names:
+> > +    description: Array of output signal names, one per gpio in out-gpios.
+> > +
+> > +  out-masks:
+> > +    description: Array of enable, value, changed and clear masks, one
+> > +      per gpio in out-gpios.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    usb_pinmap: usb-pinmap@22000d0 {
+> > +        compatible = "brcm,usb-pinmap";
+> > +        reg = <0x22000d0 0x4>;
+> > +        in-gpios = <&gpio 18 0>, <&gpio 19 0>;
+> > +        in-names = "VBUS", "PWRFLT";
+> > +        in-masks = <0x8000 0x40000 0x10000 0x80000>;
+> > +        out-gpios = <&gpio 20 0>;
+> > +        out-names = "PWRON";
+> > +        out-masks = <0x20000 0x800000 0x400000 0x200000>;
+> > +        interrupts = <0x0 0xb2 0x4>;
+> > +    };
+>
+> Wow look at that.
+>
+> This looks very much like Geert's just invented GPIO aggregator.
+> But in hardware!
+>
+> See:
+> drivers/gpio/gpio-aggregator.c
+>
+> I think Geert is intending to add bindings to the aggregator, and
+> while I do think this should be its own driver (in drivers/usb) these
+> bindings and whatever Geert want to use for the aggregator
+> should certainly be the same.
 
-Hi everyone,
+I don't intend to add any DT bindings to the GPIO Aggregator, as it's
+meant to be an "abstract base" driver.  Actual hardware blocks for which
+the GPIO Aggregator could be a suitable driver should have their own DT
+bindings, and their compatible values added to the GPIO Aggregator
+driver's match table.
 
-On Fri 28 Aug 20, 15:17, K=C3=A9vin L'h=C3=B4pital wrote:
-> This series adds the support for the MIPI CSI-2 controller for the A83T S=
-oC.
-> The CSI controller is the same as the V3s SoC that's why I put the A83T
-> MIPI CSI-2 driver in sun6i-csi.
-> My work is based on the Allwinner BSP for A83T and also on MIPI CSI-2
-> specification for the A83T given by Allwinner.
+Anyway, DT bindings would just be a compatible value, and a gpios
+property.
 
-To give a bit of context here, Kevin is our intern who worked on MIPI CSI-2
-support on the A83t this summer. As we were approaching the end of the
-internship, we wanted to publish the current state of the work as a working
-reference and base for mainline support.
+> Geert what do you think?
 
-However, we are well aware that there are significant design issues in this
-series, such as:
-- not supporting the fwnode graph;
-- not working with the DPHY API;
-- adding MIPI CSI-2 support under the same dt compatible as parallel CSI;
+This USB pin map driver seems to map GPIO pins to USB pins, not other
+GPIO pins, so to me it looks like something different than the GPIO
+Aggregator: a hardware mux instead of a software mux.
 
-and probably other things.
+BTW, at least on most Renesas SoCs, you can usually mux output functions
+to multiple pins at the same time, which could be considered mirroring,
+too.
 
-Bootlin is currently working on V3s MIPI CSI-2 support and we intend to res=
-pin
-this series when submitting V3s MIPI CSI-2 support, with fixes to these des=
-ign
-issues.
+Gr{oetje,eeting}s,
 
-So we hope you keep this in mind when reviewing the series, which is not me=
-ant
-to be merged in its current state.
+                        Geert
 
-Thanks!
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Paul
-
-> v4l2-compliance SHA: not available, 32 bits                              =
-                                              =20
->                                                                          =
-                                              =20
-> Compliance test for sun6i-video device /dev/video0:                      =
-                                              =20
->                                                                          =
-                                              =20
-> Driver Info:                                                             =
-                                              =20
->         Driver name      : sun6i-video                                   =
-                                              =20
->         Card type        : sun6i-csi                                     =
-                                              =20
->         Bus info         : platform:camera                               =
-                                              =20
->         Driver version   : 5.5.0                                         =
-                                              =20
->         Capabilities     : 0x84200001                                    =
-                                              =20
->                 Video Capture                                            =
-                                              =20
->                 Streaming                                                =
-                                              =20
->                 Extended Pix Format                                      =
-                                              =20
->                 Device Capabilities                                      =
-                                              =20
->         Device Caps      : 0x04200001                                    =
-                                              =20
->                 Video Capture                                            =
-                                              =20
->                 Streaming                                                =
-                                              =20
->                 Extended Pix Format                                      =
-                                              =20
-> Media Driver Info:                                                       =
-                                              =20
->         Driver name      : sun6i-csi                                     =
-                                              =20
->         Model            : Allwinner Video Capture Device                =
-                                              =20
->         Serial           :                                               =
-                                              =20
->         Bus info         :                                               =
-                                              =20
->         Media version    : 5.5.0                                         =
-                                              =20
->         Hardware revision: 0x00000000 (0)                                =
-                                              =20
->         Driver version   : 5.5.0                                         =
-                                              =20
-> Interface Info:                                                          =
-                                              =20
->         ID               : 0x03000003                                    =
-                                              =20
->         Type             : V4L Video                                     =
-                                              =20
-> Entity Info:                                                             =
-                                              =20
->         ID               : 0x00000001 (1)                                =
-                                              =20
->         Name             : sun6i-csi                                     =
-                                              =20
->         Function         : V4L2 I/O                                      =
-                                              =20
->         Pad 0x01000002   : 0: Sink, Must Connect                         =
-                                              =20
->           Link 0x02000007: from remote pad 0x1000006 of entity 'ov8865 1-=
-0036': Data, Enabled, Immutable               =20
->                                                                          =
-                                              =20
-> Required ioctls:                                                         =
-                                              =20
->         test MC information (see 'Media Driver Info' above): OK          =
-                                              =20
->         test VIDIOC_QUERYCAP: OK                                         =
-                                              =20
->                                                                          =
-                                              =20
-> Allow for multiple opens:                                                =
-                                              =20
->         test second /dev/video0 open: OK                                 =
-                                              =20
->         test VIDIOC_QUERYCAP: OK                                         =
-                                              =20
->         test VIDIOC_G/S_PRIORITY: OK                                     =
-                                              =20
->         test for unlimited opens: OK                                     =
-                                              =20
->                                                                          =
-                                              =20
-> Debug ioctls:                                                            =
-                                              =20
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)                 =
-                                              =20
->         test VIDIOC_LOG_STATUS: OK                                       =
-                                              =20
->                                                                          =
-                                              =20
-> Input ioctls:                                                            =
-                                              =20
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)        =
-                                              =20
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)                    =
-                                              =20
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)                   =
-                                              =20
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)                        =
-                                              =20
->         test VIDIOC_G/S/ENUMINPUT: OK                                    =
-                                              =20
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)                        =
-                                              =20
->         Inputs: 1 Audio Inputs: 0 Tuners: 0                              =
-                                              =20
->                                                                          =
-                                              =20
-> Output ioctls:                                                           =
-                                              =20
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)                    =
-                                              =20
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)                    =
-                                              =20
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)                       =
-                                              =20
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)                   =
-                                              =20
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)                       =
-                                              =20
->         Outputs: 0 Audio Outputs: 0 Modulators: 0                        =
-                                              =20
->                                                                          =
-                                              =20
-> Input/Output configuration ioctls:                                       =
-                                              =20
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)               =
-                                              =20
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)        =
-                                              =20
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)                   =
-                                              =20
->         test VIDIOC_G/S_EDID: OK (Not Supported)                         =
-                                              =20
->                                                                          =
-                                              =20
-> Control ioctls (Input 0):                                                =
-                                              =20
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK                         =
-                                              =20
->         test VIDIOC_QUERYCTRL: OK                                        =
-                                              =20
->         test VIDIOC_G/S_CTRL: OK                                         =
-                                              =20
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK                                =
-                                              =20
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK                      =
-                                              =20
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)                     =
-                                              =20
->         Standard Controls: 7 Private Controls: 0                         =
-                                              =20
->                                                                          =
-                                              =20
-> Format ioctls (Input 0):                                                 =
-                                              =20
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK               =
-                                              =20
->         test VIDIOC_G/S_PARM: OK (Not Supported)                         =
-                                              =20
->         test VIDIOC_G_FBUF: OK (Not Supported)                           =
-                                              =20
->         test VIDIOC_G_FMT: OK                                            =
-                                              =20
->         test VIDIOC_TRY_FMT: OK                                          =
-                                              =20
->         test VIDIOC_S_FMT: OK                                            =
-                                              =20
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)                 =
-                                              =20
->         test Cropping: OK (Not Supported)                                =
-                                              =20
->         test Composing: OK (Not Supported)                               =
-                                              =20
->         test Scaling: OK                                                 =
-                                              =20
->                                                                          =
-                                              =20
-> Codec ioctls (Input 0):                                                  =
-                                              =20
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)                =
-                                              =20
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)                      =
-                                              =20
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)                =
-                                              =20
->                                                                          =
-                                              =20
-> Buffer ioctls (Input 0):                                                 =
-                                              =20
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK                     =
-                                              =20
->         test VIDIOC_EXPBUF: OK                                           =
-                                              =20
->         test Requests: OK (Not Supported)                                =
-                                              =20
->                                                                          =
-                                              =20
-> Total for sun6i-video device /dev/video0: 45, Succeeded: 45, Failed: 0, W=
-arnings: 0
->=20
-> Changes since V1:
-> - Add more details in the cover letter.
-> - Add a test to get the clocks to avoid an error for the platform without=
- MIPI
-> CSI-2.
-> - Add more details in the register assignations.
-> - Removed the support of multiple virtual channels because there is only =
-one
-> channel support in the CSI driver.
->=20
-> K=C3=A9vin L'h=C3=B4pital (4):
->   media: sun6i-csi: Fix the bpp for 10-bit bayer formats
->   media: sunxi: sun6i-csi: Move the sun6i_csi_dev structure to the
->     common header
->   media: sunxi: sun6i-csi: Add support of MIPI CSI-2 for A83T
->   ARM: dts: sun8i: a83t: Add support for the MIPI CSI-2 in CSI node
->=20
->  arch/arm/boot/dts/sun8i-a83t.dtsi             |  11 +-
->  .../media/platform/sunxi/sun6i-csi/Makefile   |   2 +-
->  .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  96 +++++---
->  .../platform/sunxi/sun6i-csi/sun6i_csi.h      |  14 +-
->  .../sunxi/sun6i-csi/sun8i_a83t_dphy.c         |  39 ++++
->  .../sunxi/sun6i-csi/sun8i_a83t_dphy.h         |  16 ++
->  .../sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h     |  39 ++++
->  .../sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c    | 217 ++++++++++++++++++
->  .../sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h    |  16 ++
->  .../sun6i-csi/sun8i_a83t_mipi_csi2_reg.h      | 179 +++++++++++++++
->  10 files changed, 595 insertions(+), 34 deletions(-)
->  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dph=
-y.c
->  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dph=
-y.h
->  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dph=
-y_reg.h
->  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mip=
-i_csi2.c
->  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mip=
-i_csi2.h
->  create mode 100644 drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mip=
-i_csi2_reg.h
->=20
-> --=20
-> 2.17.1
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---/dFl7e5Y0zcWrcPL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl9JELMACgkQ3cLmz3+f
-v9Fc0Qf/S07c7Hdhnzb41WcEM2OpOc3NsME/sjeAdJhTi0zt9cgyeadSg8B/menR
-OFJFD4M0XVaXhXkqCuzdFj9Rc7+gLWfdSn6PnMNxQ1K4VEhJDNS2ToxTFyLRy2pL
-qUe2KzO8ILWR6Wq5iNfyeikMqxfwEvWN9gtDUndUrlmp/+WRfXWfp9Pby8oOxIXA
-rXJaV/DhPLCd8BXlp4PnaNVsk2dFjckGjCLjcHMygH+NXZUUTocEjjDrSp+7MmvR
-O3NaHu9cvB73XfdBqSQJijkY4ZMPjw+O4+WfzhwN19sNJ2GOSPdaKlgEyg6KV4JU
-ZeyLAheRsKSQJ1r9Hka+iRVgspyhmA==
-=V3H8
------END PGP SIGNATURE-----
-
---/dFl7e5Y0zcWrcPL--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
