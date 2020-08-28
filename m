@@ -2,75 +2,163 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D411C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A13EC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0C3E2086A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598623259;
-	bh=e+NGXNVcRMFJD52on+AniSJrUCkn8PZHapatz4fw2l0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JKbX3kcSqMHSGwqoijG7r8xm29/va+8h9GvlmmbigqYzFSmPhh8TVrB0cs7j7Toi2
-	 bQXRCfZMXyuBdsZobNoh1t8mD+WPZCVQlCGIGkgDpXWthORBsjjfGImPsbYxvvW9Wg
-	 kjgMKPDL85cy7MtSZDeKqOy/RGpbCsle6TcYOn4c=
+	by mail.kernel.org (Postfix) with ESMTP id 4D4B6208C9
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:02:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pdNYH+h1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgH1OAv (ORCPT
+        id S1726946AbgH1OCV (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726614AbgH1OA3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 10:00:29 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F9C22086A;
-        Fri, 28 Aug 2020 14:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598623229;
-        bh=e+NGXNVcRMFJD52on+AniSJrUCkn8PZHapatz4fw2l0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w7X308tgOhAdUVjQ13X2pQxRIh9Ho/HbXNIDjUQmUOI6yJdLuP87eZ2XHLGyVLWuG
-         uC1xIDikr424CFU/ASZoBR0/ZvC/yil00BfnMrDuxXNB1zeRvtSs98CWJ3bgHR9r4b
-         RnELtxseoLz2iF0ioko8RHGk5YSRe3bFzjujwR0c=
-Date:   Fri, 28 Aug 2020 19:30:25 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v1 1/2] dt-bindings: display: bridge: Add documentation
- for LT9611UXC
-Message-ID: <20200828140025.GW2639@vkoul-mobl>
-References: <20200828120431.1636402-1-dmitry.baryshkov@linaro.org>
- <20200828120431.1636402-2-dmitry.baryshkov@linaro.org>
+        Fri, 28 Aug 2020 10:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51346 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbgH1OAp (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 10:00:45 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41A5C06121B
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 07:00:43 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t23so1432048ljc.3
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 07:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gpinBUuKFwanae5hZ9+GsFmSPe7o+4reyxCKGT+ja5s=;
+        b=pdNYH+h1GmeQ9fLGwIJanYIbb510jIkD7kW2meqEVSM5rwTJRvVtduJxlg1HRNuWPM
+         OJzEQRp5MhIAwxCg2chf7VjZ9Qsnf7LrWWyLmLmqQEffPQlGVjxIZXeZu/WlL76pdw9Z
+         pN/ZsabbeaqSv+CCSyo1Avig2NVg6zceoVqGwG63sAQ2Bstkrdx3sTnXBiZL+m6kz6X5
+         fdOclQby1zOd0GQ6gWXMuoZf70UEbdxHPWv24ARpMAg6JapBvYE+41GI0wSpPb+Zk2fm
+         AmRMponyt7WsWIHvenEcM9LKzm5HnCO/73HrfxCphYJZaq8XWw6+XCHHNnQB8ISgNqba
+         J7DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gpinBUuKFwanae5hZ9+GsFmSPe7o+4reyxCKGT+ja5s=;
+        b=qYYe9HRfE41xrfKf+EspTsOyGzmd627FtU5z2uKtxeuFgQ/C53UExE7jL9ykDxWaCK
+         AXGH5baQEDj7mxlfE9Am5/qPxdaHg3yUhRwgSjFFlVe63oy4dm91B9WUFUX/urbromkQ
+         5FfSebyY5wWpIQu9AezYpcQxPiyIK+xbHgzib2TRCYdIQ0lEylcK6xjm1JVnCu8zYI/a
+         5/INQzYyFOMxRW+XXFeB9MdelVX6192lgTfTkqD50LvRZUiwlmiKJnQf4EAePPVO6vhU
+         RJi0FiSSoBDFcXSMAjCmevd9rNp2XBxNZmq5EaHToJeJYt3vJ6YALSI8Yh8oNh3VSpgL
+         CN3Q==
+X-Gm-Message-State: AOAM533aEz2UD2jNuh4F3N8of62uqpbM1kOMx1LZ9dpitRSDiVexUmEK
+        fSqcLjF1fuooA3fYlGAghy82TEcO/Rfd2MPUqLFgCQ==
+X-Google-Smtp-Source: ABdhPJwHSGiAZyzHlD41R4r6UG5OM6T7dS4SiDyVDpCTwNm77h9zuuu8QPg34MEBcJFowkGqZTWBFbVPm6ypV84qpWM=
+X-Received: by 2002:a2e:558:: with SMTP id 85mr983462ljf.293.1598623240088;
+ Fri, 28 Aug 2020 07:00:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828120431.1636402-2-dmitry.baryshkov@linaro.org>
+References: <20200812202018.49046-1-alcooperx@gmail.com> <20200812202018.49046-2-alcooperx@gmail.com>
+In-Reply-To: <20200812202018.49046-2-alcooperx@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 28 Aug 2020 16:00:29 +0200
+Message-ID: <CACRpkdZVde024_CCwmKBY_zVzfcq7=A1+t=8nEe1ei8+_Le51A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add support for Broadcom USB pin map driver
+To:     Al Cooper <alcooperx@gmail.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On 28-08-20, 15:04, Dmitry Baryshkov wrote:
-> Lontium LT9611UXC is a DSI to HDMI bridge which supports 2 DSI ports
-> and I2S port as input and one HDMI port as output. The LT9611UXC chip is
-> handled by a separate driver, but the bindings used are fully compatible
-> with the LT9611 chip, so let's reuse the lt9611.yaml schema.
+On Wed, Aug 12, 2020 at 10:20 PM Al Cooper <alcooperx@gmail.com> wrote:
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+> Add DT bindings for the Broadcom USB pin map driver. This driver allows
+> some USB input and output signals to be mapped to any GPIO instead
+> of the normal dedicated pins to/from the XHCI controller.
+>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+(...)
+> +title: Broadcom USB pin map Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Al Cooper <alcooperx@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +      items:
+> +          - const: brcm,usb-pinmap
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Must be defined if any out-gpios are specified.
+> +
+> +  in-gpios:
+> +    description: Array of one or more GPIO pins used for input signals.
+> +
+> +  in-names:
+> +    description: Array of input signal names, one per gpio in in-gpios.
+> +
+> +  in-masks:
+> +    description: Array of enable and mask pairs, one per gpio in-gpios.
+> +
+> +  out-gpios:
+> +    description: Array of one or more GPIO pins used for output signals.
+> +
+> +  out-names:
+> +    description: Array of output signal names, one per gpio in out-gpios.
+> +
+> +  out-masks:
+> +    description: Array of enable, value, changed and clear masks, one
+> +      per gpio in out-gpios.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    usb_pinmap: usb-pinmap@22000d0 {
+> +        compatible = "brcm,usb-pinmap";
+> +        reg = <0x22000d0 0x4>;
+> +        in-gpios = <&gpio 18 0>, <&gpio 19 0>;
+> +        in-names = "VBUS", "PWRFLT";
+> +        in-masks = <0x8000 0x40000 0x10000 0x80000>;
+> +        out-gpios = <&gpio 20 0>;
+> +        out-names = "PWRON";
+> +        out-masks = <0x20000 0x800000 0x400000 0x200000>;
+> +        interrupts = <0x0 0xb2 0x4>;
+> +    };
 
--- 
-~Vinod
+Wow look at that.
+
+This looks very much like Geert's just invented GPIO aggregator.
+But in hardware!
+
+See:
+drivers/gpio/gpio-aggregator.c
+
+I think Geert is intending to add bindings to the aggregator, and
+while I do think this should be its own driver (in drivers/usb) these
+bindings and whatever Geert want to use for the aggregator
+should certainly be the same.
+
+Geert what do you think?
+
+Here is the actual driver:
+https://lore.kernel.org/linux-usb/20200812202018.49046-3-alcooperx@gmail.com/
+
+Yours,
+Linus Walleij
