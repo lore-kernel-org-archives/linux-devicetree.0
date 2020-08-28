@@ -2,116 +2,118 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB40C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A82DC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBDF12074A
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:33:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598635998;
-	bh=dVXhorCySV7p0XUAWBV8r7NvXycdCFYPc1TRtnibkH0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sM4dPX0d7LF0OymtL+ssoxPGpcG825sJ90D6rjFVquRcKVRi83XK4Atpy7qFeOyaq
-	 98XM5qtTITmZzVRihxRCNIXWQG1sEqZ3h5+hwOjBhq4bFHbUc7ue26HkKczILgwgo9
-	 fBn9AimTb7MrFakXIKB4XVmeRLy8/Y88hp+TQY1o=
+	by mail.kernel.org (Postfix) with ESMTP id 2777B2074A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 17:41:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kJxyjpGZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbgH1RdJ (ORCPT
+        id S1726010AbgH1RlF (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 13:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726266AbgH1RdI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 13:33:08 -0400
-Received: from earth.universe (dyndsl-095-033-159-123.ewe-ip-backbone.de [95.33.159.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9E3C2074A;
-        Fri, 28 Aug 2020 17:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598635987;
-        bh=dVXhorCySV7p0XUAWBV8r7NvXycdCFYPc1TRtnibkH0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XI8iOVvVyQ9dMHhUCxnfRWh5a5w6FGRz5T1tY1ZvwTXpaL5dMCzERUYBAN2GSvkJo
-         9iq4uXhAW4qtfVnhtZ6em2gZis/BUAURXIJ54KbZCU3CHDaA0+NuF0KAkfQTi+dagy
-         gc9Ig2Trhh8DCnMBHa2V4iNUD755yOOmY/drytY8=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 078BA3C0C82; Fri, 28 Aug 2020 19:33:06 +0200 (CEST)
-Date:   Fri, 28 Aug 2020 19:33:06 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     krzk@kernel.org, jonghwa3.lee@samsung.com, tglx@linutronix.de,
-        kstewart@linuxfoundation.org, baolin.wang7@gmail.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] power: supply: Charger-manager improvements
-Message-ID: <20200828173305.u5n66ll57gn2b76s@earth.universe>
-References: <BN6PR04MB06603115D277DF264D9380E8A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Fri, 28 Aug 2020 13:41:05 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:56974 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725979AbgH1RlE (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 13:41:04 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id C868220B7178;
+        Fri, 28 Aug 2020 10:41:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C868220B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598636463;
+        bh=B5UrEdKDUH9jR7Ae1rEu3ipYxtxUO5TupJFw9Ld6H34=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kJxyjpGZXpgz/YZTr4JpGPULSjbavcGe/BP8zJO2pLyO2Txe97CE+o9uT928hiyDo
+         pt/EplTowulkW7Ooj+R7raJMvQCOK/ecQqBfj1LEsCddVsCTZZE4mYAtlvfFNjb6OY
+         hSmGdxieqHZcIN0Q11pWLHcqs8mvm2PWdYu8rwCw=
+Subject: Re: [PATCH v4 1/5] powerpc: Refactor kexec functions to move arch
+ independent code to IMA
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+References: <20200819172134.11243-1-nramas@linux.microsoft.com>
+ <20200819172134.11243-2-nramas@linux.microsoft.com>
+ <875z938xwy.fsf@morokweng.localdomain>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <3897c55e-11d2-113a-5cef-db750b33772f@linux.microsoft.com>
+Date:   Fri, 28 Aug 2020 10:40:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="curnqtretflpgrou"
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB06603115D277DF264D9380E8A3BC0@BN6PR04MB0660.namprd04.prod.outlook.com>
+In-Reply-To: <875z938xwy.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
+On 8/27/20 4:35 PM, Thiago Jung Bauermann wrote:
+> 
+> Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
+> 
+>> The functions ima_get_kexec_buffer() and ima_free_kexec_buffer() that
+>> handle carrying forward the IMA measurement logs on kexec for powerpc
+>> do not have architecture specific code, but they are currently defined
+>> for powerpc only.
+>>
+>> Move these functions to IMA subsystem so that it can be used for other
+>> architectures as well. A later patch in this series will use these
+>> functions for carrying forward the IMA measurement log for ARM64.
+>>
+>> Define FDT_PROP_IMA_KEXEC_BUFFER for the chosen node, namely
+>> "linux,ima-kexec-buffer", that is added to the DTB to hold
+>> the address and the size of the memory reserved to carry
+>> the IMA measurement log.
+>>
+>> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+>> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+>> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> 
+> This patch removes two functions from arch/powerpc/kexec/ima.c, but adds
+> four to security/integrity/ima/ima_kexec.c. The extra ones are
+> get_addr_size_cells() and do_get_kexec_buffer(), which are being copied
+> from the powerpc code but can't be removed yet because they're still
+> used there by remove_ima_buffer() and setup_ima_buffer().
+> 
+> On the next patch you remove the need for these functions in powerpc
+> code and therefore delete them. This confused me at first, so I think it
+> would be cleared if you put patch 2 first in the series and then on this
+> patch you can simply move the four functions and delete them from
+> arch/powerpc/kexec/ima.c.
+> 
+> If you prefer to keep the current order, it's worth mentioning on the
+> commit log where get_addr_size_cells() and do_get_kexec_buffer() are
+> coming from.
+> 
+> Regardless:
+> 
+> Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> 
 
---curnqtretflpgrou
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for reviewing the changes Thiago.
 
-Hi,
+I'll update the commit log to describe the changes related to 
+get_addr_size_cells() and do_get_kexec_buffer().
 
-On Thu, May 14, 2020 at 04:04:25PM -0700, Jonathan Bakker wrote:
-> Charger-manager is a virtual driver for unifying chargers, fuel gauges,
-> extcon devices, and a thermal device into a battery management system.
->=20
-> Unfortunately, it has been broken since commit 830ae442202e ("extcon:
-> Remove the deprecated extcon functions") when the extcon internal API
-> was changed but some drivers were not updated.  Additionally, it had
-> some race conditions and was unnecessarily complex.
->=20
-> A number of these patches come from a Tizen git tree(1); they have been
-> rebased and the commit messages cleaned up.
->=20
-> These changes have been tested on a couple of first-gen Galaxy S devices
-> based on s5pv210 with a modified max8998 driver so that a charger
-> regulator is exposed.  In addition to the max8998, this hardware has
-> a max17040 fuel gauge, fsa9480 extcon, and a generic thermal resistor
-> for temperature sensing.
->=20
-> 1) https://git.tizen.org/cgit/platform/kernel/linux-exynos/log/drivers/po=
-wer/charger-manager.c?h=3Dtizen_5.0
+  -lakshmi
 
-Thanks, queued. I hope this does not trigger more people to use it.
-We really need a proper core feature for this.
-
--- Sebastian
-
---curnqtretflpgrou
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9JP8oACgkQ2O7X88g7
-+prZ+A/+KIUCbI6mn4h5I1HAy0txA5dSSTOsqLZ2UMCL12zN46q53vgjv69PBHxt
-+bBSnmDRPd3rW+EDe693lHBDKoxJ/A7lqQENeFw0lMsDaAHEsW7RKlF/rOIDIPKB
-DdbXJqfw3CQWBGZ35OCnTEGUDdH20EJINATS7B/8yVsbMYwnax6NENSj8iSSQf1B
-9IqW+rg63n+d9TFC85qL0L39bBOx13TxnYiG0BCdKRaZA3HMb2+FyHdMDyvi/nY7
-I577cq6GZb/uD+s2sbl575PwWfZpsn1OBhidmCpXg9lN6+dzPv6RnwaHDlAiM4Cq
-D6Pb/njPdIddJ3uMe7RptQgoh+wAL0gFZ5zHEY5jOMYOYxjMiNYGdvgzPkEYwogy
-EZTLJhGCtMQk6LLPnxrtWWJRztOkkul8BIWJyYLBz+dDL/7AF2gSmT7u+YVhfUj5
-DagDgufuAspY3ZLz16Omz5m/9u0MRe+KDocnTQNNS5NvR+AvxTlmNspqbu+G1yDq
-c6k4ZYuo/zvSU0sbaSICcDCvnQkXAoDLw8la1KvBnjZZM5kOh7sW1I7UI0dATVTn
-BoY41Uxx13wyckHgatpgAZO7NT9okBmY3l18awz01zZAQo4b1w7+/ZS8RkiMB5YQ
-uwG5WFPgdVuooK5LUO0Yew66rQFMgBy0HnEYSHmqX8oLBOLRw5M=
-=2ELG
------END PGP SIGNATURE-----
-
---curnqtretflpgrou--
