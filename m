@@ -2,111 +2,149 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFED9C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A7AC433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6B520872
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598629480;
-	bh=88kJ/G7CWpX+LGOzEx33CLHVpu7kYOqIcbs+2c87R24=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=Gbk3bEAtnoJIWukhT+zLe3k8lXIR0zW5pUyrnW9UfcbpB/T236cO56oj8qtFbFlBf
-	 S8PRr70RY+TlV1+lcA/X1LsVruFiOKLWjEFgKYYdmc+HKTBPsgHoMtuS8EtmlZPNXi
-	 SHmw/uOi7xK3j6MqtIm6MhInmgPKmmVbAsGFRE3M=
+	by mail.kernel.org (Postfix) with ESMTP id C9D54208FE
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbgH1Poj (ORCPT
+        id S1726418AbgH1Po6 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:44:39 -0400
-Received: from mail-ej1-f48.google.com ([209.85.218.48]:36584 "EHLO
-        mail-ej1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbgH1Poh (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 11:44:37 -0400
-Received: by mail-ej1-f48.google.com with SMTP id l2so2122873eji.3
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 08:44:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kPFFssSK0FB0b8xHaLwh78SxNX/7VnzwnzslGetfO38=;
-        b=DgQDaiow04QnGJVmNu212fh1JwZLjCCqOg0iFdeMLJeG7RbkClHi11lhJ9+7bexwkp
-         a03DD7reSLGpmeJt5DBRSDAMRKcwZsRo/6zIKUjqmVlhaDjpcVqNrs1hEdvYwkO7+vPB
-         CJBmvRpHCB2grPBstbwIsS1gncHBVYJP55gcHvkpCd7w+9NjwtlI8EPYx0MwErtPAcbt
-         abkzsWCutgu3jWP1vZx8BjOngg8pMYVxI6aOOll6Gnyhs8ggtlUWBJFh9rh/qZUfRBJU
-         E2/3gDjWsHFmrxit2FRlw6iw01JF8G8zmBJ3R/G0zB79qvFVFNkBejSc/VxFRO9VYV/z
-         h99w==
-X-Gm-Message-State: AOAM532WbNQ2/A7HLuAy4H3brr3klZsXGXnFUZT7Y2iH4B6NAbyZMcGI
-        +57Nff4V1uaOtFTKdz21x9UPDmdl/wJ3aw==
-X-Google-Smtp-Source: ABdhPJwlBIgg7Pcv1a48QyOYOjGuraP+JXawT7+eQ2ioaYlgUu5/bLt3ZRFjGTjWrOfOjd2heWB9AQ==
-X-Received: by 2002:a17:906:5796:: with SMTP id k22mr2594760ejq.77.1598629474886;
-        Fri, 28 Aug 2020 08:44:34 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id fx15sm1265236ejb.1.2020.08.28.08.44.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 28 Aug 2020 08:44:34 -0700 (PDT)
-Date:   Fri, 28 Aug 2020 17:44:32 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: dtschema v2020.08.1 json.decoder.JSONDecodeError error
-Message-ID: <20200828154432.GA24473@kozik-lap>
-References: <20200828095115.GA18030@pi3>
+        Fri, 28 Aug 2020 11:44:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:52206 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbgH1Pos (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 11:44:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC94DD6E;
+        Fri, 28 Aug 2020 08:44:47 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBFED3F71F;
+        Fri, 28 Aug 2020 08:44:45 -0700 (PDT)
+Subject: Re: [PATCH v2 0/6] dt-bindings: Convert SP804 to Json-schema (and fix
+ users)
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+References: <20200828142018.43298-1-andre.przywara@arm.com>
+ <CACRpkdZUrPeUbpNeCZcw8kq5k3egijAuh7R1_3TkbPz5wN+=Lw@mail.gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ i4aIXCH3Wv6K
+Organization: ARM Ltd.
+Message-ID: <28acf821-fa6f-7259-ec1b-4810ca1ff48f@arm.com>
+Date:   Fri, 28 Aug 2020 16:44:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <CACRpkdZUrPeUbpNeCZcw8kq5k3egijAuh7R1_3TkbPz5wN+=Lw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200828095115.GA18030@pi3>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:51:15AM +0200, Krzysztof Kozlowski wrote:
-> Hi Rob,
-> 
-> I am trying dt_bindings_check with on top of next-20200826 with dtschema
-> v2020.08.01 and got errors on all schemas:
-> 
-> =======
-> Traceback (most recent call last):
->   File "/home/krzk/.local/lib/python3.5/site-packages/jsonschema/validators.py", line 777, in resolve_from_url
->     document = self.resolve_remote(url)
->   File "/home/krzk/.local/lib/python3.5/site-packages/jsonschema/validators.py", line 860, in resolve_remote
->     result = requests.get(uri).json()
->   File "/home/krzk/.local/lib/python3.5/site-packages/requests/models.py", line 897, in json
->     return complexjson.loads(self.text, **kwargs)
->   File "/usr/lib/python3.5/json/__init__.py", line 319, in loads
->     return _default_decoder.decode(s)
->   File "/usr/lib/python3.5/json/decoder.py", line 339, in decode
->   DTEX    Documentation/devicetree/bindings/net/allwinner,sun7i-a20-gmac.example.dts
->     obj, end = self.raw_decode(s, idx=_w(s, 0).end())
->   File "/usr/lib/python3.5/json/decoder.py", line 357, in raw_decode
->     raise JSONDecodeError("Expecting value", s, err.value) from None
-> json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-> 
-> During handling of the above exception, another exception occurred:
-> 
-> Traceback (most recent call last):
->   File "/home/krzk/.local/bin/dt-doc-validate", line 67, in <module>
->     ret = check_doc(f)
->   File "/home/krzk/.local/bin/dt-doc-validate", line 33, in check_doc
->     for error in sorted(dtschema.DTValidator.iter_schema_errors(testtree), key=lambda e: e.linecol):
->   File "/home/krzk/.local/lib/python3.5/site-packages/dtschema/lib.py", line 663, in iter_schema_errors
->     meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
->   File "/home/krzk/.local/lib/python3.5/site-packages/jsonschema/validators.py", line 779, in resolve_from_url
->     raise exceptions.RefResolutionError(exc)
-> jsonschema.exceptions.RefResolutionError: Expecting value: line 1 column 1 (char 0)
-> =======
-> 
-> 
-> Python v3.5.2
-> Ubuntu 16.04
+On 28/08/2020 15:54, Linus Walleij wrote:
 
-I tried also on newer machine (Ubuntu 18.04, Python 3.6.9) - the same.
+Hi,
 
-Best regards,
-Krzysztof
+> On Fri, Aug 28, 2020 at 4:20 PM Andre Przywara <andre.przywara@arm.com> wrote:
+> 
+>> This is the second attempt at converting the SP804 timer binding to yaml.
+>> Compared to v1, I forbid additional properties, and included the primecell
+>> binding. Also the clock-names property is now listed, although without
+>> further requirements on the names. Changelog below.
+> 
+> The series:
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+>> I couldn't test any of those DT files on actual machines, but tried
+>> to make the changes in a way that would be transparent to at least the
+>> Linux driver. The only other SP804 DT user I could find is FreeBSD,
+>> but they seem to use a different binding (no clocks, but a
+>> clock-frequency property).
+> 
+> That's annoying. I suppose FreeBSD just made that up and doesn't
+> even have a binding document for it?
 
+I couldn't find bindings at all in their git tree. I don't think they
+treat this very formally, it seems to be more use-case driven.
+Their SP804 driver does not know how to handle clock properties, so most
+of the DTs (in sys/gnu/dts, so apparently copied from Linux) would not
+work really well, because the driver assumes a hardcoded frequency of
+1MHz by default.
+There is only one DT (Annapurna Alpine with Cortex-A15) that provides
+this clock-frequency property. The Linux DT does not mention the SP804
+in there at all, interestingly.
+
+> In an ideal world I suppose we should go and fix FreeBSD but I have
+> no idea how easy or hard that is.
+
+It seems to be messy, at least in this case, and I guess unifying DTs
+means some work on drivers as well.
+But AFAIK most of the more modern platforms copy the DTs (and thus
+implicitly the bindings) from Linux, so there is probably much less
+deviation for many more relevant boards.
+
+Cheers,
+Andre
