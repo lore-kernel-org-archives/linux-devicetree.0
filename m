@@ -2,201 +2,128 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96FCC433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D533DC433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9409208D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E9F20872
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 01:39:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u7auesJf"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="m9c177sQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgH1Bfe (ORCPT
+        id S1727843AbgH1Bjq (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 21:35:34 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:56151 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbgH1Bfd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Aug 2020 21:35:33 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200828013529epoutp0224530c805a5e5df79b8a2d4b8fb0c789~vSrQK11xu0670506705epoutp02C
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 01:35:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200828013529epoutp0224530c805a5e5df79b8a2d4b8fb0c789~vSrQK11xu0670506705epoutp02C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598578529;
-        bh=mfZS9t3mm4EcSIakzUimqKpFxitij5KZmxwTrUCgxhc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=u7auesJfbgAw2m+bpWAjU7aJ0vNeEXVLoQODJgIbfdZYitK/9443Vm9mvSgHDpS60
-         Tp0jhxn1pZayhKfqPXBXIP8hDz91LZkusCei/90IVBw4CidlBjnRTLtQISPwTWuh49
-         6TkIQDX/4v6le91qnI3r+yrFn5VOXyrpuQc3us5g=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200828013529epcas1p47231fba0fb8e3486082f079f17624411~vSrPXxycJ3008030080epcas1p4J;
-        Fri, 28 Aug 2020 01:35:29 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4Bd2Gh6nN0zMqYmD; Fri, 28 Aug
-        2020 01:35:24 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4C.BE.29173.85F584F5; Fri, 28 Aug 2020 10:35:20 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200828013520epcas1p2bc32bd495a6427a36bc7e016dea98e27~vSrHIUnUo0309303093epcas1p2z;
-        Fri, 28 Aug 2020 01:35:20 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200828013520epsmtrp1aae0b48885e40c8b76c3a48da1087bfe~vSrHHRFUJ0208202082epsmtrp1S;
-        Fri, 28 Aug 2020 01:35:20 +0000 (GMT)
-X-AuditID: b6c32a37-9b7ff700000071f5-02-5f485f584a00
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EE.F2.08382.75F584F5; Fri, 28 Aug 2020 10:35:20 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200828013519epsmtip2cb4c7fb54f955a09e82cac16c65c1415~vSrG0NQaN0625906259epsmtip2I;
-        Fri, 28 Aug 2020 01:35:19 +0000 (GMT)
-Subject: Re: [PATCH v5 13/36] PM / devfreq: tegra30: Use MC timings for
- building OPP table
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
+        Thu, 27 Aug 2020 21:39:46 -0400
+Received: from mail-eopbgr1320112.outbound.protection.outlook.com ([40.107.132.112]:26201
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726197AbgH1Bjp (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 21:39:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NOe2INbAELdLLDzLjPrBylOBIoXZODEREHQtXkJIOP7p7xOpRjjJxrhzAoVqsNnKjl+Ruiy9VY9r465zl63nMbrWofSDTMhZPWu/3SrZMlSVd2hOZj+khPom2vx1w5qU8a3hJs9uR7i//TYbfZ8RxIlc8hj6veqj8xQJYYZ2kP0JRffHv1Fspr6CuoX0hYB8lsnJUxp/jos8DAAKvW7S7kp0nxBhsVhC35BsdJWHAqAxQcymrPl3Wscu7vYkIRyxeHQ7qz8lvCLN52xZ4ntdjGAcKHxXCKBL/qu7/GK3HIL/1M326Uc9fx5MZq/3qNbqwcBKcwOCDX/T9uwv3EVLzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qgooAZH/x6JmuAUo1d1P2zvBfAAaOQA/ahrE5+5syP4=;
+ b=bKAF8S70pvWQLheGVQkzv6+23b3mmwnx4VipKeyGsCJzsKgzs+o7vgkHNxklY2nHbCkPMlHNhF1hxMU4st5FVK3mlMHPGbKtpdOTWycrAZ8eJ3zm6mUknjh37iWICx/XSg8lWQdtrS6CZ9ocQuaYtY1VqEBqv0LlJlfuf86poAKGV94w4mJaxKzk9fyo+DVncc4RpaBY305QMw9gGAlWdDrJlBqmELAjcUYn0OnrGekMlLyfbX4WdPJDkN3yVXZZ9vYKMtDxOocFip0GCgVaG6wCHZDRPKt5YHw7xaiEjgG7AAJMCQgSB1il9yp6rmWhFHLTzfjBQDha3M2ly5BfFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qgooAZH/x6JmuAUo1d1P2zvBfAAaOQA/ahrE5+5syP4=;
+ b=m9c177sQLQZV80j6CnK5sUJVJF/YCBLZzFSpKZ7XexxItCEOtErzrPaMhkHmbXJOJlnC3U48a5hP6h2m2iWdfa9IXoV03S0rGs62t0pKXkRdZMx645gAnscVyTqb6dbstMGYVIy3LhWGr+G+d9aDxW1J/TaqiaeSOxbh77V2nS0=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TY2PR01MB1977.jpnprd01.prod.outlook.com (2603:1096:404:c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Fri, 28 Aug
+ 2020 01:39:40 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3305.032; Fri, 28 Aug 2020
+ 01:39:40 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Joerg Roedel <joro@8bytes.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <2a255211-5426-d78f-d266-cdb958f4c658@samsung.com>
-Date:   Fri, 28 Aug 2020 10:47:46 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Magnus Damm <magnus.damm@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: RE: [PATCH 1/2] dt-bindings: iommu: renesas,ipmmu-vmsa: Add r8a7742
+ support
+Thread-Topic: [PATCH 1/2] dt-bindings: iommu: renesas,ipmmu-vmsa: Add r8a7742
+ support
+Thread-Index: AQHWeuqxUasJXAzIakucV8XtlZyI+KlMwiKA
+Date:   Fri, 28 Aug 2020 01:39:40 +0000
+Message-ID: <TY2PR01MB369270F4F0F5753A9A7D4919D8520@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <20200825141805.27105-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200825141805.27105-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200825141805.27105-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bp.renesas.com; dkim=none (message not signed)
+ header.d=none;bp.renesas.com; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [240f:60:5f3e:1:b16e:b7b1:d350:3c9a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 46368cc6-7a78-4a9a-b0d3-08d84af33b7b
+x-ms-traffictypediagnostic: TY2PR01MB1977:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB19770D7EDB631C888C791599D8520@TY2PR01MB1977.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dFpJFfI4xudFciGKler4JxrJwvSz0wyuZmyOjV22Qg3bbwcgQUQu8NaFkYBiWuptJmFke8KcMH1IsuHzIKm0S4xdh5FvZ9J8vfNMsJAUVzK1oc9iCT+XyL+3bT6XW/LYQCJR5TN83LhRL1EWp/vGXICj09vLapPB8UXXvfl7cQqk8ldS1xjV5vV6OIJvO/pK+1ytdg7rnEgSHuDW406V105sg3eF8tpNU418VkBvM4+Tj5WIoGcA/Np6imS6HfauvAQ9TyGu69cC4vGXHB0EnTWD8UcNvj3v6eCXf+fn0yGe+JwTh/Od6Qx3OLx1Xoq2lA5imbp7Mt6VnHHOAsQW+6eBnk1OQHFsz0h2/uNljjaogbCouQcngaZFTMFQ0Aa1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(376002)(346002)(396003)(39860400002)(86362001)(4326008)(110136005)(8936002)(8676002)(54906003)(316002)(9686003)(52536014)(71200400001)(2906002)(4744005)(55016002)(66946007)(33656002)(6506007)(66556008)(64756008)(478600001)(7696005)(76116006)(66476007)(66446008)(5660300002)(186003)(142933001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: aA3VKCNUqCcF1WRqEcCbAXjDPd/S5afUjhaB2T7oWVuXOMpeG7t/EYHmaNa38SI/l50nZQG4Zs28RO68MYVOuVcQjOAQmIiIxLApJazMxZrztQFicNKvSBH182U55N7I0z6cR4iGeGwR1ygFn6aSyCDZLstQPiwiRXMF+6oSF8XcfI2Eqb0Ne7XaytfTyixSXrNgStwq/1/CgLk6/Cyl5oZd/67W905Rmc+6lV1XrB269D0UkOZ1sZqWv+ck5AeTgVCzY0fN5CbpmOWR8n0FpF82Wlmbpiudogeg61LANeVRdMK4QGYXyZuY+OsiiS3qd6TT6aMqtKDDg/9xw7PxIvAFhVQahf3SKp35aBZQf/dwnA2XNpXxxKuxm8wB1HkmqCP3CtOdGCdvubdhrpP4546AbeQquYdfFcYMfuBhViaNyjg+YIZ6APQSXwVUZUuGbUPaKOWYIZha45Y3AEYQ5KFCbHTA/4Rsluy2J8Tt60Yx7FuwcMJw7UwdA8FKEXydUl6/H3JCCgodLiFzUrwj2y1yzWuN0/rctFMO/1l08ZgXc/kSDbbIHJRZm3UyeYviITH59/4grOs1p1ZIpdfyKPVD9dobGjkDVcUZveNT6AU6qcle/u0F0bFj3OxRC+YWcTsFJuHN77l87YaRhJp+mXOVCfgxNuO1mZnlqnFQl1DI2AgV+0Ts9tJfPOWx3fgVrBw1JePrpT/vviTFOxUrqw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBJsWRmVeSWpSXmKPExsWy7bCmnm5EvEe8QdsSI4t3n56yWsw/co7V
-        YvXHx4wWV76+Z7OYvncTm0XLrEUsFmeb3rBbXN41h83ic+8RRovOL7PYLC6ecrW43biCzWLS
-        2qmMFq17j7Bb/Lu2kcXi5655LA4CHu9vtLJ77Jx1l93j0rk/zB6bVnWyedy5tofN4373cSaP
-        3uZ3bB59W1YxenzeJBfAGZVtk5GamJJapJCal5yfkpmXbqvkHRzvHG9qZmCoa2hpYa6kkJeY
-        m2qr5OIToOuWmQP0hpJCWWJOKVAoILG4WEnfzqYov7QkVSEjv7jEVim1ICWnwLJArzgxt7g0
-        L10vOT/XytDAwMgUqDAhO2Nx4ySmgvN8FR/udrE2ML7i7mLk5JAQMJFoe7CftYuRi0NIYAej
-        xMMt/UwgCSGBT4wSc7ZoQCS+MUq8/tPBDNNxccN0RojEXkaJ9ncXmSGc94wSTQv/sINUCQvE
-        SJyZt5EdJCEicIRZYnXncUaQBLPADEaJO3uUQWw2AS2J/S9usIHY/AKKEld/PAar4RWwk5j8
-        4xtYnEVAVeLa28tgN4kKhEmc3NYCVSMocXLmExYQm1PAVmLd/jUsEPPFJW49mc8EYctLNG+d
-        DXadhMB/Dompp38DNXMAOS4SGz87Q7wjLPHq+BZ2CFtK4mV/G5RdLbHy5BE2iN4ORokt+y+w
-        QiSMJfYvncwEModZQFNi/S59iLCixM7fc6F+5JN497WHFWIVr0RHmxBEibLE5Qd3mSBsSYnF
-        7Z1sExiVZiH5ZhaSD2Yh+WAWwrIFjCyrGMVSC4pz01OLDQuMkWN7EyM4iWuZ72Cc9vaD3iFG
-        Jg7GQ4wSHMxKIryvj7rHC/GmJFZWpRblxxeV5qQWH2I0BYbvRGYp0eR8YB7JK4k3NDUyNja2
-        MDE0MzU0VBLnfXhLIV5IID2xJDU7NbUgtQimj4mDU6qByYib2++EtvOLZX+/Vcxcq7R3blRs
-        I2vBnh2Zq6wFVLoSQ5O/CU+dsePmukmeb0NXrZQJirqRn1NouVb91d8ff4Imq9xgvTulzmLR
-        BEHlHbJvL7VZr4x737P4+eNglcSPAd8WMDaqGR05/3d1G/8/foZGl2T7+Xq1SbIzg00nqUgu
-        4nqeu/BipNfVCY92REqvnZR2UjOt8q7JXZZn/7fJMxREvln26s2WaKUEv0lme57KpHzOTir1
-        VCmsKZ0jd93GYMHVfblicmGGcmdSJk9OTdYJC+WV0J6TxZgWIdJ1bXa4q/7Ut0pzu9ND77L4
-        9u3Z5J2hImw46Yqhm8MEqcOma/gqWyU3M60wrzeK+HNIiaU4I9FQi7moOBEAfmno22sEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsWy7bCSvG5EvEe8wZlOJot3n56yWsw/co7V
-        YvXHx4wWV76+Z7OYvncTm0XLrEUsFmeb3rBbXN41h83ic+8RRovOL7PYLC6ecrW43biCzWLS
-        2qmMFq17j7Bb/Lu2kcXi5655LA4CHu9vtLJ77Jx1l93j0rk/zB6bVnWyedy5tofN4373cSaP
-        3uZ3bB59W1YxenzeJBfAGcVlk5Kak1mWWqRvl8CVsbhxElPBeb6KD3e7WBsYX3F3MXJySAiY
-        SFzcMJ2xi5GLQ0hgN6PE9u3bmSESkhLTLh4FsjmAbGGJw4eLIWreMkpM2PkIrEZYIEbizLyN
-        7CAJEYFjzBKbTp9mAnGYBWYwSvzZAJEREpjDJHF0zjw2kBY2AS2J/S9ugNn8AooSV388ZgSx
-        eQXsJCb/+AYWZxFQlbj29jITiC0qECaxc8ljJogaQYmTM5+wgNicArYS6/avAbOZBdQl/sy7
-        xAxhi0vcejKfCcKWl2jeOpt5AqPwLCTts5C0zELSMgtJywJGllWMkqkFxbnpucWGBYZ5qeV6
-        xYm5xaV56XrJ+bmbGMExraW5g3H7qg96hxiZOBgPMUpwMCuJ8L4+6h4vxJuSWFmVWpQfX1Sa
-        k1p8iFGag0VJnPdG4cI4IYH0xJLU7NTUgtQimCwTB6dUA1Ob1I9zPnO5j8zS4d637czuA4wW
-        5XOKmsoOZL5omCt+7cvyRcFzL5QavJoSuPdN3zn3rfl+zRKnGDh2xrk5lwtm/5itoSE26dJh
-        xVLZ/kVHF3Vf2yehcTF93ZNpDblPr642Wv/g+PZHtxoD2atnJlhZzvEO/BUsm7rSgttBYVWn
-        Y5tXfKPb+6tukrsqD1dttXmoUeBXMlFKdFPgvdbv6TN01wbdmVK5pUHPoXj3zGV3G/eukb/6
-        TD/6jv7JX/rGD761TH4nfT+Pf0nN9MnCTEs7mF4Gnt6gvJHn6dzIyU47LzDI/uBtEFhrnL49
-        b8VmWVvNY5/PtbZxvhRm1efxNP6tz1Qf9ftOu0RpSJuScbQSS3FGoqEWc1FxIgB9F1inWAMA
-        AA==
-X-CMS-MailID: 20200828013520epcas1p2bc32bd495a6427a36bc7e016dea98e27
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818
-References: <20200814000621.8415-1-digetx@gmail.com>
-        <CGME20200814000944epcas1p3dfd0104c5fa640695dfcd4949f6b1818@epcas1p3.samsung.com>
-        <20200814000621.8415-14-digetx@gmail.com>
-        <1b0d75fe-79af-70eb-8450-999a3bc72bac@samsung.com>
-        <1de8aa41-8001-cf46-026c-b00f8df0b9a3@gmail.com>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46368cc6-7a78-4a9a-b0d3-08d84af33b7b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Aug 2020 01:39:40.6656
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WUS5sT7zF/db6ov42my904PiInMl4KJNSrSkpDStc1j46Yythlurn1swNHJVVdGBtuVKqYAbaCZoEjf5k9v+GUUcnlcAxX2+ZWePSVdhF6SeSDuN62bSCtvixPGupfXa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB1977
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Hi,
+Hi Lad-san,
 
-On 8/15/20 1:47 AM, Dmitry Osipenko wrote:
-> 14.08.2020 05:02, Chanwoo Choi пишет:
->> Hi Dmitry,
->>
->> I add the minor comment. Except of some comments, it looks good to me.
-> 
-> Hello, Chanwoo! Thank you for the review!
-> 
-> ...
->>> +struct tegra_devfreq_soc_data {
->>> +	const char *mc_compatible;
->>> +};
->>> +
->>> +static const struct tegra_devfreq_soc_data tegra30_soc = {
->>> +	.mc_compatible = "nvidia,tegra30-mc",
->>> +};
->>> +
->>> +static const struct tegra_devfreq_soc_data tegra124_soc = {
->>> +	.mc_compatible = "nvidia,tegra124-mc",
->>> +};
-> .
->>> +	soc_data = of_device_get_match_data(&pdev->dev);
->>
->> I think that better to check whether 'soc_data' is not NULL.
-> 
-> It's a quite common misconception among kernel developers that
-> of_device_get_match_data() may "accidentally" return NULL, but it
-> couldn't if every driver's of_match[] entry has a non-NULL .data field
-> and because the OF-matching already happened at the driver's probe-time
-> [1], which is the case of this driver.
-> 
-> [1] https://elixir.bootlin.com/linux/v5.8/source/drivers/of/device.c#L189
-> 
-> Hence the NULL-checking is unnecessary.
-> 
-> When I first encountered the of_device_get_match_data(), I was also
-> thinking that adding the NULL-checks is a good idea, but later on
-> somebody pointed out to me (maybe Thierry) that it's unnecessary to do.
+> From: Lad Prabhakar, Sent: Tuesday, August 25, 2020 11:18 PM
+>=20
+> Document RZ/G1H (R8A7742) SoC bindings.
+>=20
+> No driver change is needed due to the fallback compatible value
+> "renesas,ipmmu-vmsa".
+>=20
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
 
-OK. Thanks.
+Thank you for the patch!
 
-> 
->>> +
->>> +	mc = tegra_get_memory_controller(soc_data->mc_compatible);
->>> +	if (IS_ERR(mc))
->>> +		return PTR_ERR(mc);
->>
->> You better to add error log.
-> 
-> In practice we should get only -EPROBE_DEFER here ever. I'll consider
-> adding the message in the next revision, at least just for consistency.
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-In order to handle -EPROBE_DEFER, recommend the using of dev_err_probe().
+Best regards,
+Yoshihiro Shimoda
 
-(snip)
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
