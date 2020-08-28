@@ -2,121 +2,167 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCACC433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EC7C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8568208C9
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85F620825
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 15:38:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOK87iFM"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="XQR50PRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgH1P2A (ORCPT
+        id S1726321AbgH1Pi0 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 11:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36754 "EHLO
+        Fri, 28 Aug 2020 11:38:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbgH1P1t (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 11:27:49 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24BE7C061264;
-        Fri, 28 Aug 2020 08:27:49 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g13so1664716ioo.9;
-        Fri, 28 Aug 2020 08:27:49 -0700 (PDT)
+        with ESMTP id S1728104AbgH1PiI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 11:38:08 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEDAC061264
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 08:38:07 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id b18so1704480wrs.7
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 08:38:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=raspberrypi.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=o2zmhYfnTOjlCp7ra2OX3q7ngPbsdndePp/+MPwLm0U=;
-        b=mOK87iFMfQJ9TetCoD1ZZEd3Gk9eSNPPllmpQeO6U2ZsRm0lNnzQ5ZRXVIPiGncq22
-         i7VOrvP90lKo0C72DYh3xhHjlZxSQiQWMoEfZcRyf0P6fCviuLYU+hra5w5xeBdk7Ral
-         f5UqYdhHhnj3b14aks4eeuTOxDYd0QEYiPkHDLBa0CHZbk7AEOXyJ4/o42s9Otlp+1W7
-         2fx+awoDW3pwdE1Ns1dJrJSAl2cdZpGtHhD/q4Yvuw9wLBC7FmlrIbsOqJffUeSZ1+xe
-         ps2xs7MPh4QNKDixWqAD4tCTy5bLoJAmpJsT/3Tq1xPZjJJoWjy8b9Ei5Gyi14AycRDr
-         uKaQ==
+        bh=zF4wjuq7NlXDCWxwqRlprq8+YIO3EP/prTKpLCQVawE=;
+        b=XQR50PRzIDXP7atHlwU9Y4qtYH28bhVuN+nc6jOAmcqiR2nOALvWYBMqVBfos581P7
+         XGuz8fAztk6pjkS4VSz1i+BrPic5yobLkfpI+3tqM0DZ+225Umxxb14UGnoxugMMwDYV
+         x+L4fm0kLLr7OwOHtl8k3RTEFMTZC5zlrXj/PfItUmfoa0XNfo8m1fX3TvKoIs/sF4Dm
+         ERf6IkH4uup+VWncdtaax3E7liZHFGEQq07Yl+ikmZwcm7SH86z5AYK4p+pOIWBgzfKY
+         oPh/N/V4D+w+z8aCU/f8HsXnQ03i+Y425UyDnihNH9AJ9fJSueAzXi8Uqx8LfCNf5Jrg
+         zGWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=o2zmhYfnTOjlCp7ra2OX3q7ngPbsdndePp/+MPwLm0U=;
-        b=Cxh6NgJsb4acZQIBxxPlVr1pDen/K1TNTAt0Uj7BhPOqkazQyYEBR6gbFZdljk2f7W
-         yBN0MpBVXDRmbrxKArEeLmCv5aDIVEv9REZab9bYRhJL2y4dHM18J4w6ng0yAIY0JMR0
-         kn9k98TMEm45kXhpmDgUQ2s7xywD2/NUIZXPoVozlQDAW/+ld9jLTwtpSL7gQ/doEI77
-         XfgoRhfqvMU0rfjbM5HV1dTonCxxmKIQ335bMkdHNxYBre9vdn2cEoxVOX+kLcqQAzOf
-         iWu95iUYhgM1QH6dqYup3b/Bs0ReWX2NWbj5fRjSzuhVbwzGAMrTM4BI5RAqg68C2cYE
-         G2cg==
-X-Gm-Message-State: AOAM530BllSNN//01wMBcgJ1pVaAUKEdygeYsYBZHP0ap6fY3p31Cg3e
-        8yLVDWBRJOfP/+NcypA8u2j2ZaiVop4Pi0vhMUg=
-X-Google-Smtp-Source: ABdhPJzgUFbW5K9VQXTgxAOChCuEdEYjVCRZKxYaY9ONaicsREP1FfFEyVeVlPAclR9W9HFB4nKRjf+XFCmKrCGEadU=
-X-Received: by 2002:a05:6638:594:: with SMTP id a20mr1658187jar.127.1598628467885;
- Fri, 28 Aug 2020 08:27:47 -0700 (PDT)
+        bh=zF4wjuq7NlXDCWxwqRlprq8+YIO3EP/prTKpLCQVawE=;
+        b=g2aJ2eEAh3hS45FQEpDlSlnbc3Jp1IGIf8/PJGcYDDG6yXrUjCMRRCrzzMJI5EG5PK
+         fs2d4yp27PzJdjlgQ6wiJOJBqxAIMVEBGJjN+l6Xju5F8kphGYsLeiFknMCPL+e7Ziog
+         FW/C4Ahwj7wfvU/VaVH2fCY8T5ipnozkYis82xi80zeZgrA1vZYK98s0x4ZojZfqBpq2
+         aUzg/4kuYeKw3QfHTLWNS+pif3rfkIzbSr7w95MHsNeGC3KAI0YccF9qpDImN7Ox+k7j
+         U8HQXwL3ed3JFuOPrZKbzCR+/92VQbZVET0ap/zPZgeglGgsNi3W27f83npARhd83b5b
+         9tJw==
+X-Gm-Message-State: AOAM531fNpasPl9oL8K1i0W/M37lFyidtjnSC9lUVWdxQF8QuIP2sMem
+        rbU16L6TAP2Wl8KQjcmTiLS1XknFDhqFUcHnvJnWWQ==
+X-Google-Smtp-Source: ABdhPJxHuvA/mBiuIknMdmiA5hSVY4oW2N955fzVP5r0eRNvMn3H/kQnCuEvq9cPXPwP9snvFO3LG6RV314TaQhSdqo=
+X-Received: by 2002:a5d:43c7:: with SMTP id v7mr2146163wrr.27.1598629086231;
+ Fri, 28 Aug 2020 08:38:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200827181842.1000451-1-f.fainelli@gmail.com> <5afe8762-c0a3-ff10-5946-0eb2e7ddc0e5@broadcom.com>
-In-Reply-To: <5afe8762-c0a3-ff10-5946-0eb2e7ddc0e5@broadcom.com>
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-Date:   Fri, 28 Aug 2020 11:27:36 -0400
-Message-ID: <CAC=U0a3JwZr5tpNZ1ba63ORw5gfiBPAhOqYo4UZTOE-eJm8mjw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] qspi binding and DTS fixes
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "maintainer:BROADCOM SPI DRIVER" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>,
-        "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
+ <CGME20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d@epcas1p3.samsung.com>
+ <20200821071045.24501-4-hoegeun.kwon@samsung.com> <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
+ <80749dcd-d4b2-68a1-f3ca-c19a120f6f7b@samsung.com> <84c423e8-25a6-8f23-cc80-7a17ce03fd1d@i2se.com>
+ <a19de8d5-2b01-cb62-38a2-b0732068025c@samsung.com> <a3231281-3bd0-e7c9-1bb0-f05848621e82@i2se.com>
+ <20200828152510.jhhqvka6fmouozff@gilmour.lan>
+In-Reply-To: <20200828152510.jhhqvka6fmouozff@gilmour.lan>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Fri, 28 Aug 2020 16:37:50 +0100
+Message-ID: <CAPY8ntDeLOb+GvpLDX1BFrhtYyGQzJ01pWHiS30r-2ZUJTg8Gw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] drm/vc4: hdmi: Add pixel bvb clock control
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        Tim Gover <tim.gover@raspberrypi.com>, kdasu.kdev@gmail.com,
+        sboyd@kernel.org, mturquette@baylibre.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Phil Elwell <phil@raspberrypi.com>, robh+dt@kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-Looks good to me.
+Hi Maxime, Stefan, and Hoegeun
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
+On Fri, 28 Aug 2020 at 16:25, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> Hi,
+>
+> On Fri, Aug 28, 2020 at 02:45:49PM +0200, Stefan Wahren wrote:
+> > Am 28.08.20 um 08:30 schrieb Hoegeun Kwon:
+> > > On 8/27/20 6:49 PM, Stefan Wahren wrote:
+> > >> Am 27.08.20 um 06:35 schrieb Hoegeun Kwon:
+> > >>> Hi Stefan,
+> > >>>
+> > >>> Thank you for your review.
+> > >>>
+> > >>>
+> > >>> On 8/26/20 7:04 PM, Stefan Wahren wrote:
+> > >>>> Hi Hoeguen,
+> > >>>>
+> > >>>> Am 21.08.20 um 09:10 schrieb Hoegeun Kwon:
+> > >>>>> There is a problem that the output does not work at a resolution
+> > >>>>> exceeding FHD. To solve this, we need to adjust the bvb clock at a
+> > >>>>> resolution exceeding FHD.
+> > >>>> this patch introduces a mandatory clock, please update
+> > >>>> brcm,bcm2835-hdmi.yaml first.
+> > >>>>
+> > >>>> Is this clock physically available on BCM283x or only on BCM2711?
+> > >>> As far as I know, BCM2711 raspberry pi 4 supports 4k,
+> > >>>
+> > >>> don't supported on pi 3 and pi 3+.
+> > >>>
+> > >>> Since 4k is not supported in versions prior to Raspberry Pi 4,
+> > >>>
+> > >>> I don't think we need to modify the bvb clock.
+> > >>>
+> > >>>
+> > >>> So I think it is better to update 'brcm,bcm2711-hdmi.yaml'
+> > >>>
+> > >>> instead of 'brcm,bcm2835-hdmi.yaml'.
+> > >> You are correct please update only brcm,bcm2711-hdmi.yaml.
+> > >>
+> > >> My concern was that the function vc4_hdmi_encoder_pre_crtc_configure()
+> > >> is called on a non-bcm2711 platform or on a Raspberry Pi 4 with an older
+> > >> DTB. So making the BVB clock optional might be better?
+> > > You are right, if use old dtb, we have a problem with the hdmi driver.
+> > >
+> > > So how about modifying it like this?
+> > >
+> > > @@ -1614,8 +1614,8 @@ static int vc5_hdmi_init_resources(struct vc4_hdmi
+> > > *vc4_hdmi)
+> > >
+> > >          vc4_hdmi->pixel_bvb_clock = devm_clk_get(dev, "bvb");
+> > >          if (IS_ERR(vc4_hdmi->pixel_bvb_clock)) {
+> > > -               DRM_ERROR("Failed to get pixel bvb clock\n");
+> > > -               return PTR_ERR(vc4_hdmi->pixel_bvb_clock);
+> > > +               DRM_WARN("Failed to get pixel bvb clock\n");
+> > > +               vc4_hdmi->pixel_bvb_clock = NULL;
+> > >          }
+> >
+> > i think the better solution would be devm_clk_get_optional(), which
+> > return NULL in case the clock doesn't exist.
+>
+> It's not really optional though. BCM2711 will require it in order to run
+> properly (as Hoegeun experienced), and the previous SoCs won't.
+>
+> If we use clk_get_optional and that the DT is missing the clock on the
+> BCM2711, we will silently ignore it which doesn't sound great.
 
-On Thu, Aug 27, 2020 at 3:30 PM Scott Branden
-<scott.branden@broadcom.com> wrote:
->
-> Patch series looks good.
->
-> Acked-by: Scott Branden <scott.branden@broadcom.com>
->
-> On 2020-08-27 11:18 a.m., Florian Fainelli wrote:
-> > Hi all,
-> >
-> > This patch series fixes incorrectly defined compatible strings for the
-> > Broadcom QSPI controller which resulted in the strings not being
-> > ordered from most to least compatible.
-> >
-> > We will need to apply some changes to the spi-bcm-qspi.c driver in
-> > the future to assume no revision register exist, and these patches
-> > are a preliminary step towards that goal.
-> >
-> > Florian Fainelli (5):
-> >   dt-bindings: spi: Fix spi-bcm-qspi compatible ordering
-> >   ARM: dts: bcm: HR2: Fixed QSPI compatible string
-> >   ARM: dts: NSP: Fixed QSPI compatible string
-> >   ARM: dts: BCM5301X: Fixed QSPI compatible string
-> >   arm64: dts: ns2: Fixed QSPI compatible string
-> >
-> >  .../bindings/spi/brcm,spi-bcm-qspi.txt           | 16 ++++++++--------
-> >  arch/arm/boot/dts/bcm-hr2.dtsi                   |  2 +-
-> >  arch/arm/boot/dts/bcm-nsp.dtsi                   |  2 +-
-> >  arch/arm/boot/dts/bcm5301x.dtsi                  |  2 +-
-> >  arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi |  2 +-
-> >  5 files changed, 12 insertions(+), 12 deletions(-)
-> >
->
+Am I missing something here? (I know I missed this earlier)
+We're in vc5_hdmi_init_resources, which is inherently bcm2711 only.
+bcm283x will go through vc4_hdmi_init_resources.
+
+As long as vc4_hdmi_init_resources has left vc4_hdmi->pixel_bvb_clock
+at NULL, then the clock framework will be happy to do a nop.
+
+For BCM2711 an old DT would have issues, but, as Maxime has stated, no
+binding or upstream DTB has been merged yet, so it can be made
+mandatory.
+Making it optional drops you back on whatever the firmware might have
+set it to, which may be sufficient for some resolutions but not
+others.
+
+  Dave
