@@ -6,119 +6,103 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5414DC433E7
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D025C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30317207DF
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C72A20848
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 14:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m3SH83Jh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bXWkGcM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgH1Ovp (ORCPT
+        id S1726804AbgH1OyS (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 10:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59294 "EHLO
+        Fri, 28 Aug 2020 10:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728004AbgH1Ovi (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 10:51:38 -0400
+        with ESMTP id S1726579AbgH1OyP (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 10:54:15 -0400
 Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58AF4C061234
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 07:51:35 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id f26so1604239ljc.8
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 07:51:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6F3C06121B
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 07:54:15 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id f26so1614384ljc.8
+        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 07:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
-        b=m3SH83JhPp5zysOZ8UGaOASaGvHwyBdy+dMZYhDz9IjeZrOUNDL7DGC2IYkYpae6UT
-         FpGAiEisi2hdICi2QBwVlxCRBlQYajQ6kIl3apwv6Zd5zwaMsm+woTJe0VxhXsJCBmVB
-         /Krz+up/rlea+pltJEx57NrY0mSwXBmgaoM8eBGVocnnO/EabniaNW7LYGT8om9EynVv
-         CIC9WHLTJ4TqH3GGF/DLZDlPvjr7OZ+u5Gmua0OvS7bbxfJ/KVP9l6u2f80iB9oWA4S5
-         XcREjqO8mQbwzNglMH6NjTAUpG2SBhzd1ox2KvfQMgaZMf3Rcty3gxm60W7RrjIkgx2T
-         DCMQ==
+        bh=EaaDnpIAd/0N0TJd1zen3eByHC6IpKh9i3Fpiy9qR/k=;
+        b=bXWkGcM/3QvfdQoTxvuWnsiCIP6Ks+5QoU4VaVvISf+Dna3kvGIf6YZZW66m/GT4JL
+         PToRSL1UdKdKcIRp/NNDz8whnwPjThqKj6jx55L92BmFeS9sdTVR77YlyqC1R4+bYf3a
+         0X5PUCqg7TQKLymp1mQfeCWX8MWIuh+srrDFX81wbr413tv5IMWBt61vCG65v5w6l3OJ
+         cioSvCbVjk1Izwh4cFysn6/9JWEoMlhvRUiI7s5FXKbYIXVqJqna4lAMVyjXZHvj/jHF
+         ad3QnxLOv9C/Vj0qCJ53ciUSg5YwV3wqVYOOtAxhYvw33D4RVWYNfox9o6ZK67/Qma7M
+         LvBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ImiWhFwiMiRaDILGK2vYxwtK6H1QbPrDWNEB8Fo5yp0=;
-        b=JWVrYEooF+lukHQT+KAxMUCbmPYEzoo4pCPVPOEilcX3mIT6JtXlRfnNV3ntk1+U0y
-         9/Ch+MMyTYBRsOJjtIYUJ/pAxg0PF+zR3DAGDKM1JtiaI89YroWiwozs5esCAzyX3BbC
-         NN7VI15pJn2cZGE7jNDIF8rUYStz4XtAnAFp4i0wrTqTZZhMkwnW5Jl2YpFD23eVIAwV
-         nnRASMC885cIywQqbSTqQobT4xj/llBHJArJKqJqA0KG/AqWXXE02ux3U1HcTDg7DKFF
-         rROePSlsf3wzFXVFf0mvmdUYaZqoRiV59o6G04QJVgpPY2OJPUcLkrhMcyYLjxgrnQYq
-         OISA==
-X-Gm-Message-State: AOAM531f0QX/U5PfwI6sXSt6s1BPtPQLZvf1/YZQNCSnE7Xr7x/9LTLn
-        fAkUIQErgPoBaxEtJDMFUR0xOQVVPrFFZmW4YHYyGA==
-X-Google-Smtp-Source: ABdhPJz7nqwPZB2YVbmFth99db1dEuQGwLTN+Hy4/7RmCxHXULzHeBqpJLldBTh4ZZ0VSRoDavwoeUh9uKGkK6yVJPw=
-X-Received: by 2002:a2e:9dd0:: with SMTP id x16mr1026817ljj.144.1598626291535;
- Fri, 28 Aug 2020 07:51:31 -0700 (PDT)
+        bh=EaaDnpIAd/0N0TJd1zen3eByHC6IpKh9i3Fpiy9qR/k=;
+        b=m116K3TZeY2cjDDcZ5qnbpNfHdSCWgj52vZms7YxqQ8hds448+J+gyMK6knBUOXocz
+         BWsm8H10RyvWv+0FdibM8j8DSDsLhORLNmQKTLNL2BTB8DLvdzN0lcDQO1FcUQWRzEKN
+         dMvLh431bq0+4dvpfoKU/fqD2yOAVGsyCQheEG+fBCH6kCnqv1aPoQtM13wWgoyxqCA4
+         /Bi0xktFQc1G0K8OMQxXcPHgePJKj9Uncj5EYjlI3xqnEM7VojBYsjks3askFZqkUSo1
+         H7TWKRTHtG9M1ogKy/S1Tofw2z3M5B102IYzV4Udo8cRbCFgCwDrG+2Lt+7bbcM3rA87
+         I+Og==
+X-Gm-Message-State: AOAM531EhnKR06JABoMQLrnITLZ2xb1odyYGly3m+0wRJbmA5TxTuDKD
+        H9AUM55s6zreaRS9X6iWWgPZe5p4bGtyaqHomVs1Rw==
+X-Google-Smtp-Source: ABdhPJw/f0HJ8MCYMcu1gB0bXpSqkJ9CYpXN9gEZm4uK0TEZUd3ZGEkcmGUeF/RM7NNZxPKum8shT+U99APw0soiIZ8=
+X-Received: by 2002:a2e:6a17:: with SMTP id f23mr972357ljc.338.1598626452983;
+ Fri, 28 Aug 2020 07:54:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825193536.7332-1-krzk@kernel.org> <CACRpkdb4j2kJvpY23G-os9gTktZW5HT287MsvMZxC=ovgn_9LQ@mail.gmail.com>
- <20200828130837.GA14163@kozik-lap>
-In-Reply-To: <20200828130837.GA14163@kozik-lap>
+References: <20200828142018.43298-1-andre.przywara@arm.com>
+In-Reply-To: <20200828142018.43298-1-andre.przywara@arm.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 16:51:20 +0200
-Message-ID: <CACRpkdaWAzJQz_Z1zsRbyVQNPO2wUogH8U_mDNV2fSkW22zmtQ@mail.gmail.com>
-Subject: Re: [PATCH v3 00/19] dt-bindings / arm64: Cleanup of i.MX 8 bindings
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+Date:   Fri, 28 Aug 2020 16:54:02 +0200
+Message-ID: <CACRpkdZUrPeUbpNeCZcw8kq5k3egijAuh7R1_3TkbPz5wN+=Lw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] dt-bindings: Convert SP804 to Json-schema (and fix users)
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wei Xu <xuwei5@hisilicon.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 3:08 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, Aug 28, 2020 at 02:51:20PM +0200, Linus Walleij wrote:
-> > On Tue, Aug 25, 2020 at 9:35 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > > This is a v3 of cleanup of i.XM 8 bindings and DTSes.
-> >
-> > If you are going to be working a lot on Freescale SoC code going forward
-> > I wouldn't mind if you could add yourself as maintainer for the
-> > Freescale pin controller and GPIO at least, I already have high trust
-> > in you in general so if the Freescale maintainers also have that I think you
-> > should just sign up as maintainer. This makes it easier to do pull requests
-> > and things like that.
->
-> Thanks for encouragement.  Indeed I am planning to do more work around
-> i.MX 8M platforms from NXP/Freescale. However there are already four
-> maintainers for Freescale pin controller drivers so I doubt there is
-> need for fifth entry :).
+On Fri, Aug 28, 2020 at 4:20 PM Andre Przywara <andre.przywara@arm.com> wrote:
 
-I beg to differ. As subsystem maintainer it has happened to me more
-than once that the i.MX pin control patches went unreviewed for weeks.
-Everyone listed for this driver is a kitchen sink maintainer that get
-way too much traffic and things fall over the edge.
+> This is the second attempt at converting the SP804 timer binding to yaml.
+> Compared to v1, I forbid additional properties, and included the primecell
+> binding. Also the clock-names property is now listed, although without
+> further requirements on the names. Changelog below.
 
-> Different question is the GPIO driver which apparently lacks entry in
-> Maintainers file.
+The series:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-That's probably just an oversight. Feel free to add it!
+> I couldn't test any of those DT files on actual machines, but tried
+> to make the changes in a way that would be transparent to at least the
+> Linux driver. The only other SP804 DT user I could find is FreeBSD,
+> but they seem to use a different binding (no clocks, but a
+> clock-frequency property).
+
+That's annoying. I suppose FreeBSD just made that up and doesn't
+even have a binding document for it?
+
+In an ideal world I suppose we should go and fix FreeBSD but I have
+no idea how easy or hard that is.
 
 Yours,
 Linus Walleij
