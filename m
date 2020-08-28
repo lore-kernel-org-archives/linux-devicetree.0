@@ -6,102 +6,128 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997BCC43461
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 10:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED054C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 10:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75408208CA
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 10:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE22E2078A
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 10:08:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yfZYGfWI"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="WVYxVSgb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CJpQvLkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgH1KCu (ORCPT
+        id S1729021AbgH1KIl (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 06:02:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728954AbgH1KCm (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 06:02:42 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E144C061232
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 03:02:41 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 185so641204ljj.7
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 03:02:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gg8w7FyxS5olNPP0T/p1d8kcV4d3oP7pvIBcK4KxiMA=;
-        b=yfZYGfWIaazhZpa4MiIfi8N1UYAwzELWPkKXWkeWzFH0MlcFmqxKiS+EAg2YC5+qd1
-         r+P2+8DvIOePVKtMKrUFWOydQlKrMISbi6KPh/K1RN1eF79khiLQGP0aJL4yAEsHZIhu
-         mLlsz7S6XqAjgLOoJe2zsL5z8EP92lbJAhoDJ2HAPkQQYf/4PR6erjtyFQvZ69ZDBFo8
-         geVZUT/w4DpGsf2+/cq4vAElPCWJeF8mLbiSZcFNQTPNypLVCx/4XEO+h782UOPyvBvx
-         6n8lsxYQb+0daon+8trpyWVpJN1BQcYSAou3pR+PM04gn6qcXNkxjP0Uruyr6u8BIUvE
-         XuuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gg8w7FyxS5olNPP0T/p1d8kcV4d3oP7pvIBcK4KxiMA=;
-        b=FX/tla+tlTOyPH6yYNu4krubbzz2EVKJ3zQj8a9rXmnoZ6N7u1HpTM96NgxmrX2enJ
-         gHsUgAy6F6+B8gjSak4AFL4lxhRC9qEB9b/SQN/xRb2klj2BXJgfcsoQi4S1C6OjEmdJ
-         LoI9Mk0lUF5OxNPtPFzFAXxcy6Z0Nj9yehAXvM7DEB/7VEOFYbtKPmYdJoRsgbm75fyA
-         qUwUHRmR1Z92bPUZ50+DDFsBJetmnPYLJfNA/n2pdoxF4uTfSjKIExdt2Mx6eXfHAbWE
-         fRYtNI+JHArarmsE9GGcNEFJ2aeKb9f8zWbwYYIRkmwoEtknB4Gje7id8Kne8l4VNRmS
-         lQDw==
-X-Gm-Message-State: AOAM531wNXdHLvgyTxEaAQA8fjxFBOFqawnCsOr41p9nkt7VEuIT8KJ3
-        JcqBmeR+kOQkrsaqtfeV5+/PxxbBmMQ85TYHKvC92g==
-X-Google-Smtp-Source: ABdhPJxGBDDIUGKlDHb7X+U9ZlUuxz6OTVqUpjGGNG25WaTWbUK0lfjyuNiH2UpzdtAP231LGoGkSdCBPbtNK7t7yF8=
-X-Received: by 2002:a2e:b80b:: with SMTP id u11mr556502ljo.286.1598608960272;
- Fri, 28 Aug 2020 03:02:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1595572867.git.frank@allwinnertech.com>
-In-Reply-To: <cover.1595572867.git.frank@allwinnertech.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 12:02:29 +0200
-Message-ID: <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
-Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
-To:     Frank Lee <frank@allwinnertech.com>
+        Fri, 28 Aug 2020 06:08:41 -0400
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:33315 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728218AbgH1KIh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 06:08:37 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 0FD8158047F;
+        Fri, 28 Aug 2020 06:08:36 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 28 Aug 2020 06:08:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=y6PHXIgWBPbtvFBPhl/0zuLOSry
+        Fkqx6ez5tJ90Cqho=; b=WVYxVSgb0Adj/HUfaYwpdtq5EVjUXz7gP8VgCCXLP2Q
+        KR7QR9bZwHp0oLnfep/2mVN3ysy34lehi5C/E7ARR+CCnWRpImz60w6qzWa5Qzpw
+        JEmjFEF/Lo+o2ajycT5Rdu6iqQ+z1Idg64Q4oMDyP6JmaHoIc7Be7ZBETMsYwJ5q
+        UymRT2ezcFYLUj04JMUH4hIA8OTNwH8AUn4AQgU1kOFUfqpuGLrpYI6ntJ7AYfEG
+        REBoNMBHZiGnbwFzBqXi3Cil4qXn6qRJ/9T6pZcyGLSKO+8xLv74ZgmWqR5mGcNE
+        od5ieYGs+HjLhcvEu5Dczu1mfFqXm76jvGTeKjEQklg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=y6PHXI
+        gWBPbtvFBPhl/0zuLOSryFkqx6ez5tJ90Cqho=; b=CJpQvLkgz0qjavV+hmVhTe
+        6sjDv3GS45I+9yYLjRDUO9k+DTz8dIAfJ0qRM0C8Tfpgv+wQXC5CMyhIt/eykBG2
+        U0C2NaR6KSyhcwFMXH7NNlrUUJa/EbsXc5jTczw+14Yb+IXJoygZz3U8M6J5Ryea
+        c+ihh/19yDJkkYr1jsjqIJ/quDNFYDGBeYeHq6vppOAI3tgg0w8Bd6jgWKO1dIri
+        w5iEicfLApxZt1f1HKipPjUPOoAuJoFvAXv2BXpAKHt/uCwIYe2EU+ZVDC3Rx2SF
+        TqaE48tNqPrUmP4ZXskJPXcpfu4zVK5Xc/+rdtPw6DUWrL8fXtRqAGtiY4TzkLwA
+        ==
+X-ME-Sender: <xms:otdIXyKnO1l5HxfGA3FsuAWqqeyPUuoc5qYyMCcqEoTUFEd0uoXoOw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvjedgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:otdIX6LR3G0Ouj-8ogYE6_olnBuRuCTNOVkxMl3nEiiqNYwxc7QEGg>
+    <xmx:otdIXysmFeCeeQDSrFP1Vc0wNvYxrywertj_lx183n76QcbsvaFCsA>
+    <xmx:otdIX3ZO0ycDnGoSciSOh-9sN93wLeXx0KyW3fYHVhTmmB1t0GKYWg>
+    <xmx:pNdIX2QUzismPVfRgMbjinfwYLihQlpRMM64bCqDlLZZMTPtw-pJeg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3BB7F328005A;
+        Fri, 28 Aug 2020 06:08:34 -0400 (EDT)
+Date:   Fri, 28 Aug 2020 12:08:32 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Mark Rutland <mark.rutland@arm.com>,
         Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
         Vasily Khoruzhick <anarsoul@gmail.com>,
-        Frank Lee <tiny.windzz@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Ondrej Jirman <megous@megous.com>,
-        Corentin Labbe <clabbe@baylibre.com>, bage@linutronix.de,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 0/7] Allwinner A64 digital audio codec fixes
+Message-ID: <20200828100832.rdom24nne3k72qw2@gilmour.lan>
+References: <20200726012557.38282-1-samuel@sholland.org>
+ <159776961932.56094.2705667823777375165.b4-ty@kernel.org>
+ <20200824140334.6gflonflqju6g5ea@gilmour.lan>
+ <20200825153652.GG5379@sirena.org.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="phq3v7zpz2byao32"
+Content-Disposition: inline
+In-Reply-To: <20200825153652.GG5379@sirena.org.uk>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Jul 24, 2020 at 8:53 AM Frank Lee <frank@allwinnertech.com> wrote:
 
-> This patch set adds initial support for allwinner a100 soc,
-> which is a 64-bit tablet chip.
+--phq3v7zpz2byao32
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shall I commit the pinctrl patches (if Maxime ACKed) separately
-or not? Once Maxime is happy, I am usually happy too.
+On Tue, Aug 25, 2020 at 04:36:52PM +0100, Mark Brown wrote:
+> On Mon, Aug 24, 2020 at 04:03:34PM +0200, Maxime Ripard wrote:
+>=20
+> > > [5/7] ARM: dts: sun8i: a33: Update codec widget names
+> > >       (no commit info)
+> > > [6/7] arm64: dts: allwinner: a64: Update codec widget names
+> > >       (no commit info)
+> > > [7/7] arm64: dts: allwinner: a64: Update the audio codec compatible
+> > >       (no commit info)
+>=20
+> > Ideally we should get the DT patches through arm-soc, can you drop the
+> > patches 5 to 7?
+>=20
+> When it says "no commit info" that means the patch wasn't applied.
 
-Yours,
-Linus Walleij
+My bad, thanks :)
+
+Maxime
+
+--phq3v7zpz2byao32
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0jXoAAKCRDj7w1vZxhR
+xbIuAQChfBrRDxrpF84qEZXzXXGsgmWR8LFHxd9RZXSZEnbopQEAvQ0j9FgXis/t
+SnAqPER+37FTmAxfocXlX+oSHxTsBQA=
+=N5mz
+-----END PGP SIGNATURE-----
+
+--phq3v7zpz2byao32--
