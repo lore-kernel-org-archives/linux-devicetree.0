@@ -2,71 +2,134 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64126C433E2
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD20FC433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 02:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E42720786
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 02:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BC420786
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 02:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgH1CUC (ORCPT
+        id S1728015AbgH1CXU (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Thu, 27 Aug 2020 22:20:02 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:57288 "EHLO vps0.lunn.ch"
+        Thu, 27 Aug 2020 22:23:20 -0400
+Received: from mga06.intel.com ([134.134.136.31]:11262 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbgH1CUC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Aug 2020 22:20:02 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kBTzk-00CDlN-DK; Fri, 28 Aug 2020 04:20:00 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH] of: of_match_node: Make stub an inline function to avoid W=1 warnings
-Date:   Fri, 28 Aug 2020 04:19:39 +0200
-Message-Id: <20200828021939.2912798-1-andrew@lunn.ch>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727124AbgH1CXT (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Aug 2020 22:23:19 -0400
+IronPort-SDR: oN69aaIKuT3MHcPG6L+HKbo4OonV3BiLu7zrA1+FqwYupdcOJIqsL65M8hPyuzkATx2qjwJ/Po
+ oOyK4+yWfWLA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="218147304"
+X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
+   d="scan'208";a="218147304"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2020 19:23:17 -0700
+IronPort-SDR: SDlNF5XF0T6XTGSYyzumy72sZR+6YYyxh9CA46B43y2XpImrt6hFawuSD66v9iMzEEaIU1U3fK
+ G8mBACcT0ASQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,362,1592895600"; 
+   d="scan'208";a="373921645"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga001.jf.intel.com with ESMTP; 27 Aug 2020 19:23:14 -0700
+From:   "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
+Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
+        gregkh@linuxfoundation.org, p.zabel@pengutronix.de,
+        balbi@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
+        "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Subject: [PATCH v9 0/2] phy: Add USB PHY support on Intel LGM SoC
+Date:   Fri, 28 Aug 2020 10:23:10 +0800
+Message-Id: <20200828022312.52724-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-When building without CONFIG_OF and W=1, errors are given about unused
-arrays of match data, because of_match_node is stubbed as a macro. The
-compile does not see it takes parameters when not astub, so it
-generates warnings about unused variables. Replace the stub with an
-inline function to avoid these false warnings.
-
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
+Requires minimal external components, a single resistor, for best operation.
+Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
 ---
- include/linux/of.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+v9:
+  - Vinod review comments update
+  - remove depends on USB_SUPPORT
+  - replace ret variable by 0 in return statement
+  - replace dev_info by dev_dbg
+  - handle ret and extcon_get_state separately
+v8-resend:
+  - Correct the typo error in my previous patch
+v8:
+  - Rebase to V5.9-rc1
+v7:
+  - No Change
+v6:
+  - No Change
+v5:
+  - As per Felipe and Greg's suggestion usb phy driver reviewed patches
+    changed the folder from drivers/usb/phy to drivers/phy
+  - Reviewed-By tag added in commit message
+v4:
+  - Andy's review comments addressed
+  - drop the excess error debug prints
+  - error check optimized
+  - merge the split line to one line
+v3:
+  - Andy's review comments update
+  - hardcode return value changed to actual return value from the callee
+  - add error check is fixed according to the above
+  - correct the assignment in redundant
+  - combine the split line into one line
+v2:
+  - Address Phillip's review comments
+  - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
+  - re-design the assert and deassert fucntion calls as per review comments
+  - address kbuild bot warnings
+  - add the comments
+v1:
+  - initial version
+---
+dt-bindings: usb: Add USB PHY support for Intel LGM SoC
+v9:
+  - No Change
+v8-resend:
+  - No change
+v8:
+  - No Change
+v7:
+  - Fixed the bot issue: usb-phy@e7e00000: '#phy-cells' is a required property
+v6:
+  - Fixed the bot issue.
+  - replace node-name by usb-phy@ in example
+v5:
+  - Reviewed-By tag added
+v4:
+  - No Change
+v3:
+  - No Change
+v2:
+  - No Change
+v1:
+  - initial version
+ 
+Ramuthevar Vadivel Murugan (2):
+  dt-bindings: phy: Add USB PHY support for Intel LGM SoC
+  phy: Add USB3 PHY support for Intel LGM SoC
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 5cf7ae0465d1..e9838387e7d9 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -991,7 +991,12 @@ static inline int of_map_id(struct device_node *np, u32 id,
- }
- 
- #define of_match_ptr(_ptr)	NULL
--#define of_match_node(_matches, _node)	NULL
-+
-+static inline const struct of_device_id *of_match_node(
-+	const struct of_device_id *matches, const struct device_node *node)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_OF */
- 
- /* Default string compare functions, Allow arch asm/prom.h to override */
+ .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  58 +++++
+ drivers/phy/Kconfig                                |  10 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-lgm-usb.c                          | 281 +++++++++++++++++++++
+ 4 files changed, 350 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
+ create mode 100644 drivers/phy/phy-lgm-usb.c
+
 -- 
-2.28.0
+2.11.0
 
