@@ -2,88 +2,102 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF9FC433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5B5C433E2
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1312208D5
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41F02075B
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:31:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iUJdiq08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgH1J2l (ORCPT
+        id S1728764AbgH1Jbk (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:28:41 -0400
-Received: from mga03.intel.com ([134.134.136.65]:27470 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728362AbgH1J2i (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 05:28:38 -0400
-IronPort-SDR: GbEUEp+0kaNVgq8dP753M1QcX3GQ7j37f80HwuSwOl7nASsQO07f8YpldE3tNSWZBAUVGzmekx
- KNKXDeXQ0d9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9726"; a="156641284"
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="156641284"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2020 02:28:37 -0700
-IronPort-SDR: iVyKu4XviyxQQJXd0QlV9QkFkH31Rj/KiBjOQmy9sYXNob2gBK778SrMAS+c/pNgLXp80rp2Ea
- 2N4zbx0Y6zOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,363,1592895600"; 
-   d="scan'208";a="329901335"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 28 Aug 2020 02:28:35 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kBagT-00C4dH-87; Fri, 28 Aug 2020 12:28:33 +0300
-Date:   Fri, 28 Aug 2020 12:28:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Thomas Preston <thomas.preston@codethink.co.uk>,
-        Jan =?iso-8859-1?Q?Kundr=E1t?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
-Message-ID: <20200828092833.GP1891694@smile.fi.intel.com>
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk>
- <20200814100357.209340-2-thomas.preston@codethink.co.uk>
- <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
+        Fri, 28 Aug 2020 05:31:40 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57644 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728016AbgH1JbW (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:31:22 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07S9RKLH005422;
+        Fri, 28 Aug 2020 11:30:46 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=GZcXYK4IQ/ttyWbgQ2w+8/AUl4mLyk/JntubDt8xpu4=;
+ b=iUJdiq08j1aAdX0H//CuLIvKCyuHq+0qo06HR0veCNKqtfts+9GPogoz7knCy4K6H2Tn
+ rII6qYVUpDXcqmuN2R0T010lAr8/3hIeUNaCs48mgCAMxjSkLcbuhj168DSlabMBrPB8
+ UbzyAqIycsEyWw0NfqB9/v/EohNmJRNe8FH5aK9W+ZOqXrDx0eVzEEcGSxIAiWsM3sB5
+ qtjPsBRjuo2xWipwyiMeUAbrQCZF+usgqdzZFm125aVg5bTXq9sbdTojV/8HiF6vfaDn
+ HNQgrnRPXS4jTFLUciLAAyKgaiHN3j4tm6bvLLXALI28xEY5BaKPfDGmxatcXU+ux7Bz NQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 332t8g5mm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Aug 2020 11:30:46 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 753D510002A;
+        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 547472AD2DE;
+        Fri, 28 Aug 2020 11:30:38 +0200 (CEST)
+Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Aug
+ 2020 11:30:37 +0200
+Subject: Re: [PATCH v7 3/3] ARM: dts: stm32: add initial support for
+ stm32mp157-odyssey board
+To:     Marcin Sloniewski <marcin.sloniewski@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <robh+dt@kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <mani@kernel.org>, <a.fatoum@pengutronix.de>, <sam@ravnborg.org>,
+        <linus.walleij@linaro.org>, <arnd@arndb.de>, <broonie@kernel.org>,
+        <lkundrak@v3.sk>, <daniel@0x0f.com>,
+        <kuninori.morimoto.gx@renesas.com>, <allen.chen@ite.com.tw>,
+        <robh@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20200809164450.289731-1-marcin.sloniewski@gmail.com>
+ <20200809164450.289731-3-marcin.sloniewski@gmail.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <8a95db7e-865a-db34-ae8a-b2fe3533ab8d@st.com>
+Date:   Fri, 28 Aug 2020 11:30:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200809164450.289731-3-marcin.sloniewski@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-28_05:2020-08-28,2020-08-28 signatures=0
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:06:21AM +0200, Linus Walleij wrote:
-> On Fri, Aug 14, 2020 at 12:04 PM Thomas Preston
-> <thomas.preston@codethink.co.uk> wrote:
+Hi Marcin,
+
+On 8/9/20 6:44 PM, Marcin Sloniewski wrote:
+> Add support for Seeed Studio's stm32mp157c odyssey board.
+> Board consists of SoM with stm32mp157c with 4GB eMMC and 512 MB DDR3 RAM
+> and carrier board with USB and ETH interfaces, SD card connector,
+> wifi and BT chip AP6236.
 > 
-> > - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
-> > - Fix precious range to include INTCAP{A,B}, which clear on read.
-> > - Fix precious range to include GPIOB, which clears on read.
-> > - Fix volatile range to include GPIOB, to fix debugfs registers
-> >   reporting different values than `gpioget gpiochip2 {0..15}`.
-> >
-> > Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+> In this patch only basic kernel boot is supported and interfacing
+> SD card and on-board eMMC.
 > 
-> Since the other two patches seem wrong, please resend this one patch,
-> also include the people on TO: here: Andy, Phil and Jan, who all use
-> this chip a lot.
+> Signed-off-by: Marcin Sloniewski <marcin.sloniewski@gmail.com>
+> ---
 
-And it seems it combines a lot of stuff in one patch. Can we have a split with
-appropriate Fixes: tags?
+Series applied on stm32-next.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Regards
+Alex
 
