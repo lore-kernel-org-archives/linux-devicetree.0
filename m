@@ -2,172 +2,115 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5861C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F521C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC6C720714
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6550320776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 13:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Oj6a3RQS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BePUAKUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgH1NpT (ORCPT
+        id S1727002AbgH1Nx2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 09:45:19 -0400
-Received: from mail-bn8nam12on2062.outbound.protection.outlook.com ([40.107.237.62]:15457
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729566AbgH1NmE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Aug 2020 09:42:04 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J2Sngn4aZ8userDdx9wHdHfCWVGkH/N0CAWsJzZ/oxe0wvQrBAZevWwt171Vn02ENmD81Ex+lF9DGCp/5lRwX3hBdRo0finA8oTROT5UF6zXI4mDBj6DdXK1iew4FBFKSQXTYsRzQJYGAXmG5y6edq8KnXtrZQL/ytxTBBzkGuf7ZJtnZjT6KiMQr6QLRlbtk1VCZFbEx4hSJZUHpTzQq1QX5aAYCq+jfU7AnwrJ3g4nTGak0awIBWcHUbwB8qzd21hqDGkB/JNHV5y6szzcfQCvc1Z3YpTYzIyTNRHQUFhwNKmDRyHtsdLiOTIrzpA2O2uI/mlijY0zj5kBEvd4bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Z9K7W0xVt6tZoVxuf4lFIucFP1dZMqMhbLgQzy6/IE=;
- b=bpSdwt9YL2WncaRlUxaU3g2FbBELnfy+7kADHilCZ3TFi0ORVs/ZJXM/b5sur8PHFwWn//WM28aajjxVQdLEA+acITRWzWqkaVpRiHmO1i4xSY07upPzW2drSshHLh/39HuG3xWkhFoXJ8BGWG0dVGRByvZHzo2ZBnFNPZfJUdztJGi1b7C62x5SB9Q1ybbXzDuFp741I4pYP9gOEOzwLhIq5Oq/VTd7Kmgg6aNaRAuwyf0I02ToHjZUoxgNTRYnR2yYfSJUn5ah4wnaNS2nNvKJtYzn2vzdV0DaevaltvGTOvjcu9h2sbLzsrKyTc8GxTDNrWBaLJIk9VNEnGQC+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=baylibre.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Fri, 28 Aug 2020 09:53:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbgH1Nx0 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 09:53:26 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F40BC061264;
+        Fri, 28 Aug 2020 06:53:24 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id oz20so1613977ejb.5;
+        Fri, 28 Aug 2020 06:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4Z9K7W0xVt6tZoVxuf4lFIucFP1dZMqMhbLgQzy6/IE=;
- b=Oj6a3RQSmWVpiM5GZ3R1emqTVG70nqqvOYxQBX+PGaoJ3wK0hwGmCV26HSJfw6CQUcUm+n+1A4dvkEwyaOfbIOrgKs/5BP/dseq71E0W+uLjiVGWpF+MxXWe8/cjOBqik5iyDGwybv6ZyxliZKzUVMZo1laLgK3BA3/AeK3M0Rs=
-Received: from SA0PR11CA0011.namprd11.prod.outlook.com (2603:10b6:806:d3::16)
- by DM5PR02MB2234.namprd02.prod.outlook.com (2603:10b6:3:58::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.21; Fri, 28 Aug 2020 13:40:33 +0000
-Received: from SN1NAM02FT012.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:d3:cafe::15) by SA0PR11CA0011.outlook.office365.com
- (2603:10b6:806:d3::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Fri, 28 Aug 2020 13:40:33 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; baylibre.com; dkim=none (message not signed)
- header.d=none;baylibre.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT012.mail.protection.outlook.com (10.152.72.95) with Microsoft SMTP
- Server id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 13:40:33
- +0000
-Received: from [149.199.38.66] (port=59865 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1kBebn-0004so-5f; Fri, 28 Aug 2020 06:39:59 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1kBecL-0006Ll-6m; Fri, 28 Aug 2020 06:40:33 -0700
-Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07SDeShj028644;
-        Fri, 28 Aug 2020 06:40:28 -0700
-Received: from [10.140.6.59] (helo=xhdshubhraj40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <shubhrajyoti.datta@xilinx.com>)
-        id 1kBecF-0005it-VV; Fri, 28 Aug 2020 06:40:28 -0700
-From:   Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-To:     linux-clk@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org, sboyd@kernel.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org, mturquette@baylibre.com,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH v6 6/8] clk: clock-wizard: Remove the hardcoding of the clock outputs
-Date:   Fri, 28 Aug 2020 19:09:54 +0530
-Message-Id: <1598621996-31040-7-git-send-email-shubhrajyoti.datta@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1598621996-31040-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-References: <1598621996-31040-1-git-send-email-shubhrajyoti.datta@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T4lzNkfbdbtgX88qAdnkqoTFXT/HG037Os2PTRBYKfo=;
+        b=BePUAKUOc3LbigT963xXcitFAVnrOr0MehLVBNAaj6e09jglBOHlKzzpGDU2t+UGeY
+         8Tm5GaAT4VTleqc4Y1tYNg0LbJf5RmWoP8uJScLroWfoH90tgLqB7T6W7kyrIghaOPUC
+         PgjcaWVFe+CEa5en382QRkk5LXQWHcBa568KWH0NGPAAxEQojOiostq+/6egiErfJSXW
+         XDbb9f2JRg8f2ZkiMrXuZkmJb/T5ZNVJmoecUIE/Ggt/aTBx1kmKtZDJ1+0lb3wTCdNy
+         Vndp6TK38wHY42rHCl9eTHtMys6encXyAGlt4yAks0Cox9YfuXrGVkh6b2Js8OGKhV4b
+         wH9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T4lzNkfbdbtgX88qAdnkqoTFXT/HG037Os2PTRBYKfo=;
+        b=okPauw12Fnpnbe7TuxkIJAN8LArPiiDjjU/7OSaYvTNeARtje1xGqRHzbhFIADREQE
+         488j0qjD9xSMuU2I5egnI8NGKElrzKul9BGCV26bqwNr5Alhftdd121uwuSn8OGa1zMq
+         a3At3sYSuJS4Z89MYWOwDZYCiGWHUhC4qplL5dRIcTUaQRHgNwRDVUZyYxNM9BHNwQUX
+         x7zepBxWkQ5r7I9rGXJYtz6xQGEOlecJhfaQZKjn9l3zcuncNIlbpFli6aEzpOWRPSbO
+         TPhNOqgkzBISRLF81xmD21gkZr89do+lI7P9Qo7WE8f6JScHrX07smm1qpBerwvajt2J
+         xMFA==
+X-Gm-Message-State: AOAM532RW5VgcVNNix4xGV/n9XyFJpZUC1Xk3lld45edip57FqEGi4je
+        /qOw63Clnbpb4EIVXTf+CtU=
+X-Google-Smtp-Source: ABdhPJzjXa3uhVQ1vYKA0KVvl7n8ZXPwjp84kKKWg7pTSUsLm2w7BqKchs3veGnxYOK88qxA6i55pA==
+X-Received: by 2002:a17:906:5812:: with SMTP id m18mr1961371ejq.66.1598622802967;
+        Fri, 28 Aug 2020 06:53:22 -0700 (PDT)
+Received: from localhost.localdomain ([188.24.159.61])
+        by smtp.gmail.com with ESMTPSA id f20sm981624ejq.60.2020.08.28.06.53.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Aug 2020 06:53:22 -0700 (PDT)
+From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+To:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Peter Korsgaard <peter@korsgaard.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
+Subject: [PATCH v2 0/4] Add initial support for RoseapplePi SBC
+Date:   Fri, 28 Aug 2020 16:53:16 +0300
+Message-Id: <cover.1598621459.git.cristian.ciocaltea@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 86420ce0-73aa-4e2b-a82e-08d84b57f019
-X-MS-TrafficTypeDiagnostic: DM5PR02MB2234:
-X-Microsoft-Antispam-PRVS: <DM5PR02MB22341077A2F09CB34346B513AA520@DM5PR02MB2234.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HJTpAInATx4XWcskg1Cfegx/nvuR2MyUCH5pj0wnxLuXkp8yXvEnRVkd3UWiojHvjo9+zMH6uR9PmMHkmIAHe6XFsqfpccAcDVEocmFGtK6FOmxavh0ulJ1zYaKW0PhcQTvpy6BO+vGhyZdFShgfi5+CfPxsUQzKoBs7tKFBgNF9TaQdoET5C5r9Q3JI5xBSY1T6DIYjBv2iHLV6+pIa4FwtoNCZjtswImskuTOQkSffvF/hdPFO0pejuokehGTSQORwucF0Z5I7J3hwPaEFNtP0MDAOtBpDU0u35Lx0z+bISeUG7TpxYHSKZB5+jHMDz7w9rMoYGVAQwe/Psg4c+DTYGEaez0zYExBWCMIaySqb2UjakbybnNd4AVMqxRMKA4iC+8kQ9V5Zir/at/Gr6Q==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(346002)(396003)(376002)(39860400002)(136003)(46966005)(336012)(4326008)(107886003)(6916009)(6666004)(7696005)(82740400003)(47076004)(2906002)(81166007)(8936002)(44832011)(316002)(356005)(82310400002)(2616005)(478600001)(70206006)(83380400001)(5660300002)(426003)(186003)(36756003)(26005)(70586007)(9786002)(8676002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 13:40:33.5276
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86420ce0-73aa-4e2b-a82e-08d84b57f019
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT012.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2234
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-The number of output clocks are configurable in the hardware.
-Currently the driver registers the maximum number of outputs.
-Fix the same by registering only the outputs that are there.
+This patchset enables basic support for RoseapplePi, relying exclusively
+on the existing infrastructure for the Actions Semi Owl SoCs (thanks to
+Andreas and Mani for making this possible).
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
-v4:
-Assign output in this patch
+The SBC is powered by the Actions Semi S500 SoC and comes with 2GB RAM,
+uSD slot and optional eMMC storage. For more details, please check:
+http://roseapplepi.org/index.php/spec/
 
- drivers/clk/clk-xlnx-clock-wizard.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+The upcoming patches will improve this initial support by adding the
+missing bits and pieces to the S500 clock management unit, which is a
+prerequisite for providing an S500 pinctrl and gpio driver, in order to
+eventually enable access to additional functionality like I2C and MMC.
 
-diff --git a/drivers/clk/clk-xlnx-clock-wizard.c b/drivers/clk/clk-xlnx-clock-wizard.c
-index 1af59a4..ded4cdd 100644
---- a/drivers/clk/clk-xlnx-clock-wizard.c
-+++ b/drivers/clk/clk-xlnx-clock-wizard.c
-@@ -442,6 +442,7 @@ static int clk_wzrd_probe(struct platform_device *pdev)
- 	const char *clk_name;
- 	struct clk_wzrd *clk_wzrd;
- 	struct resource *mem;
-+	int outputs;
- 	struct device_node *np = pdev->dev.of_node;
- 
- 	clk_wzrd = devm_kzalloc(&pdev->dev, sizeof(*clk_wzrd), GFP_KERNEL);
-@@ -512,6 +513,7 @@ static int clk_wzrd_probe(struct platform_device *pdev)
- 		goto err_disable_clk;
- 	}
- 
-+	outputs = of_property_count_strings(np, "clock-output-names");
- 	/* register div */
- 	reg = (readl(clk_wzrd->base + WZRD_CLK_CFG_REG(0)) &
- 			WZRD_DIVCLK_DIVIDE_MASK) >> WZRD_DIVCLK_DIVIDE_SHIFT;
-@@ -533,7 +535,7 @@ static int clk_wzrd_probe(struct platform_device *pdev)
- 	}
- 
- 	/* register div per output */
--	for (i = WZRD_NUM_OUTPUTS - 1; i >= 0 ; i--) {
-+	for (i = outputs - 1; i >= 0 ; i--) {
- 		const char *clkout_name;
- 
- 		if (of_property_read_string_index(np, "clock-output-names", i,
-@@ -564,7 +566,7 @@ static int clk_wzrd_probe(struct platform_device *pdev)
- 		if (IS_ERR(clk_wzrd->clkout[i])) {
- 			int j;
- 
--			for (j = i + 1; j < WZRD_NUM_OUTPUTS; j++)
-+			for (j = i + 1; j < outputs; j++)
- 				clk_unregister(clk_wzrd->clkout[j]);
- 			dev_err(&pdev->dev,
- 				"unable to register divider clock\n");
+Thanks and regards,
+Cristian Ciocaltea
+
+Changes in v2:
+ - Added Reviewed-by and Acked-by tags from Rob
+ - Added Reviewed-by tags from Peter
+ - Rebased series onto v5.9-rc2
+
+Cristian Ciocaltea (4):
+  arm: dts: owl-s500: Fix incorrect PPI interrupt specifiers
+  dt-bindings: Add vendor prefix for RoseapplePi.org
+  dt-bindings: arm: actions: Document RoseapplePi
+  arm: dts: owl-s500: Add RoseapplePi
+
+ .../devicetree/bindings/arm/actions.yaml      |  1 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+ arch/arm/boot/dts/Makefile                    |  1 +
+ arch/arm/boot/dts/owl-s500-roseapplepi.dts    | 47 +++++++++++++++++++
+ arch/arm/boot/dts/owl-s500.dtsi               |  6 +--
+ 5 files changed, 54 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/boot/dts/owl-s500-roseapplepi.dts
+
 -- 
-2.1.1
+2.28.0
 
