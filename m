@@ -2,93 +2,144 @@ Return-Path: <SRS0=L07u=CG=vger.kernel.org=devicetree-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D81C433E6
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CE5C433E6
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDCC220776
-	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1272720776
+	for <linux-devicetree@archiver.kernel.org>; Fri, 28 Aug 2020 09:11:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h1hgyTlR"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qN37PLkg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J/GreiDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgH1JGj (ORCPT
+        id S1728830AbgH1JL2 (ORCPT
         <rfc822;linux-devicetree@archiver.kernel.org>);
-        Fri, 28 Aug 2020 05:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgH1JGg (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Aug 2020 05:06:36 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964FEC061264
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 02:06:34 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id l2so574019eji.3
-        for <devicetree@vger.kernel.org>; Fri, 28 Aug 2020 02:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HvV7eXBvyQgCBgrsjvWaIv2rEaJefsbSLUIuZLspMEA=;
-        b=h1hgyTlR8KltTUDbvjiOZ0FJPdU1qPb2uGFPxuC9WkmLFRhAEyeaFSrZW97ojGNcp0
-         ccRdiTageCHFfZJBLuATi1xd0boWZlbxqSGcqSlmEk1SE5ZKwTSi9YCZAIGfUZiNksWn
-         mBZgya8M2DBV7E+1WLVtyLXHnyeyR28qvSLsk3mBKW1XGhw+ERe3+pE8Hxv8ePRG2Uc3
-         FqDohuRqdAKDiQe60Wp7dd+SAqOlJDTYXWvF5PYjIrtO70S+9wpqgoV0PH57Lti/mkS7
-         lkA0rwUzvgBigA19Oou95yEg2rao3yIdKqpkBcEr/hgJpNN9FGAPgr0LiMO2eTLNh9sf
-         XsnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HvV7eXBvyQgCBgrsjvWaIv2rEaJefsbSLUIuZLspMEA=;
-        b=cFJds9JgvMJVNyM7sPBmpIfHPU2oJKvKdtkqxB1uaGVBGq2Och+SZBjiOxm54CeEZ5
-         i7QG95LPvPY8bHHyRSuekiHPtumb783MCxMj8zV5cnQ0hGcqoPX7HiSj3qHGHlDIw78J
-         SiqO/zodQd0qkmvY5aVG/KwjgdMfgl+gz1xC68jzjbKjyaOAmDogDO8VIqGi7Hy2uWRW
-         zmAJe3TVGYGH3+uXsjOY+zR38HHz5BQPsse5sh894C6pSmBwsgyMcoipmq6JPi98Ud9s
-         3Hn88ZlrUqY4ce7uGh6qQc5FAZ0r9FMJlRNNaazuO/9bKj5sH8+A+/xiS54XfVlnYBcm
-         kPwA==
-X-Gm-Message-State: AOAM53100RK+9K6+Qwrh4dfmRrD347DDkvuwW8axoKtDjJqK7bW2y5yZ
-        BXC7onybo0FCloQW1QOaBfpslJ7CdAbPePeerFayNw==
-X-Google-Smtp-Source: ABdhPJzmAhVb+RcSV8T4sZX5/XRKDlKD6uVeC4jK3X8WbHU7aWhc8Y1BK4BLw7LNFeiAVXdSfK9JBKq/4Qwn8LtOpcU=
-X-Received: by 2002:a17:906:5f8d:: with SMTP id a13mr767284eju.226.1598605593511;
- Fri, 28 Aug 2020 02:06:33 -0700 (PDT)
+        Fri, 28 Aug 2020 05:11:28 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:42673 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728555AbgH1JL1 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Fri, 28 Aug 2020 05:11:27 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 8AB89789;
+        Fri, 28 Aug 2020 05:11:24 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 28 Aug 2020 05:11:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=Z
+        6mEu5ovUCsGUuf/wYMTCQN4y6rAXdKDOAyJ2Ja6nCA=; b=qN37PLkgvkVR5Aazx
+        VO6BnCy6DwdAV9DCbIZf14J7EMDsPTYcytEmv27Q19g3xOaErEcN8uFbDs/RK+2r
+        qvYHiC8ux0XdNPZEvNL2DSUXkQaRhpUgRLsVdt6V/rYwMASN0dJ2Pp8DeUqZgKnM
+        Jbxtp2cKAYQsZWyV0ok59dj5yMepW4jXKcqOYAtdomFYcOWZC4DCVyw3RBdj1ot5
+        MVpJ7WYZwLU8liQEakA9C4keoaImk068u7RSJwVZadNsOES7aPlfbRYCI4oWSynA
+        KnTZGKmJ1QmexpzClITgozZEM7c/Co9GQ5xWxUGtlT14hJRUPRe8De9lUCQIKO81
+        Fx0HQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=Z6mEu5ovUCsGUuf/wYMTCQN4y6rAXdKDOAyJ2Ja6n
+        CA=; b=J/GreiDhRaZndA7DEBOqOBikLTiFnuLazmjM6HRBkH3DkY6QbCiHTxKXA
+        AT7CFyaTUft0UvLJz8h9MQO21oTI+fax4rUA4NHW/zUTyp3TaKvhZr4I4lDeiWsS
+        1iYNk7N4HGxcIdw1ifu4rfV6mbtt+vw0hjSF4bhKZuLjsgnqbVUeZjcu8/zJenqf
+        EGZ5dW/GElYwtg6CcuJEMLARnYM2EFBU6Vr3/b83Ib2JVAyD4klarhMsRt8SuWiI
+        DQeHiRaO4CO65d5YvEfT6aNonVw9LHcy7CmDRWkeR2BBvV/zm/zDP4MlT3zVpQzM
+        zZI74TPd9+2TnOcv6cKXbwpM1IwvQ==
+X-ME-Sender: <xms:OspIX0ocSBm2DjNrFPFC4W7EeyJNIMQwWeiDjArXG5Umr_lD8Jl3rg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvjedgtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpefhieehiefftddtgfekuefgleelgedtudefvddtkedvheejhfethfekjedv
+    fffhheenucffohhmrghinhephigrmhhlrdihohhupdihrghmlhdrmhihpdgsohhothhlih
+    hnrdgtohhmnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgep
+    tdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:OspIX6qjTBWCbMKI489sP7e1md-tHIHIS9C2HkG5wnfEg70zir99BA>
+    <xmx:OspIX5PDxDCqlUilueVJdVYs9CHCjUU0UeKMXgftzRW4mJhR9HiIFg>
+    <xmx:OspIX77D5JWzJkxHsy_fyvUcDVrGQ_xjsI4FTSiFr-oAxNizaJqqEg>
+    <xmx:PMpIXyTmitD0WCYlzYmkQqr7Z6mJ3U_0CDE3jCHafbFtXctad7afN8uEIYo>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 10FC33280064;
+        Fri, 28 Aug 2020 05:11:21 -0400 (EDT)
+Date:   Fri, 28 Aug 2020 11:11:19 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Hoegeun Kwon <hoegeun.kwon@samsung.com>, nsaenzjulienne@suse.de,
+        eric@anholt.net, devicetree@vger.kernel.org,
+        tim.gover@raspberrypi.com, dave.stevenson@raspberrypi.com,
+        sboyd@kernel.org, mturquette@baylibre.com, kdasu.kdev@gmail.com,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, robh+dt@kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] drm/vc4: hdmi: Add pixel bvb clock control
+Message-ID: <20200828091119.2kykcxixw247kfno@gilmour.lan>
+References: <20200821071045.24501-1-hoegeun.kwon@samsung.com>
+ <CGME20200821071122epcas1p3d00dda4665f94192ac5e9ee829d0557d@epcas1p3.samsung.com>
+ <20200821071045.24501-4-hoegeun.kwon@samsung.com>
+ <61c199bf-852f-82d3-089a-a0a435343acf@i2se.com>
+ <80749dcd-d4b2-68a1-f3ca-c19a120f6f7b@samsung.com>
+ <84c423e8-25a6-8f23-cc80-7a17ce03fd1d@i2se.com>
 MIME-Version: 1.0
-References: <20200814100357.209340-1-thomas.preston@codethink.co.uk> <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-In-Reply-To: <20200814100357.209340-2-thomas.preston@codethink.co.uk>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 28 Aug 2020 11:06:21 +0200
-Message-ID: <CACRpkdZj-eAz0yse3OcKLiO0sPVHJMmhVZ_yLWFt1YKPe3hkRg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] pinctrl: mcp23s08: Fixup mcp23x17 regmap_config
-To:     Thomas Preston <thomas.preston@codethink.co.uk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>,
-        Phil Reid <preid@electromag.com.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <84c423e8-25a6-8f23-cc80-7a17ce03fd1d@i2se.com>
 Sender: devicetree-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <devicetree.vger.kernel.org>
 X-Mailing-List: devicetree@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 12:04 PM Thomas Preston
-<thomas.preston@codethink.co.uk> wrote:
+Hi Stefan,
 
-> - Fix a typo where mcp23x17 configs are referred to as mcp23x16.
-> - Fix precious range to include INTCAP{A,B}, which clear on read.
-> - Fix precious range to include GPIOB, which clears on read.
-> - Fix volatile range to include GPIOB, to fix debugfs registers
->   reporting different values than `gpioget gpiochip2 {0..15}`.
->
-> Signed-off-by: Thomas Preston <thomas.preston@codethink.co.uk>
+On Thu, Aug 27, 2020 at 11:49:34AM +0200, Stefan Wahren wrote:
+> Am 27.08.20 um 06:35 schrieb Hoegeun Kwon:
+> > Hi Stefan,
+> >
+> > Thank you for your review.
+> >
+> >
+> > On 8/26/20 7:04 PM, Stefan Wahren wrote:
+> >> Hi Hoeguen,
+> >>
+> >> Am 21.08.20 um 09:10 schrieb Hoegeun Kwon:
+> >>> There is a problem that the output does not work at a resolution
+> >>> exceeding FHD. To solve this, we need to adjust the bvb clock at a
+> >>> resolution exceeding FHD.
+> >> this patch introduces a mandatory clock, please update
+> >> brcm,bcm2835-hdmi.yaml first.
+> >>
+> >> Is this clock physically available on BCM283x or only on BCM2711?
+> > As far as I know, BCM2711 raspberry pi 4 supports 4k,
+> >
+> > don't supported on pi 3 and pi 3+.
+> >
+> > Since 4k is not supported in versions prior to Raspberry Pi 4,
+> >
+> > I don't think we need to modify the bvb clock.
+> >
+> >
+> > So I think it is better to update 'brcm,bcm2711-hdmi.yaml'
+> >
+> > instead of 'brcm,bcm2835-hdmi.yaml'.
+>=20
+> You are correct please update only brcm,bcm2711-hdmi.yaml.
+>=20
+> My concern was that the function vc4_hdmi_encoder_pre_crtc_configure()
+> is called on a non-bcm2711 platform or on a Raspberry Pi 4 with an older
+> DTB. So making the BVB clock optional might be better?
 
-Since the other two patches seem wrong, please resend this one patch,
-also include the people on TO: here: Andy, Phil and Jan, who all use
-this chip a lot.
+It won't cause any issue on a non-RPi4 platform since the clock pointer
+will be NULL and clk_set_rate can deal with NULL pointers just fine:
+https://elixir.bootlin.com/linux/latest/source/drivers/clk/clk.c#L2221
 
-Yours,
-Linus Walleij
+For the older DTBs, it shouldn't be an issue either. We haven't merged
+the binding yet, so we don't have an upstream DTB using it
+
+Maxime
